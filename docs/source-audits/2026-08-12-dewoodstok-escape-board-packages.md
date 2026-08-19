@@ -1,8 +1,9 @@
 # DeWoodstok and Escape board-package source audit
 
-Checked 2026-08-12. This is an evidence audit, not a runtime package or
-review-state record. The existing `assets/primary.png` files are generated
-presentation images; they were not used to establish hold facts.
+Checked 2026-08-12. This is a historical evidence audit, not current runtime
+package or review state. Its source links remain useful, but current packages
+are directly authored under `docs/ADDING_A_BOARD.md`. The former incomplete
+draft assets were removed and are not future authoring inputs.
 
 ## Candidates and primary manufacturer sources
 
@@ -38,14 +39,6 @@ an exact key in its `evidence.json`.
 | `escape.beta` | board facts; every `holds[]` field above; every semantic ID; `assets/primary.png` | Product identity, overall dimensions, dual texture, and official gallery images only | blocked |
 | `escape.unlimited` | board facts; every `holds[]` field above; every semantic ID; `assets/primary.png` | Product identity, overall dimensions, generic rung-depth ordering in finger pads, and official gallery images only | blocked |
 
-## Retained assets
-
-| candidate | retained path | SHA-256 | source role | package evidence key |
-| --- | --- | --- | --- | --- |
-| `dewoodstok.woodbord` | `assets/primary.png` | `5e21480090569510c2f51dfba9311b6e5c144a9565c5c821d6ade2a9a94ef1fc` | generated presentation candidate, not factual evidence | not authored: candidate is unregistered |
-| `escape.beta` | `assets/primary.png` | `fca647122a0fc2474843fb9b39a24e6a7000ded35e9f009e0265afb2ec927506` | generated presentation candidate, not factual evidence | not authored: candidate is unregistered |
-| `escape.unlimited` | `assets/primary.png` | `162cd0bfc010ad33ed68790663a58ede59124aab046de1153f973539fac01466` | generated presentation candidate, not factual evidence | not authored: candidate is unregistered |
-
 ## Exact blockers
 
 ### `dewoodstok-woodbord`
@@ -53,16 +46,16 @@ an exact key in its `evidence.json`.
 Missing official manufacturer evidence for the product URL, front and oblique
 reference images, the physical hold inventory and boundaries, every per-hold
 depth and size, finger capacity, grip type, semantic targets, and normalized
-frames. The candidate remains primary-only and unregistered; no sidecars or
-catalog entry are permitted.
+frames. The current Woodbord package was later authored directly and reviewed
+under the newer flat-package contract.
 
 ### `escape-beta`
 
 Missing official manufacturer evidence for the individual physical hold
 inventory and boundaries, per-hold depth and size, finger capacity, grip type,
 semantic targets, and the association of the gallery image areas to those
-facts. Overall dimensions and an image cannot fill those gaps. The candidate
-remains primary-only and unregistered.
+facts. Overall dimensions and an image cannot fill those gaps. The duplicate
+historical candidate was removed; Escape Beta 22 is the active package.
 
 ### `escape-unlimited`
 
@@ -70,4 +63,5 @@ Missing official manufacturer evidence mapping each physical rung/hold to a
 measured depth, its boundaries, size, finger capacity, grip type, semantic
 targets, and normalized frames. The product copy's finger-pad sequence is not a
 millimetre measurement or a per-hold map, and it explicitly leaves mono/crimp
-placement to the climber. The candidate remains primary-only and unregistered.
+placement to the climber. The old incomplete candidate was removed; a future
+complete package must use directly authored and visually reviewed paths.

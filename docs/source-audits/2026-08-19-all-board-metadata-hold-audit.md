@@ -11,12 +11,14 @@ source only where noted). A source may support a product-level fact without
 supporting a per-hold mapping; this audit does not promote such a fact into
 individual hold metadata.
 
-The 2026-08-19 audit supersedes earlier readiness conclusions where the
+The 2026-08-19 audit superseded earlier readiness conclusions where the
 single-file schema made optional metadata omissible. Omitting an unsupported
 optional field is necessary, but it does not make an incomplete, grouped, or
-invented physical-hold map shippable. The result is seven packages to correct
-and retain, and 27 packages to retain only as `assets/primary.png` drafts until
-a complete, source-backed, scalable reauthoring is available.
+invented physical-hold map shippable. Seven packages were corrected and
+retained. The 27 incomplete generated drafts were subsequently removed in full;
+they are not inputs to future work. Their manufacturer research remains below
+for reuse when each complete package is directly authored from primary evidence
+under `docs/ADDING_A_BOARD.md`.
 
 ## Retain after correction
 
@@ -131,13 +133,13 @@ a complete, source-backed, scalable reauthoring is available.
   [plan cue provenance audit](2026-08-10-plan-cue-provenance.md), which labels
   those board targets as app choices/adaptations.
 
-## Demote to primary-only drafts
+## Removed incomplete packages awaiting direct authoring
 
-Every package below keeps its exact `assets/primary.png`; its `board.json`
-cannot ship until a complete physical inventory and scalable geometry can be
-re-established. “Unknown” below is deliberate: it means the cited current
-sources do not establish a count that can be mapped safely to the current
-records.
+The incomplete package directories and their presentation assets were removed.
+“Unknown” below is deliberate: it means the cited sources did not establish a
+count that could be mapped safely to the old records. A future package must be
+created complete, with its geometry directly authored and visually reviewed;
+none of the removed art may be restored as a starting point.
 
 ### `escape-beta`
 
@@ -148,7 +150,7 @@ records.
   historical-variant dimensions or material are established here.
 - **Discrepancy:** stale URL/name and an incompatible layout prevent a safe
   mapping.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `escape-unlimited`
 
@@ -159,7 +161,7 @@ records.
   dimensions in JSON are not supported by the cited source.
 - **Discrepancy:** unsupported dimensions and no defensible tier-to-record
   mapping.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `frictitious-doormount-pro-7`
 
@@ -172,7 +174,7 @@ records.
   components.
 - **Discrepancy:** the current grouping cannot be mapped to the official seven
   holds.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `frictitious-megalith`
 
@@ -185,7 +187,7 @@ records.
   edge sizes, centre hold, full-width jug, and pocket targets), so the official
   exact physical count is unknown; current JSON under-models that inventory and
   has wrong dimensions.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `metolius-climbers-edge`
 
@@ -197,7 +199,7 @@ records.
 - **Discrepancy:** the source shows at least 14 features (ten edge slots,
   round/flat slopers, and plural jugs), but does not establish an exact physical
   count; current JSON misses features and has wrong dimensions and a stale URL.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `metolius-contact`
 
@@ -210,7 +212,7 @@ records.
 - **Discrepancy:** the official guide documents 18 numbered positions, rather
   than an exact physical-region count; current JSON misses jugs, slopers, and
   pinches, and its dimensions and URL are stale.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `metolius-project`
 
@@ -222,7 +224,7 @@ records.
 - **Discrepancy:** approximately 10 regions are visible, including two small
   centre-adjacent pockets absent from JSON; that observation is not an exact
   count, and dimensions and URL are stale.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `metolius-simulator-3d`
 
@@ -235,7 +237,7 @@ records.
 - **Discrepancy:** the official guide documents 18 numbered positions, rather
   than an exact physical-region count; the current inventory is materially
   grouped/omitted and dimensions are wrong.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `moon-armstrong`
 
@@ -246,7 +248,7 @@ records.
 - **Verified facts:** Moon Armstrong Fingerboard Beech; `65 × 16.5 × 5.5 cm`.
 - **Discrepancy:** invented three-finger pockets and missing jugs, slopers,
   monos, and centre edges; dimensions and URL are stale.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `nature-stoak-board-iii`
 
@@ -258,7 +260,7 @@ records.
 - **Discrepancy:** at least eight cavities (and nine semantic contacts) are
   visible, but that is not an exact physical count; the current grouped and
   incomplete hold map omits top rails and mis-maps the centre jug.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `soill-iron-palm-2`
 
@@ -270,7 +272,7 @@ records.
 - **Discrepancy:** roughly 10 targets are visible, but no exact count is
   evidenced; slopers and pinches are missing, identity/URL are stale, and
   dimensions are unsupported.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `soill-split-palm`
 
@@ -281,7 +283,7 @@ records.
   material are not established here.
 - **Discrepancy:** at least 12 regions are visible, but no exact count is
   evidenced; JSON is severely under-modeled.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `soill-training-tiles`
 
@@ -293,7 +295,7 @@ records.
   material are not established here.
 - **Discrepancy:** roughly 10 regions are visible, but no exact count is
   evidenced; JSON is severely under-modeled with stale identity/URL.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `target10a-linebreaker-base`
 
@@ -307,7 +309,7 @@ records.
 - **Discrepancy:** at least 19 recesses plus sloper surfaces are visible, but no
   exact count is evidenced; grouped pockets are false, top holds are
   misclassified as edges, and the inventory is incomplete.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `tension-grindstone`
 
@@ -320,7 +322,7 @@ records.
   50 mm one-arm edge, but not a one-to-one mapping for the seven grouped
   records; a nonexistent centre jug replaces that edge, so this needs
   reauthoring, not relabeling.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `tension-honestone`
 
@@ -330,7 +332,7 @@ records.
 - **Verified facts:** Tension Honestone; `25” × 6” × 2.5”`.
 - **Discrepancy:** end pockets are 25 mm monos, the centre is a 25 mm incut
   edge, and two top slopers are missing.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `tension-whetstone`
 
@@ -340,7 +342,7 @@ records.
 - **Verified facts:** Tension Whetstone; `25” × 6” × 2”`.
 - **Discrepancy:** end pockets are 40 mm two-finger pockets, the centre is a
   40 mm incut edge, and the top ergo-bump jug is missing.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `trango-rock-prodigy-forge`
 
@@ -352,7 +354,7 @@ records.
 - **Discrepancy:** current JSON has 12 broad groups, while the official depth
   groups cannot be mapped one-to-one; those broad groups collapse source-backed
   physical depth targets and semantics.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `trango-rock-prodigy-natural`
 
@@ -364,7 +366,7 @@ records.
 - **Discrepancy:** 12 current groups cannot safely be reconciled with the
   official narrower pocket semantics; dimensions are wrong and those semantics
   are too broad.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `trango-rock-prodigy-pivot`
 
@@ -375,7 +377,7 @@ records.
   are not established here.
 - **Discrepancy:** the documentation lists 22 grip positions, not an exact
   physical-region count; dimensions are unsupported and orientations collapsed.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `trango-rock-prodigy-training-center`
 
@@ -389,7 +391,7 @@ records.
   an exact physical-region count; current inventory is short of those positions
   and asserts unsupported exact finger-pair labels. Earlier source audit records
   this blocker.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `yy-verticalboard-evo`
 
@@ -399,7 +401,7 @@ records.
 - **Source-backed expected physical count:** 19.
 - **Verified facts:** YY Vertical VerticalBoard Evo; `65 × 14 × 5.5 cm`.
 - **Discrepancy:** false symmetric/three-finger mapping and wrong dimensions.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `yy-verticalboard-first`
 
@@ -411,7 +413,7 @@ records.
   centre jug or pockets.
 - **Discrepancy:** current centre jug/pockets are fictitious and dimensions are
   wrong.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `yy-verticalboard-light`
 
@@ -423,7 +425,7 @@ records.
   centre jug.
 - **Discrepancy:** the current centre jug is fictitious despite a matching
   count; dimensions are wrong.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `yy-verticalboard-one`
 
@@ -433,7 +435,7 @@ records.
 - **Source-backed expected physical count:** 15.
 - **Verified facts:** YY Vertical VerticalBoard One; `62 × 13 × 5.5 cm`.
 - **Discrepancy:** false pockets/centre jug, wrong dimensions, and stale URL.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `zlagboard-evo`
 
@@ -446,7 +448,7 @@ records.
   slopers absent from JSON. Dimensions/material are unsupported or conflicting.
 - **Discrepancy:** stale URL, missing source-described kinds, and no defensible
   complete inventory.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ### `zlagboard-pro`
 
@@ -457,16 +459,16 @@ records.
   established here.
 - **Discrepancy:** stale URL and unsupported dimensions; the apparent count is
   not sufficient evidence for the physical map.
-- **Action:** `primary-only draft`.
+- **Action:** removed incomplete package; directly author a complete replacement from the cited primary evidence.
 
 ## Decision summary
 
 | decision | packages |
 | --- | ---: |
 | `correct` and retain as complete packages | 7 |
-| `primary-only draft` | 27 |
+| removed incomplete package awaiting direct authoring | 27 |
 | total audited package slugs | 34 |
 
-Re-promotion of any draft requires a complete source-backed physical inventory
-and scalable geometry generation under the normal package contract, rather
-than a hand-edited one-off map.
+Adding any removed model requires a complete source-backed physical inventory,
+direct manual path authoring, current package validation, and human visual
+review under `docs/ADDING_A_BOARD.md`.

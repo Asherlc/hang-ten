@@ -1,10 +1,9 @@
 # Zlagboard Evo and Pro package-source audit
 
-Checked 2026-08-12. This audit evaluates the two unregistered generated-image
-candidates against the source-backed package contract in
-`docs/ADDING_A_BOARD.md`. It is documentation, not package state. Both
-candidates remain exactly `assets/primary.png`; neither is registered in
-`Hangboards/catalog.json`.
+Checked 2026-08-12. This historical audit preserves the official Zlagboard
+sources reviewed for Evo and Pro. The old incomplete package art was removed
+and is not an input to future work. Future geometry is directly authored from
+model-specific primary evidence under `docs/ADDING_A_BOARD.md`.
 
 ## Official source sets
 
@@ -14,22 +13,22 @@ candidates remain exactly `assets/primary.png`; neither is registered in
 | `zlagboard-pro` (`zlagboard.pro`) | [Zlagboard hangboards](https://www.zlagboard.com/hangboards) identifies the Pro as a board with varied ergonomic hold shapes and sizes. The [official app page](https://www.zlagboard.com/app) identifies Pro 1.0 and Pro 2.0 as distinct compatible products. | [Pro product image](https://www.zlagboard.com/assets/web/Zlagboard-2019-smaller2x-8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b.png) on the official hangboards page. | No manufacturer numbered hold guide, dimensioned hold drawing, or model-version-specific manual assigning values to every contact region was published. |
 
 The official pages are sufficient to distinguish the product families and to
-show their visible layouts. They do not resolve which Pro version the generated
-candidate represents, nor do they publish a complete physical-hold inventory.
+show their visible layouts. They did not resolve which Pro version the old
+candidate represented, nor did they publish a complete physical-hold inventory.
 An image does not establish hold capacity, grip classification, boundaries,
 cue treatment, or semantic target.
 
 ## Evidence-key readiness
 
 A registered package needs exact mappings for every board field, all physical
-hold fields and frames, each semantic target, and each retained asset. The
+hold fields and frames, each semantic target, and each presentation asset. The
 source sets below only support broad board-level claims and
 visible imagery; they cannot supply the required per-hold key set.
 
 | candidate | official facts established | missing required evidence | result |
 | --- | --- | --- | --- |
-| `zlagboard.evo` | Product identity; compact form factor; aggregate grip categories of crimps, pockets, slopers, and jugs; official front image. | Exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
-| `zlagboard.pro` | Product-family identity; general ergonomic-hold description; official front image; evidence that Pro 1.0 and Pro 2.0 are distinct app-compatible boards. | Exact model version of the candidate; exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
+| `zlagboard.evo` | Product identity; compact form factor; aggregate grip categories of crimps, pockets, slopers, and jugs; official front image. | Exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Old incomplete package removed; direct authoring required. |
+| `zlagboard.pro` | Product-family identity; general ergonomic-hold description; official front image; evidence that Pro 1.0 and Pro 2.0 are distinct app-compatible boards. | Exact model version of the candidate; exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Old incomplete package removed; direct authoring required. |
 
 ## Exact blockers
 
@@ -56,7 +55,6 @@ and an official complete hold map.
 Obtain a manufacturer-issued, model-specific numbered hold diagram or data
 sheet for Evo and for the exact Pro version. It must map every physical contact
 region and its boundary to its measurements, finger capacity, grip
-classification, and documented training target. Only then create all three
-sidecars and add the package to the catalog in the same change. Do not use the
-generated primary image, a broad product description, or evidence from one Pro
-version for another.
+classification, and documented training target. Then directly author and
+visually review a complete flat package. Do not use a broad product description
+or evidence from one Pro version for another.

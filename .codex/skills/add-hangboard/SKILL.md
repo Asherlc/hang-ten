@@ -1,40 +1,42 @@
 ---
 name: add-hangboard
-description: Add or refine a physical hangboard in Hang Ten with audited hold metadata, deterministic normalized vector artwork, semantic routine targets, and exact-path highlights. Use for new board models, board fidelity fixes, hold-map corrections, highlight alignment, or reusable board-design work.
+description: Use when adding or refining a physical hangboard, correcting its hold inventory or metadata, editing canonical hold paths, or reviewing highlight alignment in Hang Ten.
 ---
 
 # Add a hangboard
 
-Read `docs/ADDING_A_BOARD.md` completely before changing files. Follow its
-source, metadata, geometry, and validation contract.
+Read `docs/ADDING_A_BOARD.md` completely. It is the active package, evidence,
+geometry, and validation contract.
 
 ## Workflow
 
-1. Inspect `BoardCatalog`, `BoardDesignLanguage.swift`, the existing bespoke
-   designs, and the target board's official manufacturer sources.
-2. Record front, oblique, dimensional, and hold-depth evidence. Do not infer a
-   hold semantic when a manufacturer diagram exists.
-3. Add stable `TrainingBoard` and `BoardHold` metadata first, including truthful
-   `GripType` and `HoldFeature` values.
-4. Build normalized vector geometry from silhouette to planes to contact
-   shapes. Define paired geometry once and mirror it.
-5. Register the design and keep the model and rendered hold-ID sets identical.
-6. Add the board's versioned semantic mapping, regenerate `PlanLibrary.json`,
-   and verify it with `scripts/export-plan-library.sh --check`.
-7. Resolve representative routines and ensure every requested feature maps to
-   a factual hold.
-8. Use the dedicated-simulator workflow to inspect inactive and active surface,
-   shelf, deep-recess, and shallow-recess states in portrait and landscape.
+1. Research the exact product using official front, oblique, dimensional, and
+   hold-guide sources. Record URLs and field mappings in a source audit.
+2. Freeze the physical hold inventory. Omit optional measurements, capacities,
+   posture, and feature metadata that the sources do not support.
+3. Create the flat `Hangboards/<slug>/board.json` plus
+   `assets/primary.png`. Use the Trango Rock Prodigy Pivot only as a structural
+   and path-style precedent; do not copy its product-specific geometry.
+4. Deliberately author each normalized closed path, then refine it directly in
+   Workbench. Mirror one reviewed side exactly when official evidence shows
+   symmetry. Keep one logical hold with multiple pieces when a single physical
+   contact is visually disconnected.
+5. If the checked-out schema supports shape constraints, select one manually
+   for a genuinely regular hold; otherwise use a freeform path. The canonical
+   path is always the rendering, highlighting, and hit-testing truth.
+6. Run `scripts/hangboard-packages.sh validate --root Hangboards
+   --final-inventory` and `scripts/hangboard-packages.sh status --root
+   Hangboards`, then inspect normal and active paths in Workbench and the app.
 
 ## Non-negotiable rules
 
-- A raster may be a temporary calibration reference, never the highlight or
-  hit-testing source.
-- The same `BoardHoldPiece` path must draw normal contact, active contact, and
-  interaction geometry.
-- Do not add bolts, branding, photographic texture, or fake protrusions to the
-  shared design language.
-- Do not hand-enter both sides of a symmetric board unless official evidence
-  establishes asymmetry.
-- Do not call the work complete while a model hold lacks artwork, artwork has
-  no model hold, or a highlighted screenshot drifts from its cavity.
+- Author paths directly. Do not use or create image-driven detection,
+  segmentation, masks, contours, registration/alignment, vectorization,
+  automatic simplification/cropping, or proposal/refine/promote tooling.
+- Shape constraints are operator-selected, never inferred from pixels.
+- The same saved path must drive normal rendering, active rendering, and hit
+  testing.
+- Do not hand-author both sides of a symmetric board unless evidence establishes
+  asymmetry.
+- Do not finish with missing geometry, extra geometry, unsupported facts, or a
+  highlight that drifts from its physical contact surface.

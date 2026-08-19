@@ -1,8 +1,9 @@
 # Rock Prodigy Training Center source-evidence audit
 
-Originally checked 2026-08-10; re-audited 2026-08-13 against the direct-source
-package contract. The board is not registered or bundled. Its directory is an
-unregistered image candidate containing only `assets/primary.png`.
+Originally checked 2026-08-10; re-audited 2026-08-13. The incomplete package
+directory and its art were later removed. This audit retains only the useful
+direct manufacturer sources for a future complete package whose paths are
+authored directly under `docs/ADDING_A_BOARD.md`.
 
 ## Direct manufacturer sources
 
@@ -34,6 +35,6 @@ reconsidered only when Trango publishes a direct exhaustive hold guide that
 supports every required field, normalized hold frame, semantic target, and
 asset.
 
-There is no package `review/` directory, approximate outline, README, or
-separate presentation declaration. The retained `assets/primary.png` is an
-unregistered catalog image and is not staged into the app.
+There is no retained package directory or draft art. Any future Training Center
+package must be created complete, validated, and visually reviewed from the
+primary evidence above.

@@ -1,8 +1,9 @@
 # Beastmaker board-package source audit
 
-Checked 2026-08-12. This is an evidence audit, not package or runtime state.
-The existing `assets/primary.png` files are generated presentation images and
-were not used to establish hold facts.
+Checked 2026-08-12. This is a historical evidence audit, not current package
+or runtime state. Its old readiness conclusions are superseded by the current
+flat-package schema and `docs/ADDING_A_BOARD.md`; unsupported optional metadata
+is omitted, while visible paths are directly authored from primary evidence.
 
 ## Candidates
 
@@ -40,7 +41,8 @@ and front image establish identity and silhouette only. No `board.json`,
 The product page does name a grouped inventory (including pocket capacities and
 one 10 mm category), but it does not associate those facts with every visible
 physical hold or publish the full depth/size measurements and boundaries that
-the package needs. The generated primary image remains unregistered.
+the package needs. The completed package was later authored and reviewed
+independently of the removed draft art.
 
 ### `beastmaker-2000`
 
@@ -51,5 +53,5 @@ and front image establish identity and silhouette only. No `board.json`,
 
 The product page has a grouped descriptive list (including the 22 mm middle
 edge), rather than a one-to-one map of physical holds with their depth, finger
-capacity, grip classification, and boundary. The generated primary image
-remains unregistered.
+capacity, grip classification, and boundary. The completed package was later
+authored and reviewed independently of the removed draft art.

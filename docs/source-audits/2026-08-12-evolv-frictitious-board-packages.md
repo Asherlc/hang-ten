@@ -1,15 +1,15 @@
 # Evolv and Frictitious package-source audit
 
-Checked 2026-08-12. This audit evaluates the unregistered image candidates
-against the source-backed package contract in `docs/ADDING_A_BOARD.md`. A
+Checked 2026-08-12. This historical audit records sources that can be reused
+under the current direct-authoring contract in `docs/ADDING_A_BOARD.md`. A
 product page and a manufacturer-hosted image establish product identity and a
 visible board image only. They do not establish a physical hold's capacity, grip
 classification, or a distinct physical boundary unless the manufacturer
 explicitly documents it.
 
-None of these candidates is registered. Each remains exactly
-`assets/primary.png`, with no JSON sidecars, review-state files, or alternate
-generated images.
+The former incomplete candidate directories were removed. Evolv Kilter Basic
+Long was later completed independently; future Frictitious packages must be
+created complete with directly authored paths rather than restoring old art.
 
 ## Evolv Kilter Basic Long (`evolv.kilter-basic-long`)
 
@@ -60,7 +60,7 @@ insufficient to map all seven individual records and their factual fields.
 boundaries of the plural mono pockets, nor a complete per-hold classification
 and capacity map. It also does not say how the 40 mm edge's two-finger pocket
 is bounded relative to the edge as a separate physical hold. The official
-images may support the retained primary image once the factual hold inventory
+images may support a future presentation asset once the factual hold inventory
 exists, but cannot establish it. No source-backed `board.json`, `semantics.json`,
 or evidence map can be authored without inventing that inventory.
 
@@ -69,5 +69,5 @@ or evidence map can be authored without inventing that inventory.
 Request manufacturer-issued numbered hold diagrams or manuals for all three
 models. The material must name every physical hold and establish its boundary,
 depth/size, finger capacity, and grip classification. Once available, update
-this audit with exact source rows and author the three package sidecars in one
-change; do not infer missing fields from the retained `primary.png` files.
+this audit with exact source rows, omit unsupported optional fields, and
+directly author each complete flat package from its primary evidence.

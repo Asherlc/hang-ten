@@ -3,7 +3,7 @@
 ## Status
 
 Approved. Adds interactive SVG path editing to the Hangboard Workbench so users
-can visually refine AI-generated hold outlines instead of editing raw path data
+can visually refine manually authored hold outlines instead of editing raw path data
 in a textarea.
 
 ## Problem

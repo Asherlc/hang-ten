@@ -93,7 +93,6 @@ shared_board_content:
   - 'HangTen/Resources/BoardLibrary.json'
   - 'scripts/export-board-library.py'
   - 'scripts/export-board-catalog.py'
-  - 'docs/hangboard-generative-catalog/**'
 metadata:
   - 'metadata/**'
   - 'scripts/validate-app-store-metadata.sh'

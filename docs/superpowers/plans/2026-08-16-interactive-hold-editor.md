@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add interactive SVG path editing to the Hangboard Workbench so users can visually refine AI-generated hold contours by dragging vertices, adjusting bezier curves, and repositioning holds.
+**Goal:** Add interactive SVG path editing to the Hangboard Workbench so users can visually refine manually authored hold contours by dragging vertices, adjusting bezier curves, and repositioning holds.
 
 **Architecture:** A standalone `path-editor.js` module (exported both as CommonJS and `globalThis.HoldPathEditor`) parses `displayPath` strings into a structured command array and exposes pure mutation helpers (`moveVertex`, `addVertex`, `deleteVertex`). `app.js` renders vertex/control point handles on the SVG, wires pointer events for dragging, and calls into `path-editor.js` on each edit before serializing back to `displayPath`. No changes to the backend data model or save flow.
 
