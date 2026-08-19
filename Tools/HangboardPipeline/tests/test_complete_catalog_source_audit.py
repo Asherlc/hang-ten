@@ -19,7 +19,7 @@ def test_complete_catalog_exposes_authoritative_board_facts() -> None:
     boards = _boards_by_id()
 
     expected_dimensions = {
-        "beastmaker-1000": "580 × 150 × 58 mm",
+        "beastmaker-1000": "580 × 150 mm",
         "escape-unlimited": "23.5 × 6 in",
         "evolv-kilter-basic-long": "79 × 16 × 6 cm",
         "frictitious-doormount-pro-7": "25.5 × 4.5 × 2.25 in",
