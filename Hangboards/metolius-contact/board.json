@@ -5,41 +5,201 @@
   "name": "Contact",
   "subtitle": "Molded training board with graduated edge clusters across three rows.",
   "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/contact",
-  "dimensions": "26\" × 13\"",
-  "aspectRatio": 2.0,
+  "dimensions": "32.5 \u00d7 11 \u00d7 2.625 in",
+  "aspectRatio": 2.7329093799682034,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "edge-top-slot", "name": "Top center slot", "kind": "edge", "gripType": "fullCrimp", "features": ["smallEdge"], "geometry": [
-      { "frame": {"x": 0.37, "y": 0.20, "width": 0.16, "height": 0.08}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row2-left", "name": "Row 2 left edges", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.32, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-row2-center", "name": "Row 2 center bar", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.36, "y": 0.32, "width": 0.18, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
-    ]},
-    { "id": "edge-row2-right", "name": "Row 2 right edges", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.60, "y": 0.32, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-row3-left", "name": "Row 3 left edges", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.45, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-row3-center", "name": "Row 3 center bar", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.36, "y": 0.45, "width": 0.18, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
-    ]},
-    { "id": "edge-row3-right", "name": "Row 3 right edges", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.60, "y": 0.45, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-row4-left", "name": "Row 4 left edges", "kind": "edge", "gripType": "openHand", "features": ["largeEdge"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.58, "width": 0.24, "height": 0.12}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-row4-center", "name": "Row 4 center bar", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.36, "y": 0.58, "width": 0.18, "height": 0.12}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
-    ]},
-    { "id": "edge-row4-right", "name": "Row 4 right edges", "kind": "edge", "gripType": "openHand", "features": ["largeEdge"], "geometry": [
-      { "frame": {"x": 0.60, "y": 0.58, "width": 0.24, "height": 0.12}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]}
+    {
+      "id": "edge-top-slot",
+      "name": "Top center slot",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.3696218731820826,
+            "y": 0.07058823529411766,
+            "width": 0.1651192553810355,
+            "height": 0.1128139904610493
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-left",
+      "name": "Row 2 left edges",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.04970331588132635,
+            "y": 0.23980922098569163,
+            "width": 0.24767888307155322,
+            "height": 0.14101748807631162
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-center",
+      "name": "Row 2 center bar",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.35930191972076786,
+            "y": 0.23980922098569163,
+            "width": 0.1857591623036649,
+            "height": 0.14101748807631162
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-right",
+      "name": "Row 2 right edges",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.606980802792321,
+            "y": 0.23980922098569163,
+            "width": 0.24767888307155322,
+            "height": 0.14101748807631162
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row3-left",
+      "name": "Row 3 left edges",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.04970331588132635,
+            "y": 0.42313195548489674,
+            "width": 0.24767888307155322,
+            "height": 0.14101748807631162
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row3-center",
+      "name": "Row 3 center bar",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.35930191972076786,
+            "y": 0.42313195548489674,
+            "width": 0.1857591623036649,
+            "height": 0.14101748807631162
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row3-right",
+      "name": "Row 3 right edges",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.606980802792321,
+            "y": 0.42313195548489674,
+            "width": 0.24767888307155322,
+            "height": 0.14101748807631162
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row4-left",
+      "name": "Row 4 left edges",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.04970331588132635,
+            "y": 0.6064546899841017,
+            "width": 0.24767888307155322,
+            "height": 0.16922098569157393
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row4-center",
+      "name": "Row 4 center bar",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.35930191972076786,
+            "y": 0.6064546899841017,
+            "width": 0.1857591623036649,
+            "height": 0.16922098569157393
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row4-right",
+      "name": "Row 4 right edges",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.606980802792321,
+            "y": 0.6064546899841017,
+            "width": 0.24767888307155322,
+            "height": 0.16922098569157393
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    }
   ]
 }

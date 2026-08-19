@@ -5,44 +5,268 @@
   "name": "Linebreaker Base",
   "subtitle": "Wooden training board with three graduated rows of edges and pockets.",
   "productURL": "https://www.target10a.com/products/linebreaker-base",
-  "dimensions": "500 × 375 mm",
-  "aspectRatio": 1.3333333333333333,
+  "dimensions": "500 \u00d7 375 mm",
+  "aspectRatio": 2.1277955271565494,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "edge-row1-left", "name": "Row 1 left edge", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.05, "y": 0.18, "width": 0.18, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "pocket-row1-center", "name": "Row 1 center pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.30, "y": 0.20, "width": 0.40, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-row1-right", "name": "Row 1 right edge", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.77, "y": 0.18, "width": 0.18, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "pocket-row2-left", "name": "Row 2 left pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.05, "y": 0.38, "width": 0.14, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-row2-left", "name": "Row 2 left edge", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
-      { "frame": {"x": 0.22, "y": 0.38, "width": 0.14, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-row2-center", "name": "Row 2 center edge", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.40, "y": 0.38, "width": 0.20, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-row2-right", "name": "Row 2 right edge", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
-      { "frame": {"x": 0.64, "y": 0.38, "width": 0.14, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "pocket-row2-right", "name": "Row 2 right pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.81, "y": 0.38, "width": 0.14, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-row3-left", "name": "Row 3 left edge", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.05, "y": 0.60, "width": 0.18, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "pocket-row3-center", "name": "Row 3 center pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.30, "y": 0.62, "width": 0.40, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-row3-right", "name": "Row 3 right edge", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.77, "y": 0.60, "width": 0.18, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]}
+    {
+      "id": "edge-row1-left",
+      "name": "Row 1 left edge",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "mediumEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.010810810810810815,
+            "y": 0.023130990415335447,
+            "width": 0.19567567567567568,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-row1-center",
+      "name": "Row 1 center pockets",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.28258258258258256,
+            "y": 0.05782747603833868,
+            "width": 0.43483483483483487,
+            "height": 0.173482428115016
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row1-right",
+      "name": "Row 1 right edge",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "mediumEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.7935135135135135,
+            "y": 0.023130990415335447,
+            "width": 0.19567567567567568,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-row2-left",
+      "name": "Row 2 left pockets",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.010810810810810815,
+            "y": 0.37009584664536743,
+            "width": 0.1521921921921922,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-left",
+      "name": "Row 2 left edge",
+      "kind": "edge",
+      "gripType": "halfCrimp",
+      "features": [
+        "smallEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.1956156156156156,
+            "y": 0.37009584664536743,
+            "width": 0.1521921921921922,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-center",
+      "name": "Row 2 center edge",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.3912912912912913,
+            "y": 0.37009584664536743,
+            "width": 0.21741741741741744,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-right",
+      "name": "Row 2 right edge",
+      "kind": "edge",
+      "gripType": "halfCrimp",
+      "features": [
+        "smallEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.6521921921921923,
+            "y": 0.37009584664536743,
+            "width": 0.1521921921921922,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-row2-right",
+      "name": "Row 2 right pockets",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.836996996996997,
+            "y": 0.37009584664536743,
+            "width": 0.1521921921921922,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row3-left",
+      "name": "Row 3 left edge",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "mediumEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.010810810810810815,
+            "y": 0.7517571884984026,
+            "width": 0.19567567567567568,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-row3-center",
+      "name": "Row 3 center pockets",
+      "kind": "pocket",
+      "gripType": "twoFingerPocket",
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.28258258258258256,
+            "y": 0.7864536741214059,
+            "width": 0.43483483483483487,
+            "height": 0.173482428115016
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row3-right",
+      "name": "Row 3 right edge",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "mediumEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.7935135135135135,
+            "y": 0.7517571884984026,
+            "width": 0.19567567567567568,
+            "height": 0.22552715654952077
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    }
   ]
 }

@@ -3,31 +3,151 @@
   "id": "escape-unlimited",
   "manufacturer": "Escape Climbing",
   "name": "Unlimited",
-  "subtitle": "Wooden training board with three rows of open-hand edge rails.",
+  "subtitle": "Four descending finger-pad depth levels.",
   "productURL": "https://escapeclimbing.com/products/unlimited",
-  "dimensions": "600 × 300 mm",
-  "aspectRatio": 2.0,
+  "dimensions": "23.5 \u00d7 6 in",
+  "aspectRatio": 3.034358047016275,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "edge-row1-left", "name": "Row 1 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.07, "y": 0.20, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row1-right", "name": "Row 1 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.20, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row2-left", "name": "Row 2 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.07, "y": 0.42, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row2-right", "name": "Row 2 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.42, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row3-left", "name": "Row 3 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.07, "y": 0.64, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row3-right", "name": "Row 3 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.64, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]}
+    {
+      "id": "edge-row1-left",
+      "name": "Row 1 left rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.04420738974970203,
+            "y": 0.03146473779385173,
+            "width": 0.4228843861740167,
+            "height": 0.22455696202531647
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row1-right",
+      "name": "Row 1 right rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.5305244338498213,
+            "y": 0.03146473779385173,
+            "width": 0.4228843861740167,
+            "height": 0.22455696202531647
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-left",
+      "name": "Row 2 left rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.04420738974970203,
+            "y": 0.38433996383363467,
+            "width": 0.4228843861740167,
+            "height": 0.22455696202531647
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-right",
+      "name": "Row 2 right rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.5305244338498213,
+            "y": 0.38433996383363467,
+            "width": 0.4228843861740167,
+            "height": 0.22455696202531647
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row3-left",
+      "name": "Row 3 left rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.04420738974970203,
+            "y": 0.7372151898734178,
+            "width": 0.4228843861740167,
+            "height": 0.22455696202531647
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row3-right",
+      "name": "Row 3 right rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.5305244338498213,
+            "y": 0.7372151898734178,
+            "width": 0.4228843861740167,
+            "height": 0.22455696202531647
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    }
   ]
 }

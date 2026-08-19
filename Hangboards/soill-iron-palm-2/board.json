@@ -4,30 +4,150 @@
   "manufacturer": "So iLL",
   "name": "Iron Palm 2",
   "subtitle": "Molded jug hold pair connected by four stacked open-hand rails.",
-  "productURL": "https://www.soill.com/products/iron-palm-2",
-  "dimensions": "580 × 280 mm",
-  "aspectRatio": 1.5,
+  "productURL": "https://soillholds.com/products/iron-palm-2-0",
+  "dimensions": "580 \u00d7 280 mm",
+  "aspectRatio": 2.13447782546495,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "jug-left", "name": "Left palm jug", "kind": "jug", "gripType": "openHand", "features": ["jug"], "geometry": [
-      { "frame": {"x": 0.04, "y": 0.19, "width": 0.24, "height": 0.32}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "jug-right", "name": "Right palm jug", "kind": "jug", "gripType": "openHand", "features": ["jug"], "geometry": [
-      { "frame": {"x": 0.72, "y": 0.19, "width": 0.24, "height": 0.32}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-rail1", "name": "Rail 1", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.28, "y": 0.27, "width": 0.44, "height": 0.06}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-rail2", "name": "Rail 2", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.28, "y": 0.35, "width": 0.44, "height": 0.06}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-rail3", "name": "Rail 3", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.28, "y": 0.43, "width": 0.44, "height": 0.06}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-rail4", "name": "Rail 4", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.22, "y": 0.51, "width": 0.56, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]}
+    {
+      "id": "jug-left",
+      "name": "Left palm jug",
+      "kind": "jug",
+      "gripType": "openHand",
+      "features": [
+        "jug"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.023083109919571045,
+            "y": 0.02226037195994278,
+            "width": 0.24707774798927612,
+            "height": 0.4687839771101574
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "jug-right",
+      "name": "Right palm jug",
+      "kind": "jug",
+      "gripType": "openHand",
+      "features": [
+        "jug"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.7231367292225201,
+            "y": 0.02226037195994278,
+            "width": 0.24707774798927612,
+            "height": 0.4687839771101574
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-rail1",
+      "name": "Rail 1",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.2701608579088472,
+            "y": 0.13945636623748214,
+            "width": 0.45297587131367295,
+            "height": 0.0878969957081545
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-rail2",
+      "name": "Rail 2",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.2701608579088472,
+            "y": 0.25665236051502144,
+            "width": 0.45297587131367295,
+            "height": 0.0878969957081545
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-rail3",
+      "name": "Rail 3",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.2701608579088472,
+            "y": 0.3738483547925608,
+            "width": 0.45297587131367295,
+            "height": 0.0878969957081545
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-rail4",
+      "name": "Rail 4",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.20839142091152815,
+            "y": 0.49104434907010014,
+            "width": 0.576514745308311,
+            "height": 0.10254649499284693
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    }
   ]
 }

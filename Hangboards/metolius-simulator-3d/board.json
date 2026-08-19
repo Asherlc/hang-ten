@@ -5,32 +5,144 @@
   "name": "Simulator 3-D",
   "subtitle": "Chevron-shaped molded training board with a center jug and angled hold wings.",
   "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/simulator-3-d",
-  "dimensions": "34\" × 9\"",
-  "aspectRatio": 1.6553846153846155,
+  "dimensions": "28 \u00d7 8.75 in",
+  "aspectRatio": 2.772329246935201,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "jug-center", "name": "Center jug", "kind": "jug", "features": ["jug"], "geometry": [
-      { "frame": {"x": 0.40, "y": 0.19, "width": 0.20, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-left-upper", "name": "Left wing upper row", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.32, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-right-upper", "name": "Right wing upper row", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
-      { "frame": {"x": 0.64, "y": 0.32, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-left-lower", "name": "Left wing lower row", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.46, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "edge-right-lower", "name": "Right wing lower row", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
-      { "frame": {"x": 0.64, "y": 0.46, "width": 0.30, "height": 0.11}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
-    ]},
-    { "id": "pocket-left-bottom", "name": "Left bottom pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.10, "y": 0.62, "width": 0.20, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "pocket-right-bottom", "name": "Right bottom pockets", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.70, "y": 0.62, "width": 0.20, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]}
+    {
+      "id": "jug-center",
+      "name": "Center jug",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.39898926089703096,
+            "y": 0.044220665499124345,
+            "width": 0.20391661402400507,
+            "height": 0.22197898423817863
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-left-upper",
+      "name": "Left wing upper row",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.05233101705622237,
+            "y": 0.266199649737303,
+            "width": 0.30587492103600755,
+            "height": 0.18782837127845883
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-right-upper",
+      "name": "Right wing upper row",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.643689197725837,
+            "y": 0.266199649737303,
+            "width": 0.30587492103600755,
+            "height": 0.18782837127845883
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-left-lower",
+      "name": "Left wing lower row",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.05233101705622237,
+            "y": 0.5052539404553416,
+            "width": 0.30587492103600755,
+            "height": 0.18782837127845883
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-right-lower",
+      "name": "Right wing lower row",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.643689197725837,
+            "y": 0.5052539404553416,
+            "width": 0.30587492103600755,
+            "height": 0.18782837127845883
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-left-bottom",
+      "name": "Left bottom pockets",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.09311433986102338,
+            "y": 0.7784588441330998,
+            "width": 0.20391661402400507,
+            "height": 0.17075306479859895
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-right-bottom",
+      "name": "Right bottom pockets",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.7048641819330385,
+            "y": 0.7784588441330998,
+            "width": 0.20391661402400507,
+            "height": 0.17075306479859895
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    }
   ]
 }

@@ -5,29 +5,151 @@
   "name": "Stoak Board III",
   "subtitle": "Wooden training board with textured-insert edges and a center jug.",
   "productURL": "https://www.natureclimbing.com/products/stoak-board-iii",
-  "dimensions": "600 × 300 mm",
-  "aspectRatio": 2.0,
+  "dimensions": "57 \u00d7 12 \u00d7 5.5 cm",
+  "aspectRatio": 3.7685393258426965,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "edge-outer-left", "name": "Outer left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "sizeMillimeters": 40, "geometry": [
-      { "frame": {"x": 0.045, "y": 0.42, "width": 0.35, "height": 0.095}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.35} }
-    ]},
-    { "id": "edge-inner-left", "name": "Inner left edge", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
-      { "frame": {"x": 0.245, "y": 0.34, "width": 0.13, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "jug-center", "name": "Center jug", "kind": "jug", "features": ["jug"], "geometry": [
-      { "frame": {"x": 0.44, "y": 0.24, "width": 0.12, "height": 0.08}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-center", "name": "Center edge", "kind": "edge", "gripType": "fullCrimp", "features": ["smallEdge"], "sizeMillimeters": 15, "geometry": [
-      { "frame": {"x": 0.45, "y": 0.42, "width": 0.10, "height": 0.09}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-inner-right", "name": "Inner right edge", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
-      { "frame": {"x": 0.625, "y": 0.34, "width": 0.13, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-outer-right", "name": "Outer right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "sizeMillimeters": 40, "geometry": [
-      { "frame": {"x": 0.605, "y": 0.42, "width": 0.35, "height": 0.095}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.35} }
-    ]}
+    {
+      "id": "edge-outer-left",
+      "name": "Outer left rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "sizeMillimeters": 40,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.018980322003577816,
+            "y": 0.39896629213483137,
+            "width": 0.37024448419797257,
+            "height": 0.18935955056179776
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-inner-left",
+      "name": "Inner left edge",
+      "kind": "edge",
+      "gripType": "halfCrimp",
+      "features": [
+        "smallEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.23054859868813357,
+            "y": 0.23950561797752817,
+            "width": 0.13751937984496124,
+            "height": 0.13952808988764046
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "jug-center",
+      "name": "Center jug",
+      "kind": "jug",
+      "features": [
+        "jug"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.43682766845557547,
+            "y": 0.04017977528089887,
+            "width": 0.12694096601073346,
+            "height": 0.1594606741573034
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-center",
+      "name": "Center edge",
+      "kind": "edge",
+      "gripType": "fullCrimp",
+      "features": [
+        "smallEdge"
+      ],
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.4474060822898033,
+            "y": 0.39896629213483137,
+            "width": 0.10578413834227789,
+            "height": 0.1793932584269663
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-inner-right",
+      "name": "Inner right edge",
+      "kind": "edge",
+      "gripType": "halfCrimp",
+      "features": [
+        "smallEdge"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.6325283243887895,
+            "y": 0.23950561797752817,
+            "width": 0.13751937984496124,
+            "height": 0.13952808988764046
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-outer-right",
+      "name": "Outer right rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "sizeMillimeters": 40,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.611371496720334,
+            "y": 0.39896629213483137,
+            "width": 0.37024448419797257,
+            "height": 0.18935955056179776
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.35
+          }
+        }
+      ]
+    }
   ]
 }

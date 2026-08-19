@@ -5,8 +5,8 @@
   "name": "Rock Prodigy Forge",
   "subtitle": "Two-piece hangboard with a closed-crimp thumb rest, all-new edge profiles, drafted pockets, and usable slopers.",
   "productURL": "https://trango.com/products/rock-prodigy-forge",
-  "dimensions": "5.25 × 12.75 in (per side)",
-  "aspectRatio": 1.5,
+  "dimensions": "5.25 \u00d7 12.75 in (per side)",
+  "aspectRatio": 4.162534435261708,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
@@ -15,11 +15,21 @@
       "id": "pinch-block-left",
       "name": "Left pinch block",
       "kind": "pinch",
-      "features": ["widePinch"],
+      "features": [
+        "widePinch"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.02, "y": 0.335, "width": 0.145, "height": 0.265},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.15}
+          "frame": {
+            "x": 0.011065519523494374,
+            "y": 0.044187327823691516,
+            "width": 0.1473990734612839,
+            "height": 0.7475482093663912
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.15
+          }
         }
       ]
     },
@@ -27,11 +37,21 @@
       "id": "pinch-block-right",
       "name": "Right pinch block",
       "kind": "pinch",
-      "features": ["widePinch"],
+      "features": [
+        "widePinch"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.835, "y": 0.335, "width": 0.145, "height": 0.265},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.15}
+          "frame": {
+            "x": 0.8395499669093315,
+            "y": 0.044187327823691516,
+            "width": 0.1473990734612839,
+            "height": 0.7475482093663912
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.15
+          }
         }
       ]
     },
@@ -40,11 +60,21 @@
       "name": "Left top edge rail",
       "kind": "edge",
       "gripType": "openHand",
-      "features": ["largeOpenHandRail"],
+      "features": [
+        "largeOpenHandRail"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.19, "y": 0.375, "width": 0.28, "height": 0.045},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45}
+          "frame": {
+            "x": 0.1838782263401721,
+            "y": 0.15702479338842976,
+            "width": 0.2846326935804104,
+            "height": 0.12694214876033058
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
         }
       ]
     },
@@ -53,11 +83,21 @@
       "name": "Right top edge rail",
       "kind": "edge",
       "gripType": "openHand",
-      "features": ["largeOpenHandRail"],
+      "features": [
+        "largeOpenHandRail"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.53, "y": 0.375, "width": 0.28, "height": 0.045},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45}
+          "frame": {
+            "x": 0.5295036399735275,
+            "y": 0.15702479338842976,
+            "width": 0.2846326935804104,
+            "height": 0.12694214876033058
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
         }
       ]
     },
@@ -66,11 +106,21 @@
       "name": "Left lower edge rail",
       "kind": "edge",
       "gripType": "openHand",
-      "features": ["mediumEdge"],
+      "features": [
+        "mediumEdge"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.19, "y": 0.43, "width": 0.14, "height": 0.04},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45}
+          "frame": {
+            "x": 0.1838782263401721,
+            "y": 0.3121763085399449,
+            "width": 0.1423163467902052,
+            "height": 0.1128374655647383
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
         }
       ]
     },
@@ -79,11 +129,21 @@
       "name": "Right lower edge rail",
       "kind": "edge",
       "gripType": "openHand",
-      "features": ["mediumEdge"],
+      "features": [
+        "mediumEdge"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.67, "y": 0.43, "width": 0.14, "height": 0.04},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45}
+          "frame": {
+            "x": 0.6718199867637327,
+            "y": 0.3121763085399449,
+            "width": 0.1423163467902052,
+            "height": 0.1128374655647383
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
         }
       ]
     },
@@ -93,11 +153,21 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["pocket"],
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.335, "y": 0.415, "width": 0.08, "height": 0.045},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "frame": {
+            "x": 0.33127729980145604,
+            "y": 0.269862258953168,
+            "width": 0.0813236267372601,
+            "height": 0.12694214876033058
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
       ]
     },
@@ -107,11 +177,21 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["pocket"],
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.585, "y": 0.415, "width": 0.08, "height": 0.045},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "frame": {
+            "x": 0.5854136333553938,
+            "y": 0.269862258953168,
+            "width": 0.0813236267372601,
+            "height": 0.12694214876033058
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
       ]
     },
@@ -121,11 +201,21 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["pocket"],
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.335, "y": 0.47, "width": 0.08, "height": 0.045},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "frame": {
+            "x": 0.33127729980145604,
+            "y": 0.4250137741046831,
+            "width": 0.0813236267372601,
+            "height": 0.12694214876033058
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
       ]
     },
@@ -135,11 +225,21 @@
       "kind": "pocket",
       "gripType": "twoFingerPocket",
       "fingerCapacity": 2,
-      "features": ["pocket"],
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.585, "y": 0.47, "width": 0.08, "height": 0.045},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "frame": {
+            "x": 0.5854136333553938,
+            "y": 0.4250137741046831,
+            "width": 0.0813236267372601,
+            "height": 0.12694214876033058
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
       ]
     },
@@ -149,11 +249,21 @@
       "kind": "pocket",
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "features": ["pocket"],
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.225, "y": 0.535, "width": 0.08, "height": 0.04},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "frame": {
+            "x": 0.21945731303772337,
+            "y": 0.608374655647383,
+            "width": 0.0813236267372601,
+            "height": 0.1128374655647383
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
       ]
     },
@@ -163,11 +273,21 @@
       "kind": "pocket",
       "gripType": "threeFingerPocket",
       "fingerCapacity": 3,
-      "features": ["pocket"],
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
-          "frame": {"x": 0.695, "y": 0.535, "width": 0.08, "height": 0.04},
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "frame": {
+            "x": 0.6972336201191264,
+            "y": 0.608374655647383,
+            "width": 0.0813236267372601,
+            "height": 0.1128374655647383
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
       ]
     }

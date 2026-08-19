@@ -5,32 +5,169 @@
   "name": "Whetstone",
   "subtitle": "Wooden training board with two edge-rail rows, a center jug, and deep end pockets.",
   "productURL": "https://tensionclimbing.com/products/whetstone",
-  "dimensions": "580 × 150 mm",
-  "aspectRatio": 1.5,
+  "dimensions": "25 \u00d7 6 \u00d7 2 in",
+  "aspectRatio": 3.9505208333333335,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "pocket-end-left", "name": "Left end pocket", "kind": "pocket", "gripType": "fourFingerPocket", "fingerCapacity": 4, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.02, "y": 0.35, "width": 0.095, "height": 0.30}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "pocket-end-right", "name": "Right end pocket", "kind": "pocket", "gripType": "fourFingerPocket", "fingerCapacity": 4, "features": ["pocket"], "geometry": [
-      { "frame": {"x": 0.885, "y": 0.35, "width": 0.095, "height": 0.30}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-row1-left", "name": "Row 1 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.13, "y": 0.37, "width": 0.34, "height": 0.085}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
-    ]},
-    { "id": "edge-row1-right", "name": "Row 1 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.37, "width": 0.34, "height": 0.085}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
-    ]},
-    { "id": "jug-center", "name": "Center jug", "kind": "jug", "features": ["jug"], "geometry": [
-      { "frame": {"x": 0.44, "y": 0.46, "width": 0.12, "height": 0.06}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
-    ]},
-    { "id": "edge-row2-left", "name": "Row 2 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.13, "y": 0.475, "width": 0.34, "height": 0.085}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
-    ]},
-    { "id": "edge-row2-right", "name": "Row 2 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.475, "width": 0.34, "height": 0.085}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
-    ]}
+    {
+      "id": "pocket-end-left",
+      "name": "Left end pocket",
+      "kind": "pocket",
+      "features": [
+        "pocket"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.013658536585365854,
+            "y": 0.08697916666666661,
+            "width": 0.09618984838497034,
+            "height": 0.7999999999999999
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-end-right",
+      "name": "Right end pocket",
+      "kind": "pocket",
+      "features": [
+        "pocket"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.8894924192485169,
+            "y": 0.08697916666666661,
+            "width": 0.09618984838497034,
+            "height": 0.7999999999999999
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row1-left",
+      "name": "Row 1 left rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.1250362557679631,
+            "y": 0.14031249999999998,
+            "width": 0.3442584047462096,
+            "height": 0.22666666666666668
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row1-right",
+      "name": "Row 1 right rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.5300461437046803,
+            "y": 0.14031249999999998,
+            "width": 0.3442584047462096,
+            "height": 0.22666666666666668
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "jug-center",
+      "name": "Center jug",
+      "kind": "jug",
+      "features": [
+        "jug"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.43891891891891893,
+            "y": 0.38031250000000005,
+            "width": 0.12150296638101515,
+            "height": 0.16
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-left",
+      "name": "Row 2 left rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.1250362557679631,
+            "y": 0.4203124999999999,
+            "width": 0.3442584047462096,
+            "height": 0.22666666666666668
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-row2-right",
+      "name": "Row 2 right rail",
+      "kind": "edge",
+      "gripType": "openHand",
+      "features": [
+        "largeOpenHandRail"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.5300461437046803,
+            "y": 0.4203124999999999,
+            "width": 0.3442584047462096,
+            "height": 0.22666666666666668
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.45
+          }
+        }
+      ]
+    }
   ]
 }
