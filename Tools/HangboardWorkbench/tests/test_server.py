@@ -1210,6 +1210,8 @@ def test_server_close_waits_for_a_paused_hosted_catalog_request(
     httpd.shutdown()
     close_thread = threading.Thread(target=httpd.server_close)
     close_thread.start()
+    close_thread.join(timeout=1)
+    assert close_thread.is_alive()
     release.set()
     request_thread.join(timeout=5)
     close_thread.join(timeout=5)
