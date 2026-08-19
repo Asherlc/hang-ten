@@ -182,6 +182,29 @@ class _HostedSaveIdentityRaceClient(FakeGitHubClient):
         return super().get_branch_head_sha(token, branch)
 
 
+class _ConcurrentHostedBlobClient(FakeGitHubClient):
+    """Tracks the aggregate upstream blob concurrency of hosted requests."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({"main": files, HOSTED_BRANCH: files, "feature": files})
+        self._lock = threading.Lock()
+        self._active_blob_reads = 0
+        self.max_active_blob_reads = 0
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        with self._lock:
+            self._active_blob_reads += 1
+            self.max_active_blob_reads = max(
+                self.max_active_blob_reads, self._active_blob_reads
+            )
+        try:
+            time.sleep(0.04)
+            return super().get_blob(token, sha)
+        finally:
+            with self._lock:
+                self._active_blob_reads -= 1
+
+
 @contextmanager
 def running_server_with_github_backend(
     files: dict[str, bytes],
@@ -1050,7 +1073,7 @@ def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     assert image == PRIMARY_IMAGE.read_bytes()
     assert len(client.calls_named("get_branch_head_sha")) == 3
     assert len(client.calls_named("get_tree")) == 1
-    assert len(client.calls_named("get_blob")) == 2
+    assert len(client.calls_named("get_blob")) == 4
 
 
 def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
@@ -1088,6 +1111,49 @@ def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
     assert second["boards"][0]["displayName"] == "Fixture Maker Replacement Board"
     assert len(client.calls_named("get_branch_head_sha")) == 2
     assert len(client.calls_named("get_tree")) == 3
+
+
+def test_simultaneous_hosted_catalog_reads_share_one_bounded_upstream_load() -> None:
+    """Fails if concurrent cold routes duplicate catalog reads or worker pools."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
+        board = board_document(f"{slug}.board")
+        board["name"] = slug.title()
+        files.update(
+            {
+                f"Hangboards/{slug}/board.json": (
+                    json.dumps(board, indent=2) + "\n"
+                ).encode("utf-8"),
+                f"Hangboards/{slug}/assets/primary.png": (
+                    PRIMARY_IMAGE.read_bytes() + slug.encode("utf-8")
+                ),
+            }
+        )
+    client = _ConcurrentHostedBlobClient(files)
+    with running_server_with_github_backend(files, github_client=client) as (
+        base,
+        _client,
+        session,
+    ):
+        start = threading.Barrier(3)
+        results: list[tuple[int, dict[str, object], object]] = []
+
+        def request_catalog() -> None:
+            start.wait()
+            results.append(hosted_request_json(base, session, "GET", "/api/boards"))
+
+        first = threading.Thread(target=request_catalog)
+        second = threading.Thread(target=request_catalog)
+        first.start()
+        second.start()
+        start.wait()
+        first.join(timeout=5)
+        second.join(timeout=5)
+
+    assert [status for status, _body, _headers in results] == [200, 200]
+    assert len(client.calls_named("get_tree")) == 1
+    assert len(client.calls_named("get_blob")) == 12
+    assert client.max_active_blob_reads <= 4
 
 
 def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:

@@ -260,6 +260,11 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         self.git_lock = nullcontext() if allow_remote else threading.Lock()
         super().__init__(server_address, request_handler)
 
+    def server_close(self) -> None:
+        if self.github_board_store is not None:
+            self.github_board_store.close()
+        super().server_close()
+
 
 class EditorRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802

@@ -260,6 +260,9 @@ def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() 
             **_complete_package("zeta", board_document("zeta.board")),
             **_complete_package("alpha", board_document("alpha.board")),
             **_complete_package("middle", board_document("middle.board")),
+            **_complete_package("delta", board_document("delta.board")),
+            **_complete_package("bravo", board_document("bravo.board")),
+            **_complete_package("echo", board_document("echo.board")),
         }
     )
 
@@ -267,10 +270,42 @@ def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() 
 
     assert [package.board_id for package in packages] == [
         "alpha.board",
+        "bravo.board",
+        "delta.board",
+        "echo.board",
         "middle.board",
         "zeta.board",
     ]
     assert 2 <= client.max_active_blob_reads <= 4
+
+
+def test_cached_catalog_avoids_rescanning_over_capacity_images_for_open_and_image() -> None:
+    """Fails if an LRU blob scan evicts catalog data before an addressed read."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo"):
+        files.update(_complete_package(slug, board_document(f"{slug}.board")))
+        files[f"Hangboards/{slug}/assets/primary.png"] = _primary_image_with_text_chunk(
+            slug.encode("utf-8")
+        )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(
+        client, max_cached_blob_bytes=1, max_cached_blobs=1
+    )
+
+    listed = store.discover_packages(TOKEN, BRANCH)
+    opened = store.open_package(TOKEN, BRANCH, "charlie.board")
+    image = store.primary_image_bytes(TOKEN, BRANCH, "charlie.board")
+
+    assert [package.board_id for package in listed] == [
+        "alpha.board",
+        "bravo.board",
+        "charlie.board",
+        "delta.board",
+        "echo.board",
+    ]
+    assert opened.board_id == "charlie.board"
+    assert image == files["Hangboards/charlie/assets/primary.png"]
+    assert len(client.calls_named("get_blob")) == 14
 
 
 def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
@@ -282,6 +317,7 @@ def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
 
     store.discover_packages(TOKEN, BRANCH)
     store.open_package(TOKEN, BRANCH, "fixture.board")
+    store.primary_image_bytes(TOKEN, BRANCH, "fixture.board")
 
     assert len(client.calls_named("get_blob")) == 6
 
