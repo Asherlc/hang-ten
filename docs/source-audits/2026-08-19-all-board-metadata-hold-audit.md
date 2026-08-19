@@ -114,11 +114,15 @@ a complete, source-backed, scalable reauthoring is available.
   certification. The source supports the current 56/29/19 mm mapping and the
   visible hold kinds and cavity capacities.
 - **Discrepancy:** inventory, mapped depths, visible kinds, and capacities are
-  sound; per-hold `gripType` posture prescriptions are not established by the
-  manufacturer sources and remain omitted.
+  sound. Generic `gripType` posture prescriptions for jugs, edges, and slopers
+  are not established by the manufacturer sources and remain omitted.
 - **Action:** `correct` — retain all 19 distinct regions, including separate
   side rails, use the factual `FSC-certified wood training board` subtitle,
-  and retain the sourced kind/depth/capacity facts. The `features` arrays are
+  and retain the sourced kind/depth/capacity facts. Pocket-only
+  `twoFingerPocket`, `threeFingerPocket`, and `fourFingerPocket` grip semantics
+  are retained because they are a structural one-to-one encoding of each
+  source-backed visible pocket capacity and preserve custom-routine semantics;
+  they are not manufacturer coaching prescriptions. The `features` arrays are
   app semantic-routing adaptations derived from those sourced or visible hold
   kinds, sizes, and shapes; they are not manufacturer claims or grip
   prescriptions. In particular, each 19 mm edge maps to both `mediumEdge` and

@@ -152,6 +152,7 @@
       "id": "pocket-29-three-left",
       "name": "Left 29 mm three-finger pocket",
       "kind": "pocket",
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -181,6 +182,7 @@
       "id": "pocket-29-two-left",
       "name": "Left 29 mm two-finger pocket",
       "kind": "pocket",
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -210,6 +212,7 @@
       "id": "pocket-29-four-center",
       "name": "Center 29 mm four-finger pocket",
       "kind": "pocket",
+      "gripType": "fourFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -239,6 +242,7 @@
       "id": "pocket-29-two-right",
       "name": "Right 29 mm two-finger pocket",
       "kind": "pocket",
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -268,6 +272,7 @@
       "id": "pocket-29-three-right",
       "name": "Right 29 mm three-finger pocket",
       "kind": "pocket",
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -338,6 +343,7 @@
       "id": "pocket-19-three-left",
       "name": "Left 19 mm three-finger pocket",
       "kind": "pocket",
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -367,6 +373,7 @@
       "id": "pocket-19-three-right",
       "name": "Right 19 mm three-finger pocket",
       "kind": "pocket",
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -396,6 +403,7 @@
       "id": "pocket-19-two-left",
       "name": "Left 19 mm two-finger pocket",
       "kind": "pocket",
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -425,6 +433,7 @@
       "id": "pocket-19-two-right",
       "name": "Right 19 mm two-finger pocket",
       "kind": "pocket",
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -454,6 +463,7 @@
       "id": "pocket-19-four-center",
       "name": "Center 19 mm four-finger pocket",
       "kind": "pocket",
+      "gripType": "fourFingerPocket",
       "geometry": [
         {
           "frame": {
