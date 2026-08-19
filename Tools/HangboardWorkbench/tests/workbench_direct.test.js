@@ -927,9 +927,10 @@ async function selectFirstHold(app) {
   app.elements["hold-overlay"].children[0].click();
 }
 
-test("the selected outline inspector offers shape presets as a neutral action picker", async () => {
+test("the outline picker shows Custom or the selected piece's persisted constraint", async () => {
   const controller = require("../workbench-controller.js");
   const board = multiPieceHoldBoard();
+  board.document.regions[1].shapeConstraint = { shape: "roundedRectangle", rotationDegrees: 15 };
   const app = loadApp({
     client: {
       async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
@@ -939,11 +940,14 @@ test("the selected outline inspector offers shape presets as a neutral action pi
   });
   await selectFirstHold(app);
 
-  assert.equal(app.elements["outline-shape-select"].value, "");
+  assert.equal(app.elements["outline-shape-select"].value, "custom");
   assert.deepEqual(
     app.elements["outline-shape-select"].children.map((option) => [option.value, option.textContent]),
-    [["", "Choose preset…"], ["oval", "Oval"], ["circle", "Circle"], ["pill", "Pill"], ["rounded-rectangle", "Rounded rectangle"], ["rectangle", "Rectangle"]],
+    [["custom", "Custom"], ["oval", "Oval"], ["circle", "Circle"], ["pill", "Pill"], ["roundedRectangle", "Rounded rectangle"], ["rectangle", "Rectangle"]],
   );
+
+  app.elements["hold-overlay"].children[1].click();
+  assert.equal(app.elements["outline-shape-select"].value, "roundedRectangle");
 });
 
 test("an oval preset preserves the selected piece bounds and leaves sibling pieces untouched", async () => {
@@ -976,7 +980,7 @@ test("an oval preset preserves the selected piece bounds and leaves sibling piec
   assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
   assert.equal(app.elements["editor-status"].textContent, "Outline changed to oval. Save when ready.");
   assert.equal(app.elements["validation-panel"].classList.contains("hidden"), true);
-  assert.equal(app.elements["outline-shape-select"].value, "");
+  assert.equal(app.elements["outline-shape-select"].value, "oval");
 });
 
 test("a circle preset keeps the selected outline center and uses its shorter dimension as diameter", async () => {
@@ -1008,6 +1012,7 @@ test("the outline picker stays disabled and cannot mutate the selected piece dur
   let resolveSave;
   const controller = require("../workbench-controller.js");
   const board = multiPieceHoldBoard();
+  board.document.regions[0].shapeConstraint = { shape: "rectangle", rotationDegrees: 0 };
   const app = loadApp({
     client: {
       async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
@@ -1024,14 +1029,22 @@ test("the outline picker stays disabled and cannot mutate the selected piece dur
   app.elements["hold-overlay"].children[0].click();
   assert.equal(app.elements["outline-shape-select"].disabled, false);
   const originalPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+  const resizeHandle = descendantsWithClass(app.elements["editor-svg"], "path-editor-resize-handle")[0];
+  assert.ok(resizeHandle);
 
   app.elements["save-button"].click();
   await settle();
   try {
     assert.equal(app.elements["outline-shape-select"].disabled, true);
+    assert.equal(app.elements["hold-type-select"].disabled, true);
+    assert.equal(app.elements["rotate-cw-button"].disabled, true);
+    assert.equal(app.elements["delete-hold-button"].disabled, true);
     app.elements["outline-shape-select"].value = "oval";
     app.elements["outline-shape-select"].change();
+    app.elements["editor-svg"].listeners.get("pointerdown")(directPointerEvent(resizeHandle, 19, 10, 10));
+    app.elements["editor-svg"].listeners.get("pointermove")(directPointerEvent(resizeHandle, 19, 40, 40));
     assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+    assert.equal(app.elements["editor-svg"].capturedPointerId, null);
     assert.equal(app.elements["save-state"].textContent, "Working…");
   } finally {
     resolveSave(board);
@@ -1067,7 +1080,242 @@ test("an invalid outline action restores the original path and dirty state", asy
   assert.equal(app.elements["validation-panel"].classList.contains("hidden"), false);
   assert.equal(app.elements["validation-list"].children[0].textContent, "Forced invalid outline");
   assert.equal(app.elements["editor-status"].textContent, "Outline change reverted — contour is invalid.");
-  assert.equal(app.elements["outline-shape-select"].value, "");
+  assert.equal(app.elements["outline-shape-select"].value, "custom");
+});
+
+function constrainedMultiPieceBoard() {
+  return {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 120, height: 80 }, regions: [
+      {
+        id: 1,
+        key: "a-piece-0",
+        type: "jug",
+        displayPath: "M 10 10 L 50 10 L 50 30 L 10 30 Z",
+        metadata: { holdID: "a", pieceIndex: 0 },
+        shapeConstraint: { shape: "rectangle", rotationDegrees: 0 },
+      },
+      {
+        id: 2,
+        key: "a-piece-1",
+        type: "jug",
+        displayPath: "M 60 10 L 80 10 L 80 30 L 60 30 Z",
+        metadata: { holdID: "a", pieceIndex: 1 },
+        shapeConstraint: { shape: "oval", rotationDegrees: 0 },
+      },
+      {
+        id: 3,
+        key: "b-piece-0",
+        type: "edge",
+        displayPath: "M 90 10 L 110 10 L 110 30 L 90 30 Z",
+        metadata: { holdID: "b", pieceIndex: 0 },
+      },
+    ] },
+  };
+}
+
+function directPointerEvent(target, pointerId, x, y) {
+  return { target, pointerId, clientX: x, clientY: y, preventDefault() {} };
+}
+
+test("choosing a primitive persists an exact zero-degree constraint and Custom removes only that constraint", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const savedDocuments = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      async saveBoard(_boardId, documentValue) {
+        savedDocuments.push(documentValue);
+        return { ...board, document: documentValue };
+      },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  app.elements["outline-shape-select"].value = "pill";
+  app.elements["outline-shape-select"].change();
+  const constrainedPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+  assert.equal(app.elements["outline-shape-select"].value, "pill");
+  app.elements["save-button"].click();
+  await settle();
+  await settle();
+  assert.equal(JSON.stringify(savedDocuments[0].regions[0].shapeConstraint), '{"shape":"pill","rotationDegrees":0}');
+
+  app.elements["outline-shape-select"].value = "custom";
+  app.elements["outline-shape-select"].change();
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), constrainedPath);
+  assert.equal(app.elements["outline-shape-select"].value, "custom");
+  app.elements["save-button"].click();
+  await settle();
+  await settle();
+  assert.equal(Object.hasOwn(savedDocuments[1].regions[0], "shapeConstraint"), false);
+});
+
+test("a constrained selection renders one oriented box and eight local-axis handles without freeform controls", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  board.document.regions[0].displayPath = "M 20 5 L 35 20 L 20 35 L 5 20 Z";
+  board.document.regions[0].shapeConstraint.rotationDegrees = 45;
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  const handles = descendantsWithClass(app.elements["editor-svg"], "path-editor-resize-handle");
+  assert.deepEqual(handles.map((handle) => handle.dataset.handle), ["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
+  assert.equal(descendantsWithClass(app.elements["editor-svg"], "path-editor-constrained-box").length, 1);
+  assert.equal(descendantsWithClass(app.elements["editor-svg"], "path-editor-vertex").length, 0);
+  assert.equal(descendantsWithClass(app.elements["editor-svg"], "path-editor-control").length, 0);
+  assert.deepEqual(
+    ["nw", "ne", "se", "sw"].map((id) => {
+      const handle = handles.find((candidate) => candidate.dataset.handle === id);
+      return [Number(Number(handle.attributes.get("cx")).toFixed(6)), Number(Number(handle.attributes.get("cy")).toFixed(6))];
+    }),
+    [[20, 5], [35, 20], [20, 35], [5, 20]],
+  );
+});
+
+test("constrained handle drag resizes only the selected piece and keeps circles circular", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  board.document.regions[0].displayPath = "M 30 10 C 35.522847 10 40 14.477153 40 20 C 40 25.522847 35.522847 30 30 30 C 24.477153 30 20 25.522847 20 20 C 20 14.477153 24.477153 10 30 10 Z";
+  board.document.regions[0].shapeConstraint = { shape: "circle", rotationDegrees: 0 };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  const svg = app.elements["editor-svg"];
+  svg.boundingClientRect = { left: 0, top: 0, width: 120, height: 80 };
+  const east = descendantsWithClass(svg, "path-editor-resize-handle").find((handle) => handle.dataset.handle === "e");
+  assert.ok(east);
+  const siblingPath = app.elements["hold-overlay"].children[1].attributes.get("d");
+
+  svg.listeners.get("pointerdown")(directPointerEvent(east, 9, 40, 20));
+  svg.listeners.get("pointermove")(directPointerEvent(east, 9, 50, 20));
+  svg.listeners.get("pointerup")(directPointerEvent(east, 9, 50, 20));
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 35 5 C 43.284271 5 50 11.715729 50 20 C 50 28.284271 43.284271 35 35 35 C 26.715729 35 20 28.284271 20 20 C 20 11.715729 26.715729 5 35 5 Z");
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), siblingPath);
+});
+
+test("moving and nudging a constrained piece preserve its shape constraint", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  const savedDocuments = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      async saveBoard(_boardId, documentValue) {
+        savedDocuments.push(documentValue);
+        return { ...board, document: documentValue };
+      },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  const svg = app.elements["editor-svg"];
+  svg.boundingClientRect = { left: 0, top: 0, width: 120, height: 80 };
+  const body = app.elements["hold-overlay"].children[0];
+  svg.listeners.get("pointerdown")(directPointerEvent(body, 3, 20, 20));
+  svg.listeners.get("pointermove")(directPointerEvent(body, 3, 25, 23));
+  svg.listeners.get("pointerup")(directPointerEvent(body, 3, 25, 23));
+  app.document.dispatchEvent({ key: "ArrowRight", shiftKey: false, type: "keydown", preventDefault() {} });
+  app.elements["save-button"].click();
+  await settle();
+  await settle();
+
+  assert.equal(JSON.stringify(savedDocuments[0].regions[0].shapeConstraint), '{"shape":"rectangle","rotationDegrees":0}');
+  assert.equal(savedDocuments[0].regions[0].displayPath, "M 16 13 L 56 13 L 56 33 L 16 33 Z");
+});
+
+test("button, keyboard, and pointer rotation update every constrained sibling angle and leave other holds alone", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  const savedDocuments = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      async saveBoard(_boardId, documentValue) {
+        savedDocuments.push(documentValue);
+        return { ...board, document: documentValue };
+      },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  app.elements["rotate-cw-button"].click();
+  app.document.dispatchEvent({ key: "]", shiftKey: false, type: "keydown", preventDefault() {} });
+
+  const svg = app.elements["editor-svg"];
+  svg.boundingClientRect = { left: 0, top: 0, width: 120, height: 80 };
+  const connector = descendantsWithClass(svg, "path-editor-rotation-connector")[0];
+  const handle = descendantsWithClass(svg, "path-editor-rotation-handle")[0];
+  const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
+  const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
+  const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+  const startAngle = Math.atan2(start.y - pivot.y, start.x - pivot.x);
+  const end = { x: pivot.x + radius * Math.cos(startAngle + Math.PI / 2), y: pivot.y + radius * Math.sin(startAngle + Math.PI / 2) };
+  svg.listeners.get("pointerdown")(directPointerEvent(handle, 7, start.x, start.y));
+  svg.listeners.get("pointermove")(directPointerEvent(handle, 7, end.x, end.y));
+  svg.listeners.get("pointerup")(directPointerEvent(handle, 7, end.x, end.y));
+  app.elements["save-button"].click();
+  await settle();
+  await settle();
+
+  assert.equal(JSON.stringify(savedDocuments[0].regions[0].shapeConstraint), '{"shape":"rectangle","rotationDegrees":120}');
+  assert.equal(JSON.stringify(savedDocuments[0].regions[1].shapeConstraint), '{"shape":"oval","rotationDegrees":120}');
+  assert.equal(Object.hasOwn(savedDocuments[0].regions[2], "shapeConstraint"), false);
+});
+
+test("pointer cancellation and lost capture restore constrained paths and angles", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  const savedDocuments = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      async saveBoard(_boardId, documentValue) {
+        savedDocuments.push(documentValue);
+        return { ...board, document: documentValue };
+      },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  const svg = app.elements["editor-svg"];
+  const originalPaths = board.document.regions.slice(0, 2).map((region) => region.displayPath);
+
+  for (const eventName of ["pointercancel", "lostpointercapture"]) {
+    const connector = descendantsWithClass(svg, "path-editor-rotation-connector")[0];
+    const handle = descendantsWithClass(svg, "path-editor-rotation-handle")[0];
+    const pivot = { x: Number(connector.attributes.get("x1")), y: Number(connector.attributes.get("y1")) };
+    const start = { x: Number(handle.attributes.get("cx")), y: Number(handle.attributes.get("cy")) };
+    svg.listeners.get("pointerdown")(directPointerEvent(handle, 11, start.x, start.y));
+    svg.listeners.get("pointermove")(directPointerEvent(handle, 11, pivot.x + 24, pivot.y));
+    svg.listeners.get(eventName)(directPointerEvent(svg, 11, pivot.x + 24, pivot.y));
+  }
+  app.elements["save-button"].click();
+  await settle();
+  await settle();
+
+  assert.equal(JSON.stringify(savedDocuments[0].regions.slice(0, 2).map((region) => region.displayPath)), JSON.stringify(originalPaths));
+  assert.equal(JSON.stringify(savedDocuments[0].regions.slice(0, 2).map((region) => region.shapeConstraint.rotationDegrees)), "[0,0]");
 });
 
 function descendantsWithClass(element, className) {

@@ -9,7 +9,17 @@
     validateEditorDocument,
   } = globalThis.HoldWorkbenchController;
   const svgNS = "http://www.w3.org/2000/svg";
-  const { parsePath, serializePath, createOutlineShapePath, moveVertex, addVertex, deleteVertex, rotatePath } = (() => {
+  const {
+    parsePath,
+    serializePath,
+    createOutlineShapePath,
+    constrainedOutlineModel,
+    resizeConstrainedOutline,
+    moveVertex,
+    addVertex,
+    deleteVertex,
+    rotatePath,
+  } = (() => {
     try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
   })();
   const dialogs = globalThis.HoldWorkbenchDialogs || {
@@ -19,11 +29,11 @@
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
   const HOLD_KINDS = Object.keys(TYPE_COLORS);
   const OUTLINE_SHAPES = [
-    ["", "Choose preset…"],
+    ["custom", "Custom"],
     ["oval", "Oval"],
     ["circle", "Circle"],
     ["pill", "Pill"],
-    ["rounded-rectangle", "Rounded rectangle"],
+    ["roundedRectangle", "Rounded rectangle"],
     ["rectangle", "Rectangle"],
   ];
   const ROTATION_HANDLE_RADIUS = 6;
@@ -93,6 +103,24 @@
     return JSON.parse(JSON.stringify(value));
   }
 
+  function cloneConstraint(constraint) {
+    return constraint ? { shape: constraint.shape, rotationDegrees: constraint.rotationDegrees } : undefined;
+  }
+
+  function restoreConstraint(region, constraint) {
+    if (constraint) region.shapeConstraint = cloneConstraint(constraint);
+    else delete region.shapeConstraint;
+  }
+
+  function normalizeRotationDegrees(degrees) {
+    const normalized = ((degrees + 180) % 360 + 360) % 360 - 180;
+    return Object.is(normalized, -0) ? 0 : normalized;
+  }
+
+  function presetPathValue(shape) {
+    return shape === "roundedRectangle" ? "rounded-rectangle" : shape;
+  }
+
   function selectedHold() {
     return state.document?.regions.find((region) => region.key === state.selectedKey) || null;
   }
@@ -113,7 +141,11 @@
   function renderSaveState() {
     el["save-button"].disabled = !state.board || isBusy();
     el["add-hold-button"].disabled = !state.document || isBusy();
-    el["outline-shape-select"].disabled = isBusy() || !selectedHold();
+    const disableHoldControls = isBusy() || !selectedHold();
+    for (const id of [
+      "hold-type-select", "outline-shape-select", "delete-hold-button",
+      "rotate-ccw-button", "rotate-cw-button", "rotate-by-input", "rotate-by-apply-button",
+    ]) el[id].disabled = disableHoldControls;
     el["refresh-boards-button"].disabled = isBusy();
     el["save-state"].textContent = !state.board
       ? "No board selected"
@@ -232,6 +264,7 @@
     if (!parsePath) return;
     const overlay = document.createElementNS(svgNS, "g");
     overlay.classList.add("path-editor-overlay");
+    if (isBusy()) overlay.classList.add("busy");
     const pivot = holdCentroid(holdSiblings(hold));
     const { width, height } = state.document.canvas;
     const minHandleX = Math.min(ROTATION_HANDLE_RADIUS, width / 2);
@@ -278,6 +311,35 @@
     rotationHandle.setAttribute("stroke-width", "2");
     rotationHandle.classList.add("path-editor-rotation-handle");
     overlay.append(rotationHandle);
+    if (hold.shapeConstraint) {
+      let model;
+      try { model = constrainedOutlineModel(hold.displayPath, hold.shapeConstraint); } catch { return; }
+      const box = document.createElementNS(svgNS, "polygon");
+      box.setAttribute("points", ["nw", "ne", "se", "sw"].map((id) => {
+        const point = model.handles[id];
+        return `${point.x},${point.y}`;
+      }).join(" "));
+      box.setAttribute("fill", "none");
+      box.setAttribute("stroke", "#fff7dc");
+      box.setAttribute("stroke-width", "1.5");
+      box.setAttribute("stroke-dasharray", "4 3");
+      box.classList.add("path-editor-constrained-box");
+      overlay.append(box);
+      for (const [id, point] of Object.entries(model.handles)) {
+        const handle = document.createElementNS(svgNS, "circle");
+        handle.setAttribute("cx", String(point.x));
+        handle.setAttribute("cy", String(point.y));
+        handle.setAttribute("r", "5");
+        handle.setAttribute("fill", TYPE_COLORS[hold.type] || "#ff754f");
+        handle.setAttribute("stroke", "#fff7dc");
+        handle.setAttribute("stroke-width", "1.5");
+        handle.classList.add("path-editor-resize-handle");
+        handle.dataset.handle = id;
+        overlay.append(handle);
+      }
+      el["editor-svg"].append(overlay);
+      return;
+    }
     let commands;
     try { commands = parsePath(hold.displayPath); } catch { return; }
     for (let i = 0; i < commands.length; i++) {
@@ -339,7 +401,9 @@
     commands: null,
     originalPath: null,
     originalPaths: null,
+    originalConstraint: null,
     originalDirty: false,
+    resizeHandle: null,
     pivot: null,
     lastAngle: 0,
     totalAngle: 0,
@@ -383,11 +447,17 @@
     if (drag.type === "rotation") {
       for (const original of drag.originalPaths) {
         const region = state.document?.regions.find((candidate) => candidate.key === original.key);
-        if (region) region.displayPath = original.path;
+        if (region) {
+          region.displayPath = original.path;
+          restoreConstraint(region, original.shapeConstraint);
+        }
       }
     } else {
       const hold = state.document?.regions.find((region) => region.key === drag.holdKey);
-      if (hold) hold.displayPath = drag.originalPath;
+      if (hold) {
+        hold.displayPath = drag.originalPath;
+        restoreConstraint(hold, drag.originalConstraint);
+      }
     }
     state.dirty = drag.originalDirty;
   }
@@ -410,7 +480,7 @@
   }
 
   function handlePointerDown(event) {
-    if (drag.active) return;
+    if (isBusy() || drag.active) return;
     const target = event.target;
     if (target.classList.contains("path-editor-rotation-handle")) {
       event.preventDefault();
@@ -422,11 +492,26 @@
       drag.active = true;
       drag.type = "rotation";
       drag.holdKey = hold.key;
-      drag.originalPaths = siblings.map((region) => ({ key: region.key, path: region.displayPath }));
+      drag.originalPaths = siblings.map((region) => ({
+        key: region.key,
+        path: region.displayPath,
+        shapeConstraint: cloneConstraint(region.shapeConstraint),
+      }));
       drag.originalDirty = state.dirty;
       drag.pivot = pivot;
       drag.lastAngle = Math.atan2(pt.y - pivot.y, pt.x - pivot.x);
       drag.totalAngle = 0;
+    } else if (target.classList.contains("path-editor-resize-handle")) {
+      event.preventDefault();
+      const hold = selectedHold();
+      if (!hold?.shapeConstraint) return;
+      drag.active = true;
+      drag.type = "constrained-resize";
+      drag.holdKey = hold.key;
+      drag.resizeHandle = target.dataset.handle;
+      drag.originalPath = hold.displayPath;
+      drag.originalConstraint = cloneConstraint(hold.shapeConstraint);
+      drag.originalDirty = state.dirty;
     } else if (target.classList.contains("path-editor-vertex")) {
       event.preventDefault();
       const hold = selectedHold();
@@ -441,6 +526,7 @@
       drag.startY = pt.y;
       drag.commands = parsePath(hold.displayPath);
       drag.originalPath = hold.displayPath;
+      drag.originalConstraint = cloneConstraint(hold.shapeConstraint);
       drag.originalDirty = state.dirty;
     } else if (target.classList.contains("path-editor-control")) {
       event.preventDefault();
@@ -456,6 +542,7 @@
       drag.startY = pt.y;
       drag.commands = parsePath(hold.displayPath);
       drag.originalPath = hold.displayPath;
+      drag.originalConstraint = cloneConstraint(hold.shapeConstraint);
       drag.originalDirty = state.dirty;
     } else if (target.classList.contains("region-shape") && target.dataset.holdKey === state.selectedKey) {
       event.preventDefault();
@@ -469,6 +556,7 @@
       drag.startY = pt.y;
       drag.commands = parsePath(hold.displayPath);
       drag.originalPath = hold.displayPath;
+      drag.originalConstraint = cloneConstraint(hold.shapeConstraint);
       drag.originalDirty = state.dirty;
     }
     if (drag.active && event.pointerId != null) {
@@ -500,9 +588,34 @@
         try { commands = parsePath(original.path); } catch { continue; }
         rotatePath(commands, drag.totalAngle, drag.pivot);
         region.displayPath = serializePath(commands);
+        if (original.shapeConstraint) {
+          region.shapeConstraint = {
+            shape: original.shapeConstraint.shape,
+            rotationDegrees: normalizeRotationDegrees(original.shapeConstraint.rotationDegrees + drag.totalAngle * 180 / Math.PI),
+          };
+        }
       }
       state.dirty = true;
       render();
+      return;
+    }
+    if (drag.type === "constrained-resize") {
+      try {
+        const resized = resizeConstrainedOutline(
+          drag.originalPath,
+          drag.originalConstraint,
+          drag.resizeHandle,
+          pt,
+        );
+        hold.displayPath = resized.displayPath;
+        hold.shapeConstraint = resized.shapeConstraint;
+        state.dirty = true;
+        setValidation();
+        render();
+      } catch (error) {
+        restoreDragPaths();
+        setValidation(error.message || "Contour is invalid.");
+      }
       return;
     }
     const dx = pt.x - drag.startX;
@@ -570,9 +683,10 @@
   }
 
   function handleDoubleClick(event) {
+    if (isBusy()) return;
     if (event.target.classList.contains("path-editor-vertex") || event.target.classList.contains("path-editor-control")) return;
     const hold = selectedHold();
-    if (!hold) return;
+    if (!hold || hold.shapeConstraint) return;
     const pt = svgPoint(event);
     let commands;
     try { commands = parsePath(hold.displayPath); } catch { return; }
@@ -606,10 +720,11 @@
   }
 
   function handleContextMenu(event) {
+    if (isBusy()) return;
     if (!event.target.classList.contains("path-editor-vertex")) return;
     event.preventDefault();
     const hold = selectedHold();
-    if (!hold) return;
+    if (!hold || hold.shapeConstraint) return;
     const idx = parseInt(event.target.dataset.index, 10);
     let commands;
     try { commands = parsePath(hold.displayPath); } catch { return; }
@@ -680,7 +795,7 @@
     if (!hold) return;
     el["hold-key"].value = hold.key;
     el["hold-type-select"].value = hold.type;
-    el["outline-shape-select"].value = "";
+    el["outline-shape-select"].value = hold.shapeConstraint?.shape || "custom";
   }
 
   function render() {
@@ -1022,18 +1137,28 @@
   }
 
   function rotateHold(angleDegrees) {
+    if (isBusy()) return;
     const hold = selectedHold();
     if (!hold) return;
     const siblings = holdSiblings(hold);
     const pivot = holdCentroid(siblings);
     const angleRadians = ((angleDegrees % 360) * Math.PI) / 180;
-    const originalPaths = siblings.map((region) => region.displayPath);
+    const originals = siblings.map((region) => ({
+      path: region.displayPath,
+      shapeConstraint: cloneConstraint(region.shapeConstraint),
+    }));
     const originalDirty = state.dirty;
     for (const region of siblings) {
       let commands;
       try { commands = parsePath(region.displayPath); } catch { continue; }
       rotatePath(commands, angleRadians, pivot);
       region.displayPath = serializePath(commands);
+      if (region.shapeConstraint) {
+        region.shapeConstraint = {
+          shape: region.shapeConstraint.shape,
+          rotationDegrees: normalizeRotationDegrees(region.shapeConstraint.rotationDegrees + angleDegrees),
+        };
+      }
     }
     state.dirty = true;
     try {
@@ -1041,7 +1166,10 @@
       setValidation();
       setStatus("Hold rotated. Save when ready.");
     } catch (error) {
-      siblings.forEach((region, index) => { region.displayPath = originalPaths[index]; });
+      siblings.forEach((region, index) => {
+        region.displayPath = originals[index].path;
+        restoreConstraint(region, originals[index].shapeConstraint);
+      });
       state.dirty = originalDirty;
       setValidation(error.message || "Contour is invalid.");
       setStatus("Rotation reverted — contour is invalid.");
@@ -1066,6 +1194,7 @@
     const target = event.target;
     const tagName = target?.tagName?.toLowerCase();
     if (target?.isContentEditable || target?.getAttribute?.("contenteditable") === "true" || ["input", "select", "textarea"].includes(tagName)) return;
+    if (isBusy()) return;
     const key = event.key;
     if (key === "[" || key === "]") {
       if (!selectedHold()) return;
@@ -1107,6 +1236,7 @@
   document.addEventListener("keydown", handleKeyDown);
 
   el["delete-hold-button"].addEventListener("click", () => {
+    if (isBusy()) return;
     const hold = selectedHold();
     if (!hold) return;
     const proceed = dialogs.confirm(`Delete hold "${hold.key}"?`);
@@ -1126,6 +1256,7 @@
   });
 
   el["hold-type-select"].addEventListener("change", () => {
+    if (isBusy()) return;
     const hold = selectedHold();
     if (!hold) return;
     const type = el["hold-type-select"].value;
@@ -1151,19 +1282,28 @@
     const preset = el["outline-shape-select"].value;
     const hold = selectedHold();
     if (isBusy() || !preset || !hold) {
-      el["outline-shape-select"].value = "";
+      el["outline-shape-select"].value = hold?.shapeConstraint?.shape || "custom";
       return;
     }
     const originalPath = hold.displayPath;
+    const originalConstraint = cloneConstraint(hold.shapeConstraint);
     const originalDirty = state.dirty;
     try {
-      hold.displayPath = createOutlineShapePath(originalPath, preset);
+      if (preset === "custom") {
+        delete hold.shapeConstraint;
+      } else {
+        hold.displayPath = createOutlineShapePath(originalPath, presetPathValue(preset));
+        hold.shapeConstraint = { shape: preset, rotationDegrees: 0 };
+      }
       state.dirty = true;
       validateEditorDocument(state.document);
       setValidation();
-      setStatus(`Outline changed to ${preset.replace(/-/g, " ")}. Save when ready.`);
+      setStatus(preset === "custom"
+        ? "Outline unlocked for custom editing. Save when ready."
+        : `Outline changed to ${preset === "roundedRectangle" ? "rounded rectangle" : preset}. Save when ready.`);
     } catch (error) {
       hold.displayPath = originalPath;
+      restoreConstraint(hold, originalConstraint);
       state.dirty = originalDirty;
       setValidation(error.message || "Contour is invalid.");
       setStatus("Outline change reverted — contour is invalid.");
@@ -1184,7 +1324,7 @@
   }
 
   el["add-hold-button"].addEventListener("click", () => {
-    if (!state.document) return;
+    if (isBusy() || !state.document) return;
     const { width, height } = state.document.canvas;
     const size = Math.max(20, Math.min(60, width * 0.06, height * 0.06));
     const cx = width / 2;
