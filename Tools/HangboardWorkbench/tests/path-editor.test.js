@@ -238,6 +238,43 @@ test("resizeConstrainedOutline resizes a rotated oval in its local axes and rota
   assert.deepEqual(resized.shapeConstraint, { shape: "oval", rotationDegrees: 90 });
 });
 
+test("resizeConstrainedOutline rejects a finite pointer when inverse rotation overflows", () => {
+  assert.throws(
+    () => resizeConstrainedOutline(
+      "M 5 -2.071068 L 12.071068 5 L 5 12.071068 L -2.071068 5 Z",
+      { shape: "rectangle", rotationDegrees: 45 },
+      "e",
+      { x: Number.MAX_VALUE, y: Number.MAX_VALUE },
+    ),
+    /finite/,
+  );
+});
+
+test("resizeConstrainedOutline rejects finite local bounds whose derived dimensions overflow", () => {
+  const halfMaximum = Number.MAX_VALUE / 2;
+  assert.throws(
+    () => resizeConstrainedOutline(
+      `M ${-halfMaximum} 0 L ${halfMaximum} 0 L ${halfMaximum} 10 L ${-halfMaximum} 10 Z`,
+      { shape: "rectangle", rotationDegrees: 0 },
+      "e",
+      { x: Number.MAX_VALUE, y: 5 },
+    ),
+    /finite/,
+  );
+});
+
+test("resizeConstrainedOutline rejects regenerated coordinates that overflow during world rotation", () => {
+  assert.throws(
+    () => resizeConstrainedOutline(
+      "M 6.010407569374976e307 -6.010407710796332e307 L 6.010407710796332e307 -6.010407569374976e307 L -6.010407569374976e307 6.010407710796332e307 L -6.010407710796332e307 6.010407569374976e307 Z",
+      { shape: "rectangle", rotationDegrees: 45 },
+      "e",
+      { x: 1.2020815280171308e308, y: 1.2020815280171308e308 },
+    ),
+    /finite/,
+  );
+});
+
 test("resizeConstrainedOutline keeps circle corner drags square around the opposite corner", () => {
   const resized = resizeConstrainedOutline(
     "M 5 0 C 7.761424 0 10 2.238576 10 5 C 10 7.761424 7.761424 10 5 10 C 2.238576 10 0 7.761424 0 5 C 0 2.238576 2.238576 0 5 0 Z",

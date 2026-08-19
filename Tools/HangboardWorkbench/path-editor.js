@@ -119,10 +119,42 @@ function constrainedOutlineModel(pathString, constraint) {
 
 function validPathBounds(commands) {
   const bounds = pathBounds(commands);
-  if (!Object.values(bounds).every(Number.isFinite) || bounds.maxX <= bounds.minX || bounds.maxY <= bounds.minY) {
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  if (
+    !Object.values(bounds).every(Number.isFinite)
+    || !Number.isFinite(width)
+    || !Number.isFinite(height)
+    || width <= 0
+    || height <= 0
+  ) {
     throw new Error("Outline needs non-zero width and height");
   }
   return bounds;
+}
+
+function assertFinitePoint(point, message) {
+  if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) throw new Error(message);
+}
+
+function assertFiniteResizeBounds(bounds) {
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  if (
+    !Object.values(bounds).every(Number.isFinite)
+    || !Number.isFinite(width)
+    || !Number.isFinite(height)
+  ) {
+    throw new Error("Constrained resize dimensions must be finite");
+  }
+}
+
+function assertFiniteCommands(commands) {
+  for (const command of commands) {
+    for (const point of [...command.points, ...command.controls]) {
+      assertFinitePoint(point, "Constrained resize coordinates must be finite");
+    }
+  }
 }
 
 function resizeConstrainedOutline(pathString, constraint, handle, pointer, minimumSize = 2) {
@@ -136,6 +168,7 @@ function resizeConstrainedOutline(pathString, constraint, handle, pointer, minim
   const model = constrainedOutlineModel(pathString, shapeConstraint);
   const rotationRadians = shapeConstraint.rotationDegrees * Math.PI / 180;
   const localPointer = rotatePoint(pointer, model.center, -rotationRadians);
+  assertFinitePoint(localPointer, "Constrained resize local pointer must be finite");
   const bounds = { ...model.intrinsicBounds };
   const originalWidth = bounds.maxX - bounds.minX;
   const originalHeight = bounds.maxY - bounds.minY;
@@ -148,9 +181,12 @@ function resizeConstrainedOutline(pathString, constraint, handle, pointer, minim
   if (shapeConstraint.shape === "circle") {
     lockCircleBounds(bounds, model.intrinsicBounds, handle, originalWidth, originalHeight, minimumSize);
   }
+  assertFiniteResizeBounds(bounds);
 
   const commands = constrainedPrimitiveCommands(shapeConstraint.shape, bounds);
+  assertFiniteCommands(commands);
   rotatePath(commands, rotationRadians, model.center);
+  assertFiniteCommands(commands);
   return { displayPath: serializePath(commands), shapeConstraint };
 }
 
