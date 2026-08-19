@@ -190,6 +190,52 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
     assert package.board.presentation_asset_path == "assets/primary.png"
 
 
+def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["holds"][0]["geometry"][0]["shapeConstraint"] = {
+        "shape": "roundedRectangle",
+        "rotationDegrees": -17.5,
+    }
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+
+    constraint = package.board.holds[0].geometry[0].shape_constraint
+    assert constraint is not None
+    assert constraint.shape == "roundedRectangle"
+    assert constraint.rotation_degrees == -17.5
+
+
+@pytest.mark.parametrize(
+    "constraint",
+    [
+        {"rotationDegrees": 0},
+        {"shape": "oval"},
+        {"shape": "triangle", "rotationDegrees": 0},
+        {"shape": "circle", "rotationDegrees": True},
+        {"shape": "pill", "rotationDegrees": float("inf")},
+        {"shape": "rectangle", "rotationDegrees": -180.01},
+        {"shape": "oval", "rotationDegrees": 180},
+        {"shape": "oval", "rotationDegrees": 0, "unexpected": True},
+    ],
+)
+def test_package_loader_rejects_invalid_shape_constraints(
+    tmp_path: Path, constraint: object
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["holds"][0]["geometry"][0]["shapeConstraint"] = constraint
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="shapeConstraint"):
+        module.load_board_package(package_root)
+
+
 def test_package_loader_rejects_unknown_board_hold_and_geometry_keys(
     tmp_path: Path,
 ) -> None:

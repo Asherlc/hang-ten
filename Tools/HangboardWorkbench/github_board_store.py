@@ -633,9 +633,13 @@ def save_editor_document(
     width, height = live.image_width, live.image_height
     parsed_regions = board_package._validate_editor_document(document, width, height)
 
-    pieces_by_hold: dict[str, list[tuple[int, str, Any]]] = {}
-    for hold_id, piece_index, kind, path in parsed_regions.values():
-        pieces_by_hold.setdefault(hold_id, []).append((piece_index, kind, path))
+    pieces_by_hold: dict[
+        str, list[tuple[int, str, Any, dict[str, object] | None]]
+    ] = {}
+    for hold_id, piece_index, kind, path, shape_constraint in parsed_regions.values():
+        pieces_by_hold.setdefault(hold_id, []).append(
+            (piece_index, kind, path, shape_constraint)
+        )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])
 
