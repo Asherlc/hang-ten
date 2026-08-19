@@ -77,6 +77,17 @@ Presentation findings by board:
 - Trango Rock Prodigy Training Center loses the square canvas's unused vertical
   space while retaining both board halves and all 28 pieces for its 24 holds.
 
+## Simulator screenshots
+
+These retained screenshots come from dedicated iPhone 17 Pro / iOS 26.5 signed
+Debug review routes: the portrait plan route shows the first-hold highlight,
+and the landscape workout route shows the next-hold highlight. They document
+the review states without claiming that all boards are shown.
+
+![Portrait plan route with first-hold highlight](assets/2026-08-18-all-board-visual-audit/plan-portrait.png)
+
+![Landscape workout route with next-hold highlight](assets/2026-08-18-all-board-visual-audit/workout-landscape.png)
+
 ## Validation
 
 The completed catalog passes `packages validate`. After the original
