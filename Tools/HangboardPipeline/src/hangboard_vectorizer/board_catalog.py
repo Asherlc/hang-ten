@@ -116,9 +116,15 @@ def is_board_package_slug(value: object) -> bool:
 
 
 def _number(value: Any, source: str) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{source} must be finite")
-    return float(value)
+    try:
+        result = float(value)
+    except OverflowError as error:
+        raise ValueError(f"{source} must be finite") from error
+    if not math.isfinite(result):
+        raise ValueError(f"{source} must be finite")
+    return result
 
 
 def _positive_integer(value: Any, source: str) -> int:

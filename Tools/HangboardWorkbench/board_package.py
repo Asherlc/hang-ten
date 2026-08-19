@@ -802,8 +802,8 @@ def _parse_shape_constraint(value: object, label: str) -> dict[str, object]:
     if (
         isinstance(rotation, bool)
         or not isinstance(rotation, (int, float))
-        or not math.isfinite(rotation)
         or not -180 <= rotation < 180
+        or not math.isfinite(rotation)
     ):
         raise BoardPackageError(
             f"{label}.rotationDegrees must be finite and in [-180, 180)"

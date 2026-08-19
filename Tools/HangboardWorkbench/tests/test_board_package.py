@@ -791,6 +791,7 @@ def test_omitting_editor_shape_constraint_removes_stored_constraint(
         {"shape": "triangle", "rotationDegrees": 0},
         {"shape": "oval", "rotationDegrees": True},
         {"shape": "oval", "rotationDegrees": float("inf")},
+        {"shape": "oval", "rotationDegrees": 10**1000},
         {"shape": "oval", "rotationDegrees": -180.0001},
         {"shape": "oval", "rotationDegrees": 180},
         {"shape": "oval", "rotationDegrees": 0, "unexpected": True},

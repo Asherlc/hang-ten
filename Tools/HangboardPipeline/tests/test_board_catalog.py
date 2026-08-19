@@ -217,6 +217,7 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
         {"shape": "triangle", "rotationDegrees": 0},
         {"shape": "circle", "rotationDegrees": True},
         {"shape": "pill", "rotationDegrees": float("inf")},
+        {"shape": "pill", "rotationDegrees": 10**1000},
         {"shape": "rectangle", "rotationDegrees": -180.01},
         {"shape": "oval", "rotationDegrees": 180},
         {"shape": "oval", "rotationDegrees": 0, "unexpected": True},
