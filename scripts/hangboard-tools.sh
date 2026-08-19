@@ -48,12 +48,26 @@ if [[ -x "$environment_root/bin/python" ]] && \
     environment_has_package=true
 fi
 
-if [[ ! -x "$environment_root/bin/hangboard-onboard" || \
-      ! -x "$environment_root/bin/hangboard-review" || \
-      ! -x "$environment_root/bin/hangboard-promote" || \
-      ! -x "$environment_root/bin/hangboard-release-check" || \
-      "$environment_has_package" != true || \
-      "$tool_root/pyproject.toml" -nt "$environment_root/bin/hangboard-onboard" ]]; then
+required_commands=(
+    hangboard-onboard
+    hangboard-review
+    hangboard-promote
+    hangboard-release-check
+)
+if [[ "$command_name" == packages ]]; then
+    required_commands=(hangboard-packages)
+fi
+
+environment_needs_install=false
+for required_command in "${required_commands[@]}"; do
+    if [[ ! -x "$environment_root/bin/$required_command" || \
+          "$tool_root/pyproject.toml" -nt "$environment_root/bin/$required_command" ]]; then
+        environment_needs_install=true
+        break
+    fi
+done
+
+if [[ "$environment_has_package" != true || "$environment_needs_install" == true ]]; then
     "$python_command" -m venv "$environment_root"
     "$environment_root/bin/python" -m pip install --disable-pip-version-check -e "$tool_root"
 fi
