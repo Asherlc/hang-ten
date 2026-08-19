@@ -17,7 +17,7 @@
 - The capture and analysis workflow must contain no product IDs, product-specific coordinates, masks, templates, or tuning.
 - Every changed metadata field must map to a cited authoritative source; omit unsupported optional facts.
 - Normal, active, and hit-testing geometry remains the same canonical geometry from `board.json`.
-- Retain labeled before and after contact sheets that visibly include every completed board.
+- Retain labeled before and after contact sheets that visibly include every completed board, plus every full-resolution per-board before/after capture.
 - Require strictly lower editable-point count for a geometry simplification and enforce at most 1 native pixel boundary deviation and 0.25% symmetric difference.
 - Use `CONDUCTOR_WORKSPACE_NAME=audit-hangboard-fidelity` for owned simulator resources and clean up the exact owned UUID and workspace artifacts before completion.
 
@@ -47,12 +47,13 @@
 - Modify: `Hangboards/*/board.json` only where authoritative evidence or generic simplification supports a change
 - Create or modify: `docs/source-audits/2026-08-18-complete-hangboard-visual-audit.md`
 - Create: `docs/source-audits/assets/2026-08-18-complete-hangboard-visual-audit/before-contact-sheet.png`
+- Create: `docs/source-audits/assets/2026-08-18-complete-hangboard-visual-audit/before/*.png`
 
 **Interfaces:**
 - Consumes: Task 1 capture command and manifest; the three `.context/all-board-audit/research-*.md` evidence reports; existing source audits; generic `simplify-hold-paths` and `normalize-presentations` commands.
 - Produces: one authoritative audit row per completed board; a baseline editor contact sheet; evidence-backed package corrections; exact before/after point and inventory metrics.
 
-- [ ] Capture the branch-base package state and assert the manifest board IDs equal package discovery IDs before saving the labeled before contact sheet.
+- [ ] Capture the branch-base package state and assert the manifest board IDs equal package discovery IDs before saving the labeled before contact sheet and all full-resolution per-board captures.
 - [ ] For every completed board, compare the editor render, primary image, hold metadata, and inventory to the cited manufacturer evidence; record one audit row even when unchanged.
 - [ ] Add failing package/data assertions before any metadata correction, then make the smallest source-backed correction and run the focused package test.
 - [ ] Run the generic simplifier with `--write`; accept only changes satisfying the global native-pixel error and strict point-reduction gates. Do not hand-edit contours merely to reduce points.
@@ -65,15 +66,16 @@
 
 **Files:**
 - Create: `docs/source-audits/assets/2026-08-18-complete-hangboard-visual-audit/after-contact-sheet.png`
+- Create: `docs/source-audits/assets/2026-08-18-complete-hangboard-visual-audit/after/*.png`
 - Modify: `docs/source-audits/2026-08-18-complete-hangboard-visual-audit.md`
 
 **Interfaces:**
 - Consumes: Task 2 final packages and audit metrics; Task 1 capture command; isolated simulator validation contract.
 - Produces: complete after contact sheet, per-board visual verdicts, fresh validation evidence, and PR description image links.
 
-- [ ] Recapture every completed package through the Workbench and assert before/after manifests have identical ordered board-ID inventories.
+- [ ] Recapture every completed package through the Workbench, retain every full-resolution per-board after capture, and assert before/after manifests have identical ordered board-ID inventories.
 - [ ] Inspect both contact sheets at readable scale and record a per-board verdict covering hold completeness, outline alignment, clipping, symmetry, and visible source agreement.
 - [ ] Run focused Python and Node Workbench suites, package validation, simplifier/presentation idempotence, and `xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`.
 - [ ] Create an owned iOS simulator named `Hang Ten Conductor audit-hangboard-fidelity Review`, build/install/launch using its exact UUID, capture representative inactive and highlighted states, inspect them, then verify exact simulator deletion and cleanup.
-- [ ] Finalize the audit with exact commands, test totals, simulator identity, visual findings, remaining physical-device limits, and relative Markdown links for both catalog contact sheets.
+- [ ] Finalize the audit with exact commands, test totals, simulator identity, visual findings, remaining physical-device limits, and relative Markdown links for both catalog contact sheets and both per-board capture directories.
 - [ ] Commit the task with `Add complete hangboard visual evidence`.

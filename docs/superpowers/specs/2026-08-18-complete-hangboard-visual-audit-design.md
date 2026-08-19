@@ -23,8 +23,9 @@ A generic Workbench capture command loads each board through the existing HTTP
 API and browser editor, waits for the canonical primary image and every SVG hold
 path, and captures the board canvas at a fixed viewport. It accepts any catalog
 inventory and contains no product IDs, coordinates, masks, or per-board tuning.
-The audit retains labeled before and after contact sheets in the source-audit
-assets and records per-board hold, geometry-piece, and editable-point counts.
+The audit retains labeled before and after contact sheets plus every individual
+per-board before/after capture in the source-audit assets, and records per-board
+hold, geometry-piece, and editable-point counts.
 
 Visual inspection checks that every documented hold is represented, no artwork
 or highlight drifts from its physical contact, paired geometry is consistent
@@ -46,5 +47,6 @@ are forbidden.
 Package validation, Workbench tests, simplifier idempotence, presentation
 idempotence, generic simulator build-for-testing, and an owned-simulator visual
 check are required. The PR contains the source-audit report, labeled before and
-after contact sheets covering every completed board, the reusable capture
-method, and only evidence-backed package changes.
+after contact sheets covering every completed board, all full-resolution
+per-board before/after captures, the reusable capture method, and only
+evidence-backed package changes.
