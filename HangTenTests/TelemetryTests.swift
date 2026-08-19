@@ -85,8 +85,19 @@ final class TelemetryTests: XCTestCase {
             error: TestError()
         )
 
-        XCTAssertEqual(HangTenTelemetryEvent.appTabSelected(tab: .today).name, "app tab selected")
-        XCTAssertEqual(HangTenTelemetryEvent.appTabSelected(tab: .today).properties, ["tab": "today"])
+        XCTAssertEqual(HangTenTelemetryEvent.appTabSelected(tab: .train).name, "app tab selected")
+        XCTAssertEqual(
+            [
+                HangTenTelemetryEvent.AppTab.train.rawValue,
+                HangTenTelemetryEvent.AppTab.plans.rawValue,
+                HangTenTelemetryEvent.AppTab.history.rawValue
+            ],
+            ["train", "plans", "history"]
+        )
+        XCTAssertEqual(
+            HangTenTelemetryEvent.appTabSelected(tab: .train).properties,
+            ["tab": "train"]
+        )
         XCTAssertEqual(HangTenTelemetryEvent.planBrowsed(source: .catalog).properties, ["source": "catalog"])
         XCTAssertEqual(HangTenTelemetryEvent.workoutStarted(source: .favorite).properties, ["source": "favorite"])
         XCTAssertEqual(HangTenTelemetryEvent.boardSelected(family: .compactII).properties, ["board_family": "compact_ii"])

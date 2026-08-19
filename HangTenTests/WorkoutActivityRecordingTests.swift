@@ -843,7 +843,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             workoutSessionStore: makeSessionStore(defaults: defaults),
             defaults: defaults
         )
-        store.selectedBoard = board
+        store.selectBoard(board)
         let workout = plan([
             WorkoutSegment(
                 kind: .work,

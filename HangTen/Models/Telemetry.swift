@@ -19,9 +19,9 @@ protocol SessionReplayControlling: AnyObject {
 
 enum HangTenTelemetryEvent: Equatable {
     enum AppTab: String, Equatable {
-        case today
+        case train
         case plans
-        case progress
+        case history
     }
 
     enum PlanSource: String, Equatable {

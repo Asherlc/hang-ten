@@ -4,9 +4,10 @@ import Combine
 @MainActor
 final class AppStore: ObservableObject {
     private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
+    private static let selectedBoardIDKey = "HangTen.selectedBoardID.v1"
     private static let favoritePlanIDsKey = "favoritePlanIDs"
 
-    @Published var selectedBoard: TrainingBoard = BoardCatalog.defaultBoard
+    @Published private(set) var selectedBoard: TrainingBoard
     @Published private(set) var workoutHistory: WorkoutHistorySnapshot
     @Published var lastSessionTitle: String?
     @Published private(set) var sessionHistory: [WorkoutSessionRecord]
@@ -41,6 +42,9 @@ final class AppStore: ObservableObject {
         telemetry: TelemetryDependencies = .noOp()
     ) {
         self.defaults = defaults
+        let persistedBoardID = defaults.string(forKey: Self.selectedBoardIDKey)
+        selectedBoard = BoardCatalog.all.first { $0.id == persistedBoardID }
+            ?? BoardCatalog.defaultBoard
         self.healthKitService = healthKitService
         self.motherboardBluetoothService = motherboardBluetoothService ?? MotherboardBluetoothService(
             transport: CoreBluetoothMotherboardTransport()
@@ -176,6 +180,7 @@ final class AppStore: ObservableObject {
 
     func selectBoard(_ board: TrainingBoard) {
         selectedBoard = board
+        defaults.set(board.id, forKey: Self.selectedBoardIDKey)
         guard let family = telemetryBoardFamily(for: board) else { return }
         telemetry.tracking.track(.boardSelected(family: family))
     }
