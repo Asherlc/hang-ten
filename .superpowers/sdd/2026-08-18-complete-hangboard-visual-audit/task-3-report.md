@@ -75,7 +75,7 @@ hash, and H/P/point counts for every board are in
 
 | board | metadata disposition | geometry/presentation disposition |
 | --- | --- | --- |
-| beastmaker-1000 | dimensions corrected | retain audited paths; no crop; numbered mapping absent |
+| beastmaker-1000 | 580 × 150 mm face dimensions retained; thickness withheld after final review | retain audited paths; no crop; numbered mapping absent |
 | beastmaker-2000 | unchanged | retain audited paths; no crop; numbered mapping absent |
 | dewoodstok-woodbord | unchanged | retain audited paths; no crop; depth-to-ID map absent |
 | escape-beta | legacy facts withheld | no materialization; generic crop |
@@ -114,10 +114,13 @@ hash, and H/P/point counts for every board are in
 
 Authoritative scalar corrections:
 
-- 17 dimensions: Beastmaker 1000; Escape Unlimited; Evolv Basic Long;
-  Frictitious Pro 7 and Megalith; Metolius Contact, Project, and Simulator 3-D;
-  Moon Armstrong; Nature Stoak III; Tension Grindstone and Whetstone; Trango
-  Natural; YY Evo, First, Light, and One.
+- 16 dimensions: Escape Unlimited; Evolv Basic Long; Frictitious Pro 7 and
+  Megalith; Metolius Contact, Project, and Simulator 3-D; Moon Armstrong;
+  Nature Stoak III; Tension Grindstone and Whetstone; Trango Natural; YY Evo,
+  First, Light, and One. Final review supersedes the earlier Beastmaker 1000
+  thickness correction: its 580 × 150 mm face dimensions remain unchanged and
+  thickness is withheld because 58 mm is documented only for a separate Beech
+  variant.
 - Three canonical product URLs: So iLL Iron Palm 2.0, Split Palm, and Training
   Tiles.
 - Escape Unlimited schema-required subtitle replaced with the sourced four
