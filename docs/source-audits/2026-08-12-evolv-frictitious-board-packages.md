@@ -2,10 +2,9 @@
 
 Checked 2026-08-12. This historical audit records sources that can be reused
 under the current direct-authoring contract in `docs/ADDING_A_BOARD.md`. A
-product page and a manufacturer-hosted image establish product identity and a
-visible board image only. They do not establish a physical hold's capacity, grip
-classification, or a distinct physical boundary unless the manufacturer
-explicitly documents it.
+product page and manufacturer-hosted imagery support identity, visible contact
+boundaries, and presentation. They do not establish non-visible measurements,
+capacity, or grip posture unless the manufacturer labels those facts.
 
 The former incomplete candidate directories were removed. Evolv Kilter Basic
 Long was later completed independently; future Frictitious packages must be
@@ -21,11 +20,9 @@ created complete with directly authored paths rather than restoring old art.
 
 ### `evolv-kilter-basic-long`
 
-**Blocker:** Evolv's page enumerates hold *types* but does not publish an
-official numbered hold guide, per-hold count/boundaries, finger capacities, or
-grip classifications. The images cannot supply those non-visible facts. It
-therefore cannot support `board.json` hold records, hold evidence, or semantic
-targets without inference.
+**Authoring note:** Evolv identifies the rounded jug and the 20, 15, and 10 mm
+rows. The four visible continuous contacts may be directly authored; omit
+unsupported capacities and posture. This package was later completed.
 
 ## Frictitious DoorMount Pro 7 (`frictitious.doormount-pro-7`)
 
@@ -41,11 +38,9 @@ and 35, 25, 20, 15, and 10 mm edges.
 
 ### `frictitious-doormount-pro-7`
 
-**Blocker:** Frictitious does not identify the physical boundary/count of the
-pocket hold(s), their finger capacities, or a grip classification for the
-edges and pockets. Its images cannot convert the generic word “pockets” into
-capacity or physical-hold metadata. The published seven-hold total is
-insufficient to map all seven individual records and their factual fields.
+**Authoring note:** The published seven-hold total and named jug/edge families
+must reconcile with the seven visible logical contacts. The official images may
+support those boundaries; omit capacity or posture not explicitly stated.
 
 ## Frictitious Megalith (`frictitious.megalith`)
 
@@ -56,18 +51,13 @@ insufficient to map all seven individual records and their factual fields.
 
 ### `frictitious-megalith`
 
-**Blocker:** The product page never gives the count, location, or individual
-boundaries of the plural mono pockets, nor a complete per-hold classification
-and capacity map. It also does not say how the 40 mm edge's two-finger pocket
-is bounded relative to the edge as a separate physical hold. The official
-images may support a future presentation asset once the factual hold inventory
-exists, but cannot establish it. No source-backed `board.json`, `semantics.json`,
-or evidence map can be authored without inventing that inventory.
+**Authoring note:** Reconcile the seven edge sizes, full-width jug, center hold,
+two-finger pocket, and visible mono pockets into one physical inventory. The
+official images support visible boundaries, including whether the integrated
+pocket shares a logical contact; omit any unsupported capacity or posture.
 
 ## Required follow-up
 
-Request manufacturer-issued numbered hold diagrams or manuals for all three
-models. The material must name every physical hold and establish its boundary,
-depth/size, finger capacity, and grip classification. Once available, update
-this audit with exact source rows, omit unsupported optional fields, and
-directly author each complete flat package from its primary evidence.
+For each unfinished model, confirm the physical inventory from the product copy
+and official views, document any ambiguity, omit unsupported optional facts,
+and directly author and visually review the complete flat package.

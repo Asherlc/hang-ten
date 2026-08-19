@@ -4,18 +4,17 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-The first supported board is the Metolius Wood Grips Compact II. Its map is a
-deterministic, textureless vector illustration based on Metolius's product
-photography and hold-depth diagram. The same declared contact path renders a
-hold cavity, its active red highlight, and its interaction area, so a highlight
-cannot drift away from the hold.
+Each supported board is a complete flat package containing its presentation PNG
+and directly authored canonical hold paths. The same saved path renders the
+normal contact, active highlight, and interaction area, so a highlight cannot
+drift away from its physical hold.
 
 ## Included
 
-- A reusable hangboard design language with normalized geometry, mirrored
-  pairs, dimensional planes, recess depths, and exact-path highlights.
-- An audited Compact II hold map covering its jugs, flat and round slopers,
-  29/19 mm edges, and 2-, 3-, and 4-finger pockets.
+- Audited flat board packages with normalized, manually authored geometry,
+  exact mirroring where the physical product is symmetric, and exact-path
+  highlights.
+- Source-backed physical inventories that omit unsupported optional metadata.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
   Intermediate, and Advanced, represented as faithful task-order expansions
   with adapted guided timing.
@@ -39,17 +38,17 @@ Runtime routine definitions are stored in
 `HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
 decodes and validates that schema-versioned document; the source-audited seed
 in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-and hold metadata lives in directly discovered
-`Hangboards/<board-folder>/board.json` packages. The app loads the staged
-package bytes from its resource bundle; no registry or Swift board catalog is
-generated or hand-authored.
+identity, conservative hold metadata, and canonical geometry live in directly
+discovered `Hangboards/<board-folder>/board.json` packages alongside
+`assets/primary.png`. The app loads validated package bytes without rewriting
+geometry or maintaining another geometry source.
 
 ## Run
 
 Open `HangTen.xcodeproj` in Xcode 26, or build from the repository root:
 
 ```sh
-xcodebuild -project HangTen.xcodeproj \
+rtk xcodebuild -project HangTen.xcodeproj \
   -scheme HangTen \
   -sdk iphonesimulator \
   -configuration Debug \
@@ -130,12 +129,12 @@ Canonical hangboard packages are checked by the read-only validator in
 from the repository root:
 
 ```sh
-scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-scripts/hangboard-packages.sh status --root Hangboards
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-The repository currently has eight directly discovered, complete packages and
-zero drafts. Each package contains exactly `board.json` and
+The repository currently has eight directly discovered, complete packages.
+Each package contains exactly `board.json` and
 `assets/primary.png`. The Xcode build phase runs
 `scripts/stage-board-packages.py`, which bundles the validated packages without
 rewriting their geometry or presentation bytes.
@@ -152,8 +151,8 @@ the saved paths remain the exact rendering and hit-testing source of truth.
 Regenerate the bundled routine document after an audited plan change:
 
 ```sh
-scripts/export-plan-library.sh
-scripts/export-plan-library.sh --check
+rtk scripts/export-plan-library.sh
+rtk scripts/export-plan-library.sh --check
 ```
 
 ## Routine scope

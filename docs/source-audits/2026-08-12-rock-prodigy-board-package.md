@@ -18,23 +18,14 @@ names seven broad training grips: warm-up jug, large open-hand edge, deep
 two-finger pocket, small semi-closed crimp, shallow three-finger pocket, wide
 pinch, and sloper.
 
-## Registration blocker
+## Current authoring interpretation
 
 ### `trango-rock-prodigy-training-center`
 
-The former 26-hold runtime model included exact rail ranges, pocket depths,
-pinch sizes, normalized frames, finger capacities, and logical contacts. Those
-details were mapped to a depth guide hosted by a third-party retailer and to
-pre-migration Swift data. Neither source satisfies the requirement that every
-factual hold field map to direct official manufacturer evidence.
-
-The official sources above do not exhaustively establish the detailed 26-hold
-model. Therefore its three package sidecars and board-specific runtime plan were
-removed. No reduced or inferred package was substituted. Registration can be
-reconsidered only when Trango publishes a direct exhaustive hold guide that
-supports every required field, normalized hold frame, semantic target, and
-asset.
-
-There is no retained package directory or draft art. Any future Training Center
-package must be created complete, validated, and visually reviewed from the
-primary evidence above.
+The former 26-hold model mixed third-party depth claims with pre-migration data;
+those values must not be restored. Use Trango's product page, main image, and
+use guide to freeze the visible logical contacts and seven named grip families.
+Author paths directly from the official front view, use exact mirroring for the
+symmetric halves, and omit depth, capacity, or posture values not established by
+Trango. The replacement package must be complete, validated, and visually
+reviewed from the primary evidence above.

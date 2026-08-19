@@ -7,13 +7,9 @@ manufacturer evidence under `docs/ADDING_A_BOARD.md`. A product page or gallery
 image still cannot establish non-visible capacity, grip posture, or measurement
 facts unless the manufacturer labels them.
 
-## Evidence-key readiness
-
-Every ready package would need exact evidence for the board facts; every
-`holds[].{id,name,shortLabel,detail,kind,frame,sizeMillimeters,`
-`depthRangeMillimeters,gripType,fingerCapacity,cueStyle,features}` field;
-every semantic target; and `assets/primary.png`. The source rows below state
-which of those requirements the manufacturer material actually covers.
+The source rows below separate established product facts from optional facts
+that must remain omitted. Visible boundaries are directly authored from the
+manufacturer views and then reviewed; they are not treated as measurements.
 
 ## Lattice Triple Rung (`lattice.triple-rung`)
 
@@ -25,13 +21,9 @@ which of those requirements the manufacturer material actually covers.
 
 ### `lattice-triple-rung`
 
-**Blocker:** Lattice's materials identify the three edge *sizes*, but do not
-publish a numbered physical-hold diagram or map each edge to all package
-fields: a discrete boundary/frame, finger capacity, grip type, cue style, and
-feature classification. The product description's statement that a climber
-can choose hand width does not define the schema's `fingerCapacity` value.
-It also does not define semantic target IDs. Those facts cannot be inferred
-from the continuous profile alone, so no complete package was authored then.
+**Authoring note:** Lattice identifies three continuous edges and their sizes.
+Author those three visible contacts directly; omit fixed capacity, posture, and
+other unsupported optional tags. This package was later completed.
 
 ## Moon Armstrong Fingerboard (`moon.armstrong`)
 
@@ -43,12 +35,10 @@ from the continuous profile alone, so no complete package was authored then.
 
 ### `moon-armstrong`
 
-**Blocker:** Moon's aggregate inventory does not assign each individual
-physical hold an identity, boundary/frame, depth, capacity, or grip
-classification. It also does not map physical holds to semantic targets or to
-the normalized frames required by the package. A gallery cannot supply those
-unpublished one-to-one mappings. No `board.json`, `semantics.json`, or
-`evidence.json` is permitted.
+**Authoring note:** Reconcile Moon's aggregate inventory with each visible
+contact in the official gallery. Retain the explicitly identified 22 mm and
+18 mm central edges and jug; omit unassigned measurements, capacity, and
+posture. Author the remaining visible paths directly.
 
 ## Nature Climbing Stoak Board III (`nature.stoak-board-iii`)
 
@@ -60,11 +50,10 @@ unpublished one-to-one mappings. No `board.json`, `semantics.json`, or
 
 ### `nature-stoak-board-iii`
 
-**Blocker:** The configurable insert system means the available edge depth can
-change. Nature does not publish a source assigning every configuration's
-physical hold boundary, final depth, finger capacity, grip type, or semantic
-target. A package cannot choose one configuration or label visible recesses
-without unsupported facts. The incomplete candidate was later removed.
+**Authoring note:** The magnetic inserts change available depth. Document the
+configuration shown by the selected presentation and retain only the explicit
+22 mm edge, top jug, dimensions, and material facts. Author visible contacts
+directly and omit unsupported configuration-specific values.
 
 ## target10a Linebreaker Base (`target10a.linebreaker-base`)
 
@@ -76,16 +65,14 @@ without unsupported facts. The incomplete candidate was later removed.
 
 ### `target10a-linebreaker-base`
 
-**Blocker:** The official target10a.com article is high-level copy, and the
-manufacturer-branded CDN document does not enumerate holds. Neither supports
-a discrete physical-hold inventory, per-hold dimensions/depths, finger
-capacities, grip types, semantics, or normalized hold frames. A future complete
-package must omit unsupported optional facts and directly author visible paths.
+**Authoring note:** Use the exact official product views to freeze the visible
+inventory and the article only for its high-level product claims. The CDN
+document supports safety/mounting, not hold measurements. Omit unsupported
+depth, capacity, and posture values and directly author the visible paths.
 
 ## Required follow-up
 
-Obtain manufacturer-published hold diagrams, manuals, or measurement tables
-that clarify the discrete hold inventory and any optional facts to be claimed.
-The source set must also select and document one Stoak Board III insert
-configuration. Then directly author and review a complete flat package, omitting
-anything the sources do not establish.
+For each unfinished model, reconcile the product copy with official front and
+oblique views, document conflicts (including the Stoak insert configuration),
+directly author and review the complete package, and omit anything the sources
+do not establish.

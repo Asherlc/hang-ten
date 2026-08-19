@@ -99,8 +99,8 @@ review is the process.
 Validate direct discovery and the package contract after every package change:
 
 ```sh
-scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-scripts/hangboard-packages.sh status --root Hangboards
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
 `--final-inventory` rejects every incomplete direct child. Do not commit a
@@ -115,7 +115,7 @@ app resource bundle. It does not generate a registry or app-side board catalog.
 Confirm the package loader compiles with the normal bounded simulator build:
 
 ```sh
-xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen \
+rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen \
   -destination 'generic/platform=iOS Simulator'
 ```
 

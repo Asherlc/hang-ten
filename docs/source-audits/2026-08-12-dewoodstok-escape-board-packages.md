@@ -7,7 +7,7 @@ draft assets were removed and are not future authoring inputs.
 
 ## Candidates and primary manufacturer sources
 
-| slug | catalog id | official product URL | official front image URL | official oblique image URL | official hold guide or measurement URL |
+| slug | board id | official product URL | official front image URL | official oblique image URL | official hold guide or measurement URL |
 | --- | --- | --- | --- | --- | --- |
 | `dewoodstok-woodbord` | `dewoodstok.woodbord` | No public manufacturer product page located | No public manufacturer front image located | No public manufacturer oblique image located | No public manufacturer guide or measurement source located |
 | `escape-beta` | `escape.beta` | https://escapeclimbing.com/products/ec72100 | https://escapeclimbing.com/cdn/shop/products/2020_Website_ProductImage_BetaBoardListing_01-02.jpg?v=1700454580&width=1946 | https://escapeclimbing.com/cdn/shop/products/2020_Website_ProductImage_BetaBoardListing_02-02.jpg?v=1700454580&width=1946 | No official per-hold guide or measurement source located |
@@ -25,43 +25,15 @@ located. Several retailer pages repeat a Woodbord product description and
 dimensions, but they are not manufacturer evidence and are intentionally not
 used for package facts. In particular, the repeated list of 4-finger and
 2-finger pocket depths cannot establish which visible physical pocket has each
-depth, nor supply official frame or semantics mappings.
+depth, nor supply an official per-hold measurement mapping.
 
-## Evidence-key readiness matrix
+## Current authoring interpretation
 
-No candidate reaches the package schema's evidence gate, so no exact evidence
-keys are authored. Were a package ready, the following rows would each require
-an exact key in its `evidence.json`.
+| model | required package decision | optional facts to omit |
+| --- | --- | --- |
+| `dewoodstok-woodbord` | The current completed Woodbord package uses the later manufacturer source and reviewed physical inventory. | Do not restore retailer-only measurements or certification language. |
+| `escape-beta` | This was a duplicate historical candidate; Escape Beta 22 is the active product package. | Do not create a second package or reuse the removed candidate art. |
+| `escape-unlimited` | Freeze the visible rung inventory from the exact product imagery, then author and review its paths directly. | Treat finger-pad wording as descriptive; omit unsupported millimetre depths, capacities, and posture. |
 
-| candidate | required evidence-key rows | authoritative coverage found | result |
-| --- | --- | --- | --- |
-| `dewoodstok.woodbord` | board facts; every `holds[].{id,name,shortLabel,detail,kind,frame,sizeMillimeters,depthRangeMillimeters,gripType,fingerCapacity,cueStyle,features}`; every semantic ID; `assets/primary.png` | No manufacturer source for product facts, hold inventory/frames, per-hold measurements, or semantics | blocked |
-| `escape.beta` | board facts; every `holds[]` field above; every semantic ID; `assets/primary.png` | Product identity, overall dimensions, dual texture, and official gallery images only | blocked |
-| `escape.unlimited` | board facts; every `holds[]` field above; every semantic ID; `assets/primary.png` | Product identity, overall dimensions, generic rung-depth ordering in finger pads, and official gallery images only | blocked |
-
-## Exact blockers
-
-### `dewoodstok-woodbord`
-
-Missing official manufacturer evidence for the product URL, front and oblique
-reference images, the physical hold inventory and boundaries, every per-hold
-depth and size, finger capacity, grip type, semantic targets, and normalized
-frames. The current Woodbord package was later authored directly and reviewed
-under the newer flat-package contract.
-
-### `escape-beta`
-
-Missing official manufacturer evidence for the individual physical hold
-inventory and boundaries, per-hold depth and size, finger capacity, grip type,
-semantic targets, and the association of the gallery image areas to those
-facts. Overall dimensions and an image cannot fill those gaps. The duplicate
-historical candidate was removed; Escape Beta 22 is the active package.
-
-### `escape-unlimited`
-
-Missing official manufacturer evidence mapping each physical rung/hold to a
-measured depth, its boundaries, size, finger capacity, grip type, semantic
-targets, and normalized frames. The product copy's finger-pad sequence is not a
-millimetre measurement or a per-hold map, and it explicitly leaves mono/crimp
-placement to the climber. The old incomplete candidate was removed; a future
-complete package must use directly authored and visually reviewed paths.
+Official imagery supports visible boundaries and symmetry for direct authoring.
+It does not turn marketing copy into measurements or training prescriptions.

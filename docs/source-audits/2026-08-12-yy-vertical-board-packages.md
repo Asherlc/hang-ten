@@ -7,7 +7,7 @@ model's primary evidence under `docs/ADDING_A_BOARD.md`.
 
 ## Official source sets
 
-| slug | catalog ID | official product and dimensions | official front/oblique material | official hold documentation |
+| slug | board ID | official product and dimensions | official front/oblique material | official hold documentation |
 | --- | --- | --- | --- | --- |
 | `yy-verticalboard-evo` | `yy.verticalboard-evo` | [VerticalBoard Evo product page](https://www.yyvertical.com/en/products/verticalboard-evo) — 65 × 14 × 5.5 cm; 19 grips; named size/category summary | [Evo product gallery](https://www.yyvertical.com/en/products/verticalboard-evo) | The product page’s technical-details and feature sections only; no separate numbered hold guide, manual, or dimensioned hold drawing was published. |
 | `yy-verticalboard-first` | `yy.verticalboard-first` | [VerticalBoard First product page](https://www.yyvertical.com/en/products/verticalboard-first) — 54 × 13 × 5 cm; named size/category summary | [First product gallery](https://www.yyvertical.com/en/products/verticalboard-first) | The product page’s technical-details and feature sections only; no separate numbered hold guide, manual, or dimensioned hold drawing was published. |
@@ -18,66 +18,16 @@ The [YY Vertical comparison page](https://www.yyvertical.com/en/collections/pout
 is also first-party, but it is not a per-model hold diagram. It cannot turn a
 category list or gallery image into an exhaustive physical-hold inventory.
 
-## Source-backed facts and evidence-key readiness
+## Published grip summaries and current authoring interpretation
 
-A registered package needs exact evidence maps for every board field, every
-physical-hold field and frame, semantic target, and presentation asset. The product
-pages support the model-level facts in the table below, but they do not identify
-individual contact regions. Consequently the required per-hold and semantic
-evidence-key sets are all unknown rather than
-empty; no package sidecars may be authored from these sources.
+| model | published grip summary | direct-authoring note |
+| --- | --- | --- |
+| Evo | 19 grips; 25/20/18 mm edges with inserts; two jugs; 43°/38°/30° slopers; mono-, two-finger, and inclined grips | Reconcile the stated count with the exact Evo views; document insert state and omit unassigned measurements. |
+| First | 45/33/25/22/20 mm edges; 35°/20° slopers; two jugs | Freeze the visible inventory from First imagery and map a size only where the product presentation makes the association defensible. |
+| Light | 20/25/45 mm edges; 40 mm central hold; 30°/20° slopers; two jugs | Preserve its smaller model-specific inventory; do not borrow positions from First. |
+| One | 18/25/30/35/45 mm edges; 20°/35° slopers; 30/50 mm vertical two-finger holds; broad jugs | Reconcile the visible openings with the product summary and omit any conflicted label or measurement. |
 
-| candidate | source-backed product facts | published grip summary | required evidence-key coverage available | readiness |
-| --- | --- | --- | --- | --- |
-| Evo | identity, material, overall dimensions/weight, magnetic inserts, central handle | 19 grips; 25/20/18 mm edges with inserts; two jugs; 43°/38°/30° slopers; mono-, two-finger, and inclined grips | board-level subset and `assets/primary.png` only; no `holds.*` or `semantics.*` key set can be mapped | blocked |
-| First | identity, material, overall dimensions/weight, central notch, insert compatibility | 45/33/25/22/20 mm edges; 35°/20° slopers; two jugs | board-level subset and `assets/primary.png` only; no `holds.*` or `semantics.*` key set can be mapped | blocked |
-| Light | identity, material, overall dimensions/weight, central notch, insert compatibility | 20/25/45 mm edges; 40 mm central hold; 30°/20° slopers; two jugs | board-level subset and `assets/primary.png` only; no `holds.*` or `semantics.*` key set can be mapped | blocked |
-| One | identity, material, overall dimensions/weight, magnetic inserts, central handle | 18/25/30/35/45 mm edges; 20°/35° slopers; 30/50 mm vertical two-finger holds; broad jugs | board-level subset and `assets/primary.png` only; no `holds.*` or `semantics.*` key set can be mapped | blocked |
-
-## Exact blockers
-
-### `yy-verticalboard-evo`
-
-YY Vertical identifies the Evo’s aggregate count and grip categories, but
-does not publish a labeled, exhaustive map of the 19 physical contacts. In
-particular, no source assigns each contact a boundary, grip type, finger
-capacity, depth/size, cue, feature set, semantic target, or normalized frame.
-Product-gallery images are not evidence for those non-visible fields. The old
-incomplete candidate was later removed; future optional facts require
-model-specific evidence.
-
-### `yy-verticalboard-first`
-
-YY Vertical publishes the First’s overall dimensions and a category/size
-summary, but not an exhaustive individual-hold inventory or labeled physical
-boundaries. The page does not establish the required per-contact capacity,
-grip classification, cue, feature, semantic target, or normalized frame.
-The old incomplete candidate was later removed; future optional facts require
-model-specific evidence.
-
-### `yy-verticalboard-light`
-
-YY Vertical publishes the Light’s overall dimensions and grip categories, but
-not an exhaustive, labeled inventory of its physical contact regions. The
-product images and category list cannot establish the full per-hold records,
-semantic targets, or normalized hold frames required by the package
-schema. The old incomplete candidate was later removed; future optional facts
-require model-specific evidence.
-
-### `yy-verticalboard-one`
-
-YY Vertical publishes the One’s dimensions and summarized edge, sloper,
-two-finger, jug, and handle categories, but no exhaustive individual-contact
-map. It therefore does not establish each hold boundary or every required
-per-hold field, semantic target, and normalized frame. The old incomplete
-candidate was later removed; future optional facts require model-specific
-evidence.
-
-## Required follow-up
-
-For each model, obtain a manufacturer-issued, model-specific source that maps
-every physical contact region and boundary to its measurements, finger
-capacity, grip classification, and documented training target. Then directly
-author the complete flat package and visually review it. Do not use another YY
-Vertical model or visual similarity as a substitute for model-specific
-evidence.
+For each model, directly author the visible paths from its own official views,
+use exact mirroring only where justified, omit unsupported optional facts, and
+visually review the complete package. Do not substitute another YY Vertical
+model merely because the products look similar.

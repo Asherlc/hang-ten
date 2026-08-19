@@ -5,14 +5,10 @@ Tension sources reviewed for six models. Their old incomplete package art was
 removed. Future geometry is directly authored from primary evidence under
 `docs/ADDING_A_BOARD.md`; unsupported optional facts remain omitted.
 
-The package schema requires a cited, model-specific source for every physical
-hold and every runtime hold field (`id`, name, label, detail, kind, normalized
-frame, size/depth, grip type, finger capacity, cue style, and features).
-Product photos can support selection of a future presentation asset, but cannot
-supply source-backed hold frames, unlabelled physical semantics, or app-specific
-fields. The
-tables below identify the exact official source keys reviewed for each
-independent model; source keys are not shared between models.
+The tables identify the official sources reviewed for each independent model;
+sources are never shared across models. Official product views support visible
+boundaries for direct path authoring. They do not establish optional depth,
+capacity, posture, or feature values unless those facts are explicitly labeled.
 
 | Candidate | Official source keys and URLs | Fields that source establishes | Historical evidence limitation |
 | --- | --- | --- | --- |
@@ -23,33 +19,10 @@ independent model; source keys are not shared between models.
 | `tension-honestone` | `product`: [Honestone product page](https://tensionclimbing.com/products/honestone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; 35°/45° top slopers; 25 mm center edge and one-finger pockets; 20/15/10/8 mm edge families. | The reviewed sources listed families rather than a numbered contact map. |
 | `tension-whetstone` | `product`: [Whetstone product page](https://tensionclimbing.com/products/whetstone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; top jug; 40 mm center edge and two-finger pockets; 40/30/25/20 mm edge families. | The reviewed sources did not provide a numbered or dimensioned contact map. |
 
-## Exact blockers
+## Current authoring interpretation
 
-### `soill-iron-palm-2`
-
-The exact source-backed package blocker is recorded in this candidate's table row above.
-
-### `soill-split-palm`
-
-The exact source-backed package blocker is recorded in this candidate's table row above.
-
-### `soill-training-tiles`
-
-The exact source-backed package blocker is recorded in this candidate's table row above.
-
-### `tension-grindstone`
-
-The exact source-backed package blocker is recorded in this candidate's table row above.
-
-### `tension-honestone`
-
-The exact source-backed package blocker is recorded in this candidate's table row above.
-
-### `tension-whetstone`
-
-The exact source-backed package blocker is recorded in this candidate's table row above.
-
-Before adding a model, confirm its physical inventory from model-specific
-manufacturer material, author the visible boundaries directly, validate the
-complete flat package, and visually review every path. The current schema
-already permits unsupported optional runtime fields to be omitted.
+For each model, reconcile the named hold families with every visible physical
+contact, preserve continuous stepped cavities as one logical hold when
+appropriate, and mirror only verified symmetric pairs. Directly author each
+path, omit unsupported optional facts, validate the complete flat package, and
+visually review normal and active alignment.

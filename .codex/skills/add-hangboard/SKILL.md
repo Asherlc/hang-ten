@@ -24,9 +24,10 @@ geometry, and validation contract.
 5. If the checked-out schema supports shape constraints, select one manually
    for a genuinely regular hold; otherwise use a freeform path. The canonical
    path is always the rendering, highlighting, and hit-testing truth.
-6. Run `scripts/hangboard-packages.sh validate --root Hangboards
-   --final-inventory` and `scripts/hangboard-packages.sh status --root
-   Hangboards`, then inspect normal and active paths in Workbench and the app.
+6. Run `rtk scripts/hangboard-packages.sh validate --root Hangboards
+   --final-inventory` and `rtk scripts/hangboard-packages.sh status --root
+   Hangboards`. Inspect normal paths in Workbench; inspect active/highlight
+   alignment in the app on an owned simulator.
 
 ## Non-negotiable rules
 
