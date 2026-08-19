@@ -1,6 +1,27 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { parsePath, serializePath, moveVertex, addVertex, deleteVertex, rotatePath, createOutlineShapePath } = require("../path-editor.js");
+const {
+  parsePath,
+  serializePath,
+  moveVertex,
+  addVertex,
+  deleteVertex,
+  rotatePath,
+  createOutlineShapePath,
+  constrainedOutlineModel,
+  resizeConstrainedOutline,
+} = require("../path-editor.js");
+
+function assertPoint(actual, expected) {
+  assert.ok(Math.abs(actual.x - expected.x) < 1e-6, `expected x=${expected.x}, got ${actual.x}`);
+  assert.ok(Math.abs(actual.y - expected.y) < 1e-6, `expected y=${expected.y}, got ${actual.y}`);
+}
+
+function assertBounds(actual, expected) {
+  for (const key of ["minX", "minY", "maxX", "maxY"]) {
+    assert.ok(Math.abs(actual[key] - expected[key]) < 1e-6, `expected ${key}=${expected[key]}, got ${actual[key]}`);
+  }
+}
 
 test("parsePath splits an SVG path string into commands", () => {
   const commands = parsePath("M 10 20 L 30 40 Q 50 60 70 80 C 10 20 30 40 50 60 Z");
@@ -93,6 +114,188 @@ test("createOutlineShapePath uses a cubic curve's true extrema instead of its co
     createOutlineShapePath("M 0 0 C 0 120 200 120 200 0 L 200 60 L 0 60 Z", "oval"),
     "M 100 0 C 155.228475 0 200 20.147186 200 45 C 200 69.852814 155.228475 90 100 90 C 44.771525 90 0 69.852814 0 45 C 0 20.147186 44.771525 0 100 0 Z",
   );
+});
+
+test("constrainedOutlineModel exposes an unrotated rectangle's intrinsic bounds and all eight handles", () => {
+  const model = constrainedOutlineModel(
+    "M 10 20 L 50 20 L 50 40 L 10 40 Z",
+    { shape: "rectangle", rotationDegrees: 0 },
+  );
+
+  assertPoint(model.center, { x: 30, y: 30 });
+  assert.equal(model.rotationDegrees, 0);
+  assertBounds(model.intrinsicBounds, { minX: 10, minY: 20, maxX: 50, maxY: 40 });
+  assert.deepEqual(model.handles, {
+    nw: { x: 10, y: 20 },
+    n: { x: 30, y: 20 },
+    ne: { x: 50, y: 20 },
+    e: { x: 50, y: 30 },
+    se: { x: 50, y: 40 },
+    s: { x: 30, y: 40 },
+    sw: { x: 10, y: 40 },
+    w: { x: 10, y: 30 },
+  });
+});
+
+test("constrainedOutlineModel inverse-rotates a rectangle and maps its handles back to world space", () => {
+  const model = constrainedOutlineModel(
+    "M 40 10 L 40 50 L 20 50 L 20 10 Z",
+    { shape: "rectangle", rotationDegrees: 450 },
+  );
+
+  assertPoint(model.center, { x: 30, y: 30 });
+  assert.equal(model.rotationDegrees, 90);
+  assertBounds(model.intrinsicBounds, { minX: 10, minY: 20, maxX: 50, maxY: 40 });
+  for (const [handle, expected] of Object.entries({
+    nw: { x: 40, y: 10 },
+    n: { x: 40, y: 30 },
+    ne: { x: 40, y: 50 },
+    e: { x: 30, y: 50 },
+    se: { x: 20, y: 50 },
+    s: { x: 20, y: 30 },
+    sw: { x: 20, y: 10 },
+    w: { x: 30, y: 10 },
+  })) assertPoint(model.handles[handle], expected);
+});
+
+test("constrainedOutlineModel uses true quadratic and cubic extrema", () => {
+  const quadratic = constrainedOutlineModel(
+    "M 0 0 Q 100 100 200 0 L 200 40 L 0 40 Z",
+    { shape: "rectangle", rotationDegrees: 0 },
+  );
+  const cubic = constrainedOutlineModel(
+    "M 0 0 C 0 120 200 120 200 0 L 200 60 L 0 60 Z",
+    { shape: "rectangle", rotationDegrees: 0 },
+  );
+
+  assertPoint(quadratic.center, { x: 100, y: 25 });
+  assertBounds(quadratic.intrinsicBounds, { minX: 0, minY: 0, maxX: 200, maxY: 50 });
+  assertPoint(cubic.center, { x: 100, y: 45 });
+  assertBounds(cubic.intrinsicBounds, { minX: 0, minY: 0, maxX: 200, maxY: 90 });
+});
+
+test("resizeConstrainedOutline supports every rectangle handle while fixing its opposite edge or corner", () => {
+  const source = "M 0 0 L 10 0 L 10 8 L 0 8 Z";
+  const constraint = { shape: "rectangle", rotationDegrees: 0 };
+  const cases = [
+    ["nw", { x: -2, y: -3 }, "M -2 -3 L 10 -3 L 10 8 L -2 8 Z"],
+    ["n", { x: 999, y: -3 }, "M 0 -3 L 10 -3 L 10 8 L 0 8 Z"],
+    ["ne", { x: 12, y: -3 }, "M 0 -3 L 12 -3 L 12 8 L 0 8 Z"],
+    ["e", { x: 12, y: 999 }, "M 0 0 L 12 0 L 12 8 L 0 8 Z"],
+    ["se", { x: 12, y: 11 }, "M 0 0 L 12 0 L 12 11 L 0 11 Z"],
+    ["s", { x: 999, y: 11 }, "M 0 0 L 10 0 L 10 11 L 0 11 Z"],
+    ["sw", { x: -2, y: 11 }, "M -2 0 L 10 0 L 10 11 L -2 11 Z"],
+    ["w", { x: -2, y: 999 }, "M -2 0 L 10 0 L 10 8 L -2 8 Z"],
+  ];
+
+  for (const [handle, pointer, expectedPath] of cases) {
+    const resized = resizeConstrainedOutline(source, constraint, handle, pointer);
+    assert.equal(resized.displayPath, expectedPath, handle);
+    assert.deepEqual(resized.shapeConstraint, constraint, handle);
+  }
+});
+
+test("resizeConstrainedOutline clamps dragged rectangle axes to two pixels without flipping", () => {
+  const source = "M 0 0 L 10 0 L 10 8 L 0 8 Z";
+  const constraint = { shape: "rectangle", rotationDegrees: 0 };
+
+  assert.equal(
+    resizeConstrainedOutline(source, constraint, "se", { x: -10, y: -10 }).displayPath,
+    "M 0 0 L 2 0 L 2 2 L 0 2 Z",
+  );
+  assert.equal(
+    resizeConstrainedOutline(source, constraint, "w", { x: 20, y: 999 }).displayPath,
+    "M 8 0 L 10 0 L 10 8 L 8 8 Z",
+  );
+});
+
+test("resizeConstrainedOutline regenerates an oval when a side changes one intrinsic dimension", () => {
+  const resized = resizeConstrainedOutline(
+    "M 5 0 C 7.761424 0 10 1.790861 10 4 C 10 6.209139 7.761424 8 5 8 C 2.238576 8 0 6.209139 0 4 C 0 1.790861 2.238576 0 5 0 Z",
+    { shape: "oval", rotationDegrees: 0 },
+    "e",
+    { x: 14, y: 999 },
+  );
+
+  assert.equal(
+    resized.displayPath,
+    "M 7 0 C 10.865993 0 14 1.790861 14 4 C 14 6.209139 10.865993 8 7 8 C 3.134007 8 0 6.209139 0 4 C 0 1.790861 3.134007 0 7 0 Z",
+  );
+});
+
+test("resizeConstrainedOutline resizes a rotated oval in its local axes and rotates every control back", () => {
+  const resized = resizeConstrainedOutline(
+    "M 9 4 C 9 6.761424 7.209139 9 5 9 C 2.790861 9 1 6.761424 1 4 C 1 1.238576 2.790861 -1 5 -1 C 7.209139 -1 9 1.238576 9 4 Z",
+    { shape: "oval", rotationDegrees: 90 },
+    "e",
+    { x: 5, y: 13 },
+  );
+
+  assert.equal(
+    resized.displayPath,
+    "M 9 6 C 9 9.865993 7.209139 13 5 13 C 2.790861 13 1 9.865993 1 6 C 1 2.134007 2.790861 -1 5 -1 C 7.209139 -1 9 2.134007 9 6 Z",
+  );
+  assert.deepEqual(resized.shapeConstraint, { shape: "oval", rotationDegrees: 90 });
+});
+
+test("resizeConstrainedOutline keeps circle corner drags square around the opposite corner", () => {
+  const resized = resizeConstrainedOutline(
+    "M 5 0 C 7.761424 0 10 2.238576 10 5 C 10 7.761424 7.761424 10 5 10 C 2.238576 10 0 7.761424 0 5 C 0 2.238576 2.238576 0 5 0 Z",
+    { shape: "circle", rotationDegrees: 0 },
+    "se",
+    { x: 14, y: 12 },
+  );
+
+  assert.equal(
+    resized.displayPath,
+    "M 7 0 C 10.865993 0 14 3.134007 14 7 C 14 10.865993 10.865993 14 7 14 C 3.134007 14 0 10.865993 0 7 C 0 3.134007 3.134007 0 7 0 Z",
+  );
+});
+
+test("resizeConstrainedOutline keeps a circle centered on the perpendicular axis during an edge drag", () => {
+  const resized = resizeConstrainedOutline(
+    "M 5 0 C 7.761424 0 10 2.238576 10 5 C 10 7.761424 7.761424 10 5 10 C 2.238576 10 0 7.761424 0 5 C 0 2.238576 2.238576 0 5 0 Z",
+    { shape: "circle", rotationDegrees: 0 },
+    "e",
+    { x: 14, y: 999 },
+  );
+
+  assert.equal(
+    resized.displayPath,
+    "M 7 -2 C 10.865993 -2 14 1.134007 14 5 C 14 8.865993 10.865993 12 7 12 C 3.134007 12 0 8.865993 0 5 C 0 1.134007 3.134007 -2 7 -2 Z",
+  );
+});
+
+test("resizeConstrainedOutline clamps circle corner and edge drags before they can invert", () => {
+  const source = "M 5 0 C 7.761424 0 10 2.238576 10 5 C 10 7.761424 7.761424 10 5 10 C 2.238576 10 0 7.761424 0 5 C 0 2.238576 2.238576 0 5 0 Z";
+  const constraint = { shape: "circle", rotationDegrees: 0 };
+
+  assert.equal(
+    resizeConstrainedOutline(source, constraint, "nw", { x: 9, y: 8 }).displayPath,
+    "M 9 8 C 9.552285 8 10 8.447715 10 9 C 10 9.552285 9.552285 10 9 10 C 8.447715 10 8 9.552285 8 9 C 8 8.447715 8.447715 8 9 8 Z",
+  );
+  assert.equal(
+    resizeConstrainedOutline(source, constraint, "w", { x: 20, y: 999 }).displayPath,
+    "M 9 4 C 9.552285 4 10 4.447715 10 5 C 10 5.552285 9.552285 6 9 6 C 8.447715 6 8 5.552285 8 5 C 8 4.447715 8.447715 4 9 4 Z",
+  );
+});
+
+test("resizeConstrainedOutline regenerates horizontal and vertical pills from the shorter dimension", () => {
+  const horizontal = resizeConstrainedOutline(
+    "M 2 0 L 8 0 C 9.104569 0 10 0.895431 10 2 C 10 3.104569 9.104569 4 8 4 L 2 4 C 0.895431 4 0 3.104569 0 2 C 0 0.895431 0.895431 0 2 0 Z",
+    { shape: "pill", rotationDegrees: 0 },
+    "e",
+    { x: 14, y: 999 },
+  );
+  const vertical = resizeConstrainedOutline(
+    "M 0 2 L 0 8 C 0 9.104569 0.895431 10 2 10 C 3.104569 10 4 9.104569 4 8 L 4 2 C 4 0.895431 3.104569 0 2 0 C 0.895431 0 0 0.895431 0 2 Z",
+    { shape: "pill", rotationDegrees: 0 },
+    "s",
+    { x: 999, y: 14 },
+  );
+
+  assert.equal(horizontal.displayPath, "M 2 0 L 12 0 C 13.104569 0 14 0.895431 14 2 C 14 3.104569 13.104569 4 12 4 L 2 4 C 0.895431 4 0 3.104569 0 2 C 0 0.895431 0.895431 0 2 0 Z");
+  assert.equal(vertical.displayPath, "M 0 2 L 0 12 C 0 13.104569 0.895431 14 2 14 C 3.104569 14 4 13.104569 4 12 L 4 2 C 4 0.895431 3.104569 0 2 0 C 0.895431 0 0 0.895431 0 2 Z");
 });
 
 test("parsePath throws on malformed input", () => {

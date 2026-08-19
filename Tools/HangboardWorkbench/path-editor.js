@@ -66,6 +66,138 @@ function createOutlineShapePath(pathString, preset) {
   throw new Error("Choose a valid outline preset");
 }
 
+const CONSTRAINED_SHAPES = new Set(["oval", "circle", "pill", "roundedRectangle", "rectangle"]);
+const CONSTRAINED_HANDLES = new Set(["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
+
+function normalizeDegrees(rotationDegrees) {
+  if (typeof rotationDegrees !== "number" || !Number.isFinite(rotationDegrees)) {
+    throw new Error("Shape rotation must be finite");
+  }
+  const normalized = ((rotationDegrees + 180) % 360 + 360) % 360 - 180;
+  return Object.is(normalized, -0) ? 0 : normalized;
+}
+
+function validateShapeConstraint(constraint) {
+  if (!constraint || typeof constraint !== "object" || !CONSTRAINED_SHAPES.has(constraint.shape)) {
+    throw new Error("Choose a valid constrained shape");
+  }
+  return {
+    shape: constraint.shape,
+    rotationDegrees: normalizeDegrees(constraint.rotationDegrees),
+  };
+}
+
+function constrainedOutlineModel(pathString, constraint) {
+  const shapeConstraint = validateShapeConstraint(constraint);
+  const commands = parsePath(pathString);
+  const worldBounds = validPathBounds(commands);
+  const center = {
+    x: (worldBounds.minX + worldBounds.maxX) / 2,
+    y: (worldBounds.minY + worldBounds.maxY) / 2,
+  };
+  const rotationRadians = shapeConstraint.rotationDegrees * Math.PI / 180;
+  rotatePath(commands, -rotationRadians, center);
+  const intrinsicBounds = validPathBounds(commands);
+  const { minX, minY, maxX, maxY } = intrinsicBounds;
+  const midX = (minX + maxX) / 2;
+  const midY = (minY + maxY) / 2;
+  const localHandles = {
+    nw: { x: minX, y: minY },
+    n: { x: midX, y: minY },
+    ne: { x: maxX, y: minY },
+    e: { x: maxX, y: midY },
+    se: { x: maxX, y: maxY },
+    s: { x: midX, y: maxY },
+    sw: { x: minX, y: maxY },
+    w: { x: minX, y: midY },
+  };
+  const handles = Object.fromEntries(
+    Object.entries(localHandles).map(([handle, point]) => [handle, rotatePoint(point, center, rotationRadians)]),
+  );
+  return { center, rotationDegrees: shapeConstraint.rotationDegrees, intrinsicBounds, handles };
+}
+
+function validPathBounds(commands) {
+  const bounds = pathBounds(commands);
+  if (!Object.values(bounds).every(Number.isFinite) || bounds.maxX <= bounds.minX || bounds.maxY <= bounds.minY) {
+    throw new Error("Outline needs non-zero width and height");
+  }
+  return bounds;
+}
+
+function resizeConstrainedOutline(pathString, constraint, handle, pointer, minimumSize = 2) {
+  const shapeConstraint = validateShapeConstraint(constraint);
+  if (!CONSTRAINED_HANDLES.has(handle)) throw new Error("Choose a valid resize handle");
+  if (!pointer || !Number.isFinite(pointer.x) || !Number.isFinite(pointer.y)) {
+    throw new Error("Resize pointer must be finite");
+  }
+  if (!Number.isFinite(minimumSize) || minimumSize <= 0) throw new Error("Minimum size must be positive");
+
+  const model = constrainedOutlineModel(pathString, shapeConstraint);
+  const rotationRadians = shapeConstraint.rotationDegrees * Math.PI / 180;
+  const localPointer = rotatePoint(pointer, model.center, -rotationRadians);
+  const bounds = { ...model.intrinsicBounds };
+  const originalWidth = bounds.maxX - bounds.minX;
+  const originalHeight = bounds.maxY - bounds.minY;
+
+  if (handle.includes("w")) bounds.minX = Math.min(localPointer.x, bounds.maxX - minimumSize);
+  if (handle.includes("e")) bounds.maxX = Math.max(localPointer.x, bounds.minX + minimumSize);
+  if (handle.includes("n")) bounds.minY = Math.min(localPointer.y, bounds.maxY - minimumSize);
+  if (handle.includes("s")) bounds.maxY = Math.max(localPointer.y, bounds.minY + minimumSize);
+
+  if (shapeConstraint.shape === "circle") {
+    lockCircleBounds(bounds, model.intrinsicBounds, handle, originalWidth, originalHeight, minimumSize);
+  }
+
+  const commands = constrainedPrimitiveCommands(shapeConstraint.shape, bounds);
+  rotatePath(commands, rotationRadians, model.center);
+  return { displayPath: serializePath(commands), shapeConstraint };
+}
+
+function lockCircleBounds(bounds, originalBounds, handle, originalWidth, originalHeight, minimumSize) {
+  const changesX = handle.includes("e") || handle.includes("w");
+  const changesY = handle.includes("n") || handle.includes("s");
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  let diameter;
+
+  if (changesX && changesY) {
+    diameter = Math.abs(width - originalWidth) >= Math.abs(height - originalHeight) ? width : height;
+  } else {
+    diameter = changesX ? width : height;
+  }
+  diameter = Math.max(minimumSize, diameter);
+
+  if (changesX) {
+    if (handle.includes("w")) bounds.minX = bounds.maxX - diameter;
+    else bounds.maxX = bounds.minX + diameter;
+  } else {
+    const centerX = (originalBounds.minX + originalBounds.maxX) / 2;
+    bounds.minX = centerX - diameter / 2;
+    bounds.maxX = centerX + diameter / 2;
+  }
+
+  if (changesY) {
+    if (handle.includes("n")) bounds.minY = bounds.maxY - diameter;
+    else bounds.maxY = bounds.minY + diameter;
+  } else {
+    const centerY = (originalBounds.minY + originalBounds.maxY) / 2;
+    bounds.minY = centerY - diameter / 2;
+    bounds.maxY = centerY + diameter / 2;
+  }
+}
+
+function constrainedPrimitiveCommands(shape, bounds) {
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  const cx = (bounds.minX + bounds.maxX) / 2;
+  const cy = (bounds.minY + bounds.maxY) / 2;
+  if (shape === "oval" || shape === "circle") return ellipseCommands(cx, cy, width / 2, height / 2);
+  if (shape === "pill") return pillCommands(bounds);
+  if (shape === "roundedRectangle") return roundedRectangleCommands(bounds, Math.min(width, height) / 5);
+  return rectangleCommands(bounds);
+}
+
 function pathBounds(commands) {
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   const include = (point) => {
@@ -301,6 +433,16 @@ function subdivideCubic(p0, c1, c2, p3) {
   };
 }
 
-const pathEditorExports = { parsePath, serializePath, createOutlineShapePath, moveVertex, addVertex, deleteVertex, rotatePath };
+const pathEditorExports = {
+  parsePath,
+  serializePath,
+  createOutlineShapePath,
+  constrainedOutlineModel,
+  resizeConstrainedOutline,
+  moveVertex,
+  addVertex,
+  deleteVertex,
+  rotatePath,
+};
 if (typeof module !== "undefined") module.exports = pathEditorExports;
 if (typeof globalThis !== "undefined") globalThis.HoldPathEditor = pathEditorExports;
