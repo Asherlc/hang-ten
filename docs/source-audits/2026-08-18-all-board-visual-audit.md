@@ -21,14 +21,16 @@ they are not runtime assets and were not used to add or change hold facts.
 | Metolius Wood Grips Compact II | [product](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards) | [front image](https://www.metoliusclimbing.com/cdn/shop/files/Wood-Grips-II-Compact-Training-Board.jpg?v=1759460952) | 1774×457 → 1774×457 | 19 / 19 | 78 → 78 | 0.0 | 0.0000% |
 | Trango Rock Prodigy Training Center | [product](https://trango.com/products/rock-prodigy-training-center) | [front image](https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750) | 1254×1254 → 1233×435 | 24 / 28 | 520 → 504 | 0.0 | 0.0000% |
 
-Catalog total: 1,920 → 1,902 editable points. The final mixed-path simplifier
-reported nine accepted safe-candidate removals across five geometry pieces,
-with nine evaluated candidates, zero rejected or complexity-skipped candidates,
-and 13
-unsupported rounded rectangles. It removed two points from Beastmaker 2000's
-`top-sloper-3` and four points from each of the four geometry pieces belonging
-to Trango's `pinch-medium-left` and `pinch-medium-right`. Each accepted piece
-has measured maximum boundary error 0.0 px and symmetric difference 0.0000%.
+Catalog total: 1,920 → 1,890 editable points. The final mixed-path simplifier
+reported 15 accepted safe-candidate removals across 11 geometry pieces: nine
+accepted candidates from the first pass and six additional Trango
+curve-to-line removals. The complete catalog run evaluated 15 candidates, with
+zero rejected or complexity-skipped candidates, and 13 unsupported rounded
+rectangles. It removed two points from Beastmaker 2000's `top-sloper-3` and
+four points from each of the four geometry pieces belonging to Trango's
+`pinch-medium-left` and `pinch-medium-right`; the follow-on pass removed two
+points from each of six Trango pinch geometry pieces. Each accepted piece has
+measured maximum boundary error 0.0 px and symmetric difference 0.0000%.
 
 This is a reasonably minimal result within the generic simplifier's supported
 safe-candidate surface. It is not a claim that every curve representation in
@@ -54,7 +56,7 @@ restyling occurred.
 The before, post-simplification, and after inventories were compared in order.
 All seven board IDs and paths, all 132 ordered hold IDs, every non-geometry hold
 hash, every geometry-piece count and shape type, and every treatment hash
-match. Shape hashes differ only for the five pieces reported by the
+match. Shape hashes differ only for the 11 pieces reported by the
 simplifier. A generic comparison checked every reported before/after point
 count and raster-error gate, unchanged frames and PNGs, and finite positive
 normalized bounds. It completed 2,020 assertions without an error.
@@ -65,7 +67,7 @@ contact sheets were visually inspected. Every one of the 132 logical hold
 targets (136 geometry pieces) remains on its prior physical contact and no
 board or hold is clipped. A fresh final-fix comparison of each complete before
 overlay against its after overlay is pixel-identical for all seven boards,
-including the Beastmaker sloper and four Trango pinch pieces whose editable
+including the Beastmaker sloper and 10 Trango pinch pieces whose editable
 commands changed.
 
 Presentation findings by board:

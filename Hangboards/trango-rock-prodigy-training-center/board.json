@@ -2538,15 +2538,7 @@
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.54
-                ],
-                "control2": [
-                  0,
-                  0.26
-                ],
+                "command": "line",
                 "to": [
                   0,
                   0
@@ -2757,15 +2749,7 @@
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.54
-                ],
-                "control2": [
-                  1,
-                  0.26
-                ],
+                "command": "line",
                 "to": [
                   1,
                   0
@@ -2977,15 +2961,7 @@
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.52
-                ],
-                "control2": [
-                  1,
-                  0.26
-                ],
+                "command": "line",
                 "to": [
                   1,
                   0
@@ -3075,15 +3051,7 @@
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.395833333333333
-                ],
-                "control2": [
-                  1,
-                  0.1875
-                ],
+                "command": "line",
                 "to": [
                   1,
                   0
@@ -3183,15 +3151,7 @@
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.52
-                ],
-                "control2": [
-                  0,
-                  0.26
-                ],
+                "command": "line",
                 "to": [
                   0,
                   0
@@ -3281,15 +3241,7 @@
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.395833333333333
-                ],
-                "control2": [
-                  0,
-                  0.1875
-                ],
+                "command": "line",
                 "to": [
                   0,
                   0
