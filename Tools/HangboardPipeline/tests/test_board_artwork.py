@@ -24,6 +24,24 @@ def test_path_command_rejects_coordinates_outside_the_normalized_canvas() -> Non
         PathCommand.from_json(_line(0.5, -0.1), "commands[0]")
 
 
+def _curve(control1: tuple[float, float], control2: tuple[float, float], x: float, y: float) -> dict:
+    return {"command": "curve", "control1": list(control1), "control2": list(control2), "to": [x, y]}
+
+
+def test_path_command_allows_a_control_point_outside_the_normalized_canvas() -> None:
+    command = PathCommand.from_json(_curve((1.5, -0.5), (0.5, 0.5), 1, 1), "commands[0]")
+    assert command.control1 == (1.5, -0.5)
+
+
+def test_path_command_rejects_a_control_point_too_large_to_quantize_safely() -> None:
+    # A control point only needs to be finite, but the app quantizes
+    # flattened contour coordinates into an Int64 by scaling by 1e12, which
+    # traps outside Int64's range. Reject an oversized-but-finite control
+    # here instead of accepting a board.json that would crash the app later.
+    with pytest.raises(ValueError, match="must be at most|must be at least"):
+        PathCommand.from_json(_curve((2_000_000, 0.5), (0.5, 0.5), 1, 1), "commands[0]")
+
+
 def test_shape_document_requires_a_path_to_start_with_move() -> None:
     with pytest.raises(ValueError, match="must start with move"):
         BoardShapeDocument.from_json(

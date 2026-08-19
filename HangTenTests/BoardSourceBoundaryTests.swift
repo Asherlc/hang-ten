@@ -15,6 +15,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "evolv-kilter-basic-long",
             "lattice-triple-rung",
             "metolius.wood-grips-compact-ii",
+            "trango.rock-prodigy-pivot",
         ]
 
         XCTAssertEqual(
