@@ -161,19 +161,25 @@ class _HostedSaveIdentityRaceClient(FakeGitHubClient):
             {"main": files, HOSTED_BRANCH: files, "feature": files},
             default_branch=HOSTED_BRANCH,
         )
-        self._tree_reads = 0
+        self._head_reads = 0
 
-    def get_tree(self, token: str, branch: str):
-        self._tree_reads += 1
-        if self._tree_reads == 5:
+    def get_branch_head_sha(self, token: str, branch: str) -> str:
+        self._head_reads += 1
+        if self._head_reads == 3:
             path = "Hangboards/fixture-board/board.json"
             content = (
                 json.dumps(board_document("different.board"), indent=2) + "\n"
             ).encode("utf-8")
-            blob_sha = self._sha(content)
-            self._branches[branch][path] = (content, blob_sha)
-            self._objects[blob_sha] = content
-        return super().get_tree(token, branch)
+            current_sha = self._branches[branch][path][1]
+            super().put_file(
+                token,
+                path,
+                branch,
+                content,
+                "Concurrent board replacement",
+                current_sha,
+            )
+        return super().get_branch_head_sha(token, branch)
 
 
 @contextmanager
@@ -1014,12 +1020,74 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
         assert headers["Content-Type"] == "image/png"
         assert image == PRIMARY_IMAGE.read_bytes()
 
-    assert {
-        call.args[:2] for call in client.calls_named("get_tree")
-    } == {(HOSTED_TOKEN, HOSTED_BRANCH)}
+    assert len(client.calls_named("get_tree")) == 1
+    assert {call.args[0] for call in client.calls_named("get_tree")} == {HOSTED_TOKEN}
     assert {
         call.args[0] for call in client.calls_named("get_blob")
     } == {HOSTED_TOKEN}
+
+
+def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
+    """Fails if list, open, and image repeatedly fetch the same GitHub tree/blobs."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        listed_status, listed, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+        opened_status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.board"
+        )
+        image_status, image, _headers = hosted_request(
+            base, session, "GET", "/api/boards/fixture.board/image"
+        )
+
+    assert (listed_status, opened_status, image_status) == (200, 200, 200)
+    assert listed["boards"][0]["boardId"] == "fixture.board"
+    assert opened["board"]["boardId"] == "fixture.board"
+    assert image == PRIMARY_IMAGE.read_bytes()
+    assert len(client.calls_named("get_branch_head_sha")) == 3
+    assert len(client.calls_named("get_tree")) == 1
+    assert len(client.calls_named("get_blob")) == 2
+
+
+def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
+    """Fails if a cached remote snapshot hides a board committed after a prior read."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        first_status, first, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+        board_path = "Hangboards/fixture-board/board.json"
+        current_sha = next(
+            entry.sha
+            for entry in client.get_tree(HOSTED_TOKEN, HOSTED_BRANCH)
+            if entry.path == board_path
+        )
+        replacement = board_document("fixture.board")
+        replacement["name"] = "Replacement Board"
+        client.put_file(
+            HOSTED_TOKEN,
+            board_path,
+            HOSTED_BRANCH,
+            (json.dumps(replacement, indent=2) + "\n").encode("utf-8"),
+            "Replace fixture board",
+            current_sha,
+        )
+        second_status, second, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+
+    assert first_status == second_status == 200
+    assert first["boards"][0]["displayName"] == "Fixture Maker Fixture Board"
+    assert second["boards"][0]["displayName"] == "Fixture Maker Replacement Board"
+    assert len(client.calls_named("get_branch_head_sha")) == 2
+    assert len(client.calls_named("get_tree")) == 3
 
 
 def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
@@ -1082,7 +1150,9 @@ def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> N
 
     assert status == 409
     assert payload["ok"] is False
-    assert client.calls_named("put_file") == ()
+    assert [call.args[4] for call in client.calls_named("put_file")] == [
+        "Concurrent board replacement"
+    ]
 
 
 def test_hosted_git_status_uses_session_branch_and_remote_branches() -> None:

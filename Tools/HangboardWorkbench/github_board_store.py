@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
+from collections import OrderedDict
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Any, Protocol
 
@@ -13,9 +16,16 @@ from board_geometry import NormalizedFrame, union_normalized_frames
 from github_client import GitHubConflictError, GitHubNotFoundError, TreeEntry
 
 _BOARD_LIBRARY_PATH = "Hangboards"
+_MAX_CONCURRENT_PACKAGE_LOADS = 4
+_MAX_CACHED_TREES = 16
+_MAX_CACHED_TREE_ENTRIES = 50_000
+_MAX_CACHED_BLOBS = 128
+_MAX_CACHED_BLOB_BYTES = 32 * 1024 * 1024
 
 
 class _GitHubBoardClient(Protocol):
+    def get_branch_head_sha(self, token: str, branch: str) -> str: ...
+
     def get_tree(self, token: str, branch: str) -> tuple[TreeEntry, ...]: ...
 
     def get_blob(self, token: str, sha: str) -> bytes: ...
@@ -29,6 +39,176 @@ class _GitHubBoardClient(Protocol):
         message: str,
         sha: str | None,
     ) -> str: ...
+
+
+class GitHubBoardStore:
+    """Bounded, credential-partitioned cache for immutable GitHub snapshots."""
+
+    def __init__(
+        self,
+        client: _GitHubBoardClient,
+        *,
+        max_cached_trees: int = _MAX_CACHED_TREES,
+        max_cached_tree_entries: int = _MAX_CACHED_TREE_ENTRIES,
+        max_cached_blobs: int = _MAX_CACHED_BLOBS,
+        max_cached_blob_bytes: int = _MAX_CACHED_BLOB_BYTES,
+    ) -> None:
+        if (
+            min(
+                max_cached_trees,
+                max_cached_tree_entries,
+                max_cached_blobs,
+                max_cached_blob_bytes,
+            )
+            < 1
+        ):
+            raise ValueError("GitHub cache limits must be positive")
+        self._client = client
+        self._max_cached_trees = max_cached_trees
+        self._max_cached_tree_entries = max_cached_tree_entries
+        self._max_cached_blobs = max_cached_blobs
+        self._max_cached_blob_bytes = max_cached_blob_bytes
+        self._trees: OrderedDict[tuple[bytes, str], tuple[TreeEntry, ...]] = (
+            OrderedDict()
+        )
+        self._blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
+        self._blob_bytes = 0
+        self._lock = threading.RLock()
+
+    def discover_packages(
+        self, token: str, branch: str
+    ) -> tuple[GitHubBoardPackage, ...]:
+        snapshot = self._snapshot(token, branch)
+        return discover_packages(snapshot, token, branch)
+
+    def open_package(
+        self, token: str, branch: str, board_id: str
+    ) -> GitHubBoardPackage:
+        snapshot = self._snapshot(token, branch)
+        return open_package(snapshot, token, branch, board_id)
+
+    def primary_image_bytes(self, token: str, branch: str, board_id: str) -> bytes:
+        snapshot = self._snapshot(token, branch)
+        return primary_image_bytes(snapshot, token, branch, board_id)
+
+    def save_editor_document(
+        self,
+        token: str,
+        branch: str,
+        slug: str,
+        document: Mapping[str, Any],
+        *,
+        expected_board_id: str | None = None,
+    ) -> tuple[GitHubBoardPackage, str]:
+        snapshot = self._snapshot(token, branch)
+        saved = save_editor_document(
+            snapshot,
+            token,
+            branch,
+            slug,
+            document,
+            expected_board_id=expected_board_id,
+        )
+        self._discard_credential_entries(_credential_key(token))
+        return saved
+
+    def _snapshot(self, token: str, branch: str) -> _CachedSnapshotClient:
+        credential_key = _credential_key(token)
+        head = self._client.get_branch_head_sha(token, branch)
+        key = (credential_key, head)
+        with self._lock:
+            tree = self._trees.get(key)
+            if tree is not None:
+                self._trees.move_to_end(key)
+        if tree is None:
+            tree = self._client.get_tree(token, head)
+            if len(tree) <= self._max_cached_tree_entries:
+                with self._lock:
+                    self._trees[key] = tree
+                    self._trees.move_to_end(key)
+                    while len(self._trees) > self._max_cached_trees:
+                        self._trees.popitem(last=False)
+        return _CachedSnapshotClient(self, token, credential_key, tree)
+
+    def _blob(self, token: str, credential_key: bytes, sha: str) -> bytes:
+        key = (credential_key, sha)
+        with self._lock:
+            blob = self._blobs.get(key)
+            if blob is not None:
+                self._blobs.move_to_end(key)
+                return blob
+        blob = self._client.get_blob(token, sha)
+        if len(blob) > self._max_cached_blob_bytes:
+            return blob
+        with self._lock:
+            previous = self._blobs.pop(key, None)
+            if previous is not None:
+                self._blob_bytes -= len(previous)
+            self._blobs[key] = blob
+            self._blob_bytes += len(blob)
+            while (
+                len(self._blobs) > self._max_cached_blobs
+                or self._blob_bytes > self._max_cached_blob_bytes
+            ):
+                _discarded_key, discarded = self._blobs.popitem(last=False)
+                self._blob_bytes -= len(discarded)
+        return blob
+
+    def _discard_credential_entries(self, credential_key: bytes) -> None:
+        with self._lock:
+            self._trees = OrderedDict(
+                (key, tree)
+                for key, tree in self._trees.items()
+                if key[0] != credential_key
+            )
+            retained_blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
+            self._blob_bytes = 0
+            for key, blob in self._blobs.items():
+                if key[0] == credential_key:
+                    continue
+                retained_blobs[key] = blob
+                self._blob_bytes += len(blob)
+            self._blobs = retained_blobs
+
+
+class _CachedSnapshotClient:
+    """Presents one authenticated immutable tree to existing load helpers."""
+
+    def __init__(
+        self,
+        store: GitHubBoardStore,
+        token: str,
+        credential_key: bytes,
+        tree: tuple[TreeEntry, ...],
+    ) -> None:
+        self._store = store
+        self._token = token
+        self._credential_key = credential_key
+        self._tree = tree
+
+    def get_tree(self, token: str, branch: str) -> tuple[TreeEntry, ...]:
+        self._require_token(token)
+        return self._tree
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        self._require_token(token)
+        return self._store._blob(token, self._credential_key, sha)
+
+    def put_file(
+        self,
+        token: str,
+        path: str,
+        branch: str,
+        content: bytes,
+        message: str,
+        sha: str | None,
+    ) -> str:
+        self._require_token(token)
+        return self._store._client.put_file(token, path, branch, content, message, sha)
+
+    def _require_token(self, token: str) -> None:
+        if token != self._token:
+            raise RuntimeError("GitHub snapshot credentials do not match")
 
 
 @dataclass(frozen=True, slots=True)
@@ -74,13 +254,22 @@ def discover_packages(
 ) -> tuple[GitHubBoardPackage, ...]:
     """List completed remote board packages with header-only PNG validation."""
     groups = _package_groups(client.get_tree(token, branch))
-    packages = [
-        _load_package_from_entries(
-            client, token, slug, entries, inspect_png_header_only=True
-        )
-        for slug, entries in groups.items()
-        if _is_completed(entries)
+    completed = [
+        (slug, entries) for slug, entries in groups.items() if _is_completed(entries)
     ]
+    with ThreadPoolExecutor(max_workers=_MAX_CONCURRENT_PACKAGE_LOADS) as executor:
+        pending = [
+            executor.submit(
+                _load_package_from_entries,
+                client,
+                token,
+                slug,
+                entries,
+                inspect_png_header_only=True,
+            )
+            for slug, entries in completed
+        ]
+        packages = [future.result() for future in pending]
     for slug, entries in groups.items():
         if _is_completed(entries):
             continue
@@ -89,13 +278,17 @@ def discover_packages(
             continue
         _raise_for_incomplete_layout(slug, entries)
     board_ids: set[str] = set()
+    completed_packages: list[GitHubBoardPackage] = []
     for package in packages:
+        if not isinstance(package, GitHubBoardPackage):
+            raise TypeError("completed board package unexpectedly included image bytes")
+        completed_packages.append(package)
         if package.board_id in board_ids:
             raise board_package.BoardPackageError(
                 f"duplicate board ID: {package.board_id}"
             )
         board_ids.add(package.board_id)
-    return tuple(sorted(packages, key=_package_sort_key))
+    return tuple(sorted(completed_packages, key=_package_sort_key))
 
 
 def open_package(
@@ -386,3 +579,7 @@ def _package_sort_key(
 
 def _git_blob_sha(content: bytes) -> str:
     return hashlib.sha1(f"blob {len(content)}\0".encode() + content).hexdigest()
+
+
+def _credential_key(token: str) -> bytes:
+    return hashlib.sha256(token.encode("utf-8")).digest()

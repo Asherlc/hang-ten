@@ -6,6 +6,8 @@ import json
 import shutil
 import struct
 import sys
+import threading
+import time
 import zlib
 from dataclasses import replace
 from pathlib import Path
@@ -18,7 +20,7 @@ sys.path.insert(0, str(WORKBENCH_ROOT))
 import board_package
 import github_board_store
 from fake_github_client import FakeGitHubClient
-from github_client import GitHubForbiddenError
+from github_client import GitHubForbiddenError, GitHubNotFoundError
 from workbench_fixtures import PRIMARY_IMAGE, board_document
 
 TOKEN = "test-token"
@@ -160,6 +162,44 @@ class _ForbiddenSaveClient(FakeGitHubClient):
         raise GitHubForbiddenError("write denied")
 
 
+class _OverlappingBlobClient(FakeGitHubClient):
+    """Records concurrent blob reads without changing their returned bytes."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({BRANCH: files})
+        self._lock = threading.Lock()
+        self._active_blob_reads = 0
+        self.max_active_blob_reads = 0
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        with self._lock:
+            self._active_blob_reads += 1
+            self.max_active_blob_reads = max(
+                self.max_active_blob_reads, self._active_blob_reads
+            )
+        try:
+            time.sleep(0.04)
+            return super().get_blob(token, sha)
+        finally:
+            with self._lock:
+                self._active_blob_reads -= 1
+
+
+class _OneTimeMissingBlobClient(FakeGitHubClient):
+    """Makes the first blob lookup unavailable, then serves the same blob."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({BRANCH: files})
+        self._failed = False
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        content = super().get_blob(token, sha)
+        if not self._failed:
+            self._failed = True
+            raise GitHubNotFoundError("blob is not available")
+        return content
+
+
 def _local_package_error(
     tmp_path: Path,
     *,
@@ -211,6 +251,56 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
         "width": 1774,
         "height": 457,
     }
+
+
+def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() -> None:
+    """Fails if catalog loading serializes independent package blob reads."""
+    client = _OverlappingBlobClient(
+        {
+            **_complete_package("zeta", board_document("zeta.board")),
+            **_complete_package("alpha", board_document("alpha.board")),
+            **_complete_package("middle", board_document("middle.board")),
+        }
+    )
+
+    packages = github_board_store.discover_packages(client, TOKEN, BRANCH)
+
+    assert [package.board_id for package in packages] == [
+        "alpha.board",
+        "middle.board",
+        "zeta.board",
+    ]
+    assert 2 <= client.max_active_blob_reads <= 4
+
+
+def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
+    """Fails if cache capacity lets immutable blobs grow without eviction."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(
+        client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
+    )
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.open_package(TOKEN, BRANCH, "fixture.board")
+
+    assert len(client.calls_named("get_blob")) == 6
+
+
+def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
+    """Fails if a transient GitHub blob failure is retained as a cache entry."""
+    client = _OneTimeMissingBlobClient(
+        _complete_package("fixture-board", board_document("fixture.board"))
+    )
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(
+        board_package.BoardPackageError, match="primary image is missing"
+    ):
+        store.discover_packages(TOKEN, BRANCH)
+    packages = store.discover_packages(TOKEN, BRANCH)
+
+    assert [package.board_id for package in packages] == ["fixture.board"]
+    assert len(client.calls_named("get_blob")) == 3
 
 
 @pytest.mark.parametrize(
