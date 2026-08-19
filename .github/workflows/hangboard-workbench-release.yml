@@ -27,6 +27,13 @@ jobs:
         with:
           persist-credentials: false
 
+      # actions/cache v4.2.3
+      - name: Restore native Swift build products
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: Tools/HangboardWorkbench/macos/.build
+          key: hangboard-workbench-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Tools/HangboardWorkbench/macos/Package.resolved') }}
+
       - name: Build and upload verified unsigned app
         id: build
         uses: ./.github/actions/build-hangboard-workbench
