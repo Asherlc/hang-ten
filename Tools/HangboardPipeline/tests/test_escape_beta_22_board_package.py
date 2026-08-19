@@ -4,8 +4,9 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
-from hangboard_vectorizer.board_catalog import load_board_package
+from hangboard_vectorizer.board_catalog import NormalizedFrame, load_board_package
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -37,9 +38,23 @@ def _points(command: object) -> tuple[tuple[float, float], ...]:
     )
 
 
+def _presentation_frame(
+    frame: NormalizedFrame, size: tuple[int, int]
+) -> tuple[float, float, float, float]:
+    width, height = size
+    return (
+        frame.x * width,
+        frame.y * height,
+        frame.width * width,
+        frame.height * height,
+    )
+
+
 def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
+        presentation_size = image.size
 
     assert board.id == "escape-beta-22"
     assert tuple((hold.id, hold.kind) for hold in board.holds) == EXPECTED_HOLDS
@@ -61,13 +76,24 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
         assert any(_points(command) for command in piece.shape.commands)
 
+    symmetry_axis_x: float | None = None
     for family in range(1, 12):
         left = holds[f"hold-{family:02d}-left"].geometry[0]
         right = holds[f"hold-{family:02d}-right"].geometry[0]
-        assert right.frame.x == pytest.approx(1 - left.frame.x - left.frame.width)
-        assert right.frame.y == pytest.approx(left.frame.y)
-        assert right.frame.width == pytest.approx(left.frame.width)
-        assert right.frame.height == pytest.approx(left.frame.height)
+        left_x, left_y, left_width, left_height = _presentation_frame(
+            left.frame, presentation_size
+        )
+        right_x, right_y, right_width, right_height = _presentation_frame(
+            right.frame, presentation_size
+        )
+        assert right_y == pytest.approx(left_y, abs=1e-6)
+        assert right_width == pytest.approx(left_width, abs=1e-6)
+        assert right_height == pytest.approx(left_height, abs=1e-6)
+        pair_axis_x = (left_x + left_width + right_x) / 2
+        if symmetry_axis_x is None:
+            symmetry_axis_x = pair_axis_x
+        else:
+            assert pair_axis_x == pytest.approx(symmetry_axis_x, abs=1e-6)
         assert [command.command for command in right.shape.commands] == [
             command.command for command in left.shape.commands
         ]
@@ -82,6 +108,9 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
             ):
                 assert right_x == pytest.approx(1 - left_x)
                 assert right_y == pytest.approx(left_y)
+
+    assert symmetry_axis_x is not None
+    assert 0 < symmetry_axis_x < presentation_size[0]
 
     # Jugs and edges have sourced sizeMillimeters, so they also carry
     # derived gripType/fingerCapacity/features; pinches and slopers have no
