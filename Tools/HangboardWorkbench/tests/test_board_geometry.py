@@ -144,6 +144,17 @@ def test_rejects_a_control_point_too_far_outside_its_frame() -> None:
         )
 
 
+def test_parses_a_path_whose_control_point_falls_outside_the_canvas() -> None:
+    # A control point only shapes the curve between two points it passes
+    # through; it may legitimately fall outside the canvas the same way it
+    # falls outside a hold's frame, as long as it stays finite.
+    path = parse_closed_path(
+        "M 20 20 C -50 20 -50 80 20 80 L 40 80 L 40 20 Z", 100, 100
+    )
+
+    assert path.data == "M 20 20 C -50 20 -50 80 20 80 L 40 80 L 40 20 Z"
+
+
 def test_parses_a_pill_shaped_rounded_rectangle() -> None:
     path = display_path_for_shape(
         {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.8},

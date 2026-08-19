@@ -109,8 +109,12 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
             if not math.isfinite(number):
                 raise GeometryError(f"{label} coordinates must be finite")
             values.append(number)
-        for x, y in zip(values[::2], values[1::2], strict=True):
-            if not 0 <= x <= width or not 0 <= y <= height:
+        # Only the point the curve actually passes through (a command's final
+        # pair) must stay on the canvas; a Bezier control point just shapes
+        # the curve between two such points and routinely falls outside it.
+        if values:
+            destination_x, destination_y = values[-2], values[-1]
+            if not 0 <= destination_x <= width or not 0 <= destination_y <= height:
                 raise GeometryError(f"{label} coordinates must stay inside the canvas")
         parsed.append((command, tuple(values)))
         index += arity
