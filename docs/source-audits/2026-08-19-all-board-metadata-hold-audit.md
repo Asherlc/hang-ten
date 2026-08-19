@@ -23,10 +23,14 @@ a complete, source-backed, scalable reauthoring is available.
 ### `beastmaker-1000`
 
 - **Sources:** [Beastmaker 1000 Series](https://www.beastmaker.co.uk/products/beastmaker-1000-series);
-  [Beech variant](https://www.beastmaker.co.uk/products/beastmaker-1000-beech).
+  [Beastmaker FAQ](https://www.beastmaker.co.uk/pages/faq);
+  [Beech variant](https://www.beastmaker.co.uk/products/beastmaker-1000-beech)
+  (cross-variant corroboration for the 58 mm depth only).
 - **Current JSON holds:** 22.
 - **Source-backed expected physical count:** 22.
-- **Verified facts:** Beastmaker 1000 Beech; `580 × 150 × 58 mm`.
+- **Verified facts:** generic/Tulipwood Beastmaker 1000; `580 × 150 × 58 mm`.
+  The separate Beech page corroborates only the shared 58 mm depth, not this
+  package's product identity.
 - **Discrepancy:** the physical-region count is aligned, but current per-pocket
   millimetre fields are not mapped one-to-one by the manufacturer.
 - **Action:** `correct` — retain the 22 regions and omit those unsupported
@@ -66,11 +70,14 @@ a complete, source-backed, scalable reauthoring is available.
 - **Current JSON holds:** 22 logical holds / 22 geometry pieces.
 - **Source-backed expected physical count:** 19.
 - **Verified facts:** Escape Beta Board; official identity, dimensions, and
-  dual texture are current.
+  dual texture are current. The limited secondary source conflicts internally
+  on the smallest central sloper-edge depth: its section header says `11 mm`,
+  while the body says `1/2 in`.
 - **Discrepancy:** three continuous central cavities were split into left/right
   logical holds, yielding 22 holds rather than 19 physical regions.
 - **Action:** `correct` — combine each central pair into one hold with two
-  geometry pieces; retain the 22 total pieces.
+  geometry pieces; retain the 22 total pieces, name `hold-11-center` without a
+  numeric depth, and omit its exact `sizeMillimeters` value.
 
 ### `evolv-kilter-basic-long`
 
@@ -106,10 +113,12 @@ a complete, source-backed, scalable reauthoring is available.
 - **Verified facts:** Metolius Wood Grips Compact II; `24” × 6.2”`; FSC
   certification. The source supports the current 56/29/19 mm mapping and the
   visible cavity capacities.
-- **Discrepancy:** inventory and mapped depths are sound; the product URL must
-  use the canonical live page.
+- **Discrepancy:** inventory, mapped depths, and visible capacities are sound;
+  optional grip-posture and feature tags are not established by the sources.
 - **Action:** `correct` — retain all 19 distinct regions, including separate
-  side rails, and update only the canonical URL as needed.
+  side rails, use the factual `FSC-certified wood training board` subtitle,
+  retain sourced kind/depth/capacity facts, and omit optional `gripType` and
+  `features` fields.
 
 ## Demote to primary-only drafts
 
@@ -147,10 +156,11 @@ records.
   [doorway collection](https://frictitiousclimbing.com/collections/doorway-mount-and-accessories).
 - **Current JSON holds:** 8.
 - **Source-backed expected physical count:** 7.
-- **Verified facts:** current Frictitious Doormount Pro identity; dimensions and
-  material are not established here.
+- **Verified facts:** current Frictitious Doormount Pro identity;
+  `25.5 × 4.5 × 2.25 in`; poplar wood hangboard with aluminum and steel mounting
+  components.
 - **Discrepancy:** the current grouping cannot be mapped to the official seven
-  holds; its domain and dimensions are stale/unsupported.
+  holds.
 - **Action:** `primary-only draft`.
 
 ### `frictitious-megalith`
@@ -158,8 +168,8 @@ records.
 - **Source:** [Frictitious Megalith](https://frictitiousclimbing.com/products/megalith).
 - **Current JSON holds:** 9.
 - **Source-backed expected physical count:** unknown.
-- **Verified facts:** current Frictitious Megalith identity; dimensions and
-  material are not established here.
+- **Verified facts:** current Frictitious Megalith identity;
+  `26.75 × 6.5 × 2.25 in`; poplar.
 - **Discrepancy:** the source establishes at least 10 functional targets (seven
   edge sizes, centre hold, full-width jug, and pocket targets), so the official
   exact physical count is unknown; current JSON under-models that inventory and
@@ -233,10 +243,10 @@ records.
 - **Current JSON holds:** 6.
 - **Source-backed expected physical count:** unknown.
 - **Verified facts:** Nature Stoak Board III; official edge is 22 mm;
-  `57 × 12 × 5.5 cm`; material is not established here.
+  `57 × 12 × 5.5 cm`; FSC-certified oak or beech with granite.
 - **Discrepancy:** at least eight cavities (and nine semantic contacts) are
-  visible, but that is not an exact physical count; top rails are missing and
-  the centre jug is mis-mapped.
+  visible, but that is not an exact physical count; the current grouped and
+  incomplete hold map omits top rails and mis-maps the centre jug.
 - **Action:** `primary-only draft`.
 
 ### `soill-iron-palm-2`

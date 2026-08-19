@@ -1781,9 +1781,8 @@
     },
     {
       "id": "hold-11-center",
-      "name": "12mm Sloper Edge",
+      "name": "Center Sloper Edge",
       "kind": "sloper",
-      "sizeMillimeters": 12,
       "geometry": [
         {
           "frame": {

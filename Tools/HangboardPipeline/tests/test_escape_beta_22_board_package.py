@@ -48,7 +48,7 @@ EXPECTED_SIZES = {
     },
     "hold-09-center": 50,
     "hold-10-center": 31,
-    "hold-11-center": 12,
+    "hold-11-center": None,
 }
 
 

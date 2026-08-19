@@ -3,7 +3,7 @@
   "id": "metolius.wood-grips-compact-ii",
   "manufacturer": "Metolius",
   "name": "Wood Grips Compact II",
-  "subtitle": "A compact FSC-certified wood board for everyday strength work.",
+  "subtitle": "FSC-certified wood training board.",
   "productURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
   "dimensions": "24\" × 6.2\"",
   "aspectRatio": 3.88,
@@ -24,11 +24,7 @@
           }
         }
       ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "sloper-flat-left",
@@ -52,11 +48,7 @@
         }
       ],
       "sizeMillimeters": 56,
-      "gripType": "sloper",
-      "fingerCapacity": 4,
-      "features": [
-        "largeSlope"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "sloper-round-center",
@@ -80,11 +72,7 @@
         }
       ],
       "sizeMillimeters": 56,
-      "gripType": "sloper",
-      "fingerCapacity": 4,
-      "features": [
-        "roundSloper"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "sloper-flat-right",
@@ -108,11 +96,7 @@
         }
       ],
       "sizeMillimeters": 56,
-      "gripType": "sloper",
-      "fingerCapacity": 4,
-      "features": [
-        "largeSlope"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "jug-right",
@@ -127,11 +111,7 @@
           }
         }
       ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "edge-29-left",
@@ -148,11 +128,7 @@
         }
       ],
       "sizeMillimeters": 29,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "pocket-29-three-left",
@@ -178,11 +154,7 @@
         }
       ],
       "sizeMillimeters": 29,
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 3
     },
     {
       "id": "pocket-29-two-left",
@@ -208,11 +180,7 @@
         }
       ],
       "sizeMillimeters": 29,
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 2
     },
     {
       "id": "pocket-29-four-center",
@@ -238,11 +206,7 @@
         }
       ],
       "sizeMillimeters": 29,
-      "gripType": "fourFingerPocket",
-      "fingerCapacity": 4,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "pocket-29-two-right",
@@ -268,11 +232,7 @@
         }
       ],
       "sizeMillimeters": 29,
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 2
     },
     {
       "id": "pocket-29-three-right",
@@ -298,11 +258,7 @@
         }
       ],
       "sizeMillimeters": 29,
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 3
     },
     {
       "id": "edge-29-right",
@@ -319,11 +275,7 @@
         }
       ],
       "sizeMillimeters": 29,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "edge-19-left",
@@ -340,12 +292,7 @@
         }
       ],
       "sizeMillimeters": 19,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "pocket-19-three-left",
@@ -371,11 +318,7 @@
         }
       ],
       "sizeMillimeters": 19,
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 3
     },
     {
       "id": "pocket-19-three-right",
@@ -401,11 +344,7 @@
         }
       ],
       "sizeMillimeters": 19,
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 3
     },
     {
       "id": "pocket-19-two-left",
@@ -431,11 +370,7 @@
         }
       ],
       "sizeMillimeters": 19,
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 2
     },
     {
       "id": "pocket-19-two-right",
@@ -461,11 +396,7 @@
         }
       ],
       "sizeMillimeters": 19,
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 2
     },
     {
       "id": "pocket-19-four-center",
@@ -491,11 +422,7 @@
         }
       ],
       "sizeMillimeters": 19,
-      "gripType": "fourFingerPocket",
-      "fingerCapacity": 4,
-      "features": [
-        "pocket"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "edge-19-right",
@@ -512,12 +439,7 @@
         }
       ],
       "sizeMillimeters": 19,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ]
+      "fingerCapacity": 4
     }
   ]
 }

@@ -62,85 +62,25 @@ COMPACT_HOLD_BOUNDS = {
 }
 
 COMPACT_HOLD_PHYSICAL_FACTS = {
-    "jug-left": ("jug", None, "openHand", 4, ("jug",)),
-    "sloper-flat-left": ("sloper", 56, "sloper", 4, ("largeSlope",)),
-    "sloper-round-center": ("sloper", 56, "sloper", 4, ("roundSloper",)),
-    "sloper-flat-right": ("sloper", 56, "sloper", 4, ("largeSlope",)),
-    "jug-right": ("jug", None, "openHand", 4, ("jug",)),
-    "edge-29-left": ("edge", 29, "openHand", 4, ("largeEdge",)),
-    "pocket-29-three-left": (
-        "pocket",
-        29,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "pocket-29-two-left": (
-        "pocket",
-        29,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-29-four-center": (
-        "pocket",
-        29,
-        "fourFingerPocket",
-        4,
-        ("pocket",),
-    ),
-    "pocket-29-two-right": (
-        "pocket",
-        29,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-29-three-right": (
-        "pocket",
-        29,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "edge-29-right": ("edge", 29, "openHand", 4, ("largeEdge",)),
-    "edge-19-left": ("edge", 19, "openHand", 4, ("mediumEdge", "smallEdge")),
-    "pocket-19-three-left": (
-        "pocket",
-        19,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "pocket-19-three-right": (
-        "pocket",
-        19,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "pocket-19-two-left": (
-        "pocket",
-        19,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-19-two-right": (
-        "pocket",
-        19,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-19-four-center": (
-        "pocket",
-        19,
-        "fourFingerPocket",
-        4,
-        ("pocket",),
-    ),
-    "edge-19-right": ("edge", 19, "openHand", 4, ("mediumEdge", "smallEdge")),
+    "jug-left": ("jug", None, 4),
+    "sloper-flat-left": ("sloper", 56, 4),
+    "sloper-round-center": ("sloper", 56, 4),
+    "sloper-flat-right": ("sloper", 56, 4),
+    "jug-right": ("jug", None, 4),
+    "edge-29-left": ("edge", 29, 4),
+    "pocket-29-three-left": ("pocket", 29, 3),
+    "pocket-29-two-left": ("pocket", 29, 2),
+    "pocket-29-four-center": ("pocket", 29, 4),
+    "pocket-29-two-right": ("pocket", 29, 2),
+    "pocket-29-three-right": ("pocket", 29, 3),
+    "edge-29-right": ("edge", 29, 4),
+    "edge-19-left": ("edge", 19, 4),
+    "pocket-19-three-left": ("pocket", 19, 3),
+    "pocket-19-three-right": ("pocket", 19, 3),
+    "pocket-19-two-left": ("pocket", 19, 2),
+    "pocket-19-two-right": ("pocket", 19, 2),
+    "pocket-19-four-center": ("pocket", 19, 4),
+    "edge-19-right": ("edge", 19, 4),
 }
 
 def _embedded_geometry_bounds(
@@ -210,22 +150,20 @@ def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> No
         "geometry",
         "sizeMillimeters",
         "depthRangeMillimeters",
-        "gripType",
         "fingerCapacity",
-        "features",
     }
 
     assert all(not (set(hold) & retired_fields) for hold in holds)
     assert all({"id", "name", "kind", "geometry"} <= set(hold) for hold in holds)
     assert all(set(hold) <= supported_fields for hold in holds)
     assert all("depthRangeMillimeters" not in hold for hold in holds)
+    assert all("gripType" not in hold for hold in holds)
+    assert all("features" not in hold for hold in holds)
     assert {
         hold["id"]: (
             hold.get("kind"),
             hold.get("sizeMillimeters"),
-            hold.get("gripType"),
             hold.get("fingerCapacity"),
-            tuple(hold.get("features", ())),
         )
         for hold in holds
     } == COMPACT_HOLD_PHYSICAL_FACTS
@@ -251,7 +189,7 @@ def test_compact_package_loader_preserves_identity_inventory_and_bounds() -> Non
     assert package.board.facts == {
         "manufacturer": "Metolius",
         "name": "Wood Grips Compact II",
-        "subtitle": "A compact FSC-certified wood board for everyday strength work.",
+        "subtitle": "FSC-certified wood training board.",
         "productURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
         "dimensions": '24" × 6.2"',
         "aspectRatio": 3.88,
