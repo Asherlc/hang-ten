@@ -42,6 +42,13 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
       - name: Show Apple toolchain
         run: |
           set -euo pipefail
@@ -87,6 +94,8 @@ jobs:
           echo "Using App Store build number $build_number"
 
       - name: Validate App Store metadata
+        env:
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: scripts/validate-app-store-metadata.sh
 
       - name: Archive signed release
@@ -117,10 +126,13 @@ jobs:
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath "$archive_path" \
+            -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
+            -showBuildTimingSummary \
             HANGTEN_DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             HANGTEN_PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             -xcconfig "$telemetry_xcconfig" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             clean archive
 
       - name: Verify archived bundle

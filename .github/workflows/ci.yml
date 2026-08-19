@@ -10,7 +10,6 @@ on:
       - synchronize
       - reopened
       - ready_for_review
-      - edited
       - closed
   push:
     branches:
@@ -21,13 +20,7 @@ permissions:
   contents: read
 
 concurrency:
-  # A PR-edited event (title/description only, no new commits) must not
-  # cancel a real code build still running for that ref, so it gets its own
-  # suffix. Every other trigger -- including close/merge -- shares one
-  # group per ref so a new commit or a closed PR cancels the stale run.
-  group: >-
-    ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event.action ==
-    'edited' && 'edited' || 'code' }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -66,10 +59,11 @@ jobs:
     needs:
       - changes
     if: >-
-      github.event_name != 'pull_request' ||
-      needs.changes.outputs.metadata == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      github.event_name == 'pull_request' &&
+      needs.changes.outputs.metadata == 'true' &&
+      needs.changes.outputs.ios != 'true' &&
+      needs.changes.outputs.workflow != 'true' &&
+      needs.changes.outputs.shared_board_content != 'true'
     runs-on: macos-26
     timeout-minutes: 15
 
@@ -80,7 +74,16 @@ jobs:
         with:
           persist-credentials: false
 
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
       - name: Validate App Store metadata
+        env:
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: scripts/validate-app-store-metadata.sh
 
   python:
@@ -151,100 +154,21 @@ jobs:
           path: Tools/HangboardPipeline/pytest-results.xml
           if-no-files-found: ignore
 
-  build-ios:
-    name: Build iOS (${{ matrix.name }})
-    needs:
-      - changes
-    if: >-
-      github.event_name != 'pull_request' ||
-      needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
-    runs-on: macos-26
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Debug simulator
-            configuration: Debug
-            sdk: iphonesimulator
-            destination: generic/platform=iOS Simulator
-
-    steps:
-      # actions/checkout v4.2.2
-      - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-
-      - name: Show Apple toolchain
-        run: |
-          set -euo pipefail
-          sw_vers
-          xcodebuild -version
-          xcodebuild -showsdks
-
-      - name: Build ${{ matrix.name }}
-        env:
-          # Forked pull requests receive an empty secret; the app then uses its
-          # intentional no-op telemetry composition.
-          POSTHOG_CLIENT_TOKEN: ${{ secrets.POSTHOG_CLIENT_TOKEN }}
-          POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://us.i.posthog.com' }}
-        run: |
-          set -euo pipefail
-          build_root="$RUNNER_TEMP/hang-ten-build/${{ matrix.configuration }}-${{ matrix.sdk }}"
-          mkdir -p "$RUNNER_TEMP/hang-ten-logs" "$build_root/sym" "$build_root/obj"
-          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-posthog.XXXXXX")"
-          trap 'rm -f "$telemetry_xcconfig"' EXIT
-          umask 077
-          case "$POSTHOG_HOST" in
-            https://?*) posthog_host_remainder="${POSTHOG_HOST#https://}" ;;
-            *) echo "POSTHOG_HOST must be a normal HTTPS URL" >&2; exit 1 ;;
-          esac
-          # `//` begins a comment in an xcconfig. Compose the second slash via
-          # a build setting so the resolved value remains the full HTTPS URL.
-          printf 'POSTHOG_URL_SLASH = /\nPOSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = https:/$(POSTHOG_URL_SLASH)%s\n' \
-            "$POSTHOG_CLIENT_TOKEN" "$posthog_host_remainder" > "$telemetry_xcconfig"
-          chmod 600 "$telemetry_xcconfig"
-          unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
-          xcodebuild \
-            -project HangTen.xcodeproj \
-            -target HangTen \
-            -configuration "${{ matrix.configuration }}" \
-            -sdk "${{ matrix.sdk }}" \
-            -destination "${{ matrix.destination }}" \
-            SYMROOT="$build_root/sym" \
-            OBJROOT="$build_root/obj" \
-            -xcconfig "$telemetry_xcconfig" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            build 2>&1 | tee "$RUNNER_TEMP/hang-ten-logs/${{ matrix.configuration }}-${{ matrix.sdk }}.log"
-
-      # actions/upload-artifact v4.6.2
-      - name: Upload build log on failure
-        if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: ci-build-logs-${{ matrix.configuration }}-${{ matrix.sdk }}-${{ github.run_id }}
-          path: ${{ runner.temp }}/hang-ten-logs/
-          if-no-files-found: ignore
-
   build-required:
     # Keep this stable: branch protection requires this exact check name. A
-    # matrix job skipped by path classification never creates its expanded
-    # check name, leaving the pull request waiting forever.
+    # test job skipped by path classification is reported here so this stable
+    # check does not leave the pull request waiting forever.
     name: Build (Debug simulator)
     needs:
       - changes
-      - build-ios
+      - test
     if: always() && github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Report required build status
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
-          BUILD_RESULT: ${{ needs.build-ios.result }}
+          BUILD_RESULT: ${{ needs.test.result }}
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
         run: |
           set -euo pipefail
@@ -258,20 +182,20 @@ jobs:
           fi
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
             if [[ "$BUILD_RESULT" == "cancelled" ]]; then
-              echo "Required iOS build was cancelled for this attempt; evaluating only non-cancelled runs."
+              echo "Required iOS test was cancelled for this attempt; evaluating only non-cancelled runs."
               exit 0
             fi
             if [[ "$BUILD_RESULT" != "success" ]]; then
-              echo "Required iOS build did not succeed: $BUILD_RESULT" >&2
+              echo "Required iOS test did not succeed: $BUILD_RESULT" >&2
               exit 1
             fi
-            echo "Required iOS build succeeded."
+            echo "Required iOS test succeeded."
           else
             if [[ "$BUILD_RESULT" != "skipped" ]]; then
-              echo "Non-required iOS build had unexpected result: $BUILD_RESULT" >&2
+              echo "Non-required iOS test had unexpected result: $BUILD_RESULT" >&2
               exit 1
             fi
-            echo "iOS build is not required for the changed components."
+            echo "iOS test is not required for the changed components."
           fi
 
   build-release-device:
@@ -288,6 +212,13 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
 
       - name: Show Apple toolchain
         run: |
@@ -323,7 +254,10 @@ jobs:
             -sdk iphoneos \
             -destination generic/platform=iOS \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-derived-data/Release-iphoneos" \
+            -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
+            -showBuildTimingSummary \
             -xcconfig "$telemetry_xcconfig" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build 2>&1 | tee "$RUNNER_TEMP/hang-ten-logs/Release-iphoneos.log"
@@ -356,6 +290,13 @@ jobs:
         with:
           persist-credentials: false
 
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
       - name: Show Apple toolchain
         run: |
           set -euo pipefail
@@ -363,65 +304,15 @@ jobs:
           xcodebuild -version
           xcodebuild -showsdks
 
-      - name: Create test simulator
-        id: create-simulator
-        run: |
-          set -euo pipefail
-
-          device_type_id="$(
-            xcrun simctl list devicetypes \
-              | sed -nE 's/^[[:space:]]*iPhone 16 \((com\.apple\.CoreSimulator\.SimDeviceType\.[^)]+)\).*$/\1/p' \
-              | head -n 1
-          )"
-          if [[ -z "$device_type_id" ]]; then
-            echo "Required iPhone 16 simulator device type is unavailable." >&2
-            exit 1
-          fi
-
-          runtime_id="$(
-            xcrun simctl list runtimes available \
-              | awk '
-                /^[[:space:]]*iOS [0-9]/ {
-                  version = $2
-                  runtime = $NF
-                  if (runtime ~ /^com\.apple\.CoreSimulator\.SimRuntime\.iOS-/) {
-                    print version "|" runtime
-                  }
-                }
-              ' \
-              | awk -F'|' '
-                {
-                  split($1, version, /\./)
-                  printf "%03d%03d%03d|%s\n", version[1], version[2], version[3], $2
-                }
-              ' \
-              | sort \
-              | tail -n 1 \
-              | cut -d'|' -f 2-
-          )"
-          if [[ -z "$runtime_id" ]]; then
-            echo "No available iOS simulator runtime was found." >&2
-            exit 1
-          fi
-
-          simulator_name="Hang Ten CI iPhone 16 $(uuidgen)"
-          simulator_udid="$(xcrun simctl create "$simulator_name" "$device_type_id" "$runtime_id")"
-          if [[ -z "$simulator_udid" ]]; then
-            echo "Failed to create the owned iPhone 16 simulator." >&2
-            exit 1
-          fi
-
-          echo "udid=$simulator_udid" >> "$GITHUB_OUTPUT"
-          xcrun simctl boot "$simulator_udid"
-          for _ in $(seq 1 90); do
-            if xcrun simctl list devices | grep -q "$simulator_udid (Booted)"; then
-              break
-            fi
-            sleep 1
-          done
-          if ! xcrun simctl list devices | grep -q "$simulator_udid (Booted)"; then
-            echo "Simulator boot status check timed out; continuing anyway." >&2
-          fi
+      - name: Validate App Store metadata
+        if: >-
+          github.event_name != 'pull_request' ||
+          needs.changes.outputs.metadata == 'true' ||
+          needs.changes.outputs.workflow == 'true' ||
+          needs.changes.outputs.shared_board_content == 'true'
+        env:
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+        run: scripts/validate-app-store-metadata.sh
 
       - name: Run XCTest suite
         env:
@@ -447,33 +338,19 @@ jobs:
             -project HangTen.xcodeproj \
             -scheme HangTen \
             -configuration Debug \
-            -destination "platform=iOS Simulator,id=${{ steps.create-simulator.outputs.udid }}" \
-            -parallel-testing-enabled NO \
-            -maximum-parallel-testing-workers 1 \
+            -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
+            -parallel-testing-enabled YES \
+            -maximum-parallel-testing-workers 2 \
             -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
             -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
+            -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
+            -showBuildTimingSummary \
             -xcconfig "$telemetry_xcconfig" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             CODE_SIGNING_ALLOWED=YES \
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGN_IDENTITY="-" \
             test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
-
-      - name: Run board package-store tests
-        run: |
-          set -o pipefail
-          xcodebuild \
-            -project HangTen.xcodeproj \
-            -scheme HangTen \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,id=${{ steps.create-simulator.outputs.udid }}" \
-            -parallel-testing-enabled NO \
-            -maximum-parallel-testing-workers 1 \
-            -derivedDataPath "$RUNNER_TEMP/hang-ten-package-test-derived-data" \
-            CODE_SIGNING_ALLOWED=YES \
-            CODE_SIGNING_REQUIRED=YES \
-            CODE_SIGN_IDENTITY="-" \
-            -only-testing:HangTenTests/BoardPackageStoreTests \
-            test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/package-store.log"
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
@@ -513,14 +390,4 @@ jobs:
           if [[ "$healthkit_enabled" != "true" ]]; then
             echo "Simulator HealthKit entitlement must be true; found: $healthkit_enabled" >&2
             exit 1
-          fi
-
-      - name: Delete test simulator
-        if: always()
-        env:
-          SIMULATOR_UDID: ${{ steps.create-simulator.outputs.udid }}
-        run: |
-          set -euo pipefail
-          if [[ -n "$SIMULATOR_UDID" ]]; then
-            xcrun simctl delete "$SIMULATOR_UDID"
           fi
