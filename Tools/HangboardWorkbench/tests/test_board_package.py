@@ -679,6 +679,30 @@ def test_header_only_discovery_rejects_a_leading_curve_as_a_board_package_error(
 
 
 @pytest.mark.parametrize(
+    "commands",
+    [
+        [{"command": "move", "to": []}],
+        [{"command": "move", "to": ["left", "top"]}],
+    ],
+    ids=["empty-move-coordinates", "string-move-coordinates"],
+)
+def test_header_only_discovery_wraps_malformed_path_commands_as_board_package_errors(
+    commands: list[dict[str, object]], tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape", {"type": "path", "commands": commands}
+        ),
+    )
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+@pytest.mark.parametrize(
     "fixture",
     VALIDATION_FIXTURES["outOfBoundsFrames"],
     ids=lambda fixture: fixture["name"],

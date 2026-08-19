@@ -727,14 +727,14 @@ def _shape_fills_declared_frame(shape: object) -> bool:
     # points, must reach every edge of the declared frame.
     try:
         min_x, max_x, min_y, max_y = flattened_shape_bounds(shape["commands"])
-    except (KeyError, TypeError, ValueError):
+        return (
+            min_x <= _FRAME_EDGE_TOLERANCE
+            and min_y <= _FRAME_EDGE_TOLERANCE
+            and max_x >= 1 - _FRAME_EDGE_TOLERANCE
+            and max_y >= 1 - _FRAME_EDGE_TOLERANCE
+        )
+    except (IndexError, KeyError, TypeError, ValueError):
         return False
-    return (
-        min_x <= _FRAME_EDGE_TOLERANCE
-        and min_y <= _FRAME_EDGE_TOLERANCE
-        and max_x >= 1 - _FRAME_EDGE_TOLERANCE
-        and max_y >= 1 - _FRAME_EDGE_TOLERANCE
-    )
 
 
 def _validate_treatment(value: object, label: str) -> None:
