@@ -361,8 +361,10 @@ routine change, preview every distinct hold target and finger cue.
   Apple Health card visible; it
   does not request authorization. Leave the visible Connect Apple Health
   action untouched while triggering a Settings/scene refresh and completing a
-  short routine. Confirm the session remains in local fallback history and no
-  HealthKit workout is saved, imported, or migrated before Connect is tapped.
+  short routine. Confirm Settings continues to report the local-fallback
+  source and History retains the detailed local session row. Use the relevant
+  service tests to verify that no HealthKit workout is saved, imported, or
+  migrated before Connect is tapped.
 - Tap Connect Apple Health to start the user-initiated flow and persist the
   HealthKit history-sync request flag.
 - Confirm the system permission sheet requests both read and write access to
@@ -371,29 +373,38 @@ routine change, preview every distinct hold target and finger cue.
   `Not connected`, `Access denied`, `Connected`, and `Open app settings` as
   applicable.
 - Before granting HealthKit access, complete a short routine and tap Log
-  session. Confirm one new row appears in History, the Health card shows
-  `History stored on this device until Apple Health is connected.`, and the
-  session remains after leaving Settings and returning to History. Tap End session in
-  a separate check and confirm it does not create a history record.
+  session. Confirm one new detailed local row appears in History, the Health
+  card shows `History stored on this device until Apple Health is connected.`,
+  and the row remains after leaving Settings and returning to History. That row
+  comes from `AppStore.sessionHistory`, the app's local detailed session
+  records; it is not proof of a HealthKit save or import. Tap End session in a
+  separate check and confirm it does not create a local history record.
 - Grant HealthKit access later by tapping Connect Apple Health when it is
   available, or by enabling Hang Ten's workout access in Settings after a
   denial. Return to the app and wait for the scene-activation refresh. Confirm
-  the pending local session syncs to HealthKit, the source copy changes to
-  `History synced from Apple Health.`, and the same session is still counted
-  exactly once. If a successful query has no accepted Hang Ten history, treat
-  the empty `.healthKit` result as ambiguous: preserve any local fallback and
-  do not treat the empty result as proof of no history or denied access. Verify
+  the Apple Health card's source copy changes to
+  `History synced from Apple Health.` and inspect its status and any error or
+  action. If a successful query has no accepted Hang Ten history, treat the
+  empty `.healthKit` result as ambiguous: preserve any local fallback and do
+  not treat the empty result as proof of no history or denied access. Verify
   that an authorized empty result shows the `Connected` status and no Connect
-  action. When accepted HealthKit history is visible, no action is shown; local
-  fallback maps to Open app settings, while denied and unavailable behavior
-  remains unchanged.
-- Relaunch the app on the same explicit simulator UUID, open History, and
-  confirm the HealthKit-backed rows and latest plan title persist. Refresh or
-  relaunch again and verify migration does not double-count the session.
+  action. When the service reports accepted HealthKit history, no action is
+  shown; local fallback maps to Open app settings, while denied and unavailable
+  behavior remains unchanged.
+- Relaunch the app on the same explicit simulator UUID. Open Settings and
+  validate the Apple Health source, authorization status, and any sync error;
+  that card reflects `AppStore.workoutHistory`. Then open History and confirm
+  only that the local detailed row and latest plan title persist. A History row
+  is not evidence of a HealthKit import. Validate HealthKit restoration,
+  pending-record migration, and deduplication with
+  `WorkoutHistoryServiceTests` and `AppStoreTests`, and inspect the actual
+  HealthKit records on a signed physical-device build when validating the
+  end-to-end behavior.
 - From Train, open Settings with `train.settings`; from the denied or
-  local-fallback state use `health.settings` to open system app settings, change Hang Ten's
-  Health permissions, return to the app, and confirm authorization and history
-  refresh automatically without a new permission prompt on appearance.
+  local-fallback state use `health.settings` to open system app settings,
+  change Hang Ten's Health permissions, return to the app, and confirm the
+  Settings authorization, source, and error states refresh automatically
+  without a new permission prompt on appearance.
 - Preserve the signed HealthKit entitlement check. Inspect the installed app
   and, for simulator builds, the intermediate `HangTen.app-Simulated.xcent`
   under the workspace-specific Derived Data path; verify
@@ -409,8 +420,9 @@ routine change, preview every distinct hold target and finger cue.
   ```
 
   Both commands must print the non-empty read and write usage descriptions.
-- Simulator validation covers the permission flow, local fallback, migration,
-  and deduplication. It does not prove cross-device HealthKit restoration;
+- Simulator validation covers the permission flow and the UI's local-fallback,
+  source, status, and error states. The service tests cover migration and
+  deduplication logic, but neither proves cross-device HealthKit restoration;
   repeat that scenario on two physical devices using the same HealthKit
   account before release.
 - On a signed build, open Train's gear → Settings, tap Connect Apple Health,
