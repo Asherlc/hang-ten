@@ -17,6 +17,23 @@ struct TrainView: View {
         return false
         #endif
     }()
+    @State private var showsSettingsReview: Bool = {
+        #if DEBUG
+        let environment = ProcessInfo.processInfo.environment
+        return environment["HANGTEN_REVIEW_SETTINGS"] == "1"
+            || environment["HANGTEN_REVIEW_HEALTH"] == "1"
+            || environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
+        #else
+        return false
+        #endif
+    }()
+    @State private var showsBoardPickerReview: Bool = {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_PICKER"] == "1"
+        #else
+        return false
+        #endif
+    }()
 
     init(onBrowsePlans: @escaping () -> Void) {
         self.onBrowsePlans = onBrowsePlans
@@ -34,7 +51,17 @@ struct TrainView: View {
                 .padding(.bottom, 30)
             }
             .background(Color.hangBackground)
-            .toolbar(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        AppSettingsView()
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityLabel("Settings")
+                    .accessibilityIdentifier("train.settings")
+                }
+            }
             .navigationDestination(isPresented: $showsPlanReview) {
                 if let plan = reviewPlan {
                     PlanDetailView(plan: plan)
@@ -48,6 +75,12 @@ struct TrainView: View {
                 } else {
                     noCompatiblePlan
                 }
+            }
+            .navigationDestination(isPresented: $showsSettingsReview) {
+                AppSettingsView()
+            }
+            .navigationDestination(isPresented: $showsBoardPickerReview) {
+                BoardPickerView()
             }
         }
     }
