@@ -149,7 +149,12 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
-        let capturedPlan = try XCTUnwrap(store.plans.first { $0.boardID != nil })
+        let boardSpecificDefinition = makeRoutine(id: "custom.captured-board-specific")
+        try store.saveCustomRoutine(boardSpecificDefinition)
+        let capturedPlan = try XCTUnwrap(
+            store.plans.first { $0.id == boardSpecificDefinition.id }
+        )
+        XCTAssertEqual(capturedPlan.boardID, BoardCatalog.defaultBoard.id)
         let otherBoard = try XCTUnwrap(
             BoardCatalog.all.first { $0.id != capturedPlan.boardID }
         )
