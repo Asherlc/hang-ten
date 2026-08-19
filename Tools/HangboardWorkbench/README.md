@@ -100,8 +100,8 @@ invalid image data, or an interrupted write leave the saved package unchanged.
 The catalog capture command starts an isolated loopback Workbench server and one
 headless Chrome DevTools session. It reads the completed-board order from
 `GET /api/boards`, opens each board through the existing editor, waits for its
-primary image and exactly the board document's SVG region count, then captures
-the unchanged `#editor-svg` surface at a fixed viewport.
+expected encoded primary-image URL and exactly the board document's SVG region
+count, then captures the unchanged `#editor-svg` surface at a fixed viewport.
 
 ```sh
 rtk python3 Tools/HangboardWorkbench/capture_catalog.py \

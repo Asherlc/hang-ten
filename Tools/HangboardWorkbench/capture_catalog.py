@@ -79,7 +79,8 @@ def capture_filename(board_id: str) -> str:
     normalized = "-".join(piece for piece in normalized.split("-") if piece)
     if not normalized:
         raise CaptureError("catalog", "board ID cannot produce a safe filename", board_id=board_id)
-    return f"{normalized}.png"
+    digest = hashlib.sha256(board_id.encode("utf-8")).hexdigest()[:12]
+    return f"{normalized}--{digest}.png"
 
 
 def _request_json(url: str) -> dict[str, Any]:
@@ -112,7 +113,20 @@ def fetch_catalog(base_url: str) -> tuple[CatalogBoard, ...]:
     return tuple(result)
 
 
-def _board_region_count(base_url: str, board_id: str) -> int:
+def _absolute_url(base_url: str, url: str) -> str:
+    resolved = urllib.parse.urlsplit(urllib.parse.urljoin(base_url, url))
+    return urllib.parse.urlunsplit(
+        (
+            resolved.scheme,
+            resolved.netloc,
+            urllib.parse.quote(resolved.path, safe="/%"),
+            resolved.query,
+            resolved.fragment,
+        )
+    )
+
+
+def _board_capture_target(base_url: str, board_id: str) -> tuple[str, int]:
     encoded_id = urllib.parse.quote(board_id, safe="")
     payload = _request_json(f"{base_url}/api/boards/{encoded_id}")
     board = payload.get("board")
@@ -125,14 +139,17 @@ def _board_region_count(base_url: str, board_id: str) -> int:
     regions = document.get("regions")
     if not isinstance(regions, list):
         raise CaptureError("board", "board document is missing regions", board_id=board_id)
-    return len(regions)
+    return _absolute_url(base_url, image_url), len(regions)
 
 
-def capture_is_ready(value: object, *, expected_region_count: int) -> bool:
+def capture_is_ready(
+    value: object, *, expected_image_url: str, expected_region_count: int
+) -> bool:
     """Validate the editor's image and complete region inventory readiness signal."""
     return (
         isinstance(value, dict)
         and value.get("primaryImageLoaded") is True
+        and value.get("imageURL") == expected_image_url
         and value.get("regionCount") == expected_region_count
     )
 
@@ -152,6 +169,7 @@ def _readiness_expression() -> str:
         }
         return {
           primaryImageLoaded,
+          imageURL: href ? new URL(href, document.baseURI).href : null,
           regionCount: document.querySelectorAll('#hold-overlay path.region-shape').length,
         };
       })()
@@ -365,11 +383,19 @@ def _evaluate(connection: _DevToolsConnection, expression: str) -> Any:
 
 
 def _wait_for_capture_ready(
-    connection: _DevToolsConnection, *, expected_region_count: int, board_id: str
+    connection: _DevToolsConnection,
+    *,
+    expected_image_url: str,
+    expected_region_count: int,
+    board_id: str,
 ) -> None:
     deadline = time.monotonic() + READINESS_TIMEOUT_SECONDS
     while time.monotonic() < deadline:
-        if capture_is_ready(_evaluate(connection, _readiness_expression()), expected_region_count=expected_region_count):
+        if capture_is_ready(
+            _evaluate(connection, _readiness_expression()),
+            expected_image_url=expected_image_url,
+            expected_region_count=expected_region_count,
+        ):
             return
         time.sleep(0.1)
     raise CaptureError("readiness", "timed out waiting for primary image and SVG regions", board_id=board_id)
@@ -522,13 +548,16 @@ def capture_catalog(
                     _wait_for_catalog_controls(connection, expected_count=len(catalog))
                     entries: list[CaptureEntry] = []
                     for index, board in enumerate(catalog):
-                        regions = _board_region_count(base_url, board.board_id)
+                        image_url, regions = _board_capture_target(base_url, board.board_id)
                         _evaluate(
                             connection,
                             f"(() => {{ document.querySelectorAll('#board-list button')[{index}].click(); return true; }})()",
                         )
                         _wait_for_capture_ready(
-                            connection, expected_region_count=regions, board_id=board.board_id
+                            connection,
+                            expected_image_url=image_url,
+                            expected_region_count=regions,
+                            board_id=board.board_id,
                         )
                         screenshot = connection.call(
                             "Page.captureScreenshot", format="png", clip=_canvas_clip(connection)

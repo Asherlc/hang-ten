@@ -50,15 +50,29 @@ def test_catalog_order_comes_from_boards_api(monkeypatch: pytest.MonkeyPatch) ->
     assert requested == ["http://127.0.0.1:4173/api/boards"]
 
 
-def test_capture_readiness_requires_loaded_primary_image_and_exact_region_count() -> None:
+def test_capture_readiness_requires_expected_primary_image_and_exact_region_count() -> None:
     assert not capture_catalog.capture_is_ready(
-        {"primaryImageLoaded": False, "regionCount": 2}, expected_region_count=2
+        {"primaryImageLoaded": False, "imageURL": "http://capture.test/api/boards/second/image", "regionCount": 2},
+        expected_image_url="http://capture.test/api/boards/second/image",
+        expected_region_count=2,
     )
     assert not capture_catalog.capture_is_ready(
-        {"primaryImageLoaded": True, "regionCount": 1}, expected_region_count=2
+        {"primaryImageLoaded": True, "imageURL": "http://capture.test/api/boards/second/image", "regionCount": 1},
+        expected_image_url="http://capture.test/api/boards/second/image",
+        expected_region_count=2,
     )
     assert capture_catalog.capture_is_ready(
-        {"primaryImageLoaded": True, "regionCount": 2}, expected_region_count=2
+        {"primaryImageLoaded": True, "imageURL": "http://capture.test/api/boards/second/image", "regionCount": 2},
+        expected_image_url="http://capture.test/api/boards/second/image",
+        expected_region_count=2,
+    )
+
+
+def test_capture_readiness_rejects_prior_board_with_the_same_region_count() -> None:
+    assert not capture_catalog.capture_is_ready(
+        {"primaryImageLoaded": True, "imageURL": "http://capture.test/api/boards/first/image", "regionCount": 2},
+        expected_image_url="http://capture.test/api/boards/second/image",
+        expected_region_count=2,
     )
 
 
@@ -83,17 +97,25 @@ def test_capture_failure_identifies_its_stage_and_board() -> None:
 
 
 @pytest.mark.parametrize(
-    ("board_id", "expected"),
+    ("board_id", "safe_stem"),
     [
-        ("metolius.wood-grips", "metolius.wood-grips.png"),
-        ("Board / Needs Review", "board-needs-review.png"),
-        ("../../escape", "escape.png"),
+        ("synthetic.board-alpha", "synthetic.board-alpha"),
+        ("Board / Needs Review", "board-needs-review"),
+        ("../../escape", "escape"),
     ],
 )
 def test_capture_filenames_are_derived_from_safe_board_ids(
-    board_id: str, expected: str
+    board_id: str, safe_stem: str
 ) -> None:
-    assert capture_catalog.capture_filename(board_id) == expected
+    filename = capture_catalog.capture_filename(board_id)
+
+    assert filename.startswith(f"{safe_stem}--")
+    assert filename.endswith(".png")
+    assert "/" not in filename
+
+
+def test_capture_filenames_distinguish_ids_that_normalize_to_the_same_stem() -> None:
+    assert capture_catalog.capture_filename("a_b") != capture_catalog.capture_filename("a-b")
 
 
 def test_contact_sheet_contains_every_manifest_entry(tmp_path: Path) -> None:
