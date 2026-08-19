@@ -1,0 +1,180 @@
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export type PathCommandType = "M" | "L" | "Q" | "C" | "Z";
+
+export interface PathCommand {
+  type: PathCommandType;
+  points: Point[];
+  controls: Point[];
+}
+
+export interface HoldRegion {
+  id?: number;
+  key: string;
+  type?: string;
+  displayPath: string;
+  metadata?: {
+    holdID: string;
+    pieceIndex: number;
+  };
+}
+
+export interface EditorDocument {
+  schemaVersion: number;
+  canvas: {
+    width: number;
+    height: number;
+  };
+  regions: HoldRegion[];
+}
+
+export interface BoardSummary {
+  boardId: string;
+  displayName: string;
+  holdCount: number;
+  href?: string;
+}
+
+export interface Board extends BoardSummary {
+  imageUrl: string;
+  saveUrl?: string;
+  document: EditorDocument;
+}
+
+export interface GitStatus {
+  ok: true;
+  currentBranch: string | null;
+  branches: string[];
+  dirty: boolean;
+  statusLines: string[];
+}
+
+export interface AuthStatus {
+  ok: true;
+  authenticated: boolean;
+  username?: string;
+  hostedStorage?: boolean;
+}
+
+export interface CommitResult {
+  ok: true;
+  commit: string;
+  branch: string;
+  message: string;
+}
+
+export interface PushResult {
+  ok: true;
+  branch: string;
+  remote: string;
+}
+
+export interface PullRequestResult {
+  ok: true;
+  branch: string;
+  url: string;
+}
+
+export interface WorkbenchClient {
+  listBoards(): Promise<BoardSummary[]>;
+  getBoard(boardId: string): Promise<Board>;
+  saveBoard(boardId: string, document: EditorDocument): Promise<Board>;
+  getGitStatus(): Promise<GitStatus>;
+  getAuthStatus(): Promise<AuthStatus>;
+  listBranches(): Promise<GitStatus>;
+  switchBranch(branchName: string): Promise<string>;
+  createBranch(branchName: string): Promise<string>;
+  commitBoardChanges(message: string): Promise<CommitResult>;
+  pushBranch(options?: { remote?: string }): Promise<PushResult>;
+  openPullRequest(options?: {
+    title?: string;
+    body?: string;
+    base?: string;
+    branch?: string | null;
+  }): Promise<PullRequestResult>;
+}
+
+export interface BoardOperationContext {
+  isCurrent(): boolean;
+}
+
+export interface BoardOperationResult<T> {
+  started: boolean;
+  value: T | undefined;
+}
+
+export interface BoardOperationCoordinator {
+  readonly isBusy: boolean;
+  perform<T>(operation: (context: BoardOperationContext) => Promise<T>): Promise<BoardOperationResult<T>>;
+}
+
+export interface LoadedBoard<ImageType = HTMLImageElement> {
+  readonly board: Board;
+  readonly image: ImageType;
+  readonly document: EditorDocument;
+}
+
+export interface SavedBoard {
+  readonly board: Board;
+  readonly document: EditorDocument;
+}
+
+export interface WorkbenchController {
+  validateEditorDocument(document: unknown): EditorDocument;
+  loadBoardAtomically<ImageType>(options: {
+    boardId: string;
+    getBoard(boardId: string): Promise<Board>;
+    loadImage(href: string): Promise<ImageType>;
+    commit(value: LoadedBoard<ImageType>): void;
+  }): Promise<LoadedBoard<ImageType>>;
+  saveBoardAtomically(options: {
+    boardId: string;
+    document: EditorDocument;
+    save(boardId: string, document: EditorDocument): Promise<Board>;
+    commit(value: SavedBoard): void;
+  }): Promise<SavedBoard>;
+  createBoardOperationCoordinator(options?: {
+    onBusyChange?: (busy: boolean) => void;
+  }): BoardOperationCoordinator;
+}
+
+export interface PathEditor {
+  parsePath(pathString: string): PathCommand[];
+  serializePath(commands: readonly PathCommand[]): string;
+  moveVertex(commands: PathCommand[], index: number, dx: number, dy: number): void;
+  addVertex(commands: PathCommand[], afterIndex: number, x: number, y: number): void;
+  deleteVertex(commands: PathCommand[], index: number): void;
+  rotatePath(commands: PathCommand[], angleRadians: number, pivot: Point): void;
+}
+
+export interface RequestDiagnostic {
+  path: string;
+  category: string;
+  message: string;
+  status?: number;
+}
+
+export interface Dialogs {
+  confirm(message: string): boolean;
+  prompt(message: string, defaultValue?: string): string | null;
+}
+
+export interface BrowserRuntime extends Dialogs {
+  fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
+  location: {
+    assign(url: string): void;
+  };
+  postDiagnostic?(diagnostic: RequestDiagnostic): void;
+  createImage(): HTMLImageElement;
+}
+
+export interface WorkbenchDependencies {
+  client: WorkbenchClient;
+  controller: WorkbenchController;
+  pathEditor: PathEditor;
+  runtime: BrowserRuntime;
+  dialogs: Dialogs;
+}
