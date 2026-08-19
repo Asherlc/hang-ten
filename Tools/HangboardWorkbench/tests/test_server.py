@@ -1156,6 +1156,68 @@ def test_simultaneous_hosted_catalog_reads_share_one_bounded_upstream_load() -> 
     assert client.max_active_blob_reads <= 4
 
 
+def test_server_close_waits_for_a_paused_hosted_catalog_request(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Fails if closing the store executor races an accepted catalog request."""
+    library = tmp_path / "Hangboards"
+    library.mkdir()
+    client = FakeGitHubClient({HOSTED_BRANCH: _github_files()})
+    httpd = create_server(
+        library,
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+        session_secret="test-session-secret",
+        github_owner="fixture-owner",
+        github_repo="fixture-repo",
+        github_client=client,
+    )
+    session = server_module._encode_session(
+        httpd.session_secret,
+        _Session(token=HOSTED_TOKEN, username="climber", branch=HOSTED_BRANCH),
+    )
+    entered = threading.Event()
+    release = threading.Event()
+    original_catalog = server_module.github_board_store.GitHubBoardStore._catalog
+
+    def pause_catalog(store, *args):
+        entered.set()
+        assert release.wait(timeout=5)
+        return original_catalog(store, *args)
+
+    monkeypatch.setattr(
+        server_module.github_board_store.GitHubBoardStore,
+        "_catalog",
+        pause_catalog,
+    )
+    server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    server_thread.start()
+    result: list[tuple[int, dict[str, object], object]] = []
+
+    def request_catalog() -> None:
+        result.append(hosted_request_json(
+            f"http://127.0.0.1:{httpd.server_port}",
+            session,
+            "GET",
+            "/api/boards",
+        ))
+
+    request_thread = threading.Thread(target=request_catalog)
+    request_thread.start()
+    assert entered.wait(timeout=5)
+    httpd.shutdown()
+    close_thread = threading.Thread(target=httpd.server_close)
+    close_thread.start()
+    release.set()
+    request_thread.join(timeout=5)
+    close_thread.join(timeout=5)
+    server_thread.join(timeout=5)
+
+    assert result[0][0] == 200
+
+
 def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
     """Fails if a hosted save writes locally or drops GitHub's commit identity."""
     with running_server_with_github_backend(_github_files()) as (

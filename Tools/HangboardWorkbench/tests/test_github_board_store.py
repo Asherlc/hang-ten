@@ -200,6 +200,24 @@ class _OneTimeMissingBlobClient(FakeGitHubClient):
         return content
 
 
+class _FirstPackageFailureClient(FakeGitHubClient):
+    """Fails the first package image once and records which packages began."""
+
+    def __init__(self, files: dict[str, bytes], failing_sha: str) -> None:
+        super().__init__({BRANCH: files})
+        self._failing_sha = failing_sha
+        self._failed = False
+        self.started_shas: set[str] = set()
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        self.started_shas.add(sha)
+        if sha == self._failing_sha and not self._failed:
+            self._failed = True
+            super().get_blob(token, sha)
+            raise GitHubNotFoundError("blob is not available")
+        return super().get_blob(token, sha)
+
+
 def _local_package_error(
     tmp_path: Path,
     *,
@@ -321,6 +339,17 @@ def test_cached_store_reloads_a_tree_evicted_at_its_configured_capacity() -> Non
     assert len(client.calls_named("get_tree")) == 3
 
 
+def test_cached_store_skips_trees_larger_than_its_configured_byte_limit() -> None:
+    """Fails if max_cached_tree_bytes retains an oversized tree payload."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client, max_cached_tree_bytes=1)
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_tree")) == 2
+
+
 def test_cached_store_skips_trees_larger_than_its_configured_entry_limit() -> None:
     """Fails if max_cached_tree_entries retains an oversized recursive tree."""
     client = _client(("fixture-board", board_document("fixture.board")))
@@ -335,15 +364,26 @@ def test_cached_store_skips_trees_larger_than_its_configured_entry_limit() -> No
 def test_cached_store_reloads_a_catalog_evicted_at_its_capacity() -> None:
     """Fails if catalog capacity does not evict the least-recent commit metadata."""
     files = _complete_package("fixture-board", board_document("fixture.board"))
-    branches = {f"branch-{index}": files for index in range(17)}
+    branches = {"first": files, "second": files}
     client = FakeGitHubClient(branches)
-    store = github_board_store.GitHubBoardStore(client)
+    store = github_board_store.GitHubBoardStore(client, max_cached_catalogs=1)
 
-    for branch in branches:
-        store.discover_packages(TOKEN, branch)
-    store.discover_packages(TOKEN, "branch-0")
+    store.discover_packages(TOKEN, "first")
+    store.discover_packages(TOKEN, "second")
+    store.discover_packages(TOKEN, "first")
 
-    assert len(client.calls_named("get_blob")) == 36
+    assert len(client.calls_named("get_blob")) == 6
+
+
+def test_cached_store_skips_catalogs_larger_than_its_configured_byte_limit() -> None:
+    """Fails if max_cached_catalog_bytes retains oversized board metadata."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client, max_cached_catalog_bytes=1)
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_blob")) == 4
 
 
 def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
@@ -375,6 +415,46 @@ def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
 
     assert [package.board_id for package in packages] == ["fixture.board"]
     assert len(client.calls_named("get_blob")) == 3
+
+
+def test_cached_store_partitions_immutable_reads_by_credential() -> None:
+    """Fails if one credential can consume another credential's cache entries."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client)
+
+    store.discover_packages("first-token", BRANCH)
+    store.discover_packages("second-token", BRANCH)
+
+    assert len(client.calls_named("get_tree")) == 2
+    assert len(client.calls_named("get_blob")) == 4
+
+
+def test_discovery_submits_only_one_worker_window_after_an_early_failure() -> None:
+    """Fails if a failed source-ordered package starts later queued packages."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
+        files.update(_complete_package(slug, board_document(f"{slug}.board")))
+        files[f"Hangboards/{slug}/assets/primary.png"] = _primary_image_with_text_chunk(
+            slug.encode("utf-8")
+        )
+    failing_sha = FakeGitHubClient._sha(files["Hangboards/alpha/assets/primary.png"])
+    client = _FirstPackageFailureClient(files, failing_sha)
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(board_package.BoardPackageError, match="primary image is missing"):
+        store.discover_packages(TOKEN, BRANCH)
+    started_before_retry = set(client.started_shas)
+    packages = store.discover_packages(TOKEN, BRANCH)
+
+    assert [package.board_id for package in packages] == [
+        "alpha.board",
+        "bravo.board",
+        "charlie.board",
+        "delta.board",
+        "echo.board",
+        "foxtrot.board",
+    ]
+    assert len(started_before_retry) <= 7
 
 
 @pytest.mark.parametrize(

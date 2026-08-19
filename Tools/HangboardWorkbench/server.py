@@ -261,9 +261,11 @@ class WorkbenchHTTPServer(ThreadingHTTPServer):
         super().__init__(server_address, request_handler)
 
     def server_close(self) -> None:
-        if self.github_board_store is not None:
-            self.github_board_store.close()
-        super().server_close()
+        try:
+            super().server_close()
+        finally:
+            if self.github_board_store is not None:
+                self.github_board_store.close()
 
 
 class EditorRequestHandler(BaseHTTPRequestHandler):

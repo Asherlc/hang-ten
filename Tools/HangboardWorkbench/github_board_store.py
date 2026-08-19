@@ -20,7 +20,9 @@ _BOARD_LIBRARY_PATH = "Hangboards"
 _MAX_CONCURRENT_PACKAGE_LOADS = 4
 _MAX_CACHED_TREES = 16
 _MAX_CACHED_TREE_ENTRIES = 50_000
+_MAX_CACHED_TREE_BYTES = 16 * 1024 * 1024
 _MAX_CACHED_CATALOGS = 16
+_MAX_CACHED_CATALOG_BYTES = 16 * 1024 * 1024
 _MAX_CACHED_BLOBS = 128
 _MAX_CACHED_BLOB_BYTES = 32 * 1024 * 1024
 
@@ -56,6 +58,9 @@ class GitHubBoardStore:
         *,
         max_cached_trees: int = _MAX_CACHED_TREES,
         max_cached_tree_entries: int = _MAX_CACHED_TREE_ENTRIES,
+        max_cached_tree_bytes: int = _MAX_CACHED_TREE_BYTES,
+        max_cached_catalogs: int = _MAX_CACHED_CATALOGS,
+        max_cached_catalog_bytes: int = _MAX_CACHED_CATALOG_BYTES,
         max_cached_blobs: int = _MAX_CACHED_BLOBS,
         max_cached_blob_bytes: int = _MAX_CACHED_BLOB_BYTES,
     ) -> None:
@@ -63,6 +68,9 @@ class GitHubBoardStore:
             min(
                 max_cached_trees,
                 max_cached_tree_entries,
+                max_cached_tree_bytes,
+                max_cached_catalogs,
+                max_cached_catalog_bytes,
                 max_cached_blobs,
                 max_cached_blob_bytes,
             )
@@ -72,6 +80,9 @@ class GitHubBoardStore:
         self._client = client
         self._max_cached_trees = max_cached_trees
         self._max_cached_tree_entries = max_cached_tree_entries
+        self._max_cached_tree_bytes = max_cached_tree_bytes
+        self._max_cached_catalogs = max_cached_catalogs
+        self._max_cached_catalog_bytes = max_cached_catalog_bytes
         self._max_cached_blobs = max_cached_blobs
         self._max_cached_blob_bytes = max_cached_blob_bytes
         self._trees: OrderedDict[tuple[bytes, str], tuple[TreeEntry, ...]] = (
@@ -80,6 +91,10 @@ class GitHubBoardStore:
         self._catalogs: OrderedDict[
             tuple[bytes, str], tuple[GitHubBoardPackage, ...]
         ] = OrderedDict()
+        self._tree_sizes: dict[tuple[bytes, str], int] = {}
+        self._catalog_sizes: dict[tuple[bytes, str], int] = {}
+        self._tree_bytes = 0
+        self._catalog_bytes = 0
         self._blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
         self._blob_bytes = 0
         self._lock = threading.RLock()
@@ -95,6 +110,7 @@ class GitHubBoardStore:
             tuple[bytes, str], Future[tuple[GitHubBoardPackage, ...]]
         ] = {}
         self._blob_flights: dict[tuple[bytes, str], Future[bytes]] = {}
+        self._closed = False
 
     def discover_packages(
         self, token: str, branch: str
@@ -145,6 +161,10 @@ class GitHubBoardStore:
         return saved
 
     def close(self) -> None:
+        with self._lock:
+            if self._closed:
+                return
+            self._closed = True
         self._executor.shutdown(wait=True, cancel_futures=True)
 
     def _snapshot(
@@ -169,12 +189,25 @@ class GitHubBoardStore:
 
         def load() -> tuple[TreeEntry, ...]:
             tree = self._call_bounded(self._client.get_tree, token, head)
-            if len(tree) <= self._max_cached_tree_entries:
+            cache_size = _tree_cache_size(tree)
+            if (
+                len(tree) <= self._max_cached_tree_entries
+                and cache_size <= self._max_cached_tree_bytes
+            ):
                 with self._lock:
+                    previous = self._trees.pop(key, None)
+                    if previous is not None:
+                        self._tree_bytes -= self._tree_sizes.pop(key)
                     self._trees[key] = tree
+                    self._tree_sizes[key] = cache_size
+                    self._tree_bytes += cache_size
                     self._trees.move_to_end(key)
-                    while len(self._trees) > self._max_cached_trees:
-                        self._trees.popitem(last=False)
+                    while (
+                        len(self._trees) > self._max_cached_trees
+                        or self._tree_bytes > self._max_cached_tree_bytes
+                    ):
+                        discarded_key, _discarded = self._trees.popitem(last=False)
+                        self._tree_bytes -= self._tree_sizes.pop(discarded_key)
             return tree
 
         return self._single_flight(self._tree_flights, key, load)
@@ -191,12 +224,25 @@ class GitHubBoardStore:
 
         def load() -> tuple[GitHubBoardPackage, ...]:
             catalog = discover_packages(snapshot, token, branch, executor=self._executor)
-            if len(catalog) <= self._max_cached_tree_entries:
+            cache_size = _catalog_cache_size(catalog)
+            if (
+                len(catalog) <= self._max_cached_tree_entries
+                and cache_size <= self._max_cached_catalog_bytes
+            ):
                 with self._lock:
+                    previous = self._catalogs.pop(key, None)
+                    if previous is not None:
+                        self._catalog_bytes -= self._catalog_sizes.pop(key)
                     self._catalogs[key] = catalog
+                    self._catalog_sizes[key] = cache_size
+                    self._catalog_bytes += cache_size
                     self._catalogs.move_to_end(key)
-                    while len(self._catalogs) > _MAX_CACHED_CATALOGS:
-                        self._catalogs.popitem(last=False)
+                    while (
+                        len(self._catalogs) > self._max_cached_catalogs
+                        or self._catalog_bytes > self._max_cached_catalog_bytes
+                    ):
+                        discarded_key, _discarded = self._catalogs.popitem(last=False)
+                        self._catalog_bytes -= self._catalog_sizes.pop(discarded_key)
             return catalog
 
         return self._single_flight(self._catalog_flights, key, load)
@@ -261,16 +307,32 @@ class GitHubBoardStore:
 
     def _discard_credential_entries(self, credential_key: bytes) -> None:
         with self._lock:
-            self._trees = OrderedDict(
-                (key, tree)
-                for key, tree in self._trees.items()
-                if key[0] != credential_key
+            retained_trees: OrderedDict[tuple[bytes, str], tuple[TreeEntry, ...]] = (
+                OrderedDict()
             )
-            self._catalogs = OrderedDict(
-                (key, catalog)
-                for key, catalog in self._catalogs.items()
-                if key[0] != credential_key
-            )
+            self._tree_sizes = {}
+            self._tree_bytes = 0
+            for key, tree in self._trees.items():
+                if key[0] == credential_key:
+                    continue
+                retained_trees[key] = tree
+                size = _tree_cache_size(tree)
+                self._tree_sizes[key] = size
+                self._tree_bytes += size
+            self._trees = retained_trees
+            retained_catalogs: OrderedDict[
+                tuple[bytes, str], tuple[GitHubBoardPackage, ...]
+            ] = OrderedDict()
+            self._catalog_sizes = {}
+            self._catalog_bytes = 0
+            for key, catalog in self._catalogs.items():
+                if key[0] == credential_key:
+                    continue
+                retained_catalogs[key] = catalog
+                size = _catalog_cache_size(catalog)
+                self._catalog_sizes[key] = size
+                self._catalog_bytes += size
+            self._catalogs = retained_catalogs
             retained_blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
             self._blob_bytes = 0
             for key, blob in self._blobs.items():
@@ -520,6 +582,7 @@ def _load_completed_packages(
     token: str,
     completed: list[tuple[str, dict[str, TreeEntry]]],
 ) -> list[GitHubBoardPackage | tuple[GitHubBoardPackage, bytes]]:
+    window = min(_MAX_CONCURRENT_PACKAGE_LOADS, len(completed))
     pending = [
         executor.submit(
             _load_package_from_entries,
@@ -529,9 +592,32 @@ def _load_completed_packages(
             entries,
             inspect_png_header_only=True,
         )
-        for slug, entries in completed
+        for slug, entries in completed[:window]
     ]
-    return [future.result() for future in pending]
+    next_index = window
+    packages: list[GitHubBoardPackage | tuple[GitHubBoardPackage, bytes]] = []
+    try:
+        while pending:
+            future = pending.pop(0)
+            packages.append(future.result())
+            if next_index < len(completed):
+                slug, entries = completed[next_index]
+                pending.append(
+                    executor.submit(
+                        _load_package_from_entries,
+                        client,
+                        token,
+                        slug,
+                        entries,
+                        inspect_png_header_only=True,
+                    )
+                )
+                next_index += 1
+    except BaseException:
+        for future in pending:
+            future.cancel()
+        raise
+    return packages
 
 
 def _copy_packages(
@@ -780,6 +866,34 @@ def _package_sort_key(
 
 def _git_blob_sha(content: bytes) -> str:
     return hashlib.sha1(f"blob {len(content)}\0".encode() + content).hexdigest()
+
+
+def _tree_cache_size(tree: tuple[TreeEntry, ...]) -> int:
+    """Return deterministic UTF-8 payload bytes retained for one tree cache entry."""
+    return sum(
+        len(entry.path.encode("utf-8"))
+        + len(entry.type.encode("utf-8"))
+        + len(entry.sha.encode("utf-8"))
+        for entry in tree
+    )
+
+
+def _catalog_cache_size(catalog: tuple[GitHubBoardPackage, ...]) -> int:
+    """Return deterministic UTF-8 metadata bytes retained for one catalog entry."""
+    return sum(
+        len(package.slug.encode("utf-8"))
+        + len(package.board_json_sha.encode("utf-8"))
+        + len(
+            json.dumps(
+                package.board,
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode("utf-8")
+        )
+        + 16
+        for package in catalog
+    )
 
 
 def _credential_key(token: str) -> bytes:
