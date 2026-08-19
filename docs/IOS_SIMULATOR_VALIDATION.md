@@ -260,13 +260,16 @@ Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
 
 | Variable | Effect |
 | --- | --- |
-| `HANGTEN_REVIEW_PLAN=1` | Open the featured plan detail. |
+| `HANGTEN_REVIEW_PLAN=1` | Open the featured plan detail from Train. |
 | `HANGTEN_REVIEW_PLANS=1` | Select the full Plans tab. |
+| `HANGTEN_REVIEW_HISTORY=1` | Select the History tab. |
+| `HANGTEN_REVIEW_BOARD_PICKER=1` | Open the full-page board picker from Train. |
+| `HANGTEN_REVIEW_SETTINGS=1` | Open Settings from Train. |
 | `HANGTEN_REVIEW_PLAN_ID=<TrainingPlan.id>` | Make a specific plan the featured plan. |
 | `HANGTEN_REVIEW_WORKOUT=1` | Open the featured workout. |
 | `HANGTEN_REVIEW_STEP=<step number>` | Preview any plan step without waiting. |
-| `HANGTEN_REVIEW_GRIP=<GripType raw value>` | Override the plan-detail grip preview. |
-| `HANGTEN_REVIEW_HEALTH=1` | Select the Progress tab and Health card. |
+| `HANGTEN_REVIEW_HEALTH=1` | Open Settings from Train with the Apple Health card visible. |
+| `HANGTEN_REVIEW_MOTHERBOARD=1` | Open Settings from Train and use the deterministic sensor transport. |
 | `HANGTEN_REVIEW_LANDSCAPE=1` | Request landscape-right scene geometry. |
 | `HANGTEN_REVIEW_PORTRAIT=1` | Request portrait scene geometry. |
 | `HANGTEN_REVIEW_AUTOSTART=1` | Start the three-second countdown on launch. |
@@ -281,6 +284,15 @@ xcrun simctl launch <uuid> com.hangten.training
 ```
 
 These hooks are compiled only in DEBUG and do not affect production launches.
+
+For primary-navigation review, the Train gear is `train.settings`, its board
+link is `train.changeBoard`, and the compact Plans board link is
+`plans.changeBoard`. Both board links open the full-page picker; each choice is
+`boardPicker.board.<TrainingBoard.id>`, selects and persists that board, then
+returns to its originating screen. Settings exposes `settings.sensor`,
+`health.historySource`, and either `health.connect` or `health.settings` when
+that action is available. History is the third root tab and opens directly to
+the chronological saved-session list.
 
 ## Capture and orient screenshots
 
@@ -345,9 +357,10 @@ routine change, preview every distinct hold target and finger cue.
   physical size where the board supplies one. Confirm a never-started
   stopwatch and a genuinely untimed work segment have no duration value.
 - Launch with `HANGTEN_REVIEW_HEALTH=1` on a fresh or permission-reset
-  dedicated simulator. This route opens the Progress tab and Health card; it
+  dedicated simulator. This route opens Train's Settings destination with the
+  Apple Health card visible; it
   does not request authorization. Leave the visible Connect Apple Health
-  action untouched while triggering a Progress/scene refresh and completing a
+  action untouched while triggering a Settings/scene refresh and completing a
   short routine. Confirm the session remains in local fallback history and no
   HealthKit workout is saved, imported, or migrated before Connect is tapped.
 - Tap Connect Apple Health to start the user-initiated flow and persist the
@@ -358,9 +371,9 @@ routine change, preview every distinct hold target and finger cue.
   `Not connected`, `Access denied`, `Connected`, and `Open app settings` as
   applicable.
 - Before granting HealthKit access, complete a short routine and tap Log
-  session. Confirm the session count increases once, the Health card shows
+  session. Confirm one new row appears in History, the Health card shows
   `History stored on this device until Apple Health is connected.`, and the
-  session remains after leaving and returning to Progress. Tap End session in
+  session remains after leaving Settings and returning to History. Tap End session in
   a separate check and confirm it does not create a history record.
 - Grant HealthKit access later by tapping Connect Apple Health when it is
   available, or by enabling Hang Ten's workout access in Settings after a
@@ -374,10 +387,11 @@ routine change, preview every distinct hold target and finger cue.
   action. When accepted HealthKit history is visible, no action is shown; local
   fallback maps to Open app settings, while denied and unavailable behavior
   remains unchanged.
-- Relaunch the app on the same explicit simulator UUID, open Progress, and
-  confirm the HealthKit-backed count and latest plan title persist. Refresh or
+- Relaunch the app on the same explicit simulator UUID, open History, and
+  confirm the HealthKit-backed rows and latest plan title persist. Refresh or
   relaunch again and verify migration does not double-count the session.
-- Open app Settings from the denied/local-fallback state, change Hang Ten's
+- From Train, open Settings with `train.settings`; from the denied or
+  local-fallback state use `health.settings` to open system app settings, change Hang Ten's
   Health permissions, return to the app, and confirm authorization and history
   refresh automatically without a new permission prompt on appearance.
 - Preserve the signed HealthKit entitlement check. Inspect the installed app
@@ -399,7 +413,8 @@ routine change, preview every distinct hold target and finger cue.
   and deduplication. It does not prove cross-device HealthKit restoration;
   repeat that scenario on two physical devices using the same HealthKit
   account before release.
-- On a signed build, open Progress, tap Connect Apple Health, and inspect the
+- On a signed build, open Train's gear → Settings, tap Connect Apple Health,
+  and inspect the
   user-triggered HealthKit authorization sheet. After authorization, complete a
   short session and verify the write path is exercised; the saved metadata
   must include the board ID/name and versioned activity-segment JSON. The

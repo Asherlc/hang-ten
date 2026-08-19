@@ -91,12 +91,14 @@ enum RootTab: Hashable, CaseIterable {
     case history
 
     static func initial(environment: [String: String]) -> RootTab {
+        #if DEBUG
         if environment["HANGTEN_REVIEW_HISTORY"] == "1" {
             return .history
         }
         if environment["HANGTEN_REVIEW_PLANS"] == "1" {
             return .plans
         }
+        #endif
         return .train
     }
 }
@@ -653,6 +655,23 @@ struct FavoritePlanCard: View {
     }
 }
 
+enum PlanDetailPlanResolver {
+    static func resolve(
+        capturedPlan: TrainingPlan,
+        eligiblePlans: [TrainingPlan]
+    ) -> TrainingPlan? {
+        eligiblePlans.first { $0.id == capturedPlan.id }
+    }
+}
+
+private enum PlanDetailResolutionError: LocalizedError {
+    case unavailable
+
+    var errorDescription: String? {
+        "This routine is not available for the selected board."
+    }
+}
+
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -662,8 +681,11 @@ struct PlanDetailView: View {
     @State private var isShowingDeleteConfirmation = false
     @State private var lifecycleError: String?
 
-    private var currentPlan: TrainingPlan {
-        store.plans.first(where: { $0.id == plan.id }) ?? plan
+    private var currentPlan: TrainingPlan? {
+        PlanDetailPlanResolver.resolve(
+            capturedPlan: plan,
+            eligiblePlans: store.plans
+        )
     }
 
     @MainActor
@@ -671,66 +693,55 @@ struct PlanDetailView: View {
         for plan: TrainingPlan,
         in store: AppStore
     ) throws -> CustomRoutineDefinition {
-        let currentPlan = store.plans.first(where: { $0.id == plan.id }) ?? plan
+        guard let currentPlan = PlanDetailPlanResolver.resolve(
+            capturedPlan: plan,
+            eligiblePlans: store.plans
+        ) else {
+            throw PlanDetailResolutionError.unavailable
+        }
         return try store.duplicateRoutine(currentPlan)
     }
 
-    private var board: TrainingBoard {
-        store.board(for: currentPlan)
-    }
-
-    private var firstStep: WorkoutStep? {
-        currentPlan.steps.first
-    }
-
-    private var firstStepHoldIDs: Set<String> {
-        guard let firstStep else { return [] }
-        return store.holdIDs(for: firstStep, on: board)
-    }
-
-    private var firstStepHold: BoardHold? {
-        board.holds.first { firstStepHoldIDs.contains($0.id) }
-    }
-
-    private var firstStepHoldCue: WorkoutHoldCue? {
-        WorkoutHoldCuePolicy.resolve(
-            step: firstStep,
-            hold: firstStepHold,
-            on: board
-        )
-    }
-
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 21) {
-                titleBlock
-                if let firstStep, !firstStep.targets.isEmpty {
-                    boardPreview
+        Group {
+            if let currentPlan {
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 21) {
+                        titleBlock(for: currentPlan)
+                        if let firstStep = currentPlan.steps.first,
+                           !firstStep.targets.isEmpty {
+                            boardPreview(for: currentPlan)
+                        }
+                        stepsCard(for: currentPlan)
+                        sourceCard(for: currentPlan)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 18)
+                    .padding(.bottom, 116)
                 }
-                stepsCard
-                sourceCard
+            } else {
+                unavailableContent
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 18)
-            .padding(.bottom, 116)
         }
         .background(Color.hangBackground)
         .navigationTitle("Plan")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button("Duplicate", action: duplicateRoutine)
-                    if store.isCustom(plan) {
-                        Button("Edit", action: editRoutine)
-                        Button("Delete", role: .destructive) {
-                            isShowingDeleteConfirmation = true
+            if let currentPlan {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Duplicate", action: duplicateRoutine)
+                        if store.isCustom(currentPlan) {
+                            Button("Edit", action: editRoutine)
+                            Button("Delete", role: .destructive) {
+                                isShowingDeleteConfirmation = true
+                            }
                         }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
                     }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
+                    .accessibilityIdentifier("customRoutine.actions")
                 }
-                .accessibilityIdentifier("customRoutine.actions")
             }
         }
         .sheet(isPresented: $isShowingEditor) {
@@ -739,7 +750,7 @@ struct PlanDetailView: View {
             }
         }
         .confirmationDialog(
-            "Delete \(currentPlan.title)?",
+            "Delete \(currentPlan?.title ?? plan.title)?",
             isPresented: $isShowingDeleteConfirmation,
             titleVisibility: .visible
         ) {
@@ -758,7 +769,7 @@ struct PlanDetailView: View {
         }
     }
 
-    private var titleBlock: some View {
+    private func titleBlock(for currentPlan: TrainingPlan) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Pill(title: currentPlan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
@@ -798,8 +809,18 @@ struct PlanDetailView: View {
         }
     }
 
-    private var boardPreview: some View {
-        VStack(alignment: .leading, spacing: 12) {
+    private func boardPreview(for currentPlan: TrainingPlan) -> some View {
+        let board = store.board(for: currentPlan)
+        let firstStep = currentPlan.steps.first
+        let firstStepHoldIDs = firstStep.map { store.holdIDs(for: $0, on: board) } ?? []
+        let firstStepHold = board.holds.first { firstStepHoldIDs.contains($0.id) }
+        let firstStepHoldCue = WorkoutHoldCuePolicy.resolve(
+            step: firstStep,
+            hold: firstStepHold,
+            on: board
+        )
+
+        return VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
                 SectionLabel(title: "First hold cue")
                 Text(board.name)
@@ -825,7 +846,7 @@ struct PlanDetailView: View {
         .hangCard()
     }
 
-    private var stepsCard: some View {
+    private func stepsCard(for currentPlan: TrainingPlan) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 SectionLabel(title: "Session flow")
@@ -845,10 +866,10 @@ struct PlanDetailView: View {
     }
 
     @ViewBuilder
-    private var sourceCard: some View {
+    private func sourceCard(for currentPlan: TrainingPlan) -> some View {
         if let sourceURL = currentPlan.sourceURL {
             Link(destination: sourceURL) {
-                sourceCardContent(showsExternalLink: true)
+                sourceCardContent(for: currentPlan, showsExternalLink: true)
             }
             .buttonStyle(.plain)
         } else {
@@ -875,7 +896,10 @@ struct PlanDetailView: View {
         .hangCard(padding: 16)
     }
 
-    private func sourceCardContent(showsExternalLink: Bool) -> some View {
+    private func sourceCardContent(
+        for currentPlan: TrainingPlan,
+        showsExternalLink: Bool
+    ) -> some View {
         HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "book.pages.fill")
                     .font(.system(size: 17, weight: .bold))
@@ -897,6 +921,30 @@ struct PlanDetailView: View {
                 }
             }
             .hangCard(padding: 16)
+    }
+
+    private var unavailableContent: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Image(systemName: "rectangle.portrait.and.arrow.right")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+            SectionLabel(title: "Routine unavailable")
+            Text(plan.title)
+                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text("This routine does not support \(store.selectedBoard.name). Choose a compatible plan for your selected board.")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+            Button("Go back", action: dismiss.callAsFunction)
+                .buttonStyle(.borderedProminent)
+                .tint(.hangGreenDark)
+        }
+        .hangCard()
+        .padding(.horizontal, 20)
+        .padding(.top, 18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .accessibilityIdentifier("plan.unavailable")
     }
 
     private var lifecycleErrorAlertBinding: Binding<Bool> {
@@ -922,6 +970,10 @@ struct PlanDetailView: View {
     }
 
     private func editRoutine() {
+        guard currentPlan != nil else {
+            lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
+            return
+        }
         guard let definition = store.customDefinition(for: plan.id) else {
             lifecycleError = "The custom routine could not be found."
             return
@@ -931,6 +983,10 @@ struct PlanDetailView: View {
     }
 
     private func deleteRoutine() {
+        guard currentPlan != nil else {
+            lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
+            return
+        }
         do {
             try store.deleteCustomRoutine(id: plan.id)
             dismiss()

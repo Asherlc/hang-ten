@@ -145,6 +145,45 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertEqual(duplicate.steps.map(\.id), ["step-1", "step-2"])
     }
 
+    func testPlanDetailRejectsCapturedBoardSpecificPlanAfterBoardChanges() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let capturedPlan = try XCTUnwrap(store.plans.first { $0.boardID != nil })
+        let otherBoard = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id != capturedPlan.boardID }
+        )
+
+        store.selectBoard(otherBoard)
+
+        XCTAssertNil(PlanDetailPlanResolver.resolve(
+            capturedPlan: capturedPlan,
+            eligiblePlans: store.plans
+        ))
+        XCTAssertThrowsError(
+            try PlanDetailView.duplicateDefinition(for: capturedPlan, in: store)
+        )
+    }
+
+    func testPlanDetailRemapsCapturedGenericPlanToTheSelectedBoard() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let capturedPlan = try XCTUnwrap(store.plans.first { $0.boardID == nil })
+        let otherBoard = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id != store.selectedBoard.id }
+        )
+
+        store.selectBoard(otherBoard)
+        let resolvedPlan = try XCTUnwrap(PlanDetailPlanResolver.resolve(
+            capturedPlan: capturedPlan,
+            eligiblePlans: store.plans
+        ))
+
+        XCTAssertEqual(resolvedPlan.id, capturedPlan.id)
+        XCTAssertEqual(store.board(for: resolvedPlan).id, otherBoard.id)
+    }
+
     func testCorruptCustomIDsAreOmittedWithoutShadowingBuiltInsAndWarningIsRetained() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
