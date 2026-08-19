@@ -50,6 +50,12 @@ authoritative evidence proves them wrong, and pass native-pixel error gates.
 Product-specific code paths, hand-authored masks, special-case coordinates, and
 per-board tuning are forbidden.
 
+Already-audited path geometry may also be replaced by the schema's
+`roundedRect` primitive when a catalog-generic fit proves the final primitive
+against the original exact path at the same native-pixel error gates. The
+operation must preserve hold identity, piece inventory, frame, treatment, and
+all non-shape metadata, and a second run must be idempotent.
+
 ## Validation and deliverables
 
 Package validation, Workbench tests, simplifier idempotence, presentation

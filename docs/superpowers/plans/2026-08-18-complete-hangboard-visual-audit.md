@@ -84,7 +84,24 @@
 - [ ] Run `rtk scripts/hangboard-tools.sh packages validate --root Hangboards` and both generic dry runs; require all changed packages to validate and both dry runs to be idempotent.
 - [ ] Commit the task with `Audit and refine complete hangboard catalog`.
 
-### Task 4: After captures, visual verification, and PR-ready evidence
+### Task 4: Generic path-to-primitive hold reduction
+
+**Files:**
+- Modify: `Tools/HangboardPipeline/src/hangboard_vectorizer/board_path_simplification.py`
+- Modify: `Tools/HangboardPipeline/tests/test_board_path_simplification.py`
+- Modify: `Tools/HangboardPipeline/src/hangboard_vectorizer/board_catalog_cli.py` only if reporting needs a primitive-conversion field
+
+**Interfaces:**
+- Consumes: any existing audited `path` hold piece and its exact native-pixel rendering.
+- Produces: a `roundedRect` replacement only when its final native rendering has at most 1 px bidirectional boundary deviation and 0.25% symmetric difference from the original path, with editable points strictly reduced to zero.
+
+- [ ] Write failing product-neutral tests for exact rounded rectangles, rounded corners, capsule-like paths, near-miss irregular paths that must remain paths, native-pixel gate failures, metadata/frame/treatment preservation, deterministic radius choice, atomic writes, and second-run idempotence.
+- [ ] Implement deterministic primitive fitting with canvas-derived search resolution and no board IDs, coordinates, templates, or product tuning; compare every proposed final primitive directly against the original native path.
+- [ ] Run the focused simplifier suite and a catalog dry run, then run with `--write`; preserve ordered board/hold/piece inventories and every non-shape field.
+- [ ] Run package validation, focused Pipeline/Workbench suites, and a second simplifier dry run; require idempotence and report exact per-piece before/after counts and native-pixel errors.
+- [ ] Commit the task with `Reduce audited hold paths to primitives`.
+
+### Task 5: After captures, visual verification, and PR-ready evidence
 
 **Files:**
 - Create: `docs/source-audits/assets/2026-08-18-complete-hangboard-visual-audit/after-contact-sheet.png`
@@ -92,7 +109,7 @@
 - Modify: `docs/source-audits/2026-08-18-complete-hangboard-visual-audit.md`
 
 **Interfaces:**
-- Consumes: Task 3 final packages and audit metrics; Task 1 capture command; isolated simulator validation contract.
+- Consumes: Task 4 final packages and audit metrics; Task 1 capture command; isolated simulator validation contract.
 - Produces: complete after contact sheet, per-board visual verdicts, fresh validation evidence, and PR description image links.
 
 - [ ] Recapture every completed package through the Workbench, retain every full-resolution per-board after capture, and assert before/after manifests have identical ordered board-ID inventories.
