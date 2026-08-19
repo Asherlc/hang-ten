@@ -192,6 +192,8 @@ struct PlansView: View {
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
 
+                        currentBoardControl
+
                         Button {
                             isCreatingRoutine = true
                         } label: {
@@ -293,6 +295,40 @@ struct PlansView: View {
                 )
             }
         }
+    }
+
+    private var currentBoardControl: some View {
+        NavigationLink {
+            BoardPickerView()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "rectangle.portrait.fill")
+                    .foregroundStyle(Color.hangGreenDark)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Training on")
+                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                    Text(store.selectedBoard.name)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+            }
+            .padding(14)
+            .background(
+                Color.hangCream,
+                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("plans.changeBoard")
     }
 
     private func filterBar(options: PlanFilterOptions) -> some View {
