@@ -98,14 +98,25 @@ def _load_image(path: Path) -> Image.Image:
 
 
 def _visible_bounds(image: Image.Image) -> Crop | None:
-    pixels = np.asarray(image)
+    foreground, _ambiguous = visible_foreground_mask(image)
+    return _mask_bounds(foreground)
+
+
+def visible_foreground_mask(image: Image.Image) -> tuple[np.ndarray, bool]:
+    """Return the shared image-only foreground policy and ambiguity state.
+
+    Transparent canvases use alpha. Opaque canvases use the existing
+    border-connected light-neutral classifier; an unclassifiable opaque image
+    deliberately keeps the full canvas and records that conservative choice.
+    """
+    pixels = np.asarray(image.convert("RGBA"))
     alpha = pixels[:, :, 3]
     if np.any(alpha == 0):
-        foreground = alpha > 0
-    else:
-        background = _opaque_background_mask(pixels[:, :, :3])
-        foreground = np.ones(alpha.shape, dtype=bool) if background is None else ~background
-    return _mask_bounds(foreground)
+        return alpha > 0, False
+    background = _opaque_background_mask(pixels[:, :, :3])
+    if background is None:
+        return np.ones(alpha.shape, dtype=bool), True
+    return ~background, False
 
 
 def _opaque_background_mask(rgb: np.ndarray) -> np.ndarray | None:

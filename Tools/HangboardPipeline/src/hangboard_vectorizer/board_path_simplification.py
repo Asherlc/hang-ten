@@ -51,6 +51,83 @@ class HoldPathSimplificationResult:
         return any(piece.changed for piece in self.pieces)
 
 
+@dataclass(frozen=True)
+class NativeContourError:
+    maximum_boundary_deviation_pixels: float
+    symmetric_difference_ratio: float
+
+    @property
+    def passes(self) -> bool:
+        return (
+            self.maximum_boundary_deviation_pixels
+            <= _MAX_BOUNDARY_DEVIATION_PIXELS
+            and self.symmetric_difference_ratio
+            <= _MAX_SYMMETRIC_DIFFERENCE_RATIO
+        )
+
+
+def measure_native_contour_error(
+    before: Sequence[Point],
+    after: Sequence[Point],
+    *,
+    width: int,
+    height: int,
+) -> NativeContourError:
+    """Measure two native-pixel contours with the package simplifier gates."""
+    first, second = list(before), list(after)
+    if not _is_simple_polygon(first) or not _is_simple_polygon(second):
+        raise ValueError("native contours must be simple nonzero polygons")
+    if len(first) == len(second) and all(
+        _same_point(first_point, second_point)
+        for first_point, second_point in zip(first, second, strict=True)
+    ):
+        return NativeContourError(0.0, 0.0)
+    if not _within_exact_hausdorff_work_cap(first, second):
+        raise ValueError("native contour comparison exceeds exact complexity cap")
+    return NativeContourError(
+        maximum_boundary_deviation_pixels=_boundary_deviation(first, second),
+        symmetric_difference_ratio=_symmetric_difference_ratio(
+            first, second, width=width, height=height
+        ),
+    )
+
+
+def simplify_native_contour(
+    points: Sequence[Point], *, width: int, height: int
+) -> tuple[Point, ...]:
+    """Apply the existing exact reduction loop to one native-pixel contour."""
+    original = list(points)
+    if not _is_simple_polygon(original):
+        raise ValueError("native contour must be a simple nonzero polygon")
+    minimum_x = min(point[0] for point in original)
+    maximum_x = max(point[0] for point in original)
+    minimum_y = min(point[1] for point in original)
+    maximum_y = max(point[1] for point in original)
+    frame_width = maximum_x - minimum_x
+    frame_height = maximum_y - minimum_y
+    if frame_width <= _EPSILON or frame_height <= _EPSILON:
+        raise ValueError("native contour must have positive bounds")
+    frame = {
+        "x": minimum_x / width,
+        "y": minimum_y / height,
+        "width": frame_width / width,
+        "height": frame_height / height,
+    }
+    local = [
+        (
+            (point[0] - minimum_x) / frame_width,
+            (point[1] - minimum_y) / frame_height,
+        )
+        for point in original
+    ]
+    simplified, complexity_capped, _statistics = _reduce_line_polygon(
+        local, frame, width=width, height=height
+    )
+    if complexity_capped:
+        return tuple(original)
+    return tuple(_position(simplified, frame, width=width, height=height))
+
+
 def simplify_package_hold_paths(
     package_root: Path, *, write: bool
 ) -> HoldPathSimplificationResult:

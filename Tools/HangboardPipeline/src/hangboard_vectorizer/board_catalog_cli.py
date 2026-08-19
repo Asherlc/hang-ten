@@ -9,6 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
+from .board_geometry_derivation import derive_geometry_candidates
 from .board_path_simplification import simplify_package_hold_paths
 from .board_presentation import normalize_package_presentation
 
@@ -35,6 +36,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         if arguments.command == "normalize-presentations":
             inventory = discover_board_packages(arguments.root)
             payload, failed = _presentation_payload(inventory, write=arguments.write)
+            print(payload)
+            return 1 if failed else 0
+        if arguments.command == "derive-hold-geometry":
+            inventory = discover_board_packages(arguments.root)
+            payload, failed = _derivation_payload(inventory)
             print(payload)
             return 1 if failed else 0
         raise _CliError("unknown command")
@@ -75,6 +81,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     normalize.add_argument("--root", type=Path, required=True)
     normalize.add_argument("--write", action="store_true", help="atomically update changed board packages")
+    derive = subcommands.add_parser(
+        "derive-hold-geometry",
+        help="emit deterministic unlabeled image-derived hold candidates without writing",
+    )
+    derive.add_argument("--root", type=Path, required=True)
     return parser
 
 
@@ -129,6 +140,26 @@ def _presentation_payload(inventory: BoardInventory, *, write: bool) -> tuple[st
             }
         )
     return _catalog_payload(boards, inventory, write=write), failed
+
+
+def _derivation_payload(inventory: BoardInventory) -> tuple[str, bool]:
+    boards = []
+    failed = False
+    for package in inventory.packages:
+        try:
+            report = derive_geometry_candidates(package.root)
+        except (OSError, ValueError) as error:
+            failed = True
+            boards.append(_package_error(package, error))
+            continue
+        boards.append(
+            {
+                "id": package.board.id,
+                "path": package.root.name,
+                "manifest": report.manifest(),
+            }
+        )
+    return _catalog_payload(boards, inventory, write=False), failed
 
 
 def _catalog_payload(

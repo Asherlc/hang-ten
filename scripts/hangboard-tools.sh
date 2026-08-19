@@ -20,7 +20,7 @@ Commands:
   promote     Build a safe promotion package for an accepted review run
   release-check Verify repo-facing release readiness for one promoted review run
   benchmark   Validate canonical package semantic and artwork parity
-  packages    Validate or inspect directly discovered hangboard packages
+  packages    Validate, inspect, or derive dry-run geometry for board packages
 EOF
 }
 
