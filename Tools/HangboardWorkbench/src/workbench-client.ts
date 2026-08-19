@@ -22,11 +22,29 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
 }
 
+function isOptionalString(value: unknown): value is string | undefined {
+  return value === undefined || typeof value === "string";
+}
+
+function isHoldRegion(value: unknown): value is EditorDocument["regions"][number] {
+  if (!isRecord(value)) return false;
+  const metadata = value.metadata;
+  return typeof value.key === "string"
+    && typeof value.displayPath === "string"
+    && (value.id === undefined || typeof value.id === "number")
+    && isOptionalString(value.type)
+    && (metadata === undefined
+      || (isRecord(metadata)
+        && typeof metadata.holdID === "string"
+        && typeof metadata.pieceIndex === "number"));
+}
+
 function isBoardSummary(value: unknown): value is BoardSummary {
   return isRecord(value)
     && typeof value.boardId === "string"
     && typeof value.displayName === "string"
-    && typeof value.holdCount === "number";
+    && typeof value.holdCount === "number"
+    && isOptionalString(value.href);
 }
 
 function isEditorDocumentPayload(value: unknown): value is EditorDocument {
@@ -36,9 +54,7 @@ function isEditorDocumentPayload(value: unknown): value is EditorDocument {
     && typeof value.canvas.width === "number"
     && typeof value.canvas.height === "number"
     && Array.isArray(value.regions)
-    && value.regions.every((region) => isRecord(region)
-      && typeof region.key === "string"
-      && typeof region.displayPath === "string");
+    && value.regions.every(isHoldRegion);
 }
 
 function isBoard(value: unknown): value is Board {
@@ -46,7 +62,9 @@ function isBoard(value: unknown): value is Board {
     && typeof value.boardId === "string"
     && typeof value.displayName === "string"
     && typeof value.holdCount === "number"
+    && isOptionalString(value.href)
     && typeof value.imageUrl === "string"
+    && isOptionalString(value.saveUrl)
     && isEditorDocumentPayload(value.document);
 }
 

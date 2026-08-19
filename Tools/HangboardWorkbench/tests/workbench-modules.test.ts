@@ -94,6 +94,92 @@ test("the browser client lists and opens direct boards", async () => {
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
 });
 
+test("the browser client rejects invalid optional board URLs", async () => {
+  const { runtime } = runtimeFixture(async (input) => {
+    if (String(input) === "/api/boards") {
+      return response({
+        ok: true,
+        boards: [{
+          boardId: "compact",
+          displayName: "Compact",
+          holdCount: 10,
+          href: 42,
+        }],
+      });
+    }
+    return response({
+      ok: true,
+      board: {
+        boardId: "compact",
+        displayName: "Compact",
+        holdCount: 10,
+        imageUrl: "/api/boards/compact/image",
+        saveUrl: 42,
+        document: editorDocument(),
+      },
+    });
+  });
+  const client = createWorkbenchClient(runtime);
+
+  await assert.rejects(client.listBoards(), /invalid board list/);
+  await assert.rejects(client.getBoard("compact"), /invalid board/);
+});
+
+test("the browser client rejects invalid optional hold-region fields", async (context) => {
+  const invalidRegions: Array<{ name: string; region: unknown }> = [
+    {
+      name: "id",
+      region: { id: "1", key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    },
+    {
+      name: "type",
+      region: { type: 42, key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    },
+    {
+      name: "metadata",
+      region: { metadata: "invalid", key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    },
+    {
+      name: "metadata holdID",
+      region: {
+        metadata: { holdID: 42, pieceIndex: 0 },
+        key: "hold-1",
+        displayPath: "M 1 1 L 2 1 L 2 2 Z",
+      },
+    },
+    {
+      name: "metadata pieceIndex",
+      region: {
+        metadata: { holdID: "hold-1", pieceIndex: "0" },
+        key: "hold-1",
+        displayPath: "M 1 1 L 2 1 L 2 2 Z",
+      },
+    },
+  ];
+
+  for (const fixture of invalidRegions) {
+    await context.test(fixture.name, async () => {
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: {
+          boardId: "compact",
+          displayName: "Compact",
+          holdCount: 1,
+          imageUrl: "/api/boards/compact/image",
+          document: {
+            schemaVersion: 1,
+            canvas: { width: 100, height: 50 },
+            regions: [fixture.region],
+          },
+        },
+      }));
+      const client = createWorkbenchClient(runtime);
+
+      await assert.rejects(client.getBoard("compact"), /invalid board/);
+    });
+  }
+});
+
 test("the browser client navigates to login when an API request is unauthenticated", async () => {
   const { runtime, assignedUrls } = runtimeFixture(async () => response(
     { ok: false, error: "authentication required", login_url: "/auth/login" },
@@ -279,6 +365,35 @@ test("the direct editor model rejects duplicate and open hold paths before savin
   assert.throws(() => validateEditorDocument({ ...base, regions: [
     { key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20" },
   ] }), /one closed contour/);
+});
+
+test("the direct editor model rejects invalid optional hold-region fields", () => {
+  const invalidRegions: unknown[] = [
+    { id: "1", key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    { type: 42, key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    { metadata: "invalid", key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    {
+      metadata: { holdID: 42, pieceIndex: 0 },
+      key: "hold-1",
+      displayPath: "M 1 1 L 2 1 L 2 2 Z",
+    },
+    {
+      metadata: { holdID: "hold-1", pieceIndex: "0" },
+      key: "hold-1",
+      displayPath: "M 1 1 L 2 1 L 2 2 Z",
+    },
+  ];
+
+  for (const region of invalidRegions) {
+    assert.throws(
+      () => validateEditorDocument({
+        schemaVersion: 1,
+        canvas: { width: 100, height: 50 },
+        regions: [region],
+      }),
+      /valid hold fields/,
+    );
+  }
 });
 
 test("a rejected save keeps the editor document untouched", async () => {

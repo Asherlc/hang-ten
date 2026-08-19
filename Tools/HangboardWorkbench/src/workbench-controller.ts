@@ -11,9 +11,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isHoldRegion(value: unknown): value is HoldRegion {
-  return isRecord(value)
-    && typeof value.key === "string"
-    && typeof value.displayPath === "string";
+  if (!isRecord(value)) return false;
+  const metadata = value.metadata;
+  return typeof value.key === "string"
+    && typeof value.displayPath === "string"
+    && (value.id === undefined || typeof value.id === "number")
+    && (value.type === undefined || typeof value.type === "string")
+    && (metadata === undefined
+      || (isRecord(metadata)
+        && typeof metadata.holdID === "string"
+        && typeof metadata.pieceIndex === "number"));
 }
 
 function isEditorDocument(value: unknown): value is EditorDocument {
@@ -49,6 +56,9 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     if (typeof region.displayPath !== "string"
       || !/^\s*M\s+[^MZ]+\s+Z\s*$/u.test(region.displayPath)) {
       throw new Error(`Hold ${region.key} needs one closed contour`);
+    }
+    if (!isHoldRegion(region)) {
+      throw new Error(`Hold ${region.key} needs valid hold fields`);
     }
   }
   if (!isEditorDocument(document)) {
