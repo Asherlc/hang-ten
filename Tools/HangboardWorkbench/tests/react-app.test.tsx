@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import type { ReactElement } from "react";
+import { useState, type ReactElement } from "react";
 
 import { WorkbenchApp } from "../src/WorkbenchApp.tsx";
 import { useWorkbench } from "../src/useWorkbench.ts";
@@ -267,8 +267,13 @@ test("initialization awaits authentication, repository status, then boards", asy
     assert.deepEqual(calls, ["auth"]);
     await app.flush(() => auth.resolve({ ok: true, authenticated: true, username: "octocat" }));
     assert.deepEqual(calls, ["auth", "git"]);
+    assert.equal(app.disabled("#git-refresh-button"), true);
+    assert.equal(app.disabled("#git-new-branch-name"), true);
+    await app.click("#git-refresh-button");
+    assert.deepEqual(calls, ["auth", "git"]);
     await app.flush(() => status.resolve(gitStatus()));
     assert.deepEqual(calls, ["auth", "git", "boards"]);
+    assert.equal(app.disabled("#git-refresh-button"), false);
   });
 });
 
@@ -371,6 +376,85 @@ test("an old delayed save cannot overwrite a newer document identity", async () 
     assert.equal(result().state.document?.regions[0]?.displayPath, "M 9 9 L 29 9 L 29 29 Z");
     assert.equal(result().state.dirty, true);
   });
+});
+
+test("a successful save always reports Board saved after committing the saved document", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(boardId, document) {
+        saves += 1;
+        return boardFixture(boardId, document);
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    assert.equal(app.text("#editor-status"), "Board loaded.");
+
+    await app.click("#save-button");
+
+    assert.equal(saves, 1);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(app.text("#editor-status"), "Board saved.");
+  });
+});
+
+test("replacing dependencies cannot let stale initialization overwrite coordinated Git state", async () => {
+  const staleStatus = deferred<GitStatus>();
+  let staleBoards = 0;
+  let freshGitCalls = 0;
+  let freshBoards = 0;
+  const initialDependencies = dependenciesFixture({
+    client: {
+      async getAuthStatus() { return { ok: true, authenticated: true, username: "old-user" }; },
+      getGitStatus() { return staleStatus.promise; },
+      async listBoards() { staleBoards += 1; return []; },
+    },
+  });
+  const replacementDependencies = dependenciesFixture({
+    client: {
+      async getAuthStatus() { return { ok: true, authenticated: true, username: "new-user" }; },
+      async getGitStatus() {
+        freshGitCalls += 1;
+        return gitStatus({ currentBranch: "fresh", branches: ["fresh"] });
+      },
+      async listBoards() { freshBoards += 1; return []; },
+    },
+  });
+  let replaceDependencies: ((dependencies: WorkbenchDependencies) => void) | undefined;
+
+  function ReplacingApp(): ReactElement {
+    const [dependencies, setDependencies] = useState(initialDependencies);
+    replaceDependencies = (nextDependencies) => setDependencies(nextDependencies);
+    return <WorkbenchApp dependencies={dependencies} />;
+  }
+
+  const app = await renderReact(<ReplacingApp />);
+  try {
+    await app.flush();
+    assert.equal(app.disabled("#git-refresh-button"), true);
+    await app.flush(() => replaceDependencies?.(replacementDependencies));
+    assert.equal(freshGitCalls, 0, "replacement initialization waits for the coordinated Git slot");
+
+    await app.flush(() => staleStatus.resolve(gitStatus({
+      currentBranch: "stale",
+      branches: ["stale"],
+    })));
+    await app.flush();
+
+    assert.equal(app.text("#git-auth-status"), "Logged in as new-user");
+    assert.equal(app.text("#git-status"), "fresh");
+    assert.equal(staleBoards, 0);
+    assert.equal(freshGitCalls, 1);
+    assert.equal(freshBoards, 1);
+    assert.equal(app.disabled("#git-refresh-button"), false);
+  } finally {
+    await app.cleanup();
+  }
 });
 
 test("detached HEAD differs from unavailable status and still permits New Branch", async () => {

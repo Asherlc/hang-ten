@@ -35,6 +35,7 @@ const INITIAL_STATE: WorkbenchState = {
 };
 
 type StateUpdate = (state: WorkbenchState) => WorkbenchState;
+type ActivityGuard = () => boolean;
 
 function cloneEditorDocument(document: EditorDocument): EditorDocument {
   return {
@@ -62,8 +63,13 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const { client, controller, dialogs, runtime } = dependencies;
   const [state, setState] = useState<WorkbenchState>(INITIAL_STATE);
   const stateRef = useRef(state);
+  const mountedRef = useRef(true);
+  const initializationGenerationRef = useRef(0);
+  const boardIdleWaitersRef = useRef(new Set<() => void>());
+  const gitIdleWaitersRef = useRef(new Set<() => void>());
 
   const updateState = useCallback((update: StateUpdate): void => {
+    if (!mountedRef.current) return;
     setState((current) => {
       const next = update(current);
       stateRef.current = next;
@@ -78,13 +84,25 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const boardOperationsRef = useRef<BoardOperationCoordinator | null>(null);
   if (boardOperationsRef.current === null) {
     boardOperationsRef.current = controller.createBoardOperationCoordinator({
-      onBusyChange: (busy) => updateState((current) => ({ ...current, busyBoard: busy })),
+      onBusyChange: (busy) => {
+        if (!busy) {
+          for (const resolve of boardIdleWaitersRef.current) resolve();
+          boardIdleWaitersRef.current.clear();
+        }
+        updateState((current) => ({ ...current, busyBoard: busy }));
+      },
     });
   }
   const gitOperationsRef = useRef<BoardOperationCoordinator | null>(null);
   if (gitOperationsRef.current === null) {
     gitOperationsRef.current = controller.createBoardOperationCoordinator({
-      onBusyChange: (busy) => updateState((current) => ({ ...current, busyGit: busy })),
+      onBusyChange: (busy) => {
+        if (!busy) {
+          for (const resolve of gitIdleWaitersRef.current) resolve();
+          gitIdleWaitersRef.current.clear();
+        }
+        updateState((current) => ({ ...current, busyGit: busy }));
+      },
     });
   }
   const boardOperations = boardOperationsRef.current;
@@ -93,6 +111,18 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const isBusy = useCallback((): boolean => (
     boardOperations.isBusy || gitOperations.isBusy
   ), [boardOperations, gitOperations]);
+
+  const waitForBoardIdle = useCallback(async (isActive: ActivityGuard): Promise<void> => {
+    while (boardOperations.isBusy && isActive()) {
+      await new Promise<void>((resolve) => boardIdleWaitersRef.current.add(resolve));
+    }
+  }, [boardOperations]);
+
+  const waitForGitIdle = useCallback(async (isActive: ActivityGuard): Promise<void> => {
+    while (gitOperations.isBusy && isActive()) {
+      await new Promise<void>((resolve) => gitIdleWaitersRef.current.add(resolve));
+    }
+  }, [gitOperations]);
 
   const loadImage = useCallback((href: string): Promise<HTMLImageElement> => (
     new Promise((resolve, reject) => {
@@ -111,11 +141,17 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     })
   ), [runtime]);
 
-  const reloadBoards = useCallback(async (): Promise<boolean> => {
+  const reloadBoards = useCallback(async (
+    isActive: ActivityGuard = () => mountedRef.current,
+    waitForSlot = false,
+  ): Promise<boolean> => {
+    if (waitForSlot) await waitForBoardIdle(isActive);
+    if (!isActive()) return false;
     let loaded = false;
-    await boardOperations.perform(async () => {
+    await boardOperations.perform(async ({ isCurrent }) => {
       try {
         const boards = await client.listBoards();
+        if (!isActive() || !isCurrent()) return;
         updateState((current) => ({
           ...current,
           boards,
@@ -124,6 +160,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         }));
         loaded = true;
       } catch (error: unknown) {
+        if (!isActive() || !isCurrent()) return;
         updateState((current) => ({
           ...current,
           boardsError: errorMessage(error, "Could not load boards."),
@@ -132,16 +169,19 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       }
     });
     return loaded;
-  }, [boardOperations, client, updateState]);
+  }, [boardOperations, client, updateState, waitForBoardIdle]);
 
   const refreshBoards = useCallback(async (): Promise<void> => {
     if (isBusy()) return;
     await reloadBoards();
   }, [isBusy, reloadBoards]);
 
-  const refreshGitState = useCallback(async (): Promise<boolean> => {
+  const refreshGitState = useCallback(async (
+    isActive: ActivityGuard = () => mountedRef.current,
+  ): Promise<boolean> => {
     try {
       const status = await client.getGitStatus();
+      if (!isActive()) return false;
       updateState((current) => ({
         ...current,
         branches: [...status.branches],
@@ -152,6 +192,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       }));
       return true;
     } catch (error: unknown) {
+      if (!isActive()) return false;
       updateState((current) => ({
         ...current,
         branches: [],
@@ -168,14 +209,15 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
 
   const refreshGit = useCallback(async (): Promise<void> => {
     if (isBusy()) return;
-    await gitOperations.perform(async () => {
-      await refreshGitState();
+    await gitOperations.perform(async ({ isCurrent }) => {
+      await refreshGitState(() => mountedRef.current && isCurrent());
     });
   }, [gitOperations, isBusy, refreshGitState]);
 
-  const refreshAuthState = useCallback(async (): Promise<void> => {
+  const refreshAuthState = useCallback(async (isActive: ActivityGuard): Promise<void> => {
     try {
       const auth = await client.getAuthStatus();
+      if (!isActive()) return;
       updateState((current) => ({
         ...current,
         authenticated: auth.authenticated,
@@ -183,6 +225,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         hostedStorage: auth.hostedStorage ?? false,
       }));
     } catch {
+      if (!isActive()) return;
       updateState((current) => ({
         ...current,
         authenticated: false,
@@ -191,6 +234,14 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       }));
     }
   }, [client, updateState]);
+
+  const refreshInitialGitState = useCallback(async (isActive: ActivityGuard): Promise<void> => {
+    await waitForGitIdle(isActive);
+    if (!isActive()) return;
+    await gitOperations.perform(async ({ isCurrent }) => {
+      await refreshGitState(() => isActive() && isCurrent());
+    });
+  }, [gitOperations, refreshGitState, waitForGitIdle]);
 
   const selectBoard = useCallback(async (boardId: string): Promise<void> => {
     if (!boardId || isBusy()) return;
@@ -244,35 +295,30 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     const boardId = current.board.boardId;
     const documentIdentity = current.document;
     await boardOperations.perform(async ({ isCurrent }) => {
-      let committed = false;
       try {
         await controller.saveBoardAtomically({
           boardId,
           document: cloneEditorDocument(documentIdentity),
           save: client.saveBoard,
           commit: ({ board, document }) => {
-            if (!isCurrent()) return;
+            if (!isCurrent()
+              || stateRef.current.board?.boardId !== boardId
+              || stateRef.current.document !== documentIdentity) return;
             updateState((latest) => {
               if (latest.board?.boardId !== boardId || latest.document !== documentIdentity) {
                 return latest;
               }
-              committed = true;
               return {
                 ...latest,
                 board,
                 document: cloneEditorDocument(document),
                 dirty: false,
+                validation: "",
+                status: "Board saved.",
               };
             });
           },
         });
-        if (committed) {
-          updateState((latest) => ({
-            ...latest,
-            validation: "",
-            status: "Board saved.",
-          }));
-        }
       } catch (error: unknown) {
         if (!isCurrent()) return;
         updateState((latest) => ({
@@ -457,16 +503,36 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   }, [client, dialogs, gitOperations, isBusy, updateState]);
 
   useEffect(() => {
-    let active = true;
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      initializationGenerationRef.current += 1;
+      for (const resolve of boardIdleWaitersRef.current) resolve();
+      boardIdleWaitersRef.current.clear();
+      for (const resolve of gitIdleWaitersRef.current) resolve();
+      gitIdleWaitersRef.current.clear();
+    };
+  }, []);
+
+  useEffect(() => {
+    const generation = initializationGenerationRef.current + 1;
+    initializationGenerationRef.current = generation;
+    const isActive = (): boolean => (
+      mountedRef.current && initializationGenerationRef.current === generation
+    );
     void (async () => {
-      await refreshAuthState();
-      if (!active) return;
-      await refreshGitState();
-      if (!active) return;
-      await reloadBoards();
+      await refreshAuthState(isActive);
+      if (!isActive()) return;
+      await refreshInitialGitState(isActive);
+      if (!isActive()) return;
+      await reloadBoards(isActive, true);
     })();
-    return () => { active = false; };
-  }, [refreshAuthState, refreshGitState, reloadBoards]);
+    return () => {
+      if (initializationGenerationRef.current === generation) {
+        initializationGenerationRef.current += 1;
+      }
+    };
+  }, [refreshAuthState, refreshInitialGitState, reloadBoards]);
 
   const actions = useMemo<WorkbenchActions>(() => ({
     refreshBoards,
