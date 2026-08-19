@@ -1157,36 +1157,6 @@ enum LegacyPlanSeedBoardMappings {
 enum LegacyPlanSeedCatalog {
     static let repeaterStepIDPrefix = "repeaters-grip-"
 
-    private static let exactTargetMapping = LegacyPlanSeedBoardMappings.required(
-        containingSemantic: "edge-19"
-    )
-    private static let exactTargetBoard = requiredBoard(id: exactTargetMapping.boardID)
-
-    private static func requiredBoard(id boardID: String) -> TrainingBoard {
-        let matches = BoardCatalog.all.filter { $0.id == boardID }
-        precondition(
-            matches.count == 1,
-            "Expected exactly one discovered board with ID \(boardID)."
-        )
-        return matches[0]
-    }
-
-    private static func exactTarget(
-        _ semanticID: String,
-        holdIndex: Int? = nil
-    ) -> HoldTarget {
-        guard let holdIDs = exactTargetMapping.semanticHolds[semanticID]?.holdIDs else {
-            preconditionFailure(
-                "The plan seed mapping is missing \(semanticID) semantics."
-            )
-        }
-        if let holdIndex {
-            precondition(holdIDs.indices.contains(holdIndex))
-            return .ids([holdIDs[holdIndex]])
-        }
-        return .ids(holdIDs)
-    }
-
     private static let sourceURL = URL(
         string: "https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide"
     )!
@@ -1516,12 +1486,12 @@ enum LegacyPlanSeedCatalog {
     static let maxHangs = TrainingPlan(
         id: "research.max-hangs",
         title: "Max Hangs",
-        subtitle: "Seven-second half-crimp hangs on a 20 mm edge; Compact II targeting and the five-set timer structure are app-guided.",
+        subtitle: "Seven-second half-crimp hangs on a 20 mm edge; the five-set timer structure is app-guided.",
         level: "Advanced",
         sourceLabel: "Lattice max hang protocol",
         sourceURL: URL(string: "https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered([
             hangStep(
                 id: "max-hangs-1",
@@ -1530,7 +1500,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [exactTarget("edge-19")],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1540,7 +1510,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [exactTarget("edge-19")],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1550,7 +1520,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [exactTarget("edge-19")],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1560,7 +1530,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · app recovery 3m · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [exactTarget("edge-19")],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
                 gripType: .halfCrimp
             ),
             hangStep(
@@ -1570,7 +1540,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · half crimp",
                 active: 7,
                 rest: 0,
-                targets: [exactTarget("edge-19")],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
                 gripType: .halfCrimp
             ),
         ])
@@ -1579,12 +1549,12 @@ enum LegacyPlanSeedCatalog {
     static let forceF80 = TrainingPlan(
         id: "research.force-feedback-f80",
         title: "F80 Force Board",
-        subtitle: "80% MFSi repeaters on the study hold; Compact II targeting is adapted.",
+        subtitle: "80% MFSi repeaters require real-time force measurement/feedback; the study used an instrumented 12 mm hold.",
         level: "Advanced",
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for set in 1...3 {
@@ -1597,7 +1567,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: 6,
-                            targets: [exactTarget("edge-19")],
+                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)],
                             gripType: nil
                         )
                     )
@@ -1620,12 +1590,12 @@ enum LegacyPlanSeedCatalog {
     static let forceF100 = TrainingPlan(
         id: "research.force-feedback-f100",
         title: "F100 Force Board",
-        subtitle: "Six-second maximal alternating-hand hangs; Compact II targeting and timer structure are app adaptations.",
+        subtitle: "Six-second maximal alternating-hand hangs require real-time force measurement/feedback; the study used an instrumented 12 mm hold.",
         level: "Expert",
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for set in 1...2 {
@@ -1638,7 +1608,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: 0,
-                            targets: [exactTarget("edge-19", holdIndex: 1)],
+                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)],
                             gripType: nil
                         )
                     )
@@ -1650,7 +1620,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
-                            targets: [exactTarget("edge-19", holdIndex: 0)],
+                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)],
                             gripType: nil
                         )
                     )
@@ -1663,12 +1633,12 @@ enum LegacyPlanSeedCatalog {
     static let evaIntHangs = TrainingPlan(
         id: "research.eva-int-hangs",
         title: "Eva Intermittent Dead-Hangs",
-        subtitle: "Intermittent dead-hangs from the Eva López comparison study; exact timer structure and Compact II targeting are app adaptations.",
+        subtitle: "Intermittent dead-hangs from the Eva López comparison study; exact timer structure and semantic board targets are app adaptations.",
         level: "Intermediate+",
         sourceLabel: "Eva López hangboard comparison",
         sourceURL: URL(string: "https://pubmed.ncbi.nlm.nih.gov/30988852/")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for set in 1...3 {
@@ -1681,7 +1651,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "App timer adaptation",
                             active: 10,
                             rest: rep < 5 ? 5 : 0,
-                            targets: [exactTarget("edge-19")],
+                            targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
                             gripType: nil
                         )
                     )
@@ -1704,12 +1674,12 @@ enum LegacyPlanSeedCatalog {
     static let repeaters = TrainingPlan(
         id: "research.seven-three-repeaters",
         title: "7/3 Repeaters",
-        subtitle: "Two identical 7/3 sets with six progressive series; Compact II hold mapping is adapted.",
+        subtitle: "Two identical 7/3 sets with six progressive series; semantic edge targets are adapted.",
         level: "Intermediate",
         sourceLabel: "Beastmaker 7/3 study protocol",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.888158/full")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(
@@ -1718,12 +1688,12 @@ enum LegacyPlanSeedCatalog {
                 grip: GripType?,
                 fingerConfiguration: FingerConfiguration?
             )] = [
-                ("29 mm open edge", [exactTarget("edge-29")], .openHand, nil),
-                ("19 mm open edge", [exactTarget("edge-19")], .openHand, nil),
-                ("19 mm half crimp", [exactTarget("edge-19")], .halfCrimp, nil),
-                ("Front-three open edge", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("Back-three half crimp", [exactTarget("edge-19")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("Front-two open edge", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
+                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)], .openHand, nil),
+                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, nil),
+                ("19 mm half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, nil),
+                ("Front-three open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("Back-three half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("Front-two open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
             ]
 
             for set in 1...2 {
@@ -1772,21 +1742,21 @@ enum LegacyPlanSeedCatalog {
     static let abrahangs = TrainingPlan(
         id: "research.abrahangs",
         title: "Abrahangs",
-        subtitle: "Low-intensity feet-supported hangs; 10/50 timing and Compact II grip mapping are app adaptations.",
+        subtitle: "Low-intensity feet-supported hangs; 10/50 timing and semantic edge targets are app adaptations.",
         level: "Supplemental",
         sourceLabel: "Lattice Abrahangs protocol",
         sourceURL: URL(string: "https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [exactTarget("edge-19")], .halfCrimp, nil),
-                ("F3 Open Hang", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [exactTarget("edge-19")], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [exactTarget("edge-19")], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [exactTarget("edge-19")], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+                ("Half 4 Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, nil),
+                ("F3 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1811,18 +1781,18 @@ enum LegacyPlanSeedCatalog {
     static let horst753 = TrainingPlan(
         id: "coach.horst-seven-fifty-three",
         title: "7–53 Max Hangs",
-        subtitle: "Seven-second maximal hangs with exact 53-second rests; Compact II holds and three-minute set recovery are app choices.",
+        subtitle: "Seven-second maximal hangs with exact 53-second rests; semantic targets and three-minute set recovery are app choices.",
         level: "Advanced",
         sourceLabel: "Eric Hörst fingerboard protocols",
         sourceURL: URL(string: "https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm half crimp", [exactTarget("edge-29")], .halfCrimp),
-                ("19 mm open edge", [exactTarget("edge-19")], .openHand),
-                ("Two-finger pocket", [.feature(.pocket, fingerCapacity: 2)], .openHand)
+                ("29 mm half crimp", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)], .halfCrimp),
+                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand),
+                ("Two-finger pocket", [.feature(.pocket, fingerCapacity: 2, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)], .openHand)
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -1858,12 +1828,12 @@ enum LegacyPlanSeedCatalog {
     static let ladders = TrainingPlan(
         id: "coach.bechtel-three-six-nine",
         title: "3–6–9 Ladders",
-        subtitle: "The 3–6–9 sequence; three rounds, Compact II targeting, and exact rests are app choices within the source ranges.",
+        subtitle: "The 3–6–9 sequence; three rounds, semantic edge targets, and exact rests are app choices within the source ranges.",
         level: "Intermediate+",
         sourceLabel: "Steve Bechtel 3–6–9 ladder protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for round in 1...3 {
@@ -1876,7 +1846,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "App timer · \(hangSeconds)s hang · 30s rest",
                             active: TimeInterval(hangSeconds),
                             rest: index < 2 ? 30 : 0,
-                            targets: [exactTarget("edge-29")],
+                            targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)],
                             gripType: nil
                         )
                     )
@@ -1899,17 +1869,17 @@ enum LegacyPlanSeedCatalog {
     static let densityHangs = TrainingPlan(
         id: "coach.density-hangs",
         title: "Density Hangs",
-        subtitle: "Density hangs within the source ranges; exact timers, set count, and Compact II holds are app adaptations.",
+        subtitle: "Density hangs within the source ranges; exact timers, set count, and semantic targets are app adaptations.",
         level: "Intermediate+",
         sourceLabel: "Tyler Nelson density hang protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm open edge", [exactTarget("edge-29")], .openHand),
-                ("Four-finger pocket", [.feature(.pocket, fingerCapacity: 4)], .openHand)
+                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)], .openHand),
+                ("Four-finger pocket", [.feature(.pocket, fingerCapacity: 4, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)], .openHand)
             ]
 
             for (holdIndex, grip) in grips.enumerated() {
@@ -1957,12 +1927,12 @@ enum LegacyPlanSeedCatalog {
     static let zlagboardEndurance = TrainingPlan(
         id: "device.zlagboard-sixty-sixty",
         title: "Zlagboard 60/60 Endurance",
-        subtitle: "Ten 60-second hangs with 60-second rests; Compact II targeting is adapted.",
+        subtitle: "Ten 60-second hangs with 60-second rests; the semantic edge target is adapted.",
         level: "Intermediate",
         sourceLabel: "Zlagboard endurance protocol",
         sourceURL: URL(string: "https://strengthclimbing.com/zlagboard-forearm-endurance-workout/")!,
         provenance: .adapted,
-        boardID: exactTargetBoard.id,
+        boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
             for interval in 1...10 {
@@ -1974,7 +1944,7 @@ enum LegacyPlanSeedCatalog {
                         accessory: "60s hang · 60s rest",
                         active: 60,
                         rest: interval < 10 ? 60 : 0,
-                        targets: [exactTarget("edge-29")],
+                        targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)],
                         gripType: nil
                     )
                 )
