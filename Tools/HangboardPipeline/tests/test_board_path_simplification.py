@@ -211,10 +211,10 @@ def test_preserves_curve_when_its_polygon_approximation_is_not_cheaper(tmp_path:
         "type": "path",
         "commands": [
             {"command": "move", "to": [0, 0]},
-            {"command": "curve", "control1": [0.2, 0], "control2": [0.8, 0], "to": [1, 0]},
-            {"command": "curve", "control1": [1, 0.2], "control2": [1, 0.8], "to": [1, 1]},
-            {"command": "curve", "control1": [0.8, 1], "control2": [0.2, 1], "to": [0, 1]},
-            {"command": "curve", "control1": [0, 0.8], "control2": [0, 0.2], "to": [0, 0]},
+            {"command": "curve", "control1": [0.2, 0.1], "control2": [0.8, 0.1], "to": [1, 0]},
+            {"command": "curve", "control1": [0.9, 0.2], "control2": [0.9, 0.8], "to": [1, 1]},
+            {"command": "curve", "control1": [0.8, 0.9], "control2": [0.2, 0.9], "to": [0, 1]},
+            {"command": "curve", "control1": [0.1, 0.8], "control2": [0.1, 0.2], "to": [0, 0]},
             {"command": "close"},
         ],
     }
@@ -224,6 +224,53 @@ def test_preserves_curve_when_its_polygon_approximation_is_not_cheaper(tmp_path:
 
     change = result.pieces[0]
     assert (change.before_editable_points, change.after_editable_points, change.changed) == (13, 13, False)
+
+
+def test_simplifies_exact_redundancies_in_a_mixed_curve_and_line_contour(tmp_path: Path) -> None:
+    mixed = {
+        "type": "path",
+        "commands": [
+            {"command": "move", "to": [0, 0]},
+            {"command": "curve", "control1": [0.1, 0], "control2": [0.2, 0.1], "to": [0.3, 0.2]},
+            {"command": "line", "to": [0.5, 0.2]},
+            {"command": "line", "to": [0.7, 0.2]},
+            {"command": "line", "to": [0.7, 0.8]},
+            {"command": "line", "to": [0.2, 0.8]},
+            {"command": "quad", "control": [0.1, 0.8], "to": [0, 0.8]},
+            {"command": "line", "to": [0, 0]},
+            {"command": "close"},
+        ],
+    }
+    package = _write_package(tmp_path / "board", [_hold("mixed", mixed)])
+
+    result = simplify_package_hold_paths(package, write=True)
+
+    change = result.pieces[0]
+    assert (change.before_editable_points, change.after_editable_points, change.changed) == (11, 8, True)
+    assert (change.eligible_candidates, change.evaluated_candidates, change.rejected_candidates) == (3, 3, 0)
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    commands = document["holds"][0]["geometry"][0]["shape"]["commands"]
+    assert commands[1]["command"] == "curve"
+    assert all(command["command"] != "quad" for command in commands)
+
+
+def test_reports_interior_move_as_unsupported_without_modifying_the_path(tmp_path: Path) -> None:
+    invalid_mixed = {
+        "type": "path",
+        "commands": [
+            {"command": "move", "to": [0, 0]},
+            {"command": "line", "to": [1, 0]},
+            {"command": "move", "to": [1, 1]},
+            {"command": "line", "to": [0, 1]},
+            {"command": "close"},
+        ],
+    }
+    package = _write_package(tmp_path / "board", [_hold("interior-move", invalid_mixed)])
+
+    result = simplify_package_hold_paths(package, write=False)
+
+    change = result.pieces[0]
+    assert (change.changed, change.unsupported_pieces, change.eligible_candidates) == (False, 1, 0)
 
 
 def test_handles_multiple_and_mirrored_pieces_but_leaves_rounded_rectangles(tmp_path: Path) -> None:

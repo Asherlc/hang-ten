@@ -34,6 +34,10 @@ class HoldPieceSimplification:
     symmetric_difference_ratio: float
     changed: bool
     complexity_capped: bool
+    eligible_candidates: int
+    evaluated_candidates: int
+    rejected_candidates: int
+    unsupported_pieces: int
 
 
 @dataclass(frozen=True)
@@ -92,7 +96,25 @@ def _simplify_piece(
     shape = piece["shape"]
     before = _editable_point_count(shape)
     if shape.get("type") != "path":
-        return _unchanged(before), None
+        return _unchanged(before, unsupported_pieces=1), None
+
+    commands = _mixed_commands(shape)
+    if commands is None:
+        return _unchanged(before, unsupported_pieces=1), None
+    if any(command["command"] in {"quad", "curve"} for command in commands):
+        simplified, statistics = _reduce_mixed_commands(commands)
+        after = _editable_point_count({"commands": simplified})
+        if after >= before:
+            return _unchanged(before, **statistics), None
+        return {
+            "before_editable_points": before,
+            "after_editable_points": after,
+            "maximum_boundary_deviation_pixels": 0.0,
+            "symmetric_difference_ratio": 0.0,
+            "changed": True,
+            "complexity_capped": False,
+            **statistics,
+        }, {"type": "path", "commands": simplified}
 
     points = _line_contour(shape)
     if points is None or not _is_simple_polygon(points):
@@ -123,10 +145,22 @@ def _simplify_piece(
         "symmetric_difference_ratio": difference,
         "changed": True,
         "complexity_capped": False,
+        "eligible_candidates": 0,
+        "evaluated_candidates": 0,
+        "rejected_candidates": 0,
+        "unsupported_pieces": 0,
     }, replacement
 
 
-def _unchanged(points: int, *, complexity_capped: bool = False) -> dict[str, Any]:
+def _unchanged(
+    points: int,
+    *,
+    complexity_capped: bool = False,
+    eligible_candidates: int = 0,
+    evaluated_candidates: int = 0,
+    rejected_candidates: int = 0,
+    unsupported_pieces: int = 0,
+) -> dict[str, Any]:
     return {
         "before_editable_points": points,
         "after_editable_points": points,
@@ -134,6 +168,10 @@ def _unchanged(points: int, *, complexity_capped: bool = False) -> dict[str, Any
         "symmetric_difference_ratio": 0.0,
         "changed": False,
         "complexity_capped": complexity_capped,
+        "eligible_candidates": eligible_candidates,
+        "evaluated_candidates": evaluated_candidates,
+        "rejected_candidates": rejected_candidates,
+        "unsupported_pieces": unsupported_pieces,
     }
 
 
@@ -153,6 +191,10 @@ def _line_contour(shape: Mapping[str, Any]) -> list[Point] | None:
         return None
     if commands[0].get("command") != "move" or commands[-1].get("command") != "close":
         return None
+    if sum(command.get("command") == "move" for command in commands) != 1:
+        return None
+    if sum(command.get("command") == "close" for command in commands) != 1:
+        return None
     if any(command.get("command") not in {"move", "line", "close"} for command in commands):
         return None
     if any(command.get("command") == "close" for command in commands[1:-1]):
@@ -169,6 +211,76 @@ def _line_contour(shape: Mapping[str, Any]) -> list[Point] | None:
     if len(normalized) > 1 and _same_point(normalized[0], normalized[-1]):
         normalized.pop()
     return normalized if len(normalized) >= 3 else None
+
+
+def _mixed_commands(shape: Mapping[str, Any]) -> list[dict[str, Any]] | None:
+    commands = shape.get("commands")
+    if not isinstance(commands, list) or len(commands) < 4:
+        return None
+    if commands[0].get("command") != "move" or commands[-1].get("command") != "close":
+        return None
+    if sum(command.get("command") == "move" for command in commands) != 1:
+        return None
+    if sum(command.get("command") == "close" for command in commands) != 1:
+        return None
+    if any(command.get("command") not in {"move", "line", "quad", "curve", "close"} for command in commands):
+        return None
+    return [dict(command) for command in commands]
+
+
+def _reduce_mixed_commands(commands: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    current = commands
+    statistics = {"eligible_candidates": 0, "evaluated_candidates": 0, "rejected_candidates": 0, "unsupported_pieces": 0}
+    while True:
+        changed = False
+        for index in range(1, len(current) - 2):
+            command = current[index]
+            next_command = current[index + 1]
+            start = _point(current[index - 1]["to"])
+            end = _point(command["to"])
+            if command["command"] == "line" and next_command["command"] == "line":
+                next_end = _point(next_command["to"])
+                if _point_is_between(start, end, next_end):
+                    statistics["eligible_candidates"] += 1
+                    statistics["evaluated_candidates"] += 1
+                    del current[index]
+                    changed = True
+                    break
+            if command["command"] in {"quad", "curve"} and _is_monotonic_line_curve(start, command, end):
+                statistics["eligible_candidates"] += 1
+                statistics["evaluated_candidates"] += 1
+                current[index] = {"command": "line", "to": command["to"]}
+                changed = True
+                break
+        if not changed:
+            return current, statistics
+
+
+def _point_is_between(start: Point, middle: Point, end: Point) -> bool:
+    direction = _subtract(end, start)
+    length_squared = _dot(direction, direction)
+    if length_squared <= _EPSILON or abs(_cross(_subtract(middle, start), direction)) > _EPSILON:
+        return False
+    fraction = _dot(_subtract(middle, start), direction) / length_squared
+    return _EPSILON < fraction < 1.0 - _EPSILON
+
+
+def _is_monotonic_line_curve(start: Point, command: Mapping[str, Any], end: Point) -> bool:
+    direction = _subtract(end, start)
+    length_squared = _dot(direction, direction)
+    if length_squared <= _EPSILON:
+        return False
+    control_names = ("control",) if command["command"] == "quad" else ("control1", "control2")
+    fractions = []
+    for name in control_names:
+        control = _point(command[name])
+        if abs(_cross(_subtract(control, start), direction)) > _EPSILON:
+            return False
+        fraction = _dot(_subtract(control, start), direction) / length_squared
+        if not 0.0 <= fraction <= 1.0:
+            return False
+        fractions.append(fraction)
+    return fractions == sorted(fractions)
 
 
 def _point(value: Sequence[object]) -> Point:
@@ -292,8 +404,8 @@ def _within_exact_hausdorff_work_cap(before: list[Point], after: list[Point]) ->
 
 def _directed_hausdorff_work(source_segments: int, target_segments: int) -> int:
     projection_intervals = 2 * target_segments + 1
-    quadratic_intersections = target_segments * (target_segments - 1) // 2
-    candidate_locations = 2 + quadratic_intersections
+    quadratic_pairs = target_segments * (target_segments - 1) // 2
+    candidate_locations = 2 + 2 * quadratic_pairs
     return source_segments * projection_intervals * candidate_locations * target_segments
 
 

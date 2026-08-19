@@ -124,6 +124,13 @@ def _simplification_payload(inventory: BoardInventory, *, write: bool) -> str:
                     for piece in result.pieces
                     if piece.complexity_capped
                 ],
+                "coverage": {
+                    "eligible": sum(piece.eligible_candidates for piece in result.pieces),
+                    "evaluated": sum(piece.evaluated_candidates for piece in result.pieces),
+                    "rejected": sum(piece.rejected_candidates for piece in result.pieces),
+                    "unsupported": sum(piece.unsupported_pieces for piece in result.pieces),
+                    "skipped": sum(piece.complexity_capped for piece in result.pieces),
+                },
             }
         )
     return json.dumps(
