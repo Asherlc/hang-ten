@@ -4,6 +4,7 @@ ios:
   - 'HangTen.xcodeproj/**'
   - '.github/ExportOptions.plist'
 python:
+  - 'Tools/HangboardPackages/**'
   - 'Tools/HangboardWorkbench/**/*.py'
   - 'Tools/HangboardWorkbench/tests/**/*.py'
   - 'scripts/run-supported-python.sh'
@@ -17,6 +18,7 @@ workbench_native:
   - 'Tools/HangboardWorkbench/macos/**'
   - 'Tools/HangboardWorkbench/packaging/**'
 workbench:
+  - 'Tools/HangboardPackages/**'
   - 'Tools/HangboardWorkbench/**'
   - 'Hangboards/**'
   - 'HangTen/Resources/BoardLibrary.json'
@@ -29,6 +31,7 @@ workbench:
   - '.github/ci-paths.yml'
   - '.github/actions/**'
 shared_board_content:
+  - 'Tools/HangboardPackages/**'
   - 'Hangboards/**'
   - 'HangTen/Resources/BoardLibrary.json'
   - 'scripts/export-board-library.py'

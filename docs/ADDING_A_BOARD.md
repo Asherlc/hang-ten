@@ -44,15 +44,16 @@ ranges, finger capacity, grip posture, and feature tags are optional.
 Set `presentation.assetPath` to exactly `assets/primary.png`. Any other value is
 rejected by the loader.
 
-Validate direct discovery and the single-file package contract after every
-package change:
+Validate direct discovery and the package contract after every package change:
 
 ```sh
-scripts/hangboard-tools.sh packages validate --root Hangboards
+scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-Use `--final-inventory` only when every primary-only draft has been authored;
-that mode rejects any directory missing `board.json`.
+The committed inventory is final: it contains eight complete packages and zero
+primary-only drafts. `--final-inventory` rejects any directory missing
+`board.json`.
 
 ## 3. Bundle discovered packages directly
 
@@ -67,17 +68,19 @@ xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen \
   -destination 'generic/platform=iOS Simulator'
 ```
 
-## 4. Optional onboarding work
+## 4. Edit canonical geometry directly
 
-Onboarding artifacts belong under `.context/`. They can support later human
-authoring but are not package content and are never bundled directly.
+Start the Workbench from the repository root and open the package that needs a
+visual correction:
 
 ```sh
-scripts/hangboard-tools.sh onboard \
-  --product-name "Manufacturer Model" \
-  --source /absolute/path/to/front-photo.jpg \
-  --output .context/hangboard-onboarding/manufacturer-model
+rtk python Tools/HangboardWorkbench/server.py
 ```
+
+The operator may use a physically appropriate constrained shape or a freeform
+path. The saved canonical path remains the exact rendering, highlighting, and
+hit-testing source of truth. Review every edit against the primary source image
+and manufacturer evidence before committing it.
 
 ## Completion checklist
 
@@ -85,5 +88,6 @@ scripts/hangboard-tools.sh onboard \
 - The package contains exactly `board.json` and `assets/primary.png`.
 - Every hold has unique identity and nonempty normalized geometry.
 - Unsupported optional physical facts remain omitted.
+- The final inventory contains eight complete packages and zero drafts.
 - Direct discovery and staging tests pass.
 - Normal, active, and hit-testing paths are inspected on an owned simulator.
