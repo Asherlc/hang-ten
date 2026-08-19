@@ -122,14 +122,16 @@ def _simplify_piece(
 
     frame = piece["frame"]
     positioned = _position(points, frame, width=width, height=height)
-    simplified, complexity_capped = _reduce_line_polygon(points, frame, width=width, height=height)
+    simplified, complexity_capped, statistics = _reduce_line_polygon(
+        points, frame, width=width, height=height
+    )
     if complexity_capped:
-        return _unchanged(before, complexity_capped=True), None
+        return _unchanged(before, complexity_capped=True, **statistics), None
     candidate = _position(simplified, frame, width=width, height=height)
     replacement = _path_shape(simplified)
     after = _editable_point_count(replacement)
     if after >= before or not _is_simple_polygon(simplified):
-        return _unchanged(before), None
+        return _unchanged(before, **statistics), None
 
     deviation = _boundary_deviation(positioned, candidate)
     difference = _symmetric_difference_ratio(positioned, candidate, width=width, height=height)
@@ -137,7 +139,7 @@ def _simplify_piece(
         deviation > _MAX_BOUNDARY_DEVIATION_PIXELS
         or difference > _MAX_SYMMETRIC_DIFFERENCE_RATIO
     ):
-        return _unchanged(before), None
+        return _unchanged(before, **statistics), None
     return {
         "before_editable_points": before,
         "after_editable_points": after,
@@ -145,9 +147,7 @@ def _simplify_piece(
         "symmetric_difference_ratio": difference,
         "changed": True,
         "complexity_capped": False,
-        "eligible_candidates": 0,
-        "evaluated_candidates": 0,
-        "rejected_candidates": 0,
+        **statistics,
         "unsupported_pieces": 0,
     }, replacement
 
@@ -233,7 +233,7 @@ def _reduce_mixed_commands(commands: list[dict[str, Any]]) -> tuple[list[dict[st
     statistics = {"eligible_candidates": 0, "evaluated_candidates": 0, "rejected_candidates": 0, "unsupported_pieces": 0}
     while True:
         changed = False
-        for index in range(1, len(current) - 2):
+        for index in range(1, len(current) - 1):
             command = current[index]
             next_command = current[index + 1]
             start = _point(current[index - 1]["to"])
@@ -291,18 +291,21 @@ def _point(value: Sequence[object]) -> Point:
 
 def _reduce_line_polygon(
     original: list[Point], frame: Mapping[str, Any], *, width: int, height: int
-) -> tuple[list[Point], bool]:
+) -> tuple[list[Point], bool, dict[str, int]]:
     current = list(original)
+    statistics = {"eligible_candidates": 0, "evaluated_candidates": 0, "rejected_candidates": 0}
+    before = _position(original, frame, width=width, height=height)
     while len(current) > 3:
         removed = False
         for index in range(len(current)):
             candidate = current[:index] + current[index + 1 :]
             if not _is_simple_polygon(candidate) or not _same_winding(candidate, original):
                 continue
-            before = _position(original, frame, width=width, height=height)
+            statistics["eligible_candidates"] += 1
             after = _position(candidate, frame, width=width, height=height)
             if not _within_exact_hausdorff_work_cap(before, after):
-                return original, True
+                return original, True, statistics
+            statistics["evaluated_candidates"] += 1
             if (
                 _boundary_deviation(before, after) <= _MAX_BOUNDARY_DEVIATION_PIXELS
                 and _symmetric_difference_ratio(before, after, width=width, height=height)
@@ -311,9 +314,10 @@ def _reduce_line_polygon(
                 current = candidate
                 removed = True
                 break
+            statistics["rejected_candidates"] += 1
         if not removed:
             break
-    return current, False
+    return current, False, statistics
 
 
 def _path_shape(points: Iterable[Point]) -> dict[str, Any]:
@@ -346,8 +350,6 @@ def _is_simple_polygon(points: list[Point]) -> bool:
     for first_index, (first_start, first_end) in enumerate(segments):
         for second_index in range(first_index + 1, len(segments)):
             if second_index in {first_index + 1, (first_index - 1) % len(segments)}:
-                continue
-            if first_index == 0 and second_index == len(segments) - 1:
                 continue
             if _segments_intersect(first_start, first_end, *segments[second_index]):
                 return False

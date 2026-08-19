@@ -22,8 +22,9 @@ they are not runtime assets and were not used to add or change hold facts.
 | Trango Rock Prodigy Training Center | [product](https://trango.com/products/rock-prodigy-training-center) | [front image](https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750) | 1254×1254 → 1233×435 | 24 / 28 | 520 → 504 | 0.0 | 0.0000% |
 
 Catalog total: 1,920 → 1,902 editable points. The final mixed-path simplifier
-reported nine eligible and evaluated safe-candidate removals, zero rejected or
-complexity-skipped candidates, five accepted geometry pieces, and 13
+reported nine accepted safe-candidate removals across five geometry pieces,
+with nine evaluated candidates, zero rejected or complexity-skipped candidates,
+and 13
 unsupported rounded rectangles. It removed two points from Beastmaker 2000's
 `top-sloper-3` and four points from each of the four geometry pieces belonging
 to Trango's `pinch-medium-left` and `pinch-medium-right`. Each accepted piece

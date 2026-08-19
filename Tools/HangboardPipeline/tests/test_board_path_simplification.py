@@ -140,6 +140,9 @@ def test_rejects_line_candidate_that_exceeds_one_native_pixel(tmp_path: Path) ->
 
     change = result.pieces[0]
     assert (change.before_editable_points, change.after_editable_points, change.changed) == (5, 5, False)
+    assert change.eligible_candidates >= 1
+    assert change.evaluated_candidates >= 1
+    assert change.rejected_candidates >= 1
     maximum, ratio = _independent_measurements(source, [(0, 0), (1, 0), (1, 1), (0, 1)])
     assert maximum > 1.0
     assert ratio > 0.0025
@@ -252,6 +255,27 @@ def test_simplifies_exact_redundancies_in_a_mixed_curve_and_line_contour(tmp_pat
     commands = document["holds"][0]["geometry"][0]["shape"]["commands"]
     assert commands[1]["command"] == "curve"
     assert all(command["command"] != "quad" for command in commands)
+
+
+def test_evaluates_curve_immediately_before_close(tmp_path: Path) -> None:
+    mixed = {
+        "type": "path",
+        "commands": [
+            {"command": "move", "to": [0, 0]},
+            {"command": "line", "to": [1, 0]},
+            {"command": "line", "to": [1, 1]},
+            {"command": "line", "to": [0, 1]},
+            {"command": "curve", "control1": [0, 0.75], "control2": [0, 0.25], "to": [0, 0]},
+            {"command": "close"},
+        ],
+    }
+    package = _write_package(tmp_path / "board", [_hold("final-curve", mixed)])
+
+    result = simplify_package_hold_paths(package, write=False)
+
+    change = result.pieces[0]
+    assert change.changed is True
+    assert change.after_editable_points == 5
 
 
 def test_reports_interior_move_as_unsupported_without_modifying_the_path(tmp_path: Path) -> None:
