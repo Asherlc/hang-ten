@@ -38,6 +38,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "stage-board-packages.py" in ci_workflow_text
     assert "xcodebuild" in xctest_command
     assert "-only-testing" not in xctest_command
+    assert "-skip-testing" not in xctest_command
     assert "test 2>&1" in xctest_command
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
