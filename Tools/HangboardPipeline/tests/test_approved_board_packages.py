@@ -167,6 +167,7 @@ def test_direct_discovery_finds_compact_and_ignores_primary_only_drafts() -> Non
         ("beastmaker-2000", "beastmaker-2000"),
         ("dewoodstok-woodbord", "dewoodstok-woodbord"),
         ("escape-beta-22", "escape-beta-22"),
+        ("evolv-kilter-basic-long", "evolv-kilter-basic-long"),
         ("lattice-triple-rung", "lattice-triple-rung"),
     }
     assert base_packages <= discovered
@@ -251,7 +252,7 @@ def test_compact_package_loader_preserves_identity_inventory_and_bounds() -> Non
         "manufacturer": "Metolius",
         "name": "Wood Grips Compact II",
         "subtitle": "A compact FSC-certified wood board for everyday strength work.",
-        "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards",
+        "productURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
         "dimensions": '24" × 6.2"',
         "aspectRatio": 3.88,
     }

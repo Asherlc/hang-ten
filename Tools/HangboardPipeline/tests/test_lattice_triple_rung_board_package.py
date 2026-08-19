@@ -11,9 +11,9 @@ from hangboard_vectorizer.board_catalog import load_board_package
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "lattice-triple-rung"
 EXPECTED_HOLDS = (
-    ("edge-45", "edge", 45, ("largeEdge",)),
-    ("edge-10", "edge", 10, ("smallEdge",)),
-    ("edge-20", "edge", 20, ("mediumEdge",)),
+    ("edge-45", "edge", 45),
+    ("edge-10", "edge", 10),
+    ("edge-20", "edge", 20),
 )
 
 
@@ -34,10 +34,10 @@ def test_lattice_triple_rung_has_three_exact_continuous_edge_regions() -> None:
     )
     assert tuple(
         (hold.id, hold.kind, hold.size_millimeters) for hold in board.holds
-    ) == tuple(expected[:3] for expected in EXPECTED_HOLDS)
+    ) == EXPECTED_HOLDS
 
     edge_frames = []
-    for hold, expected in zip(board.holds, EXPECTED_HOLDS, strict=True):
+    for hold in board.holds:
         assert len(hold.geometry) == 1
         piece = hold.geometry[0]
         assert piece.shape.type == "path"
@@ -59,12 +59,9 @@ def test_lattice_triple_rung_has_three_exact_continuous_edge_regions() -> None:
         assert piece.frame.y + piece.frame.height <= 1
         edge_frames.append(piece.frame)
         assert hold.depth_range_millimeters is None
-        # Each edge has a sourced sizeMillimeters, so it also carries derived
-        # gripType/fingerCapacity/features. See "Add sourced hold
-        # depth/feature metadata for 4 new boards".
-        assert hold.grip_type == "openHand"
-        assert hold.finger_capacity == 4
-        assert set(hold.features) == set(expected[3])
+        assert hold.grip_type is None
+        assert hold.finger_capacity is None
+        assert hold.features is None
 
     assert edge_frames[0].y + edge_frames[0].height < edge_frames[1].y
     assert edge_frames[1].y + edge_frames[1].height < edge_frames[2].y
