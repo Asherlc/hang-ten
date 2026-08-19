@@ -29,12 +29,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         if arguments.command == "simplify-hold-paths":
             inventory = discover_board_packages(arguments.root)
-            print(_simplification_payload(inventory, write=arguments.write))
-            return 0
+            payload, failed = _simplification_payload(inventory, write=arguments.write)
+            print(payload)
+            return 1 if failed else 0
         if arguments.command == "normalize-presentations":
             inventory = discover_board_packages(arguments.root)
-            print(_presentation_payload(inventory, write=arguments.write))
-            return 0
+            payload, failed = _presentation_payload(inventory, write=arguments.write)
+            print(payload)
+            return 1 if failed else 0
         raise _CliError("unknown command")
     except SystemExit as error:
         return int(error.code or 0)
@@ -91,64 +93,30 @@ def _board_status(package: BoardPackage) -> dict[str, object]:
     }
 
 
-def _simplification_payload(inventory: BoardInventory, *, write: bool) -> str:
+def _simplification_payload(inventory: BoardInventory, *, write: bool) -> tuple[str, bool]:
     boards = []
+    failed = False
     for package in inventory.packages:
-        result = simplify_package_hold_paths(package.root, write=write)
-        boards.append(
-            {
-                "id": result.board_id,
-                "path": package.root.name,
-                "changed": result.changed,
-                "pieces": [
-                    {
-                        "holdId": piece.hold_id,
-                        "pieceIndex": piece.piece_index,
-                        "beforeEditablePoints": piece.before_editable_points,
-                        "afterEditablePoints": piece.after_editable_points,
-                        "maximumBoundaryDeviationPixels": piece.maximum_boundary_deviation_pixels,
-                        "symmetricDifferenceRatio": piece.symmetric_difference_ratio,
-                        "changed": piece.changed,
-                    }
-                    for piece in result.pieces
-                    if piece.changed
-                ],
-                "skippedPieces": [
-                    {
-                        "holdId": piece.hold_id,
-                        "pieceIndex": piece.piece_index,
-                        "beforeEditablePoints": piece.before_editable_points,
-                        "afterEditablePoints": piece.after_editable_points,
-                        "reason": "exactHausdorffComplexityCap",
-                    }
-                    for piece in result.pieces
-                    if piece.complexity_capped
-                ],
-                "coverage": {
-                    "eligible": sum(piece.eligible_candidates for piece in result.pieces),
-                    "evaluated": sum(piece.evaluated_candidates for piece in result.pieces),
-                    "rejected": sum(piece.rejected_candidates for piece in result.pieces),
-                    "unsupported": sum(piece.unsupported_pieces for piece in result.pieces),
-                    "skipped": sum(piece.complexity_capped for piece in result.pieces),
-                },
-            }
-        )
-    return json.dumps(
-        {
-            "boards": boards,
-            "draftCount": len(inventory.drafts),
-            "drafts": [path.name for path in inventory.drafts],
-            "write": write,
-        },
-        indent=2,
-        sort_keys=True,
-    )
+        try:
+            result = simplify_package_hold_paths(package.root, write=write)
+        except (OSError, ValueError) as error:
+            failed = True
+            boards.append(_package_error(package, error))
+            continue
+        boards.append(_simplification_board_payload(package, result))
+    return _catalog_payload(boards, inventory, write=write), failed
 
 
-def _presentation_payload(inventory: BoardInventory, *, write: bool) -> str:
+def _presentation_payload(inventory: BoardInventory, *, write: bool) -> tuple[str, bool]:
     boards = []
+    failed = False
     for package in inventory.packages:
-        result = normalize_package_presentation(package.root, write=write)
+        try:
+            result = normalize_package_presentation(package.root, write=write)
+        except (OSError, ValueError) as error:
+            failed = True
+            boards.append(_package_error(package, error))
+            continue
         boards.append(
             {
                 "id": result.board_id,
@@ -160,6 +128,12 @@ def _presentation_payload(inventory: BoardInventory, *, write: bool) -> str:
                 "changed": result.changed,
             }
         )
+    return _catalog_payload(boards, inventory, write=write), failed
+
+
+def _catalog_payload(
+    boards: list[dict[str, object]], inventory: BoardInventory, *, write: bool
+) -> str:
     return json.dumps(
         {
             "boards": boards,
@@ -170,6 +144,50 @@ def _presentation_payload(inventory: BoardInventory, *, write: bool) -> str:
         indent=2,
         sort_keys=True,
     )
+
+
+def _package_error(package: BoardPackage, error: Exception) -> dict[str, object]:
+    message = str(error).splitlines()[0] if str(error) else error.__class__.__name__
+    return {"id": package.board.id, "path": package.root.name, "error": message}
+
+
+def _simplification_board_payload(package: BoardPackage, result: object) -> dict[str, object]:
+    return {
+        "id": result.board_id,
+        "path": package.root.name,
+        "changed": result.changed,
+        "pieces": [
+            {
+                "holdId": piece.hold_id,
+                "pieceIndex": piece.piece_index,
+                "beforeEditablePoints": piece.before_editable_points,
+                "afterEditablePoints": piece.after_editable_points,
+                "maximumBoundaryDeviationPixels": piece.maximum_boundary_deviation_pixels,
+                "symmetricDifferenceRatio": piece.symmetric_difference_ratio,
+                "changed": piece.changed,
+            }
+            for piece in result.pieces
+            if piece.changed
+        ],
+        "skippedPieces": [
+            {
+                "holdId": piece.hold_id,
+                "pieceIndex": piece.piece_index,
+                "beforeEditablePoints": piece.before_editable_points,
+                "afterEditablePoints": piece.after_editable_points,
+                "reason": "exactHausdorffComplexityCap",
+            }
+            for piece in result.pieces
+            if piece.complexity_capped
+        ],
+        "coverage": {
+            "eligible": sum(piece.eligible_candidates for piece in result.pieces),
+            "evaluated": sum(piece.evaluated_candidates for piece in result.pieces),
+            "rejected": sum(piece.rejected_candidates for piece in result.pieces),
+            "unsupported": sum(piece.unsupported_pieces for piece in result.pieces),
+            "skipped": sum(piece.complexity_capped for piece in result.pieces),
+        },
+    }
 
 
 if __name__ == "__main__":
