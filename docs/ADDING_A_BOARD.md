@@ -31,9 +31,11 @@ Hangboards/
       primary.png
 ```
 
-A primary-only directory is a migration draft that the Workbench can open. It
-is ignored by app staging until `board.json` is complete. Do not add a registry,
-sidecar JSON, source photo, README, review directory, or duplicate geometry.
+A primary-only directory is incomplete: Workbench does not list or open it, and
+app staging ignores it. An author must first create a structurally valid,
+complete `board.json`; then they can open and edit the package in Workbench. Do
+not add a registry, sidecar JSON, source photo, README, review directory, or
+duplicate geometry.
 
 `board.json` contains product identity and physical holds. Every hold requires
 `id`, `name`, one of `jug`, `edge`, `pocket`, `pinch`, or `sloper`, and a
