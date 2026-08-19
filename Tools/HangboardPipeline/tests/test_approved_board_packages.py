@@ -61,26 +61,28 @@ COMPACT_HOLD_BOUNDS = {
     "edge-19-right": (0.805, 0.626125, 0.160, 0.231525),
 }
 
-COMPACT_HOLD_PHYSICAL_FACTS = {
-    "jug-left": ("jug", None, 4),
-    "sloper-flat-left": ("sloper", 56, 4),
-    "sloper-round-center": ("sloper", 56, 4),
-    "sloper-flat-right": ("sloper", 56, 4),
-    "jug-right": ("jug", None, 4),
-    "edge-29-left": ("edge", 29, 4),
-    "pocket-29-three-left": ("pocket", 29, 3),
-    "pocket-29-two-left": ("pocket", 29, 2),
-    "pocket-29-four-center": ("pocket", 29, 4),
-    "pocket-29-two-right": ("pocket", 29, 2),
-    "pocket-29-three-right": ("pocket", 29, 3),
-    "edge-29-right": ("edge", 29, 4),
-    "edge-19-left": ("edge", 19, 4),
-    "pocket-19-three-left": ("pocket", 19, 3),
-    "pocket-19-three-right": ("pocket", 19, 3),
-    "pocket-19-two-left": ("pocket", 19, 2),
-    "pocket-19-two-right": ("pocket", 19, 2),
-    "pocket-19-four-center": ("pocket", 19, 4),
-    "edge-19-right": ("edge", 19, 4),
+# Each value is (source-backed kind, depth, capacity, app semantic routing).
+# The feature tuple is an app compatibility adaptation, not a manufacturer grip fact.
+COMPACT_HOLD_SOURCE_FACTS_AND_ROUTING = {
+    "jug-left": ("jug", None, 4, ("jug",)),
+    "sloper-flat-left": ("sloper", 56, 4, ("largeSlope",)),
+    "sloper-round-center": ("sloper", 56, 4, ("roundSloper",)),
+    "sloper-flat-right": ("sloper", 56, 4, ("largeSlope",)),
+    "jug-right": ("jug", None, 4, ("jug",)),
+    "edge-29-left": ("edge", 29, 4, ("largeEdge",)),
+    "pocket-29-three-left": ("pocket", 29, 3, ("pocket",)),
+    "pocket-29-two-left": ("pocket", 29, 2, ("pocket",)),
+    "pocket-29-four-center": ("pocket", 29, 4, ("pocket",)),
+    "pocket-29-two-right": ("pocket", 29, 2, ("pocket",)),
+    "pocket-29-three-right": ("pocket", 29, 3, ("pocket",)),
+    "edge-29-right": ("edge", 29, 4, ("largeEdge",)),
+    "edge-19-left": ("edge", 19, 4, ("mediumEdge", "smallEdge")),
+    "pocket-19-three-left": ("pocket", 19, 3, ("pocket",)),
+    "pocket-19-three-right": ("pocket", 19, 3, ("pocket",)),
+    "pocket-19-two-left": ("pocket", 19, 2, ("pocket",)),
+    "pocket-19-two-right": ("pocket", 19, 2, ("pocket",)),
+    "pocket-19-four-center": ("pocket", 19, 4, ("pocket",)),
+    "edge-19-right": ("edge", 19, 4, ("mediumEdge", "smallEdge")),
 }
 
 def _embedded_geometry_bounds(
@@ -139,7 +141,7 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry()
     assert all(hold.get("geometry") for hold in holds)
 
 
-def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> None:
+def test_compact_hold_records_keep_sourced_physical_facts_and_app_routing() -> None:
     board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
     holds = board["holds"]
     retired_fields = {"frame", "shortLabel", "detail", "cueStyle"}
@@ -151,6 +153,7 @@ def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> No
         "sizeMillimeters",
         "depthRangeMillimeters",
         "fingerCapacity",
+        "features",
     }
 
     assert all(not (set(hold) & retired_fields) for hold in holds)
@@ -158,15 +161,15 @@ def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> No
     assert all(set(hold) <= supported_fields for hold in holds)
     assert all("depthRangeMillimeters" not in hold for hold in holds)
     assert all("gripType" not in hold for hold in holds)
-    assert all("features" not in hold for hold in holds)
     assert {
         hold["id"]: (
             hold.get("kind"),
             hold.get("sizeMillimeters"),
             hold.get("fingerCapacity"),
+            tuple(hold.get("features", ())),
         )
         for hold in holds
-    } == COMPACT_HOLD_PHYSICAL_FACTS
+    } == COMPACT_HOLD_SOURCE_FACTS_AND_ROUTING
 
 
 def test_compact_hold_bounds_are_derived_from_embedded_piece_unions() -> None:

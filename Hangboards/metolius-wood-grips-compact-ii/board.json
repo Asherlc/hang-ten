@@ -24,7 +24,10 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "jug"
+      ]
     },
     {
       "id": "sloper-flat-left",
@@ -48,7 +51,10 @@
         }
       ],
       "sizeMillimeters": 56,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "largeSlope"
+      ]
     },
     {
       "id": "sloper-round-center",
@@ -72,7 +78,10 @@
         }
       ],
       "sizeMillimeters": 56,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "roundSloper"
+      ]
     },
     {
       "id": "sloper-flat-right",
@@ -96,7 +105,10 @@
         }
       ],
       "sizeMillimeters": 56,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "largeSlope"
+      ]
     },
     {
       "id": "jug-right",
@@ -111,7 +123,10 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "jug"
+      ]
     },
     {
       "id": "edge-29-left",
@@ -128,7 +143,10 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "largeEdge"
+      ]
     },
     {
       "id": "pocket-29-three-left",
@@ -154,7 +172,10 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-29-two-left",
@@ -180,7 +201,10 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-29-four-center",
@@ -206,7 +230,10 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-29-two-right",
@@ -232,7 +259,10 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-29-three-right",
@@ -258,7 +288,10 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "edge-29-right",
@@ -275,7 +308,10 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "largeEdge"
+      ]
     },
     {
       "id": "edge-19-left",
@@ -292,7 +328,11 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "mediumEdge",
+        "smallEdge"
+      ]
     },
     {
       "id": "pocket-19-three-left",
@@ -318,7 +358,10 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-19-three-right",
@@ -344,7 +387,10 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-19-two-left",
@@ -370,7 +416,10 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-19-two-right",
@@ -396,7 +445,10 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "pocket-19-four-center",
@@ -422,7 +474,10 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "edge-19-right",
@@ -439,7 +494,11 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "features": [
+        "mediumEdge",
+        "smallEdge"
+      ]
     }
   ]
 }

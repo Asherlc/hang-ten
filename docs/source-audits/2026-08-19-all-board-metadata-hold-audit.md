@@ -112,13 +112,20 @@ a complete, source-backed, scalable reauthoring is available.
 - **Source-backed expected physical count:** 19.
 - **Verified facts:** Metolius Wood Grips Compact II; `24” × 6.2”`; FSC
   certification. The source supports the current 56/29/19 mm mapping and the
-  visible cavity capacities.
-- **Discrepancy:** inventory, mapped depths, and visible capacities are sound;
-  optional grip-posture and feature tags are not established by the sources.
+  visible hold kinds and cavity capacities.
+- **Discrepancy:** inventory, mapped depths, visible kinds, and capacities are
+  sound; per-hold `gripType` posture prescriptions are not established by the
+  manufacturer sources and remain omitted.
 - **Action:** `correct` — retain all 19 distinct regions, including separate
   side rails, use the factual `FSC-certified wood training board` subtitle,
-  retain sourced kind/depth/capacity facts, and omit optional `gripType` and
-  `features` fields.
+  and retain the sourced kind/depth/capacity facts. The `features` arrays are
+  app semantic-routing adaptations derived from those sourced or visible hold
+  kinds, sizes, and shapes; they are not manufacturer claims or grip
+  prescriptions. In particular, each 19 mm edge maps to both `mediumEdge` and
+  `smallEdge` target classes for app compatibility. This follows the Compact II
+  target-mapping treatment documented in the
+  [plan cue provenance audit](2026-08-10-plan-cue-provenance.md), which labels
+  those board targets as app choices/adaptations.
 
 ## Demote to primary-only drafts
 
