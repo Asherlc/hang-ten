@@ -70,7 +70,7 @@ Run Ruby YAML parsing across `.github/workflows/*.yml`, `rtk bash -n scripts/val
 
 **Interfaces:**
 - Consumes: the existing composite action and Workbench change filter.
-- Produces: Ubuntu portable-test gates, deterministic native dependencies, a reusable Release-mode Swift build, and matching PR/release caches.
+- Produces: Ubuntu portable-test gates, deterministic native dependencies, Debug-mode native tests, and matching PR/release SwiftPM caches.
 
 - [ ] **Step 1: Pin native Swift dependencies**
 
@@ -80,11 +80,10 @@ Run SwiftPM resolution for `Tools/HangboardWorkbench/macos` and add the resultin
 
 Keep the existing JavaScript check on Ubuntu and add a Python Workbench test job there with Python 3.12, pip caching, an isolated workspace-owned virtual environment, installation of `Tools/HangboardWorkbench[dev]`, and `pytest Tools/HangboardWorkbench/tests -q`. Make the macOS build depend on both portable checks. Remove the Python and Node test executions from the macOS composite action, retaining dependency installation required by packaging.
 
-- [ ] **Step 3: Reuse native Release products**
+- [ ] **Step 3: Run native tests in proven Debug mode and cache SwiftPM artifacts**
 
-Run `swift test` in Release for arm64 with the same `-Xswiftc -g` flag as the following Release build. Retain the existing native test coverage and app verification. Add pinned `actions/cache` v4 steps for `Tools/HangboardWorkbench/macos/.build` in both PR and release build jobs, keyed by OS, architecture, and the native `Package.resolved` hash.
+Run the proven Debug-mode `swift test --package-path Tools/HangboardWorkbench/macos` command. Retain the existing native test coverage and Release app verification. Add pinned `actions/cache` v4 steps for `Tools/HangboardWorkbench/macos/.build` in both PR and release build jobs, keyed by OS, architecture, and the native `Package.resolved` hash; do not promise Release test/build product reuse.
 
 - [ ] **Step 4: Validate and commit**
 
-Run Ruby YAML parsing across `.github/workflows/*.yml`, `rtk swift package describe --package-path Tools/HangboardWorkbench/macos`, targeted `rtk rg` checks proving portable tests no longer execute in the macOS composite and that Release flags match, and `rtk git diff --check`. Commit the task.
-
+Run Ruby YAML parsing across `.github/workflows/*.yml`, `rtk swift package describe --package-path Tools/HangboardWorkbench/macos`, targeted `rtk rg` checks proving portable tests no longer execute in the macOS composite and that the Debug test command and Release build flags remain intentional, and `rtk git diff --check`. Commit the task.

@@ -86,8 +86,8 @@ jobs:
           "$python_bin" -m pip install -e 'Tools/HangboardWorkbench[dev]'
           "$python_bin" -m pytest Tools/HangboardWorkbench/tests -q
 
-  build:
-    name: Build verified arm64 workbench
+  native-build:
+    name: Build arm64 workbench artifact
     needs:
       - changes
       - test-js
@@ -110,3 +110,38 @@ jobs:
 
       - name: Build and upload verified unsigned app
         uses: ./.github/actions/build-hangboard-workbench
+
+  build:
+    # This stable required check reports every prerequisite, rather than being
+    # skipped when a failed prerequisite prevents the costly native build.
+    name: Build verified arm64 workbench
+    needs:
+      - changes
+      - test-js
+      - test-python
+      - native-build
+    if: always() && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Report Workbench validation result
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ needs.changes.result }}" != "success" ]]; then
+            echo "Workbench change classification did not succeed." >&2
+            exit 1
+          fi
+          if [[ "${{ needs.changes.outputs.workbench }}" != "true" ]]; then
+            echo "No Workbench-relevant paths changed."
+            exit 0
+          fi
+          for result in \
+            "${{ needs.test-js.result }}" \
+            "${{ needs.test-python.result }}" \
+            "${{ needs['native-build'].result }}"; do
+            if [[ "$result" != "success" ]]; then
+              echo "A required Workbench validation did not succeed (result=$result)." >&2
+              exit 1
+            fi
+          done

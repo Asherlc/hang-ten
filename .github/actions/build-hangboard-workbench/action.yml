@@ -34,10 +34,7 @@ runs:
 
     - name: Run native shell tests
       shell: bash
-      run: |
-        swift test -c release --arch arm64 \
-          -Xswiftc -g \
-          --package-path Tools/HangboardWorkbench/macos
+      run: swift test --package-path Tools/HangboardWorkbench/macos
 
     - name: Build unsigned native app
       shell: bash

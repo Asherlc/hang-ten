@@ -141,7 +141,7 @@ jobs:
             <<<"$comments")"
 
           artifact_id=""
-          build_conclusion=""
+          native_build_conclusion=""
           handler_status=0
           if [[ "$RUN_CONCLUSION" == "success" ]]; then
             artifact_name="hangboard-workbench-macos-arm64-$RUN_ID-$RUN_ATTEMPT"
@@ -153,10 +153,10 @@ jobs:
             if [[ -z "$artifact_id" ]]; then
               jobs="$(gh api --paginate --slurp \
                 "repos/$REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100")"
-              build_conclusion="$(jq -r \
-                '[.[].jobs[] | select(.name == "Build verified arm64 workbench")] | last | .conclusion // empty' \
+              native_build_conclusion="$(jq -r \
+                '[.[].jobs[] | select(.name == "Build arm64 workbench artifact")] | last | .conclusion // empty' \
                 <<<"$jobs")"
-              if [[ "$build_conclusion" == "skipped" ]]; then
+              if [[ "$native_build_conclusion" == "skipped" ]]; then
                 echo "Workbench build was skipped because this pull request did not change relevant paths."
               else
                 echo "Expected unexpired artifact '$artifact_name' was not found." >&2
@@ -170,7 +170,7 @@ jobs:
             body="${marker}
           ${identity}
           The Hangboard Workbench build for \`${HEAD_SHA}\` is ready: [download the unsigned macOS arm64 artifact](${artifact_url})."
-          elif [[ "$build_conclusion" == "skipped" ]]; then
+          elif [[ "$native_build_conclusion" == "skipped" ]]; then
             body="${marker}
           ${identity}
           No downloadable Hangboard Workbench artifact is available for \`${HEAD_SHA}\`; this run was path-gated because it did not change relevant files."
