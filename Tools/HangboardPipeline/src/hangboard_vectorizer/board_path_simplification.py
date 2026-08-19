@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import math
 import os
+import re
 import struct
+import sys
 import tempfile
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -13,6 +16,8 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any
 
+import cv2
+import numpy as np
 from PIL import Image, ImageChops, ImageDraw
 
 from .board_catalog import load_board_package
@@ -25,6 +30,21 @@ _MAX_MINIMAL_CONTOUR_CANDIDATES = 500
 _EPSILON = 1e-9
 
 Point = tuple[float, float]
+
+_WORKBENCH_GEOMETRY_PATH = (
+    Path(__file__).resolve().parents[3] / "HangboardWorkbench" / "board_geometry.py"
+)
+_WORKBENCH_SPEC = importlib.util.spec_from_file_location(
+    "hangboard_simplification_workbench_geometry", _WORKBENCH_GEOMETRY_PATH
+)
+if _WORKBENCH_SPEC is None or _WORKBENCH_SPEC.loader is None:
+    raise ImportError("Hangboard Workbench geometry codec is unavailable")
+_WORKBENCH_GEOMETRY = importlib.util.module_from_spec(_WORKBENCH_SPEC)
+sys.modules[_WORKBENCH_SPEC.name] = _WORKBENCH_GEOMETRY
+_WORKBENCH_SPEC.loader.exec_module(_WORKBENCH_GEOMETRY)
+
+GeometryError = _WORKBENCH_GEOMETRY.GeometryError
+display_path_for_shape = _WORKBENCH_GEOMETRY.display_path_for_shape
 
 
 class ContourComplexityError(ValueError):
@@ -200,13 +220,16 @@ def simplify_package_hold_paths(
     """
     package = load_board_package(package_root)
     board_path = package.root / "board.json"
-    document = json.loads(board_path.read_text(encoding="utf-8"))
+    original_text = board_path.read_text(encoding="utf-8")
+    document = json.loads(original_text)
     width, height = _png_dimensions(package.root / "assets" / "primary.png")
 
     reports: list[HoldPieceSimplification] = []
+    replacements: list[dict[str, Any] | None] = []
     for hold in document["holds"]:
         for piece_index, piece in enumerate(hold["geometry"]):
             report, replacement = _simplify_piece(piece, width=width, height=height)
+            replacements.append(replacement)
             reports.append(
                 HoldPieceSimplification(
                     hold_id=hold["id"],
@@ -223,7 +246,8 @@ def simplify_package_hold_paths(
         pieces=tuple(reports),
     )
     if write and result.changed:
-        _write_json_atomically(board_path, document)
+        rewritten = _replace_shape_values(original_text, replacements)
+        _write_text_atomically(board_path, rewritten)
     return result
 
 
@@ -234,6 +258,22 @@ def _simplify_piece(
     before = _editable_point_count(shape)
     if shape.get("type") != "path":
         return _unchanged(before, unsupported_pieces=1), None
+
+    primitive = _fit_rounded_rectangle(piece, width=width, height=height)
+    if primitive is not None:
+        replacement, error, candidate_count, rejected_count = primitive
+        return {
+            "before_editable_points": before,
+            "after_editable_points": 0,
+            "maximum_boundary_deviation_pixels": error.maximum_boundary_deviation_pixels,
+            "symmetric_difference_ratio": error.symmetric_difference_ratio,
+            "changed": True,
+            "complexity_capped": False,
+            "eligible_candidates": candidate_count,
+            "evaluated_candidates": candidate_count,
+            "rejected_candidates": rejected_count,
+            "unsupported_pieces": 0,
+        }, replacement
 
     commands = _mixed_commands(shape)
     if commands is None:
@@ -287,6 +327,165 @@ def _simplify_piece(
         **statistics,
         "unsupported_pieces": 0,
     }, replacement
+
+
+def _fit_rounded_rectangle(
+    piece: Mapping[str, Any], *, width: int, height: int
+) -> tuple[dict[str, Any], NativeContourError, int, int] | None:
+    """Fit the schema primitive through one product-neutral native-pixel search."""
+    frame = piece["frame"]
+    shape = piece["shape"]
+    try:
+        source = _display_contour(frame, shape, width=width, height=height)
+    except (GeometryError, TypeError, ValueError):
+        return None
+
+    radii = _rounded_rectangle_radius_candidates(
+        shape, frame, width=width, height=height
+    )
+    best: tuple[tuple[float, float, float], dict[str, Any], NativeContourError] | None = None
+    rejected = 0
+    for radius in radii:
+        candidate_shape = {
+            "type": "roundedRect",
+            "cornerRadiusFraction": radius,
+        }
+        try:
+            candidate = _display_contour(
+                frame, candidate_shape, width=width, height=height
+            )
+            error = _native_render_error(
+                source, candidate, width=width, height=height
+            )
+        except (GeometryError, TypeError, ValueError):
+            rejected += 1
+            continue
+        if not error.passes:
+            rejected += 1
+            continue
+        score = (
+            error.symmetric_difference_ratio,
+            error.maximum_boundary_deviation_pixels,
+            radius,
+        )
+        if best is None or score < best[0]:
+            best = score, candidate_shape, error
+    if best is None:
+        return None
+    return best[1], best[2], len(radii), rejected
+
+
+def _rounded_rectangle_radius_candidates(
+    shape: Mapping[str, Any],
+    frame: Mapping[str, Any],
+    *,
+    width: int,
+    height: int,
+) -> tuple[float, ...]:
+    """Derive deterministic radii at quarter-native-pixel search resolution."""
+    native_width = float(frame["width"]) * width
+    native_height = float(frame["height"]) * height
+    minimum_dimension = min(native_width, native_height)
+    if minimum_dimension <= _EPSILON:
+        return ()
+    resolution = 1.0 / (_SUPER_SAMPLE * minimum_dimension)
+    maximum_step = max(1, round(0.5 / resolution))
+    steps = {0, maximum_step}
+    for command in shape.get("commands", ()):
+        if not isinstance(command, Mapping):
+            continue
+        for field in ("to", "control", "control1", "control2"):
+            value = command.get(field)
+            if not isinstance(value, list) or len(value) != 2:
+                continue
+            try:
+                point_x, point_y = float(value[0]), float(value[1])
+            except (TypeError, ValueError):
+                continue
+            distances = (
+                min(point_x, 1.0 - point_x) * native_width,
+                min(point_y, 1.0 - point_y) * native_height,
+            )
+            for distance in distances:
+                if distance < -_EPSILON or distance > minimum_dimension / 2 + _EPSILON:
+                    continue
+                center = round((distance / minimum_dimension) / resolution)
+                steps.update(
+                    step
+                    for step in range(center - 1, center + 2)
+                    if 0 <= step <= maximum_step
+                )
+    return tuple(
+        min(0.5, round(step * resolution, 12)) for step in sorted(steps)
+    )
+
+
+def _display_contour(
+    frame: Mapping[str, Any],
+    shape: Mapping[str, Any],
+    *,
+    width: int,
+    height: int,
+) -> list[Point]:
+    rendered = display_path_for_shape(
+        frame, shape, width, height, label="hold piece"
+    )
+    contour = list(rendered.contour)
+    if len(contour) > 1 and _same_point(contour[0], contour[-1]):
+        contour.pop()
+    return contour
+
+
+def _native_render_error(
+    before: list[Point], after: list[Point], *, width: int, height: int
+) -> NativeContourError:
+    """Compare both final rendered contours on the native supersampled canvas."""
+    padding = _SUPER_SAMPLE * 2
+    all_points = before + after
+    left = math.floor(min(point[0] for point in all_points) * _SUPER_SAMPLE) - padding
+    top = math.floor(min(point[1] for point in all_points) * _SUPER_SAMPLE) - padding
+    right = math.ceil(max(point[0] for point in all_points) * _SUPER_SAMPLE) + padding
+    bottom = math.ceil(max(point[1] for point in all_points) * _SUPER_SAMPLE) + padding
+    raster_size = (right - left + 1, bottom - top + 1)
+
+    def mask(points: list[Point]) -> np.ndarray:
+        image = Image.new("1", raster_size, 0)
+        ImageDraw.Draw(image).polygon(
+            [
+                (
+                    round(point[0] * _SUPER_SAMPLE) - left,
+                    round(point[1] * _SUPER_SAMPLE) - top,
+                )
+                for point in points
+            ],
+            fill=1,
+        )
+        return np.asarray(image, dtype=bool)
+
+    first = mask(before)
+    second = mask(after)
+    difference = float(np.count_nonzero(first ^ second)) / (
+        width * _SUPER_SAMPLE * height * _SUPER_SAMPLE
+    )
+    if np.array_equal(first, second):
+        return NativeContourError(0.0, 0.0)
+
+    kernel = np.ones((3, 3), dtype=np.uint8)
+    first_boundary = first ^ (cv2.erode(first.astype(np.uint8), kernel) > 0)
+    second_boundary = second ^ (cv2.erode(second.astype(np.uint8), kernel) > 0)
+    if not np.any(first_boundary) or not np.any(second_boundary):
+        return NativeContourError(float("inf"), difference)
+    distance_to_first = cv2.distanceTransform(
+        (~first_boundary).astype(np.uint8), cv2.DIST_L2, cv2.DIST_MASK_PRECISE
+    )
+    distance_to_second = cv2.distanceTransform(
+        (~second_boundary).astype(np.uint8), cv2.DIST_L2, cv2.DIST_MASK_PRECISE
+    )
+    deviation = max(
+        float(distance_to_first[second_boundary].max(initial=0)),
+        float(distance_to_second[first_boundary].max(initial=0)),
+    ) / _SUPER_SAMPLE
+    return NativeContourError(deviation, difference)
 
 
 def _unchanged(
@@ -739,13 +938,42 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
     return struct.unpack(">II", header[16:24])
 
 
-def _write_json_atomically(path: Path, document: Mapping[str, Any]) -> None:
+def _replace_shape_values(
+    original: str, replacements: Sequence[Mapping[str, Any] | None]
+) -> str:
+    matches = list(re.finditer(r'"shape"\s*:\s*', original))
+    if len(matches) != len(replacements):
+        raise ValueError("board shape inventory changed while preparing atomic write")
+
+    decoder = json.JSONDecoder()
+    edits: list[tuple[int, int, str]] = []
+    for match, replacement in zip(matches, replacements, strict=True):
+        start = match.end()
+        _value, end = decoder.raw_decode(original, start)
+        if replacement is None:
+            continue
+        source = original[start:end]
+        if source.startswith("{ ") and source.endswith(" }"):
+            body = json.dumps(replacement, separators=(", ", ": "))[1:-1]
+            serialized = f"{{ {body} }}"
+        elif "\n" not in source and ": " not in source:
+            serialized = json.dumps(replacement, separators=(",", ":"))
+        else:
+            serialized = json.dumps(replacement, separators=(", ", ": "))
+        edits.append((start, end, serialized))
+
+    rewritten = original
+    for start, end, serialized in reversed(edits):
+        rewritten = rewritten[:start] + serialized + rewritten[end:]
+    return rewritten
+
+
+def _write_text_atomically(path: Path, contents: str) -> None:
     descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
     temporary_path = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as file:
-            json.dump(document, file, indent=2)
-            file.write("\n")
+            file.write(contents)
             file.flush()
             os.fsync(file.fileno())
         os.replace(temporary_path, path)
