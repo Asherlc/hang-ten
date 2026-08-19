@@ -92,6 +92,14 @@ internal enum BoardTargetResolver {
             for fallback in target.fallbackFeatures {
                 let matches = matching(fallback, fingerCapacity: target.fingerCapacity, on: board)
                 if !matches.isEmpty { return matches.map(\.id) }
+
+                // A fallback identifies a physically available substitute, not
+                // the source-prescribed finger capacity. Preserve capacity for
+                // the primary target, but do not reject an explicit fallback
+                // merely because that substitute has no matching capacity.
+                let capacityAgnosticMatches = matching(fallback, fingerCapacity: nil, on: board)
+                if !capacityAgnosticMatches.isEmpty { return capacityAgnosticMatches.map(\.id) }
+
             }
             return []
         }

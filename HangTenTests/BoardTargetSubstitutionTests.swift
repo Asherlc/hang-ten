@@ -84,6 +84,22 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertTrue(result.isEmpty)
     }
 
+    func testResolveHoldIDsUsesExplicitFallbackDespiteMismatchedFingerCapacity() {
+        let board = board(holds: [
+            hold(id: "fallback-edge", feature: .largeEdge, fingerCapacity: 4),
+            hold(id: "unrelated-jug", kind: .jug, feature: .jug)
+        ])
+        let target = HoldTarget.feature(
+            .smallEdge,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        let result = BoardTargetResolver.resolveHoldIDs(for: target, on: board)
+
+        XCTAssertEqual(result, ["fallback-edge"])
+    }
+
     func testSubstitutionPrefersMatchingFingerCapacityWithinSameKindTier() {
         let board = board(holds: [
             hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2),
