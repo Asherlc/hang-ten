@@ -3,6 +3,19 @@ import PostHog
 @testable import HangTen
 
 final class TelemetryTests: XCTestCase {
+    func testRootTabsUseTimelessOrderAndReviewRouting() {
+        XCTAssertEqual(RootTab.allCases, [.train, .plans, .history])
+        XCTAssertEqual(RootTab.initial(environment: [:]), .train)
+        XCTAssertEqual(
+            RootTab.initial(environment: ["HANGTEN_REVIEW_PLANS": "1"]),
+            .plans
+        )
+        XCTAssertEqual(
+            RootTab.initial(environment: ["HANGTEN_REVIEW_HISTORY": "1"]),
+            .history
+        )
+    }
+
     func testConfigurationWithoutAProjectTokenBuildsNoOpDependencies() {
         let configuration = PostHogConfiguration(
             projectToken: "$(POSTHOG_CLIENT_TOKEN)",

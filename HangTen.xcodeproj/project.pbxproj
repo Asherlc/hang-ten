@@ -13,6 +13,7 @@
 		AA0000000000000000000004 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000004 /* DesignSystem.swift */; };
 		AA0000000000000000000005 /* BoardMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000005 /* BoardMapView.swift */; };
 		AA0000000000000000000006 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000006 /* RootView.swift */; };
+		AA0000000000000000000091 /* TrainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000091 /* TrainView.swift */; };
 		AA0000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000007 /* Assets.xcassets */; };
 		AA0000000000000000000008 /* GripDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000008 /* GripDiagramView.swift */; };
 		AA0000000000000000000009 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000009 /* HealthKitService.swift */; };
@@ -107,6 +108,7 @@
 		BB0000000000000000000004 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		BB0000000000000000000005 /* BoardMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardMapView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000006 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000091 /* TrainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB0000000000000000000008 /* GripDiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripDiagramView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000009 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				BB0000000000000000000004 /* DesignSystem.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
+				BB0000000000000000000091 /* TrainView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
 				BB0000000000000000000032 /* MotherboardViews.swift */,
 				BB0000000000000000000034 /* WorkoutSummaryView.swift */,
@@ -541,6 +544,7 @@
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
+				AA0000000000000000000091 /* TrainView.swift in Sources */,
 				AA0000000000000000000008 /* GripDiagramView.swift in Sources */,
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,

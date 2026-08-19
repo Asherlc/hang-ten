@@ -85,41 +85,43 @@ enum InstructionAccessoryCardContent {
     }
 }
 
+enum RootTab: Hashable, CaseIterable {
+    case train
+    case plans
+    case history
+
+    static func initial(environment: [String: String]) -> RootTab {
+        if environment["HANGTEN_REVIEW_HISTORY"] == "1" {
+            return .history
+        }
+        if environment["HANGTEN_REVIEW_PLANS"] == "1" {
+            return .plans
+        }
+        return .train
+    }
+}
+
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
-    @State private var selectedTab: Int = {
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" ||
-            ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1" {
-            return 2
-        }
-        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLANS"] == "1" {
-            return 1
-        }
-        #else
-        #endif
-        return 0
-    }()
+    @State private var selectedTab = RootTab.initial(
+        environment: ProcessInfo.processInfo.environment
+    )
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView()
-                .tabItem {
-                    Label("Today", systemImage: "sun.max.fill")
-                }
-                .tag(0)
+            TrainView { selectedTab = .plans }
+                .tabItem { Label("Train", systemImage: "figure.climbing") }
+                .tag(RootTab.train)
 
             PlansView()
                 .tabItem {
                     Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
                 }
-                .tag(1)
+                .tag(RootTab.plans)
 
             ProgressDashboardView()
-                .tabItem {
-                    Label("Progress", systemImage: "chart.bar.xaxis")
-                }
-                .tag(2)
+                .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+                .tag(RootTab.history)
 		}
 		.tint(.hangGreenDark)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
@@ -149,219 +151,6 @@ struct RootView: View {
                 .iOS(interfaceOrientations: orientationMask)
             )
             #endif
-        }
-    }
-}
-
-struct HomeView: View {
-    @EnvironmentObject private var store: AppStore
-    @State private var showsPlanReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN"] == "1"
-        #else
-        return false
-        #endif
-    }()
-	@State private var showsWorkoutReview: Bool = {
-		#if DEBUG
-		return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT"] == "1"
-		#else
-		return false
-		#endif
-	}()
-
-    var body: some View {
-        NavigationStack {
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 22) {
-                    homeHeader
-                    favoritesSection
-                    boardCard
-                    quickStats
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
-                .padding(.bottom, 30)
-            }
-            .background(Color.hangBackground)
-            .toolbar(.hidden, for: .navigationBar)
-            .navigationDestination(isPresented: $showsPlanReview) {
-                if let plan = reviewPlan {
-                    PlanDetailView(plan: plan)
-                } else {
-                    noCompatiblePlan
-                }
-            }
-			.navigationDestination(isPresented: $showsWorkoutReview) {
-				if let plan = reviewPlan {
-					WorkoutView(plan: plan)
-				} else {
-					noCompatiblePlan
-				}
-			}
-        }
-    }
-
-    private var reviewPlan: TrainingPlan? {
-        store.featuredPlan
-    }
-
-    private var homeHeader: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 6) {
-                SectionLabel(title: "Hang Ten")
-                Text("Train with intention.")
-                    .font(.system(size: 31, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text("Your board. Your holds. Your next session.")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-            }
-
-            Spacer()
-
-            ZStack {
-                Circle()
-                    .fill(Color.hangGreen)
-                    .frame(width: 48, height: 48)
-                Image(systemName: "figure.climbing")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(Color.hangInk)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var favoritesSection: some View {
-        if store.favoritePlans.isEmpty {
-            VStack(alignment: .leading, spacing: 17) {
-                SectionLabel(title: "Favorites")
-                Text("Favorite routines from Plans to keep them handy here.")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text("Your favorites will appear here when they are compatible with your selected board.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-            }
-            .hangCard()
-        } else {
-            VStack(alignment: .leading, spacing: 12) {
-                SectionLabel(title: "Favorites")
-                ForEach(store.favoritePlans) { plan in
-                    FavoritePlanCard(
-                        plan: plan,
-                        board: store.board(for: plan),
-                        isFavorite: store.isFavorite(plan),
-                        isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
-                    ) {
-                        store.toggleFavorite(plan)
-                    }
-                }
-            }
-        }
-    }
-
-    private var noCompatiblePlan: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            SectionLabel(title: "No compatible routine")
-            Text("This board needs a routine whose hold targets resolve exactly.")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
-            Text("Choose another board or add a source-audited routine before starting a session.")
-                .font(.system(size: 13, weight: .medium, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
-        }
-        .hangCard()
-    }
-
-    private var boardCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 5) {
-                    SectionLabel(title: "Your board")
-                    Text(store.selectedBoard.name)
-                        .font(.system(size: 21, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-                    Text(store.selectedBoard.dimensions)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                }
-
-                Spacer()
-
-                Menu {
-                    ForEach(BoardCatalog.all) { board in
-                        Button {
-                            store.selectBoard(board)
-                        } label: {
-                            Label(
-                                board.name,
-                                systemImage: board.id == store.selectedBoard.id ? "checkmark" : "rectangle"
-                            )
-                        }
-                    }
-                } label: {
-                    Image(systemName: "slider.horizontal.3")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Color.hangInk)
-                        .padding(10)
-                        .background(Color.hangBackground, in: Circle())
-                }
-                .accessibilityLabel("Choose hangboard")
-            }
-
-            BoardMapView(board: store.selectedBoard)
-                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-
-            HStack(spacing: 7) {
-                Circle()
-                    .fill(Color.holdActive)
-                    .frame(width: 8, height: 8)
-                Text("Active holds appear in red")
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-                Spacer()
-                Link(destination: store.selectedBoard.productURL) {
-                    Image(systemName: "arrow.up.right")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(Color.hangGreenDark)
-                }
-                .accessibilityLabel("Open board product page")
-            }
-        }
-        .hangCard()
-    }
-
-    private var quickStats: some View {
-        HStack(spacing: 12) {
-            StatCard(value: "\(store.sessionsCompleted)", label: "Sessions", icon: "checkmark.seal.fill")
-        }
-    }
-}
-
-private struct StatCard: View {
-    let value: String
-    let label: String
-    let icon: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 15, weight: .bold))
-                .foregroundStyle(Color.hangGreenDark)
-            Text(value)
-                .font(.system(size: 21, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
-            Text(label)
-                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
         }
     }
 }
@@ -785,7 +574,7 @@ private struct PlanCard: View {
     }
 }
 
-private struct FavoritePlanCard: View {
+struct FavoritePlanCard: View {
     let plan: TrainingPlan
     let board: TrainingBoard
     let isFavorite: Bool
