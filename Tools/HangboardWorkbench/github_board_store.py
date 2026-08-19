@@ -6,8 +6,9 @@ import hashlib
 import json
 import threading
 from collections import OrderedDict
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from concurrent.futures import Executor, Future, ThreadPoolExecutor
+from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Protocol
@@ -110,34 +111,44 @@ class GitHubBoardStore:
             tuple[bytes, str], Future[tuple[GitHubBoardPackage, ...]]
         ] = {}
         self._blob_flights: dict[tuple[bytes, str], Future[bytes]] = {}
+        self._operations = threading.Condition(self._lock)
+        self._active_operations = 0
+        self._closing = False
         self._closed = False
 
     def discover_packages(
         self, token: str, branch: str
     ) -> tuple[GitHubBoardPackage, ...]:
-        snapshot = self._snapshot(token, branch, cache_blobs=False)
-        return _copy_packages(self._catalog(snapshot, token, branch))
+        with self._operation():
+            snapshot = self._snapshot(token, branch, cache_blobs=False)
+            return _copy_packages(self._catalog(snapshot, token, branch))
 
     def open_package(
         self, token: str, branch: str, board_id: str
     ) -> GitHubBoardPackage:
-        board_id = board_package._identifier(board_id, "board ID")
-        snapshot = self._snapshot(token, branch, cache_blobs=False)
-        selected = _selected_package(self._catalog(snapshot, token, branch), board_id)
-        return _load_selected_package(
-            snapshot.with_blob_cache(), token, branch, selected.slug, board_id
-        )
+        with self._operation():
+            board_id = board_package._identifier(board_id, "board ID")
+            snapshot = self._snapshot(token, branch, cache_blobs=False)
+            selected = _selected_package(
+                self._catalog(snapshot, token, branch), board_id
+            )
+            return _load_selected_package(
+                snapshot.with_blob_cache(), token, branch, selected.slug, board_id
+            )
 
     def primary_image_bytes(self, token: str, branch: str, board_id: str) -> bytes:
-        board_id = board_package._identifier(board_id, "board ID")
-        snapshot = self._snapshot(token, branch, cache_blobs=False)
-        selected = _selected_package(self._catalog(snapshot, token, branch), board_id)
-        package, image = _load_selected_package_with_image(
-            snapshot.with_blob_cache(), token, branch, selected.slug, board_id
-        )
-        if package.board_id != board_id:
-            raise board_package.BoardNotAvailableError("board is not available")
-        return image
+        with self._operation():
+            board_id = board_package._identifier(board_id, "board ID")
+            snapshot = self._snapshot(token, branch, cache_blobs=False)
+            selected = _selected_package(
+                self._catalog(snapshot, token, branch), board_id
+            )
+            package, image = _load_selected_package_with_image(
+                snapshot.with_blob_cache(), token, branch, selected.slug, board_id
+            )
+            if package.board_id != board_id:
+                raise board_package.BoardNotAvailableError("board is not available")
+            return image
 
     def save_editor_document(
         self,
@@ -148,24 +159,51 @@ class GitHubBoardStore:
         *,
         expected_board_id: str | None = None,
     ) -> tuple[GitHubBoardPackage, str]:
-        snapshot = self._snapshot(token, branch, cache_blobs=True)
-        saved = save_editor_document(
-            snapshot,
-            token,
-            branch,
-            slug,
-            document,
-            expected_board_id=expected_board_id,
-        )
-        self._discard_credential_entries(_credential_key(token))
-        return saved
+        with self._operation():
+            snapshot = self._snapshot(token, branch, cache_blobs=True)
+            saved = save_editor_document(
+                snapshot,
+                token,
+                branch,
+                slug,
+                document,
+                expected_board_id=expected_board_id,
+            )
+            self._discard_credential_entries(_credential_key(token))
+            return saved
 
     def close(self) -> None:
-        with self._lock:
+        with self._operations:
             if self._closed:
                 return
-            self._closed = True
-        self._executor.shutdown(wait=True, cancel_futures=True)
+            if self._closing:
+                while not self._closed:
+                    self._operations.wait()
+                return
+            self._closing = True
+            while self._active_operations:
+                self._operations.wait()
+        try:
+            self._executor.shutdown(wait=True, cancel_futures=True)
+        finally:
+            with self._operations:
+                self._closed = True
+                self._operations.notify_all()
+
+    @contextmanager
+    def _operation(self) -> Iterator[None]:
+        """Lease the store for one public operation until close drains it."""
+        with self._operations:
+            if self._closing:
+                raise RuntimeError("GitHub board store is closing")
+            self._active_operations += 1
+        try:
+            yield
+        finally:
+            with self._operations:
+                self._active_operations -= 1
+                if not self._active_operations:
+                    self._operations.notify_all()
 
     def _snapshot(
         self, token: str, branch: str, *, cache_blobs: bool

@@ -4,6 +4,7 @@ import http.cookiejar
 import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import tempfile
@@ -1218,6 +1219,69 @@ def test_server_close_waits_for_a_paused_hosted_catalog_request(
     server_thread.join(timeout=5)
 
     assert result[0][0] == 200
+    assert not request_thread.is_alive()
+    assert not close_thread.is_alive()
+    assert not server_thread.is_alive()
+
+
+def test_server_close_does_not_wait_for_an_incomplete_request_before_store_work(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Fails if shutdown waits for a handler blocked before a store operation."""
+    library = tmp_path / "Hangboards"
+    library.mkdir()
+    httpd = create_server(
+        library,
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+        session_secret="test-session-secret",
+        github_owner="fixture-owner",
+        github_repo="fixture-repo",
+        github_client=FakeGitHubClient({HOSTED_BRANCH: _github_files()}),
+    )
+    session = server_module._encode_session(
+        httpd.session_secret,
+        _Session(token=HOSTED_TOKEN, username="climber", branch=HOSTED_BRANCH),
+    )
+    entered_body_read = threading.Event()
+    original_read_body = server_module.EditorRequestHandler._read_body
+
+    def observe_read_body(handler):
+        entered_body_read.set()
+        return original_read_body(handler)
+
+    monkeypatch.setattr(
+        server_module.EditorRequestHandler, "_read_body", observe_read_body
+    )
+    server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    server_thread.start()
+    client_socket = socket.create_connection(("127.0.0.1", httpd.server_port))
+    try:
+        client_socket.sendall(
+            (
+                "PUT /api/boards/fixture.board HTTP/1.1\r\n"
+                f"Host: 127.0.0.1:{httpd.server_port}\r\n"
+                f"Cookie: wb_session={session}\r\n"
+                "Content-Type: application/json\r\n"
+                "Content-Length: 10\r\n\r\n"
+            ).encode("ascii")
+        )
+        assert entered_body_read.wait(timeout=5)
+        httpd.shutdown()
+        close_thread = threading.Thread(target=httpd.server_close)
+        close_thread.start()
+        close_thread.join(timeout=1)
+
+        assert not close_thread.is_alive()
+        assert not server_thread.is_alive()
+    finally:
+        client_socket.sendall(b"{}        ")
+        client_socket.shutdown(socket.SHUT_WR)
+        client_socket.close()
+        httpd.server_close()
+        server_thread.join(timeout=5)
 
 
 def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:

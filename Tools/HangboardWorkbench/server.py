@@ -218,10 +218,6 @@ def create_server(
 class WorkbenchHTTPServer(ThreadingHTTPServer):
     """HTTP server containing one selected direct board library."""
 
-    # server_close must join accepted handlers before it closes the hosted
-    # GitHub executor those handlers may still need.
-    daemon_threads = False
-
     def __init__(
         self,
         server_address: tuple[str, int],
