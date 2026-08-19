@@ -56,6 +56,20 @@ def test_complete_catalog_exposes_authoritative_board_facts() -> None:
     }
 
 
+def test_complete_catalog_exposes_authoritative_frictitious_product_url() -> None:
+    boards = _boards_by_id()
+
+    assert boards["frictitious-doormount-pro-7"]["productURL"] == (
+        "https://frictitiousclimbing.com/en-ca/products/doormount-pro"
+    )
+
+
+def test_complete_catalog_exposes_authoritative_iron_palm_name() -> None:
+    boards = _boards_by_id()
+
+    assert boards["soill-iron-palm-2"]["name"] == "Iron Palm 2.0"
+
+
 def test_complete_catalog_omits_contradicted_optional_semantics() -> None:
     boards = _boards_by_id()
 

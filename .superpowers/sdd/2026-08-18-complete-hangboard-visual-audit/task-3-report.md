@@ -222,3 +222,58 @@ rtk git diff --check
   the package's legacy identity and facts remain unverified.
 - Zlagboard generation identity and Trango Pivot orientation semantics remain
   unresolved, so generation/orientation-specific metadata was withheld.
+
+## Fix round 1 — authoritative product identities
+
+Status: **DONE_WITH_CONCERNS**. This follow-up corrects two omitted identity
+fields without changing any hold, piece, geometry, or screenshot asset.
+
+The reviewed Frictitious package audit identifies the exact current model URL
+as `https://frictitiousclimbing.com/en-ca/products/doormount-pro`; that literal
+replaces the stale `frictitious.com/products/doormount-pro-7` value. The current
+So iLL product page identifies the model as `Iron Palm 2.0`; the package name
+now matches it exactly. The canonical audit's opening policy now says only
+selected matrix-approved optional semantics were removed and explicitly names
+Tension Honestone's retained blocked `fourFingerPocket` semantic.
+
+Red/green evidence:
+
+```sh
+rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
+  Tools/HangboardPipeline/tests/test_complete_catalog_source_audit.py -q
+# RED: 2 failed, 2 passed
+# - stale Frictitious URL was https://frictitious.com/products/doormount-pro-7
+# - stale So iLL name was Iron Palm 2
+
+rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
+  Tools/HangboardPipeline/tests/test_complete_catalog_source_audit.py -q
+# GREEN: 4 passed
+```
+
+Cross-suite/package validation:
+
+```sh
+# From Tools/HangboardPipeline
+rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+  PYTHONPATH=../../.context/task-2-pythonpath python3 -m pytest \
+  tests/test_board_presentation.py tests/test_board_path_simplification.py \
+  tests/test_approved_board_packages.py \
+  tests/test_complete_catalog_source_audit.py -q
+# 43 passed
+
+# From Tools/HangboardWorkbench
+rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
+  tests/test_board_geometry.py tests/test_board_package.py -q
+# 72 passed
+
+rtk scripts/hangboard-tools.sh packages validate --root Hangboards
+# 34 completed packages; zero drafts; exit 0
+```
+
+The package inventory assertion remains exactly 359 ordered logical holds and
+363 geometry pieces. The retained baseline remains 35 PNG files (34 per-board
+BEFORE captures plus the contact sheet), with deterministic path-and-content
+tree SHA-256
+`34d0d8f85c4bedd9704c630fcfede9d27971567c56dbbde243185fd1b3aaeb26`.
+`git diff` against the original Task 3 commit reports no changed baseline
+asset path. `git diff --check` is clean.

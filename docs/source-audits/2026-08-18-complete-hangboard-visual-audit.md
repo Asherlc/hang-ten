@@ -9,8 +9,10 @@ The manufacturer sources establish only the fields explicitly mapped below.
 Product photos are presentation evidence, not hold-boundary, capacity, grip,
 or training-semantic evidence. Required `id`, `name`, `kind`, and `geometry`
 fields therefore remain in blocked packages even where the current inventory
-is not authoritative. Unknown optional semantics are removed rather than
-replaced with an image inference.
+is not authoritative. Only selected matrix-approved unsupported optional
+semantics are removed. Other blocked semantics remain explicitly identified—
+including Tension Honestone's retained `fourFingerPocket`—rather than being
+silently removed or replaced with an image inference.
 
 ## Retained BEFORE evidence
 
@@ -44,7 +46,7 @@ change geometry relative to the source image.
 | [`escape-beta-22`](assets/2026-08-18-complete-hangboard-visual-audit/before/escape-beta-22--245680ffb240.png) | [Escape](https://escapeclimbing.com/products/ec72100) | 22/22/274; `69329433b14e01a2ed1640bf29b7f2d91492fe6468ec448d33cdc7a33018ce8a` | Dimensions retained; secondary 11-family facts are not promoted. | Keep audited paths; 11 visible cavities versus 22 logical targets is unresolved; no crop. |
 | [`escape-unlimited`](assets/2026-08-18-complete-hangboard-visual-audit/before/escape-unlimited--19831f6dfe62.png) | [Escape](https://escapeclimbing.com/products/ec72000) | 6/6/0; `0c772e2845e61bc8cf08d0cf62753a51a3f80f9c0d0a42764c53a3c35083748a` | Correct dimensions to 23.5 × 6 in; replace the unsupported three-row subtitle with the sourced four descending finger-pad levels. | Source says four levels but package has three pairs; no materialization; exact crop 1774×887 → 1678×553. |
 | [`evolv-kilter-basic-long`](assets/2026-08-18-complete-hangboard-visual-audit/before/evolv-kilter-basic-long--ac4049aa3a2d.png) | [Evolv](https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105) | 4/4/0; `528f2d02b5a792d4ca31b842360a3b0444170f45ead810a5cf1999d03da7e511` | Correct dimensions to 79 × 16 × 6 cm; do not infer which region is the sourced jug. | Four generic bands do not prove jug+three-edge topology; no materialization; exact crop 1537×1023 → 1406×332. |
-| [`frictitious-doormount-pro-7`](assets/2026-08-18-complete-hangboard-visual-audit/before/frictitious-doormount-pro-7--8a23c5cc8dca.png) | [Frictitious](https://frictitiousclimbing.com/en-ca/products/doormount-pro) | 8/8/0; `8b32c935192d394edbff49ae8e11371811ca12737f0edf98df7acf2637fa7c92` | Correct dimensions to 25.5 × 4.5 × 2.25 in; remove unsupported optional per-hold mappings while retaining eight schema-required records. | Official seven-hold aggregate cannot identify a record to delete; lower regions cross bays; no materialization; exact crop 1774×887 → 1688×353. |
+| [`frictitious-doormount-pro-7`](assets/2026-08-18-complete-hangboard-visual-audit/before/frictitious-doormount-pro-7--8a23c5cc8dca.png) | [Frictitious](https://frictitiousclimbing.com/en-ca/products/doormount-pro) | 8/8/0; `8b32c935192d394edbff49ae8e11371811ca12737f0edf98df7acf2637fa7c92` | Correct dimensions to 25.5 × 4.5 × 2.25 in and repair the product URL; remove unsupported optional per-hold mappings while retaining eight schema-required records. | Official seven-hold aggregate cannot identify a record to delete; lower regions cross bays; no materialization; exact crop 1774×887 → 1688×353. |
 | [`frictitious-megalith`](assets/2026-08-18-complete-hangboard-visual-audit/before/frictitious-megalith--33de4ccadb0c.png) | [Frictitious](https://frictitiousclimbing.com/products/megalith) | 9/9/0; `57d38ec00d5195c04b5bc229ab3b6370635791e2f21e5c6d1f1c1bbeb408e3d3` | Correct dimensions to 26.75 × 6.5 × 2.25 in; aggregate edge/pocket facts are not assigned to IDs. | Mono count and 40-mm pocket boundary are unresolved; no materialization; exact crop 1536×1024 → 1453×411. |
 | [`lattice-triple-rung`](assets/2026-08-18-complete-hangboard-visual-audit/before/lattice-triple-rung--98ec533951a6.png) | [Lattice](https://latticetraining.com/product/triple-rung-wooden-hangboard/) | 3/3/57; `b6e54cc95849a0bcff0d169fb7d918f3b6829bb6c49cfe52e342028d2f0a2fd7` | Dimensions and three sourced edge sizes retained. | Three continuous audited paths align; simplifier no-op; no crop. Optional capacity remains unsupported. |
 | [`metolius-climbers-edge`](assets/2026-08-18-complete-hangboard-visual-audit/before/metolius-climbers-edge--1e84e2649b1d.png) | [Metolius](https://www.metoliusclimbing.com/products/climbers-edge-board) | 11/11/0; `dd117715ba58f5c6a90b08f1635cdc69303c5cc0727a9e5d1ef9a39e553b39fd` | Current-page dimensions are not applied until package model/version is proven. | Floating/broad regions omit sourced slopers and depths; no materialization; exact crop 1717×916 → 1644×722. |
@@ -54,7 +56,7 @@ change geometry relative to the source image.
 | [`metolius.wood-grips-compact-ii`](assets/2026-08-18-complete-hangboard-visual-audit/before/metolius.wood-grips-compact-ii--ecd2a502a9db.png) | [Metolius](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards) | 19/19/78; `f4d0bf85865b150704af1bb8bf1eb78d9c39abb5e7461abbd827ebffd16cd966` | Dimensions and aggregate inventory retained. | Strong audited match; simplifier no-op; no crop. Individual field provenance remains incomplete. |
 | [`moon-armstrong`](assets/2026-08-18-complete-hangboard-visual-audit/before/moon-armstrong--3e59a2c3ad25.png) | [Moon](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | 11/11/0; `37ec77e11f4efe36def477c955f5ee0b6aed8c417ff1b2281a792be3576dc29b` | Correct dimensions to 65 × 16.5 × 5.5 cm; do not remap aggregate features. | Artwork/layout likely wrong model and misses sourced slopers/monos; no materialization; exact crop 1672×941 → 1538×471. |
 | [`nature-stoak-board-iii`](assets/2026-08-18-complete-hangboard-visual-audit/before/nature-stoak-board-iii--23853bedbe8d.png) | [Nature](https://natureclimbing.com/products/stoak-board-iii-beech) | 6/6/0; `4cba6504a798e3921c5effd1ab9f384080f7a5346fd5e586dbc054592c862cf5` | Correct dimensions to 57 × 12 × 5.5 cm; do not choose an insert state or map depths. | Current topology conflicts with adjustable product; no materialization; exact crop 1774×887 → 1677×445. |
-| [`soill-iron-palm-2`](assets/2026-08-18-complete-hangboard-visual-audit/before/soill-iron-palm-2--eb1bcad6f0bc.png) | [So iLL](https://soillholds.com/products/iron-palm-2-0) | 6/6/0; `68d4c854170cef6bf6004619fd760eb707bd463f87bf548e18a9125b21c792d0` | Repair product URL; unsupported dimensions and current completeness remain audit blockers. | Large discs/rails do not expose pinches, slopers, or thumb catches; no materialization; exact crop 1536×1024 → 1492×699. |
+| [`soill-iron-palm-2`](assets/2026-08-18-complete-hangboard-visual-audit/before/soill-iron-palm-2--eb1bcad6f0bc.png) | [So iLL](https://soillholds.com/products/iron-palm-2-0) | 6/6/0; `68d4c854170cef6bf6004619fd760eb707bd463f87bf548e18a9125b21c792d0` | Repair product URL and correct the manufacturer model name to Iron Palm 2.0; unsupported dimensions and current completeness remain audit blockers. | Large discs/rails do not expose pinches, slopers, or thumb catches; no materialization; exact crop 1536×1024 → 1492×699. |
 | [`soill-split-palm`](assets/2026-08-18-complete-hangboard-visual-audit/before/soill-split-palm--cc07b6832b7c.png) | [So iLL](https://soillholds.com/products/split-palm) | 2/2/0; `ce8d12b68182f9f099a7f34132585d982531026056711df4f5d622ddd44e650c` | Repair product URL; no current manufacturer dimensions/inventory are claimed as verified. | Two large zones cover multiple branches; authoritative inventory absent; no materialization; exact crop 1254×1254 → 1244×616. |
 | [`soill-training-tiles`](assets/2026-08-18-complete-hangboard-visual-audit/before/soill-training-tiles--073b9c42fd16.png) | [So iLL](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin) | 4/4/0; `0a16960e26aadb4b31bafcaf798f4b29afd4c9546690a4d90dd1362c1cb8bf7f` | Repair product URL; dealer dimensions/depths are not promoted. | Four zones omit the documented secondary edge progression; no first-party map; no materialization; exact crop 1536×1024 → 1514×529. |
 | [`target10a-linebreaker-base`](assets/2026-08-18-complete-hangboard-visual-audit/before/target10a-linebreaker-base--83a10cb8e4e0.png) | [target10a](https://www.target10a.com/magazin/2017/01/01/linebreaker-base/) | 11/11/0; `db9b63f4bc5ec6a03f79c40e4186ab20c74348606d4c0444bb0f52d14f2f96dc` | Dealer dimensions/capacities are not promoted; package facts remain explicitly unverified. | Floating/broad zones omit apparent jugs/slopers; no first-party map; no materialization; exact crop 1448×1086 → 1332×626. |
@@ -79,7 +81,7 @@ change geometry relative to the source image.
 | Beastmaker 1000 `dimensions` | `580 × 150 mm` → `580 × 150 × 58 mm` | Manufacturer product dimensions. |
 | Escape Unlimited `dimensions`; `subtitle` | `600 × 300 mm` → `23.5 × 6 in`; three-row claim → `Four descending finger-pad depth levels.` | Manufacturer dimensions and four-level description; `subtitle` is schema-required. |
 | Evolv Basic Long `dimensions` | `580 × 110 mm` → `79 × 16 × 6 cm` | Manufacturer product dimensions. |
-| Frictitious Pro 7 `dimensions` | `700 × 140 mm` → `25.5 × 4.5 × 2.25 in` | Manufacturer product dimensions. |
+| Frictitious Pro 7 `dimensions`; `productURL` | `700 × 140 mm` → `25.5 × 4.5 × 2.25 in`; stale `frictitious.com` URL → `https://frictitiousclimbing.com/en-ca/products/doormount-pro` | Manufacturer product dimensions and current model product page. |
 | Frictitious Megalith `dimensions` | `580 × 150 mm` → `26.75 × 6.5 × 2.25 in` | Manufacturer product dimensions. |
 | Metolius Contact `dimensions` | `26 × 13 in` → `32.5 × 11 × 2.625 in` | Manufacturer product dimensions. |
 | Metolius Project `dimensions` | `26 × 8 in` → `24.5 × 6 in` | Manufacturer catalog dimensions. |
@@ -91,6 +93,7 @@ change geometry relative to the source image.
 | Trango Natural `dimensions` | `5.25 × 12.75 in (per side)` → `7.5 × 6 × 1.5 in (each board)` | Manufacturer product/Quick Start dimensions. |
 | YY Evo/First/Light/One `dimensions` | shared `600 × 300 mm` → 65×14×5.5, 54×13×5, 54×9×5, and 62×13×5.5 cm | Each model's manufacturer product dimensions. |
 | So iLL three `productURL` fields | stale `soill.com` URLs → current `soillholds.com` product URLs | Current manufacturer product identity pages. |
+| So iLL Iron Palm `name` | `Iron Palm 2` → `Iron Palm 2.0` | Current manufacturer model identity. |
 | Contact, Pro 7, Simulator optional hold semantics | mapped `gripType`/`fingerCapacity`/`features` → omitted | Sources contradict completeness and do not map the retained schema-required records. |
 | YY Evo/First/One pocket semantics | `threeFingerPocket`, `fingerCapacity=3` → omitted | Manufacturer aggregate inventories contradict 3F and do not identify replacement IDs. |
 | Tension Whetstone end-pocket semantics | `fourFingerPocket`, `fingerCapacity=4` → omitted | Manufacturer says 2F at board level; no per-ID boundary map supports writing 2. |
@@ -156,14 +159,14 @@ unchanged except for exact presentation crop/reprojection.
 ```sh
 rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
   Tools/HangboardPipeline/tests/test_complete_catalog_source_audit.py -q
-# 2 passed
+# 4 passed
 
 rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
   PYTHONPATH=../../.context/task-2-pythonpath python3 -m pytest \
   tests/test_board_presentation.py tests/test_board_path_simplification.py \
   tests/test_approved_board_packages.py \
   tests/test_complete_catalog_source_audit.py -q
-# 41 passed (from Tools/HangboardPipeline)
+# 43 passed (from Tools/HangboardPipeline)
 
 rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
   tests/test_board_geometry.py tests/test_board_package.py -q
