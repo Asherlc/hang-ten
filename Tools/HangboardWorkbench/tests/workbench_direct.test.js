@@ -104,7 +104,7 @@ function loadApp({ client, controller, imageLoader = () => Promise.resolve({}), 
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
-    "hold-type-select", "add-hold-button",
+    "hold-type-select", "outline-shape-select", "add-hold-button",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
@@ -926,6 +926,149 @@ async function selectFirstHold(app) {
   await settle();
   app.elements["hold-overlay"].children[0].click();
 }
+
+test("the selected outline inspector offers shape presets as a neutral action picker", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  assert.equal(app.elements["outline-shape-select"].value, "");
+  assert.deepEqual(
+    app.elements["outline-shape-select"].children.map((option) => [option.value, option.textContent]),
+    [["", "Choose preset…"], ["oval", "Oval"], ["circle", "Circle"], ["pill", "Pill"], ["rounded-rectangle", "Rounded rectangle"], ["rectangle", "Rectangle"]],
+  );
+});
+
+test("an oval preset preserves the selected piece bounds and leaves sibling pieces untouched", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
+      { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 20 L 50 20 L 50 40 L 10 40 Z", metadata: { holdID: "a", pieceIndex: 0 } },
+      { id: 2, key: "a-piece-1", type: "jug", displayPath: "M 60 10 L 70 10 L 70 20 Z", metadata: { holdID: "a", pieceIndex: 1 } },
+      { id: 3, key: "b-piece-0", type: "edge", displayPath: "M 80 10 L 90 10 L 90 20 Z", metadata: { holdID: "b", pieceIndex: 0 } },
+    ] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  app.elements["outline-shape-select"].value = "oval";
+  app.elements["outline-shape-select"].change();
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 30 20 C 41.045695 20 50 24.477153 50 30 C 50 35.522847 41.045695 40 30 40 C 18.954305 40 10 35.522847 10 30 C 10 24.477153 18.954305 20 30 20 Z");
+  assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), "M 60 10 L 70 10 L 70 20 Z");
+  assert.equal(app.elements["hold-overlay"].children[2].attributes.get("d"), "M 80 10 L 90 10 L 90 20 Z");
+  assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
+  assert.equal(app.elements["editor-status"].textContent, "Outline changed to oval. Save when ready.");
+  assert.equal(app.elements["validation-panel"].classList.contains("hidden"), true);
+  assert.equal(app.elements["outline-shape-select"].value, "");
+});
+
+test("a circle preset keeps the selected outline center and uses its shorter dimension as diameter", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = {
+    boardId: "board-a",
+    displayName: "Board A",
+    imageUrl: "/api/boards/board-a/image",
+    document: { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [
+      { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 20 L 50 20 L 50 40 L 10 40 Z", metadata: { holdID: "a", pieceIndex: 0 } },
+    ] },
+  };
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 1 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+
+  app.elements["outline-shape-select"].value = "circle";
+  app.elements["outline-shape-select"].change();
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 30 20 C 35.522847 20 40 24.477153 40 30 C 40 35.522847 35.522847 40 30 40 C 24.477153 40 20 35.522847 20 30 C 20 24.477153 24.477153 20 30 20 Z");
+});
+
+test("the outline picker stays disabled and cannot mutate the selected piece during a pending save", async () => {
+  let resolveSave;
+  const controller = require("../workbench-controller.js");
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      saveBoard() { return new Promise((resolve) => { resolveSave = resolve; }); },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  assert.equal(app.elements["outline-shape-select"].disabled, true);
+  app.elements["hold-overlay"].children[0].click();
+  assert.equal(app.elements["outline-shape-select"].disabled, false);
+  const originalPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+
+  app.elements["save-button"].click();
+  await settle();
+  try {
+    assert.equal(app.elements["outline-shape-select"].disabled, true);
+    app.elements["outline-shape-select"].value = "oval";
+    app.elements["outline-shape-select"].change();
+    assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+    assert.equal(app.elements["save-state"].textContent, "Working…");
+  } finally {
+    resolveSave(board);
+    await settle();
+    await settle();
+  }
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+  assert.equal(app.elements["save-state"].textContent, "Saved");
+});
+
+test("an invalid outline action restores the original path and dirty state", async () => {
+  const baseController = require("../workbench-controller.js");
+  const controller = {
+    ...baseController,
+    validateEditorDocument() { throw new Error("Forced invalid outline"); },
+  };
+  const board = multiPieceHoldBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  const originalPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+
+  app.elements["outline-shape-select"].value = "oval";
+  app.elements["outline-shape-select"].change();
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+  assert.equal(app.elements["save-state"].textContent, "Saved");
+  assert.equal(app.elements["validation-panel"].classList.contains("hidden"), false);
+  assert.equal(app.elements["validation-list"].children[0].textContent, "Forced invalid outline");
+  assert.equal(app.elements["editor-status"].textContent, "Outline change reverted — contour is invalid.");
+  assert.equal(app.elements["outline-shape-select"].value, "");
+});
 
 function descendantsWithClass(element, className) {
   const descendants = [];

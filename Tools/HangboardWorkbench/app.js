@@ -9,7 +9,7 @@
     validateEditorDocument,
   } = globalThis.HoldWorkbenchController;
   const svgNS = "http://www.w3.org/2000/svg";
-  const { parsePath, serializePath, moveVertex, addVertex, deleteVertex, rotatePath } = (() => {
+  const { parsePath, serializePath, createOutlineShapePath, moveVertex, addVertex, deleteVertex, rotatePath } = (() => {
     try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
   })();
   const dialogs = globalThis.HoldWorkbenchDialogs || {
@@ -18,6 +18,14 @@
   };
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
   const HOLD_KINDS = Object.keys(TYPE_COLORS);
+  const OUTLINE_SHAPES = [
+    ["", "Choose preset…"],
+    ["oval", "Oval"],
+    ["circle", "Circle"],
+    ["pill", "Pill"],
+    ["rounded-rectangle", "Rounded rectangle"],
+    ["rectangle", "Rectangle"],
+  ];
   const ROTATION_HANDLE_RADIUS = 6;
   const ROTATION_HANDLE_OFFSET = 24;
 
@@ -43,7 +51,7 @@
     "board-list", "boards-error", "refresh-boards-button", "save-button", "save-state", "board-status",
     "board-name", "editor-svg", "board-image", "hold-overlay", "empty-state", "editor-status",
     "validation-panel", "validation-list", "hold-heading", "hold-empty", "hold-form", "hold-key",
-    "hold-type-select", "add-hold-button",
+    "hold-type-select", "outline-shape-select", "add-hold-button",
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
@@ -55,6 +63,12 @@
     option.value = kind;
     option.textContent = kind;
     el["hold-type-select"].append(option);
+  }
+  for (const [value, label] of OUTLINE_SHAPES) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    el["outline-shape-select"].append(option);
   }
 
   const boardOperations = createBoardOperationCoordinator({
@@ -99,6 +113,7 @@
   function renderSaveState() {
     el["save-button"].disabled = !state.board || isBusy();
     el["add-hold-button"].disabled = !state.document || isBusy();
+    el["outline-shape-select"].disabled = isBusy() || !selectedHold();
     el["refresh-boards-button"].disabled = isBusy();
     el["save-state"].textContent = !state.board
       ? "No board selected"
@@ -665,6 +680,7 @@
     if (!hold) return;
     el["hold-key"].value = hold.key;
     el["hold-type-select"].value = hold.type;
+    el["outline-shape-select"].value = "";
   }
 
   function render() {
@@ -1127,6 +1143,30 @@
       siblings.forEach((region, index) => { region.type = originalTypes[index]; });
       state.dirty = originalDirty;
       setValidation(error.message || "Hold type is invalid.");
+    }
+    render();
+  });
+
+  el["outline-shape-select"].addEventListener("change", () => {
+    const preset = el["outline-shape-select"].value;
+    const hold = selectedHold();
+    if (isBusy() || !preset || !hold) {
+      el["outline-shape-select"].value = "";
+      return;
+    }
+    const originalPath = hold.displayPath;
+    const originalDirty = state.dirty;
+    try {
+      hold.displayPath = createOutlineShapePath(originalPath, preset);
+      state.dirty = true;
+      validateEditorDocument(state.document);
+      setValidation();
+      setStatus(`Outline changed to ${preset.replace(/-/g, " ")}. Save when ready.`);
+    } catch (error) {
+      hold.displayPath = originalPath;
+      state.dirty = originalDirty;
+      setValidation(error.message || "Contour is invalid.");
+      setStatus("Outline change reverted — contour is invalid.");
     }
     render();
   });
