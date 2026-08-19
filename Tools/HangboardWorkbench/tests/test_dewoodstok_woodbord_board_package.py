@@ -12,6 +12,17 @@ import pytest
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = REPOSITORY_ROOT / "Hangboards" / "dewoodstok-woodbord"
+EXPECTED_PIXEL_FRAMES = {
+    "top-rim": (64, 232, 1646, 48), "front-upper-1": (112, 287, 253, 72),
+    "front-upper-2": (419, 286, 118, 73), "front-upper-3": (594, 287, 262, 71),
+    "front-upper-4": (918, 287, 262, 71), "front-upper-5": (1237, 286, 118, 73),
+    "front-upper-6": (1409, 287, 253, 72), "front-middle-1": (112, 410, 253, 71),
+    "front-middle-2": (419, 410, 248, 71), "front-middle-3": (1107, 410, 248, 71),
+    "front-middle-4": (1409, 410, 253, 71), "front-lower-1": (112, 532, 253, 72),
+    "front-lower-2": (419, 531, 118, 74), "front-lower-3": (594, 532, 263, 72),
+    "front-lower-4": (917, 532, 263, 72), "front-lower-5": (1237, 531, 118, 74),
+    "front-lower-6": (1409, 532, 253, 72),
+}
 EXPECTED_HOLDS = (
     "top-rim",
     *(f"front-upper-{index}" for index in range(1, 7)),
@@ -118,6 +129,11 @@ def _command_signature(hold: dict[str, object]) -> tuple[tuple[object, ...], ...
     )
 
 
+def _pixel_frame(frame: dict[str, float], size: tuple[int, int]) -> tuple[float, float, float, float]:
+    width, height = size
+    return (frame["x"] * width, frame["y"] * height, frame["width"] * width, frame["height"] * height)
+
+
 def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     package = board_package.load_board_package(PACKAGE_ROOT)
     board = package.board
@@ -145,6 +161,7 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert all("gripType" not in hold for hold in holds.values())
     assert all("features" not in hold for hold in holds.values())
 
+    crop_translation = None
     for hold in holds.values():
         assert len(hold["geometry"]) == 1
         piece = hold["geometry"][0]
@@ -158,6 +175,16 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
         assert 0 <= frame["x"] < frame["x"] + frame["width"] <= 1
         assert 0 <= frame["y"] < frame["y"] + frame["height"] <= 1
         assert frame["width"] * frame["height"] > 0
+        projected = _pixel_frame(frame, (image_width, image_height))
+        expected = EXPECTED_PIXEL_FRAMES[hold["id"]]
+        assert projected[2:] == pytest.approx(expected[2:], abs=0.002)
+        translation = (projected[0] - expected[0], projected[1] - expected[1])
+        if crop_translation is None:
+            crop_translation = translation
+        else:
+            assert translation == pytest.approx(crop_translation, abs=0.01)
+
+    assert crop_translation is not None
     symmetry_axis_x = None
     for left_id, right_id in MIRRORED_PAIRS:
         left = holds[left_id]
