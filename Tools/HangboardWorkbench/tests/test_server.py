@@ -1207,20 +1207,26 @@ def test_server_close_waits_for_a_paused_hosted_catalog_request(
 
     request_thread = threading.Thread(target=request_catalog)
     request_thread.start()
-    assert entered.wait(timeout=5)
-    httpd.shutdown()
-    close_thread = threading.Thread(target=httpd.server_close)
-    close_thread.start()
-    close_thread.join(timeout=1)
-    assert close_thread.is_alive()
-    release.set()
-    request_thread.join(timeout=5)
-    close_thread.join(timeout=5)
-    server_thread.join(timeout=5)
+    close_thread: threading.Thread | None = None
+    try:
+        assert entered.wait(timeout=5)
+        httpd.shutdown()
+        close_thread = threading.Thread(target=httpd.server_close)
+        close_thread.start()
+        close_thread.join(timeout=1)
+        assert close_thread.is_alive()
+    finally:
+        release.set()
+        httpd.shutdown()
+        request_thread.join(timeout=5)
+        if close_thread is not None:
+            close_thread.join(timeout=5)
+        server_thread.join(timeout=5)
+        httpd.server_close()
 
     assert result[0][0] == 200
     assert not request_thread.is_alive()
-    assert not close_thread.is_alive()
+    assert close_thread is not None and not close_thread.is_alive()
     assert not server_thread.is_alive()
 
 

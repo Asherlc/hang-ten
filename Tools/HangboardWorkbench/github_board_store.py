@@ -6,12 +6,12 @@ import hashlib
 import json
 import threading
 from collections import OrderedDict
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Hashable, Iterator, Mapping
 from concurrent.futures import Executor, Future, ThreadPoolExecutor
 from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, Protocol
+from typing import Any, Literal, ParamSpec, Protocol, TypeVar, overload
 
 import board_package
 from board_geometry import NormalizedFrame, union_normalized_frames
@@ -19,6 +19,7 @@ from github_client import GitHubConflictError, GitHubNotFoundError, TreeEntry
 
 _BOARD_LIBRARY_PATH = "Hangboards"
 _MAX_CONCURRENT_PACKAGE_LOADS = 4
+_MAX_CONCURRENT_CONTROL_CALLS = 4
 _MAX_CACHED_TREES = 16
 _MAX_CACHED_TREE_ENTRIES = 50_000
 _MAX_CACHED_TREE_BYTES = 16 * 1024 * 1024
@@ -26,6 +27,10 @@ _MAX_CACHED_CATALOGS = 16
 _MAX_CACHED_CATALOG_BYTES = 16 * 1024 * 1024
 _MAX_CACHED_BLOBS = 128
 _MAX_CACHED_BLOB_BYTES = 32 * 1024 * 1024
+
+_Arguments = ParamSpec("_Arguments")
+_Result = TypeVar("_Result")
+_FlightKey = TypeVar("_FlightKey", bound=Hashable)
 
 
 class _GitHubSnapshotClient(Protocol):
@@ -64,6 +69,8 @@ class GitHubBoardStore:
         max_cached_catalog_bytes: int = _MAX_CACHED_CATALOG_BYTES,
         max_cached_blobs: int = _MAX_CACHED_BLOBS,
         max_cached_blob_bytes: int = _MAX_CACHED_BLOB_BYTES,
+        max_concurrent_package_loads: int = _MAX_CONCURRENT_PACKAGE_LOADS,
+        max_concurrent_control_calls: int = _MAX_CONCURRENT_CONTROL_CALLS,
     ) -> None:
         if (
             min(
@@ -74,6 +81,8 @@ class GitHubBoardStore:
                 max_cached_catalog_bytes,
                 max_cached_blobs,
                 max_cached_blob_bytes,
+                max_concurrent_package_loads,
+                max_concurrent_control_calls,
             )
             < 1
         ):
@@ -86,6 +95,7 @@ class GitHubBoardStore:
         self._max_cached_catalog_bytes = max_cached_catalog_bytes
         self._max_cached_blobs = max_cached_blobs
         self._max_cached_blob_bytes = max_cached_blob_bytes
+        self._max_concurrent_package_loads = max_concurrent_package_loads
         self._trees: OrderedDict[tuple[bytes, str], tuple[TreeEntry, ...]] = (
             OrderedDict()
         )
@@ -99,11 +109,14 @@ class GitHubBoardStore:
         self._blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
         self._blob_bytes = 0
         self._lock = threading.RLock()
-        self._request_slots = threading.BoundedSemaphore(
-            _MAX_CONCURRENT_PACKAGE_LOADS
+        self._load_slots = threading.BoundedSemaphore(
+            max_concurrent_package_loads
+        )
+        self._control_slots = threading.BoundedSemaphore(
+            max_concurrent_control_calls
         )
         self._executor = ThreadPoolExecutor(
-            max_workers=_MAX_CONCURRENT_PACKAGE_LOADS,
+            max_workers=max_concurrent_package_loads,
             thread_name_prefix="hangboard-github-load",
         )
         self._tree_flights: dict[tuple[bytes, str], Future[tuple[TreeEntry, ...]]] = {}
@@ -209,11 +222,11 @@ class GitHubBoardStore:
         self, token: str, branch: str, *, cache_blobs: bool
     ) -> _CachedSnapshotClient:
         credential_key = _credential_key(token)
-        head = self._call_bounded(self._client.get_branch_head_sha, token, branch)
+        head = self._call_control(self._client.get_branch_head_sha, token, branch)
         key = (credential_key, head)
         tree = self._tree(key, token, head)
         return _CachedSnapshotClient(
-            self, token, credential_key, head, tree, cache_blobs
+            self, token, credential_key, branch, head, tree, cache_blobs
         )
 
     def _tree(
@@ -226,7 +239,7 @@ class GitHubBoardStore:
                 return tree
 
         def load() -> tuple[TreeEntry, ...]:
-            tree = self._call_bounded(self._client.get_tree, token, head)
+            tree = self._call_bulk(self._client.get_tree, token, head)
             cache_size = _tree_cache_size(tree)
             if (
                 len(tree) <= self._max_cached_tree_entries
@@ -261,12 +274,15 @@ class GitHubBoardStore:
                 return catalog
 
         def load() -> tuple[GitHubBoardPackage, ...]:
-            catalog = discover_packages(snapshot, token, branch, executor=self._executor)
+            catalog = discover_packages(
+                snapshot,
+                token,
+                branch,
+                executor=self._executor,
+                max_concurrent_package_loads=self._max_concurrent_package_loads,
+            )
             cache_size = _catalog_cache_size(catalog)
-            if (
-                len(catalog) <= self._max_cached_tree_entries
-                and cache_size <= self._max_cached_catalog_bytes
-            ):
+            if cache_size <= self._max_cached_catalog_bytes:
                 with self._lock:
                     previous = self._catalogs.pop(key, None)
                     if previous is not None:
@@ -297,7 +313,7 @@ class GitHubBoardStore:
                     return blob
 
         def load() -> bytes:
-            blob = self._call_bounded(self._client.get_blob, token, sha)
+            blob = self._call_bulk(self._client.get_blob, token, sha)
             if not cache or len(blob) > self._max_cached_blob_bytes:
                 return blob
             with self._lock:
@@ -316,11 +332,30 @@ class GitHubBoardStore:
 
         return self._single_flight(self._blob_flights, key, load)
 
-    def _call_bounded(self, operation, *args):
-        with self._request_slots:
-            return operation(*args)
+    def _call_control(
+        self,
+        operation: Callable[_Arguments, _Result],
+        *args: _Arguments.args,
+        **kwargs: _Arguments.kwargs,
+    ) -> _Result:
+        with self._control_slots:
+            return operation(*args, **kwargs)
 
-    def _single_flight(self, flights, key, load):
+    def _call_bulk(
+        self,
+        operation: Callable[_Arguments, _Result],
+        *args: _Arguments.args,
+        **kwargs: _Arguments.kwargs,
+    ) -> _Result:
+        with self._load_slots:
+            return operation(*args, **kwargs)
+
+    def _single_flight(
+        self,
+        flights: dict[_FlightKey, Future[_Result]],
+        key: _FlightKey,
+        load: Callable[[], _Result],
+    ) -> _Result:
         with self._lock:
             future = flights.get(key)
             if future is None:
@@ -348,29 +383,31 @@ class GitHubBoardStore:
             retained_trees: OrderedDict[tuple[bytes, str], tuple[TreeEntry, ...]] = (
                 OrderedDict()
             )
-            self._tree_sizes = {}
+            retained_tree_sizes: dict[tuple[bytes, str], int] = {}
             self._tree_bytes = 0
             for key, tree in self._trees.items():
                 if key[0] == credential_key:
                     continue
                 retained_trees[key] = tree
-                size = _tree_cache_size(tree)
-                self._tree_sizes[key] = size
+                size = self._tree_sizes[key]
+                retained_tree_sizes[key] = size
                 self._tree_bytes += size
             self._trees = retained_trees
+            self._tree_sizes = retained_tree_sizes
             retained_catalogs: OrderedDict[
                 tuple[bytes, str], tuple[GitHubBoardPackage, ...]
             ] = OrderedDict()
-            self._catalog_sizes = {}
+            retained_catalog_sizes: dict[tuple[bytes, str], int] = {}
             self._catalog_bytes = 0
             for key, catalog in self._catalogs.items():
                 if key[0] == credential_key:
                     continue
                 retained_catalogs[key] = catalog
-                size = _catalog_cache_size(catalog)
-                self._catalog_sizes[key] = size
+                size = self._catalog_sizes[key]
+                retained_catalog_sizes[key] = size
                 self._catalog_bytes += size
             self._catalogs = retained_catalogs
+            self._catalog_sizes = retained_catalog_sizes
             retained_blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
             self._blob_bytes = 0
             for key, blob in self._blobs.items():
@@ -389,6 +426,7 @@ class _CachedSnapshotClient:
         store: GitHubBoardStore,
         token: str,
         credential_key: bytes,
+        branch: str,
         commit_sha: str,
         tree: tuple[TreeEntry, ...],
         cache_blobs: bool,
@@ -396,6 +434,7 @@ class _CachedSnapshotClient:
         self._store = store
         self._token = token
         self._credential_key = credential_key
+        self._branch = branch
         self._commit_sha = commit_sha
         self._tree = tree
         self._cache_blobs = cache_blobs
@@ -409,7 +448,7 @@ class _CachedSnapshotClient:
         return self._commit_sha
 
     def get_tree(self, token: str, branch: str) -> tuple[TreeEntry, ...]:
-        self._require_token(token)
+        self._require_snapshot(token, branch)
         return self._tree
 
     def get_blob(self, token: str, sha: str) -> bytes:
@@ -423,6 +462,7 @@ class _CachedSnapshotClient:
             self._store,
             self._token,
             self._credential_key,
+            self._branch,
             self._commit_sha,
             self._tree,
             True,
@@ -437,8 +477,8 @@ class _CachedSnapshotClient:
         message: str,
         sha: str | None,
     ) -> str:
-        self._require_token(token)
-        return self._store._call_bounded(
+        self._require_snapshot(token, branch)
+        return self._store._call_control(
             self._store._client.put_file,
             token,
             path,
@@ -451,6 +491,11 @@ class _CachedSnapshotClient:
     def _require_token(self, token: str) -> None:
         if token != self._token:
             raise RuntimeError("GitHub snapshot credentials do not match")
+
+    def _require_snapshot(self, token: str, branch: str) -> None:
+        self._require_token(token)
+        if branch != self._branch:
+            raise RuntimeError("GitHub snapshot branch does not match")
 
 
 @dataclass(frozen=True, slots=True)
@@ -497,17 +542,32 @@ def discover_packages(
     branch: str,
     *,
     executor: Executor | None = None,
+    max_concurrent_package_loads: int = _MAX_CONCURRENT_PACKAGE_LOADS,
 ) -> tuple[GitHubBoardPackage, ...]:
     """List completed remote board packages with header-only PNG validation."""
+    if max_concurrent_package_loads < 1:
+        raise ValueError("GitHub cache limits must be positive")
     groups = _package_groups(client.get_tree(token, branch))
     completed = [
         (slug, entries) for slug, entries in groups.items() if _is_completed(entries)
     ]
     if executor is None:
-        with ThreadPoolExecutor(max_workers=_MAX_CONCURRENT_PACKAGE_LOADS) as pool:
-            packages = _load_completed_packages(pool, client, token, completed)
+        with ThreadPoolExecutor(max_workers=max_concurrent_package_loads) as pool:
+            packages = _load_completed_packages(
+                pool,
+                client,
+                token,
+                completed,
+                max_concurrent_package_loads,
+            )
     else:
-        packages = _load_completed_packages(executor, client, token, completed)
+        packages = _load_completed_packages(
+            executor,
+            client,
+            token,
+            completed,
+            max_concurrent_package_loads,
+        )
     for slug, entries in groups.items():
         if _is_completed(entries):
             continue
@@ -518,8 +578,6 @@ def discover_packages(
     board_ids: set[str] = set()
     completed_packages: list[GitHubBoardPackage] = []
     for package in packages:
-        if not isinstance(package, GitHubBoardPackage):
-            raise TypeError("completed board package unexpectedly included image bytes")
         completed_packages.append(package)
         if package.board_id in board_ids:
             raise board_package.BoardPackageError(
@@ -619,8 +677,9 @@ def _load_completed_packages(
     client: _GitHubSnapshotClient,
     token: str,
     completed: list[tuple[str, dict[str, TreeEntry]]],
-) -> list[GitHubBoardPackage | tuple[GitHubBoardPackage, bytes]]:
-    window = min(_MAX_CONCURRENT_PACKAGE_LOADS, len(completed))
+    max_concurrent_package_loads: int,
+) -> list[GitHubBoardPackage]:
+    window = min(max_concurrent_package_loads, len(completed))
     pending = [
         executor.submit(
             _load_package_from_entries,
@@ -633,7 +692,7 @@ def _load_completed_packages(
         for slug, entries in completed[:window]
     ]
     next_index = window
-    packages: list[GitHubBoardPackage | tuple[GitHubBoardPackage, bytes]] = []
+    packages: list[GitHubBoardPackage] = []
     try:
         while pending:
             future = pending.pop(0)
@@ -762,6 +821,30 @@ def _load_slug_with_image(
         client, token, slug, entries, inspect_png_header_only=False, include_image=True
     )
     return package, image
+
+
+@overload
+def _load_package_from_entries(
+    client: _GitHubSnapshotClient,
+    token: str,
+    slug: str,
+    entries: Mapping[str, TreeEntry],
+    *,
+    inspect_png_header_only: bool,
+    include_image: Literal[False] = False,
+) -> GitHubBoardPackage: ...
+
+
+@overload
+def _load_package_from_entries(
+    client: _GitHubSnapshotClient,
+    token: str,
+    slug: str,
+    entries: Mapping[str, TreeEntry],
+    *,
+    inspect_png_header_only: bool,
+    include_image: Literal[True],
+) -> tuple[GitHubBoardPackage, bytes]: ...
 
 
 def _load_package_from_entries(

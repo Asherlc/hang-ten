@@ -328,9 +328,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             document = self._read_json_object()
             if self.server.allow_remote:
                 session = self._github_session()
-                store = self.server.github_board_store
-                if store is None:
-                    raise RuntimeError("GitHub board store is unavailable")
+                store = self._github_board_store()
                 package = store.open_package(
                     session.token, session.branch, unquote(board_path)
                 )
@@ -386,9 +384,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         try:
             if self.server.allow_remote:
                 session = self._github_session()
-                store = self.server.github_board_store
-                if store is None:
-                    raise RuntimeError("GitHub board store is unavailable")
+                store = self._github_board_store()
                 packages = store.discover_packages(session.token, session.branch)
             else:
                 packages = discover_packages(self.server.library_root)
@@ -410,9 +406,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         try:
             if self.server.allow_remote:
                 session = self._github_session()
-                store = self.server.github_board_store
-                if store is None:
-                    raise RuntimeError("GitHub board store is unavailable")
+                store = self._github_board_store()
                 package = store.open_package(session.token, session.branch, board_id)
             else:
                 package = open_package(self.server.library_root, board_id)
@@ -620,9 +614,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         try:
             if self.server.allow_remote:
                 session = self._github_session()
-                store = self.server.github_board_store
-                if store is None:
-                    raise RuntimeError("GitHub board store is unavailable")
+                store = self._github_board_store()
                 image = store.primary_image_bytes(
                     session.token, session.branch, board_id
                 )
@@ -857,6 +849,12 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
         if session is None:
             raise RequestError(HTTPStatus.UNAUTHORIZED, "authentication required")
         return session
+
+    def _github_board_store(self) -> github_board_store.GitHubBoardStore:
+        store = self.server.github_board_store
+        if store is None:
+            raise RuntimeError("GitHub board store is unavailable")
+        return store
 
     def _set_session_cookie(self, session: _Session) -> None:
         cookie = SimpleCookie()
