@@ -23,6 +23,8 @@ from .board_catalog import load_board_package
 _PADDING_FRACTION = 0.01
 _OPAQUE_BACKGROUND_MINIMUM_TOLERANCE = 12.0
 _BACKGROUND_COLOR_QUANTUM = 16
+_LIGHT_NEUTRAL_BACKGROUND_MIN_CHANNEL = 224
+_LIGHT_NEUTRAL_BACKGROUND_MAX_CHANNEL_SPREAD = 32
 _AT_FDCWD = -2
 _RENAME_EXCHANGE = 0x2
 _PIXEL_ROUNDING_EPSILON = 1e-9
@@ -102,16 +104,19 @@ def _visible_bounds(image: Image.Image) -> Crop | None:
     if np.any(alpha == 0):
         foreground = alpha > 0
     else:
-        foreground = ~_opaque_background_mask(pixels[:, :, :3])
+        background = _opaque_background_mask(pixels[:, :, :3])
+        foreground = np.ones(alpha.shape, dtype=bool) if background is None else ~background
     return _mask_bounds(foreground)
 
 
-def _opaque_background_mask(rgb: np.ndarray) -> np.ndarray:
+def _opaque_background_mask(rgb: np.ndarray) -> np.ndarray | None:
     """Classify a border-connected opaque background without board identity.
 
     The dominant quantized border-color cluster supplies both the reference and
-    spread.  Minority foreground pixels that touch an edge therefore cannot
-    broaden the background tolerance.
+    spread. A crop is safe only when that cluster is a light neutral substrate
+    with contrasting image content; otherwise the opaque image is ambiguous and
+    remains visible in full. Minority foreground pixels that touch an edge
+    therefore cannot broaden the background tolerance.
     """
     border = np.concatenate((rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]))
     clusters, membership, counts = np.unique(
@@ -123,6 +128,8 @@ def _opaque_background_mask(rgb: np.ndarray) -> np.ndarray:
     del clusters
     background_samples = border[membership == int(np.argmax(counts))]
     reference = np.median(background_samples, axis=0)
+    if not _is_light_neutral_background(reference):
+        return None
     background_distance = np.linalg.norm(
         background_samples.astype(float) - reference,
         axis=1,
@@ -132,7 +139,17 @@ def _opaque_background_mask(rgb: np.ndarray) -> np.ndarray:
         float(np.percentile(background_distance, 95)),
     )
     comparable = np.linalg.norm(rgb.astype(float) - reference, axis=2) <= tolerance
+    if np.all(comparable):
+        return None
     return _border_connected(comparable)
+
+
+def _is_light_neutral_background(reference: np.ndarray) -> bool:
+    return (
+        float(reference.min()) >= _LIGHT_NEUTRAL_BACKGROUND_MIN_CHANNEL
+        and float(reference.max() - reference.min())
+        <= _LIGHT_NEUTRAL_BACKGROUND_MAX_CHANNEL_SPREAD
+    )
 
 
 def _border_connected(mask: np.ndarray) -> np.ndarray:

@@ -131,6 +131,41 @@ def test_normalizes_transparent_canvas_and_preserves_non_presentation_fields(tmp
     assert after["holds"][0]["geometry"][0]["frame"] == _frame(1 / 42, 1 / 62, 40 / 42, 60 / 62)
 
 
+def test_preserves_a_solid_opaque_full_bleed_presentation(tmp_path: Path) -> None:
+    package = _write_package(
+        tmp_path / "board",
+        size=(100, 50),
+        background=(88, 55, 32, 255),
+        visible_rectangles=[],
+        holds=[_hold("central", _rounded_piece(0.4, 0.3, 0.2, 0.4))],
+    )
+
+    result = normalize_package_presentation(package, write=False)
+
+    assert result.crop == (0, 0, 100, 50)
+    assert result.changed is False
+
+
+def test_preserves_majority_edge_opaque_artwork_when_background_is_ambiguous(tmp_path: Path) -> None:
+    package = _write_package(
+        tmp_path / "board",
+        size=(100, 100),
+        background=(250, 248, 245, 255),
+        visible_rectangles=[
+            (0, 0, 99, 20),
+            (0, 79, 99, 99),
+            (0, 20, 20, 79),
+            (79, 20, 99, 79),
+        ],
+        holds=[_hold("central", _rounded_piece(0.4, 0.4, 0.1, 0.1))],
+    )
+
+    result = normalize_package_presentation(package, write=False)
+
+    assert result.crop == (0, 0, 100, 100)
+    assert result.changed is False
+
+
 def test_leaves_an_already_tight_canvas_unchanged(tmp_path: Path) -> None:
     package = _write_package(
         tmp_path / "board",
