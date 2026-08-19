@@ -460,11 +460,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
       ]
     },
     {
@@ -556,11 +551,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
       ]
     },
     {
@@ -652,11 +642,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
       ]
     },
     {
@@ -748,11 +733,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
       ]
     },
     {
@@ -844,11 +824,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     },
     {
@@ -940,11 +915,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     },
     {
@@ -1036,11 +1006,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
       ]
     },
     {
@@ -1132,11 +1097,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
       ]
     },
     {
@@ -1228,11 +1188,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
       ]
     },
     {
@@ -1324,11 +1279,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
       ]
     },
     {
@@ -1420,11 +1370,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     },
     {
@@ -1516,16 +1461,11 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     },
     {
-      "id": "hold-09-left",
-      "name": "Left 50mm Sloper Edge",
+      "id": "hold-09-center",
+      "name": "50mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 50,
       "geometry": [
@@ -1603,15 +1543,7 @@
               }
             ]
           }
-        }
-      ]
-    },
-    {
-      "id": "hold-09-right",
-      "name": "Right 50mm Sloper Edge",
-      "kind": "sloper",
-      "sizeMillimeters": 50,
-      "geometry": [
+        },
         {
           "frame": {
             "x": 0.4976713240186294,
@@ -1690,8 +1622,8 @@
       ]
     },
     {
-      "id": "hold-10-left",
-      "name": "Left 31mm Sloper Edge",
+      "id": "hold-10-center",
+      "name": "31mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 31,
       "geometry": [
@@ -1769,15 +1701,7 @@
               }
             ]
           }
-        }
-      ]
-    },
-    {
-      "id": "hold-10-right",
-      "name": "Right 31mm Sloper Edge",
-      "kind": "sloper",
-      "sizeMillimeters": 31,
-      "geometry": [
+        },
         {
           "frame": {
             "x": 0.4976713240186294,
@@ -1856,10 +1780,9 @@
       ]
     },
     {
-      "id": "hold-11-left",
-      "name": "Left 12mm Sloper Edge",
+      "id": "hold-11-center",
+      "name": "Center Sloper Edge",
       "kind": "sloper",
-      "sizeMillimeters": 12,
       "geometry": [
         {
           "frame": {
@@ -1935,15 +1858,7 @@
               }
             ]
           }
-        }
-      ]
-    },
-    {
-      "id": "hold-11-right",
-      "name": "Right 12mm Sloper Edge",
-      "kind": "sloper",
-      "sizeMillimeters": 12,
-      "geometry": [
+        },
         {
           "frame": {
             "x": 0.4976713240186294,

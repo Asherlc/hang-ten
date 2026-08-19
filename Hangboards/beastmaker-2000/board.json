@@ -560,10 +560,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 40,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -661,10 +657,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 20,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -1143,11 +1135,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
       ]
     },
     {
@@ -1626,12 +1613,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 15,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     },
     {
@@ -1722,10 +1703,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 27,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -1823,13 +1800,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 20,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
@@ -1927,18 +1897,11 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 22,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
       "id": "front-lower-5",
-      "name": "Front Lower 5",
+      "name": "22 mm Center Edge",
       "kind": "edge",
       "geometry": [
         {
@@ -2032,13 +1995,7 @@
           }
         }
       ],
-      "sizeMillimeters": 21,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ]
+      "sizeMillimeters": 22
     },
     {
       "id": "front-lower-6",
@@ -2135,13 +2092,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 22,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
@@ -2239,13 +2189,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 20,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
@@ -2336,10 +2279,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 27,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -2437,12 +2376,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 15,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     }
   ]

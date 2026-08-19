@@ -146,7 +146,7 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert board["id"] == "dewoodstok-woodbord"
     assert board["manufacturer"] == "deWoodstok"
     assert board["name"] == "Woodbord"
-    assert board["subtitle"] == "FSC-certified bamboo hangboard."
+    assert board["subtitle"] == "Solid certified bamboo hangboard."
     assert board["productURL"] == "https://www.dewoodstok.nl/product/hangboard-woodbord/"
     assert board["dimensions"] == "590 × 148 × 40 mm"
     assert math.isclose(board["aspectRatio"], image_aspect_ratio, rel_tol=0, abs_tol=1e-12)

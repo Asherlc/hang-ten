@@ -61,86 +61,30 @@ COMPACT_HOLD_BOUNDS = {
     "edge-19-right": (0.805, 0.626125, 0.160, 0.231525),
 }
 
-COMPACT_HOLD_PHYSICAL_FACTS = {
-    "jug-left": ("jug", None, "openHand", 4, ("jug",)),
-    "sloper-flat-left": ("sloper", 56, "sloper", 4, ("largeSlope",)),
-    "sloper-round-center": ("sloper", 56, "sloper", 4, ("roundSloper",)),
-    "sloper-flat-right": ("sloper", 56, "sloper", 4, ("largeSlope",)),
-    "jug-right": ("jug", None, "openHand", 4, ("jug",)),
-    "edge-29-left": ("edge", 29, "openHand", 4, ("largeEdge",)),
-    "pocket-29-three-left": (
-        "pocket",
-        29,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "pocket-29-two-left": (
-        "pocket",
-        29,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-29-four-center": (
-        "pocket",
-        29,
-        "fourFingerPocket",
-        4,
-        ("pocket",),
-    ),
-    "pocket-29-two-right": (
-        "pocket",
-        29,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-29-three-right": (
-        "pocket",
-        29,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "edge-29-right": ("edge", 29, "openHand", 4, ("largeEdge",)),
-    "edge-19-left": ("edge", 19, "openHand", 4, ("mediumEdge", "smallEdge")),
-    "pocket-19-three-left": (
-        "pocket",
-        19,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "pocket-19-three-right": (
-        "pocket",
-        19,
-        "threeFingerPocket",
-        3,
-        ("pocket",),
-    ),
-    "pocket-19-two-left": (
-        "pocket",
-        19,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-19-two-right": (
-        "pocket",
-        19,
-        "twoFingerPocket",
-        2,
-        ("pocket",),
-    ),
-    "pocket-19-four-center": (
-        "pocket",
-        19,
-        "fourFingerPocket",
-        4,
-        ("pocket",),
-    ),
-    "edge-19-right": ("edge", 19, "openHand", 4, ("mediumEdge", "smallEdge")),
+# Each value is (source-backed kind, depth, capacity, structural pocket grip,
+# app semantic routing). Pocket grip types are the direct semantic encoding of
+# visible/source-backed capacity, not manufacturer posture prescriptions. The
+# feature tuple is an app compatibility adaptation, not a manufacturer grip fact.
+COMPACT_HOLD_SOURCE_FACTS_AND_ROUTING = {
+    "jug-left": ("jug", None, 4, None, ("jug",)),
+    "sloper-flat-left": ("sloper", 56, 4, None, ("largeSlope",)),
+    "sloper-round-center": ("sloper", 56, 4, None, ("roundSloper",)),
+    "sloper-flat-right": ("sloper", 56, 4, None, ("largeSlope",)),
+    "jug-right": ("jug", None, 4, None, ("jug",)),
+    "edge-29-left": ("edge", 29, 4, None, ("largeEdge",)),
+    "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", ("pocket",)),
+    "pocket-29-two-left": ("pocket", 29, 2, "twoFingerPocket", ("pocket",)),
+    "pocket-29-four-center": ("pocket", 29, 4, "fourFingerPocket", ("pocket",)),
+    "pocket-29-two-right": ("pocket", 29, 2, "twoFingerPocket", ("pocket",)),
+    "pocket-29-three-right": ("pocket", 29, 3, "threeFingerPocket", ("pocket",)),
+    "edge-29-right": ("edge", 29, 4, None, ("largeEdge",)),
+    "edge-19-left": ("edge", 19, 4, None, ("mediumEdge", "smallEdge")),
+    "pocket-19-three-left": ("pocket", 19, 3, "threeFingerPocket", ("pocket",)),
+    "pocket-19-three-right": ("pocket", 19, 3, "threeFingerPocket", ("pocket",)),
+    "pocket-19-two-left": ("pocket", 19, 2, "twoFingerPocket", ("pocket",)),
+    "pocket-19-two-right": ("pocket", 19, 2, "twoFingerPocket", ("pocket",)),
+    "pocket-19-four-center": ("pocket", 19, 4, "fourFingerPocket", ("pocket",)),
+    "edge-19-right": ("edge", 19, 4, None, ("mediumEdge", "smallEdge")),
 }
 
 def _embedded_geometry_bounds(
@@ -167,6 +111,7 @@ def test_direct_discovery_finds_compact_and_ignores_primary_only_drafts() -> Non
         ("beastmaker-2000", "beastmaker-2000"),
         ("dewoodstok-woodbord", "dewoodstok-woodbord"),
         ("escape-beta-22", "escape-beta-22"),
+        ("evolv-kilter-basic-long", "evolv-kilter-basic-long"),
         ("lattice-triple-rung", "lattice-triple-rung"),
     }
     assert base_packages <= discovered
@@ -198,7 +143,7 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry()
     assert all(hold.get("geometry") for hold in holds)
 
 
-def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> None:
+def test_compact_hold_records_keep_sourced_physical_facts_and_app_routing() -> None:
     board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
     holds = board["holds"]
     retired_fields = {"frame", "shortLabel", "detail", "cueStyle"}
@@ -209,8 +154,8 @@ def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> No
         "geometry",
         "sizeMillimeters",
         "depthRangeMillimeters",
-        "gripType",
         "fingerCapacity",
+        "gripType",
         "features",
     }
 
@@ -218,16 +163,31 @@ def test_compact_hold_records_keep_only_supported_sourced_physical_facts() -> No
     assert all({"id", "name", "kind", "geometry"} <= set(hold) for hold in holds)
     assert all(set(hold) <= supported_fields for hold in holds)
     assert all("depthRangeMillimeters" not in hold for hold in holds)
+    expected_pocket_grips = {
+        2: "twoFingerPocket",
+        3: "threeFingerPocket",
+        4: "fourFingerPocket",
+    }
+    assert all(
+        hold.get("gripType") == expected_pocket_grips[hold["fingerCapacity"]]
+        for hold in holds
+        if hold["kind"] == "pocket"
+    )
+    assert all(
+        "gripType" not in hold
+        for hold in holds
+        if hold["kind"] != "pocket"
+    )
     assert {
         hold["id"]: (
             hold.get("kind"),
             hold.get("sizeMillimeters"),
-            hold.get("gripType"),
             hold.get("fingerCapacity"),
+            hold.get("gripType"),
             tuple(hold.get("features", ())),
         )
         for hold in holds
-    } == COMPACT_HOLD_PHYSICAL_FACTS
+    } == COMPACT_HOLD_SOURCE_FACTS_AND_ROUTING
 
 
 def test_compact_hold_bounds_are_derived_from_embedded_piece_unions() -> None:
@@ -250,8 +210,8 @@ def test_compact_package_loader_preserves_identity_inventory_and_bounds() -> Non
     assert package.board.facts == {
         "manufacturer": "Metolius",
         "name": "Wood Grips Compact II",
-        "subtitle": "A compact FSC-certified wood board for everyday strength work.",
-        "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards",
+        "subtitle": "FSC-certified wood training board.",
+        "productURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
         "dimensions": '24" × 6.2"',
         "aspectRatio": 3.88,
     }
