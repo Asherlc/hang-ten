@@ -84,6 +84,22 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertTrue(result.isEmpty)
     }
 
+    func testResolveHoldIDsUsesExplicitFallbackDespiteMismatchedFingerCapacity() {
+        let board = board(holds: [
+            hold(id: "fallback-edge", feature: .largeEdge, fingerCapacity: 4),
+            hold(id: "unrelated-jug", kind: .jug, feature: .jug)
+        ])
+        let target = HoldTarget.feature(
+            .smallEdge,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        let result = BoardTargetResolver.resolveHoldIDs(for: target, on: board)
+
+        XCTAssertEqual(result, ["fallback-edge"])
+    }
+
     func testSubstitutionPrefersMatchingFingerCapacityWithinSameKindTier() {
         let board = board(holds: [
             hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2),
@@ -181,6 +197,45 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [])
         let target = HoldTarget.feature(.smallEdge)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    /// A board with no pocket holds at all (not merely an unmatched
+    /// capacity) must still resolve via the target's declared fallback
+    /// feature, not just its declared kind's own closest-match search.
+    func testClosestMatchTriesDeclaredFallbackFeatureWhenBoardHasNoHoldOfThePrimaryKind() {
+        let board = board(holds: [
+            hold(id: "edge", kind: .edge, feature: nil, fingerCapacity: nil)
+        ])
+        let target = HoldTarget.feature(.pocket, fingerCapacity: 2, fallback: .largeEdge)
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
+        XCTAssertEqual(result, ["edge"])
+    }
+
+    func testPocketTargetWithoutFallbackDoesNotSubstituteMetadataLightEdge() {
+        let board = board(holds: [
+            hold(id: "edge", kind: .edge, feature: nil, fingerCapacity: nil)
+        ])
+        let target = HoldTarget.feature(.pocket, fingerCapacity: 2)
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    /// A declared fallback only substitutes on its own kind; it must not
+    /// inherit byFeatureGroup's edge-to-pocket rescue, or a plan author's
+    /// single named fallback would silently reach two substitutions deep.
+    func testDeclaredFallbackDoesNotInheritTheEdgeToPocketRescue() {
+        let board = board(holds: [
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+        let target = HoldTarget.feature(.mediumPinch, fallback: .mediumEdge)
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
         XCTAssertTrue(result.isEmpty)
     }
 

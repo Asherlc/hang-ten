@@ -1732,7 +1732,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -1744,7 +1749,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Max hang · set 1"
@@ -1768,7 +1778,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -1780,7 +1795,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Max hang · set 2"
@@ -1798,7 +1818,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -1810,7 +1835,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Max hang · set 3"
@@ -1828,7 +1858,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -1840,7 +1875,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Max hang · set 4"
@@ -1858,14 +1898,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Max hang · set 5"
@@ -1888,7 +1938,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -1900,7 +1956,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 1"
@@ -1923,7 +1985,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -1935,7 +2003,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 2"
@@ -1952,7 +2026,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -1964,7 +2044,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 3"
@@ -1981,7 +2067,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -1993,7 +2085,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 4"
@@ -2010,7 +2108,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2022,7 +2126,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 5"
@@ -2039,7 +2149,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2051,7 +2167,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 6"
@@ -2068,7 +2190,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2080,7 +2208,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 7"
@@ -2097,7 +2231,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2109,7 +2249,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 8"
@@ -2126,7 +2272,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2138,7 +2290,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 9"
@@ -2155,7 +2313,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2167,7 +2331,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 10"
@@ -2184,7 +2354,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2196,7 +2372,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 11"
@@ -2213,7 +2395,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2225,7 +2413,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 1, rep 12"
@@ -2260,7 +2454,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2272,7 +2472,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 1"
@@ -2289,7 +2495,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2301,7 +2513,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 2"
@@ -2318,7 +2536,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2330,7 +2554,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 3"
@@ -2347,7 +2577,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2359,7 +2595,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 4"
@@ -2376,7 +2618,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2388,7 +2636,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 5"
@@ -2405,7 +2659,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2417,7 +2677,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 6"
@@ -2434,7 +2700,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2446,7 +2718,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 7"
@@ -2463,7 +2741,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2475,7 +2759,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 8"
@@ -2492,7 +2782,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2504,7 +2800,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 9"
@@ -2521,7 +2823,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2533,7 +2841,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 10"
@@ -2550,7 +2864,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2562,7 +2882,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 11"
@@ -2579,7 +2905,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2591,7 +2923,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 2, rep 12"
@@ -2626,7 +2964,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2638,7 +2982,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 1"
@@ -2655,7 +3005,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2667,7 +3023,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 2"
@@ -2684,7 +3046,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2696,7 +3064,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 3"
@@ -2713,7 +3087,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2725,7 +3105,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 4"
@@ -2742,7 +3128,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2754,7 +3146,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 5"
@@ -2771,7 +3169,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2783,7 +3187,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 6"
@@ -2800,7 +3210,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2812,7 +3228,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 7"
@@ -2829,7 +3251,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2841,7 +3269,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 8"
@@ -2858,7 +3292,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2870,7 +3310,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 9"
@@ -2887,7 +3333,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2899,7 +3351,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 10"
@@ -2916,7 +3374,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2928,7 +3392,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 11"
@@ -2945,7 +3415,13 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -2957,7 +3433,13 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F80 · set 3, rep 12"
@@ -2980,18 +3462,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3014,9 +3504,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3028,9 +3522,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3047,18 +3545,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3075,9 +3581,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3089,9 +3599,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3108,18 +3622,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3136,9 +3658,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3150,9 +3676,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3169,18 +3699,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3197,9 +3735,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3211,9 +3753,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3230,18 +3776,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3258,9 +3812,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3272,9 +3830,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3291,18 +3853,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3319,9 +3889,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3333,9 +3907,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3352,18 +3930,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3380,9 +3966,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3394,9 +3984,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3413,18 +4007,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3441,9 +4043,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3455,9 +4061,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3474,18 +4084,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3502,9 +4120,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3516,9 +4138,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3535,18 +4161,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3563,9 +4197,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3577,9 +4215,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3596,18 +4238,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3624,9 +4274,13 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             },
@@ -3638,9 +4292,13 @@
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3657,18 +4315,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-right"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-right"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · right hand"
@@ -3685,18 +4351,26 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "holdIDs" : [
-                  "edge-19-left"
-                ]
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "smallEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "holdIDs" : [
-                "edge-19-left"
-              ]
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "smallEdge"
             }
           ],
           "title" : "F100 · left hand"
@@ -3719,7 +4393,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3731,7 +4410,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 1, rep 1"
@@ -3754,7 +4438,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3766,7 +4455,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 1, rep 2"
@@ -3783,7 +4477,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3795,7 +4494,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 1, rep 3"
@@ -3812,7 +4516,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3824,7 +4533,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 1, rep 4"
@@ -3841,14 +4555,24 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 1, rep 5"
@@ -3883,7 +4607,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3895,7 +4624,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 2, rep 1"
@@ -3912,7 +4646,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3924,7 +4663,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 2, rep 2"
@@ -3941,7 +4685,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3953,7 +4702,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 2, rep 3"
@@ -3970,7 +4724,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -3982,7 +4741,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 2, rep 4"
@@ -3999,14 +4763,24 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 2, rep 5"
@@ -4041,7 +4815,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4053,7 +4832,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 3, rep 1"
@@ -4070,7 +4854,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4082,7 +4871,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 3, rep 2"
@@ -4099,7 +4893,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4111,7 +4910,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 3, rep 3"
@@ -4128,7 +4932,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4140,7 +4949,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 3, rep 4"
@@ -4157,14 +4971,24 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "IntHang · set 3, rep 5"
@@ -4188,7 +5012,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -4200,7 +5029,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 29 mm open edge · rep 1"
@@ -4224,7 +5058,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -4236,7 +5075,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 29 mm open edge · rep 2"
@@ -4254,7 +5098,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -4266,7 +5115,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 29 mm open edge · rep 3"
@@ -4284,7 +5138,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -4296,7 +5155,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 29 mm open edge · rep 4"
@@ -4314,7 +5178,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -4326,7 +5195,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 29 mm open edge · rep 5"
@@ -4344,7 +5218,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -4356,7 +5235,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 29 mm open edge · rep 6"
@@ -4374,14 +5258,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 29 mm open edge · rep 7"
@@ -4417,7 +5311,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4429,7 +5328,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm open edge · rep 1"
@@ -4447,7 +5351,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4459,7 +5368,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm open edge · rep 2"
@@ -4477,7 +5391,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4489,7 +5408,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm open edge · rep 3"
@@ -4507,7 +5431,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4519,7 +5448,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm open edge · rep 4"
@@ -4537,7 +5471,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4549,7 +5488,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm open edge · rep 5"
@@ -4567,7 +5511,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4579,7 +5528,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm open edge · rep 6"
@@ -4597,14 +5551,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm open edge · rep 7"
@@ -4640,7 +5604,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4652,7 +5621,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm half crimp · rep 1"
@@ -4670,7 +5644,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4682,7 +5661,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm half crimp · rep 2"
@@ -4700,7 +5684,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4712,7 +5701,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm half crimp · rep 3"
@@ -4730,7 +5724,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4742,7 +5741,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm half crimp · rep 4"
@@ -4760,7 +5764,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4772,7 +5781,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm half crimp · rep 5"
@@ -4790,7 +5804,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4802,7 +5821,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm half crimp · rep 6"
@@ -4820,14 +5844,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · 19 mm half crimp · rep 7"
@@ -4870,7 +5904,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4882,7 +5921,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-three open edge · rep 1"
@@ -4907,7 +5951,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4919,7 +5968,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-three open edge · rep 2"
@@ -4944,7 +5998,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4956,7 +6015,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-three open edge · rep 3"
@@ -4981,7 +6045,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -4993,7 +6062,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-three open edge · rep 4"
@@ -5018,7 +6092,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5030,7 +6109,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-three open edge · rep 5"
@@ -5055,7 +6139,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5067,7 +6156,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-three open edge · rep 6"
@@ -5092,14 +6186,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-three open edge · rep 7"
@@ -5142,7 +6246,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5154,7 +6263,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Back-three half crimp · rep 1"
@@ -5179,7 +6293,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5191,7 +6310,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Back-three half crimp · rep 2"
@@ -5216,7 +6340,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5228,7 +6357,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Back-three half crimp · rep 3"
@@ -5253,7 +6387,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5265,7 +6404,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Back-three half crimp · rep 4"
@@ -5290,7 +6434,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5302,7 +6451,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Back-three half crimp · rep 5"
@@ -5327,7 +6481,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5339,7 +6498,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Back-three half crimp · rep 6"
@@ -5364,14 +6528,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Back-three half crimp · rep 7"
@@ -5413,7 +6587,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5425,7 +6604,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-two open edge · rep 1"
@@ -5449,7 +6633,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5461,7 +6650,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-two open edge · rep 2"
@@ -5485,7 +6679,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5497,7 +6696,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-two open edge · rep 3"
@@ -5521,7 +6725,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5533,7 +6742,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-two open edge · rep 4"
@@ -5557,7 +6771,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5569,7 +6788,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-two open edge · rep 5"
@@ -5593,7 +6817,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5605,7 +6834,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-two open edge · rep 6"
@@ -5629,14 +6863,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 1 · Front-two open edge · rep 7"
@@ -5672,7 +6916,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -5684,7 +6933,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 29 mm open edge · rep 1"
@@ -5702,7 +6956,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -5714,7 +6973,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 29 mm open edge · rep 2"
@@ -5732,7 +6996,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -5744,7 +7013,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 29 mm open edge · rep 3"
@@ -5762,7 +7036,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -5774,7 +7053,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 29 mm open edge · rep 4"
@@ -5792,7 +7076,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -5804,7 +7093,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 29 mm open edge · rep 5"
@@ -5822,7 +7116,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -5834,7 +7133,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 29 mm open edge · rep 6"
@@ -5852,14 +7156,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 29 mm open edge · rep 7"
@@ -5895,7 +7209,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5907,7 +7226,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm open edge · rep 1"
@@ -5925,7 +7249,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5937,7 +7266,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm open edge · rep 2"
@@ -5955,7 +7289,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5967,7 +7306,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm open edge · rep 3"
@@ -5985,7 +7329,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -5997,7 +7346,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm open edge · rep 4"
@@ -6015,7 +7369,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6027,7 +7386,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm open edge · rep 5"
@@ -6045,7 +7409,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6057,7 +7426,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm open edge · rep 6"
@@ -6075,14 +7449,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm open edge · rep 7"
@@ -6118,7 +7502,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6130,7 +7519,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm half crimp · rep 1"
@@ -6148,7 +7542,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6160,7 +7559,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm half crimp · rep 2"
@@ -6178,7 +7582,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6190,7 +7599,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm half crimp · rep 3"
@@ -6208,7 +7622,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6220,7 +7639,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm half crimp · rep 4"
@@ -6238,7 +7662,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6250,7 +7679,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm half crimp · rep 5"
@@ -6268,7 +7702,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6280,7 +7719,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm half crimp · rep 6"
@@ -6298,14 +7742,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · 19 mm half crimp · rep 7"
@@ -6348,7 +7802,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6360,7 +7819,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-three open edge · rep 1"
@@ -6385,7 +7849,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6397,7 +7866,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-three open edge · rep 2"
@@ -6422,7 +7896,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6434,7 +7913,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-three open edge · rep 3"
@@ -6459,7 +7943,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6471,7 +7960,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-three open edge · rep 4"
@@ -6496,7 +7990,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6508,7 +8007,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-three open edge · rep 5"
@@ -6533,7 +8037,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6545,7 +8054,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-three open edge · rep 6"
@@ -6570,14 +8084,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-three open edge · rep 7"
@@ -6620,7 +8144,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6632,7 +8161,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Back-three half crimp · rep 1"
@@ -6657,7 +8191,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6669,7 +8208,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Back-three half crimp · rep 2"
@@ -6694,7 +8238,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6706,7 +8255,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Back-three half crimp · rep 3"
@@ -6731,7 +8285,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6743,7 +8302,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Back-three half crimp · rep 4"
@@ -6768,7 +8332,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6780,7 +8349,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Back-three half crimp · rep 5"
@@ -6805,7 +8379,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6817,7 +8396,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Back-three half crimp · rep 6"
@@ -6842,14 +8426,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Back-three half crimp · rep 7"
@@ -6891,7 +8485,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6903,7 +8502,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-two open edge · rep 1"
@@ -6927,7 +8531,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6939,7 +8548,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-two open edge · rep 2"
@@ -6963,7 +8577,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -6975,7 +8594,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-two open edge · rep 3"
@@ -6999,7 +8623,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7011,7 +8640,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-two open edge · rep 4"
@@ -7035,7 +8669,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7047,7 +8686,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-two open edge · rep 5"
@@ -7071,7 +8715,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7083,7 +8732,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-two open edge · rep 6"
@@ -7107,14 +8761,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7\/3 · set 2 · Front-two open edge · rep 7"
@@ -7138,7 +8802,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7150,7 +8819,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Abrahang · Half 4 Hang"
@@ -7181,7 +8855,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7193,7 +8872,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Abrahang · F3 Open Hang"
@@ -7217,7 +8901,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7229,7 +8918,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Abrahang · M2 Open Hang"
@@ -7253,7 +8947,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7265,7 +8964,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Abrahang · F2 Open Hang"
@@ -7290,7 +8994,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7302,7 +9011,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Abrahang · B3 Half Hang"
@@ -7327,7 +9041,12 @@
               "duration" : 10,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7339,7 +9058,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "Abrahang · F3 Half Hang"
@@ -7363,7 +9087,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7375,7 +9104,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7–53 · 29 mm half crimp, rep 1"
@@ -7399,7 +9133,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7411,7 +9150,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7–53 · 29 mm half crimp, rep 2"
@@ -7429,14 +9173,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "7–53 · 29 mm half crimp, rep 3"
@@ -7472,7 +9226,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7484,7 +9243,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7–53 · 19 mm open edge, rep 1"
@@ -7502,7 +9266,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             },
@@ -7514,7 +9283,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7–53 · 19 mm open edge, rep 2"
@@ -7532,14 +9306,24 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-19"
+                "fallbackFeatures" : [
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "mediumEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-19"
+              "fallbackFeatures" : [
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "mediumEdge"
             }
           ],
           "title" : "7–53 · 19 mm open edge, rep 3"
@@ -7575,6 +9359,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 2
               },
@@ -7588,6 +9378,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 2
             }
@@ -7607,6 +9403,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 2
               },
@@ -7620,6 +9422,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 2
             }
@@ -7639,6 +9447,12 @@
               "duration" : 7,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 2
               },
@@ -7647,6 +9461,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 2
             }
@@ -7671,7 +9491,12 @@
               "duration" : 3,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7683,7 +9508,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 1 · 3 seconds"
@@ -7706,7 +9536,12 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7718,7 +9553,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 1 · 6 seconds"
@@ -7735,14 +9575,24 @@
               "duration" : 9,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 1 · 9 seconds"
@@ -7777,7 +9627,12 @@
               "duration" : 3,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7789,7 +9644,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 2 · 3 seconds"
@@ -7806,7 +9666,12 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7818,7 +9683,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 2 · 6 seconds"
@@ -7835,14 +9705,24 @@
               "duration" : 9,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 2 · 9 seconds"
@@ -7877,7 +9757,12 @@
               "duration" : 3,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7889,7 +9774,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 3 · 3 seconds"
@@ -7906,7 +9796,12 @@
               "duration" : 6,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7918,7 +9813,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 3 · 6 seconds"
@@ -7935,14 +9835,24 @@
               "duration" : 9,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Ladder 3 · 9 seconds"
@@ -7965,7 +9875,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -7977,7 +9892,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Density · 29 mm open edge, set 1, rep 1"
@@ -8000,7 +9920,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8012,7 +9937,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Density · 29 mm open edge, set 1, rep 2"
@@ -8029,14 +9959,24 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Density · 29 mm open edge, set 1, rep 3"
@@ -8071,7 +10011,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8083,7 +10028,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Density · 29 mm open edge, set 2, rep 1"
@@ -8100,7 +10050,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8112,7 +10067,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Density · 29 mm open edge, set 2, rep 2"
@@ -8129,14 +10089,24 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "Density · 29 mm open edge, set 2, rep 3"
@@ -8171,6 +10141,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 4
               },
@@ -8184,6 +10160,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 4
             }
@@ -8202,6 +10184,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 4
               },
@@ -8215,6 +10203,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 4
             }
@@ -8233,6 +10227,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 4
               },
@@ -8241,6 +10241,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 4
             }
@@ -8277,6 +10283,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 4
               },
@@ -8290,6 +10302,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 4
             }
@@ -8308,6 +10326,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 4
               },
@@ -8321,6 +10345,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 4
             }
@@ -8339,6 +10369,12 @@
               "duration" : 30,
               "kind" : "work",
               "target" : {
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
                 "feature" : "pocket",
                 "fingerCapacity" : 4
               },
@@ -8347,6 +10383,12 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
               "feature" : "pocket",
               "fingerCapacity" : 4
             }
@@ -8371,7 +10413,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8383,7 +10430,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 1"
@@ -8406,7 +10458,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8418,7 +10475,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 2"
@@ -8435,7 +10497,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8447,7 +10514,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 3"
@@ -8464,7 +10536,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8476,7 +10553,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 4"
@@ -8493,7 +10575,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8505,7 +10592,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 5"
@@ -8522,7 +10614,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8534,7 +10631,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 6"
@@ -8551,7 +10653,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8563,7 +10670,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 7"
@@ -8580,7 +10692,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8592,7 +10709,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 8"
@@ -8609,7 +10731,12 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             },
@@ -8621,7 +10748,12 @@
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 9"
@@ -8638,14 +10770,24 @@
               "duration" : 60,
               "kind" : "work",
               "target" : {
-                "semantic" : "edge-29"
+                "fallbackFeatures" : [
+                  "mediumEdge",
+                  "largeOpenHandRail",
+                  "jug"
+                ],
+                "feature" : "largeEdge"
               },
               "timing" : "fixed"
             }
           ],
           "targets" : [
             {
-              "semantic" : "edge-29"
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeOpenHandRail",
+                "jug"
+              ],
+              "feature" : "largeEdge"
             }
           ],
           "title" : "60\/60 · interval 10"
@@ -12798,7 +14940,6 @@
           "blockID" : "research.max-hangs.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "research.max-hangs",
       "metadata" : {
         "category" : "research",
@@ -12812,7 +14953,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Lattice max hang protocol",
         "sourceURL" : "https:\/\/latticetraining.com\/workout\/1c4cc25a-ebe8-4930-8541-5b604a831c5f\/half-4-hang-max\/",
-        "subtitle" : "Seven-second half-crimp hangs on a 20 mm edge; Compact II targeting and the five-set timer structure are app-guided.",
+        "subtitle" : "Seven-second half-crimp hangs on a 20 mm edge; the five-set timer structure is app-guided.",
         "tags" : [
           "built-in",
           "research"
@@ -12829,7 +14970,6 @@
           "blockID" : "research.force-feedback-f80.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "research.force-feedback-f80",
       "metadata" : {
         "category" : "research",
@@ -12843,7 +14983,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Frontiers force-feedback hangboard study",
         "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.862782\/full",
-        "subtitle" : "80% MFSi repeaters on the study hold; Compact II targeting is adapted.",
+        "subtitle" : "80% MFSi repeaters require real-time force measurement\/feedback; the study used an instrumented 12 mm hold.",
         "tags" : [
           "built-in",
           "research"
@@ -12860,7 +15000,6 @@
           "blockID" : "research.force-feedback-f100.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "research.force-feedback-f100",
       "metadata" : {
         "category" : "research",
@@ -12874,7 +15013,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Frontiers force-feedback hangboard study",
         "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.862782\/full",
-        "subtitle" : "Six-second maximal alternating-hand hangs; Compact II targeting and timer structure are app adaptations.",
+        "subtitle" : "Six-second maximal alternating-hand hangs require real-time force measurement\/feedback; the study used an instrumented 12 mm hold.",
         "tags" : [
           "built-in",
           "research"
@@ -12891,7 +15030,6 @@
           "blockID" : "research.eva-int-hangs.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "research.eva-int-hangs",
       "metadata" : {
         "category" : "research",
@@ -12905,7 +15043,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Eva López hangboard comparison",
         "sourceURL" : "https:\/\/pubmed.ncbi.nlm.nih.gov\/30988852\/",
-        "subtitle" : "Intermittent dead-hangs from the Eva López comparison study; exact timer structure and Compact II targeting are app adaptations.",
+        "subtitle" : "Intermittent dead-hangs from the Eva López comparison study; exact timer structure and semantic board targets are app adaptations.",
         "tags" : [
           "built-in",
           "research"
@@ -12922,7 +15060,6 @@
           "blockID" : "research.seven-three-repeaters.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "research.seven-three-repeaters",
       "metadata" : {
         "category" : "research",
@@ -12936,7 +15073,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Beastmaker 7\/3 study protocol",
         "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.888158\/full",
-        "subtitle" : "Two identical 7\/3 sets with six progressive series; Compact II hold mapping is adapted.",
+        "subtitle" : "Two identical 7\/3 sets with six progressive series; semantic edge targets are adapted.",
         "tags" : [
           "built-in",
           "research"
@@ -12953,7 +15090,6 @@
           "blockID" : "research.abrahangs.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "research.abrahangs",
       "metadata" : {
         "category" : "research",
@@ -12967,7 +15103,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Lattice Abrahangs protocol",
         "sourceURL" : "https:\/\/latticetraining.com\/workout\/1832c13b-14c1-444c-82a2-e72b22a6fb13\/abrahangs-protocol",
-        "subtitle" : "Low-intensity feet-supported hangs; 10\/50 timing and Compact II grip mapping are app adaptations.",
+        "subtitle" : "Low-intensity feet-supported hangs; 10\/50 timing and semantic edge targets are app adaptations.",
         "tags" : [
           "built-in",
           "research"
@@ -12984,7 +15120,6 @@
           "blockID" : "coach.horst-seven-fifty-three.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "coach.horst-seven-fifty-three",
       "metadata" : {
         "category" : "coach",
@@ -12998,7 +15133,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Eric Hörst fingerboard protocols",
         "sourceURL" : "https:\/\/trainingforclimbing.com\/4-fingerboard-strength-protocols-that-work\/",
-        "subtitle" : "Seven-second maximal hangs with exact 53-second rests; Compact II holds and three-minute set recovery are app choices.",
+        "subtitle" : "Seven-second maximal hangs with exact 53-second rests; semantic targets and three-minute set recovery are app choices.",
         "tags" : [
           "built-in",
           "coach"
@@ -13015,7 +15150,6 @@
           "blockID" : "coach.bechtel-three-six-nine.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "coach.bechtel-three-six-nine",
       "metadata" : {
         "category" : "coach",
@@ -13029,7 +15163,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Steve Bechtel 3–6–9 ladder protocol",
         "sourceURL" : "https:\/\/strengthclimbing.com\/steve-bechtels-3-6-9-ladders\/",
-        "subtitle" : "The 3–6–9 sequence; three rounds, Compact II targeting, and exact rests are app choices within the source ranges.",
+        "subtitle" : "The 3–6–9 sequence; three rounds, semantic edge targets, and exact rests are app choices within the source ranges.",
         "tags" : [
           "built-in",
           "coach"
@@ -13046,7 +15180,6 @@
           "blockID" : "coach.density-hangs.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "coach.density-hangs",
       "metadata" : {
         "category" : "coach",
@@ -13060,7 +15193,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Tyler Nelson density hang protocol",
         "sourceURL" : "https:\/\/strengthclimbing.com\/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing\/",
-        "subtitle" : "Density hangs within the source ranges; exact timers, set count, and Compact II holds are app adaptations.",
+        "subtitle" : "Density hangs within the source ranges; exact timers, set count, and semantic targets are app adaptations.",
         "tags" : [
           "built-in",
           "coach"
@@ -13077,7 +15210,6 @@
           "blockID" : "device.zlagboard-sixty-sixty.main"
         }
       ],
-      "boardID" : "metolius.wood-grips-compact-ii",
       "id" : "device.zlagboard-sixty-sixty",
       "metadata" : {
         "category" : "device",
@@ -13091,7 +15223,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Zlagboard endurance protocol",
         "sourceURL" : "https:\/\/strengthclimbing.com\/zlagboard-forearm-endurance-workout\/",
-        "subtitle" : "Ten 60-second hangs with 60-second rests; Compact II targeting is adapted.",
+        "subtitle" : "Ten 60-second hangs with 60-second rests; the semantic edge target is adapted.",
         "tags" : [
           "built-in",
           "device"

@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
   "id": "evolv-kilter-basic-long",
-  "manufacturer": "Kilter",
-  "name": "Basic Long",
-  "subtitle": "Molded rubber jug bar with four stacked open-hand ridges.",
-  "productURL": "https://kiltergrips.com/products/basic-long",
-  "dimensions": "580 × 110 mm",
+  "manufacturer": "Evolv",
+  "name": "Basic Training Board (Long)",
+  "subtitle": "Resin training board developed with Kilter.",
+  "productURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+  "dimensions": "790 × 160 × 60 mm",
   "aspectRatio": 1.5024437927663734,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "edge-row1", "name": "Row 1 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+    { "id": "jug-rounded", "name": "Rounded jug", "kind": "jug", "geometry": [
       { "frame": {"x": 0.06, "y": 0.39, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
     ]},
-    { "id": "edge-row2", "name": "Row 2 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+    { "id": "edge-20", "name": "20 mm rounded edge", "kind": "edge", "sizeMillimeters": 20, "geometry": [
       { "frame": {"x": 0.06, "y": 0.45, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
     ]},
-    { "id": "edge-row3", "name": "Row 3 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+    { "id": "edge-15", "name": "15 mm rounded edge", "kind": "edge", "sizeMillimeters": 15, "geometry": [
       { "frame": {"x": 0.06, "y": 0.51, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
     ]},
-    { "id": "edge-row4", "name": "Row 4 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+    { "id": "edge-10", "name": "10 mm rounded edge", "kind": "edge", "sizeMillimeters": 10, "geometry": [
       { "frame": {"x": 0.06, "y": 0.565, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
     ]}
   ]
