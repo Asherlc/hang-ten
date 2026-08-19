@@ -41,6 +41,7 @@
       throw new Error(message);
     }
     if (!response.ok || !payload.ok) {
+      if (response.status === 401 && payload.login_url) root.location.href = payload.login_url;
       const message = payload.error || `Workbench request for ${path} failed (${String(response.status)})`;
       if (response.status >= 500) reportRequestFailure(path, "server", message, { status: response.status });
       throw new Error(message);

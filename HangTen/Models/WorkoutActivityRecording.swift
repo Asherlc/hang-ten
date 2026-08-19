@@ -130,7 +130,13 @@ internal enum BoardTargetResolver {
             return byFeatureGroup(feature, target: target, on: board)
         }
         guard let kind = target.kind else { return [] }
-        return preferringFingerCapacity(board.holds.filter { $0.kind == kind }, target: target).map(\.id)
+        let sameKind = preferringFingerCapacity(
+            board.holds.filter { $0.kind == kind },
+            target: target
+        )
+        if !sameKind.isEmpty { return sameKind.map(\.id) }
+        guard kind == .edge else { return [] }
+        return crossKindPockets(for: target, on: board).map(\.id)
     }
 
     private static func byFeatureGroup(_ feature: HoldFeature, target: HoldTarget, on board: TrainingBoard) -> [String] {
@@ -149,6 +155,11 @@ internal enum BoardTargetResolver {
         let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
         if !preferredSameKind.isEmpty { return preferredSameKind.map(\.id) }
 
+        if feature.holdKind == .edge {
+            let pockets = crossKindPockets(for: target, on: board)
+            if !pockets.isEmpty { return pockets.map(\.id) }
+        }
+
         if let capacity = target.fingerCapacity {
             let crossKind = board.holds.filter { $0.fingerCapacity == capacity }
             if !crossKind.isEmpty { return crossKind.map(\.id) }
@@ -164,6 +175,12 @@ internal enum BoardTargetResolver {
         guard let capacity = target.fingerCapacity else { return holds }
         let matching = holds.filter { $0.fingerCapacity == capacity }
         return matching.isEmpty ? holds : matching
+    }
+
+    private static func crossKindPockets(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
+        let pockets = board.holds.filter { $0.kind == .pocket }
+        guard let capacity = target.fingerCapacity else { return pockets }
+        return pockets.filter { $0.fingerCapacity == capacity }
     }
 }
 

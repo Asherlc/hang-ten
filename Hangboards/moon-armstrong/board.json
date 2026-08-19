@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "moon-armstrong",
+  "manufacturer": "Moon Climbing",
+  "name": "Armstrong",
+  "subtitle": "Wooden training board with outer edge stacks, mid pockets, and a center jug.",
+  "productURL": "https://www.moonclimbing.com/products/armstrong-board",
+  "dimensions": "620 × 250 mm",
+  "aspectRatio": 1.7768331562167907,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    { "id": "edge-outer-left", "name": "Outer left rail stack", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.05, "y": 0.28, "width": 0.155, "height": 0.42}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.15} }
+    ]},
+    { "id": "pocket-inner-left", "name": "Inner left pocket", "kind": "pocket", "gripType": "threeFingerPocket", "fingerCapacity": 3, "features": ["pocket"], "geometry": [
+      { "frame": {"x": 0.225, "y": 0.28, "width": 0.145, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-inner-left-slot", "name": "Inner left slot", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.225, "y": 0.42, "width": 0.145, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "pocket-inner-left-small", "name": "Inner left small pocket", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
+      { "frame": {"x": 0.245, "y": 0.54, "width": 0.08, "height": 0.08}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+    ]},
+    { "id": "jug-center", "name": "Center jug", "kind": "jug", "features": ["jug"], "geometry": [
+      { "frame": {"x": 0.42, "y": 0.28, "width": 0.16, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+    ]},
+    { "id": "edge-center-bar", "name": "Center bar", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
+      { "frame": {"x": 0.43, "y": 0.40, "width": 0.14, "height": 0.055}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-center-bottom", "name": "Center bottom edge", "kind": "edge", "gripType": "fullCrimp", "features": ["smallEdge"], "geometry": [
+      { "frame": {"x": 0.44, "y": 0.58, "width": 0.12, "height": 0.05}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3} }
+    ]},
+    { "id": "pocket-inner-right-small", "name": "Inner right small pocket", "kind": "pocket", "gripType": "twoFingerPocket", "fingerCapacity": 2, "features": ["pocket"], "geometry": [
+      { "frame": {"x": 0.575, "y": 0.54, "width": 0.08, "height": 0.08}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+    ]},
+    { "id": "edge-inner-right-slot", "name": "Inner right slot", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.63, "y": 0.42, "width": 0.145, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "pocket-inner-right", "name": "Inner right pocket", "kind": "pocket", "gripType": "threeFingerPocket", "fingerCapacity": 3, "features": ["pocket"], "geometry": [
+      { "frame": {"x": 0.63, "y": 0.28, "width": 0.145, "height": 0.13}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
+    ]},
+    { "id": "edge-outer-right", "name": "Outer right rail stack", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.795, "y": 0.28, "width": 0.155, "height": 0.42}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.15} }
+    ]}
+  ]
+}

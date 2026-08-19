@@ -9,7 +9,7 @@
     validateEditorDocument,
   } = globalThis.HoldWorkbenchController;
   const svgNS = "http://www.w3.org/2000/svg";
-  const { parsePath, serializePath, moveVertex, addVertex, deleteVertex } = (() => {
+  const { parsePath, serializePath, moveVertex, addVertex, deleteVertex, rotatePath } = (() => {
     try { return require("./path-editor.js"); } catch { return globalThis.HoldPathEditor || {}; }
   })();
   const dialogs = globalThis.HoldWorkbenchDialogs || {
@@ -18,6 +18,8 @@
   };
   const TYPE_COLORS = { jug: "#ff754f", sloper: "#32bbc1", edge: "#9a6cf2", pocket: "#ee4d97", pinch: "#f2c94c" };
   const HOLD_KINDS = Object.keys(TYPE_COLORS);
+  const ROTATION_HANDLE_RADIUS = 6;
+  const ROTATION_HANDLE_OFFSET = 24;
 
   const state = {
     boards: [],
@@ -34,6 +36,7 @@
     busyGit: false,
     authenticated: false,
     username: null,
+    hostedStorage: false,
   };
 
   const el = Object.fromEntries([
@@ -44,7 +47,7 @@
     "git-auth-status", "git-status", "git-branch-select", "git-refresh-button", "git-switch-button",
     "git-new-branch-name", "git-new-branch-button",
     "git-commit-message", "git-commit-button", "git-push-button", "git-open-pr-button",
-    "delete-hold-button",
+    "delete-hold-button", "rotate-ccw-button", "rotate-cw-button", "rotate-by-input", "rotate-by-apply-button",
   ].map((id) => [id, document.getElementById(id)]));
 
   for (const kind of HOLD_KINDS) {
@@ -116,9 +119,12 @@
     el["git-switch-button"].disabled = isBusy() || !state.currentBranch || !el["git-branch-select"].value || el["git-branch-select"].value === state.currentBranch;
     el["git-new-branch-name"].disabled = isBusy();
     el["git-new-branch-button"].disabled = isBusy() || !el["git-new-branch-name"].value.trim();
-    el["git-commit-message"].disabled = isBusy();
-    el["git-commit-button"].disabled = isBusy() || !state.currentBranch;
-    el["git-push-button"].disabled = isBusy() || !state.currentBranch;
+    for (const id of ["git-commit-message", "git-commit-button", "git-push-button"]) {
+      el[id].classList.toggle("hidden", state.hostedStorage);
+    }
+    el["git-commit-message"].disabled = state.hostedStorage || isBusy();
+    el["git-commit-button"].disabled = state.hostedStorage || isBusy() || !state.currentBranch;
+    el["git-push-button"].disabled = state.hostedStorage || isBusy() || !state.currentBranch;
     el["git-open-pr-button"].disabled = isBusy() || !state.currentBranch;
 
     el["board-status"].textContent = state.currentBranch
@@ -211,6 +217,52 @@
     if (!parsePath) return;
     const overlay = document.createElementNS(svgNS, "g");
     overlay.classList.add("path-editor-overlay");
+    const pivot = holdCentroid(holdSiblings(hold));
+    const { width, height } = state.document.canvas;
+    const minHandleX = Math.min(ROTATION_HANDLE_RADIUS, width / 2);
+    const maxHandleX = Math.max(width - ROTATION_HANDLE_RADIUS, width / 2);
+    const minHandleY = Math.min(ROTATION_HANDLE_RADIUS, height / 2);
+    const maxHandleY = Math.max(height - ROTATION_HANDLE_RADIUS, height / 2);
+    const clampHandlePosition = (value, min, max) => Math.min(Math.max(value, min), max);
+    const centeredHandleX = clampHandlePosition(pivot.x, minHandleX, maxHandleX);
+    const centeredHandleY = clampHandlePosition(pivot.y, minHandleY, maxHandleY);
+    const horizontalOffset = Math.sqrt(Math.max(0, ROTATION_HANDLE_OFFSET ** 2 - (centeredHandleY - pivot.y) ** 2));
+    const candidates = [
+      { x: centeredHandleX, y: pivot.y - ROTATION_HANDLE_OFFSET },
+      { x: pivot.x + horizontalOffset, y: centeredHandleY },
+      { x: pivot.x - horizontalOffset, y: centeredHandleY },
+      { x: centeredHandleX, y: pivot.y + ROTATION_HANDLE_OFFSET },
+    ];
+    const isInHandleBounds = ({ x, y }) => x >= minHandleX && x <= maxHandleX && y >= minHandleY && y <= maxHandleY;
+    const handlePosition = candidates.find(isInHandleBounds) || [
+      { x: minHandleX, y: minHandleY },
+      { x: minHandleX, y: maxHandleY },
+      { x: maxHandleX, y: minHandleY },
+      { x: maxHandleX, y: maxHandleY },
+    ].reduce((furthest, candidate) => (
+      Math.hypot(candidate.x - pivot.x, candidate.y - pivot.y) > Math.hypot(furthest.x - pivot.x, furthest.y - pivot.y)
+        ? candidate
+        : furthest
+    ));
+    const rotationConnector = document.createElementNS(svgNS, "line");
+    rotationConnector.setAttribute("x1", String(pivot.x));
+    rotationConnector.setAttribute("y1", String(pivot.y));
+    rotationConnector.setAttribute("x2", String(handlePosition.x));
+    rotationConnector.setAttribute("y2", String(handlePosition.y));
+    rotationConnector.setAttribute("stroke", "#fff7dc");
+    rotationConnector.setAttribute("stroke-width", "1.5");
+    rotationConnector.setAttribute("stroke-dasharray", "4 3");
+    rotationConnector.classList.add("path-editor-rotation-connector");
+    overlay.append(rotationConnector);
+    const rotationHandle = document.createElementNS(svgNS, "circle");
+    rotationHandle.setAttribute("cx", String(handlePosition.x));
+    rotationHandle.setAttribute("cy", String(handlePosition.y));
+    rotationHandle.setAttribute("r", String(ROTATION_HANDLE_RADIUS));
+    rotationHandle.setAttribute("fill", "#fff7dc");
+    rotationHandle.setAttribute("stroke", TYPE_COLORS[hold.type] || "#ff754f");
+    rotationHandle.setAttribute("stroke-width", "2");
+    rotationHandle.classList.add("path-editor-rotation-handle");
+    overlay.append(rotationHandle);
     let commands;
     try { commands = parsePath(hold.displayPath); } catch { return; }
     for (let i = 0; i < commands.length; i++) {
@@ -261,20 +313,106 @@
     el["editor-svg"].append(overlay);
   }
 
-  const drag = { active: false, type: null, holdKey: null, commandIndex: -1, controlIndex: -1, startX: 0, startY: 0, commands: null, originalPath: null, originalDirty: false };
+  const drag = {
+    active: false,
+    type: null,
+    holdKey: null,
+    commandIndex: -1,
+    controlIndex: -1,
+    startX: 0,
+    startY: 0,
+    commands: null,
+    originalPath: null,
+    originalPaths: null,
+    originalDirty: false,
+    pivot: null,
+    lastAngle: 0,
+    totalAngle: 0,
+    pointerId: null,
+  };
 
   function svgPoint(event) {
     const svg = el["editor-svg"];
     const rect = svg.getBoundingClientRect();
     const vb = svg.getAttribute("viewBox").split(" ").map(Number);
-    const scaleX = vb[2] / rect.width;
-    const scaleY = vb[3] / rect.height;
-    return { x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY };
+    const ctm = svg.getScreenCTM?.();
+    if (ctm) {
+      try {
+        const inverse = ctm.inverse();
+        if (typeof DOMPoint === "function") {
+          const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(inverse);
+          return { x: point.x, y: point.y };
+        }
+        return {
+          x: inverse.a * event.clientX + inverse.c * event.clientY + inverse.e,
+          y: inverse.b * event.clientX + inverse.d * event.clientY + inverse.f,
+        };
+      } catch {}
+    }
+    const preserveAspectRatio = svg.getAttribute("preserveAspectRatio") || "xMidYMid meet";
+    if (preserveAspectRatio.includes("none")) {
+      return {
+        x: vb[0] + (event.clientX - rect.left) * (vb[2] / rect.width),
+        y: vb[1] + (event.clientY - rect.top) * (vb[3] / rect.height),
+      };
+    }
+    const scale = Math.min(rect.width / vb[2], rect.height / vb[3]);
+    const contentWidth = vb[2] * scale;
+    const contentHeight = vb[3] * scale;
+    const offsetX = rect.left + (rect.width - contentWidth) / 2;
+    const offsetY = rect.top + (rect.height - contentHeight) / 2;
+    return { x: vb[0] + (event.clientX - offsetX) / scale, y: vb[1] + (event.clientY - offsetY) / scale };
+  }
+
+  function restoreDragPaths() {
+    if (drag.type === "rotation") {
+      for (const original of drag.originalPaths) {
+        const region = state.document?.regions.find((candidate) => candidate.key === original.key);
+        if (region) region.displayPath = original.path;
+      }
+    } else {
+      const hold = state.document?.regions.find((region) => region.key === drag.holdKey);
+      if (hold) hold.displayPath = drag.originalPath;
+    }
+    state.dirty = drag.originalDirty;
+  }
+
+  function releaseDragPointer() {
+    const pointerId = drag.pointerId;
+    drag.pointerId = null;
+    if (pointerId == null) return;
+    try { el["editor-svg"].releasePointerCapture?.(pointerId); } catch {}
+  }
+
+  function cancelDrag(message) {
+    if (!drag.active) return;
+    restoreDragPaths();
+    drag.active = false;
+    releaseDragPointer();
+    setValidation();
+    setStatus(message);
+    render();
   }
 
   function handlePointerDown(event) {
+    if (drag.active) return;
     const target = event.target;
-    if (target.classList.contains("path-editor-vertex")) {
+    if (target.classList.contains("path-editor-rotation-handle")) {
+      event.preventDefault();
+      const hold = selectedHold();
+      if (!hold) return;
+      const siblings = holdSiblings(hold);
+      const pivot = holdCentroid(siblings);
+      const pt = svgPoint(event);
+      drag.active = true;
+      drag.type = "rotation";
+      drag.holdKey = hold.key;
+      drag.originalPaths = siblings.map((region) => ({ key: region.key, path: region.displayPath }));
+      drag.originalDirty = state.dirty;
+      drag.pivot = pivot;
+      drag.lastAngle = Math.atan2(pt.y - pivot.y, pt.x - pivot.x);
+      drag.totalAngle = 0;
+    } else if (target.classList.contains("path-editor-vertex")) {
       event.preventDefault();
       const hold = selectedHold();
       if (!hold) return;
@@ -318,16 +456,42 @@
       drag.originalPath = hold.displayPath;
       drag.originalDirty = state.dirty;
     }
+    if (drag.active && event.pointerId != null) {
+      drag.pointerId = event.pointerId;
+      el["editor-svg"].setPointerCapture?.(event.pointerId);
+    }
   }
 
   function handlePointerMove(event) {
-    if (!drag.active) return;
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
     event.preventDefault();
     const pt = svgPoint(event);
+    const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
+    if (!hold) {
+      cancelDrag("Edit cancelled because the selected hold is no longer available.");
+      return;
+    }
+    if (drag.type === "rotation") {
+      const angle = Math.atan2(pt.y - drag.pivot.y, pt.x - drag.pivot.x);
+      let angleDelta = angle - drag.lastAngle;
+      if (angleDelta > Math.PI) angleDelta -= 2 * Math.PI;
+      if (angleDelta < -Math.PI) angleDelta += 2 * Math.PI;
+      drag.lastAngle = angle;
+      drag.totalAngle += angleDelta;
+      for (const original of drag.originalPaths) {
+        const region = state.document.regions.find((candidate) => candidate.key === original.key);
+        if (!region) continue;
+        let commands;
+        try { commands = parsePath(original.path); } catch { continue; }
+        rotatePath(commands, drag.totalAngle, drag.pivot);
+        region.displayPath = serializePath(commands);
+      }
+      state.dirty = true;
+      render();
+      return;
+    }
     const dx = pt.x - drag.startX;
     const dy = pt.y - drag.startY;
-    const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
-    if (!hold) { drag.active = false; return; }
     const cmds = drag.commands.map((c) => ({
       ...c,
       points: c.points.map((p) => ({ ...p })),
@@ -357,21 +521,36 @@
     render();
   }
 
-  function handlePointerUp() {
-    if (!drag.active) return;
+  function handlePointerUp(event) {
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
     drag.active = false;
+    releaseDragPointer();
     const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
     if (!hold) return;
     try {
       validateEditorDocument(state.document);
       setValidation();
-      setStatus("Contour updated. Save when ready.");
+      setStatus(drag.type === "rotation" ? "Hold rotated. Save when ready." : "Contour updated. Save when ready.");
     } catch (error) {
-      hold.displayPath = drag.originalPath;
-      state.dirty = drag.originalDirty;
+      restoreDragPaths();
       setValidation(error.message || "Contour is invalid.");
-      setStatus("Edit reverted — contour is invalid.");
+      setStatus(drag.type === "rotation" ? "Rotation reverted — contour is invalid." : "Edit reverted — contour is invalid.");
     }
+    render();
+  }
+
+  function handlePointerCancel(event) {
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+    cancelDrag(drag.type === "rotation" ? "Rotation cancelled. Changes reverted." : "Edit cancelled. Changes reverted.");
+  }
+
+  function handleLostPointerCapture(event) {
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+    restoreDragPaths();
+    drag.active = false;
+    drag.pointerId = null;
+    setValidation();
+    setStatus(drag.type === "rotation" ? "Rotation cancelled. Changes reverted." : "Edit cancelled. Changes reverted.");
     render();
   }
 
@@ -547,9 +726,11 @@
       const status = await client.getAuthStatus();
       state.authenticated = Boolean(status.authenticated);
       state.username = status.username || null;
+      state.hostedStorage = Boolean(status.hostedStorage);
     } catch {
       state.authenticated = false;
       state.username = null;
+      state.hostedStorage = false;
     }
     renderAuthState();
   }
@@ -785,6 +966,8 @@
   el["editor-svg"].addEventListener("pointerdown", handlePointerDown);
   el["editor-svg"].addEventListener("pointermove", handlePointerMove);
   el["editor-svg"].addEventListener("pointerup", handlePointerUp);
+  el["editor-svg"].addEventListener("pointercancel", handlePointerCancel);
+  el["editor-svg"].addEventListener("lostpointercapture", handleLostPointerCapture);
   el["editor-svg"].addEventListener("dblclick", handleDoubleClick);
   el["editor-svg"].addEventListener("contextmenu", handleContextMenu);
   el["git-refresh-button"].addEventListener("click", () => {
@@ -800,8 +983,80 @@
   el["git-push-button"].addEventListener("click", () => { void pushBranch(); });
   el["git-open-pr-button"].addEventListener("click", () => { void openPullRequest(); });
 
+  function holdSiblings(hold) {
+    const holdId = hold.metadata?.holdID;
+    if (holdId == null) return [hold];
+    return state.document.regions.filter((region) => region.metadata?.holdID === holdId);
+  }
+
+  function holdCentroid(regions) {
+    let sumX = 0, sumY = 0, count = 0;
+    for (const region of regions) {
+      let commands;
+      try { commands = parsePath(region.displayPath); } catch { continue; }
+      for (const cmd of commands) {
+        if (cmd.type === "Z") continue;
+        const p = cmd.points[cmd.points.length - 1];
+        sumX += p.x;
+        sumY += p.y;
+        count++;
+      }
+    }
+    return count ? { x: sumX / count, y: sumY / count } : { x: 0, y: 0 };
+  }
+
+  function rotateHold(angleDegrees) {
+    const hold = selectedHold();
+    if (!hold) return;
+    const siblings = holdSiblings(hold);
+    const pivot = holdCentroid(siblings);
+    const angleRadians = ((angleDegrees % 360) * Math.PI) / 180;
+    const originalPaths = siblings.map((region) => region.displayPath);
+    const originalDirty = state.dirty;
+    for (const region of siblings) {
+      let commands;
+      try { commands = parsePath(region.displayPath); } catch { continue; }
+      rotatePath(commands, angleRadians, pivot);
+      region.displayPath = serializePath(commands);
+    }
+    state.dirty = true;
+    try {
+      validateEditorDocument(state.document);
+      setValidation();
+      setStatus("Hold rotated. Save when ready.");
+    } catch (error) {
+      siblings.forEach((region, index) => { region.displayPath = originalPaths[index]; });
+      state.dirty = originalDirty;
+      setValidation(error.message || "Contour is invalid.");
+      setStatus("Rotation reverted — contour is invalid.");
+    }
+    render();
+  }
+
+  el["rotate-ccw-button"].addEventListener("click", (event) => { rotateHold(event.shiftKey ? -45 : -15); });
+  el["rotate-cw-button"].addEventListener("click", (event) => { rotateHold(event.shiftKey ? 45 : 15); });
+  el["rotate-by-apply-button"].addEventListener("click", () => {
+    const input = el["rotate-by-input"].value.trim();
+    const angleDegrees = Number(input);
+    if (!input || !Number.isFinite(angleDegrees) || angleDegrees === 0) {
+      setValidation("Enter a finite, non-zero rotation in degrees.");
+      setStatus("Enter a finite, non-zero rotation in degrees.");
+      return;
+    }
+    rotateHold(angleDegrees);
+  });
+
   function handleKeyDown(event) {
+    const target = event.target;
+    const tagName = target?.tagName?.toLowerCase();
+    if (target?.isContentEditable || target?.getAttribute?.("contenteditable") === "true" || ["input", "select", "textarea"].includes(tagName)) return;
     const key = event.key;
+    if (key === "[" || key === "]") {
+      if (!selectedHold()) return;
+      event.preventDefault();
+      rotateHold(key === "]" ? (event.shiftKey ? 45 : 15) : (event.shiftKey ? -45 : -15));
+      return;
+    }
     if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)) return;
     const hold = selectedHold();
     if (!hold) return;

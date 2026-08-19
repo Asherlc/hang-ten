@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as _dataclass_replace
 import fcntl
 import json
 import math
@@ -13,12 +13,13 @@ import re
 import shutil
 import stat
 import tempfile
-from typing import Any, Iterator, Mapping
+from typing import Any, Iterator, Mapping, Protocol
 from urllib.parse import urlparse
 import uuid
 import zlib
 
 from board_geometry import (
+    ClosedPath,
     GeometryError,
     NormalizedFrame,
     display_path_for_shape,
@@ -98,6 +99,10 @@ class BoardPackageError(ValueError):
     """Raised for invalid or unsafe direct board-package operations."""
 
 
+class BoardSaveConflictError(BoardPackageError):
+    """Raised when a hosted board save cannot be applied safely."""
+
+
 class BoardNotAvailableError(BoardPackageError):
     """Raised when a valid board ID is not present in the library."""
 
@@ -132,6 +137,24 @@ class BoardPackage:
             )
         except (GeometryError, KeyError, TypeError) as error:
             raise BoardPackageError(f"hold {hold_id} has invalid geometry") from error
+
+
+class _EditorDocumentPackage(Protocol):
+    board: dict[str, Any]
+    image_width: int
+    image_height: int
+
+
+class _EditorPiecesByHold(dict[str, list[tuple[int, str, Any]]]):
+    """Editor pieces with paths already derived from an equivalent live board."""
+
+    def __init__(
+        self,
+        pieces: Mapping[str, list[tuple[int, str, Any]]],
+        current_paths: Mapping[tuple[str, int], ClosedPath],
+    ) -> None:
+        super().__init__(pieces)
+        self.current_paths = current_paths
 
 
 def discover_packages(
@@ -201,7 +224,13 @@ def _load_board_package(
         else _png_dimensions(image)
     )
     board = _load_json(root / "board.json", "board.json")
-    _validate_board(board, width, height)
+    # Discovery (header-only PNG inspection) only needs enough validation to
+    # list a board safely -- it doesn't read hold geometry, so skip the
+    # O(pieces^2) self-intersection check there too. The specific board a
+    # caller opens or saves is always reloaded through this function with
+    # inspect_png_header_only=False, which still validates its geometry in
+    # full before anyone reads or writes it.
+    _validate_board(board, width, height, validate_geometry=not inspect_png_header_only)
     return BoardPackage(root, board, width, height)
 
 
@@ -214,7 +243,7 @@ def primary_image_path(package: BoardPackage) -> Path:
     return image
 
 
-def editor_document(package: BoardPackage) -> dict[str, object]:
+def editor_document(package: _EditorDocumentPackage) -> dict[str, object]:
     """Expose every geometry piece as an independently keyed editable region."""
     width, height = package.image_width, package.image_height
     regions: list[dict[str, object]] = []
@@ -275,7 +304,10 @@ def save_editor_document(
             pieces.sort(key=lambda item: item[0])
 
         current_holds = {hold["id"]: hold for hold in live.board["holds"]}
-        if not _editor_document_is_dirty(pieces_by_hold, current_holds, width, height):
+        # Derive current display paths before staging a candidate so unchanged
+        # editor documents avoid an unnecessary package rewrite.
+        current_paths = _current_display_paths(pieces_by_hold, current_holds, width, height)
+        if not _editor_document_is_dirty(pieces_by_hold, current_holds, current_paths):
             return live
 
         candidate_parent = Path(tempfile.mkdtemp(prefix=".workbench-edit-", dir=root))
@@ -284,57 +316,95 @@ def save_editor_document(
             shutil.copytree(live.root, candidate)
             board_path = candidate / "board.json"
             board = _load_json(board_path, "board.json")
-            existing_by_id = {hold["id"]: hold for hold in board["holds"]}
-            order = [
-                hold_id for hold_id in existing_by_id if hold_id in pieces_by_hold
-            ] + [
-                hold_id for hold_id in pieces_by_hold if hold_id not in existing_by_id
-            ]
-            updated_holds: list[dict[str, Any]] = []
-            for hold_id in order:
-                pieces = pieces_by_hold[hold_id]
-                existing = existing_by_id.get(hold_id)
-                geometry: list[dict[str, Any]] = []
-                for piece_index, _kind, path in pieces:
-                    existing_geometry = existing["geometry"] if existing is not None else []
-                    if piece_index < len(existing_geometry):
-                        piece = existing_geometry[piece_index]
-                        current_path = display_path_for_shape(
-                            piece["frame"], piece["shape"], width, height,
-                            label=f"hold {_piece_key(hold_id, piece_index)}",
-                        )
-                        if path.data != current_path.data:
-                            frame, shape = shape_for_path(path, width, height)
-                            piece["frame"] = frame.to_json()
-                            piece["shape"] = _rounded_json(shape)
-                        geometry.append(piece)
-                    else:
-                        frame, shape = shape_for_path(path, width, height)
-                        geometry.append(
-                            {"frame": frame.to_json(), "shape": _rounded_json(shape)}
-                        )
-                hold_json = (
-                    existing
-                    if existing is not None
-                    else {"id": hold_id, "name": _default_hold_name(hold_id)}
-                )
-                hold_json["kind"] = pieces[0][1]
-                hold_json["geometry"] = geometry
-                updated_holds.append(hold_json)
-            board["holds"] = updated_holds
+            board = _apply_editor_document(
+                board,
+                _EditorPiecesByHold(pieces_by_hold, current_paths),
+                width,
+                height,
+            )
             _write_json(board_path, board)
-            load_board_package(candidate)
-            _replace_package_locked(root, slug, candidate, inventory=inventory)
-            return load_board_package(root / slug)
+            # _replace_package_locked already fully validates `candidate` (the
+            # PNG included) before installing it, and returns that validated
+            # package -- re-decoding the same never-modified PNG here or after
+            # install would just repeat that work for no additional safety.
+            return _replace_package_locked(root, slug, candidate, inventory=inventory)
         finally:
             shutil.rmtree(candidate_parent, ignore_errors=True)
+
+
+def _apply_editor_document(
+    board: dict[str, Any],
+    pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
+    width: int,
+    height: int,
+) -> dict[str, Any]:
+    """Return a board with editable regions merged into its holds."""
+    copied_board = json.loads(json.dumps(board))
+    existing_by_id = {hold["id"]: hold for hold in copied_board["holds"]}
+    current_paths = (
+        pieces_by_hold.current_paths
+        if isinstance(pieces_by_hold, _EditorPiecesByHold)
+        else _current_display_paths(pieces_by_hold, existing_by_id, width, height)
+    )
+    order = [
+        hold_id for hold_id in existing_by_id if hold_id in pieces_by_hold
+    ] + [hold_id for hold_id in pieces_by_hold if hold_id not in existing_by_id]
+    updated_holds: list[dict[str, Any]] = []
+    for hold_id in order:
+        pieces = pieces_by_hold[hold_id]
+        existing = existing_by_id.get(hold_id)
+        geometry: list[dict[str, Any]] = []
+        for piece_index, _kind, path in pieces:
+            existing_geometry = existing["geometry"] if existing is not None else []
+            if piece_index < len(existing_geometry):
+                piece = existing_geometry[piece_index]
+                current_path = current_paths.get((hold_id, piece_index))
+                if current_path is None or path.data != current_path.data:
+                    frame, shape = shape_for_path(path, width, height)
+                    piece["frame"] = frame.to_json()
+                    piece["shape"] = _rounded_json(shape)
+                geometry.append(piece)
+            else:
+                frame, shape = shape_for_path(path, width, height)
+                geometry.append({"frame": frame.to_json(), "shape": _rounded_json(shape)})
+        hold_json = (
+            existing
+            if existing is not None
+            else {"id": hold_id, "name": _default_hold_name(hold_id)}
+        )
+        hold_json["kind"] = pieces[0][1]
+        hold_json["geometry"] = geometry
+        updated_holds.append(hold_json)
+    copied_board["holds"] = updated_holds
+    return copied_board
+
+
+def _current_display_paths(
+    pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
+    current_holds: Mapping[str, Any],
+    width: int,
+    height: int,
+) -> dict[tuple[str, int], ClosedPath]:
+    """Derive each currently-saved piece's display path exactly once, keyed
+    by (holdID, pieceIndex), for both the dirty check and the update loop."""
+    paths: dict[tuple[str, int], ClosedPath] = {}
+    for hold_id, pieces in pieces_by_hold.items():
+        hold = current_holds.get(hold_id)
+        geometry = hold["geometry"] if hold is not None else []
+        for piece_index, _kind, _path in pieces:
+            if piece_index < len(geometry):
+                piece = geometry[piece_index]
+                paths[(hold_id, piece_index)] = display_path_for_shape(
+                    piece["frame"], piece["shape"], width, height,
+                    label=f"hold {_piece_key(hold_id, piece_index)}",
+                )
+    return paths
 
 
 def _editor_document_is_dirty(
     pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
     current_holds: Mapping[str, Any],
-    width: int,
-    height: int,
+    current_paths: Mapping[tuple[str, int], ClosedPath],
 ) -> bool:
     if set(pieces_by_hold) != set(current_holds):
         return True
@@ -343,12 +413,8 @@ def _editor_document_is_dirty(
         if hold["kind"] != pieces[0][1] or len(hold["geometry"]) != len(pieces):
             return True
         for piece_index, _kind, path in pieces:
-            piece = hold["geometry"][piece_index]
-            current_path = display_path_for_shape(
-                piece["frame"], piece["shape"], width, height,
-                label=f"hold {_piece_key(hold_id, piece_index)}",
-            )
-            if path.data != current_path.data:
+            current_path = current_paths.get((hold_id, piece_index))
+            if current_path is None or path.data != current_path.data:
                 return True
     return False
 
@@ -440,7 +506,7 @@ def _replace_package_locked(
     candidate_root: Path,
     *,
     inventory: tuple[BoardPackage, ...] | None = None,
-) -> None:
+) -> BoardPackage:
     candidate = load_board_package(candidate_root)
     packages = inventory if inventory is not None else _discover_packages_unlocked(root)
     previous = next((package for package in packages if package.root.name == slug), None)
@@ -456,10 +522,13 @@ def _replace_package_locked(
     staged_package = stage / slug
     try:
         shutil.copytree(candidate.root, staged_package)
-        load_board_package(staged_package)
+        # `staged_package` is a byte-for-byte copy of `candidate_root`, which
+        # was just fully validated above (PNG included); re-decoding it here
+        # would only repeat that work, not catch anything new.
         _replace_transaction(root, slug, staged_package)
     finally:
         shutil.rmtree(stage, ignore_errors=True)
+    return _dataclass_replace(candidate, root=root / slug)
 
 
 def _replace_transaction(root: Path, slug: str, staged_package: Path) -> None:
@@ -533,7 +602,9 @@ def _remove_empty_recovery_directory(recovery: Path | None) -> None:
         pass
 
 
-def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
+def _validate_board(
+    board: Mapping[str, Any], width: int, height: int, *, validate_geometry: bool = True
+) -> None:
     _exact_keys(board, _BOARD_FIELDS, "board.json")
     _schema_version_one(board.get("schemaVersion"), "board.json.schemaVersion")
     _identifier(board.get("id"), "board.json.id")
@@ -560,13 +631,15 @@ def _validate_board(board: Mapping[str, Any], width: int, height: int) -> None:
     identifiers: set[str] = set()
     for index, hold in enumerate(holds):
         label = f"board.json.holds[{index}]"
-        hold_id = _validate_hold(hold, width, height, label)
+        hold_id = _validate_hold(hold, width, height, label, validate_geometry=validate_geometry)
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
 
 
-def _validate_hold(hold: object, width: int, height: int, label: str) -> str:
+def _validate_hold(
+    hold: object, width: int, height: int, label: str, *, validate_geometry: bool = True
+) -> str:
     if not isinstance(hold, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _required_and_allowed_keys(
@@ -587,6 +660,7 @@ def _validate_hold(hold: object, width: int, height: int, label: str) -> str:
             width,
             height,
             f"{label}.geometry[{piece_index}]",
+            validate_geometry=validate_geometry,
         )
     if "sizeMillimeters" in hold:
         _positive_integer(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
@@ -617,7 +691,9 @@ def _validate_hold(hold: object, width: int, height: int, label: str) -> str:
     return hold_id
 
 
-def _validate_piece(piece: object, width: int, height: int, label: str) -> None:
+def _validate_piece(
+    piece: object, width: int, height: int, label: str, *, validate_geometry: bool = True
+) -> None:
     if not isinstance(piece, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _required_and_allowed_keys(
@@ -625,9 +701,10 @@ def _validate_piece(piece: object, width: int, height: int, label: str) -> None:
     )
     try:
         NormalizedFrame.from_json(piece["frame"], f"{label}.frame")
-        display_path_for_shape(
-            piece["frame"], piece["shape"], width, height, label=label
-        )
+        if validate_geometry:
+            display_path_for_shape(
+                piece["frame"], piece["shape"], width, height, label=label
+            )
     except (GeometryError, KeyError, TypeError) as error:
         raise BoardPackageError(str(error)) from error
     if not _shape_fills_declared_frame(piece["shape"]):
@@ -920,6 +997,10 @@ def _png_header_dimensions(path: Path) -> tuple[int, int]:
             data = image.read(33)
     except OSError as error:
         raise BoardPackageError("package primary image is not readable") from error
+    return _png_header_dimensions_from_bytes(data)
+
+
+def _png_header_dimensions_from_bytes(data: bytes) -> tuple[int, int]:
     if (
         len(data) != 33
         or data[:8] != b"\x89PNG\r\n\x1a\n"
@@ -940,7 +1021,10 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
         data = path.read_bytes()
     except OSError as error:
         raise BoardPackageError("package primary image is not readable") from error
+    return _png_dimensions_from_bytes(data)
 
+
+def _png_dimensions_from_bytes(data: bytes) -> tuple[int, int]:
     ihdr: bytes | None = None
     compressed_parts: list[bytes] = []
     has_palette = False

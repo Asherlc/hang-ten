@@ -48,7 +48,6 @@ struct PlanMetadata: Codable, Hashable {
     let tags: [String]
     let equipment: [String]
     let notes: [String]
-    let disclaimer: String?
 
     init(
         title: String,
@@ -60,8 +59,7 @@ struct PlanMetadata: Codable, Hashable {
         category: String = "general",
         tags: [String] = [],
         equipment: [String] = [],
-        notes: [String] = [],
-        disclaimer: String? = nil
+        notes: [String] = []
     ) {
         self.title = title
         self.subtitle = subtitle
@@ -73,7 +71,6 @@ struct PlanMetadata: Codable, Hashable {
         self.tags = tags
         self.equipment = equipment
         self.notes = notes
-        self.disclaimer = disclaimer
     }
 }
 
@@ -1553,8 +1550,7 @@ enum BuiltInPlanLibraryDefinition {
             category: category,
             tags: ["built-in", category],
             equipment: ["hangboard"],
-            notes: notes,
-            disclaimer: "Warm up thoroughly, keep the board secure, and stop if you feel pain."
+            notes: notes
         )
 
         var references: [WorkoutBlockReference] = []

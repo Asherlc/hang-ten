@@ -5,37 +5,2445 @@
   "name": "Beastmaker 2000",
   "subtitle": "Tulipwood fingerboard.",
   "productURL": "https://www.beastmaker.co.uk/products/beastmaker-2000-series",
-  "dimensions": "580 × 150 × 58 mm",
-  "aspectRatio": 3.0,
-  "presentation": { "assetPath": "assets/primary.png" },
+  "dimensions": "580 \u00d7 150 \u00d7 58 mm",
+  "aspectRatio": 3.6117021276595747,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
   "holds": [
-    { "id": "top-sloper-1", "name": "Top Sloper 1", "kind": "sloper", "geometry": [{ "frame": { "x": 0.04375, "y": 0.151934, "width": 0.150092, "height": 0.220994 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.12, 0.0] }, { "command": "curve", "control1": [0.05, 0.0], "control2": [0.01, 0.11], "to": [0.0, 0.31] }, { "command": "line", "to": [0.0, 0.88] }, { "command": "curve", "control1": [0.0, 0.96], "control2": [0.06, 1.0], "to": [0.15, 1.0] }, { "command": "line", "to": [0.95, 0.93] }, { "command": "curve", "control1": [0.98, 0.72], "control2": [0.99, 0.34], "to": [1.0, 0.05] }, { "command": "curve", "control1": [0.78, 0.01], "control2": [0.34, 0.0], "to": [0.12, 0.0] }, { "command": "close" }] } }] },
-    { "id": "top-sloper-2", "name": "Top Sloper 2", "kind": "sloper", "geometry": [{ "frame": {"x": 0.188996, "y": 0.151934, "width": 0.14934611999999994, "height": 0.14585689754859307}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.04081632653061229, 0.0]}, {"command": "line", "to": [1.0, 0.0]}, {"command": "curve", "to": [0.9693877551020411, 0.9999982342378219], "control1": [1.0, 0.29166615165269805], "control2": [1.0, 0.7395820274050554]}, {"command": "curve", "to": [0.0, 0.9999982342378219], "control1": [0.7346938775510206, 1.0], "control2": [0.25510204081632665, 1.0]}, {"command": "curve", "to": [0.04081632653061229, 0.0], "control1": [0.0, 0.6874987860385026], "control2": [0.010204081632653073, 0.2708328551060767]}, {"command": "close"}]} }] },
-    { "id": "top-sloper-3", "name": "Top Sloper 3", "kind": "sloper", "geometry": [{ "frame": {"x": 0.34793763211582, "y": 0.150552, "width": 0.30412573576835983, "height": 0.10193420249045967}, "shape": {"type": "path", "commands": [{"command": "move", "to": [6.835468213963969e-07, 0.0]}, {"command": "curve", "to": [0.9999993164531785, 0.0], "control1": [0.25000034177341074, 0.0], "control2": [0.749999658226589, 0.0]}, {"command": "curve", "to": [0.9999993164531785, 0.9999980135179881], "control1": [1.0, 0.2444439588599527], "control2": [1.0, 0.688887520423503]}, {"command": "curve", "to": [6.835468213963969e-07, 0.9999980135179881], "control1": [0.7608692085842667, 1.0], "control2": [0.23913079141573296, 1.0]}, {"command": "curve", "to": [6.835468213963969e-07, 0.0], "control1": [0.0, 0.688887520423503], "control2": [0.0, 0.2444439588599527]}, {"command": "close"}]} }] },
-    { "id": "top-sloper-4", "name": "Top Sloper 4", "kind": "sloper", "geometry": [{ "frame": {"x": 0.6616578799999999, "y": 0.151934, "width": 0.14934611999999997, "height": 0.14585689754859307}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.0, 0.0]}, {"command": "line", "to": [0.9591836734693874, 0.0]}, {"command": "curve", "to": [1.0, 0.9999982342378219], "control1": [0.9897959183673464, 0.2708328551060767], "control2": [1.0, 0.6874987860385026]}, {"command": "curve", "to": [0.030612244897959225, 0.9999982342378219], "control1": [0.7448979591836735, 1.0], "control2": [0.26530612244897994, 1.0]}, {"command": "curve", "to": [0.0, 0.0], "control1": [0.0, 0.7395820274050554], "control2": [0.0, 0.29166615165269805]}, {"command": "close"}]} }] },
-    { "id": "top-sloper-5", "name": "Top Sloper 5", "kind": "sloper", "geometry": [{ "frame": { "x": 0.806158, "y": 0.151934, "width": 0.150092, "height": 0.220994 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.88, 0.0] }, { "command": "curve", "control1": [0.66, 0.0], "control2": [0.22, 0.01], "to": [0.0, 0.05] }, { "command": "curve", "control1": [0.01, 0.34], "control2": [0.02, 0.72], "to": [0.05, 0.93] }, { "command": "line", "to": [0.85, 1.0] }, { "command": "curve", "control1": [0.94, 1.0], "control2": [1.0, 0.96], "to": [1.0, 0.88] }, { "command": "line", "to": [1.0, 0.31] }, { "command": "curve", "control1": [0.99, 0.11], "control2": [0.95, 0.0], "to": [0.88, 0.0] }, { "command": "close" }] } }] },
-
-    { "id": "front-upper-1", "name": "Front Upper 1", "kind": "pocket", "geometry": [{ "frame": { "x": 0.387201, "y": 0.274862, "width": 0.095764, "height": 0.118785 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.16, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.19], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.81], "control2": [0.07, 1.0], "to": [0.16, 1.0] }, { "command": "line", "to": [0.84, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.81], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.19], "control2": [0.93, 0.0], "to": [0.84, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 40, "features": ["pocket"] },
-    { "id": "front-upper-2", "name": "Front Upper 2", "kind": "pocket", "geometry": [{ "frame": { "x": 0.517035, "y": 0.274862, "width": 0.095764, "height": 0.118785 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.16, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.19], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.81], "control2": [0.07, 1.0], "to": [0.16, 1.0] }, { "command": "line", "to": [0.84, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.81], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.19], "control2": [0.93, 0.0], "to": [0.84, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 20, "features": ["pocket"] },
-
-    { "id": "front-middle-1", "name": "Front Middle 1", "kind": "edge", "geometry": [{ "frame": { "x": 0.055479, "y": 0.450276, "width": 0.127762, "height": 0.109116 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.12, 0.0] }, { "command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.04, 1.0], "to": [0.12, 1.0] }, { "command": "line", "to": [0.88, 1.0] }, { "command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.96, 0.0], "to": [0.88, 0.0] }, { "command": "close" }] } }] },
-    { "id": "front-middle-2", "name": "Front Middle 2", "kind": "pocket", "geometry": [{ "frame": { "x": 0.197744, "y": 0.430939, "width": 0.035912, "height": 0.101519 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.5, 0.0] }, { "command": "curve", "control1": [0.2, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.2, 1.0], "to": [0.5, 1.0] }, { "command": "curve", "control1": [0.8, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.8, 0.0], "to": [0.5, 0.0] }, { "command": "close" }] } }] },
-    { "id": "front-middle-3", "name": "Front Middle 3", "kind": "pocket", "geometry": [{ "frame": { "x": 0.247007, "y": 0.447514, "width": 0.075276, "height": 0.110497 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }] },
-    { "id": "front-middle-4", "name": "Front Middle 4", "kind": "edge", "geometry": [{ "frame": { "x": 0.3407, "y": 0.448895, "width": 0.071823, "height": 0.110497 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }] },
-    { "id": "front-middle-5", "name": "Front Middle 5", "kind": "jug", "geometry": [{ "frame": { "x": 0.43232, "y": 0.450276, "width": 0.135359, "height": 0.109116 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.12, 0.0] }, { "command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.04, 1.0], "to": [0.12, 1.0] }, { "command": "line", "to": [0.88, 1.0] }, { "command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.96, 0.0], "to": [0.88, 0.0] }, { "command": "close" }] } }], "gripType": "openHand", "fingerCapacity": 4, "features": ["jug"] },
-    { "id": "front-middle-6", "name": "Front Middle 6", "kind": "edge", "geometry": [{ "frame": { "x": 0.587477, "y": 0.448895, "width": 0.071823, "height": 0.110497 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }] },
-    { "id": "front-middle-7", "name": "Front Middle 7", "kind": "pocket", "geometry": [{ "frame": { "x": 0.677717, "y": 0.447514, "width": 0.075276, "height": 0.110497 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }] },
-    { "id": "front-middle-8", "name": "Front Middle 8", "kind": "pocket", "geometry": [{ "frame": { "x": 0.766344, "y": 0.430939, "width": 0.035912, "height": 0.101519 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.5, 0.0] }, { "command": "curve", "control1": [0.2, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.2, 1.0], "to": [0.5, 1.0] }, { "command": "curve", "control1": [0.8, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.8, 0.0], "to": [0.5, 0.0] }, { "command": "close" }] } }] },
-    { "id": "front-middle-9", "name": "Front Middle 9", "kind": "edge", "geometry": [{ "frame": { "x": 0.816759, "y": 0.450276, "width": 0.127762, "height": 0.109116 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.12, 0.0] }, { "command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.04, 1.0], "to": [0.12, 1.0] }, { "command": "line", "to": [0.88, 1.0] }, { "command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.96, 0.0], "to": [0.88, 0.0] }, { "command": "close" }] } }] },
-
-    { "id": "front-lower-1", "name": "Front Lower 1", "kind": "edge", "geometry": [{ "frame": { "x": 0.057781, "y": 0.667127, "width": 0.129144, "height": 0.103591 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.12, 0.0] }, { "command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.04, 1.0], "to": [0.12, 1.0] }, { "command": "line", "to": [0.88, 1.0] }, { "command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.96, 0.0], "to": [0.88, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 15, "gripType": "openHand", "fingerCapacity": 4, "features": ["smallEdge"] },
-    { "id": "front-lower-2", "name": "Front Lower 2", "kind": "pocket", "geometry": [{ "frame": { "x": 0.199586, "y": 0.664365, "width": 0.036602, "height": 0.110497 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.5, 0.0] }, { "command": "curve", "control1": [0.2, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.2, 1.0], "to": [0.5, 1.0] }, { "command": "curve", "control1": [0.8, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.8, 0.0], "to": [0.5, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 27, "features": ["pocket"] },
-    { "id": "front-lower-3", "name": "Front Lower 3", "kind": "edge", "geometry": [{ "frame": { "x": 0.248849, "y": 0.667127, "width": 0.073665, "height": 0.106354 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 20, "gripType": "openHand", "fingerCapacity": 4, "features": ["mediumEdge", "smallEdge"] },
-    { "id": "front-lower-4", "name": "Front Lower 4", "kind": "edge", "geometry": [{ "frame": { "x": 0.336326, "y": 0.668508, "width": 0.071133, "height": 0.10221 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 22, "gripType": "openHand", "fingerCapacity": 4, "features": ["mediumEdge", "smallEdge"] },
-    { "id": "front-lower-5", "name": "Front Lower 5", "kind": "edge", "geometry": [{ "frame": { "x": 0.41989, "y": 0.661602, "width": 0.160221, "height": 0.116022 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.12, 0.0] }, { "command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.04, 1.0], "to": [0.12, 1.0] }, { "command": "line", "to": [0.88, 1.0] }, { "command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.96, 0.0], "to": [0.88, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 21, "gripType": "openHand", "fingerCapacity": 4, "features": ["mediumEdge", "smallEdge"] },
-    { "id": "front-lower-6", "name": "Front Lower 6", "kind": "edge", "geometry": [{ "frame": { "x": 0.592541, "y": 0.668508, "width": 0.071133, "height": 0.10221 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 22, "gripType": "openHand", "fingerCapacity": 4, "features": ["mediumEdge", "smallEdge"] },
-    { "id": "front-lower-7", "name": "Front Lower 7", "kind": "edge", "geometry": [{ "frame": { "x": 0.677486, "y": 0.667127, "width": 0.073665, "height": 0.106354 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.17, 0.0] }, { "command": "curve", "control1": [0.07, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.07, 1.0], "to": [0.17, 1.0] }, { "command": "line", "to": [0.83, 1.0] }, { "command": "curve", "control1": [0.93, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.93, 0.0], "to": [0.83, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 20, "gripType": "openHand", "fingerCapacity": 4, "features": ["mediumEdge", "smallEdge"] },
-    { "id": "front-lower-8", "name": "Front Lower 8", "kind": "pocket", "geometry": [{ "frame": { "x": 0.763812, "y": 0.664365, "width": 0.036602, "height": 0.110497 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.5, 0.0] }, { "command": "curve", "control1": [0.2, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.2, 1.0], "to": [0.5, 1.0] }, { "command": "curve", "control1": [0.8, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.8, 0.0], "to": [0.5, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 27, "features": ["pocket"] },
-    { "id": "front-lower-9", "name": "Front Lower 9", "kind": "edge", "geometry": [{ "frame": { "x": 0.813075, "y": 0.667127, "width": 0.129144, "height": 0.103591 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.12, 0.0] }, { "command": "curve", "control1": [0.04, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.5] }, { "command": "curve", "control1": [0.0, 0.8], "control2": [0.04, 1.0], "to": [0.12, 1.0] }, { "command": "line", "to": [0.88, 1.0] }, { "command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.8], "to": [1.0, 0.5] }, { "command": "curve", "control1": [1.0, 0.2], "control2": [0.96, 0.0], "to": [0.88, 0.0] }, { "command": "close" }] } }], "sizeMillimeters": 15, "gripType": "openHand", "fingerCapacity": 4, "features": ["smallEdge"] }
+    {
+      "id": "top-sloper-1",
+      "name": "Top Sloper 1",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.015230731467844866,
+            "y": 0.04078052482269505,
+            "width": 0.16003918703976436,
+            "height": 0.2836873333333333
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.05,
+                  0.0
+                ],
+                "control2": [
+                  0.01,
+                  0.11
+                ],
+                "to": [
+                  0.0,
+                  0.31
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.88
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.96
+                ],
+                "control2": [
+                  0.06,
+                  1.0
+                ],
+                "to": [
+                  0.15,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.95,
+                  0.93
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.98,
+                  0.72
+                ],
+                "control2": [
+                  0.99,
+                  0.34
+                ],
+                "to": [
+                  1.0,
+                  0.05
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.78,
+                  0.01
+                ],
+                "control2": [
+                  0.34,
+                  0.0
+                ],
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-2",
+      "name": "Top Sloper 2",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.17010275503190966,
+            "y": 0.04078052482269505,
+            "width": 0.1592438746391752,
+            "height": 0.1872347408247897
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.04081632653061229,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.9693877551020411,
+                  0.9999982342378219
+                ],
+                "control1": [
+                  1.0,
+                  0.29166615165269805
+                ],
+                "control2": [
+                  1.0,
+                  0.7395820274050554
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.0,
+                  0.9999982342378219
+                ],
+                "control1": [
+                  0.7346938775510206,
+                  1.0
+                ],
+                "control2": [
+                  0.25510204081632665,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.04081632653061229,
+                  0.0
+                ],
+                "control1": [
+                  0.0,
+                  0.6874987860385026
+                ],
+                "control2": [
+                  0.010204081632653073,
+                  0.2708328551060767
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-3",
+      "name": "Top Sloper 3",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.3395780741068047,
+            "y": 0.03900646808510637,
+            "width": 0.3242813441771613,
+            "height": 0.13085170674307237
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  6.835468213963969e-07,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9999993164531785,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.9999993164531785,
+                  0.9999980135179881
+                ],
+                "control1": [
+                  1.0,
+                  0.2444439588599527
+                ],
+                "control2": [
+                  1.0,
+                  0.688887520423503
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  6.835468213963969e-07,
+                  0.9999980135179881
+                ],
+                "control1": [
+                  0.7608692085842667,
+                  1.0
+                ],
+                "control2": [
+                  0.23913079141573296,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  6.835468213963969e-07,
+                  0.0
+                ],
+                "control1": [
+                  0.0,
+                  0.688887520423503
+                ],
+                "control2": [
+                  0.0,
+                  0.2444439588599527
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-4",
+      "name": "Top Sloper 4",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.6740897964457535,
+            "y": 0.04078052482269505,
+            "width": 0.15924387463917522,
+            "height": 0.1872347408247897
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9591836734693874,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  1.0,
+                  0.9999982342378219
+                ],
+                "control1": [
+                  0.9897959183673464,
+                  0.2708328551060767
+                ],
+                "control2": [
+                  1.0,
+                  0.6874987860385026
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.030612244897959225,
+                  0.9999982342378219
+                ],
+                "control1": [
+                  0.7448979591836735,
+                  1.0
+                ],
+                "control2": [
+                  0.26530612244897994,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.0,
+                  0.0
+                ],
+                "control1": [
+                  0.0,
+                  0.7395820274050554
+                ],
+                "control2": [
+                  0.0,
+                  0.29166615165269805
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-sloper-5",
+      "name": "Top Sloper 5",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.8281665076092294,
+            "y": 0.04078052482269505,
+            "width": 0.16003918703976436,
+            "height": 0.2836873333333333
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.66,
+                  0.0
+                ],
+                "control2": [
+                  0.22,
+                  0.01
+                ],
+                "to": [
+                  0.0,
+                  0.05
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01,
+                  0.34
+                ],
+                "control2": [
+                  0.02,
+                  0.72
+                ],
+                "to": [
+                  0.05,
+                  0.93
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.85,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.96
+                ],
+                "to": [
+                  1.0,
+                  0.88
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.31
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.99,
+                  0.11
+                ],
+                "control2": [
+                  0.95,
+                  0.0
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-upper-1",
+      "name": "Front Upper 1",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.38144357977417775,
+            "y": 0.19858171631205673,
+            "width": 0.10211065684830634,
+            "height": 0.1524828723404255
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.16,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.19
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.81
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.16,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.84,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.81
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.19
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.84,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 40,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "front-upper-2",
+      "name": "Front Upper 2",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.5198821894943544,
+            "y": 0.19858171631205673,
+            "width": 0.10211065684830634,
+            "height": 0.1524828723404255
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.16,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.19
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.81
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.16,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.84,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.81
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.19
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.84,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 20,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "front-middle-1",
+      "name": "Front Middle 1",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.027737058419243985,
+            "y": 0.42375855319148936,
+            "width": 0.13622929013254786,
+            "height": 0.14007089361702127
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.04,
+                  1.0
+                ],
+                "to": [
+                  0.12,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.96,
+                  0.0
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-middle-2",
+      "name": "Front Middle 2",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.17943051939126167,
+            "y": 0.39893587943262415,
+            "width": 0.038292029455081,
+            "height": 0.13031871631205674
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.2,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.2,
+                  1.0
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.8,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.8,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-middle-3",
+      "name": "Front Middle 3",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.23195837211585663,
+            "y": 0.42021300709219855,
+            "width": 0.08026483652430044,
+            "height": 0.14184366666666665
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-middle-4",
+      "name": "Front Middle 4",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.3318607756504664,
+            "y": 0.42198578014184396,
+            "width": 0.07658299263622974,
+            "height": 0.14184366666666665
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-middle-5",
+      "name": "Front Middle 5",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.4295527933235149,
+            "y": 0.42375855319148936,
+            "width": 0.14432977319587628,
+            "height": 0.14007089361702127
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.04,
+                  1.0
+                ],
+                "to": [
+                  0.12,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.96,
+                  0.0
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "jug"
+      ]
+    },
+    {
+      "id": "front-middle-6",
+      "name": "Front Middle 6",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.5949926578301424,
+            "y": 0.42198578014184396,
+            "width": 0.07658299263622974,
+            "height": 0.14184366666666665
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-middle-7",
+      "name": "Front Middle 7",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.6912132174766814,
+            "y": 0.42021300709219855,
+            "width": 0.08026483652430044,
+            "height": 0.14184366666666665
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-middle-8",
+      "name": "Front Middle 8",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.7857138772704959,
+            "y": 0.39893587943262415,
+            "width": 0.038292029455081,
+            "height": 0.13031871631205674
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.2,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.2,
+                  1.0
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.8,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.8,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-middle-9",
+      "name": "Front Middle 9",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.8394700775650467,
+            "y": 0.42375855319148936,
+            "width": 0.13622929013254786,
+            "height": 0.14007089361702127
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.04,
+                  1.0
+                ],
+                "to": [
+                  0.12,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.96,
+                  0.0
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "front-lower-1",
+      "name": "Front Lower 1",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.030191621011291116,
+            "y": 0.7021275673758866,
+            "width": 0.13770288070692194,
+            "height": 0.13297851773049646
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.04,
+                  1.0
+                ],
+                "to": [
+                  0.12,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.96,
+                  0.0
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 15,
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "smallEdge"
+      ]
+    },
+    {
+      "id": "front-lower-2",
+      "name": "Front Lower 2",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.18139459597447227,
+            "y": 0.6985820212765957,
+            "width": 0.03902775846833579,
+            "height": 0.14184366666666665
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.2,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.2,
+                  1.0
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.8,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.8,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 27,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "front-lower-3",
+      "name": "Front Lower 3",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.23392244869906723,
+            "y": 0.7021275673758866,
+            "width": 0.07854706921944034,
+            "height": 0.13652534751773052
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 20,
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "mediumEdge",
+        "smallEdge"
+      ]
+    },
+    {
+      "id": "front-lower-4",
+      "name": "Front Lower 4",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.3271968934707904,
+            "y": 0.703900340425532,
+            "width": 0.07584726362297496,
+            "height": 0.13120574468085106
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 22,
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "mediumEdge",
+        "smallEdge"
+      ]
+    },
+    {
+      "id": "front-lower-5",
+      "name": "Front Lower 5",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.4162990083456063,
+            "y": 0.6950351914893618,
+            "width": 0.17083947569955818,
+            "height": 0.14893604255319148
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.04,
+                  1.0
+                ],
+                "to": [
+                  0.12,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.96,
+                  0.0
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 21,
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "mediumEdge",
+        "smallEdge"
+      ]
+    },
+    {
+      "id": "front-lower-6",
+      "name": "Front Lower 6",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.6003922690230731,
+            "y": 0.703900340425532,
+            "width": 0.07584726362297496,
+            "height": 0.13120574468085106
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 22,
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "mediumEdge",
+        "smallEdge"
+      ]
+    },
+    {
+      "id": "front-lower-7",
+      "name": "Front Lower 7",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.690966908198331,
+            "y": 0.7021275673758866,
+            "width": 0.07854706921944034,
+            "height": 0.13652534751773052
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.17,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.07,
+                  1.0
+                ],
+                "to": [
+                  0.17,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.83,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.93,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.0
+                ],
+                "to": [
+                  0.83,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 20,
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "mediumEdge",
+        "smallEdge"
+      ]
+    },
+    {
+      "id": "front-lower-8",
+      "name": "Front Lower 8",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.7830140716740305,
+            "y": 0.6985820212765957,
+            "width": 0.03902775846833579,
+            "height": 0.14184366666666665
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.2,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.2,
+                  1.0
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.8,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.8,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 27,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "front-lower-9",
+      "name": "Front Lower 9",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.8355419243986254,
+            "y": 0.7021275673758866,
+            "width": 0.13770288070692194,
+            "height": 0.13297851773049646
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.8
+                ],
+                "control2": [
+                  0.04,
+                  1.0
+                ],
+                "to": [
+                  0.12,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.8
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.2
+                ],
+                "control2": [
+                  0.96,
+                  0.0
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "sizeMillimeters": 15,
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "smallEdge"
+      ]
+    }
   ]
 }

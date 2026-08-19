@@ -20,6 +20,8 @@ dev = [
 py-modules = [
   "board_geometry",
   "board_package",
+  "github_client",
+  "github_board_store",
   "server",
   "workbench_assets",
   "workbench_binary",

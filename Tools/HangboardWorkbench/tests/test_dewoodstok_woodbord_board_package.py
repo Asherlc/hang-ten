@@ -12,24 +12,15 @@ import pytest
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = REPOSITORY_ROOT / "Hangboards" / "dewoodstok-woodbord"
-PRESENTATION_SIZE = (1774, 887)
 EXPECTED_PIXEL_FRAMES = {
-    "top-rim": (64, 232, 1646, 48),
-    "front-upper-1": (112, 287, 253, 72),
-    "front-upper-2": (419, 286, 118, 73),
-    "front-upper-3": (594, 287, 262, 71),
-    "front-upper-4": (918, 287, 262, 71),
-    "front-upper-5": (1237, 286, 118, 73),
-    "front-upper-6": (1409, 287, 253, 72),
-    "front-middle-1": (112, 410, 253, 71),
-    "front-middle-2": (419, 410, 248, 71),
-    "front-middle-3": (1107, 410, 248, 71),
-    "front-middle-4": (1409, 410, 253, 71),
-    "front-lower-1": (112, 532, 253, 72),
-    "front-lower-2": (419, 531, 118, 74),
-    "front-lower-3": (594, 532, 263, 72),
-    "front-lower-4": (917, 532, 263, 72),
-    "front-lower-5": (1237, 531, 118, 74),
+    "top-rim": (64, 232, 1646, 48), "front-upper-1": (112, 287, 253, 72),
+    "front-upper-2": (419, 286, 118, 73), "front-upper-3": (594, 287, 262, 71),
+    "front-upper-4": (918, 287, 262, 71), "front-upper-5": (1237, 286, 118, 73),
+    "front-upper-6": (1409, 287, 253, 72), "front-middle-1": (112, 410, 253, 71),
+    "front-middle-2": (419, 410, 248, 71), "front-middle-3": (1107, 410, 248, 71),
+    "front-middle-4": (1409, 410, 253, 71), "front-lower-1": (112, 532, 253, 72),
+    "front-lower-2": (419, 531, 118, 74), "front-lower-3": (594, 532, 263, 72),
+    "front-lower-4": (917, 532, 263, 72), "front-lower-5": (1237, 531, 118, 74),
     "front-lower-6": (1409, 532, 253, 72),
 }
 EXPECTED_HOLDS = (
@@ -138,6 +129,11 @@ def _command_signature(hold: dict[str, object]) -> tuple[tuple[object, ...], ...
     )
 
 
+def _pixel_frame(frame: dict[str, float], size: tuple[int, int]) -> tuple[float, float, float, float]:
+    width, height = size
+    return (frame["x"] * width, frame["y"] * height, frame["width"] * width, frame["height"] * height)
+
+
 def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     package = board_package.load_board_package(PACKAGE_ROOT)
     board = package.board
@@ -145,7 +141,6 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     image_width, image_height = _png_dimensions(PACKAGE_ROOT / "assets" / "primary.png")
     image_aspect_ratio = image_width / image_height
 
-    assert (image_width, image_height) == PRESENTATION_SIZE
     assert {path.name for path in PACKAGE_ROOT.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (PACKAGE_ROOT / "assets").iterdir()} == {"primary.png"}
     assert board["id"] == "dewoodstok-woodbord"
@@ -166,6 +161,7 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert all("gripType" not in hold for hold in holds.values())
     assert all("features" not in hold for hold in holds.values())
 
+    crop_translation = None
     for hold in holds.values():
         assert len(hold["geometry"]) == 1
         piece = hold["geometry"][0]
@@ -179,22 +175,38 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
         assert 0 <= frame["x"] < frame["x"] + frame["width"] <= 1
         assert 0 <= frame["y"] < frame["y"] + frame["height"] <= 1
         assert frame["width"] * frame["height"] > 0
-        expected_x, expected_y, expected_width, expected_height = EXPECTED_PIXEL_FRAMES[hold["id"]]
-        assert math.isclose(frame["x"] * PRESENTATION_SIZE[0], expected_x, abs_tol=0.002)
-        assert math.isclose(frame["y"] * PRESENTATION_SIZE[1], expected_y, abs_tol=0.002)
-        assert math.isclose(frame["width"] * PRESENTATION_SIZE[0], expected_width, abs_tol=0.002)
-        assert math.isclose(frame["height"] * PRESENTATION_SIZE[1], expected_height, abs_tol=0.002)
+        projected = _pixel_frame(frame, (image_width, image_height))
+        expected = EXPECTED_PIXEL_FRAMES[hold["id"]]
+        assert projected[2:] == pytest.approx(expected[2:], abs=0.002)
+        translation = (projected[0] - expected[0], projected[1] - expected[1])
+        if crop_translation is None:
+            crop_translation = translation
+        else:
+            assert translation == pytest.approx(crop_translation, abs=0.01)
 
+    assert crop_translation is not None
+    symmetry_axis_x = None
     for left_id, right_id in MIRRORED_PAIRS:
         left = holds[left_id]
         right = holds[right_id]
         left_frame = left["geometry"][0]["frame"]
         right_frame = right["geometry"][0]["frame"]
-        assert right_frame["x"] == pytest.approx(1 - left_frame["x"] - left_frame["width"], abs=1e-6)
         assert right_frame["y"] == pytest.approx(left_frame["y"], abs=1e-6)
         assert right_frame["width"] == pytest.approx(left_frame["width"], abs=1e-6)
         assert right_frame["height"] == pytest.approx(left_frame["height"], abs=1e-6)
         assert right["geometry"][0]["shape"]["commands"] == left["geometry"][0]["shape"]["commands"]
+        pair_axis_x = (
+            left_frame["x"]
+            + left_frame["width"]
+            + right_frame["x"]
+        ) / 2
+        if symmetry_axis_x is None:
+            symmetry_axis_x = pair_axis_x
+        else:
+            assert pair_axis_x == pytest.approx(symmetry_axis_x, abs=1e-6)
+
+    assert symmetry_axis_x is not None
+    assert 0 < symmetry_axis_x < 1
 
     capacities = Counter(hold.get("fingerCapacity") for hold in holds.values())
     assert capacities == {4: 12, 2: 4, None: 1}

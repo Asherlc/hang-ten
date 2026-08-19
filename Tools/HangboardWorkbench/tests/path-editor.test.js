@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { parsePath, serializePath, moveVertex, addVertex, deleteVertex } = require("../path-editor.js");
+const { parsePath, serializePath, moveVertex, addVertex, deleteVertex, rotatePath } = require("../path-editor.js");
 
 test("parsePath splits an SVG path string into commands", () => {
   const commands = parsePath("M 10 20 L 30 40 Q 50 60 70 80 C 10 20 30 40 50 60 Z");
@@ -181,4 +181,23 @@ test("deleteVertex on the vertex before Z leaves a curved prev segment untouched
   assert.deepEqual(commands[1].points, [{ x: 80, y: 0 }]);
   assert.deepEqual(commands[1].controls, [{ x: 40, y: 80 }]);
   assert.equal(commands[2].type, "Z");
+});
+
+test("rotatePath rotates every anchor point 90 degrees clockwise around the pivot", () => {
+  const commands = parsePath("M 20 10 L 20 20 L 10 20 Z");
+  rotatePath(commands, Math.PI / 2, { x: 10, y: 10 });
+  assert.equal(serializePath(commands), "M 10 20 L 0 20 L 0 10 Z");
+});
+
+test("rotatePath carries control points along with a curve's rotation", () => {
+  const commands = parsePath("M 10 10 Q 20 10 20 20 Z");
+  rotatePath(commands, Math.PI / 2, { x: 10, y: 10 });
+  assert.deepEqual(commands[1].controls, [{ x: 10, y: 20 }]);
+  assert.deepEqual(commands[1].points, [{ x: 0, y: 20 }]);
+});
+
+test("rotatePath leaves a point already on the pivot unchanged", () => {
+  const commands = parsePath("M 10 10 L 30 10 Z");
+  rotatePath(commands, Math.PI / 4, { x: 10, y: 10 });
+  assert.deepEqual(commands[0].points, [{ x: 10, y: 10 }]);
 });

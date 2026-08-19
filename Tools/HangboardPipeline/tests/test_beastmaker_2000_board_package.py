@@ -4,8 +4,10 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from hangboard_vectorizer.board_catalog import load_board_package
+from _board_package_helpers import presentation_frame
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -51,6 +53,8 @@ MIRRORED_PAIRS = (
 def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
+        presentation_size = image.size
 
     assert tuple(holds) == EXPECTED_HOLDS
     assert {hold_id: hold.kind for hold_id, hold in holds.items()} == EXPECTED_KINDS
@@ -71,10 +75,22 @@ def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
+    symmetry_axis_x: float | None = None
     for left_id, right_id in MIRRORED_PAIRS:
-        left = holds[left_id].frame
-        right = holds[right_id].frame
-        assert right.x == pytest.approx(1 - left.x - left.width, abs=1e-6)
-        assert right.y == pytest.approx(left.y, abs=1e-6)
-        assert right.width == pytest.approx(left.width, abs=1e-6)
-        assert right.height == pytest.approx(left.height, abs=1e-6)
+        left_x, left_y, left_width, left_height = presentation_frame(
+            holds[left_id].frame, presentation_size
+        )
+        right_x, right_y, right_width, right_height = presentation_frame(
+            holds[right_id].frame, presentation_size
+        )
+        assert right_y == pytest.approx(left_y, abs=1e-6)
+        assert right_width == pytest.approx(left_width, abs=1e-6)
+        assert right_height == pytest.approx(left_height, abs=1e-6)
+        pair_axis_x = (left_x + left_width + right_x) / 2
+        if symmetry_axis_x is None:
+            symmetry_axis_x = pair_axis_x
+        else:
+            assert pair_axis_x == pytest.approx(symmetry_axis_x, abs=1e-6)
+
+    assert symmetry_axis_x is not None
+    assert 0 < symmetry_axis_x < presentation_size[0]

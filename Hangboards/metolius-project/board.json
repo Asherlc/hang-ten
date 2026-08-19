@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "metolius-project",
+  "manufacturer": "Metolius",
+  "name": "Project",
+  "subtitle": "Molded training board with ear-tab edges and two graduated hold rows.",
+  "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/project",
+  "dimensions": "26\" × 8\"",
+  "aspectRatio": 2.0,
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
+  "holds": [
+    { "id": "edge-ear-left", "name": "Left ear edge", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.05, "y": 0.24, "width": 0.13, "height": 0.09}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.35} }
+    ]},
+    { "id": "edge-ear-right", "name": "Right ear edge", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.82, "y": 0.24, "width": 0.13, "height": 0.09}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.35} }
+    ]},
+    { "id": "edge-row1-left", "name": "Row 1 left edges", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.11, "y": 0.35, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]},
+    { "id": "edge-row1-center", "name": "Row 1 center bar", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.38, "y": 0.35, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]},
+    { "id": "edge-row1-right", "name": "Row 1 right edges", "kind": "edge", "gripType": "openHand", "features": ["mediumEdge"], "geometry": [
+      { "frame": {"x": 0.65, "y": 0.35, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]},
+    { "id": "edge-row2-left", "name": "Row 2 left edges", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
+      { "frame": {"x": 0.11, "y": 0.48, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]},
+    { "id": "edge-row2-center", "name": "Row 2 center bar", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
+      { "frame": {"x": 0.38, "y": 0.48, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.45} }
+    ]},
+    { "id": "edge-row2-right", "name": "Row 2 right edges", "kind": "edge", "gripType": "halfCrimp", "features": ["smallEdge"], "geometry": [
+      { "frame": {"x": 0.65, "y": 0.48, "width": 0.24, "height": 0.10}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2} }
+    ]}
+  ]
+}

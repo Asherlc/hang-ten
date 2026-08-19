@@ -4,8 +4,10 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from hangboard_vectorizer.board_catalog import load_board_package
+from _board_package_helpers import presentation_frame
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -26,6 +28,8 @@ MIRRORED_PAIRS = (
 def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
+    with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
+        presentation_size = image.size
 
     assert tuple(holds) == EXPECTED_HOLDS
     assert Counter(hold.kind for hold in holds.values()) == {"pocket": 16, "sloper": 1}
@@ -42,14 +46,28 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
+    symmetry_axis_x: float | None = None
     for left_id, right_id in MIRRORED_PAIRS:
         left = holds[left_id]
         right = holds[right_id]
-        assert right.frame.x == pytest.approx(1 - left.frame.x - left.frame.width, abs=1e-6)
-        assert right.frame.y == pytest.approx(left.frame.y, abs=1e-6)
-        assert right.frame.width == pytest.approx(left.frame.width, abs=1e-6)
-        assert right.frame.height == pytest.approx(left.frame.height, abs=1e-6)
+        left_x, left_y, left_width, left_height = presentation_frame(
+            left.frame, presentation_size
+        )
+        right_x, right_y, right_width, right_height = presentation_frame(
+            right.frame, presentation_size
+        )
+        assert right_y == pytest.approx(left_y, abs=1e-6)
+        assert right_width == pytest.approx(left_width, abs=1e-6)
+        assert right_height == pytest.approx(left_height, abs=1e-6)
         assert right.geometry[0].shape.commands == left.geometry[0].shape.commands
+        pair_axis_x = (left_x + left_width + right_x) / 2
+        if symmetry_axis_x is None:
+            symmetry_axis_x = pair_axis_x
+        else:
+            assert pair_axis_x == pytest.approx(symmetry_axis_x, abs=1e-6)
+
+    assert symmetry_axis_x is not None
+    assert 0 < symmetry_axis_x < presentation_size[0]
 
     capacities = Counter(hold.finger_capacity for hold in holds.values())
     assert capacities == {4: 12, 2: 4, None: 1}
