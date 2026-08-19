@@ -6,6 +6,7 @@ import json
 import sys
 from pathlib import Path
 
+import cv2
 import numpy as np
 import pytest
 from conftest import board_document
@@ -102,7 +103,9 @@ def _candidate_near_x(report, x: float):
     )
 
 
-def _complete_mapping(report, holds: list[dict[str, object]]) -> dict[str, object]:
+def _complete_mapping(
+    report, holds: list[dict[str, object]], audited_inventory_hash: str
+) -> dict[str, object]:
     ordered = sorted(report.candidates, key=lambda candidate: candidate.bounds)
     cursor = 0
     mapped_holds = []
@@ -124,6 +127,7 @@ def _complete_mapping(report, holds: list[dict[str, object]]) -> dict[str, objec
     return {
         "schemaVersion": 1,
         "manifestHash": report.manifest_hash,
+        "auditedInventoryHash": audited_inventory_hash,
         "holds": mapped_holds,
         "rejectedCandidateIDs": [
             candidate.candidate_id
@@ -132,6 +136,41 @@ def _complete_mapping(report, holds: list[dict[str, object]]) -> dict[str, objec
         ],
         "symmetry": [],
     }
+
+
+def _independent_raw_mask_error(
+    source_mask: np.ndarray, display_path: str, *, width: int, height: int
+) -> tuple[float, float]:
+    module = _derivation_module()
+    sample = 4
+    raw = np.repeat(np.repeat(source_mask, sample, axis=0), sample, axis=1)
+    parsed = module.parse_closed_path(display_path, width, height)
+    emitted_image = Image.new("1", (width * sample, height * sample), 0)
+    ImageDraw.Draw(emitted_image).polygon(
+        [(round(x * sample), round(y * sample)) for x, y in parsed.contour],
+        fill=1,
+    )
+    emitted = np.asarray(emitted_image, dtype=bool)
+    difference = np.count_nonzero(raw ^ emitted) / raw.size
+
+    kernel = np.ones((3, 3), dtype=np.uint8)
+    raw_boundary = raw ^ (cv2.erode(raw.astype(np.uint8), kernel) > 0)
+    emitted_boundary = emitted ^ (
+        cv2.erode(emitted.astype(np.uint8), kernel) > 0
+    )
+    distance_to_raw = cv2.distanceTransform(
+        (~raw_boundary).astype(np.uint8), cv2.DIST_L2, cv2.DIST_MASK_PRECISE
+    )
+    distance_to_emitted = cv2.distanceTransform(
+        (~emitted_boundary).astype(np.uint8),
+        cv2.DIST_L2,
+        cv2.DIST_MASK_PRECISE,
+    )
+    boundary = max(
+        float(distance_to_raw[emitted_boundary].max(initial=0)),
+        float(distance_to_emitted[raw_boundary].max(initial=0)),
+    ) / sample
+    return boundary, difference
 
 
 def test_derives_disconnected_silhouettes_from_transparent_background(
@@ -208,10 +247,10 @@ def test_touching_regions_remain_one_unlabeled_candidate(tmp_path: Path) -> None
 
 def test_records_only_native_gate_passing_mirror_pairs(tmp_path: Path) -> None:
     module = _derivation_module()
-    image = Image.new("RGBA", (120, 80), (0, 0, 0, 0))
+    image = Image.new("RGBA", (160, 100), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle((14, 20, 36, 48), radius=4, fill=(140, 90, 50, 255))
-    draw.rounded_rectangle((84, 20, 106, 48), radius=4, fill=(140, 90, 50, 255))
+    draw.rectangle((14, 20, 36, 48), fill=(140, 90, 50, 255))
+    draw.rectangle((84, 20, 106, 48), fill=(140, 90, 50, 255))
     draw.polygon(((48, 55), (64, 52), (70, 69), (46, 70)), fill=(140, 90, 50, 255))
     package = _write_package(tmp_path / "board", image)
 
@@ -258,7 +297,8 @@ def test_selects_rounded_rect_only_when_native_mask_gates_pass(tmp_path: Path) -
     draw = ImageDraw.Draw(image)
     draw.rounded_rectangle((12, 15, 48, 52), radius=8, fill=(140, 90, 50, 255))
     draw.polygon(
-        ((74, 13), (113, 20), (105, 56), (84, 48), (70, 31)), fill=(140, 90, 50, 255)
+        ((70, 13), (113, 13), (113, 30), (92, 30), (92, 56), (70, 56)),
+        fill=(140, 90, 50, 255),
     )
     package = _write_package(tmp_path / "board", image, piece_counts=(1, 1))
 
@@ -269,7 +309,98 @@ def test_selects_rounded_rect_only_when_native_mask_gates_pass(tmp_path: Path) -
     assert rounded.representation == "roundedRect"
     assert rounded.maximum_boundary_deviation_pixels <= 1.0
     assert rounded.symmetric_difference_ratio <= 0.0025
+    assert rounded.point_count == 0
     assert irregular.representation == "path"
+
+
+def test_emitted_shape_passes_independent_raw_native_mask_gates(
+    tmp_path: Path,
+) -> None:
+    module = _derivation_module()
+    image = Image.new("RGBA", (160, 120), (0, 0, 0, 0))
+    points = (
+        (65.0, 36.0),
+        (64.08693330549853, 48.85575219373079),
+        (51.299315375671675, 52.741731801207536),
+        (36.0, 51.588457268119896),
+        (26.38706972192411, 39.420201433256686),
+        (23.56799185956638, 31.895758280091975),
+        (34.999999999999986, 19.54551732809567),
+        (51.64661173100553, 15.319037186743628),
+        (60.256711089903646, 28.929336293448063),
+    )
+    ImageDraw.Draw(image).polygon(points, fill=(140, 90, 50, 255))
+    package = _write_package(tmp_path / "board", image)
+
+    report = module.derive_geometry_candidates(package)
+    candidate = next(
+        candidate
+        for candidate in report.candidates
+        if candidate.source == "foregroundSilhouette"
+    )
+    boundary, difference = _independent_raw_mask_error(
+        np.asarray(image)[:, :, 3] > 0,
+        candidate.display_path,
+        width=image.width,
+        height=image.height,
+    )
+
+    assert boundary <= 1.0
+    assert difference <= 0.0025
+    assert candidate.maximum_boundary_deviation_pixels == pytest.approx(boundary)
+    assert candidate.symmetric_difference_ratio == pytest.approx(difference)
+
+
+def test_bounded_search_finds_lower_complexity_than_greedy_deletion_order() -> None:
+    simplification = importlib.import_module(
+        "hangboard_vectorizer.board_path_simplification"
+    )
+    points = (
+        (73.23597754932263, 60.09255818663685),
+        (73.30998812790241, 63.087907347381936),
+        (69.66127851194875, 67.46094991029199),
+        (58.665155498037024, 75.9587454666383),
+        (47.10456102384756, 70.11898644944199),
+        (24.61644279473971, 61.17865087404196),
+        (21.6571088849237, 46.16609345952858),
+        (28.71498758293757, 36.906087936701766),
+        (80.87514856345008, 48.56133297754155),
+    )
+
+    greedy = simplification.simplify_native_contour(
+        points, width=100, height=100
+    )
+    minimal = simplification.minimize_native_contour(
+        points, width=100, height=100
+    )
+
+    assert len(greedy) == 8
+    assert len(minimal) == 6
+
+
+def test_derivation_reports_bounded_search_work_cap_fail_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = _derivation_module()
+    simplification = importlib.import_module(
+        "hangboard_vectorizer.board_path_simplification"
+    )
+    monkeypatch.setattr(simplification, "_MAX_MINIMAL_CONTOUR_CANDIDATES", 0)
+    image = Image.new("RGBA", (128, 80), (0, 0, 0, 0))
+    ImageDraw.Draw(image).polygon(
+        ((20, 15), (100, 15), (100, 35), (60, 35), (60, 65), (20, 65)),
+        fill=(140, 90, 50, 255),
+    )
+    package = _write_package(tmp_path / "board", image)
+
+    report = module.derive_geometry_candidates(package)
+
+    assert not report.candidates
+    assert any(
+        rejection.source == "foregroundSilhouette"
+        and rejection.reason == "complexityCapped"
+        for rejection in report.rejections
+    )
 
 
 def test_report_is_byte_deterministic_and_ignores_package_semantics(
@@ -302,7 +433,9 @@ def test_materializes_complete_multi_piece_mapping_in_source_hold_order(
     )
     source = json.loads((package / "board.json").read_text(encoding="utf-8"))
     report = module.derive_geometry_candidates(package)
-    mapping = _complete_mapping(report, source["holds"])
+    mapping = _complete_mapping(
+        report, source["holds"], module.audited_inventory_hash(package)
+    )
 
     editor = module.materialize_editor_document(package, mapping)
 
@@ -350,11 +483,65 @@ def test_materialization_fails_closed_for_incomplete_duplicate_or_unsafe_mapping
     )
     source = json.loads((package / "board.json").read_text(encoding="utf-8"))
     report = module.derive_geometry_candidates(package)
-    mapping = _complete_mapping(report, source["holds"])
+    mapping = _complete_mapping(
+        report, source["holds"], module.audited_inventory_hash(package)
+    )
     mutate(mapping)
 
     with pytest.raises(ValueError, match=message):
         module.materialize_editor_document(package, mapping)
+
+
+def test_materialization_rejects_stale_audited_semantic_inventory(
+    tmp_path: Path,
+) -> None:
+    module = _derivation_module()
+    package = _write_package(
+        tmp_path / "board", _transparent_rectangles(), piece_counts=(1, 1)
+    )
+    source = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    report = module.derive_geometry_candidates(package)
+    mapping = _complete_mapping(
+        report, source["holds"], module.audited_inventory_hash(package)
+    )
+    source["holds"][0]["name"] = "Changed source-audited semantics"
+    (package / "board.json").write_text(
+        json.dumps(source, indent=2) + "\n", encoding="utf-8"
+    )
+
+    with pytest.raises(ValueError, match="audited inventory hash"):
+        module.materialize_editor_document(package, mapping)
+
+
+def test_materialization_rejects_cross_package_semantic_replay(
+    tmp_path: Path,
+) -> None:
+    module = _derivation_module()
+    image = _transparent_rectangles()
+    first = _write_package(
+        tmp_path / "first", image, piece_counts=(1, 1), board_id="fixture.shared"
+    )
+    second = _write_package(
+        tmp_path / "second", image, piece_counts=(1, 1), board_id="fixture.shared"
+    )
+    first_source = json.loads((first / "board.json").read_text(encoding="utf-8"))
+    second_source = json.loads((second / "board.json").read_text(encoding="utf-8"))
+    second_source["holds"][1]["kind"] = "pocket"
+    second_source["holds"][1]["name"] = "Different audited hold"
+    (second / "board.json").write_text(
+        json.dumps(second_source, indent=2) + "\n", encoding="utf-8"
+    )
+    first_report = module.derive_geometry_candidates(first)
+    second_report = module.derive_geometry_candidates(second)
+    mapping = _complete_mapping(
+        first_report,
+        first_source["holds"],
+        module.audited_inventory_hash(first),
+    )
+
+    assert first_report.manifest_bytes() == second_report.manifest_bytes()
+    with pytest.raises(ValueError, match="audited inventory hash"):
+        module.materialize_editor_document(second, mapping)
 
 
 def test_dry_run_cli_emits_deterministic_hash_bound_catalog_manifest(

@@ -7,9 +7,11 @@ import math
 import os
 import struct
 import tempfile
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from itertools import combinations
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any
 
 from PIL import Image, ImageChops, ImageDraw
 
@@ -19,9 +21,14 @@ _SUPER_SAMPLE = 4
 _MAX_BOUNDARY_DEVIATION_PIXELS = 1.0
 _MAX_SYMMETRIC_DIFFERENCE_RATIO = 0.0025
 _MAX_EXACT_HAUSDORFF_WORK = 1_000_000
+_MAX_MINIMAL_CONTOUR_CANDIDATES = 500
 _EPSILON = 1e-9
 
 Point = tuple[float, float]
+
+
+class ContourComplexityError(ValueError):
+    """The bounded exact contour search cannot prove a safe result."""
 
 
 @dataclass(frozen=True)
@@ -126,6 +133,59 @@ def simplify_native_contour(
     if complexity_capped:
         return tuple(original)
     return tuple(_position(simplified, frame, width=width, height=height))
+
+
+def minimize_native_contour(
+    points: Sequence[Point],
+    *,
+    width: int,
+    height: int,
+    accepts: Callable[[tuple[Point, ...]], bool] | None = None,
+) -> tuple[Point, ...]:
+    """Return a provably minimum-cardinality accepted vertex subsequence.
+
+    Candidate subsets are visited by increasing cardinality and then
+    lexicographic source-index order. If the fixed catalog-wide work budget
+    cannot exhaust every smaller cardinality, the search fails closed rather
+    than returning a merely greedy result.
+    """
+    original = list(points)
+    if not _is_simple_polygon(original):
+        raise ValueError("native contour must be a simple nonzero polygon")
+    upper_bound = simplify_native_contour(original, width=width, height=height)
+    if len(upper_bound) == 3 and (accepts is None or accepts(upper_bound)):
+        return upper_bound
+
+    considered = 0
+    maximum_count = len(upper_bound)
+    if accepts is not None and not accepts(upper_bound):
+        maximum_count = len(original)
+    for point_count in range(3, maximum_count + 1):
+        for indices in combinations(range(len(original)), point_count):
+            considered += 1
+            if considered > _MAX_MINIMAL_CONTOUR_CANDIDATES:
+                raise ContourComplexityError(
+                    "minimal native contour search exceeds work cap"
+                )
+            candidate = [original[index] for index in indices]
+            if not _is_simple_polygon(candidate) or not _same_winding(
+                candidate, original
+            ):
+                continue
+            result = tuple(candidate)
+            if accepts is not None and not accepts(result):
+                continue
+            try:
+                error = measure_native_contour_error(
+                    original, candidate, width=width, height=height
+                )
+            except ValueError as error:
+                raise ContourComplexityError(
+                    "minimal native contour search exceeds exact work cap"
+                ) from error
+            if error.passes:
+                return result
+    raise ValueError("no accepted native contour within bounded candidate surface")
 
 
 def simplify_package_hold_paths(
@@ -441,11 +501,40 @@ def _segments_intersect(first_start: Point, first_end: Point, second_start: Poin
     def orientation(a: Point, b: Point, c: Point) -> float:
         return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
 
+    def on_segment(start: Point, point: Point, end: Point) -> bool:
+        return (
+            min(start[0], end[0]) - _EPSILON
+            <= point[0]
+            <= max(start[0], end[0]) + _EPSILON
+            and min(start[1], end[1]) - _EPSILON
+            <= point[1]
+            <= max(start[1], end[1]) + _EPSILON
+        )
+
     first = orientation(first_start, first_end, second_start)
     second = orientation(first_start, first_end, second_end)
     third = orientation(second_start, second_end, first_start)
     fourth = orientation(second_start, second_end, first_end)
-    return first * second <= _EPSILON and third * fourth <= _EPSILON
+    first_straddles = (first > _EPSILON and second < -_EPSILON) or (
+        first < -_EPSILON and second > _EPSILON
+    )
+    second_straddles = (third > _EPSILON and fourth < -_EPSILON) or (
+        third < -_EPSILON and fourth > _EPSILON
+    )
+    if first_straddles and second_straddles:
+        return True
+    return (
+        (abs(first) <= _EPSILON and on_segment(first_start, second_start, first_end))
+        or (abs(second) <= _EPSILON and on_segment(first_start, second_end, first_end))
+        or (
+            abs(third) <= _EPSILON
+            and on_segment(second_start, first_start, second_end)
+        )
+        or (
+            abs(fourth) <= _EPSILON
+            and on_segment(second_start, first_end, second_end)
+        )
+    )
 
 
 def _winding(points: list[Point]) -> float:

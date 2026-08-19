@@ -17,13 +17,14 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from .board_catalog import load_board_package
 from .board_path_simplification import (
+    ContourComplexityError,
     NativeContourError,
     measure_native_contour_error,
-    simplify_native_contour,
+    minimize_native_contour,
 )
 from .board_presentation import visible_foreground_mask
 
@@ -53,6 +54,7 @@ _MINIMUM_COMPONENT_AREA_FRACTION = 0.0005
 _MINIMUM_COMPONENT_AREA_PIXELS = 9
 _MORPHOLOGY_GAP_FRACTION = 0.01
 _ROUNDED_RECT_RADIUS_STEPS = 20
+_RAW_MASK_SAMPLE = 4
 
 Point = tuple[float, float]
 Bounds = tuple[int, int, int, int]
@@ -171,6 +173,103 @@ class _RawCandidate:
     topology_stable: bool
 
 
+@dataclass(frozen=True)
+class _RawMaskMeasurement:
+    minimum_x: int
+    minimum_y: int
+    width: int
+    height: int
+    source: np.ndarray
+    source_boundary: np.ndarray
+    distance_to_source: np.ndarray
+    full_canvas_area: int
+
+    @classmethod
+    def create(
+        cls,
+        raw_mask: np.ndarray,
+        *,
+        bounds: Bounds,
+        width: int,
+        height: int,
+    ) -> _RawMaskMeasurement:
+        margin = 2
+        minimum_x = max(0, bounds[0] - margin)
+        minimum_y = max(0, bounds[1] - margin)
+        maximum_x = min(width, bounds[2] + margin + 1)
+        maximum_y = min(height, bounds[3] + margin + 1)
+        cropped = raw_mask[minimum_y:maximum_y, minimum_x:maximum_x]
+        source = np.repeat(
+            np.repeat(cropped.astype(bool), _RAW_MASK_SAMPLE, axis=0),
+            _RAW_MASK_SAMPLE,
+            axis=1,
+        )
+        kernel = np.ones((3, 3), dtype=np.uint8)
+        source_boundary = source ^ (
+            cv2.erode(source.astype(np.uint8), kernel) > 0
+        )
+        if not np.any(source_boundary):
+            raise ValueError("raw-mask comparison requires a nonempty boundary")
+        distance_to_source = cv2.distanceTransform(
+            (~source_boundary).astype(np.uint8),
+            cv2.DIST_L2,
+            cv2.DIST_MASK_PRECISE,
+        )
+        return cls(
+            minimum_x=minimum_x,
+            minimum_y=minimum_y,
+            width=maximum_x - minimum_x,
+            height=maximum_y - minimum_y,
+            source=source,
+            source_boundary=source_boundary,
+            distance_to_source=distance_to_source,
+            full_canvas_area=width
+            * height
+            * _RAW_MASK_SAMPLE
+            * _RAW_MASK_SAMPLE,
+        )
+
+    def measure(self, path: object) -> NativeContourError:
+        emitted_image = Image.new(
+            "1",
+            (self.width * _RAW_MASK_SAMPLE, self.height * _RAW_MASK_SAMPLE),
+            0,
+        )
+        ImageDraw.Draw(emitted_image).polygon(
+            [
+                (
+                    round((x - self.minimum_x) * _RAW_MASK_SAMPLE),
+                    round((y - self.minimum_y) * _RAW_MASK_SAMPLE),
+                )
+                for x, y in path.contour
+            ],
+            fill=1,
+        )
+        emitted = np.asarray(emitted_image, dtype=bool)
+        symmetric_difference = float(
+            np.count_nonzero(self.source ^ emitted) / self.full_canvas_area
+        )
+        if not NativeContourError(0.0, symmetric_difference).passes:
+            return NativeContourError(float("inf"), symmetric_difference)
+
+        kernel = np.ones((3, 3), dtype=np.uint8)
+        emitted_boundary = emitted ^ (
+            cv2.erode(emitted.astype(np.uint8), kernel) > 0
+        )
+        if not np.any(emitted_boundary):
+            raise ValueError("raw-mask comparison requires nonempty boundaries")
+        distance_to_emitted = cv2.distanceTransform(
+            (~emitted_boundary).astype(np.uint8),
+            cv2.DIST_L2,
+            cv2.DIST_MASK_PRECISE,
+        )
+        boundary_deviation = max(
+            float(self.distance_to_source[emitted_boundary].max(initial=0)),
+            float(distance_to_emitted[self.source_boundary].max(initial=0)),
+        ) / _RAW_MASK_SAMPLE
+        return NativeContourError(boundary_deviation, symmetric_difference)
+
+
 def derive_geometry_candidates(package_root: Path) -> GeometryCandidateReport:
     """Derive deterministic unlabeled candidates from only ``primary.png``.
 
@@ -226,6 +325,15 @@ def derive_geometry_candidates(package_root: Path) -> GeometryCandidateReport:
     for raw in raw_candidates:
         try:
             candidates.append(_materialize_candidate(raw, width=width, height=height))
+        except ContourComplexityError:
+            rejections.append(
+                CandidateRejection(
+                    raw.source,
+                    raw.polarity,
+                    _mask_bounds(raw.mask),
+                    "complexityCapped",
+                )
+            )
         except (GeometryError, ValueError):
             rejections.append(
                 CandidateRejection(
@@ -284,7 +392,14 @@ def materialize_editor_document(
     report = derive_geometry_candidates(package.root)
     _exact_keys(
         accepted_mapping,
-        {"schemaVersion", "manifestHash", "holds", "rejectedCandidateIDs", "symmetry"},
+        {
+            "schemaVersion",
+            "manifestHash",
+            "auditedInventoryHash",
+            "holds",
+            "rejectedCandidateIDs",
+            "symmetry",
+        },
         "accepted mapping",
     )
     if accepted_mapping["schemaVersion"] != _SCHEMA_VERSION:
@@ -292,6 +407,10 @@ def materialize_editor_document(
     if accepted_mapping["manifestHash"] != report.manifest_hash:
         raise ValueError(
             "accepted mapping manifest hash does not match the candidate report"
+        )
+    if accepted_mapping["auditedInventoryHash"] != _audited_inventory_hash(source):
+        raise ValueError(
+            "accepted mapping audited inventory hash does not match the package"
         )
 
     mappings = accepted_mapping["holds"]
@@ -388,6 +507,32 @@ def materialize_editor_document(
         "canvas": {"width": report.width, "height": report.height},
         "regions": regions,
     }
+
+
+def audited_inventory_hash(package_root: Path) -> str:
+    """Hash ordered, source-audited hold semantics without geometry coordinates."""
+    package = load_board_package(package_root)
+    source = json.loads((package.root / "board.json").read_text(encoding="utf-8"))
+    return _audited_inventory_hash(source)
+
+
+def _audited_inventory_hash(source: Mapping[str, object]) -> str:
+    holds = source["holds"]
+    assert isinstance(holds, list)
+    inventory: list[dict[str, object]] = []
+    for hold in holds:
+        assert isinstance(hold, Mapping)
+        item = {key: value for key, value in hold.items() if key != "geometry"}
+        geometry = hold["geometry"]
+        assert isinstance(geometry, list)
+        item["pieceCount"] = len(geometry)
+        inventory.append(item)
+    payload = {
+        "schemaVersion": 1,
+        "boardID": source["id"],
+        "holds": inventory,
+    }
+    return hashlib.sha256(_canonical_json(payload)).hexdigest()
 
 
 def _canvas_scales(width: int, height: int) -> tuple[int, ...]:
@@ -590,36 +735,70 @@ def _deduplicate_raw(
 def _materialize_candidate(
     raw: _RawCandidate, *, width: int, height: int
 ) -> GeometryCandidate:
+    bounds = _mask_bounds(raw.mask)
+    if bounds is None:
+        raise ValueError("candidate mask is empty")
+    raw_measurement = _RawMaskMeasurement.create(
+        raw.mask, bounds=bounds, width=width, height=height
+    )
     baseline = _contour(raw.mask)
-    simplified = list(simplify_native_contour(baseline, width=width, height=height))
-    simplified = _canonicalize_points(simplified)
-    path = parse_closed_path(_path_data(simplified), width, height, label="candidate")
-    frame, path_shape = shape_for_path(path, width, height)
-    round_trip = display_path_for_shape(
-        frame.to_json(), path_shape, width, height, label="candidate"
+    rounded = _fit_rounded_rectangle(
+        raw_measurement, baseline, width=width, height=height
     )
-    if round_trip.data != path.data:
-        raise ValueError("candidate failed Workbench geometry round trip")
-
-    representation = "path"
-    selected_frame: Mapping[str, float] = frame.to_json()
-    selected_shape: Mapping[str, object] = path_shape
-    selected_path = path
-    selected_error = measure_native_contour_error(
-        baseline, simplified, width=width, height=height
-    )
-    rounded = _fit_rounded_rectangle(baseline, width=width, height=height)
     if rounded is not None:
         selected_frame, selected_shape, selected_path, selected_error = rounded
         representation = "roundedRect"
+        point_count = 0
+    else:
+        def passes_raw_mask_gate(points: tuple[Point, ...]) -> bool:
+            try:
+                candidate_path = parse_closed_path(
+                    _path_data(points), width, height, label="candidate"
+                )
+                candidate_frame, candidate_shape = shape_for_path(
+                    candidate_path, width, height
+                )
+                round_trip = display_path_for_shape(
+                    candidate_frame.to_json(),
+                    candidate_shape,
+                    width,
+                    height,
+                    label="candidate",
+                )
+                error = raw_measurement.measure(round_trip)
+            except (GeometryError, ValueError):
+                return False
+            return error.passes
+
+        simplified = _canonicalize_points(
+            minimize_native_contour(
+                baseline,
+                width=width,
+                height=height,
+                accepts=passes_raw_mask_gate,
+            )
+        )
+        path = parse_closed_path(
+            _path_data(simplified), width, height, label="candidate"
+        )
+        frame, path_shape = shape_for_path(path, width, height)
+        round_trip = display_path_for_shape(
+            frame.to_json(), path_shape, width, height, label="candidate"
+        )
+        selected_error = raw_measurement.measure(round_trip)
+        if not selected_error.passes:
+            raise ValueError("candidate fails final raw-mask error gates")
+        representation = "path"
+        selected_frame = frame.to_json()
+        selected_shape = path_shape
+        selected_path = round_trip
+        point_count = len(simplified)
 
     mask_hash = _mask_hash(raw.mask)
     path_hash = hashlib.sha256(selected_path.data.encode("utf-8")).hexdigest()
     identity = hashlib.sha256(
         f"{raw.source}\0{raw.polarity or ''}\0{mask_hash}\0{path_hash}".encode()
     ).hexdigest()[:20]
-    bounds = _mask_bounds(raw.mask)
-    assert bounds is not None
     return GeometryCandidate(
         candidate_id=f"candidate-{identity}",
         source=raw.source,
@@ -627,7 +806,7 @@ def _materialize_candidate(
         bounds=bounds,
         display_path=selected_path.data,
         representation=representation,
-        point_count=len(simplified),
+        point_count=point_count,
         maximum_boundary_deviation_pixels=selected_error.maximum_boundary_deviation_pixels,
         symmetric_difference_ratio=selected_error.symmetric_difference_ratio,
         topology_stable=raw.topology_stable,
@@ -640,7 +819,11 @@ def _materialize_candidate(
 
 
 def _fit_rounded_rectangle(
-    baseline: Sequence[Point], *, width: int, height: int
+    raw_measurement: _RawMaskMeasurement,
+    baseline: Sequence[Point],
+    *,
+    width: int,
+    height: int,
 ) -> (
     tuple[Mapping[str, float], Mapping[str, object], object, NativeContourError] | None
 ):
@@ -662,10 +845,7 @@ def _fit_rounded_rectangle(
             path = display_path_for_shape(
                 frame, shape, width, height, label="candidate"
             )
-            approximated = _approximate_contour(path.contour, epsilon=0.75)
-            error = measure_native_contour_error(
-                baseline, approximated, width=width, height=height
-            )
+            error = raw_measurement.measure(path)
         except (GeometryError, ValueError):
             continue
         if not error.passes:
@@ -742,7 +922,7 @@ def _reflection_axis(foreground: np.ndarray) -> float | None:
     bounds = _mask_bounds(foreground)
     if bounds is None:
         return None
-    return (bounds[0] + bounds[2]) / 2
+    return (bounds[0] + bounds[2] + (_RAW_MASK_SAMPLE - 1) / _RAW_MASK_SAMPLE) / 2
 
 
 def _validate_symmetry_mapping(value: object, report: GeometryCandidateReport) -> None:
@@ -797,8 +977,13 @@ def _touches_image_border(mask: np.ndarray) -> bool:
 
 
 def _contour(mask: np.ndarray) -> list[Point]:
+    sampled = np.repeat(
+        np.repeat(mask.astype(np.uint8), _RAW_MASK_SAMPLE, axis=0),
+        _RAW_MASK_SAMPLE,
+        axis=1,
+    )
     contours, hierarchy = cv2.findContours(
-        mask.astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
+        sampled, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
     )
     if hierarchy is None:
         raise ValueError("candidate has no contour")
@@ -809,9 +994,28 @@ def _contour(mask: np.ndarray) -> list[Point]:
     ]
     if len(outer) != 1 or any(relation[3] >= 0 for relation in hierarchy[0]):
         raise ValueError("candidate must contain one contour without holes")
-    # A subpixel approximation removes raster stair-step collinearity while
-    # remaining inside the shared one-native-pixel boundary budget.
-    return _approximate_contour(outer[0].reshape((-1, 2)), epsilon=0.75)
+    approximated = _approximate_contour(
+        outer[0].reshape((-1, 2)), epsilon=1.0 * _RAW_MASK_SAMPLE
+    )
+    return _canonicalize_points(
+        [(x / _RAW_MASK_SAMPLE, y / _RAW_MASK_SAMPLE) for x, y in approximated]
+    )
+
+
+def _measure_raw_mask_error(
+    raw_mask: np.ndarray,
+    path: object,
+    *,
+    bounds: Bounds | None = None,
+    width: int,
+    height: int,
+) -> NativeContourError:
+    bounds = bounds or _mask_bounds(raw_mask)
+    if bounds is None:
+        raise ValueError("raw-mask comparison requires a nonempty source")
+    return _RawMaskMeasurement.create(
+        raw_mask, bounds=bounds, width=width, height=height
+    ).measure(path)
 
 
 def _approximate_contour(
