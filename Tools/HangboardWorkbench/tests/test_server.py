@@ -4,6 +4,7 @@ import http.cookiejar
 import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import tempfile
@@ -161,19 +162,48 @@ class _HostedSaveIdentityRaceClient(FakeGitHubClient):
             {"main": files, HOSTED_BRANCH: files, "feature": files},
             default_branch=HOSTED_BRANCH,
         )
-        self._tree_reads = 0
+        self._head_reads = 0
 
-    def get_tree(self, token: str, branch: str):
-        self._tree_reads += 1
-        if self._tree_reads == 5:
+    def get_branch_head_sha(self, token: str, branch: str) -> str:
+        self._head_reads += 1
+        if self._head_reads == 3:
             path = "Hangboards/fixture-board/board.json"
             content = (
                 json.dumps(board_document("different.board"), indent=2) + "\n"
             ).encode("utf-8")
-            blob_sha = self._sha(content)
-            self._branches[branch][path] = (content, blob_sha)
-            self._objects[blob_sha] = content
-        return super().get_tree(token, branch)
+            current_sha = self._branches[branch][path][1]
+            super().put_file(
+                token,
+                path,
+                branch,
+                content,
+                "Concurrent board replacement",
+                current_sha,
+            )
+        return super().get_branch_head_sha(token, branch)
+
+
+class _ConcurrentHostedBlobClient(FakeGitHubClient):
+    """Tracks the aggregate upstream blob concurrency of hosted requests."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({"main": files, HOSTED_BRANCH: files, "feature": files})
+        self._lock = threading.Lock()
+        self._active_blob_reads = 0
+        self.max_active_blob_reads = 0
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        with self._lock:
+            self._active_blob_reads += 1
+            self.max_active_blob_reads = max(
+                self.max_active_blob_reads, self._active_blob_reads
+            )
+        try:
+            time.sleep(0.04)
+            return super().get_blob(token, sha)
+        finally:
+            with self._lock:
+                self._active_blob_reads -= 1
 
 
 @contextmanager
@@ -1014,12 +1044,250 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
         assert headers["Content-Type"] == "image/png"
         assert image == PRIMARY_IMAGE.read_bytes()
 
-    assert {
-        call.args[:2] for call in client.calls_named("get_tree")
-    } == {(HOSTED_TOKEN, HOSTED_BRANCH)}
+    assert len(client.calls_named("get_tree")) == 1
+    assert {call.args[0] for call in client.calls_named("get_tree")} == {HOSTED_TOKEN}
     assert {
         call.args[0] for call in client.calls_named("get_blob")
     } == {HOSTED_TOKEN}
+
+
+def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
+    """Fails if list, open, and image repeatedly fetch the same GitHub tree/blobs."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        listed_status, listed, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+        opened_status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.board"
+        )
+        image_status, image, _headers = hosted_request(
+            base, session, "GET", "/api/boards/fixture.board/image"
+        )
+
+    assert (listed_status, opened_status, image_status) == (200, 200, 200)
+    assert listed["boards"][0]["boardId"] == "fixture.board"
+    assert opened["board"]["boardId"] == "fixture.board"
+    assert image == PRIMARY_IMAGE.read_bytes()
+    assert len(client.calls_named("get_branch_head_sha")) == 3
+    assert len(client.calls_named("get_tree")) == 1
+    assert len(client.calls_named("get_blob")) == 4
+
+
+def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
+    """Fails if a cached remote snapshot hides a board committed after a prior read."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        first_status, first, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+        board_path = "Hangboards/fixture-board/board.json"
+        current_sha = next(
+            entry.sha
+            for entry in client.get_tree(HOSTED_TOKEN, HOSTED_BRANCH)
+            if entry.path == board_path
+        )
+        replacement = board_document("fixture.board")
+        replacement["name"] = "Replacement Board"
+        client.put_file(
+            HOSTED_TOKEN,
+            board_path,
+            HOSTED_BRANCH,
+            (json.dumps(replacement, indent=2) + "\n").encode("utf-8"),
+            "Replace fixture board",
+            current_sha,
+        )
+        second_status, second, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+
+    assert first_status == second_status == 200
+    assert first["boards"][0]["displayName"] == "Fixture Maker Fixture Board"
+    assert second["boards"][0]["displayName"] == "Fixture Maker Replacement Board"
+    assert len(client.calls_named("get_branch_head_sha")) == 2
+    assert len(client.calls_named("get_tree")) == 3
+
+
+def test_simultaneous_hosted_catalog_reads_share_one_bounded_upstream_load() -> None:
+    """Fails if concurrent cold routes duplicate catalog reads or worker pools."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
+        board = board_document(f"{slug}.board")
+        board["name"] = slug.title()
+        files.update(
+            {
+                f"Hangboards/{slug}/board.json": (
+                    json.dumps(board, indent=2) + "\n"
+                ).encode("utf-8"),
+                f"Hangboards/{slug}/assets/primary.png": (
+                    PRIMARY_IMAGE.read_bytes() + slug.encode("utf-8")
+                ),
+            }
+        )
+    client = _ConcurrentHostedBlobClient(files)
+    with running_server_with_github_backend(files, github_client=client) as (
+        base,
+        _client,
+        session,
+    ):
+        start = threading.Barrier(3)
+        results: list[tuple[int, dict[str, object], object]] = []
+
+        def request_catalog() -> None:
+            start.wait()
+            results.append(hosted_request_json(base, session, "GET", "/api/boards"))
+
+        first = threading.Thread(target=request_catalog)
+        second = threading.Thread(target=request_catalog)
+        first.start()
+        second.start()
+        start.wait()
+        first.join(timeout=5)
+        second.join(timeout=5)
+
+    assert [status for status, _body, _headers in results] == [200, 200]
+    assert len(client.calls_named("get_tree")) == 1
+    assert len(client.calls_named("get_blob")) == 12
+    assert client.max_active_blob_reads <= 4
+
+
+def test_server_close_waits_for_a_paused_hosted_catalog_request(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Fails if closing the store executor races an accepted catalog request."""
+    library = tmp_path / "Hangboards"
+    library.mkdir()
+    client = FakeGitHubClient({HOSTED_BRANCH: _github_files()})
+    httpd = create_server(
+        library,
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+        session_secret="test-session-secret",
+        github_owner="fixture-owner",
+        github_repo="fixture-repo",
+        github_client=client,
+    )
+    session = server_module._encode_session(
+        httpd.session_secret,
+        _Session(token=HOSTED_TOKEN, username="climber", branch=HOSTED_BRANCH),
+    )
+    entered = threading.Event()
+    release = threading.Event()
+    original_catalog = server_module.github_board_store.GitHubBoardStore._catalog
+
+    def pause_catalog(store, *args):
+        entered.set()
+        assert release.wait(timeout=5)
+        return original_catalog(store, *args)
+
+    monkeypatch.setattr(
+        server_module.github_board_store.GitHubBoardStore,
+        "_catalog",
+        pause_catalog,
+    )
+    server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    server_thread.start()
+    result: list[tuple[int, dict[str, object], object]] = []
+
+    def request_catalog() -> None:
+        result.append(hosted_request_json(
+            f"http://127.0.0.1:{httpd.server_port}",
+            session,
+            "GET",
+            "/api/boards",
+        ))
+
+    request_thread = threading.Thread(target=request_catalog)
+    request_thread.start()
+    close_thread: threading.Thread | None = None
+    try:
+        assert entered.wait(timeout=5)
+        httpd.shutdown()
+        close_thread = threading.Thread(target=httpd.server_close)
+        close_thread.start()
+        close_thread.join(timeout=1)
+        assert close_thread.is_alive()
+    finally:
+        release.set()
+        httpd.shutdown()
+        request_thread.join(timeout=5)
+        if close_thread is not None:
+            close_thread.join(timeout=5)
+        server_thread.join(timeout=5)
+        httpd.server_close()
+
+    assert result[0][0] == 200
+    assert not request_thread.is_alive()
+    assert close_thread is not None and not close_thread.is_alive()
+    assert not server_thread.is_alive()
+
+
+def test_server_close_does_not_wait_for_an_incomplete_request_before_store_work(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Fails if shutdown waits for a handler blocked before a store operation."""
+    library = tmp_path / "Hangboards"
+    library.mkdir()
+    httpd = create_server(
+        library,
+        port=0,
+        allow_remote=True,
+        github_client_id="test-client-id",
+        github_client_secret="test-client-secret",
+        session_secret="test-session-secret",
+        github_owner="fixture-owner",
+        github_repo="fixture-repo",
+        github_client=FakeGitHubClient({HOSTED_BRANCH: _github_files()}),
+    )
+    session = server_module._encode_session(
+        httpd.session_secret,
+        _Session(token=HOSTED_TOKEN, username="climber", branch=HOSTED_BRANCH),
+    )
+    entered_body_read = threading.Event()
+    original_read_body = server_module.EditorRequestHandler._read_body
+
+    def observe_read_body(handler):
+        entered_body_read.set()
+        return original_read_body(handler)
+
+    monkeypatch.setattr(
+        server_module.EditorRequestHandler, "_read_body", observe_read_body
+    )
+    server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    server_thread.start()
+    client_socket = socket.create_connection(("127.0.0.1", httpd.server_port))
+    try:
+        client_socket.sendall(
+            (
+                "PUT /api/boards/fixture.board HTTP/1.1\r\n"
+                f"Host: 127.0.0.1:{httpd.server_port}\r\n"
+                f"Cookie: wb_session={session}\r\n"
+                "Content-Type: application/json\r\n"
+                "Content-Length: 10\r\n\r\n"
+            ).encode("ascii")
+        )
+        assert entered_body_read.wait(timeout=5)
+        httpd.shutdown()
+        close_thread = threading.Thread(target=httpd.server_close)
+        close_thread.start()
+        close_thread.join(timeout=1)
+
+        assert not close_thread.is_alive()
+        assert not server_thread.is_alive()
+    finally:
+        client_socket.sendall(b"{}        ")
+        client_socket.shutdown(socket.SHUT_WR)
+        client_socket.close()
+        httpd.server_close()
+        server_thread.join(timeout=5)
 
 
 def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
@@ -1082,7 +1350,9 @@ def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> N
 
     assert status == 409
     assert payload["ok"] is False
-    assert client.calls_named("put_file") == ()
+    assert [call.args[4] for call in client.calls_named("put_file")] == [
+        "Concurrent board replacement"
+    ]
 
 
 def test_hosted_git_status_uses_session_branch_and_remote_branches() -> None:
