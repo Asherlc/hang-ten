@@ -49,7 +49,10 @@ def test_lattice_triple_rung_has_three_exact_continuous_edge_regions() -> None:
         # A continuous rung occupies the overwhelming majority of the
         # presentation width rather than being split into separate grips.
         assert frame_width >= presentation_size[0] * 0.9
-        assert frame_height > 0
+        # The source board is rendered at 512 px tall; a rung shorter than
+        # 20 px would be too small to preserve as an independently editable
+        # continuous edge region.
+        assert frame_height >= 20
         assert piece.frame.x >= 0
         assert piece.frame.y >= 0
         assert piece.frame.x + piece.frame.width <= 1

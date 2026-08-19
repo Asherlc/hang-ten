@@ -363,14 +363,19 @@ def test_atomic_exchange_uses_platform_contract_dirfd(
 ) -> None:
     calls: list[tuple[int, bytes, int, bytes, int]] = []
 
-    class FakeLibrary:
-        def renameatx_np(self, *args):
+    class FakeFunction:
+        def __init__(self) -> None:
+            self.argtypes = None
+            self.restype = None
+
+        def __call__(self, *args):
             calls.append(args)
             return 0
 
-        def renameat2(self, *args):
-            calls.append(args)
-            return 0
+    class FakeLibrary:
+        def __init__(self) -> None:
+            self.renameatx_np = FakeFunction()
+            self.renameat2 = FakeFunction()
 
     monkeypatch.setattr(board_presentation.sys, "platform", platform)
     monkeypatch.setattr(board_presentation.ctypes, "CDLL", lambda *args, **kwargs: FakeLibrary())

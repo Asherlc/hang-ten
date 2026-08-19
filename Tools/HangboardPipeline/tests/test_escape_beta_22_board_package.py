@@ -6,7 +6,8 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from hangboard_vectorizer.board_catalog import NormalizedFrame, load_board_package
+from hangboard_vectorizer.board_catalog import load_board_package
+from _board_package_helpers import presentation_frame
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -35,18 +36,6 @@ def _points(command: object) -> tuple[tuple[float, float], ...]:
         point
         for point in (command.to, command.control, command.control1, command.control2)
         if point is not None
-    )
-
-
-def _presentation_frame(
-    frame: NormalizedFrame, size: tuple[int, int]
-) -> tuple[float, float, float, float]:
-    width, height = size
-    return (
-        frame.x * width,
-        frame.y * height,
-        frame.width * width,
-        frame.height * height,
     )
 
 
@@ -80,16 +69,16 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
     for family in range(1, 12):
         left = holds[f"hold-{family:02d}-left"].geometry[0]
         right = holds[f"hold-{family:02d}-right"].geometry[0]
-        left_x, left_y, left_width, left_height = _presentation_frame(
+        left_pixel_x, left_pixel_y, left_pixel_width, left_pixel_height = presentation_frame(
             left.frame, presentation_size
         )
-        right_x, right_y, right_width, right_height = _presentation_frame(
+        right_pixel_x, right_pixel_y, right_pixel_width, right_pixel_height = presentation_frame(
             right.frame, presentation_size
         )
-        assert right_y == pytest.approx(left_y, abs=1e-6)
-        assert right_width == pytest.approx(left_width, abs=1e-6)
-        assert right_height == pytest.approx(left_height, abs=1e-6)
-        pair_axis_x = (left_x + left_width + right_x) / 2
+        assert right_pixel_y == pytest.approx(left_pixel_y, abs=1e-6)
+        assert right_pixel_width == pytest.approx(left_pixel_width, abs=1e-6)
+        assert right_pixel_height == pytest.approx(left_pixel_height, abs=1e-6)
+        pair_axis_x = (left_pixel_x + left_pixel_width + right_pixel_x) / 2
         if symmetry_axis_x is None:
             symmetry_axis_x = pair_axis_x
         else:

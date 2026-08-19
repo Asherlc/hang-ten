@@ -6,7 +6,8 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from hangboard_vectorizer.board_catalog import NormalizedFrame, load_board_package
+from hangboard_vectorizer.board_catalog import load_board_package
+from _board_package_helpers import presentation_frame
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -49,18 +50,6 @@ MIRRORED_PAIRS = (
 )
 
 
-def _presentation_frame(
-    frame: NormalizedFrame, size: tuple[int, int]
-) -> tuple[float, float, float, float]:
-    width, height = size
-    return (
-        frame.x * width,
-        frame.y * height,
-        frame.width * width,
-        frame.height * height,
-    )
-
-
 def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
@@ -88,10 +77,10 @@ def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
 
     symmetry_axis_x: float | None = None
     for left_id, right_id in MIRRORED_PAIRS:
-        left_x, left_y, left_width, left_height = _presentation_frame(
+        left_x, left_y, left_width, left_height = presentation_frame(
             holds[left_id].frame, presentation_size
         )
-        right_x, right_y, right_width, right_height = _presentation_frame(
+        right_x, right_y, right_width, right_height = presentation_frame(
             holds[right_id].frame, presentation_size
         )
         assert right_y == pytest.approx(left_y, abs=1e-6)

@@ -6,7 +6,8 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from hangboard_vectorizer.board_catalog import NormalizedFrame, load_board_package
+from hangboard_vectorizer.board_catalog import load_board_package
+from _board_package_helpers import presentation_frame
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -22,18 +23,6 @@ MIRRORED_PAIRS = (
     *((f"front-middle-{left}", f"front-middle-{5 - left}") for left in range(1, 3)),
     *((f"front-lower-{left}", f"front-lower-{7 - left}") for left in range(1, 4)),
 )
-
-
-def _presentation_frame(
-    frame: NormalizedFrame, size: tuple[int, int]
-) -> tuple[float, float, float, float]:
-    width, height = size
-    return (
-        frame.x * width,
-        frame.y * height,
-        frame.width * width,
-        frame.height * height,
-    )
 
 
 def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
@@ -61,10 +50,10 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     for left_id, right_id in MIRRORED_PAIRS:
         left = holds[left_id]
         right = holds[right_id]
-        left_x, left_y, left_width, left_height = _presentation_frame(
+        left_x, left_y, left_width, left_height = presentation_frame(
             left.frame, presentation_size
         )
-        right_x, right_y, right_width, right_height = _presentation_frame(
+        right_x, right_y, right_width, right_height = presentation_frame(
             right.frame, presentation_size
         )
         assert right_y == pytest.approx(left_y, abs=1e-6)
