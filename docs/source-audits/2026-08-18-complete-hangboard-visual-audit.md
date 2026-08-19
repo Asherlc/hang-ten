@@ -2,8 +2,9 @@
 
 Reviewed 2026-08-18. This audit covers all 34 completed direct-child packages
 discovered under `Hangboards/`: 359 ordered logical holds, 363 geometry pieces,
-and 1,890 editable path points at the branch-base baseline. No primary-only
-draft exists and no package was promoted.
+and 1,890 editable path points at the branch-base baseline. The final generic
+primitive pass preserves those inventories while reducing editable points to
+1,180. No primary-only draft exists and no package was promoted.
 
 The manufacturer sources establish only the fields explicitly mapped below.
 Product photos are presentation evidence, not hold-boundary, capacity, grip,
@@ -27,6 +28,20 @@ The 34 full-resolution labeled PNGs are retained in
 [`assets/2026-08-18-complete-hangboard-visual-audit/before/`](assets/2026-08-18-complete-hangboard-visual-audit/before/).
 The exact filename inventory appears in the board table below. Each capture was
 inspected individually in addition to the contact sheet.
+
+## Retained AFTER evidence
+
+The final packages were recaptured with the same Workbench API, unchanged
+`#editor-svg` rendering path, fixed viewport, and catalog-generic harness. The
+ordered 34-ID AFTER manifest is exactly equal to the retained ordered BEFORE
+manifest; every manifest entry has one full-resolution PNG.
+
+[Labeled AFTER contact sheet](assets/2026-08-18-complete-hangboard-visual-audit/after-contact-sheet.png)
+
+The 34 full-resolution labeled AFTER PNGs are retained in
+[`assets/2026-08-18-complete-hangboard-visual-audit/after/`](assets/2026-08-18-complete-hangboard-visual-audit/after/).
+Both 3150-pixel-wide contact sheets and every full-resolution BEFORE/AFTER pair
+were visually inspected.
 
 ## Complete catalog disposition and baseline inventory
 
@@ -111,12 +126,23 @@ accepted mapping, and verified symmetry/multi-piece policy required for
 materialization. Therefore zero candidate contours were written. This is a
 fail-closed result, not a claim that the current coarse geometry is accurate.
 
-The existing generic simplifier dry run examined all 34 packages and found
-zero changes: 1,890 → 1,890 editable points, zero eligible/evaluated/rejected
-candidates, and 240 unsupported `roundedRect` pieces. Consequently no path
-error gate was invoked and every existing path command remained byte-for-byte
-unchanged; the accepted maximum boundary deviation and symmetric-difference
-totals are both 0.0 because no simplification was accepted.
+The initial generic path simplifier found no safe path-to-path reductions. The
+follow-up catalog-generic path-to-primitive pass then accepted exactly 45
+`path` → `roundedRect` replacements: 18 on Beastmaker 1000, 17 on Beastmaker
+2000, and 10 on Rock Prodigy Training Center. It removed 710 editable points,
+so the complete catalog is **1,890 → 1,180 editable points**. All accepted
+pieces preserve hold identity, piece order, frame, treatment, and every
+non-shape value.
+
+The independent explicit-revision audit renders both documents through the
+Workbench codec and reports a maximum exact bidirectional boundary deviation
+of **0.999501671 px** and maximum full-canvas 4× symmetric-difference ratio of
+**0.000160231660** (0.016023166%). The maximum-error pair is Training Center
+`pocket-index-middle-deep-left/right`; its full-resolution and enlarged
+BEFORE/AFTER inspection found no visible edge discontinuity or symmetry drift.
+The maximum symmetric-difference pair is Beastmaker 1000
+`pocket-bottom-outer-left/right`. Every accepted value is below the 1 px and
+0.25% gates.
 
 The generic presentation dry run found one catalog-wide crop policy applicable
 to 27 packages. Each accepted write is an exact subset of the prior PNG pixels,
@@ -125,9 +151,11 @@ same native source pixels. It preserves all 359 ordered hold IDs, all 363 piece
 counts/types/order, every path command, every rounded-rectangle parameter, and
 all geometry treatments. The seven already-normalized packages are unchanged.
 
-The before/post comparison confirms the same 34 boards, 359 ordered holds, 363
-pieces, and 1,890 editable points. All inventory hashes remain identical except
-the eight intentionally stripped optional-semantic groups:
+The final before/post comparison confirms the same 34 boards, 359 ordered
+holds, and 363 ordered pieces; only the 45 audited shape values differ. The
+fresh simplifier dry run reports zero changed boards/pieces at 1,180 points,
+and the presentation dry run reports zero changes. All inventory hashes remain
+identical except the eight intentionally stripped optional-semantic groups:
 
 | board | before inventory hash → after inventory hash |
 | --- | --- |
@@ -154,36 +182,167 @@ Escape Beta, Metolius Contact, Moon Armstrong, So iLL Split Palm/Training
 Tiles, Pivot, and the four YY boards. Those packages remain geometrically
 unchanged except for exact presentation crop/reprojection.
 
+## AFTER per-board visual verdicts
+
+`H/P/pts` below is the final logical-hold, geometry-piece, and editable-point
+inventory. “Clear” means every manifest piece is present and the SVG canvas
+clips none of it. Symmetry is judged only where the source and package present
+a paired design; a symmetric render does not resolve an absent authoritative
+hold map.
+
+| board / AFTER capture | H/P/pts and clipping | outline/highlight alignment and symmetry | source agreement, blockers, and visible change |
+| --- | --- | --- | --- |
+| [`beastmaker-1000`](assets/2026-08-18-complete-hangboard-visual-audit/after/beastmaker-1000--4fee18798954.png) | 22/22/110; clear. | All 18 redesigned pieces remain on their recesses/sloper; paired pockets stay mirrored with no visible drift. | Strong image agreement; numbered depth/capacity map remains absent. Primitive change is visually indistinguishable at catalog and full resolution. |
+| [`beastmaker-2000`](assets/2026-08-18-complete-hangboard-visual-audit/after/beastmaker-2000--305c473cc719.png) | 25/25/104; clear. | All 17 redesigned pieces preserve row alignment and left/right pairing; no highlight discontinuity. | Strong image agreement; numbered source map remains absent. Primitive change is not visibly distinguishable. |
+| [`dewoodstok-woodbord`](assets/2026-08-18-complete-hangboard-visual-audit/after/dewoodstok-woodbord--e40376735372.png) | 17/17/255; clear. | Recess outlines remain consistently seated and symmetric. | Strong image agreement; depth-to-position map remains absent. No visible change. |
+| [`escape-beta`](assets/2026-08-18-complete-hangboard-visual-audit/after/escape-beta--dd6fe9b3a8dc.png) | 6/6/0; clear. | The six broad zones stay paired but cross/omit visible cavities. | Legacy/current-model agreement remains blocked. Exact crop enlarges the unchanged coarse geometry. |
+| [`escape-beta-22`](assets/2026-08-18-complete-hangboard-visual-audit/after/escape-beta-22--245680ffb240.png) | 22/22/274; clear. | Audited contours remain aligned and mirrored. | Strong visible agreement, but 11 cavities versus 22 logical targets remains unresolved. No visible change. |
+| [`escape-unlimited`](assets/2026-08-18-complete-hangboard-visual-audit/after/escape-unlimited--19831f6dfe62.png) | 6/6/0; clear. | Three paired broad bands remain symmetric but do not express four sourced levels. | Source topology still disagrees. Exact crop and sourced metadata change only. |
+| [`frictitious-doormount-pro-7`](assets/2026-08-18-complete-hangboard-visual-audit/after/frictitious-doormount-pro-7--8a23c5cc8dca.png) | 8/8/0; clear. | Paired upper zones are symmetric; lower zones still span multiple bays. | Official seven-hold aggregate cannot resolve the eighth record. Exact crop; geometry unchanged. |
+| [`frictitious-megalith`](assets/2026-08-18-complete-hangboard-visual-audit/after/frictitious-megalith--33de4ccadb0c.png) | 9/9/0; clear. | Paired bands remain symmetric; center/mono boundaries remain coarse. | Mono count and 40 mm mapping remain blocked. Exact crop; geometry unchanged. |
+| [`evolv-kilter-basic-long`](assets/2026-08-18-complete-hangboard-visual-audit/after/evolv-kilter-basic-long--ac4049aa3a2d.png) | 4/4/0; clear. | Four full-width bands are aligned but cannot distinguish jug from edges. | Jug/three-edge identity remains blocked. Exact crop; geometry unchanged. |
+| [`lattice-triple-rung`](assets/2026-08-18-complete-hangboard-visual-audit/after/lattice-triple-rung--98ec533951a6.png) | 3/3/57; clear. | All three continuous edge contours remain parallel and source-aligned. | Strong source agreement; optional capacity unsupported. No visible change. |
+| [`metolius-climbers-edge`](assets/2026-08-18-complete-hangboard-visual-audit/after/metolius-climbers-edge--1e84e2649b1d.png) | 11/11/0; clear. | Broad/floating rectangles remain symmetric but omit slopers and depth boundaries. | Package version and complete map remain blocked. Exact crop; geometry unchanged. |
+| [`metolius-contact`](assets/2026-08-18-complete-hangboard-visual-audit/after/metolius-contact--ec276e428883.png) | 10/10/0; clear. | Paired zones remain symmetric but cross multiple numbered cavities. | Numbered source confirms incompleteness, not a safe mapping. Exact crop; geometry unchanged. |
+| [`metolius-project`](assets/2026-08-18-complete-hangboard-visual-audit/after/metolius-project--5007e676de90.png) | 8/8/0; clear. | Symmetric broad regions still cross visible breaks. | Complete authoritative field map absent. Exact crop; geometry unchanged. |
+| [`metolius-simulator-3d`](assets/2026-08-18-complete-hangboard-visual-audit/after/metolius-simulator-3d--ad3f6e0bbb16.png) | 7/7/0; clear. | Broad paired zones remain balanced but omit sloper/3F families. | Source inventory still exceeds modeled topology. Exact crop; geometry unchanged. |
+| [`metolius.wood-grips-compact-ii`](assets/2026-08-18-complete-hangboard-visual-audit/after/metolius.wood-grips-compact-ii--ecd2a502a9db.png) | 19/19/78; clear. | Surface, shelf, deep, and shallow pieces remain tightly aligned and mirrored. | Strong aggregate source agreement; per-ID provenance remains incomplete. No visible change. |
+| [`moon-armstrong`](assets/2026-08-18-complete-hangboard-visual-audit/after/moon-armstrong--3e59a2c3ad25.png) | 11/11/0; clear. | Existing regions remain symmetric but miss apparent cavities and slopers. | Artwork likely depicts the wrong model; source agreement remains blocked. Exact crop. |
+| [`nature-stoak-board-iii`](assets/2026-08-18-complete-hangboard-visual-audit/after/nature-stoak-board-iii--23853bedbe8d.png) | 6/6/0; clear. | Paired bars stay symmetric; adjustable insert states are not represented. | State/depth mapping remains blocked. Exact crop; geometry unchanged. |
+| [`soill-iron-palm-2`](assets/2026-08-18-complete-hangboard-visual-audit/after/soill-iron-palm-2--eb1bcad6f0bc.png) | 6/6/0; clear. | Large discs/rails remain symmetric but omit pinches, slopers, and thumb catches. | Current product completeness remains blocked. Exact crop; header now shows sourced “2.0” identity. |
+| [`soill-split-palm`](assets/2026-08-18-complete-hangboard-visual-audit/after/soill-split-palm--cc07b6832b7c.png) | 2/2/0; clear. | Two mirrored zones cover multiple branches rather than physical contacts. | Authoritative inventory/map absent. Exact crop; geometry unchanged. |
+| [`soill-training-tiles`](assets/2026-08-18-complete-hangboard-visual-audit/after/soill-training-tiles--073b9c42fd16.png) | 4/4/0; clear. | Large mirrored zones remain balanced but omit secondary edge progression. | First-party per-contact map absent. Exact crop; geometry unchanged. |
+| [`target10a-linebreaker-base`](assets/2026-08-18-complete-hangboard-visual-audit/after/target10a-linebreaker-base--83a10cb8e4e0.png) | 11/11/0; clear. | Paired rectangles stay symmetric but float outside/cross multiple contacts. | First-party inventory map remains absent. Exact crop; geometry unchanged. |
+| [`tension-grindstone`](assets/2026-08-18-complete-hangboard-visual-audit/after/tension-grindstone--4c704daf13a7.png) | 7/7/0; clear. | Paired broad rails remain symmetric but flatten the edge progression. | Published depths cannot be assigned to IDs. Exact crop; geometry unchanged. |
+| [`tension-honestone`](assets/2026-08-18-complete-hangboard-visual-audit/after/tension-honestone--223e0ec49199.png) | 7/7/0; clear. | Paired regions remain balanced but omit the sloper-led source profile. | Mono mapping and retained blocked grip semantic remain unresolved. Exact crop. |
+| [`tension-whetstone`](assets/2026-08-18-complete-hangboard-visual-audit/after/tension-whetstone--c085c83b3df1.png) | 7/7/0; clear. | Paired rails stay symmetric but do not express four sourced depths. | Per-ID 2F map remains absent. Exact crop; geometry unchanged. |
+| [`trango-rock-prodigy-forge`](assets/2026-08-18-complete-hangboard-visual-audit/after/trango-rock-prodigy-forge--3524ced1ecba.png) | 12/12/0; clear. | Mirrored primitive zones remain balanced but miss source positions/closed crimp topology. | Non-exhaustive guide cannot complete the map. Exact crop; geometry unchanged. |
+| [`trango-rock-prodigy-natural`](assets/2026-08-18-complete-hangboard-visual-audit/after/trango-rock-prodigy-natural--7f4ed5768d6a.png) | 12/12/0; clear. | Paired regions remain symmetric but still resemble Forge and omit jug/pinch variables. | Model topology remains contradicted by source. Exact crop; geometry unchanged. |
+| [`trango-rock-prodigy-pivot`](assets/2026-08-18-complete-hangboard-visual-audit/after/trango-rock-prodigy-pivot--7cf9f33e474c.png) | 10/10/0; clear. | The one-view paired geometry stays symmetric but cannot express four orientations. | 22-position/orientation contract remains blocked. Exact crop; geometry unchanged. |
+| [`trango.rock-prodigy-training-center`](assets/2026-08-18-complete-hangboard-visual-audit/after/trango.rock-prodigy-training-center--54f0d57dd133.png) | 24/28/302; clear. | All 10 redesigned deep/shallow/crimp pieces remain seated and mirrored; the 0.999501671 px max-error deep pair has no visible drift at 2× inspection. | Strong visible agreement for modeled contacts; variable 30+ position contract remains unresolved. Primitive change is visually indistinguishable. |
+| [`yy-verticalboard-evo`](assets/2026-08-18-complete-hangboard-visual-audit/after/yy-verticalboard-evo--52da4a0e33ab.png) | 7/7/0; clear. | Seven broad paired zones stay symmetric but cover 19 sourced grips. | Complete map remains absent. Exact crop; geometry unchanged. |
+| [`yy-verticalboard-first`](assets/2026-08-18-complete-hangboard-visual-audit/after/yy-verticalboard-first--8a369008547e.png) | 7/7/0; clear. | Broad paired zones remain symmetric but cannot express ten grips. | Complete map remains absent. Exact crop; geometry unchanged. |
+| [`yy-verticalboard-light`](assets/2026-08-18-complete-hangboard-visual-audit/after/yy-verticalboard-light--8f078a49c3e1.png) | 7/7/0; clear. | Seven-count layout stays mirrored, but center/notch boundaries remain coarse. | Center-jug identity/map remains blocked. Exact crop; geometry unchanged. |
+| [`yy-verticalboard-one`](assets/2026-08-18-complete-hangboard-visual-audit/after/yy-verticalboard-one--53c8899c8937.png) | 7/7/0; clear. | Seven broad paired zones remain symmetric but cover 15 grips. | Complete map remains absent. Exact crop; geometry unchanged. |
+| [`zlagboard-evo`](assets/2026-08-18-complete-hangboard-visual-audit/after/zlagboard-evo--e51ac1a87bfb.png) | 14/14/0; clear. | Grid cavities align broadly and symmetrically; jugs/slopers are not modeled. | Model dimensions and per-ID types remain unresolved. Exact crop; geometry unchanged. |
+| [`zlagboard-pro`](assets/2026-08-18-complete-hangboard-visual-audit/after/zlagboard-pro--af6b10e747d3.png) | 21/21/0; clear. | Primitive grid remains symmetric but cannot establish generation-specific jugs/slopers. | Pro 1.0 versus 2.0 remains blocked. Exact crop; geometry unchanged. |
+
 ## Validation
 
 ```sh
-rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
-  Tools/HangboardPipeline/tests/test_complete_catalog_source_audit.py -q
-# 4 passed
+rtk env CONDUCTOR_WORKSPACE_NAME=audit-hangboard-fidelity python3 \
+  Tools/HangboardWorkbench/capture_catalog.py \
+  --repository-root "$PWD" \
+  --output-root "$PWD/.context/all-board-audit/task-5-after" \
+  --chrome-path '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' \
+  --port 4195
+# {"boards": 34, ...}; 34 full-resolution PNGs plus contact sheet
 
+rtk diff -u \
+  <(rtk jq -r '.boards[].board_id' .context/all-board-audit/task-3-before/manifest.json) \
+  <(rtk jq -r '.boards[].board_id' .context/all-board-audit/task-5-after/manifest.json)
+# exit 0; ordered BEFORE and AFTER board IDs identical
+
+# From Tools/HangboardPipeline:
 rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
   PYTHONPATH=../../.context/task-2-pythonpath python3 -m pytest \
   tests/test_board_presentation.py tests/test_board_path_simplification.py \
-  tests/test_approved_board_packages.py \
-  tests/test_complete_catalog_source_audit.py -q
-# 43 passed (from Tools/HangboardPipeline)
+  tests/test_board_shape_change_audit.py tests/test_board_catalog_cli.py \
+  tests/test_board_geometry_derivation.py -q
+# 70 passed in 22.63s
 
 rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
-  tests/test_board_geometry.py tests/test_board_package.py -q
-# 72 passed (from Tools/HangboardWorkbench)
+  Tools/HangboardWorkbench/tests/test_board_geometry.py \
+  Tools/HangboardWorkbench/tests/test_board_package.py \
+  Tools/HangboardWorkbench/tests/test_capture_catalog.py -q
+# 84 passed in 2.03s
+
+rtk node --test Tools/HangboardWorkbench/tests/workbench*.test.js
+# 44 passed, 0 failed
 
 rtk scripts/hangboard-tools.sh packages validate --root Hangboards
-# 34 completed packages; zero drafts; exit 0
+# 34 completed packages; zero drafts
 
 rtk scripts/hangboard-tools.sh packages simplify-hold-paths --root Hangboards
-# 34 boards; changed=false for every board; 1,890 editable points retained
+# 34 boards; changed=false for every board; 1,180 editable points retained
 
 rtk scripts/hangboard-tools.sh packages normalize-presentations --root Hangboards
-# 34 boards; changed=false for every board after the 27-board write
+# 34 boards; changed=false for every board
+
+rtk env PYTHONPATH=.context/task-2-pythonpath python3 -m \
+  hangboard_vectorizer.board_shape_change_audit \
+  --repository-root . \
+  --before-ref 011d718133274c2f8a948f4475a64d27dc443445 \
+  --after-root .
+# 34 boards / 359 holds / 363 pieces / 45 changed pieces / 710 points removed
+
+rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen \
+  -destination 'generic/platform=iOS Simulator' -quiet
+# exit 0
 ```
 
-The source-data tests were observed red before the package corrections (two
-expected failures), then green after the minimum changes. A second red cycle
-captured the required-subtitle contract after the first presentation write
-failed closed; the source-backed four-level subtitle made that focused test
-green. Both final generic dry runs are post-write idempotent.
+The final shape audit reproduces maximum exact deviation 0.999501671 px and
+maximum symmetric difference 0.000160231660. Both generic catalog dry runs are
+post-write idempotent.
+
+### Owned simulator visual validation
+
+`CONDUCTOR_WORKSPACE_NAME=audit-hangboard-fidelity` was set for the complete
+lifecycle. The recipe installed `EXIT`, `INT`, and `TERM` archive traps before
+each create, appended the validated UUID to the pending manifest before the
+owned manifest, and used only that exact UUID for boot, readiness, signed
+Debug build, install, launch, container lookup, screenshot, shutdown, and
+deletion. It never addressed `booted`.
+
+The decisive run used iPhone 16 Pro / iOS 26.5 and exact UUID
+`4B419042-039B-42A2-B8D7-A4E937D84274`:
+
+```sh
+rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen \
+  -configuration Debug \
+  -destination 'platform=iOS Simulator,id=4B419042-039B-42A2-B8D7-A4E937D84274' \
+  -derivedDataPath .context/DerivedData -quiet build
+# xcodebuild: ok; signing enabled
+
+rtk xcrun simctl install 4B419042-039B-42A2-B8D7-A4E937D84274 \
+  .context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app
+rtk xcrun simctl get_app_container \
+  4B419042-039B-42A2-B8D7-A4E937D84274 com.hangten.training app
+# exact installed app container returned
+```
+
+The simulated entitlement contains
+`com.apple.developer.healthkit = true`. The installed Info.plist prints the
+non-empty read description “Hang Ten reads your Apple Health workout history
+to restore your progress on a new device.” and the non-empty write description
+“Hang Ten saves completed hangboard sessions to Apple Health.” Built and
+installed app binaries had identical SHA-256
+`e0a6a93d31d4535e3901b26c9f5d4c9a47b97ec99a3d3e7cd17c1296229f133d`.
+
+Full-resolution runtime screenshots were retained during review under
+`.context/all-board-audit/task-5-simulator/` for the zero-selection home board,
+inactive rest/next-preview state, surface/jug highlight, shelf/edge highlight,
+combined deep/shallow recess highlight in portrait, and the same recess state
+in landscape. The landscape runtime emitted a native portrait pixel buffer;
+the retained review copy was rotated 270 degrees. Inspection found exact-path
+highlight alignment, consistent left/right mirroring, distinct surface/shelf/
+deep/shallow treatments, and no board, timer, cue, or control clipping.
+
+Two earlier evidence-refinement runs used UUIDs
+`37B6FBF3-91CC-4EE1-AE91-86FC4415D6B7` and
+`21BD6232-0A9D-401B-ACBE-F71F6770AA8A`. All three lifecycle commands exited 0.
+Fresh `simctl list devices` lookup found none of the three exact UUIDs. The
+pending manifest is absent, the owned manifest contains zero bytes, and the
+required `.context/DerivedData`, `.context/workout-raw.png`, and
+`.context/workout-landscape.png` artifacts are absent.
+
+### Remaining limits
+
+Simulator inspection validates rendering, orientation, signed entitlement
+wiring, and deterministic DEBUG routes. It does not validate physical-device
+touch/hit testing, spoken audio and audio-session interaction, real HealthKit
+authorization/write metadata, cross-device Health restoration, or Bluetooth
+sensor behavior. Those remain physical-device checks before release. The 27
+source/geometry blockers called out in the board tables also remain deliberate
+fail-closed limitations; the audit does not present their coarse geometry as
+authoritative.
