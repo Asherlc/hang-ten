@@ -214,6 +214,17 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["edge"])
     }
 
+    func testPocketTargetWithoutFallbackDoesNotSubstituteMetadataLightEdge() {
+        let board = board(holds: [
+            hold(id: "edge", kind: .edge, feature: nil, fingerCapacity: nil)
+        ])
+        let target = HoldTarget.feature(.pocket, fingerCapacity: 2)
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
+        XCTAssertTrue(result.isEmpty)
+    }
+
     /// A declared fallback only substitutes on its own kind; it must not
     /// inherit byFeatureGroup's edge-to-pocket rescue, or a plan author's
     /// single named fallback would silently reach two substitutions deep.
