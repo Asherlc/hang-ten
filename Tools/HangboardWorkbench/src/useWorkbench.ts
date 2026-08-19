@@ -1,0 +1,520 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import type {
+  BoardOperationCoordinator,
+  EditorDocument,
+  GitStatus,
+  UseWorkbenchResult,
+  WorkbenchActions,
+  WorkbenchDependencies,
+  WorkbenchState,
+} from "./types.ts";
+
+const INITIAL_STATE: WorkbenchState = {
+  boards: [],
+  board: null,
+  document: null,
+  selectedKey: null,
+  branches: [],
+  currentBranch: null,
+  selectedBranch: "",
+  gitStatusKnown: false,
+  hasUncommittedChanges: false,
+  dirty: false,
+  busyBoard: false,
+  busyGit: false,
+  authenticated: false,
+  username: null,
+  hostedStorage: false,
+  newBranchName: "",
+  commitMessage: "",
+  rotationDegrees: "",
+  validation: "",
+  status: "Ready.",
+  boardsError: "",
+};
+
+type StateUpdate = (state: WorkbenchState) => WorkbenchState;
+
+function cloneEditorDocument(document: EditorDocument): EditorDocument {
+  return {
+    schemaVersion: document.schemaVersion,
+    canvas: { width: document.canvas.width, height: document.canvas.height },
+    regions: document.regions.map((region) => ({
+      ...region,
+      ...(region.metadata ? { metadata: { ...region.metadata } } : {}),
+    })),
+  };
+}
+
+function errorMessage(error: unknown, fallback: string): string {
+  return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function selectedBranch(status: GitStatus): string {
+  if (status.currentBranch && status.branches.includes(status.currentBranch)) {
+    return status.currentBranch;
+  }
+  return [...status.branches].sort()[0] ?? "";
+}
+
+export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchResult {
+  const { client, controller, dialogs, runtime } = dependencies;
+  const [state, setState] = useState<WorkbenchState>(INITIAL_STATE);
+  const stateRef = useRef(state);
+
+  const updateState = useCallback((update: StateUpdate): void => {
+    setState((current) => {
+      const next = update(current);
+      stateRef.current = next;
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  const boardOperationsRef = useRef<BoardOperationCoordinator | null>(null);
+  if (boardOperationsRef.current === null) {
+    boardOperationsRef.current = controller.createBoardOperationCoordinator({
+      onBusyChange: (busy) => updateState((current) => ({ ...current, busyBoard: busy })),
+    });
+  }
+  const gitOperationsRef = useRef<BoardOperationCoordinator | null>(null);
+  if (gitOperationsRef.current === null) {
+    gitOperationsRef.current = controller.createBoardOperationCoordinator({
+      onBusyChange: (busy) => updateState((current) => ({ ...current, busyGit: busy })),
+    });
+  }
+  const boardOperations = boardOperationsRef.current;
+  const gitOperations = gitOperationsRef.current;
+
+  const isBusy = useCallback((): boolean => (
+    boardOperations.isBusy || gitOperations.isBusy
+  ), [boardOperations, gitOperations]);
+
+  const loadImage = useCallback((href: string): Promise<HTMLImageElement> => (
+    new Promise((resolve, reject) => {
+      const image = runtime.createImage();
+      image.onload = () => {
+        image.onload = null;
+        image.onerror = null;
+        resolve(image);
+      };
+      image.onerror = () => {
+        image.onload = null;
+        image.onerror = null;
+        reject(new Error("Board image is unavailable"));
+      };
+      image.src = href;
+    })
+  ), [runtime]);
+
+  const reloadBoards = useCallback(async (): Promise<boolean> => {
+    let loaded = false;
+    await boardOperations.perform(async () => {
+      try {
+        const boards = await client.listBoards();
+        updateState((current) => ({
+          ...current,
+          boards,
+          boardsError: "",
+          status: "Boards loaded.",
+        }));
+        loaded = true;
+      } catch (error: unknown) {
+        updateState((current) => ({
+          ...current,
+          boardsError: errorMessage(error, "Could not load boards."),
+          status: "Could not load boards.",
+        }));
+      }
+    });
+    return loaded;
+  }, [boardOperations, client, updateState]);
+
+  const refreshBoards = useCallback(async (): Promise<void> => {
+    if (isBusy()) return;
+    await reloadBoards();
+  }, [isBusy, reloadBoards]);
+
+  const refreshGitState = useCallback(async (): Promise<boolean> => {
+    try {
+      const status = await client.getGitStatus();
+      updateState((current) => ({
+        ...current,
+        branches: [...status.branches],
+        currentBranch: status.currentBranch,
+        selectedBranch: selectedBranch(status),
+        gitStatusKnown: true,
+        hasUncommittedChanges: status.dirty,
+      }));
+      return true;
+    } catch (error: unknown) {
+      updateState((current) => ({
+        ...current,
+        branches: [],
+        currentBranch: null,
+        selectedBranch: "",
+        gitStatusKnown: false,
+        hasUncommittedChanges: false,
+        validation: errorMessage(error, "Could not read repository status."),
+        status: "Could not read repository status.",
+      }));
+      return false;
+    }
+  }, [client, updateState]);
+
+  const refreshGit = useCallback(async (): Promise<void> => {
+    if (isBusy()) return;
+    await gitOperations.perform(async () => {
+      await refreshGitState();
+    });
+  }, [gitOperations, isBusy, refreshGitState]);
+
+  const refreshAuthState = useCallback(async (): Promise<void> => {
+    try {
+      const auth = await client.getAuthStatus();
+      updateState((current) => ({
+        ...current,
+        authenticated: auth.authenticated,
+        username: auth.username ?? null,
+        hostedStorage: auth.hostedStorage ?? false,
+      }));
+    } catch {
+      updateState((current) => ({
+        ...current,
+        authenticated: false,
+        username: null,
+        hostedStorage: false,
+      }));
+    }
+  }, [client, updateState]);
+
+  const selectBoard = useCallback(async (boardId: string): Promise<void> => {
+    if (!boardId || isBusy()) return;
+    updateState((current) => ({ ...current, validation: "" }));
+    await boardOperations.perform(async ({ isCurrent }) => {
+      let committed = false;
+      try {
+        await controller.loadBoardAtomically({
+          boardId,
+          getBoard: client.getBoard,
+          loadImage,
+          commit: ({ board, document }) => {
+            if (!isCurrent()) return;
+            updateState((current) => ({
+              ...current,
+              board,
+              document: cloneEditorDocument(document),
+              selectedKey: null,
+              dirty: false,
+            }));
+            committed = true;
+          },
+        });
+        if (committed) {
+          updateState((current) => ({ ...current, status: "Board loaded." }));
+        }
+      } catch (error: unknown) {
+        if (!isCurrent()) return;
+        updateState((current) => ({
+          ...current,
+          validation: errorMessage(error, "Could not load board."),
+          status: "Could not load board. The current editor was kept.",
+        }));
+      }
+    });
+  }, [boardOperations, client, controller, isBusy, loadImage, updateState]);
+
+  const saveBoard = useCallback(async (): Promise<void> => {
+    if (isBusy()) return;
+    const current = stateRef.current;
+    if (!current.board || !current.document) return;
+    try {
+      controller.validateEditorDocument(current.document);
+    } catch (error: unknown) {
+      updateState((value) => ({
+        ...value,
+        validation: errorMessage(error, "Hold document is invalid."),
+      }));
+      return;
+    }
+    const boardId = current.board.boardId;
+    const documentIdentity = current.document;
+    await boardOperations.perform(async ({ isCurrent }) => {
+      let committed = false;
+      try {
+        await controller.saveBoardAtomically({
+          boardId,
+          document: cloneEditorDocument(documentIdentity),
+          save: client.saveBoard,
+          commit: ({ board, document }) => {
+            if (!isCurrent()) return;
+            updateState((latest) => {
+              if (latest.board?.boardId !== boardId || latest.document !== documentIdentity) {
+                return latest;
+              }
+              committed = true;
+              return {
+                ...latest,
+                board,
+                document: cloneEditorDocument(document),
+                dirty: false,
+              };
+            });
+          },
+        });
+        if (committed) {
+          updateState((latest) => ({
+            ...latest,
+            validation: "",
+            status: "Board saved.",
+          }));
+        }
+      } catch (error: unknown) {
+        if (!isCurrent()) return;
+        updateState((latest) => ({
+          ...latest,
+          validation: errorMessage(error, "Could not save board."),
+          status: "Could not save board. Your editor changes were kept.",
+        }));
+      }
+    });
+  }, [boardOperations, client, controller, isBusy, updateState]);
+
+  const clearEditor = useCallback((): void => {
+    updateState((current) => ({
+      ...current,
+      board: null,
+      document: null,
+      selectedKey: null,
+      dirty: false,
+    }));
+  }, [updateState]);
+
+  const reloadBoardsAfterBranch = useCallback(async (
+    failurePrefix: string,
+  ): Promise<void> => {
+    try {
+      await boardOperations.perform(async () => {
+        const boards = await client.listBoards();
+        updateState((current) => ({ ...current, boards, boardsError: "" }));
+      });
+    } catch (error: unknown) {
+      updateState((current) => ({
+        ...current,
+        boards: [],
+        boardsError: errorMessage(error, "Could not reload boards for the new branch."),
+        validation: errorMessage(error, "Could not reload boards for the new branch."),
+        status: `${failurePrefix} Could not reload boards.`,
+      }));
+      return;
+    }
+  }, [boardOperations, client, updateState]);
+
+  const switchBranch = useCallback(async (branchName?: string): Promise<void> => {
+    const branch = (branchName ?? stateRef.current.selectedBranch).trim();
+    if (!branch || isBusy()) return;
+    await gitOperations.perform(async () => {
+      if (stateRef.current.dirty && !dialogs.confirm(
+        "You have unsaved hold edits. Switching branches will keep those edits in memory only. Continue?",
+      )) return;
+      try {
+        await client.switchBranch(branch);
+      } catch (error: unknown) {
+        updateState((current) => ({
+          ...current,
+          validation: errorMessage(error, "Could not switch branch."),
+          status: "Could not switch branch.",
+        }));
+        return;
+      }
+      clearEditor();
+      const refreshed = await refreshGitState();
+      updateState((current) => ({
+        ...current,
+        ...(refreshed ? { validation: "" } : {}),
+        status: refreshed
+          ? `Switched to ${branch}.`
+          : `Switched to ${branch}. Repository status unavailable.`,
+      }));
+      await reloadBoardsAfterBranch(`Switched to ${branch}.`);
+    });
+  }, [clearEditor, client, dialogs, gitOperations, isBusy, refreshGitState, reloadBoardsAfterBranch, updateState]);
+
+  const createBranch = useCallback(async (branchName?: string): Promise<void> => {
+    const branch = (branchName ?? stateRef.current.newBranchName).trim();
+    if (!branch || isBusy()) return;
+    await gitOperations.perform(async () => {
+      if (stateRef.current.dirty && !dialogs.confirm(
+        "You have unsaved hold edits. Creating a branch will keep those edits in memory only. Continue?",
+      )) return;
+      try {
+        await client.createBranch(branch);
+      } catch (error: unknown) {
+        updateState((current) => ({
+          ...current,
+          validation: errorMessage(error, "Could not create branch."),
+          status: "Could not create branch.",
+        }));
+        return;
+      }
+      clearEditor();
+      updateState((current) => ({ ...current, newBranchName: "" }));
+      const refreshed = await refreshGitState();
+      updateState((current) => ({
+        ...current,
+        ...(refreshed ? { validation: "" } : {}),
+        status: refreshed
+          ? `Created and switched to ${branch}.`
+          : `Created ${branch}. Repository status unavailable.`,
+      }));
+      await reloadBoardsAfterBranch(`Created ${branch}.`);
+    });
+  }, [clearEditor, client, dialogs, gitOperations, isBusy, refreshGitState, reloadBoardsAfterBranch, updateState]);
+
+  const commitChanges = useCallback(async (): Promise<void> => {
+    const message = stateRef.current.commitMessage.trim();
+    if (!message) {
+      updateState((current) => ({ ...current, validation: "Commit message is required." }));
+      return;
+    }
+    if (isBusy() || stateRef.current.hostedStorage) return;
+    await gitOperations.perform(async () => {
+      try {
+        const result = await client.commitBoardChanges(message);
+        updateState((current) => ({ ...current, commitMessage: "" }));
+        const label = `Committed ${result.commit.slice(0, 7) || "changes"}.`;
+        const refreshed = await refreshGitState();
+        updateState((current) => ({
+          ...current,
+          ...(refreshed ? { validation: "" } : {}),
+          status: refreshed ? label : `${label} Repository status unavailable.`,
+        }));
+      } catch (error: unknown) {
+        updateState((current) => ({
+          ...current,
+          validation: errorMessage(error, "Could not commit changes."),
+          status: "Could not commit changes.",
+        }));
+      }
+    });
+  }, [client, gitOperations, isBusy, refreshGitState, updateState]);
+
+  const pushBranch = useCallback(async (): Promise<void> => {
+    if (isBusy() || stateRef.current.hostedStorage) return;
+    const branch = stateRef.current.currentBranch ?? "current branch";
+    await gitOperations.perform(async () => {
+      try {
+        await client.pushBranch();
+        const label = `Pushed ${branch}.`;
+        const refreshed = await refreshGitState();
+        updateState((current) => ({
+          ...current,
+          ...(refreshed ? { validation: "" } : {}),
+          status: refreshed ? label : `${label} Repository status unavailable.`,
+        }));
+      } catch (error: unknown) {
+        updateState((current) => ({
+          ...current,
+          validation: errorMessage(error, "Could not push branch."),
+          status: "Could not push branch.",
+        }));
+      }
+    });
+  }, [client, gitOperations, isBusy, refreshGitState, updateState]);
+
+  const openPullRequest = useCallback(async (): Promise<void> => {
+    if (isBusy()) return;
+    const title = dialogs.prompt(
+      "Pull request title:",
+      `Update ${stateRef.current.currentBranch ?? "branch"}`,
+    );
+    if (!title) return;
+    const body = dialogs.prompt("Pull request description (optional):", "") ?? "";
+    await gitOperations.perform(async () => {
+      try {
+        const result = await client.openPullRequest({
+          title: title.trim(),
+          body: body.trim(),
+          base: "main",
+        });
+        updateState((current) => ({
+          ...current,
+          validation: "",
+          status: `Opened PR: ${result.url || "created"}`,
+        }));
+      } catch (error: unknown) {
+        updateState((current) => ({
+          ...current,
+          validation: errorMessage(error, "Could not open pull request."),
+          status: "Could not open pull request.",
+        }));
+      }
+    });
+  }, [client, dialogs, gitOperations, isBusy, updateState]);
+
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      await refreshAuthState();
+      if (!active) return;
+      await refreshGitState();
+      if (!active) return;
+      await reloadBoards();
+    })();
+    return () => { active = false; };
+  }, [refreshAuthState, refreshGitState, reloadBoards]);
+
+  const actions = useMemo<WorkbenchActions>(() => ({
+    refreshBoards,
+    selectBoard,
+    saveBoard,
+    refreshGit,
+    setSelectedBranch(branchName) {
+      updateState((current) => ({ ...current, selectedBranch: branchName }));
+    },
+    switchBranch,
+    setNewBranchName(branchName) {
+      updateState((current) => ({ ...current, newBranchName: branchName }));
+    },
+    createBranch,
+    setCommitMessage(message) {
+      updateState((current) => ({ ...current, commitMessage: message }));
+    },
+    commitChanges,
+    pushBranch,
+    openPullRequest,
+    selectHold(key) {
+      updateState((current) => ({ ...current, selectedKey: key }));
+    },
+    setRotationDegrees(value) {
+      updateState((current) => ({ ...current, rotationDegrees: value }));
+    },
+    updateDocument(document, status = "Hold document updated. Save when ready.") {
+      const nextDocument = cloneEditorDocument(document);
+      updateState((current) => ({
+        ...current,
+        document: nextDocument,
+        dirty: true,
+        validation: "",
+        status,
+      }));
+    },
+  }), [
+    commitChanges,
+    createBranch,
+    openPullRequest,
+    pushBranch,
+    refreshBoards,
+    refreshGit,
+    saveBoard,
+    selectBoard,
+    switchBranch,
+    updateState,
+  ]);
+
+  return { state, actions };
+}

@@ -178,3 +178,50 @@ export interface WorkbenchDependencies {
   runtime: BrowserRuntime;
   dialogs: Dialogs;
 }
+
+export interface WorkbenchState {
+  boards: BoardSummary[];
+  board: Board | null;
+  document: EditorDocument | null;
+  selectedKey: string | null;
+  branches: string[];
+  currentBranch: string | null;
+  selectedBranch: string;
+  gitStatusKnown: boolean;
+  hasUncommittedChanges: boolean;
+  dirty: boolean;
+  busyBoard: boolean;
+  busyGit: boolean;
+  authenticated: boolean;
+  username: string | null;
+  hostedStorage: boolean;
+  newBranchName: string;
+  commitMessage: string;
+  rotationDegrees: string;
+  validation: string;
+  status: string;
+  boardsError: string;
+}
+
+export interface WorkbenchActions {
+  refreshBoards(): Promise<void>;
+  selectBoard(boardId: string): Promise<void>;
+  saveBoard(): Promise<void>;
+  refreshGit(): Promise<void>;
+  setSelectedBranch(branchName: string): void;
+  switchBranch(branchName?: string): Promise<void>;
+  setNewBranchName(branchName: string): void;
+  createBranch(branchName?: string): Promise<void>;
+  setCommitMessage(message: string): void;
+  commitChanges(): Promise<void>;
+  pushBranch(): Promise<void>;
+  openPullRequest(): Promise<void>;
+  selectHold(key: string | null): void;
+  setRotationDegrees(value: string): void;
+  updateDocument(document: EditorDocument, status?: string): void;
+}
+
+export interface UseWorkbenchResult {
+  state: WorkbenchState;
+  actions: WorkbenchActions;
+}

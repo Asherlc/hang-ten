@@ -7,7 +7,8 @@
     "build": "esbuild src/main.tsx --bundle --format=iife --platform=browser --target=es2020 --outfile=app.js",
     "typecheck": "tsc --noEmit",
     "test:modules": "tsx --test tests/path-editor.test.ts tests/workbench-modules.test.ts",
-    "test": "npm run typecheck && npm run test:modules",
+    "test:react": "tsx --test tests/react-app.test.tsx",
+    "test": "npm run typecheck && npm run test:modules && npm run test:react",
     "check:bundle": "npm run build && git diff --exit-code -- app.js"
   },
   "dependencies": {
