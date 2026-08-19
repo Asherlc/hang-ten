@@ -1211,6 +1211,81 @@ test("constrained handle drag resizes only the selected piece and keeps circles 
   assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), siblingPath);
 });
 
+test("a constrained resize ending outside the canvas restores its pointer-down path, constraint, and dirty state", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  const savedDocuments = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      async saveBoard(_boardId, documentValue) {
+        savedDocuments.push(documentValue);
+        return { ...board, document: documentValue };
+      },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  const svg = app.elements["editor-svg"];
+  svg.boundingClientRect = { left: 0, top: 0, width: 120, height: 80 };
+  const originalPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+  const east = descendantsWithClass(svg, "path-editor-resize-handle").find((handle) => handle.dataset.handle === "e");
+
+  svg.listeners.get("pointerdown")(directPointerEvent(east, 17, 50, 20));
+  svg.listeners.get("pointermove")(directPointerEvent(east, 17, 130, 20));
+  svg.listeners.get("pointerup")(directPointerEvent(east, 17, 130, 20));
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+  assert.equal(app.elements["outline-shape-select"].value, "rectangle");
+  assert.equal(app.elements["save-state"].textContent, "Saved");
+  assert.match(app.elements["editor-status"].textContent, /reverted/i);
+  app.elements["save-button"].click();
+  await settle();
+  await settle();
+  assert.equal(JSON.stringify(savedDocuments[0].regions[0].shapeConstraint), '{"shape":"rectangle","rotationDegrees":0}');
+});
+
+test("starting a save during a captured constrained resize cancels and rolls the drag back before saving", async () => {
+  let resolveSave;
+  let savedDocument;
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      saveBoard(_boardId, documentValue) {
+        savedDocument = documentValue;
+        return new Promise((resolve) => { resolveSave = () => resolve({ ...board, document: documentValue }); });
+      },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  const svg = app.elements["editor-svg"];
+  svg.boundingClientRect = { left: 0, top: 0, width: 120, height: 80 };
+  const originalPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+  const east = descendantsWithClass(svg, "path-editor-resize-handle").find((handle) => handle.dataset.handle === "e");
+
+  svg.listeners.get("pointerdown")(directPointerEvent(east, 23, 50, 20));
+  svg.listeners.get("pointermove")(directPointerEvent(east, 23, 60, 20));
+  assert.notEqual(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+  app.elements["save-button"].click();
+  await settle();
+  try {
+    assert.equal(svg.capturedPointerId, null);
+    assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+    assert.equal(savedDocument.regions[0].displayPath, originalPath);
+    svg.listeners.get("pointermove")(directPointerEvent(east, 23, 80, 20));
+    assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+  } finally {
+    resolveSave?.();
+    await settle();
+    await settle();
+  }
+});
+
 test("moving and nudging a constrained piece preserve its shape constraint", async () => {
   const controller = require("../workbench-controller.js");
   const board = constrainedMultiPieceBoard();

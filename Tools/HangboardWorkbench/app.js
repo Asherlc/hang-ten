@@ -84,6 +84,7 @@
   const boardOperations = createBoardOperationCoordinator({
     onBusyChange: (busy) => {
       state.busyBoard = busy;
+      if (busy && drag.active) cancelDrag("Edit cancelled because another operation started.");
       render();
     },
   });
@@ -91,6 +92,7 @@
   const gitOperations = createBoardOperationCoordinator({
     onBusyChange: (busy) => {
       state.busyGit = busy;
+      if (busy && drag.active) cancelDrag("Edit cancelled because another operation started.");
       render();
     },
   });
@@ -656,6 +658,9 @@
     const hold = state.document?.regions.find((r) => r.key === drag.holdKey);
     if (!hold) return;
     try {
+      if (drag.type === "constrained-resize" && !constrainedOutlineIsInsideCanvas(hold)) {
+        throw new Error("Constrained outline must stay inside the canvas.");
+      }
       validateEditorDocument(state.document);
       setValidation();
       setStatus(drag.type === "rotation" ? "Hold rotated. Save when ready." : "Contour updated. Save when ready.");
@@ -665,6 +670,15 @@
       setStatus(drag.type === "rotation" ? "Rotation reverted — contour is invalid." : "Edit reverted — contour is invalid.");
     }
     render();
+  }
+
+  function constrainedOutlineIsInsideCanvas(hold) {
+    let model;
+    try { model = constrainedOutlineModel(hold.displayPath, hold.shapeConstraint); } catch { return false; }
+    const { width, height } = state.document.canvas;
+    return Object.values(model.handles).every(({ x, y }) => (
+      Number.isFinite(x) && Number.isFinite(y) && x >= 0 && x <= width && y >= 0 && y <= height
+    ));
   }
 
   function handlePointerCancel(event) {
