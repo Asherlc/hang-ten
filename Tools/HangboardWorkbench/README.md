@@ -95,6 +95,30 @@ the decoded image within 0.1% relative error.
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.
 
+## Capture a visual catalog
+
+The catalog capture command starts an isolated loopback Workbench server and one
+headless Chrome DevTools session. It reads the completed-board order from
+`GET /api/boards`, opens each board through the existing editor, waits for its
+primary image and exactly the board document's SVG region count, then captures
+the unchanged `#editor-svg` surface at a fixed viewport.
+
+```sh
+rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
+  --repository-root /absolute/path/to/hang-ten \
+  --output-root /absolute/path/to/catalog-captures \
+  --chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --port 4173
+```
+
+The output directory receives one labeled, board-ID-derived PNG per completed
+board, a `manifest.json` in API catalog order (including each board's exact
+region count), and a labeled `contact-sheet.png` containing every manifest
+entry. The command prints a JSON summary on success; failures identify a stage
+(`setup`, `server`, `chrome`, `api`, `board`, `readiness`, `capture`, or
+`output`) and, where applicable, the board ID. Chrome and server child
+processes are terminated before the command returns.
+
 ## Run the Apple Silicon macOS release
 
 Download the workbench ZIP and its checksum from a release, verify the
