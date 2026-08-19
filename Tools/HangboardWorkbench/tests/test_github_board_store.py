@@ -308,6 +308,44 @@ def test_cached_catalog_avoids_rescanning_over_capacity_images_for_open_and_imag
     assert len(client.calls_named("get_blob")) == 14
 
 
+def test_cached_store_reloads_a_tree_evicted_at_its_configured_capacity() -> None:
+    """Fails if max_cached_trees does not evict the least-recent snapshot."""
+    files = _complete_package("fixture-board", board_document("fixture.board"))
+    client = FakeGitHubClient({"first": files, "second": files})
+    store = github_board_store.GitHubBoardStore(client, max_cached_trees=1)
+
+    store.discover_packages(TOKEN, "first")
+    store.discover_packages(TOKEN, "second")
+    store.discover_packages(TOKEN, "first")
+
+    assert len(client.calls_named("get_tree")) == 3
+
+
+def test_cached_store_skips_trees_larger_than_its_configured_entry_limit() -> None:
+    """Fails if max_cached_tree_entries retains an oversized recursive tree."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client, max_cached_tree_entries=1)
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_tree")) == 2
+
+
+def test_cached_store_reloads_a_catalog_evicted_at_its_capacity() -> None:
+    """Fails if catalog capacity does not evict the least-recent commit metadata."""
+    files = _complete_package("fixture-board", board_document("fixture.board"))
+    branches = {f"branch-{index}": files for index in range(17)}
+    client = FakeGitHubClient(branches)
+    store = github_board_store.GitHubBoardStore(client)
+
+    for branch in branches:
+        store.discover_packages(TOKEN, branch)
+    store.discover_packages(TOKEN, "branch-0")
+
+    assert len(client.calls_named("get_blob")) == 36
+
+
 def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
     """Fails if cache capacity lets immutable blobs grow without eviction."""
     client = _client(("fixture-board", board_document("fixture.board")))
