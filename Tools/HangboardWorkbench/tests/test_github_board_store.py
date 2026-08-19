@@ -1,0 +1,489 @@
+from __future__ import annotations
+
+import copy
+import hashlib
+import json
+import shutil
+import struct
+import sys
+import zlib
+from dataclasses import replace
+from pathlib import Path
+
+import pytest
+
+WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(WORKBENCH_ROOT))
+
+import board_package
+import github_board_store
+from fake_github_client import FakeGitHubClient
+from github_client import GitHubForbiddenError
+from workbench_fixtures import PRIMARY_IMAGE, board_document
+
+TOKEN = "test-token"
+BRANCH = "main"
+
+
+def _encoded_board(board: dict[str, object]) -> bytes:
+    return (json.dumps(board, indent=2) + "\n").encode("utf-8")
+
+
+def _complete_package(slug: str, board: dict[str, object]) -> dict[str, bytes]:
+    return {
+        f"Hangboards/{slug}/board.json": _encoded_board(board),
+        f"Hangboards/{slug}/assets/primary.png": PRIMARY_IMAGE.read_bytes(),
+    }
+
+
+def _client(*packages: tuple[str, dict[str, object]]) -> FakeGitHubClient:
+    files: dict[str, bytes] = {}
+    for slug, board in packages:
+        files.update(_complete_package(slug, board))
+    return FakeGitHubClient({BRANCH: files})
+
+
+class _TreeRaceClient(FakeGitHubClient):
+    def __init__(
+        self, original: dict[str, object], replacement: dict[str, object]
+    ) -> None:
+        super().__init__({BRANCH: _complete_package("fixture-board", original)})
+        self._replacement = _encoded_board(replacement)
+        self._raced = False
+
+    def get_tree(self, token: str, branch: str):
+        tree = super().get_tree(token, branch)
+        if not self._raced:
+            self._raced = True
+            board_entry = next(
+                entry
+                for entry in tree
+                if entry.path == "Hangboards/fixture-board/board.json"
+            )
+            super().put_file(
+                token,
+                "Hangboards/fixture-board/board.json",
+                branch,
+                self._replacement,
+                "Concurrent board rename",
+                board_entry.sha,
+            )
+        return tree
+
+
+class _RelocatingTreeClient(FakeGitHubClient):
+    def __init__(self) -> None:
+        self.moved_image = _primary_image_with_text_chunk(b"moved-board")
+        super().__init__(
+            {
+                BRANCH: _complete_package(
+                    "fixture-board", board_document("fixture.board")
+                )
+            }
+        )
+        self._raced = False
+
+    def get_tree(self, token: str, branch: str):
+        tree = super().get_tree(token, branch)
+        if not self._raced:
+            self._raced = True
+            board_entry = next(
+                entry
+                for entry in tree
+                if entry.path == "Hangboards/fixture-board/board.json"
+            )
+            super().put_file(
+                token,
+                "Hangboards/fixture-board/board.json",
+                branch,
+                _encoded_board(board_document("different.board")),
+                "Concurrent board rename",
+                board_entry.sha,
+            )
+            super().put_file(
+                token,
+                "Hangboards/moved-board/assets/primary.png",
+                branch,
+                self.moved_image,
+                "Concurrent board move",
+                None,
+            )
+            super().put_file(
+                token,
+                "Hangboards/moved-board/board.json",
+                branch,
+                _encoded_board(board_document("fixture.board")),
+                "Concurrent board move",
+                None,
+            )
+        return tree
+
+
+class _EntryTypeClient(FakeGitHubClient):
+    def __init__(self, files: dict[str, bytes], path: str) -> None:
+        super().__init__({BRANCH: files})
+        self._path = path
+
+    def get_tree(self, token: str, branch: str):
+        return tuple(
+            replace(entry, type="tree") if entry.path == self._path else entry
+            for entry in super().get_tree(token, branch)
+        )
+
+
+class _ConcurrentSaveClient(FakeGitHubClient):
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({BRANCH: files})
+        self._raced = False
+
+    def put_file(self, token, path, branch, content, message, sha):
+        if not self._raced:
+            self._raced = True
+            current_sha = next(
+                entry.sha
+                for entry in super().get_tree(token, branch)
+                if entry.path == path
+            )
+            super().put_file(
+                token,
+                path,
+                branch,
+                b'{"concurrent":true}\n',
+                "Concurrent write",
+                current_sha,
+            )
+        return super().put_file(token, path, branch, content, message, sha)
+
+
+class _ForbiddenSaveClient(FakeGitHubClient):
+    def put_file(self, token, path, branch, content, message, sha):
+        raise GitHubForbiddenError("write denied")
+
+
+def _local_package_error(
+    tmp_path: Path,
+    *,
+    board_as_directory: bool = False,
+    image_as_directory: bool = False,
+) -> str:
+    package = tmp_path / "fixture-board"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    board_path = package / "board.json"
+    image_path = assets / "primary.png"
+    if board_as_directory:
+        board_path.mkdir()
+    else:
+        board_path.write_bytes(_encoded_board(board_document("fixture.board")))
+    if image_as_directory:
+        image_path.mkdir()
+    else:
+        shutil.copyfile(PRIMARY_IMAGE, image_path)
+    with pytest.raises(board_package.BoardPackageError) as captured:
+        board_package.load_board_package(package)
+    return str(captured.value)
+
+
+def _primary_image_with_text_chunk(text: bytes) -> bytes:
+    chunk_type = b"tEXt"
+    chunk = (
+        struct.pack(">I", len(text))
+        + chunk_type
+        + text
+        + struct.pack(">I", zlib.crc32(chunk_type + text) & 0xFFFFFFFF)
+    )
+    image = PRIMARY_IMAGE.read_bytes()
+    return image[:-12] + chunk + image[-12:]
+
+
+def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> None:
+    client = _client(("fixture-board", board_document("fixture.board")))
+
+    discovered = github_board_store.discover_packages(client, TOKEN, BRANCH)
+    assert len(client.calls_named("get_tree")) == 1
+    opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+
+    assert [
+        (package.slug, package.board_id, package.hold_ids) for package in discovered
+    ] == [("fixture-board", "fixture.board", ("hold-left",))]
+    assert (opened.image_width, opened.image_height) == (1774, 457)
+    assert board_package.editor_document(opened)["canvas"] == {
+        "width": 1774,
+        "height": 457,
+    }
+
+
+@pytest.mark.parametrize(
+    "read",
+    [
+        lambda client: github_board_store.open_package(
+            client, TOKEN, BRANCH, "fixture.board"
+        ),
+        lambda client: github_board_store.primary_image_bytes(
+            client, TOKEN, BRANCH, "fixture.board"
+        ),
+    ],
+    ids=["open", "primary-image"],
+)
+def test_id_addressed_reads_reject_a_slug_renamed_during_authoritative_reload(
+    read,
+) -> None:
+    client = _TreeRaceClient(
+        board_document("fixture.board"), board_document("different.board")
+    )
+
+    with pytest.raises(board_package.BoardNotAvailableError, match="not available"):
+        read(client)
+
+
+def test_id_addressed_reads_reresolve_a_board_moved_to_a_new_slug() -> None:
+    open_client = _RelocatingTreeClient()
+
+    opened = github_board_store.open_package(
+        open_client, TOKEN, BRANCH, "fixture.board"
+    )
+
+    assert (opened.slug, opened.board_id) == ("moved-board", "fixture.board")
+    image_client = _RelocatingTreeClient()
+    assert (
+        github_board_store.primary_image_bytes(
+            image_client, TOKEN, BRANCH, "fixture.board"
+        )
+        == image_client.moved_image
+    )
+
+
+def test_discovery_rejects_duplicate_remote_board_ids() -> None:
+    client = _client(
+        ("first-board", board_document("duplicate.board")),
+        ("second-board", board_document("duplicate.board")),
+    )
+
+    with pytest.raises(board_package.BoardPackageError, match="duplicate board ID"):
+        github_board_store.discover_packages(client, TOKEN, BRANCH)
+
+
+@pytest.mark.parametrize(
+    ("path", "local_kwargs"),
+    [
+        ("Hangboards/fixture-board/board.json", {"board_as_directory": True}),
+        (
+            "Hangboards/fixture-board/assets/primary.png",
+            {"image_as_directory": True},
+        ),
+    ],
+    ids=["board-json-tree", "primary-image-tree"],
+)
+def test_tree_entry_type_errors_match_local_package_loading(
+    path: str, local_kwargs: dict[str, bool], tmp_path: Path
+) -> None:
+    expected = _local_package_error(tmp_path, **local_kwargs)
+    client = _EntryTypeClient(
+        _complete_package("fixture-board", board_document("fixture.board")), path
+    )
+
+    with pytest.raises(board_package.BoardPackageError) as captured:
+        github_board_store.discover_packages(client, TOKEN, BRANCH)
+
+    assert str(captured.value) == expected
+
+
+def test_discovery_checks_the_png_before_jointly_invalid_board_json(
+    tmp_path: Path,
+) -> None:
+    package = tmp_path / "fixture-board"
+    (package / "assets").mkdir(parents=True)
+    (package / "board.json").write_bytes(b"not JSON")
+    (package / "assets" / "primary.png").write_bytes(b"not a PNG")
+    with pytest.raises(board_package.BoardPackageError) as local_error:
+        board_package.load_board_package(package)
+    client = FakeGitHubClient(
+        {
+            BRANCH: {
+                "Hangboards/fixture-board/board.json": b"not JSON",
+                "Hangboards/fixture-board/assets/primary.png": b"not a PNG",
+            }
+        }
+    )
+
+    with pytest.raises(board_package.BoardPackageError) as remote_error:
+        github_board_store.discover_packages(client, TOKEN, BRANCH)
+
+    assert str(remote_error.value) == str(local_error.value)
+
+
+def test_discovery_rejects_a_completed_package_with_extra_remote_files() -> None:
+    files = _complete_package("fixture-board", board_document("fixture.board"))
+    files["Hangboards/fixture-board/notes.txt"] = b"not part of a board package"
+    client = FakeGitHubClient({BRANCH: files})
+
+    with pytest.raises(
+        board_package.BoardPackageError,
+        match="only board.json and assets/primary.png",
+    ):
+        github_board_store.discover_packages(client, TOKEN, BRANCH)
+
+
+def test_open_rejects_geometry_that_header_only_discovery_defers() -> None:
+    board = board_document("fixture.board")
+    hold = board["holds"][0]
+    assert isinstance(hold, dict)
+    piece = hold["geometry"][0]
+    assert isinstance(piece, dict)
+    piece["shape"] = {
+        "type": "path",
+        "commands": [
+            {"command": "move", "to": [0, 0]},
+            {"command": "line", "to": [1, 1]},
+            {"command": "line", "to": [1, 0]},
+            {"command": "line", "to": [0, 1]},
+            {"command": "close"},
+        ],
+    }
+    client = _client(("fixture-board", board))
+
+    assert (
+        github_board_store.discover_packages(client, TOKEN, BRANCH)[0].board_id
+        == "fixture.board"
+    )
+    with pytest.raises(
+        board_package.BoardPackageError, match="must not self-intersect"
+    ):
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+
+
+def test_header_only_discovery_defers_post_ihdr_png_corruption() -> None:
+    image = bytearray(PRIMARY_IMAGE.read_bytes())
+    image[-1] ^= 0xFF
+    client = FakeGitHubClient(
+        {
+            BRANCH: {
+                **_complete_package("fixture-board", board_document("fixture.board")),
+                "Hangboards/fixture-board/assets/primary.png": bytes(image),
+            }
+        }
+    )
+
+    assert (
+        github_board_store.discover_packages(client, TOKEN, BRANCH)[0].board_id
+        == "fixture.board"
+    )
+    with pytest.raises(board_package.BoardPackageError, match="decodable PNG"):
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    with pytest.raises(board_package.BoardPackageError, match="decodable PNG"):
+        github_board_store.primary_image_bytes(client, TOKEN, BRANCH, "fixture.board")
+
+
+def test_noop_save_uses_the_live_sha_without_writing_to_github() -> None:
+    client = _client(("fixture-board", board_document("fixture.board")))
+    opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    document = board_package.editor_document(opened)
+
+    saved, commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    assert saved.board == opened.board
+    assert commit_sha == opened.board_json_sha
+    assert client.calls_named("put_file") == ()
+
+
+def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None:
+    board = board_document("fixture.board")
+    board["holds"][0]["sizeMillimeters"] = 20
+    client = _client(("fixture-board", board))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    document = copy.deepcopy(document)
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    saved, commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert saved.board["holds"][0]["kind"] == "edge"
+    assert stored["holds"][0]["name"] == "Left hold"
+    assert stored["holds"][0]["sizeMillimeters"] == 20
+    assert commit_sha != saved.board_json_sha
+    assert (
+        saved.board_json_sha
+        == github_board_store.open_package(
+            client, TOKEN, BRANCH, "fixture.board"
+        ).board_json_sha
+    )
+    put = client.calls_named("put_file")
+    assert len(put) == 1
+    assert put[0].args[4] == "Update fixture.board"
+    expected_content = (json.dumps(saved.board, indent=2) + "\n").encode("utf-8")
+    expected_sha = hashlib.sha1(
+        f"blob {len(expected_content)}\0".encode() + expected_content
+    ).hexdigest()
+    assert put[0].args[3] == expected_content
+    assert saved.board_json_sha == expected_sha
+
+
+def test_stale_sha_conflict_becomes_a_board_save_conflict() -> None:
+    client = _ConcurrentSaveClient(
+        _complete_package("fixture-board", board_document("fixture.board"))
+    )
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    document = copy.deepcopy(document)
+    for region in document["regions"]:
+        region["type"] = "edge"
+    with pytest.raises(board_package.BoardSaveConflictError, match="file changed"):
+        github_board_store.save_editor_document(
+            client, TOKEN, BRANCH, "fixture-board", document
+        )
+
+
+def test_save_rejects_a_replaced_slug_identity_before_writing() -> None:
+    original = _client(("fixture-board", board_document("fixture.board")))
+    document = copy.deepcopy(
+        board_package.editor_document(
+            github_board_store.open_package(
+                original, TOKEN, BRANCH, "fixture.board"
+            )
+        )
+    )
+    for region in document["regions"]:
+        region["type"] = "edge"
+    replaced = _client(("fixture-board", board_document("different.board")))
+
+    with pytest.raises(
+        board_package.BoardSaveConflictError, match="identity changed"
+    ):
+        github_board_store.save_editor_document(
+            replaced,
+            TOKEN,
+            BRANCH,
+            "fixture-board",
+            document,
+            expected_board_id="fixture.board",
+        )
+
+    assert replaced.calls_named("put_file") == ()
+
+
+def test_save_propagates_non_conflict_github_errors() -> None:
+    client = _ForbiddenSaveClient(
+        {BRANCH: _complete_package("fixture-board", board_document("fixture.board"))}
+    )
+    document = copy.deepcopy(
+        board_package.editor_document(
+            github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+        )
+    )
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    with pytest.raises(GitHubForbiddenError, match="write denied"):
+        github_board_store.save_editor_document(
+            client, TOKEN, BRANCH, "fixture-board", document
+        )

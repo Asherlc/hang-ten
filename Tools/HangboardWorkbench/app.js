@@ -36,6 +36,7 @@
     busyGit: false,
     authenticated: false,
     username: null,
+    hostedStorage: false,
   };
 
   const el = Object.fromEntries([
@@ -118,9 +119,12 @@
     el["git-switch-button"].disabled = isBusy() || !state.currentBranch || !el["git-branch-select"].value || el["git-branch-select"].value === state.currentBranch;
     el["git-new-branch-name"].disabled = isBusy();
     el["git-new-branch-button"].disabled = isBusy() || !el["git-new-branch-name"].value.trim();
-    el["git-commit-message"].disabled = isBusy();
-    el["git-commit-button"].disabled = isBusy() || !state.currentBranch;
-    el["git-push-button"].disabled = isBusy() || !state.currentBranch;
+    for (const id of ["git-commit-message", "git-commit-button", "git-push-button"]) {
+      el[id].classList.toggle("hidden", state.hostedStorage);
+    }
+    el["git-commit-message"].disabled = state.hostedStorage || isBusy();
+    el["git-commit-button"].disabled = state.hostedStorage || isBusy() || !state.currentBranch;
+    el["git-push-button"].disabled = state.hostedStorage || isBusy() || !state.currentBranch;
     el["git-open-pr-button"].disabled = isBusy() || !state.currentBranch;
 
     el["board-status"].textContent = state.currentBranch
@@ -722,9 +726,11 @@
       const status = await client.getAuthStatus();
       state.authenticated = Boolean(status.authenticated);
       state.username = status.username || null;
+      state.hostedStorage = Boolean(status.hostedStorage);
     } catch {
       state.authenticated = false;
       state.username = null;
+      state.hostedStorage = false;
     }
     renderAuthState();
   }
