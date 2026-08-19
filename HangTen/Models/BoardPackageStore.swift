@@ -867,8 +867,9 @@ struct BoardGeometryShapeDocument: Codable, Hashable {
         let xValues = points.map { point in point.x }
         let yValues = points.map { point in point.y }
         let tolerance = 0.0000005
-        return xValues.min()! <= tolerance && yValues.min()! <= tolerance &&
-            xValues.max()! >= 1 - tolerance && yValues.max()! >= 1 - tolerance
+        return abs(xValues.min()!) <= tolerance && abs(yValues.min()!) <= tolerance &&
+            abs(xValues.max()! - 1) <= tolerance &&
+            abs(yValues.max()! - 1) <= tolerance
     }
 }
 

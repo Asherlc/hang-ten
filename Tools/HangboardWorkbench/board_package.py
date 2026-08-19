@@ -724,14 +724,14 @@ def _shape_fills_declared_frame(shape: object) -> bool:
     if not shape["commands"]:
         return False
     # Bounds of the rendered curve, not of its (routinely wider) control
-    # points, must reach every edge of the declared frame.
+    # points, must stay within and reach every edge of the declared frame.
     try:
         min_x, max_x, min_y, max_y = flattened_shape_bounds(shape["commands"])
         return (
-            min_x <= _FRAME_EDGE_TOLERANCE
-            and min_y <= _FRAME_EDGE_TOLERANCE
-            and max_x >= 1 - _FRAME_EDGE_TOLERANCE
-            and max_y >= 1 - _FRAME_EDGE_TOLERANCE
+            abs(min_x) <= _FRAME_EDGE_TOLERANCE
+            and abs(min_y) <= _FRAME_EDGE_TOLERANCE
+            and abs(max_x - 1) <= _FRAME_EDGE_TOLERANCE
+            and abs(max_y - 1) <= _FRAME_EDGE_TOLERANCE
         )
     except (IndexError, KeyError, TypeError, ValueError):
         return False

@@ -235,6 +235,37 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsPathWhoseRenderedCurveEscapesDeclaredFrame() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = [
+                    "type": "path",
+                    "commands": [
+                        ["command": "move", "to": [0, 0]],
+                        ["command": "line", "to": [1, 0]],
+                        ["command": "line", "to": [1, 1]],
+                        ["command": "quad", "control": [-16, 2], "to": [0, 1]],
+                        ["command": "close"]
+                    ]
+                ]
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(reason.contains("frame must match its shape bounds"), reason)
+        }
+    }
+
     func testStoreRejectsSidecarsAndExtraAssets() throws {
         for relativePath in ["semantics.json", "assets/alternate.png"] {
             let fixture = try makeFixtureBundle { hangboardsURL in
