@@ -35,12 +35,20 @@ specific correction.
 
 ## Geometry changes
 
-The existing generic simplifier is the first low-point-count pass. Any further
-redesign must use the same normalized shapes and validation contracts for all
-boards, preserve the logical hold and piece inventories unless authoritative
-evidence proves them wrong, and pass native-pixel error gates. Product-specific
-code paths, hand-authored masks, special-case coordinates, and per-board tuning
-are forbidden.
+One fixed, catalog-generic image pipeline may derive unlabeled contour
+candidates from each canonical primary image. Source-audited hold identity and
+topology remain authoritative; a candidate can be materialized only through a
+complete hash-bound mapping that contains hold IDs and candidate IDs but no
+coordinates, masks, or thresholds. Ambiguous or incomplete boards fail closed.
+
+Candidate contours round-trip through the existing Workbench geometry codec.
+The lowest-complexity representation that preserves the accepted native-pixel
+mask is selected, then the existing generic simplifier runs as the final
+low-point-count pass. Any redesign must use the same normalized shapes and
+validation contracts for all boards, preserve logical inventories unless
+authoritative evidence proves them wrong, and pass native-pixel error gates.
+Product-specific code paths, hand-authored masks, special-case coordinates, and
+per-board tuning are forbidden.
 
 ## Validation and deliverables
 
