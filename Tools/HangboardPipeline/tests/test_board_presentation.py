@@ -357,6 +357,59 @@ def test_fails_closed_without_replacing_a_package_when_atomic_exchange_is_unavai
     assert (package / "assets" / "primary.png").read_bytes() == before_png
 
 
+@pytest.mark.parametrize(("platform", "dirfd"), [("darwin", -2), ("linux", -100)])
+def test_atomic_exchange_uses_platform_contract_dirfd(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, platform: str, dirfd: int
+) -> None:
+    calls: list[tuple[int, bytes, int, bytes, int]] = []
+
+    class FakeLibrary:
+        def renameatx_np(self, *args):
+            calls.append(args)
+            return 0
+
+        def renameat2(self, *args):
+            calls.append(args)
+            return 0
+
+    monkeypatch.setattr(board_presentation.sys, "platform", platform)
+    monkeypatch.setattr(board_presentation.ctypes, "CDLL", lambda *args, **kwargs: FakeLibrary())
+    root = tmp_path / "board"
+    candidate = tmp_path / "candidate"
+    root.mkdir()
+    candidate.mkdir()
+
+    board_presentation._atomic_directory_exchange(root, candidate)
+
+    assert calls == [(dirfd, str(root).encode(), dirfd, str(candidate).encode(), 0x2)]
+
+
+def test_candidate_staging_is_not_a_catalog_child_and_is_cleaned_after_exchange(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    package = _write_package(
+        tmp_path / "catalog" / "board",
+        size=(100, 50),
+        background=(250, 248, 245, 255),
+        visible_rectangles=[(20, 10, 79, 39)],
+        holds=[_hold("board", _rounded_piece(0.2, 0.2, 0.6, 0.6))],
+    )
+    staging_parents: list[Path] = []
+    original_exchange = board_presentation._atomic_directory_exchange
+
+    def observe_exchange(root: Path, candidate: Path) -> None:
+        staging_parents.append(candidate.parent)
+        original_exchange(root, candidate)
+
+    monkeypatch.setattr(board_presentation, "_atomic_directory_exchange", observe_exchange)
+    normalize_package_presentation(package, write=True)
+
+    assert staging_parents[0] != package.parent
+    assert staging_parents[0].parent == package.parent.parent
+    assert not staging_parents[0].exists()
+    assert sorted(child.name for child in package.parent.iterdir()) == ["board"]
+
+
 def test_candidate_validation_failure_keeps_live_files_and_skips_exchange(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

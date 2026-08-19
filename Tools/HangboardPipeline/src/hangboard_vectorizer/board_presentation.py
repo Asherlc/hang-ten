@@ -25,7 +25,6 @@ _OPAQUE_BACKGROUND_MINIMUM_TOLERANCE = 12.0
 _BACKGROUND_COLOR_QUANTUM = 16
 _LIGHT_NEUTRAL_BACKGROUND_MIN_CHANNEL = 224
 _LIGHT_NEUTRAL_BACKGROUND_MAX_CHANNEL_SPREAD = 32
-_AT_FDCWD = -2
 _RENAME_EXCHANGE = 0x2
 _PIXEL_ROUNDING_EPSILON = 1e-9
 
@@ -318,7 +317,12 @@ def _crop_png(image: Image.Image, crop: Crop) -> bytes:
 
 def _validate_and_replace_package(root: Path, document: Mapping[str, Any], png: bytes) -> None:
     parent = root.parent
-    candidate = Path(tempfile.mkdtemp(prefix=f".{root.name}.presentation-", dir=parent))
+    # Keep transient candidates outside the discovered catalog while using its
+    # containing directory, which is on the same filesystem for the exchange.
+    staging_parent = parent.parent / f".{parent.name}.presentation-staging"
+    staging_parent_created = not staging_parent.exists()
+    staging_parent.mkdir(exist_ok=True)
+    candidate = Path(tempfile.mkdtemp(prefix=f"{root.name}-", dir=staging_parent))
     try:
         (candidate / "assets").mkdir()
         (candidate / "board.json").write_text(
@@ -330,6 +334,11 @@ def _validate_and_replace_package(root: Path, document: Mapping[str, Any], png: 
     finally:
         if candidate.exists():
             shutil.rmtree(candidate)
+        if staging_parent_created:
+            try:
+                staging_parent.rmdir()
+            except OSError:
+                pass
 
 
 def _atomic_directory_exchange(root: Path, candidate: Path) -> None:
@@ -351,10 +360,19 @@ def _atomic_directory_exchange(root: Path, candidate: Path) -> None:
         raise OSError("atomic directory exchange is unavailable")
     operation.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
     operation.restype = ctypes.c_int
+    dirfd = (
+        -2
+        if sys.platform == "darwin"
+        else -100
+        if sys.platform.startswith("linux")
+        else None
+    )
+    if dirfd is None:
+        raise OSError("atomic directory exchange is unavailable")
     if operation(
-        _AT_FDCWD,
+        dirfd,
         os.fsencode(root),
-        _AT_FDCWD,
+        dirfd,
         os.fsencode(candidate),
         _RENAME_EXCHANGE,
     ) != 0:
