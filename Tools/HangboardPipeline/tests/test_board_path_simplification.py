@@ -17,10 +17,19 @@ from hangboard_vectorizer.board_path_simplification import (  # noqa: E402
 )
 
 
-def _write_package(root: Path, holds: list[dict[str, object]]) -> Path:
+def _write_package(
+    root: Path,
+    holds: list[dict[str, object]],
+    *,
+    native_size: tuple[int, int] = (40, 20),
+) -> Path:
     (root / "assets").mkdir(parents=True)
-    (root / "assets" / "primary.png").write_bytes(PRIMARY_PNG_BYTES)
+    if native_size == (40, 20):
+        (root / "assets" / "primary.png").write_bytes(PRIMARY_PNG_BYTES)
+    else:
+        Image.new("RGB", native_size, "white").save(root / "assets" / "primary.png")
     document = board_document()
+    document["aspectRatio"] = native_size[0] / native_size[1]
     document["holds"] = holds
     (root / "board.json").write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
     return root
@@ -74,6 +83,32 @@ def _rounded_rect_path(
         )
     )
     return {"type": "path", "commands": commands}
+
+
+def _sampled_rounded_rect_path(radius: float) -> dict[str, object]:
+    """Approximate a square rounded rect without including tangent anchors."""
+    corners = (
+        ((1 - radius, 0), (1, 0), (1, radius)),
+        ((1, 1 - radius), (1, 1), (1 - radius, 1)),
+        ((radius, 1), (0, 1), (0, 1 - radius)),
+        ((0, radius), (0, 0), (radius, 0)),
+    )
+    points: list[tuple[float, float]] = []
+    for start, control, end in corners:
+        for t in (0.025, 0.25, 0.5, 0.75, 0.975):
+            point = (
+                (1 - t) ** 2 * start[0] + 2 * (1 - t) * t * control[0] + t**2 * end[0],
+                (1 - t) ** 2 * start[1] + 2 * (1 - t) * t * control[1] + t**2 * end[1],
+            )
+            corner_x = 0 if point[0] < 0.5 else 1
+            corner_y = 0 if point[1] < 0.5 else 1
+            points.append(
+                (
+                    corner_x + (point[0] - corner_x) * 0.95,
+                    corner_y + (point[1] - corner_y) * 0.95,
+                )
+            )
+    return _path(points)
 
 
 def _piece(
@@ -412,6 +447,54 @@ def test_rejects_a_primitive_whose_reverse_native_boundary_error_exceeds_one_pix
     assert result.pieces[0].after_editable_points > 0
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
     assert document["holds"][0]["geometry"][0]["shape"]["type"] == "path"
+
+
+def test_rejects_primitive_when_exact_boundary_is_1_1_pixels_despite_raster_quantization(
+    tmp_path: Path,
+) -> None:
+    # The narrow 1.1 px notch occupies <0.25% of the image, while the 4x
+    # distance transform quantizes its boundary deviation down to 1.0 px.
+    source = [
+        (0, 0),
+        (1, 0),
+        (1, 1),
+        (0.54, 1),
+        (0.5, 0.945),
+        (0.46, 1),
+        (0, 1),
+    ]
+    package = _write_package(tmp_path / "board", [_hold("exact-gate", _path(source))])
+
+    result = simplify_package_hold_paths(package, write=True)
+
+    maximum, ratio = _independent_measurements(
+        source,
+        [(0, 0), (1, 0), (1, 1), (0, 1)],
+    )
+    assert math.isclose(maximum, 1.1, abs_tol=0.0001)
+    assert ratio <= 0.0025
+    assert result.pieces[0].after_editable_points > 0
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    assert document["holds"][0]["geometry"][0]["shape"]["type"] == "path"
+
+
+def test_finds_radius_point_25_on_complete_canvas_derived_grid(
+    tmp_path: Path,
+) -> None:
+    package = _write_package(
+        tmp_path / "board",
+        [_hold("quarter-radius", _sampled_rounded_rect_path(0.25))],
+        native_size=(100, 100),
+    )
+
+    result = simplify_package_hold_paths(package, write=True)
+
+    assert result.pieces[0].after_editable_points == 0
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    assert document["holds"][0]["geometry"][0]["shape"] == {
+        "type": "roundedRect",
+        "cornerRadiusFraction": 0.25,
+    }
 
 
 def test_primitive_conversion_preserves_frame_treatment_order_and_non_shape_fields(

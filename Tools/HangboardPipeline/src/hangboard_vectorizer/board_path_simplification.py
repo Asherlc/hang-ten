@@ -93,6 +93,24 @@ class NativeContourError:
         )
 
 
+@dataclass(frozen=True)
+class _RasterDifferenceMeasurement:
+    source_mask: np.ndarray
+    left: int
+    top: int
+    raster_size: tuple[int, int]
+    denominator: int
+
+    def difference(self, contour: list[Point]) -> float:
+        candidate = _cropped_mask(
+            contour,
+            left=self.left,
+            top=self.top,
+            raster_size=self.raster_size,
+        )
+        return float(np.count_nonzero(self.source_mask ^ candidate)) / self.denominator
+
+
 def measure_native_contour_error(
     before: Sequence[Point],
     after: Sequence[Point],
@@ -109,8 +127,6 @@ def measure_native_contour_error(
         for first_point, second_point in zip(first, second, strict=True)
     ):
         return NativeContourError(0.0, 0.0)
-    if not _within_exact_hausdorff_work_cap(first, second):
-        raise ValueError("native contour comparison exceeds exact complexity cap")
     return NativeContourError(
         maximum_boundary_deviation_pixels=_boundary_deviation(first, second),
         symmetric_difference_ratio=_symmetric_difference_ratio(
@@ -341,9 +357,17 @@ def _fit_rounded_rectangle(
         return None
 
     radii = _rounded_rectangle_radius_candidates(
-        shape, frame, width=width, height=height
+        frame, width=width, height=height
     )
-    best: tuple[tuple[float, float, float], dict[str, Any], NativeContourError] | None = None
+    raster_measurement = _raster_difference_measurement(
+        source,
+        frame,
+        width=width,
+        height=height,
+    )
+    raster_matches: list[
+        tuple[float, float, float, dict[str, Any], list[Point]]
+    ] = []
     rejected = 0
     for radius in radii:
         candidate_shape = {
@@ -351,32 +375,72 @@ def _fit_rounded_rectangle(
             "cornerRadiusFraction": radius,
         }
         try:
-            candidate = _display_contour(
-                frame, candidate_shape, width=width, height=height
+            candidate = _rounded_rectangle_contour(
+                frame,
+                radius,
+                width=width,
+                height=height,
             )
-            error = _native_render_error(
-                source, candidate, width=width, height=height
-            )
+            difference = raster_measurement.difference(candidate)
         except (GeometryError, TypeError, ValueError):
             rejected += 1
             continue
-        if not error.passes:
+        if difference > _MAX_SYMMETRIC_DIFFERENCE_RATIO:
             rejected += 1
             continue
-        score = (
-            error.symmetric_difference_ratio,
-            error.maximum_boundary_deviation_pixels,
-            radius,
+        raster_matches.append(
+            (
+                difference,
+                0.0,
+                radius,
+                candidate_shape,
+                candidate,
+            )
         )
-        if best is None or score < best[0]:
-            best = score, candidate_shape, error
-    if best is None:
-        return None
-    return best[1], best[2], len(radii), rejected
+    raster_matches.sort(key=lambda match: match[:3])
+    for difference in sorted({match[0] for match in raster_matches}):
+        exact_matches: list[
+            tuple[float, float, dict[str, Any], NativeContourError]
+        ] = []
+        for candidate_difference, _, radius, candidate_shape, _ in raster_matches:
+            if difference != candidate_difference:
+                continue
+            candidate = _display_contour(
+                frame,
+                candidate_shape,
+                width=width,
+                height=height,
+            )
+            direct_difference = raster_measurement.difference(candidate)
+            if direct_difference > _MAX_SYMMETRIC_DIFFERENCE_RATIO:
+                rejected += 1
+                continue
+            if len(source) == len(candidate) and all(
+                _same_point(source_point, candidate_point)
+                for source_point, candidate_point in zip(source, candidate, strict=True)
+            ):
+                exact_deviation = 0.0
+            elif not _boundary_within(
+                source,
+                candidate,
+                limit=_MAX_BOUNDARY_DEVIATION_PIXELS,
+            ):
+                rejected += 1
+                continue
+            else:
+                exact_deviation = _boundary_deviation(source, candidate)
+            if exact_deviation > _MAX_BOUNDARY_DEVIATION_PIXELS:
+                rejected += 1
+                continue
+            error = NativeContourError(exact_deviation, direct_difference)
+            exact_matches.append((exact_deviation, radius, candidate_shape, error))
+        if exact_matches:
+            best = min(exact_matches, key=lambda match: match[:2])
+            return best[2], best[3], len(radii), rejected
+    return None
 
 
 def _rounded_rectangle_radius_candidates(
-    shape: Mapping[str, Any],
     frame: Mapping[str, Any],
     *,
     width: int,
@@ -389,35 +453,13 @@ def _rounded_rectangle_radius_candidates(
     if minimum_dimension <= _EPSILON:
         return ()
     resolution = 1.0 / (_SUPER_SAMPLE * minimum_dimension)
-    maximum_step = max(1, round(0.5 / resolution))
-    steps = {0, maximum_step}
-    for command in shape.get("commands", ()):
-        if not isinstance(command, Mapping):
-            continue
-        for field in ("to", "control", "control1", "control2"):
-            value = command.get(field)
-            if not isinstance(value, list) or len(value) != 2:
-                continue
-            try:
-                point_x, point_y = float(value[0]), float(value[1])
-            except (TypeError, ValueError):
-                continue
-            distances = (
-                min(point_x, 1.0 - point_x) * native_width,
-                min(point_y, 1.0 - point_y) * native_height,
-            )
-            for distance in distances:
-                if distance < -_EPSILON or distance > minimum_dimension / 2 + _EPSILON:
-                    continue
-                center = round((distance / minimum_dimension) / resolution)
-                steps.update(
-                    step
-                    for step in range(center - 1, center + 2)
-                    if 0 <= step <= maximum_step
-                )
-    return tuple(
-        min(0.5, round(step * resolution, 12)) for step in sorted(steps)
-    )
+    maximum_step = math.floor(0.5 / resolution + _EPSILON)
+    radii = {
+        round(step * resolution, 12)
+        for step in range(maximum_step + 1)
+    }
+    radii.add(0.5)
+    return tuple(sorted(radii))
 
 
 def _display_contour(
@@ -433,6 +475,69 @@ def _display_contour(
     contour = list(rendered.contour)
     if len(contour) > 1 and _same_point(contour[0], contour[-1]):
         contour.pop()
+    return contour
+
+
+def _rounded_rectangle_contour(
+    frame: Mapping[str, Any],
+    radius: float,
+    *,
+    width: int,
+    height: int,
+) -> list[Point]:
+    """Generate the codec's rounded-rectangle contour for exhaustive scoring.
+
+    The selected finalist is always rendered again through the Workbench codec
+    before either native error gate can accept it.
+    """
+    x = float(frame["x"]) * width
+    y = float(frame["y"]) * height
+    horizontal = float(frame["width"]) * width
+    vertical = float(frame["height"]) * height
+    corner = min(horizontal, vertical) * radius
+    if corner <= _EPSILON:
+        return [
+            (x, y),
+            (x + horizontal, y),
+            (x + horizontal, y + vertical),
+            (x, y + vertical),
+        ]
+    commands = (
+        (
+            (x + horizontal - corner, y),
+            (x + horizontal, y),
+            (x + horizontal, y + corner),
+        ),
+        (
+            (x + horizontal, y + vertical - corner),
+            (x + horizontal, y + vertical),
+            (x + horizontal - corner, y + vertical),
+        ),
+        (
+            (x + corner, y + vertical),
+            (x, y + vertical),
+            (x, y + vertical - corner),
+        ),
+        ((x, y + corner), (x, y), (x + corner, y)),
+    )
+    contour: list[Point] = [(x + corner, y)]
+    previous_end = contour[0]
+    for start, control, end in commands:
+        if not _same_point(previous_end, start):
+            contour.append(start)
+        for step in range(1, 33):
+            t = step / 32
+            contour.append(
+                (
+                    (1 - t) ** 2 * start[0]
+                    + 2 * (1 - t) * t * control[0]
+                    + t**2 * end[0],
+                    (1 - t) ** 2 * start[1]
+                    + 2 * (1 - t) * t * control[1]
+                    + t**2 * end[1],
+                )
+            )
+        previous_end = end
     return contour
 
 
@@ -486,6 +591,58 @@ def _native_render_error(
         float(distance_to_second[first_boundary].max(initial=0)),
     ) / _SUPER_SAMPLE
     return NativeContourError(deviation, difference)
+
+
+def _raster_difference_measurement(
+    source: list[Point],
+    frame: Mapping[str, Any],
+    *,
+    width: int,
+    height: int,
+) -> _RasterDifferenceMeasurement:
+    padding = _SUPER_SAMPLE * 2
+    frame_left = float(frame["x"]) * width
+    frame_top = float(frame["y"]) * height
+    frame_right = (float(frame["x"]) + float(frame["width"])) * width
+    frame_bottom = (float(frame["y"]) + float(frame["height"])) * height
+    left = math.floor(min(frame_left, *(point[0] for point in source)) * _SUPER_SAMPLE) - padding
+    top = math.floor(min(frame_top, *(point[1] for point in source)) * _SUPER_SAMPLE) - padding
+    right = math.ceil(max(frame_right, *(point[0] for point in source)) * _SUPER_SAMPLE) + padding
+    bottom = math.ceil(max(frame_bottom, *(point[1] for point in source)) * _SUPER_SAMPLE) + padding
+    raster_size = (right - left + 1, bottom - top + 1)
+    return _RasterDifferenceMeasurement(
+        source_mask=_cropped_mask(
+            source,
+            left=left,
+            top=top,
+            raster_size=raster_size,
+        ),
+        left=left,
+        top=top,
+        raster_size=raster_size,
+        denominator=width * _SUPER_SAMPLE * height * _SUPER_SAMPLE,
+    )
+
+
+def _cropped_mask(
+    points: list[Point],
+    *,
+    left: int,
+    top: int,
+    raster_size: tuple[int, int],
+) -> np.ndarray:
+    image = Image.new("1", raster_size, 0)
+    ImageDraw.Draw(image).polygon(
+        [
+            (
+                round(point[0] * _SUPER_SAMPLE) - left,
+                round(point[1] * _SUPER_SAMPLE) - top,
+            )
+            for point in points
+        ],
+        fill=1,
+    )
+    return np.asarray(image, dtype=bool)
 
 
 def _unchanged(
@@ -748,10 +905,165 @@ def _same_winding(first: list[Point], second: list[Point]) -> bool:
 
 
 def _boundary_deviation(before: list[Point], after: list[Point]) -> float:
-    return max(
-        _maximum_distance_to_segments(before, after),
-        _maximum_distance_to_segments(after, before),
+    if _same_contour(before, after):
+        return 0.0
+    upper = max(
+        math.dist(first, second)
+        for first in before
+        for second in after
     )
+    lower = 0.0
+    # Twenty-four bisections resolve a one-pixel acceptance boundary much more
+    # finely than either the quarter-pixel search grid or reported audit needs.
+    for _ in range(24):
+        midpoint = (lower + upper) / 2
+        if _boundary_within(before, after, limit=midpoint):
+            upper = midpoint
+        else:
+            lower = midpoint
+    return 0.0 if upper <= 1e-5 else upper
+
+
+def _same_contour(first: list[Point], second: list[Point]) -> bool:
+    return len(first) == len(second) and all(
+        _same_point(first_point, second_point)
+        for first_point, second_point in zip(first, second, strict=True)
+    )
+
+
+def _boundary_within(
+    first: list[Point], second: list[Point], *, limit: float
+) -> bool:
+    return _directed_boundary_within(first, second, limit=limit) and _directed_boundary_within(
+        second, first, limit=limit
+    )
+
+
+def _directed_boundary_within(
+    source: list[Point], target: list[Point], *, limit: float
+) -> bool:
+    target_segments = list(_segments(target))
+    return all(
+        _segment_is_covered(start, end, target_segments, limit=limit)
+        for start, end in _segments(source)
+    )
+
+
+def _segment_is_covered(
+    start: Point,
+    end: Point,
+    target_segments: list[tuple[Point, Point]],
+    *,
+    limit: float,
+) -> bool:
+    intervals = sorted(
+        interval
+        for target_start, target_end in target_segments
+        for interval in _capsule_intervals(
+            start,
+            end,
+            target_start,
+            target_end,
+            limit=limit,
+        )
+    )
+    covered_until = 0.0
+    for lower, upper in intervals:
+        if lower > covered_until + _EPSILON:
+            return False
+        covered_until = max(covered_until, upper)
+        if covered_until >= 1.0 - _EPSILON:
+            return True
+    return covered_until >= 1.0 - _EPSILON
+
+
+def _capsule_intervals(
+    source_start: Point,
+    source_end: Point,
+    target_start: Point,
+    target_end: Point,
+    *,
+    limit: float,
+) -> tuple[tuple[float, float], ...]:
+    horizontal_gap = max(
+        min(target_start[0], target_end[0]) - max(source_start[0], source_end[0]),
+        min(source_start[0], source_end[0]) - max(target_start[0], target_end[0]),
+        0.0,
+    )
+    vertical_gap = max(
+        min(target_start[1], target_end[1]) - max(source_start[1], source_end[1]),
+        min(source_start[1], source_end[1]) - max(target_start[1], target_end[1]),
+        0.0,
+    )
+    if horizontal_gap * horizontal_gap + vertical_gap * vertical_gap > limit * limit:
+        return ()
+    intervals = [
+        interval
+        for endpoint in (target_start, target_end)
+        if (interval := _circle_interval(source_start, source_end, endpoint, limit))
+        is not None
+    ]
+    target_vector = _subtract(target_end, target_start)
+    target_length_squared = _dot(target_vector, target_vector)
+    if target_length_squared > _EPSILON:
+        source_vector = _subtract(source_end, source_start)
+        offset = _subtract(source_start, target_start)
+        body = (0.0, 1.0)
+        body = _intersect_linear_range(
+            body,
+            _dot(offset, target_vector),
+            _dot(source_vector, target_vector),
+            0.0,
+            target_length_squared,
+        )
+        body = _intersect_linear_range(
+            body,
+            _cross(offset, target_vector),
+            _cross(source_vector, target_vector),
+            -limit * math.sqrt(target_length_squared),
+            limit * math.sqrt(target_length_squared),
+        )
+        if body is not None:
+            intervals.append(body)
+    return tuple(intervals)
+
+
+def _circle_interval(
+    start: Point, end: Point, center: Point, radius: float
+) -> tuple[float, float] | None:
+    vector = _subtract(end, start)
+    offset = _subtract(start, center)
+    first = _dot(vector, vector)
+    second = 2 * _dot(offset, vector)
+    third = _dot(offset, offset) - radius * radius
+    if first <= _EPSILON:
+        return (0.0, 1.0) if third <= _EPSILON else None
+    discriminant = second * second - 4 * first * third
+    if discriminant < -_EPSILON:
+        return None
+    root = math.sqrt(max(0.0, discriminant))
+    lower = max(0.0, (-second - root) / (2 * first))
+    upper = min(1.0, (-second + root) / (2 * first))
+    return (lower, upper) if lower <= upper + _EPSILON else None
+
+
+def _intersect_linear_range(
+    interval: tuple[float, float] | None,
+    offset: float,
+    slope: float,
+    minimum: float,
+    maximum: float,
+) -> tuple[float, float] | None:
+    if interval is None:
+        return None
+    if abs(slope) <= _EPSILON:
+        return interval if minimum - _EPSILON <= offset <= maximum + _EPSILON else None
+    first = (minimum - offset) / slope
+    second = (maximum - offset) / slope
+    allowed_lower, allowed_upper = sorted((first, second))
+    lower = max(interval[0], allowed_lower)
+    upper = min(interval[1], allowed_upper)
+    return (lower, upper) if lower <= upper + _EPSILON else None
 
 
 def _within_exact_hausdorff_work_cap(before: list[Point], after: list[Point]) -> bool:
