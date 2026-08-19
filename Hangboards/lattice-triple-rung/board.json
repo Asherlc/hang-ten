@@ -130,12 +130,7 @@
           }
         }
       ],
-      "sizeMillimeters": 45,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
-      ]
+      "sizeMillimeters": 45
     },
     {
       "id": "edge-10",
@@ -256,12 +251,7 @@
           }
         }
       ],
-      "sizeMillimeters": 10,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
-      ]
+      "sizeMillimeters": 10
     },
     {
       "id": "edge-20",
@@ -382,12 +372,7 @@
           }
         }
       ],
-      "sizeMillimeters": 20,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge"
-      ]
+      "sizeMillimeters": 20
     }
   ]
 }

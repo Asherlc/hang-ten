@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 IMPORTER = REPO_ROOT / "scripts/import-generated-board-catalog.py"
 
 SOURCE_AUDITS = (
+    "2026-08-19-all-board-metadata-hold-audit.md",
     "2026-08-12-beastmaker-board-packages.md",
     "2026-08-12-dewoodstok-escape-board-packages.md",
     "2026-08-12-evolv-frictitious-board-packages.md",
