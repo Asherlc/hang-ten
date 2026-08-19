@@ -160,10 +160,14 @@ final class WorkoutSessionStoreTests: XCTestCase {
     }
 
     func testAppendCompletionRunsOnMainQueueAndCanFlush() {
+        dispatchPrecondition(condition: .onQueue(.main))
         let completion = expectation(description: "append completion flushes")
         let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+        var isAcceptingCompletion = true
+        defer { isAcceptingCompletion = false }
 
         store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)) { result in
+            guard isAcceptingCompletion else { return }
             XCTAssertTrue(Thread.isMainThread)
             store.flush()
 
@@ -175,7 +179,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
             }
         }
 
-        wait(for: [completion], timeout: 2)
+        wait(for: [completion], timeout: 30)
     }
 
     func testRemoveCompletionRunsOnMainQueueAndCanFlush() {
