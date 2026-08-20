@@ -785,7 +785,8 @@ final class WorkoutAudioCoachTests: XCTestCase {
         synthesizer.sendFinish(of: synthesizer.utterances[1])
         await Task.yield()
 
-        XCTAssertEqual(audioSession.deactivationCount, 0)
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
 
         coach.stop()
 
@@ -820,7 +821,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertEqual(audioSession.deactivationCount, 0)
     }
 
-    func testCueCompletionDoesNotDeactivateAudioSessionDuringCountdownSequence() async {
+    func testCueCompletionDeactivatesAudioSessionAndNotifiesOtherApps() async {
         let audioSession = RecordingWorkoutAudioSession()
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
         let coach = WorkoutAudioCoach(
@@ -833,18 +834,8 @@ final class WorkoutAudioCoachTests: XCTestCase {
         synthesizer.sendFinish(of: synthesizer.utterances[0])
         await Task.yield()
 
-        XCTAssertEqual(audioSession.deactivationCount, 0)
-
-        coach.speak("2")
-        synthesizer.isSpeaking = false
-        synthesizer.sendFinish(of: synthesizer.utterances[1])
-        await Task.yield()
-
-        XCTAssertEqual(audioSession.deactivationCount, 0)
-
-        coach.stop()
-
         XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
     }
 
     func testStopOwnsCancellationAndIgnoresLaterCallbacks() async {
