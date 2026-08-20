@@ -23585,12 +23585,12 @@
       validateEditorDocument: dependencies.controller.validateEditorDocument,
       dialogs: dependencies.dialogs
     });
-    const saveFromShortcut = import_react3.default.useCallback(() => {
+    const saveFromShortcut = import_react4.default.useCallback(() => {
       if (busy || !state.board) return;
       editor.cancelActiveEdit();
       void actions.saveBoard();
     }, [actions, busy, editor, state.board]);
-    import_react3.default.useEffect(() => {
+    import_react4.default.useEffect(() => {
       const onKeyDown = (event) => {
         const target = event.target instanceof Element ? event.target : null;
         const tag = target?.tagName.toLowerCase();
