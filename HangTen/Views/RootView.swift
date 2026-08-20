@@ -85,41 +85,45 @@ enum InstructionAccessoryCardContent {
     }
 }
 
+enum RootTab: Hashable, CaseIterable {
+    case train
+    case plans
+    case history
+
+    static func initial(environment: [String: String]) -> RootTab {
+        #if DEBUG
+        if environment["HANGTEN_REVIEW_HISTORY"] == "1" {
+            return .history
+        }
+        if environment["HANGTEN_REVIEW_PLANS"] == "1" {
+            return .plans
+        }
+        #endif
+        return .train
+    }
+}
+
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
-    @State private var selectedTab: Int = {
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HEALTH"] == "1" ||
-            ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1" {
-            return 2
-        }
-        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLANS"] == "1" {
-            return 1
-        }
-        #else
-        #endif
-        return 0
-    }()
+    @State private var selectedTab = RootTab.initial(
+        environment: ProcessInfo.processInfo.environment
+    )
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView()
-                .tabItem {
-                    Label("Today", systemImage: "sun.max.fill")
-                }
-                .tag(0)
+            TrainView { selectedTab = .plans }
+                .tabItem { Label("Train", systemImage: "figure.climbing") }
+                .tag(RootTab.train)
 
             PlansView()
                 .tabItem {
                     Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
                 }
-                .tag(1)
+                .tag(RootTab.plans)
 
-            ProgressDashboardView()
-                .tabItem {
-                    Label("Progress", systemImage: "chart.bar.xaxis")
-                }
-                .tag(2)
+            HistoryView()
+                .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+                .tag(RootTab.history)
 		}
 		.tint(.hangGreenDark)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
@@ -149,219 +153,6 @@ struct RootView: View {
                 .iOS(interfaceOrientations: orientationMask)
             )
             #endif
-        }
-    }
-}
-
-struct HomeView: View {
-    @EnvironmentObject private var store: AppStore
-    @State private var showsPlanReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN"] == "1"
-        #else
-        return false
-        #endif
-    }()
-	@State private var showsWorkoutReview: Bool = {
-		#if DEBUG
-		return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT"] == "1"
-		#else
-		return false
-		#endif
-	}()
-
-    var body: some View {
-        NavigationStack {
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 22) {
-                    homeHeader
-                    favoritesSection
-                    boardCard
-                    quickStats
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
-                .padding(.bottom, 30)
-            }
-            .background(Color.hangBackground)
-            .toolbar(.hidden, for: .navigationBar)
-            .navigationDestination(isPresented: $showsPlanReview) {
-                if let plan = reviewPlan {
-                    PlanDetailView(plan: plan)
-                } else {
-                    noCompatiblePlan
-                }
-            }
-			.navigationDestination(isPresented: $showsWorkoutReview) {
-				if let plan = reviewPlan {
-					WorkoutView(plan: plan)
-				} else {
-					noCompatiblePlan
-				}
-			}
-        }
-    }
-
-    private var reviewPlan: TrainingPlan? {
-        store.featuredPlan
-    }
-
-    private var homeHeader: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 6) {
-                SectionLabel(title: "Hang Ten")
-                Text("Train with intention.")
-                    .font(.system(size: 31, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text("Your board. Your holds. Your next session.")
-                    .font(.system(size: 15, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-            }
-
-            Spacer()
-
-            ZStack {
-                Circle()
-                    .fill(Color.hangGreen)
-                    .frame(width: 48, height: 48)
-                Image(systemName: "figure.climbing")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(Color.hangInk)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var favoritesSection: some View {
-        if store.favoritePlans.isEmpty {
-            VStack(alignment: .leading, spacing: 17) {
-                SectionLabel(title: "Favorites")
-                Text("Favorite routines from Plans to keep them handy here.")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text("Your favorites will appear here when they are compatible with your selected board.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-            }
-            .hangCard()
-        } else {
-            VStack(alignment: .leading, spacing: 12) {
-                SectionLabel(title: "Favorites")
-                ForEach(store.favoritePlans) { plan in
-                    FavoritePlanCard(
-                        plan: plan,
-                        board: store.board(for: plan),
-                        isFavorite: store.isFavorite(plan),
-                        isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
-                    ) {
-                        store.toggleFavorite(plan)
-                    }
-                }
-            }
-        }
-    }
-
-    private var noCompatiblePlan: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            SectionLabel(title: "No compatible routine")
-            Text("This board needs a routine whose hold targets resolve exactly.")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
-            Text("Choose another board or add a source-audited routine before starting a session.")
-                .font(.system(size: 13, weight: .medium, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
-        }
-        .hangCard()
-    }
-
-    private var boardCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 5) {
-                    SectionLabel(title: "Your board")
-                    Text(store.selectedBoard.name)
-                        .font(.system(size: 21, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-                    Text(store.selectedBoard.dimensions)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                }
-
-                Spacer()
-
-                Menu {
-                    ForEach(BoardCatalog.all) { board in
-                        Button {
-                            store.selectBoard(board)
-                        } label: {
-                            Label(
-                                board.name,
-                                systemImage: board.id == store.selectedBoard.id ? "checkmark" : "rectangle"
-                            )
-                        }
-                    }
-                } label: {
-                    Image(systemName: "slider.horizontal.3")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Color.hangInk)
-                        .padding(10)
-                        .background(Color.hangBackground, in: Circle())
-                }
-                .accessibilityLabel("Choose hangboard")
-            }
-
-            BoardMapView(board: store.selectedBoard)
-                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-
-            HStack(spacing: 7) {
-                Circle()
-                    .fill(Color.holdActive)
-                    .frame(width: 8, height: 8)
-                Text("Active holds appear in red")
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-                Spacer()
-                Link(destination: store.selectedBoard.productURL) {
-                    Image(systemName: "arrow.up.right")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(Color.hangGreenDark)
-                }
-                .accessibilityLabel("Open board product page")
-            }
-        }
-        .hangCard()
-    }
-
-    private var quickStats: some View {
-        HStack(spacing: 12) {
-            StatCard(value: "\(store.sessionsCompleted)", label: "Sessions", icon: "checkmark.seal.fill")
-        }
-    }
-}
-
-private struct StatCard: View {
-    let value: String
-    let label: String
-    let icon: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 15, weight: .bold))
-                .foregroundStyle(Color.hangGreenDark)
-            Text(value)
-                .font(.system(size: 21, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
-            Text(label)
-                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
         }
     }
 }
@@ -402,6 +193,8 @@ struct PlansView: View {
                             .font(.system(size: 15, weight: .medium, design: .rounded))
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
+
+                        currentBoardControl
 
                         Button {
                             isCreatingRoutine = true
@@ -504,6 +297,40 @@ struct PlansView: View {
                 )
             }
         }
+    }
+
+    private var currentBoardControl: some View {
+        NavigationLink {
+            BoardPickerView()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "rectangle.portrait.fill")
+                    .foregroundStyle(Color.hangGreenDark)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Training on")
+                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                    Text(store.selectedBoard.name)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangGreenDark)
+            }
+            .padding(14)
+            .background(
+                Color.hangCream,
+                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("plans.changeBoard")
     }
 
     private func filterBar(options: PlanFilterOptions) -> some View {
@@ -785,7 +612,7 @@ private struct PlanCard: View {
     }
 }
 
-private struct FavoritePlanCard: View {
+struct FavoritePlanCard: View {
     let plan: TrainingPlan
     let board: TrainingBoard
     let isFavorite: Bool
@@ -828,6 +655,23 @@ private struct FavoritePlanCard: View {
     }
 }
 
+enum PlanDetailPlanResolver {
+    static func resolve(
+        capturedPlan: TrainingPlan,
+        eligiblePlans: [TrainingPlan]
+    ) -> TrainingPlan? {
+        eligiblePlans.first { $0.id == capturedPlan.id }
+    }
+}
+
+private enum PlanDetailResolutionError: LocalizedError {
+    case unavailable
+
+    var errorDescription: String? {
+        "This routine is not available for the selected board."
+    }
+}
+
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -837,8 +681,11 @@ struct PlanDetailView: View {
     @State private var isShowingDeleteConfirmation = false
     @State private var lifecycleError: String?
 
-    private var currentPlan: TrainingPlan {
-        store.plans.first(where: { $0.id == plan.id }) ?? plan
+    private var currentPlan: TrainingPlan? {
+        PlanDetailPlanResolver.resolve(
+            capturedPlan: plan,
+            eligiblePlans: store.plans
+        )
     }
 
     @MainActor
@@ -846,66 +693,55 @@ struct PlanDetailView: View {
         for plan: TrainingPlan,
         in store: AppStore
     ) throws -> CustomRoutineDefinition {
-        let currentPlan = store.plans.first(where: { $0.id == plan.id }) ?? plan
+        guard let currentPlan = PlanDetailPlanResolver.resolve(
+            capturedPlan: plan,
+            eligiblePlans: store.plans
+        ) else {
+            throw PlanDetailResolutionError.unavailable
+        }
         return try store.duplicateRoutine(currentPlan)
     }
 
-    private var board: TrainingBoard {
-        store.board(for: currentPlan)
-    }
-
-    private var firstStep: WorkoutStep? {
-        currentPlan.steps.first
-    }
-
-    private var firstStepHoldIDs: Set<String> {
-        guard let firstStep else { return [] }
-        return store.holdIDs(for: firstStep, on: board)
-    }
-
-    private var firstStepHold: BoardHold? {
-        board.holds.first { firstStepHoldIDs.contains($0.id) }
-    }
-
-    private var firstStepHoldCue: WorkoutHoldCue? {
-        WorkoutHoldCuePolicy.resolve(
-            step: firstStep,
-            hold: firstStepHold,
-            on: board
-        )
-    }
-
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 21) {
-                titleBlock
-                if let firstStep, !firstStep.targets.isEmpty {
-                    boardPreview
+        Group {
+            if let currentPlan {
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 21) {
+                        titleBlock(for: currentPlan)
+                        if let firstStep = currentPlan.steps.first,
+                           !firstStep.targets.isEmpty {
+                            boardPreview(for: currentPlan)
+                        }
+                        stepsCard(for: currentPlan)
+                        sourceCard(for: currentPlan)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 18)
+                    .padding(.bottom, 116)
                 }
-                stepsCard
-                sourceCard
+            } else {
+                unavailableContent
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 18)
-            .padding(.bottom, 116)
         }
         .background(Color.hangBackground)
         .navigationTitle("Plan")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button("Duplicate", action: duplicateRoutine)
-                    if store.isCustom(plan) {
-                        Button("Edit", action: editRoutine)
-                        Button("Delete", role: .destructive) {
-                            isShowingDeleteConfirmation = true
+            if let currentPlan {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Duplicate", action: duplicateRoutine)
+                        if store.isCustom(currentPlan) {
+                            Button("Edit", action: editRoutine)
+                            Button("Delete", role: .destructive) {
+                                isShowingDeleteConfirmation = true
+                            }
                         }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
                     }
-                } label: {
-                    Image(systemName: "ellipsis.circle")
+                    .accessibilityIdentifier("customRoutine.actions")
                 }
-                .accessibilityIdentifier("customRoutine.actions")
             }
         }
         .sheet(isPresented: $isShowingEditor) {
@@ -914,7 +750,7 @@ struct PlanDetailView: View {
             }
         }
         .confirmationDialog(
-            "Delete \(currentPlan.title)?",
+            "Delete \(currentPlan?.title ?? plan.title)?",
             isPresented: $isShowingDeleteConfirmation,
             titleVisibility: .visible
         ) {
@@ -933,7 +769,7 @@ struct PlanDetailView: View {
         }
     }
 
-    private var titleBlock: some View {
+    private func titleBlock(for currentPlan: TrainingPlan) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Pill(title: currentPlan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
@@ -973,8 +809,18 @@ struct PlanDetailView: View {
         }
     }
 
-    private var boardPreview: some View {
-        VStack(alignment: .leading, spacing: 12) {
+    private func boardPreview(for currentPlan: TrainingPlan) -> some View {
+        let board = store.board(for: currentPlan)
+        let firstStep = currentPlan.steps.first
+        let firstStepHoldIDs = firstStep.map { store.holdIDs(for: $0, on: board) } ?? []
+        let firstStepHold = board.holds.first { firstStepHoldIDs.contains($0.id) }
+        let firstStepHoldCue = WorkoutHoldCuePolicy.resolve(
+            step: firstStep,
+            hold: firstStepHold,
+            on: board
+        )
+
+        return VStack(alignment: .leading, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
                 SectionLabel(title: "First hold cue")
                 Text(board.name)
@@ -1000,7 +846,7 @@ struct PlanDetailView: View {
         .hangCard()
     }
 
-    private var stepsCard: some View {
+    private func stepsCard(for currentPlan: TrainingPlan) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 SectionLabel(title: "Session flow")
@@ -1020,10 +866,10 @@ struct PlanDetailView: View {
     }
 
     @ViewBuilder
-    private var sourceCard: some View {
+    private func sourceCard(for currentPlan: TrainingPlan) -> some View {
         if let sourceURL = currentPlan.sourceURL {
             Link(destination: sourceURL) {
-                sourceCardContent(showsExternalLink: true)
+                sourceCardContent(for: currentPlan, showsExternalLink: true)
             }
             .buttonStyle(.plain)
         } else {
@@ -1050,7 +896,10 @@ struct PlanDetailView: View {
         .hangCard(padding: 16)
     }
 
-    private func sourceCardContent(showsExternalLink: Bool) -> some View {
+    private func sourceCardContent(
+        for currentPlan: TrainingPlan,
+        showsExternalLink: Bool
+    ) -> some View {
         HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "book.pages.fill")
                     .font(.system(size: 17, weight: .bold))
@@ -1072,6 +921,30 @@ struct PlanDetailView: View {
                 }
             }
             .hangCard(padding: 16)
+    }
+
+    private var unavailableContent: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Image(systemName: "rectangle.portrait.and.arrow.right")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundStyle(Color.hangGreenDark)
+            SectionLabel(title: "Routine unavailable")
+            Text(plan.title)
+                .font(.system(size: 24, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
+            Text("This routine does not support \(store.selectedBoard.name). Choose a compatible plan for your selected board.")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+                .fixedSize(horizontal: false, vertical: true)
+            Button("Go back", action: dismiss.callAsFunction)
+                .buttonStyle(.borderedProminent)
+                .tint(.hangGreenDark)
+        }
+        .hangCard()
+        .padding(.horizontal, 20)
+        .padding(.top, 18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .accessibilityIdentifier("plan.unavailable")
     }
 
     private var lifecycleErrorAlertBinding: Binding<Bool> {
@@ -1097,6 +970,10 @@ struct PlanDetailView: View {
     }
 
     private func editRoutine() {
+        guard currentPlan != nil else {
+            lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
+            return
+        }
         guard let definition = store.customDefinition(for: plan.id) else {
             lifecycleError = "The custom routine could not be found."
             return
@@ -1106,6 +983,10 @@ struct PlanDetailView: View {
     }
 
     private func deleteRoutine() {
+        guard currentPlan != nil else {
+            lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
+            return
+        }
         do {
             try store.deleteCustomRoutine(id: plan.id)
             dismiss()
@@ -2656,292 +2537,5 @@ struct WorkoutView: View {
 			intervalSecondsRemaining: secondsRemaining,
 			isComplete: isComplete
 		)
-	}
-}
-
-struct ProgressDashboardView: View {
-	@EnvironmentObject private var store: AppStore
-	@EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
-	@EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
-	@Environment(\.openURL) private var openURL
-	@Environment(\.scenePhase) private var scenePhase
-
-    var body: some View {
-        NavigationStack {
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 21) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        SectionLabel(title: "Keep showing up")
-                        Text("Your progress.")
-                            .font(.system(size: 31, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.hangInk)
-                        Text("Small, consistent sessions build durable finger strength.")
-                            .font(.system(size: 15, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.hangMuted)
-                    }
-
-                    streakCard
-					sessionHistoryCard
-                    boardInfo
-                    MotherboardCard(
-                        service: motherboardBluetoothService,
-                        settings: motherboardSettingsStore
-                    )
-                    healthCard
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
-                .padding(.bottom, 30)
-            }
-            .background(Color.hangBackground)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        MotherboardSettingsView(
-                            service: motherboardBluetoothService,
-                            settings: motherboardSettingsStore
-                        )
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
-                    .accessibilityLabel("Motherboard settings")
-                }
-            }
-        }
-		.onAppear {
-			store.refreshHealthAuthorization()
-		}
-		.onChange(of: scenePhase) { _, phase in
-			if phase == .active {
-				store.refreshHealthAuthorization()
-			}
-		}
-    }
-
-    private var streakCard: some View {
-        HStack(spacing: 17) {
-            ZStack {
-                Circle()
-                    .stroke(Color.hangGreen.opacity(0.25), lineWidth: 10)
-                Circle()
-                    .trim(from: 0, to: store.workoutHistory.sessionCount == 0 ? 0.05 : 0.68)
-                    .stroke(Color.hangGreenDark, style: StrokeStyle(lineWidth: 10, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                Text("\(store.workoutHistory.sessionCount)")
-                    .font(.system(size: 25, weight: .heavy, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                    .accessibilityIdentifier("progress.sessionsCount")
-            }
-            .frame(width: 88, height: 88)
-
-            VStack(alignment: .leading, spacing: 6) {
-                SectionLabel(title: "Sessions logged")
-                Text(store.workoutHistory.sessionCount == 0 ? "Your first one is waiting." : "You’re building momentum.")
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Text(store.workoutHistory.latestSessionTitle ?? "Start with the Metolius sequence.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-                    .lineLimit(2)
-            }
-        }
-        .hangCard()
-    }
-
-	private var sessionHistoryCard: some View {
-		VStack(alignment: .leading, spacing: 10) {
-			NavigationLink {
-				WorkoutSessionHistoryView(
-					sessions: store.sessionHistory,
-					unit: motherboardSettingsStore.forceUnit
-				)
-			} label: {
-				HStack(spacing: 14) {
-					Image(systemName: "clock.arrow.circlepath")
-						.font(.system(size: 18, weight: .bold))
-						.foregroundStyle(Color.hangGreenDark)
-						.frame(width: 36, height: 36)
-						.background(Color.hangGreen.opacity(0.22), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Session history")
-							.font(.system(size: 15, weight: .bold, design: .rounded))
-							.foregroundStyle(Color.hangInk)
-						Text(sessionHistoryDetail)
-							.font(.system(size: 12, weight: .medium, design: .rounded))
-							.foregroundStyle(Color.hangMuted)
-							.lineLimit(1)
-					}
-					Spacer()
-					Image(systemName: "chevron.right")
-						.font(.system(size: 12, weight: .bold))
-						.foregroundStyle(Color.hangMuted)
-				}
-			}
-			.buttonStyle(.plain)
-
-			if let error = store.sessionPersistenceError {
-				Label(error, systemImage: "exclamationmark.triangle.fill")
-					.font(.system(size: 12, weight: .semibold, design: .rounded))
-					.foregroundStyle(Color.holdActive)
-					.fixedSize(horizontal: false, vertical: true)
-			}
-		}
-		.hangCard()
-	}
-
-	private var sessionHistoryDetail: String {
-		guard let latest = store.sessionHistory.first else {
-			return "Saved sessions will appear here."
-		}
-		return "\(store.sessionHistory.count) saved · Latest \(latest.recordedAt.formatted(date: .abbreviated, time: .omitted))"
-	}
-
-    private var boardInfo: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            SectionLabel(title: "Current setup")
-            HStack {
-                Image(systemName: "rectangle.portrait.fill")
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundStyle(Color.hangGreenDark)
-                    .frame(width: 34, height: 34)
-                    .background(Color.hangGreen.opacity(0.22), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(store.selectedBoard.name)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.hangInk)
-                    Text(store.selectedBoard.dimensions)
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                }
-                Spacer()
-                Link(destination: store.selectedBoard.productURL) {
-                    Image(systemName: "arrow.up.right")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(Color.hangGreenDark)
-                }
-            }
-        }
-        .hangCard()
-    }
-
-    private var healthCard: some View {
-		VStack(alignment: .leading, spacing: 12) {
-			HStack(alignment: .top, spacing: 12) {
-				Image(systemName: "heart.text.square.fill")
-					.font(.system(size: 18, weight: .bold))
-					.foregroundStyle(Color.holdActiveDeep)
-					.frame(width: 34, height: 34)
-					.background(Color.holdActive.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-
-				VStack(alignment: .leading, spacing: 5) {
-					HStack {
-						Text("Apple Health")
-							.font(.system(size: 15, weight: .bold, design: .rounded))
-							.foregroundStyle(Color.hangInk)
-						Spacer()
-						Pill(
-							title: store.healthAuthorizationState.statusLabel,
-							tint: healthStatusTint,
-							fill: healthStatusTint.opacity(0.12)
-						)
-					}
-
-					Text(store.healthAuthorizationState.detail)
-						.font(.system(size: 13, weight: .medium, design: .rounded))
-						.foregroundStyle(Color.hangMuted)
-						.fixedSize(horizontal: false, vertical: true)
-				}
-			}
-
-			if let healthAuthorizationError = store.healthAuthorizationError {
-				Text(healthAuthorizationError)
-					.font(.system(size: 12, weight: .semibold, design: .rounded))
-					.foregroundStyle(Color.holdActiveDeep)
-			}
-
-				Text(historySourceMessage)
-					.font(.system(size: 13, weight: .medium, design: .rounded))
-					.foregroundStyle(Color.hangMuted)
-					.fixedSize(horizontal: false, vertical: true)
-				.accessibilityIdentifier("health.historySource")
-
-			if let healthAction {
-				Button(
-					action: { handleHealthAuthorization(healthAction) },
-					label: {
-						HStack {
-							Image(systemName: healthAction == .settings ? "gear" : "heart.fill")
-							Text(healthAction == .settings ? "Open app settings" : "Connect Apple Health")
-							Spacer()
-							Image(systemName: "arrow.right")
-						}
-						.font(.system(size: 14, weight: .bold, design: .rounded))
-						.foregroundStyle(Color.hangInk)
-						.padding(.horizontal, 14)
-						.padding(.vertical, 12)
-						.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-					}
-				)
-				.buttonStyle(.plain)
-				.accessibilityIdentifier(
-					healthAction == .connect ? "health.connect" : "health.settings"
-				)
-			}
-		}
-		.padding(16)
-		.background(Color.holdActive.opacity(0.08), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-    }
-
-	private var healthStatusTint: Color {
-		switch store.healthAuthorizationState {
-		case .authorized:
-			.hangGreenDark
-		case .denied:
-			.holdActiveDeep
-		case .notDetermined, .unavailable:
-			.hangMuted
-		}
-	}
-
-	private func handleHealthAuthorization(_ healthAction: HealthAction) {
-		if healthAction == .settings,
-		   let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-			openURL(settingsURL)
-		} else {
-			store.requestHealthAuthorization()
-		}
-	}
-
-	private var historySourceMessage: String {
-		switch store.workoutHistory.source {
-		case .healthKit:
-			"History synced from Apple Health."
-		case .localFallback:
-			"History stored on this device until Apple Health is connected."
-		case .syncing:
-			"Syncing Hang Ten history with Apple Health…"
-		case .unavailable:
-			"Apple Health history is unavailable; completed sessions stay on this device."
-		}
-	}
-
-	private var healthAction: HealthAction? {
-		guard store.healthAuthorizationState != .unavailable else { return nil }
-		if store.healthAuthorizationState == .denied {
-			return .settings
-		}
-		if store.shouldShowConnectAppleHealth {
-			return .connect
-		}
-		if store.workoutHistory.source == .localFallback {
-			return .settings
-		}
-		return nil
-	}
-
-	private enum HealthAction {
-		case connect
-		case settings
 	}
 }
