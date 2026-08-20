@@ -6,11 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "hangboard-package-validator"
 version = "0.1.0"
 requires-python = ">=3.11.4"
-dependencies = [
-    "numpy>=2.4.6",
-    "opencv-python-headless>=5.0.0.93",
-    "Pillow>=12.3.0",
-]
+dependencies = []
 
 [project.optional-dependencies]
 dev = ["Pillow>=12.3.0", "pytest>=9.1.1", "PyYAML>=6.0.2"]

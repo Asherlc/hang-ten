@@ -13,9 +13,6 @@ Usage: scripts/hangboard-packages.sh <command> [arguments]
 Commands:
   validate    Validate directly discovered hangboard packages
   status      Print directly discovered package metadata
-  simplify-hold-paths    Reduce fidelity-validated editable hold paths
-  normalize-presentations    Normalize board presentation canvases
-  derive-hold-geometry    Emit read-only image-derived geometry candidates
 EOF
 }
 
@@ -28,7 +25,7 @@ command_name="$1"
 shift
 
 case "$command_name" in
-    validate|status|simplify-hold-paths|normalize-presentations|derive-hold-geometry)
+    validate|status)
         ;;
     -h|--help|help)
         usage
