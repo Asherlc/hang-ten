@@ -397,10 +397,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertThrowsError(try CustomRoutineStore(defaults: defaults).save(definition)) { error in
-            XCTAssertEqual(
-                error as? CustomRoutineStoreError,
-                .validationFailed([.terminalRestStep])
-            )
+            guard case .validationFailed([.terminalRestStep]) = error as? CustomRoutineStoreError else {
+                return XCTFail("Expected terminal-rest validation failure, got \(error)")
+            }
         }
     }
 
@@ -434,10 +433,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertThrowsError(try CustomRoutineStore(defaults: defaults).save(definition)) { error in
-            XCTAssertEqual(
-                error as? CustomRoutineStoreError,
-                .validationFailed([.terminalRestStep])
-            )
+            guard case .validationFailed([.terminalRestStep]) = error as? CustomRoutineStoreError else {
+                return XCTFail("Expected terminal-rest validation failure, got \(error)")
+            }
         }
     }
 
@@ -485,10 +483,9 @@ final class CustomRoutineStoreTests: XCTestCase {
             [.terminalRestStep]
         )
         XCTAssertThrowsError(try CustomRoutineStore(defaults: defaults).save(definition)) { error in
-            XCTAssertEqual(
-                error as? CustomRoutineStoreError,
-                .validationFailed([.terminalRestStep])
-            )
+            guard case .validationFailed([.terminalRestStep]) = error as? CustomRoutineStoreError else {
+                return XCTFail("Expected terminal-rest validation failure, got \(error)")
+            }
         }
     }
 
