@@ -101,3 +101,71 @@ an input.
   pockets, and mirrored continuous 40/30 and 25/20 mm stepped edges. Scalar
   size and capacity metadata is retained only for the center edge and explicitly
   named two-finger pockets.
+
+## So iLL direct-authoring addendum
+
+Checked 2026-08-19 against the current So iLL product pages, the product-page
+feature metafields embedded by the manufacturer, and the official straight-on
+gallery images below. The three packages were authored from scratch. No removed
+draft geometry was restored or used as an input.
+
+### Shared evidence and geometry mapping
+
+- Each `front` JPEG is the product page's official straight-on gallery image.
+  It was losslessly decoded and re-encoded as the required
+  `assets/primary.png`; decoded-pixel comparison against the retrieved source
+  is zero for all three assets (`magick compare -metric AE` = `0`). No crop,
+  registration, source alignment, mask, contour generation, vectorization, or
+  automatic geometry operation was performed.
+- Every canonical normalized path was deliberately drawn against that complete
+  2000 × 2000 presentation image. The official front views show purposefully
+  sculpted, organic resin boundaries even on the rails, so every contact is
+  retained as freeform geometry. No shape constraint was inferred or attached.
+- The product views establish bilateral mirrored layouts for the paired
+  contacts. The right-side canonical paths are exact horizontal mirrors of the
+  reviewed left-side paths. One logical hold is retained for every distinct
+  physical contact surface.
+- The feature metafields establish measurements and product-level hold
+  families. A measurement is attached to an individual hold only when the
+  manufacturer maps it to that named physical contact. Finger capacities,
+  grip posture, feature tags, and unsupported material claims are omitted.
+
+### `soill-iron-palm-2`
+
+- `product`: [Iron Palm 2.0](https://soillholds.com/products/iron-palm-2-0)
+- `front`: [official straight-on image](https://cdn.shopify.com/s/files/1/0424/1145/products/iron-palm-20-so-ill-white-12-01-so-ill-218626.jpg?v=1677258150)
+- The product description establishes slopers, pinches, edges, a thicker incut
+  top rung, and thumb catches. The current feature metafield establishes
+  `27 × 11.5 × 4 in`, two 3-inch pinches, the top jug rail, and top-to-bottom
+  40 mm rounded, 25 mm flat, and 15 mm flat crimp rails. Together with the two
+  visible slopers, that freezes exactly eight contacts. The current
+  manufacturer value for the second rail is **25 mm**; the earlier 35 mm
+  working note was stale and is not retained.
+
+### `soill-split-palm`
+
+- `product`: [Split Palm](https://soillholds.com/products/split-palm)
+- `front`: [official straight-on image](https://cdn.shopify.com/s/files/1/0424/1145/products/split-palm-so-ill-white-12-01-so-ill-385627.jpg?v=1677258498)
+- The product description establishes a two-piece Jason Kehl design. The
+  current feature metafield establishes each piece at
+  `16.5 × 11 × 3 7/8 in` (`419 × 279.4 × 98.4 mm`) and explicitly enumerates,
+  per piece, an incut top-center jug, large sloper, smaller sloper, 38.1 mm
+  center sloping rail, 25.4 mm center flat rail, 12.7 mm outer crimp rail, and
+  12.7 mm bottom-center sloping crimp rail. That freezes exactly seven contacts
+  per piece and fourteen total. Decimal measurements remain in the names
+  because this schema's scalar `sizeMillimeters` field accepts integers only.
+
+### `soill-training-tiles`
+
+- `product`: [Training Tiles • So iLL x Meagan Martin](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin)
+- `workouts`: [official workout page](https://soillholds.com/pages/meagan-martin-training-tiles-workouts)
+- `front`: [official straight-on image](https://cdn.shopify.com/s/files/1/0424/1145/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960.jpg?v=1677258630)
+- The product description establishes the two-piece collaboration. The current
+  feature metafield establishes each tile at approximately `14 × 8 in` and,
+  per tile, one pocket, two slopers, two slightly positive middle edges, and
+  three bottom flat edges. That freezes exactly eight contacts per tile and
+  sixteen total. The same metafield lists grouped sizes (3-inch pocket depth;
+  54/64 mm slopers; 44/50 mm middle edges; 36/31/24 mm bottom edges), but the
+  straight-on view does not provide a numbered one-to-one mapping for those
+  values. The package therefore uses conservative spatial names and omits the
+  per-hold scalar values rather than guessing the assignment.

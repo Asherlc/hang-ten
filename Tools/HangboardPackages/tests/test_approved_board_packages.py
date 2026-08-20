@@ -120,10 +120,28 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("metolius.contact", "metolius-contact"),
         ("metolius.project", "metolius-project"),
         ("metolius.simulator-3d", "metolius-simulator-3d"),
+        ("moon.armstrong", "moon-armstrong"),
+        ("nature.stoak-board-iii", "nature-stoak-board-iii"),
+        ("soill.iron-palm-2", "soill-iron-palm-2"),
+        ("soill.split-palm", "soill-split-palm"),
+        ("soill.training-tiles", "soill-training-tiles"),
+        ("target10a.linebreaker-base", "target10a-linebreaker-base"),
+        ("trango.rock-prodigy-forge", "trango-rock-prodigy-forge"),
+        ("trango.rock-prodigy-natural", "trango-rock-prodigy-natural"),
         ("trango.rock-prodigy-pivot", "trango-rock-prodigy-pivot"),
+        (
+            "trango.rock-prodigy-training-center",
+            "trango-rock-prodigy-training-center",
+        ),
         ("tension.grindstone", "tension-grindstone"),
         ("tension.honestone", "tension-honestone"),
         ("tension.whetstone", "tension-whetstone"),
+        ("yy.verticalboard-evo", "yy-verticalboard-evo"),
+        ("yy.verticalboard-first", "yy-verticalboard-first"),
+        ("yy.verticalboard-light", "yy-verticalboard-light"),
+        ("yy.verticalboard-one", "yy-verticalboard-one"),
+        ("zlagboard.evo", "zlagboard-evo"),
+        ("zlagboard.pro", "zlagboard-pro"),
     }
     assert discovered == expected_packages
     assert inventory.drafts == ()

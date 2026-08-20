@@ -29,50 +29,71 @@ other unsupported optional tags. This package was later completed.
 
 | Required evidence | Official source | Coverage |
 | --- | --- | --- |
-| Product identity, overall dimensions, aggregate hold inventory, and selected central hold depths | [Moon Armstrong Fingerboard Beech](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | Moon identifies the Armstrong model; publishes 65 x 16.5 x 5.5 cm, an aggregate hold inventory, central 22 mm and 18 mm one-arm edges, and a jug for one-arm pull-ups. |
-| Visible layout | [Moon Armstrong Fingerboard Beech](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | The manufacturer gallery shows a visible layout only. |
-| Per-hold guide/measurements | No manufacturer-issued numbered hold guide or complete per-hold measurement source located | No complete physical inventory or semantic map. |
+| Product identity, dimensions, material, aggregate hold inventory, and central one-arm contacts | [Moon Armstrong Fingerboard Beech](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) | Moon identifies the beech Armstrong model and `65 × 16.5 × 5.5 cm`. Current product copy names in-cut jugs, 35-degree slopers, paired 25/20/15/10/8 mm slots, 22 mm two-finger and one-finger pockets, plus central 22 mm and 18 mm one-arm edges and a central one-arm jug. |
+| Straight-on layout and engraved depth assignment | [Official front image](https://moonclimbing.com/media/catalog/product/cache/8fbd88411911f97522c3f864e19b1b09/6/0/60-112-bec_moon_armstrong_fingerboard_bec_01.jpg) | Establishes the exact visible 21-contact layout and one-to-one placement of the five paired edge depths, paired 22 mm two-finger pockets, paired 22 mm monos, and central 22/18 mm edges. |
+| Oblique contact corroboration | [Official oblique detail](https://moonclimbing.com/media/catalog/product/cache/8fbd88411911f97522c3f864e19b1b09/6/0/60-112-bec_moon_armstrong_fingerboard_bec_02.jpg) | Corroborates that the upper side cavities are in-cut jugs and that the raised upper contacts are surfaces rather than extra recesses. |
 
 ### `moon-armstrong`
 
-**Authoring note:** Reconcile Moon's aggregate inventory with each visible
-contact in the official gallery. Retain the explicitly identified 22 mm and
-18 mm central edges and jug; omit unassigned measurements, capacity, and
-posture. Author the remaining visible paths directly.
+**Frozen inventory:** 21 physical contacts: one central jug, one central 22 mm
+edge, one central 18 mm edge, mirrored side jugs, mirrored 35-degree slopers,
+ten paired edge slots (25/20/15/10/8 mm), two 22 mm two-finger pockets, and two
+22 mm monos. The official copy assigns capacity only to the 22 mm pockets, so
+capacity remains omitted from edges and jugs. No grip-posture or app-semantic
+metadata is added. The selected presentation is the manufacturer front image,
+converted from JPEG to PNG without cropping or geometric alteration.
 
 ## Nature Climbing Stoak Board III (`nature.stoak-board-iii`)
 
 | Required evidence | Official source | Coverage |
 | --- | --- | --- |
-| Product identity, overall dimensions, material, 22 mm edge, top jug, and configurable inserts | [Nature Climbing Stoak Board III Oak](https://natureclimbing.com/products/stoak-board-iii) | Nature lists 57 x 12 x 5.5 cm, oak/granite construction, a 22 mm edge, a top jug, and 5 mm magnetic insert adjustments. |
-| Product gallery and surface appearance | [Nature Climbing Stoak Board III Oak](https://natureclimbing.com/products/stoak-board-iii) | Gallery establishes visible silhouette and materials only. |
-| Per-hold guide/measurements for the selected configuration | No manufacturer-issued numbered guide or fixed-configuration hold map located | No one-to-one inventory, boundaries, capacities, classifications, or adjustment-state map. |
+| Product identity, dimensions, material, 22 mm edge, top jug, and configurable inserts | [Nature Climbing Stoak Board III Oak](https://natureclimbing.com/products/stoak-board-iii) | Nature lists `57 × 12 × 5.5 cm`, FSC-certified oak and granite, a 22 mm edge, a comfortable top jug, and four 5 mm inserts with the Oak version. |
+| Straight-on selected configuration | [Official front image](https://cdn.shopify.com/s/files/1/0657/7736/9334/files/6_2a2069e0-b45e-4eca-aa65-59febfe7c958.png?v=1763577563) | Establishes the exact visible region boundaries and the selected Oak/granite presentation. |
+| Contact map and depth/material assignment | [Official annotated image](https://cdn.shopify.com/s/files/1/0657/7736/9334/files/Comfortable_jug_1.png?v=1763986786) | Maps the comfortable jug, 22 mm center edge, 55 mm open-hand contact, mirrored gradient 10–25 mm edges, mirrored lower 30 mm wood / 20 mm granite contacts, and center lower 30 mm granite or ergonomic wood contact. |
+| Oblique corroboration | [Official oblique image](https://cdn.shopify.com/s/files/1/0657/7736/9334/files/4_671cc28f-ab91-4566-ad88-887bace217be.png?v=1764017417) | Confirms the continuity of the lower wood/granite contact surfaces and distinguishes contact faces from the board silhouette. |
 
 ### `nature-stoak-board-iii`
 
-**Authoring note:** The magnetic inserts change available depth. Document the
-configuration shown by the selected presentation and retain only the explicit
-22 mm edge, top jug, dimensions, and material facts. Author visible contacts
-directly and omit unsupported configuration-specific values.
+**Frozen inventory:** eight physical contacts under the continuous-contact rule:
+top jug; 55 mm upper open-hand contact; center 22 mm edge; mirrored gradient
+10–25 mm contacts; mirrored lower continuous 30 mm wood / 20 mm granite
+contacts; and one center lower continuous 30 mm granite / ergonomic wood
+contact. Material transitions do not split a continuous contact into extra
+holds. The package depicts the official Oak gallery configuration. Magnetic
+inserts are product accessories/configuration facts and are not modeled as
+additional holds or as a fixed adjusted depth.
 
 ## target10a Linebreaker Base (`target10a.linebreaker-base`)
 
 | Required evidence | Official source | Coverage |
 | --- | --- | --- |
-| Product identity and high-level beginner positioning | [Linebreaker BASE product article](https://www.target10a.com/magazin/2017/01/01/linebreaker-base/) | target10a identifies the Linebreaker BASE and describes its grip selection and depths as intended for beginners. |
-| Safety and mounting information | [Linebreaker BASE safety information](https://m.media-amazon.com/images/I/418jCjplLXL.pdf) | A manufacturer-branded document hosted on Amazon's CDN; it supplies safety, mounting, and use information, but no hold map. Its hosting does not establish target10a.com provenance. |
-| Per-hold guide, dimensions, and measurements | No official numbered hold guide, front/oblique measurement set, or per-hold depth source located | No complete physical inventory, boundaries, capacities, or classifications. |
+| Product identity, dimensions, material, categories, depths, and capacities | [Linebreaker BASE product page](https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html) | target10a lists `58 × 15 × 5.5 cm`, yellow poplar, two jugs, 32.5- and 22.5-degree slopers, 16/20/18 mm bars, 37/28/45/24/30/50 mm pockets with four-/three-/two-finger capacity assignments, and a 35-degree 35 mm sloper bar. |
+| Straight-on physical layout | [Official front image](https://www.target10a.com/934-thickbox_default/linebreaker-base-trainingsboard.jpg) | Establishes the exact 24 visible physical contacts and mirrored placement. |
+| Manufacturer hold map | [Official depth/capacity map](https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg) | Maps each contact family, depth, finger capacity, and sloper angle to the straight-on layout. |
+| Oblique contact corroboration | [Official oblique image](https://www.target10a.com/931-thickbox_default/linebreaker-base-trainingsboard.jpg) | Distinguishes the top sloper surfaces, center sloper bars, jugs, and recessed bars/pockets. |
 
 ### `target10a-linebreaker-base`
 
-**Authoring note:** Use the exact official product views to freeze the visible
-inventory and the article only for its high-level product claims. The CDN
-document supports safety/mounting, not hold measurements. Omit unsupported
-depth, capacity, and posture values and directly author the visible paths.
+**Frozen inventory:** 24 physical contacts: two jugs; two 32.5-degree outer
+slopers; one 22.5-degree center sloper; paired 16 mm four-finger bars; paired
+28 mm three-finger pockets; paired 37 mm four-finger pockets; paired 45 mm
+three-finger pockets; paired 50 mm two-finger pockets; one 35-degree, 35 mm
+center sloper bar; paired 30 mm and 24 mm two-finger pockets; paired 20 mm
+four-finger bars; and paired 18 mm three-finger bars. Those values and
+capacities are retained because the official page and manufacturer map agree.
+Grip posture and app-semantic tags remain omitted. The presentation image is
+the official straight-on JPEG converted to PNG without cropping or geometric
+alteration. The official map assigns the outer 16 mm bar and 37 mm pocket to
+the upper and lower contact bands of the same long recessed footprint. Their
+canonical hit regions therefore partition that visible recess vertically in
+the map's stated order, rather than overlapping and making one contact
+unselectable.
 
-## Required follow-up
+## Completion verification
 
-For each unfinished model, reconcile the product copy with official front and
-oblique views, document conflicts (including the Stoak insert configuration),
-directly author and review the complete package, and omit anything the sources
-do not establish.
+All three packages are complete and visually reviewed. Their 40 regular pieces
+use operator-selected constraints and pass the production `+1 px` resize
+invariants. A zero-distance production save is byte-exact for four pieces and
+only reserializes decimal precision for the other 36; the independent rendered
+comparison found no visible snap. These constraints are therefore verified for
+mathematical primitive consistency, not described as universally byte-exact.
