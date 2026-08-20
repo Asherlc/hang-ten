@@ -41,6 +41,20 @@ export function HoldCanvas({
   zoomPercent,
   onZoomChange,
 }: HoldCanvasProps) {
+  const viewportRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const handleWheel = (event: WheelEvent): void => {
+      if (!event.altKey || !document) return;
+      const delta = event.deltaY === 0 ? event.deltaX : event.deltaY;
+      if (delta === 0) return;
+      event.preventDefault();
+      onZoomChange(delta < 0 ? 1 : -1);
+    };
+    viewport.addEventListener("wheel", handleWheel, { passive: false });
+    return () => viewport.removeEventListener("wheel", handleWheel);
+  }, [document, onZoomChange]);
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
   let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {
@@ -71,11 +85,7 @@ export function HoldCanvas({
       <div
         className="canvas-viewport"
         id="canvas-viewport"
-        onWheel={(event) => {
-          if (!event.altKey || !document || event.deltaY === 0) return;
-          event.preventDefault();
-          onZoomChange(event.deltaY < 0 ? 1 : -1);
-        }}
+        ref={viewportRef}
       >
         <svg
           id="editor-svg"
