@@ -1338,7 +1338,7 @@
           return dispatcher;
         }
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-        var React = require_react(), Internals = {
+        var React2 = require_react(), Internals = {
           d: {
             f: noop,
             r: function() {
@@ -1356,7 +1356,7 @@
           },
           p: 0,
           findDOMNode: null
-        }, REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+        }, REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
         "function" === typeof Map && null != Map.prototype && "function" === typeof Map.prototype.forEach && "function" === typeof Set && null != Set.prototype && "function" === typeof Set.prototype.clear && "function" === typeof Set.prototype.forEach || console.error(
           "React depends on Map and Set built-in types. Make sure that you load a polyfill in older browsers. https://reactjs.org/link/react-polyfills"
         );
@@ -2891,7 +2891,7 @@
           "number" === type && getActiveElement(node.ownerDocument) === node || node.defaultValue === "" + value || (node.defaultValue = "" + value);
         }
         function validateOptionProps(element, props) {
-          null == props.value && ("object" === typeof props.children && null !== props.children ? React.Children.forEach(props.children, function(child) {
+          null == props.value && ("object" === typeof props.children && null !== props.children ? React2.Children.forEach(props.children, function(child) {
             null == child || "string" === typeof child || "number" === typeof child || "bigint" === typeof child || didWarnInvalidChild || (didWarnInvalidChild = true, console.error(
               "Cannot infer the option value of complex children. Pass a `value` prop or use a plain string as children to <option>."
             ));
@@ -18523,14 +18523,14 @@
           ));
         }
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-        var Scheduler = require_scheduler(), React = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.element"), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy");
+        var Scheduler = require_scheduler(), React2 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.element"), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy");
         /* @__PURE__ */ Symbol.for("react.scope");
         var REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity");
         /* @__PURE__ */ Symbol.for("react.legacy_hidden");
         /* @__PURE__ */ Symbol.for("react.tracing_marker");
         var REACT_MEMO_CACHE_SENTINEL = /* @__PURE__ */ Symbol.for("react.memo_cache_sentinel");
         /* @__PURE__ */ Symbol.for("react.view_transition");
-        var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
+        var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
           pending: false,
           data: null,
           method: null,
@@ -21318,7 +21318,7 @@
           }
         };
         (function() {
-          var isomorphicReactPackageVersion = React.version;
+          var isomorphicReactPackageVersion = React2.version;
           if ("19.2.8" !== isomorphicReactPackageVersion)
             throw Error(
               'Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:\n  - react:      ' + (isomorphicReactPackageVersion + "\n  - react-dom:  19.2.8\nLearn more: https://react.dev/warnings/version-mismatch")
@@ -21672,18 +21672,18 @@
         function isValidElement(object) {
           return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
         }
-        var React = require_react(), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
+        var React2 = require_react(), REACT_ELEMENT_TYPE = /* @__PURE__ */ Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = /* @__PURE__ */ Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = /* @__PURE__ */ Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = /* @__PURE__ */ Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = /* @__PURE__ */ Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = /* @__PURE__ */ Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = /* @__PURE__ */ Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = /* @__PURE__ */ Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = /* @__PURE__ */ Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = /* @__PURE__ */ Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = /* @__PURE__ */ Symbol.for("react.memo"), REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = /* @__PURE__ */ Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = /* @__PURE__ */ Symbol.for("react.client.reference"), ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
           return null;
         };
-        React = {
+        React2 = {
           react_stack_bottom_frame: function(callStackForError) {
             return callStackForError();
           }
         };
         var specialPropKeyWarningShown;
         var didWarnAboutElementRef = {};
-        var unknownOwnerDebugStack = React.react_stack_bottom_frame.bind(
-          React,
+        var unknownOwnerDebugStack = React2.react_stack_bottom_frame.bind(
+          React2,
           UnknownOwner
         )();
         var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
@@ -21729,6 +21729,9 @@
 
   // src/main.tsx
   var import_client = __toESM(require_client());
+
+  // src/WorkbenchApp.tsx
+  var import_react3 = __toESM(require_react());
 
   // src/useWorkbench.ts
   var import_react = __toESM(require_react());
@@ -23089,7 +23092,9 @@
     busy,
     onSelectHold,
     pathEditor: pathEditor2,
-    editor
+    editor,
+    zoomPercent,
+    onZoomChange
   }) {
     const selectedHold = document2?.regions.find((region) => region.key === selectedKey) ?? null;
     let selectedCommands = null;
@@ -23114,177 +23119,194 @@
         constrainedModel = null;
       }
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "editor-views", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "canvas-viewport", id: "canvas-viewport", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-        "svg",
-        {
-          id: "editor-svg",
-          xmlns: "http://www.w3.org/2000/svg",
-          "aria-label": "Hangboard hold editor",
-          viewBox: document2 ? `0 0 ${document2.canvas.width} ${document2.canvas.height}` : void 0,
-          width: document2?.canvas.width,
-          height: document2?.canvas.height,
-          onPointerDown: editor.onPointerDown,
-          onPointerMove: editor.onPointerMove,
-          onPointerUp: editor.onPointerUp,
-          onPointerCancel: editor.onPointerCancel,
-          onLostPointerCapture: editor.onLostPointerCapture,
-          onDoubleClick: editor.onDoubleClick,
-          onContextMenu: editor.onContextMenu,
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-              "image",
-              {
-                id: "board-image",
-                x: "0",
-                y: "0",
-                preserveAspectRatio: "none",
-                href: board?.imageUrl,
-                width: document2?.canvas.width,
-                height: document2?.canvas.height
-              }
-            ),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("g", { id: "hold-overlay", children: document2?.regions.map((hold) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-              "path",
-              {
-                className: "region-shape",
-                "data-hold-key": hold.key,
-                d: hold.displayPath,
-                fill: TYPE_COLORS[hold.type ?? ""] ?? "#ff754f",
-                fillOpacity: hold.key === selectedKey ? "0.58" : "0.3",
-                stroke: hold.key === selectedKey ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f",
-                strokeWidth: hold.key === selectedKey ? "2.2" : "1.4",
-                role: "button",
-                tabIndex: 0,
-                "aria-label": `Select hold ${hold.key}`,
-                onClick: () => {
-                  if (!busy) onSelectHold(hold.key);
-                },
-                onKeyDown: (event) => {
-                  if (busy || event.key !== "Enter" && event.key !== " ") return;
-                  if (event.key === " ") event.preventDefault();
-                  onSelectHold(hold.key);
-                }
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "editor-views", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+      "div",
+      {
+        className: "canvas-viewport",
+        id: "canvas-viewport",
+        onWheel: (event) => {
+          if (!event.altKey || !document2 || event.deltaY === 0) return;
+          event.preventDefault();
+          onZoomChange(event.deltaY < 0 ? 1 : -1);
+        },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+            "svg",
+            {
+              id: "editor-svg",
+              xmlns: "http://www.w3.org/2000/svg",
+              "aria-label": "Hangboard hold editor",
+              viewBox: document2 ? `0 0 ${document2.canvas.width} ${document2.canvas.height}` : void 0,
+              width: document2?.canvas.width,
+              height: document2?.canvas.height,
+              style: {
+                width: `${zoomPercent}%`,
+                height: `${zoomPercent}%`,
+                minHeight: `${3.6 * zoomPercent}px`
               },
-              hold.key
-            )) }),
-            selectedCommands && pivot && rotationHandle && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { className: `path-editor-overlay${busy ? " busy" : ""}`, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                "line",
-                {
-                  className: "path-editor-rotation-connector",
-                  x1: pivot.x,
-                  y1: pivot.y,
-                  x2: rotationHandle.x,
-                  y2: rotationHandle.y,
-                  stroke: "#fff7dc",
-                  strokeWidth: "1.5",
-                  strokeDasharray: "4 3"
-                }
-              ),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                "circle",
-                {
-                  className: "path-editor-rotation-handle",
-                  cx: rotationHandle.x,
-                  cy: rotationHandle.y,
-                  r: "6",
-                  fill: "#fff7dc",
-                  stroke: selectedColor,
-                  strokeWidth: "2"
-                }
-              ),
-              constrainedModel ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+              onPointerDown: editor.onPointerDown,
+              onPointerMove: editor.onPointerMove,
+              onPointerUp: editor.onPointerUp,
+              onPointerCancel: editor.onPointerCancel,
+              onLostPointerCapture: editor.onLostPointerCapture,
+              onDoubleClick: editor.onDoubleClick,
+              onContextMenu: editor.onContextMenu,
+              children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                  "polygon",
+                  "image",
                   {
-                    className: "path-editor-constrained-box",
-                    points: ["nw", "ne", "se", "sw"].map((handle) => {
-                      const point = constrainedModel.handles[handle];
-                      return `${point.x},${point.y}`;
-                    }).join(" "),
-                    fill: "none",
-                    stroke: "#fff7dc",
-                    strokeWidth: "1.5",
-                    strokeDasharray: "4 3"
+                    id: "board-image",
+                    x: "0",
+                    y: "0",
+                    preserveAspectRatio: "none",
+                    href: board?.imageUrl,
+                    width: document2?.canvas.width,
+                    height: document2?.canvas.height
                   }
                 ),
-                Object.entries(constrainedModel.handles).map(([handle, point]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                  "circle",
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("g", { id: "hold-overlay", children: document2?.regions.map((hold) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                  "path",
                   {
-                    className: "path-editor-resize-handle",
-                    "data-handle": handle,
-                    cx: point.x,
-                    cy: point.y,
-                    r: "5",
-                    fill: selectedColor,
-                    stroke: "#fff7dc",
-                    strokeWidth: "1.5"
+                    className: "region-shape",
+                    "data-hold-key": hold.key,
+                    d: hold.displayPath,
+                    fill: TYPE_COLORS[hold.type ?? ""] ?? "#ff754f",
+                    fillOpacity: hold.key === selectedKey ? "0.58" : "0.3",
+                    stroke: hold.key === selectedKey ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f",
+                    strokeWidth: hold.key === selectedKey ? "2.2" : "1.4",
+                    role: "button",
+                    tabIndex: 0,
+                    "aria-label": `Select hold ${hold.key}`,
+                    onClick: () => {
+                      if (!busy) onSelectHold(hold.key);
+                    },
+                    onKeyDown: (event) => {
+                      if (busy || event.key !== "Enter" && event.key !== " ") return;
+                      if (event.key === " ") event.preventDefault();
+                      onSelectHold(hold.key);
+                    }
                   },
-                  handle
-                ))
-              ] }) : selectedCommands.map((command, commandIndex) => {
-                if (command.type === "Z") return null;
-                const endpoint = command.points.at(-1);
-                if (!endpoint) return null;
-                const previous = commandIndex > 0 ? selectedCommands[commandIndex - 1] : null;
-                return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { children: [
+                  hold.key
+                )) }),
+                selectedCommands && pivot && rotationHandle && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { className: `path-editor-overlay${busy ? " busy" : ""}`, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                    "line",
+                    {
+                      className: "path-editor-rotation-connector",
+                      x1: pivot.x,
+                      y1: pivot.y,
+                      x2: rotationHandle.x,
+                      y2: rotationHandle.y,
+                      stroke: "#fff7dc",
+                      strokeWidth: "1.5",
+                      strokeDasharray: "4 3"
+                    }
+                  ),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                     "circle",
                     {
-                      className: "path-editor-vertex",
-                      "data-index": commandIndex,
-                      cx: endpoint.x,
-                      cy: endpoint.y,
+                      className: "path-editor-rotation-handle",
+                      cx: rotationHandle.x,
+                      cy: rotationHandle.y,
                       r: "6",
-                      fill: selectedColor,
-                      stroke: "#fff7dc",
-                      strokeWidth: "1.5"
+                      fill: "#fff7dc",
+                      stroke: selectedColor,
+                      strokeWidth: "2"
                     }
                   ),
-                  command.controls.map((control, controlIndex) => {
-                    const anchor = controlIndex === 0 ? previous && previous.type !== "Z" ? previous.points.at(-1) : command.points[0] : command.points[0];
+                  constrainedModel ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                      "polygon",
+                      {
+                        className: "path-editor-constrained-box",
+                        points: ["nw", "ne", "se", "sw"].map((handle) => {
+                          const point = constrainedModel.handles[handle];
+                          return `${point.x},${point.y}`;
+                        }).join(" "),
+                        fill: "none",
+                        stroke: "#fff7dc",
+                        strokeWidth: "1.5",
+                        strokeDasharray: "4 3"
+                      }
+                    ),
+                    Object.entries(constrainedModel.handles).map(([handle, point]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                      "circle",
+                      {
+                        className: "path-editor-resize-handle",
+                        "data-handle": handle,
+                        cx: point.x,
+                        cy: point.y,
+                        r: "5",
+                        fill: selectedColor,
+                        stroke: "#fff7dc",
+                        strokeWidth: "1.5"
+                      },
+                      handle
+                    ))
+                  ] }) : selectedCommands.map((command, commandIndex) => {
+                    if (command.type === "Z") return null;
+                    const endpoint = command.points.at(-1);
+                    if (!endpoint) return null;
+                    const previous = commandIndex > 0 ? selectedCommands[commandIndex - 1] : null;
                     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { children: [
-                      anchor && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                        "line",
-                        {
-                          className: "path-editor-line",
-                          x1: anchor.x,
-                          y1: anchor.y,
-                          x2: control.x,
-                          y2: control.y,
-                          stroke: "#888",
-                          strokeWidth: "1",
-                          strokeDasharray: "4 2"
-                        }
-                      ),
                       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                         "circle",
                         {
-                          className: "path-editor-control",
+                          className: "path-editor-vertex",
                           "data-index": commandIndex,
-                          "data-control": controlIndex,
-                          cx: control.x,
-                          cy: control.y,
-                          r: "3",
-                          fill: "#888",
-                          stroke: "#fff",
-                          strokeWidth: "1"
+                          cx: endpoint.x,
+                          cy: endpoint.y,
+                          r: "6",
+                          fill: selectedColor,
+                          stroke: "#fff7dc",
+                          strokeWidth: "1.5"
                         }
-                      )
-                    ] }, `${commandIndex}-${controlIndex}`);
+                      ),
+                      command.controls.map((control, controlIndex) => {
+                        const anchor = controlIndex === 0 ? previous && previous.type !== "Z" ? previous.points.at(-1) : command.points[0] : command.points[0];
+                        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { children: [
+                          anchor && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                            "line",
+                            {
+                              className: "path-editor-line",
+                              x1: anchor.x,
+                              y1: anchor.y,
+                              x2: control.x,
+                              y2: control.y,
+                              stroke: "#888",
+                              strokeWidth: "1",
+                              strokeDasharray: "4 2"
+                            }
+                          ),
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                            "circle",
+                            {
+                              className: "path-editor-control",
+                              "data-index": commandIndex,
+                              "data-control": controlIndex,
+                              cx: control.x,
+                              cy: control.y,
+                              r: "3",
+                              fill: "#888",
+                              stroke: "#fff",
+                              strokeWidth: "1"
+                            }
+                          )
+                        ] }, `${commandIndex}-${controlIndex}`);
+                      })
+                    ] }, `${selectedHold?.key ?? "selected"}-${commandIndex}`);
                   })
-                ] }, `${selectedHold?.key ?? "selected"}-${commandIndex}`);
-              })
-            ] })
-          ]
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: `empty-state${document2 ? " hidden" : ""}`, id: "empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Select a board" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "Its image and holds load together." })
-      ] })
-    ] }) });
+                ] })
+              ]
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: `empty-state${document2 ? " hidden" : ""}`, id: "empty-state", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("strong", { children: "Select a board" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "Its image and holds load together." })
+          ] })
+        ]
+      }
+    ) });
   }
 
   // src/components/HoldInspector.tsx
@@ -23446,8 +23468,18 @@
 
   // src/WorkbenchApp.tsx
   var import_jsx_runtime6 = __toESM(require_jsx_runtime());
+  var MIN_CANVAS_ZOOM = 50;
+  var MAX_CANVAS_ZOOM = 300;
+  var CANVAS_ZOOM_STEP = 25;
   function WorkbenchApp({ dependencies }) {
     const { state, actions } = useWorkbench(dependencies);
+    const [canvasZoom, setCanvasZoom] = import_react3.default.useState(100);
+    const changeCanvasZoom = import_react3.default.useCallback((direction) => {
+      setCanvasZoom((zoom) => Math.min(
+        MAX_CANVAS_ZOOM,
+        Math.max(MIN_CANVAS_ZOOM, zoom + Math.sign(direction) * CANVAS_ZOOM_STEP)
+      ));
+    }, []);
     const busy = state.busyBoard || state.busyGit;
     const selectedHold = state.document?.regions.find(
       (region) => region.key === state.selectedKey
@@ -23502,7 +23534,37 @@
               /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "eyebrow", children: "Board" }),
               /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("strong", { id: "board-name", children: state.board?.displayName ?? "No board selected" })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button accent", id: "add-hold-button", type: "button", disabled: !state.document || busy, onClick: editor.addHold, children: "Add hold" })
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "canvas-controls", "aria-label": "Canvas controls", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "button",
+                {
+                  className: "tool-button",
+                  id: "zoom-out-button",
+                  type: "button",
+                  "aria-label": "Zoom out",
+                  disabled: !state.document || canvasZoom <= MIN_CANVAS_ZOOM,
+                  onClick: () => changeCanvasZoom(-1),
+                  children: "\u2212"
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("output", { id: "canvas-zoom-level", "aria-live": "polite", children: [
+                canvasZoom,
+                "%"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "button",
+                {
+                  className: "tool-button",
+                  id: "zoom-in-button",
+                  type: "button",
+                  "aria-label": "Zoom in",
+                  disabled: !state.document || canvasZoom >= MAX_CANVAS_ZOOM,
+                  onClick: () => changeCanvasZoom(1),
+                  children: "+"
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button accent", id: "add-hold-button", type: "button", disabled: !state.document || busy, onClick: editor.addHold, children: "Add hold" })
+            ] })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
             HoldCanvas,
@@ -23513,7 +23575,9 @@
               busy,
               onSelectHold: actions.selectHold,
               pathEditor: dependencies.pathEditor,
-              editor
+              editor,
+              zoomPercent: canvasZoom,
+              onZoomChange: changeCanvasZoom
             }
           ),
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(ValidationPanel, { validation: state.validation }),

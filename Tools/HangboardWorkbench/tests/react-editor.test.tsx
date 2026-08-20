@@ -212,6 +212,39 @@ test("selection renders one declarative handle overlay with legacy visual attrib
   });
 });
 
+test("canvas zoom controls and Alt-wheel adjust a bounded zoom while preserving normal scrolling", async () => {
+  await withEditor(async (app) => {
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(app.document.querySelector("#zoom-out-button")?.getAttribute("aria-label"), "Zoom out");
+    assert.equal(app.document.querySelector("#zoom-in-button")?.getAttribute("aria-label"), "Zoom in");
+
+    await app.click("#zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "150%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1 }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "150%");
+
+    for (let index = 0; index < 12; index += 1) await app.click("#zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+    assert.equal(app.disabled("#zoom-in-button"), true);
+    for (let index = 0; index < 12; index += 1) await app.click("#zoom-out-button");
+    assert.equal(app.text("#canvas-zoom-level"), "50%");
+    assert.equal(app.disabled("#zoom-out-button"), true);
+  });
+});
+
+test("pointer edits retain SVG coordinates at a zoomed canvas size", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 200, height: 100 } });
+    for (let index = 0; index < 4; index += 1) await app.click("#zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "200%");
+    await app.click('[data-hold-key="a-piece-0"]');
+    await drag(app, '.path-editor-vertex[data-index="1"]', [{ x: 40, y: 20 }, { x: 50, y: 30 }]);
+    assert.equal(paths(app)[0], "M 10 10 L 25 15 L 20 20 Z");
+  });
+});
+
 test("hold paths expose button semantics and support Enter and Space selection", async () => {
   await withEditor(async (app) => {
     const target = app.document.querySelector<SVGPathElement>('[data-hold-key="b-piece-0"]');
