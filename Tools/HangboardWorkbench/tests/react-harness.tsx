@@ -49,6 +49,7 @@ export interface ReactHarness {
   keyDown(selector: string, key: string, options?: KeyboardEventInit): Promise<boolean>;
   pointer(selector: string, type: string, options?: PointerEventInit): Promise<void>;
   mouse(selector: string, type: string, options?: MouseEventInit): Promise<void>;
+  wheel(selector: string, options?: WheelEventInit): Promise<boolean>;
   setSvgGeometry(selector: string, options: {
     rect: Pick<DOMRect, "left" | "top" | "width" | "height">;
     screenCTM?: DOMMatrix | null;
@@ -227,6 +228,19 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
           new windowValue.MouseEvent(type, { bubbles: true, cancelable: true, ...options }),
         );
       });
+    },
+    async wheel(selector, options = {}) {
+      let defaultPrevented = false;
+      await harness.flush(() => {
+        const event = new windowValue.WheelEvent("wheel", {
+          bubbles: true,
+          cancelable: true,
+          ...options,
+        });
+        requiredElement<Element>(windowValue.document, selector).dispatchEvent(event);
+        defaultPrevented = event.defaultPrevented;
+      });
+      return defaultPrevented;
     },
     setSvgGeometry(selector, { rect, screenCTM }) {
       const svg = requiredElement<SVGSVGElement>(windowValue.document, selector);

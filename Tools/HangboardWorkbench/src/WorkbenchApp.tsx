@@ -13,8 +13,19 @@ export interface WorkbenchAppProps {
   dependencies: WorkbenchDependencies;
 }
 
+const MIN_CANVAS_ZOOM = 50;
+const MAX_CANVAS_ZOOM = 300;
+const CANVAS_ZOOM_STEP = 25;
+
 export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const { state, actions } = useWorkbench(dependencies);
+  const [canvasZoom, setCanvasZoom] = React.useState(100);
+  const changeCanvasZoom = React.useCallback((direction: number) => {
+    setCanvasZoom((zoom) => Math.min(
+      MAX_CANVAS_ZOOM,
+      Math.max(MIN_CANVAS_ZOOM, zoom + Math.sign(direction) * CANVAS_ZOOM_STEP),
+    ));
+  }, []);
   const busy = state.busyBoard || state.busyGit;
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
@@ -82,7 +93,26 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
               <span className="eyebrow">Board</span>
               <strong id="board-name">{state.board?.displayName ?? "No board selected"}</strong>
             </div>
-            <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || busy} onClick={editor.addHold}>Add hold</button>
+            <div className="canvas-controls" aria-label="Canvas controls">
+              <button
+                className="tool-button"
+                id="zoom-out-button"
+                type="button"
+                aria-label="Zoom out"
+                disabled={!state.document || canvasZoom <= MIN_CANVAS_ZOOM}
+                onClick={() => changeCanvasZoom(-1)}
+              >−</button>
+              <output id="canvas-zoom-level" aria-live="polite">{canvasZoom}%</output>
+              <button
+                className="tool-button"
+                id="zoom-in-button"
+                type="button"
+                aria-label="Zoom in"
+                disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM}
+                onClick={() => changeCanvasZoom(1)}
+              >+</button>
+              <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || busy} onClick={editor.addHold}>Add hold</button>
+            </div>
           </div>
           <HoldCanvas
             board={state.board}
@@ -92,6 +122,8 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             onSelectHold={actions.selectHold}
             pathEditor={dependencies.pathEditor}
             editor={editor}
+            zoomPercent={canvasZoom}
+            onZoomChange={changeCanvasZoom}
           />
           <ValidationPanel validation={state.validation} />
           <footer className="statusbar">

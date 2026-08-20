@@ -26,6 +26,8 @@ export interface HoldCanvasProps {
   onSelectHold(key: string): void;
   pathEditor: PathEditor;
   editor: HoldEditorActions;
+  zoomPercent: number;
+  onZoomChange(direction: number): void;
 }
 
 export function HoldCanvas({
@@ -36,6 +38,8 @@ export function HoldCanvas({
   onSelectHold,
   pathEditor,
   editor,
+  zoomPercent,
+  onZoomChange,
 }: HoldCanvasProps) {
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
   let selectedCommands: PathCommand[] | null = null;
@@ -64,7 +68,15 @@ export function HoldCanvas({
   }
   return (
     <div className="editor-views">
-      <div className="canvas-viewport" id="canvas-viewport">
+      <div
+        className="canvas-viewport"
+        id="canvas-viewport"
+        onWheel={(event) => {
+          if (!event.altKey || !document || event.deltaY === 0) return;
+          event.preventDefault();
+          onZoomChange(event.deltaY < 0 ? 1 : -1);
+        }}
+      >
         <svg
           id="editor-svg"
           xmlns="http://www.w3.org/2000/svg"
@@ -72,6 +84,11 @@ export function HoldCanvas({
           viewBox={document ? `0 0 ${document.canvas.width} ${document.canvas.height}` : undefined}
           width={document?.canvas.width}
           height={document?.canvas.height}
+          style={{
+            width: `${zoomPercent}%`,
+            height: `${zoomPercent}%`,
+            minHeight: `${3.6 * zoomPercent}px`,
+          }}
           onPointerDown={editor.onPointerDown}
           onPointerMove={editor.onPointerMove}
           onPointerUp={editor.onPointerUp}
