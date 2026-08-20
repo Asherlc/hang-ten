@@ -162,8 +162,10 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
         store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)) { result in
             guard isAcceptingCompletion else { return }
-            if case .success = result {
-                expectation.fulfill()
+            defer { expectation.fulfill() }
+
+            if case .failure(let error) = result {
+                XCTFail("Expected append to succeed, got \(error)")
             }
         }
 
@@ -179,12 +181,13 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
         store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)) { result in
             guard isAcceptingCompletion else { return }
+            defer { completion.fulfill() }
             XCTAssertTrue(Thread.isMainThread)
             store.flush()
 
             switch result {
             case .success:
-                completion.fulfill()
+                break
             case .failure(let error):
                 XCTFail("Expected append to succeed, got \(error)")
             }
@@ -204,12 +207,13 @@ final class WorkoutSessionStoreTests: XCTestCase {
 
         store.remove(record) { result in
             guard isAcceptingCompletion else { return }
+            defer { completion.fulfill() }
             XCTAssertTrue(Thread.isMainThread)
             store.flush()
 
             switch result {
             case .success:
-                completion.fulfill()
+                break
             case .failure(let error):
                 XCTFail("Expected remove to succeed, got \(error)")
             }
@@ -228,11 +232,12 @@ final class WorkoutSessionStoreTests: XCTestCase {
         DispatchQueue.global().async {
             store.flush { result in
                 guard isAcceptingCompletion else { return }
+                defer { completion.fulfill() }
                 XCTAssertTrue(Thread.isMainThread)
 
                 switch result {
                 case .success:
-                    completion.fulfill()
+                    break
                 case .failure(let error):
                     XCTFail("Expected flush to succeed, got \(error)")
                 }
