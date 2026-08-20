@@ -370,6 +370,21 @@ test("undo during a drag restores the committed document before building redo hi
   });
 });
 
+test("command/control undo consumes the browser shortcut when it cancels an active drag without history", async () => {
+  for (const shortcut of [{ ctrlKey: true }, { metaKey: true }]) {
+    await withEditor(async (app) => {
+      app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+      await app.click('[data-hold-key="a-piece-0"]');
+      await app.pointer('[data-hold-key="a-piece-0"]', "pointerdown", { pointerId: 7, clientX: 15, clientY: 15 });
+      await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 25, clientY: 15 });
+      assert.notEqual(paths(app)[0], FIRST_PATH);
+
+      assert.equal(await app.keyDown("body", "z", shortcut), true);
+      assert.equal(paths(app)[0], FIRST_PATH);
+    });
+  }
+});
+
 test("no-op drags do not create an undo revision", async () => {
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
