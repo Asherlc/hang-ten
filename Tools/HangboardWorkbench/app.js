@@ -22050,7 +22050,7 @@
     }, [gitOperations, refreshGitState, waitForGitIdle]);
     const selectBoard = (0, import_react.useCallback)(async (boardId) => {
       if (!boardId || isBusy()) return;
-      updateState((current) => ({ ...current, validation: "" }));
+      updateState((current) => ({ ...current, validation: "", saveLoginUrl: null }));
       await boardOperations.perform(async ({ isCurrent }) => {
         let committed = false;
         try {
@@ -22145,7 +22145,8 @@
         board: null,
         document: null,
         selectedKey: null,
-        dirty: false
+        dirty: false,
+        saveLoginUrl: null
       }));
     }, [updateState]);
     const reloadBoardsAfterBranch = (0, import_react.useCallback)(async (failurePrefix) => {

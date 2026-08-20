@@ -444,6 +444,91 @@ test("recoverable save authentication failure keeps edits and offers safe separa
   });
 });
 
+test("selecting another board clears save authentication recovery state", async () => {
+  const image = imageFixture();
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async getBoard(boardId) { return boardFixture(boardId); },
+      async saveBoard() {
+        throw Object.assign(
+          new Error("GitHub authentication expired or insufficient permissions"),
+          { loginUrl: "/auth/login" },
+        );
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let firstLoad!: Promise<void>;
+    await harness.flush(() => { firstLoad = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await firstLoad;
+    });
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 4 4 L 24 4 L 24 24 Z"),
+      "Edited.",
+    ));
+    await harness.flush(() => result().actions.saveBoard());
+    assert.equal(result().state.saveLoginUrl, "/auth/login");
+
+    let secondLoad!: Promise<void>;
+    await harness.flush(() => { secondLoad = result().actions.selectBoard("board-b"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await secondLoad;
+    });
+
+    assert.equal(result().state.board?.boardId, "board-b");
+    assert.equal(result().state.status, "Board loaded.");
+    assert.equal(result().state.saveLoginUrl, null);
+  });
+});
+
+test("branch changes clear save authentication recovery with the editor", async (context) => {
+  for (const branchAction of ["switch", "create"] as const) {
+    await context.test(branchAction, async () => {
+      const image = imageFixture();
+      await withHook(dependenciesFixture({
+        runtime: image.runtime,
+        client: {
+          async saveBoard() {
+            throw Object.assign(
+              new Error("GitHub authentication expired or insufficient permissions"),
+              { loginUrl: "/auth/login" },
+            );
+          },
+        },
+      }), async (result, harness) => {
+        await harness.flush();
+        let load!: Promise<void>;
+        await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+        await harness.flush(async () => {
+          image.images.succeed();
+          await load;
+        });
+        await harness.flush(() => result().actions.updateDocument(
+          editorDocument("M 4 4 L 24 4 L 24 24 Z"),
+          "Edited.",
+        ));
+        await harness.flush(() => result().actions.saveBoard());
+        assert.equal(result().state.saveLoginUrl, "/auth/login");
+
+        if (branchAction === "switch") {
+          await harness.flush(() => result().actions.switchBranch("feature"));
+        } else {
+          await harness.flush(() => result().actions.createBranch("feature"));
+        }
+
+        assert.equal(result().state.board, null);
+        assert.equal(result().state.document, null);
+        assert.match(result().state.status, /feature/);
+        assert.equal(result().state.saveLoginUrl, null);
+      });
+    });
+  }
+});
+
 test("an old delayed save cannot overwrite a newer document identity", async () => {
   const image = imageFixture();
   const save = deferred<Board>();

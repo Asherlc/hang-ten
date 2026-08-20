@@ -248,7 +248,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
 
   const selectBoard = useCallback(async (boardId: string): Promise<void> => {
     if (!boardId || isBusy()) return;
-    updateState((current) => ({ ...current, validation: "" }));
+    updateState((current) => ({ ...current, validation: "", saveLoginUrl: null }));
     await boardOperations.perform(async ({ isCurrent }) => {
       let committed = false;
       try {
@@ -348,6 +348,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       document: null,
       selectedKey: null,
       dirty: false,
+      saveLoginUrl: null,
     }));
   }, [updateState]);
 
