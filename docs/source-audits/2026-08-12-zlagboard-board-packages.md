@@ -1,62 +1,80 @@
 # Zlagboard Evo and Pro package-source audit
 
-Checked 2026-08-12. This audit evaluates the two unregistered generated-image
-candidates against the source-backed package contract in
-`docs/ADDING_A_BOARD.md`. It is documentation, not package state. Both
-candidates remain exactly `assets/primary.png`; neither is registered in
-`Hangboards/catalog.json`.
+Rechecked 2026-08-19. This audit supersedes the removed 14-contact Evo and
+21-contact Pro candidates. Those old candidates represented only cavity rows,
+omitted the seven continuous top contacts, and carried unsupported generic
+classification. Neither old package nor any automated image output was used as
+authoring input.
 
-## Official source sets
+## Primary source set
 
-| candidate | official product material | official front imagery | official hold documentation |
+| field | Evo evidence | Pro 2.0 evidence | package decision |
 | --- | --- | --- | --- |
-| `zlagboard-evo` (`zlagboard.evo`) | [Zlagboard hangboards](https://www.zlagboard.com/hangboards) identifies the Evo as a compact board with crimps, pockets, slopers, and jugs. | [Evo holds image](https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png) on the official hangboards page. | No manufacturer numbered hold guide, dimensioned hold drawing, or manual assigning values to every contact region was published. |
-| `zlagboard-pro` (`zlagboard.pro`) | [Zlagboard hangboards](https://www.zlagboard.com/hangboards) identifies the Pro as a board with varied ergonomic hold shapes and sizes. The [official app page](https://www.zlagboard.com/app) identifies Pro 1.0 and Pro 2.0 as distinct compatible products. | [Pro product image](https://www.zlagboard.com/assets/web/Zlagboard-2019-smaller2x-8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b.png) on the official hangboards page. | No manufacturer numbered hold guide, dimensioned hold drawing, or model-version-specific manual assigning values to every contact region was published. |
+| identity, intended range, named hold families, material | [Official Zlagboard hangboards page](https://www.zlagboard.com/hangboards) names `Zlagboard.Evo`, describes it as compact and lists crimps, pockets, slopers, and jugs; the same page says all Zlagboards use noble lime wood. | The [same official page](https://www.zlagboard.com/hangboards) names `Zlagboard.Pro`, describes its varied ergonomic holds, and says all Zlagboards use noble lime wood. The [official app page](https://www.zlagboard.com/app) separately identifies Pro 1.0 and Pro 2.0. | Identity, conservative subtitle, manufacturer, product URL, and lime-wood material wording only. No performance claim was converted into hold metadata. |
+| straight-on presentation image | [Official Evo product PNG](https://www.zlagboard.com/assets/web/Zlagboard_EVO-newscreen2x-fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f.png), 1302 × 404. | [Official current Pro product PNG](https://www.zlagboard.com/assets/web/Zlagboard-2019-smaller2x-8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b.png), 1302 × 462. | Stored byte-for-byte as `assets/primary.png`; image dimensions establish package aspect ratio and geometry coordinates. |
+| exhaustive physical hold map | [Official Evo hold map](https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png). | [Official Pro 2 hold map](https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png); its filename and the official app's distinct Pro 2.0 entry identify the pictured current model. | Exact contact inventory, row order, left/right pairing, top `JUG`, `32°`, `20°`, and `sloper JUG` labels, plus every printed millimeter depth and `sloper`/`incut` qualifier. |
+| required dimensions field | [Bananafingers Evo listing](https://bananafingers.co.uk/zlagboard-evo-p3554z) reports `70 × 23 × 6 cm`. | [Chalkr Pro 2.0 listing](https://chalkr.de/vertical-life-zlagboard-pro-trainingsboard.html) reports length 70.5 cm, depth 25 cm, and height 8 cm. | Limited secondary fallback because schema version 1 requires a nonempty dimensions fact and the current first-party page publishes none. Recorded as `70 × 23 × 6 cm` and `70.5 × 25 × 8 cm`; no weight or secondary material claim was imported. |
 
-The official pages are sufficient to distinguish the product families and to
-show their visible layouts. They do not resolve which Pro version the generated
-candidate represents, nor do they publish a complete physical-hold inventory.
-An image does not establish hold capacity, grip classification, boundaries,
-cue treatment, or semantic target.
+The secondary dimension sources are not used for inventory, kinds, sizes,
+geometry, or product identity. A separate Evo retailer mixes a `6 cm` headline
+with an `8 cm` technical depth, so it was intentionally excluded rather than
+used to broaden or overwrite the single corroborated package string.
 
-## Evidence-key readiness
+## Frozen physical inventory
 
-A registered package needs exact mappings for every board field, all physical
-hold fields and frames, each semantic target, and each retained asset. The
-source sets below only support broad board-level claims and
-visible imagery; they cannot supply the required per-hold key set.
+Both official maps are exhaustive seven-column layouts. Every colored top
+segment and every colored cavity is a distinct continuous physical contact.
 
-| candidate | official facts established | missing required evidence | result |
-| --- | --- | --- | --- |
-| `zlagboard.evo` | Product identity; compact form factor; aggregate grip categories of crimps, pockets, slopers, and jugs; official front image. | Exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
-| `zlagboard.pro` | Product-family identity; general ergonomic-hold description; official front image; evidence that Pro 1.0 and Pro 2.0 are distinct app-compatible boards. | Exact model version of the candidate; exhaustive named contact inventory; each contact's boundary/frame, size/depth, finger capacity, grip classification, and cue/feature fields; source-backed semantic targets. | Keep `assets/primary.png` only and do not author sidecars or a catalog entry. |
+### `zlagboard-evo` — 21 contacts
 
-## Exact blockers
+- Top row, left to right: jug; 32-degree sloper; 20-degree sloper; center
+  sloper jug; 20-degree sloper; 32-degree sloper; jug.
+- First cavity row, left to right: 30 mm edge; 30 mm sloper edge; 25 mm
+  sloper edge; 35 mm center edge; mirrored 25 mm sloper, 30 mm sloper, and
+  30 mm edge.
+- Second cavity row, left to right: 20 mm edge; 25 mm sloper edge; 30 mm
+  inner edge; 30 mm center sloper edge; mirrored 30 mm edge, 25 mm sloper,
+  and 20 mm edge.
 
-### `zlagboard-evo`
+### `zlagboard-pro` — 28 contacts
 
-Zlagboard describes the Evo's aggregate categories but supplies no
-model-specific, exhaustive mapping of its physical contact regions. The
-official product image is evidence for visible presentation only and cannot
-turn those categories into complete per-hold records. No source establishes
-the full hold-frame, capacity, classification, or semantic evidence
-required by a canonical package.
+- The same seven top contacts and first two seven-contact cavity rows shown on
+  the Evo map.
+- Third cavity row, left to right: incut 15 mm edge; 15 mm edge; inner incut
+  30 mm edge; center incut 10 mm edge; mirrored incut 30 mm, 15 mm, and incut
+  15 mm edges.
 
-### `zlagboard-pro`
+The old 14/21 counts were incomplete because they counted only two/three rows
+of cavities. No two visible contacts were merged, and no continuous contact
+was split into multiple logical holds.
 
-Zlagboard describes the Pro generally, while its official app page separately
-lists Pro 1.0 and Pro 2.0. The existing candidate directory does not identify
-which version it represents. More importantly, neither source publishes an
-exhaustive individual-hold map or the necessary per-hold measurements and
-classifications. No package can be authored without both model identification
-and an official complete hold map.
+## Geometry and constraint decisions
 
-## Required follow-up
+- Geometry was drawn directly against the official straight-on product PNGs.
+  The official maps supplied the exhaustive topology and label mapping; they
+  were not traced, registered, segmented, or vectorized.
+- Left/right frames are exact normalized mirrors because both official product
+  images and maps establish bilateral symmetry. The irregular seven top paths
+  are freeform; their paired canonical commands are mirrored exactly.
+- Each machined cavity mouth is a regular horizontal capsule. An operator
+  selected the Workbench `pill` constraint for all 14 Evo cavity paths and all
+  21 Pro cavity paths. Workbench's production primitive serialized the exact
+  cubic canonical paths. The constraint remains metadata only; those paths are
+  the rendering, highlighting, and hit-testing truth.
+- Capacities, grip posture, feature tags, and any measurement not printed in
+  the official hold maps are omitted. The map's degree labels are preserved in
+  top-hold names because schema version 1 has no angle field.
 
-Obtain a manufacturer-issued, model-specific numbered hold diagram or data
-sheet for Evo and for the exact Pro version. It must map every physical contact
-region and its boundary to its measurements, finger capacity, grip
-classification, and documented training target. Only then create all three
-sidecars and add the package to the catalog in the same change. Do not use the
-generated primary image, a broad product description, or evidence from one Pro
-version for another.
+## Validation evidence
+
+- Final-inventory package validation reports complete direct-child packages
+  with zero drafts.
+- Strict Workbench loading reports 21 Evo regions and 28 Pro 2.0 regions; all
+  49 paths are closed.
+- Exact bilateral mirror checks pass. Zero-delta constrained resize is byte
+  exact for all 35 constrained cavity pieces.
+- Normal overlays, exhaustive one-active-contact-per-tile sheets, real
+  Workbench screenshots, and DOM hit-test results were reviewed.
+- Owned isolated iOS validation covered the four YY and two Zlag boards:
+  normal and exhaustive-active screenshots visually passed, all 12/12
+  production `BoardHoldPathShape` probes passed, and cleanup completed.

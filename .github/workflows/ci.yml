@@ -100,7 +100,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Tools/HangboardPipeline
+        working-directory: Tools/HangboardPackages
 
     steps:
       # actions/checkout v4.2.2
@@ -115,18 +115,11 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
-          cache-dependency-path: Tools/HangboardPipeline/pyproject.toml
-
-      # astral-sh/setup-uv v6
-      - name: Set up uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+          cache-dependency-path: Tools/HangboardPackages/pyproject.toml
 
       - name: Validate canonical board packages
         working-directory: ${{ github.workspace }}
-        run: scripts/hangboard-tools.sh packages validate --root Hangboards
-
-      - name: Install wheel-build prerequisites
-        run: python -m pip install 'setuptools>=68' wheel
+        run: scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
       - name: Install Python package and test dependencies
         run: python -m pip install -e ".[dev]"
@@ -151,7 +144,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: python-test-results-${{ github.run_id }}
-          path: Tools/HangboardPipeline/pytest-results.xml
+          path: Tools/HangboardPackages/pytest-results.xml
           if-no-files-found: ignore
 
   build-required:
