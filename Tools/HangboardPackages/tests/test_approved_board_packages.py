@@ -111,9 +111,19 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("beastmaker-2000", "beastmaker-2000"),
         ("dewoodstok-woodbord", "dewoodstok-woodbord"),
         ("escape-beta-22", "escape-beta-22"),
+        ("escape.unlimited", "escape-unlimited"),
         ("evolv-kilter-basic-long", "evolv-kilter-basic-long"),
+        ("frictitious.doormount-pro-7", "frictitious-doormount-pro-7"),
+        ("frictitious.megalith", "frictitious-megalith"),
         ("lattice-triple-rung", "lattice-triple-rung"),
+        ("metolius.climbers-edge", "metolius-climbers-edge"),
+        ("metolius.contact", "metolius-contact"),
+        ("metolius.project", "metolius-project"),
+        ("metolius.simulator-3d", "metolius-simulator-3d"),
         ("trango.rock-prodigy-pivot", "trango-rock-prodigy-pivot"),
+        ("tension.grindstone", "tension-grindstone"),
+        ("tension.honestone", "tension-honestone"),
+        ("tension.whetstone", "tension-whetstone"),
     }
     assert discovered == expected_packages
     assert inventory.drafts == ()
