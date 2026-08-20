@@ -214,6 +214,32 @@ test("the browser client navigates to login when an API request is unauthenticat
   assert.deepEqual(assignedUrls, ["/auth/login"]);
 });
 
+test("the browser client keeps the current tab on an unauthenticated save and exposes the login URL", async () => {
+  let requestOptions: RequestInit | undefined;
+  const { runtime, assignedUrls } = runtimeFixture(async (_input, options) => {
+    requestOptions = options;
+    return response(
+      {
+        ok: false,
+        error: "GitHub authentication expired or insufficient permissions",
+        login_url: "/auth/login",
+      },
+      { ok: false, status: 401 },
+    );
+  });
+  const client = createWorkbenchClient(runtime);
+
+  await assert.rejects(
+    client.saveBoard("compact", editorDocument()),
+    (error: unknown) => error instanceof Error
+      && error.message === "GitHub authentication expired or insufficient permissions"
+      && (error as Error & { loginUrl?: unknown }).loginUrl === "/auth/login",
+  );
+
+  assert.deepEqual(assignedUrls, []);
+  assert.equal(Object.hasOwn(requestOptions ?? {}, "redirectOnUnauthorized"), false);
+});
+
 test("the browser client saves one direct editor document with PUT", async () => {
   const calls: Array<{ request: string; options: RequestInit | undefined }> = [];
   const document = editorDocument();

@@ -13,6 +13,7 @@ import type {
 } from "./types.ts";
 
 type PayloadParser<T> = (payload: unknown) => T;
+type RequestOptions = RequestInit & { redirectOnUnauthorized?: boolean };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -186,12 +187,13 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
   async function request<T>(
     path: string,
     parser: PayloadParser<T>,
-    options: RequestInit = {},
+    options: RequestOptions = {},
   ): Promise<T> {
+    const { redirectOnUnauthorized = true, ...fetchOptions } = options;
     const requestOptions: RequestInit = {
       cache: "no-store",
-      ...options,
-      signal: options.signal ?? AbortSignal.timeout(15_000),
+      ...fetchOptions,
+      signal: fetchOptions.signal ?? AbortSignal.timeout(15_000),
     };
     let response: Response;
     try {
@@ -215,19 +217,23 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
 
     const succeeded = isRecord(payload) && payload.ok === true;
     if (!response.ok || !succeeded) {
-      if (response.status === 401
+      const loginUrl = response.status === 401
         && isRecord(payload)
-        && typeof payload.login_url === "string"
-        && payload.login_url) {
-        runtime.location.assign(payload.login_url);
-      }
+        && payload.login_url === "/auth/login"
+        ? payload.login_url
+        : null;
       const message = isRecord(payload) && typeof payload.error === "string" && payload.error
         ? payload.error
         : `Workbench request for ${path} failed (${String(response.status)})`;
       if (response.status >= 500) {
         reportRequestFailure(path, "server", message, { status: response.status });
       }
-      throw new Error(message);
+      const error = new Error(message) as Error & { loginUrl?: string };
+      if (loginUrl) {
+        error.loginUrl = loginUrl;
+        if (redirectOnUnauthorized) runtime.location.assign(loginUrl);
+      }
+      throw error;
     }
     return parser(payload);
   }
@@ -248,6 +254,7 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
       `/api/boards/${encodeURIComponent(boardId)}`,
       parseBoard("Workbench returned an invalid saved board"),
       {
+        redirectOnUnauthorized: false,
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(document),
