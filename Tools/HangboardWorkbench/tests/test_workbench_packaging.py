@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -26,6 +27,20 @@ def _load_build_module():
 
 
 build = _load_build_module()
+
+
+def test_browser_bundle_is_an_ignored_build_artifact() -> None:
+    tracked = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "Tools/HangboardWorkbench/app.js"],
+        cwd=REPOSITORY_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert tracked.returncode != 0
+    assert "/Tools/HangboardWorkbench/app.js" in (
+        REPOSITORY_ROOT / ".gitignore"
+    ).read_text(encoding="utf-8")
 
 
 def test_static_asset_routes_expose_only_the_packaged_bundle() -> None:

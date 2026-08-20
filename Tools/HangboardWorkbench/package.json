@@ -9,7 +9,7 @@
     "test:modules": "tsx --test tests/path-editor.test.ts tests/workbench-modules.test.ts",
     "test:react": "tsx --test tests/react-app.test.tsx tests/react-editor.test.tsx",
     "test": "npm run typecheck && npm run test:modules && npm run test:react",
-    "check:bundle": "npm run build && git diff --exit-code -- app.js"
+    "check:bundle": "npm run build"
   },
   "dependencies": {
     "react": "19.2.8",
