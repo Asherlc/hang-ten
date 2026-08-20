@@ -516,7 +516,16 @@ export function addVertex(
 
 export function deleteVertex(commands: PathCommand[], index: number): void {
   const command = commands[index];
-  if (index === 0 || command === undefined || command.type === "Z" || commands.length <= 4) return;
+  if (command === undefined || command.type === "Z" || commands.length <= 4) return;
+
+  if (index === 0) {
+    const next = commands[1];
+    if (next === undefined || next.type === "Z") return;
+    commands[0] = { type: "M", points: [next.points.at(-1)!], controls: [] };
+    commands.splice(1, 1);
+    return;
+  }
+
   const next = commands[(index + 1) % commands.length]!;
 
   commands.splice(index, 1);
