@@ -655,6 +655,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 {
                     "ok": False,
                     "error": "GitHub authentication expired or insufficient permissions",
+                    "login_url": "/auth/login",
                 },
             )
         except GitHubTransportError:

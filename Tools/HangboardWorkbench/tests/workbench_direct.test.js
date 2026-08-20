@@ -210,6 +210,29 @@ test("the browser client saves one direct editor document with PUT", async () =>
   assert.deepEqual(JSON.parse(calls[0][1].body), document);
 });
 
+test("the browser client keeps the current tab on an unauthenticated save and exposes the recoverable login URL", async () => {
+  global.location = { href: "/boards/compact" };
+  global.fetch = async () => response(
+    {
+      ok: false,
+      error: "GitHub authentication expired or insufficient permissions",
+      login_url: "/auth/login",
+    },
+    { ok: false, status: 401 },
+  );
+  const client = freshClient();
+  const document = { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions: [] };
+
+  await assert.rejects(
+    client.saveBoard("compact", document),
+    (error) => error instanceof Error
+      && error.message === "GitHub authentication expired or insufficient permissions"
+      && error.loginUrl === "/auth/login",
+  );
+
+  assert.equal(global.location.href, "/boards/compact");
+});
+
 test("the browser client can read git status and run git operations", async () => {
   const calls = [];
   global.fetch = async (request, options) => {
@@ -512,6 +535,53 @@ test("a pending browser save cannot reset a newer board document", async () => {
   await settle();
   await settle();
   assert.equal(app.elements["board-name"].textContent, "Board A");
+});
+
+test("an unauthenticated save keeps the dirty editor, hides validation, and offers reauthentication in a new tab", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = twoHoldBoard();
+  const saveAttempts = [];
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+      async saveBoard(boardId, documentValue) {
+        saveAttempts.push({ boardId, documentValue });
+        const error = new Error("GitHub authentication expired or insufficient permissions");
+        error.loginUrl = "/auth/login";
+        throw error;
+      },
+    },
+    controller,
+  });
+  await settle();
+  app.elements["board-list"].children[0].click();
+  await settle();
+  await settle();
+  app.elements["hold-overlay"].children[0].click();
+  app.elements["hold-type-select"].value = "pinch";
+  app.elements["hold-type-select"].change();
+  assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
+
+  app.elements["save-button"].click();
+  await settle();
+  await settle();
+
+  assert.equal(saveAttempts.length, 1);
+  assert.equal(app.elements["save-state"].textContent, "Unsaved changes");
+  assert.equal(app.elements["validation-panel"].classList.contains("hidden"), true);
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("fill"), "#f2c94c");
+  assert.match(
+    app.elements["editor-status"].textContent,
+    /return here and save again/i,
+  );
+  assert.equal(app.elements["editor-status"].textContent.endsWith(" "), true);
+  assert.equal(app.elements["editor-status"].children.length, 1);
+  assert.equal(app.elements["editor-status"].children[0].tagName, "a");
+  assert.equal(app.elements["editor-status"].children[0].href, "/auth/login");
+  assert.equal(app.elements["editor-status"].children[0].target, "_blank");
+  assert.equal(app.elements["editor-status"].children[0].rel, "noopener noreferrer");
+  assert.match(app.elements["editor-status"].children[0].textContent, /reauthenticate/i);
 });
 
 test("selecting a hold repeatedly does not duplicate the path editor overlay", async () => {

@@ -22,7 +22,8 @@
   }
 
   async function request(path, options = {}) {
-    const requestOptions = { cache: "no-store", ...options };
+    const { redirectOnUnauthorized = true, ...fetchOptions } = options;
+    const requestOptions = { cache: "no-store", ...fetchOptions };
     let response;
     try {
       response = await root.fetch(path, requestOptions);
@@ -41,10 +42,14 @@
       throw new Error(message);
     }
     if (!response.ok || !payload.ok) {
-      if (response.status === 401 && payload.login_url) root.location.href = payload.login_url;
       const message = payload.error || `Workbench request for ${path} failed (${String(response.status)})`;
+      const error = new Error(message);
+      if (response.status === 401 && payload.login_url) {
+        error.loginUrl = String(payload.login_url);
+        if (redirectOnUnauthorized) root.location.href = error.loginUrl;
+      }
       if (response.status >= 500) reportRequestFailure(path, "server", message, { status: response.status });
-      throw new Error(message);
+      throw error;
     }
     return payload;
   }
@@ -63,6 +68,7 @@
 
   async function saveBoard(boardId, document) {
     const payload = await request(`/api/boards/${encodeURIComponent(boardId)}`, {
+      redirectOnUnauthorized: false,
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(document),

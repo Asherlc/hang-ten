@@ -127,8 +127,17 @@
     return state.document?.regions.find((region) => region.key === state.selectedKey) || null;
   }
 
-  function setStatus(message) {
+  function setStatus(message, options = {}) {
+    el["editor-status"].replaceChildren();
     el["editor-status"].textContent = message;
+    if (!options.loginUrl) return;
+    el["editor-status"].textContent += " ";
+    const link = document.createElement("a");
+    link.href = String(options.loginUrl);
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = options.linkText || "Reauthenticate";
+    el["editor-status"].appendChild(link);
   }
 
   function setValidation(error = "") {
@@ -951,6 +960,14 @@
         render();
       } catch (error) {
         if (!isCurrent()) return;
+        if (error?.loginUrl) {
+          setValidation();
+          setStatus(
+            "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
+            { loginUrl: error.loginUrl, linkText: "Reauthenticate" },
+          );
+          return;
+        }
         setValidation(error.message || "Could not save board.");
         setStatus("Could not save board. Your editor changes were kept.");
       }
