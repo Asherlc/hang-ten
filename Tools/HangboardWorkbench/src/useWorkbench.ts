@@ -33,6 +33,7 @@ const INITIAL_STATE: WorkbenchState = {
   rotationDegrees: "",
   validation: "",
   status: "Ready.",
+  saveLoginUrl: null,
   boardsError: "",
 };
 
@@ -47,6 +48,15 @@ interface OperationCoordinators {
 
 function errorMessage(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function saveLoginUrl(error: unknown): string | null {
+  return typeof error === "object"
+    && error !== null
+    && "loginUrl" in error
+    && error.loginUrl === "/auth/login"
+    ? error.loginUrl
+    : null;
 }
 
 function selectedBranch(status: GitStatus): string {
@@ -282,11 +292,13 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       updateState((value) => ({
         ...value,
         validation: errorMessage(error, "Hold document is invalid."),
+        saveLoginUrl: null,
       }));
       return;
     }
     const boardId = current.board.boardId;
     const documentIdentity = current.document;
+    updateState((value) => ({ ...value, saveLoginUrl: null }));
     await boardOperations.perform(async ({ isCurrent }) => {
       try {
         await controller.saveBoardAtomically({
@@ -314,11 +326,17 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         });
       } catch (error: unknown) {
         if (!isCurrent()) return;
-        updateState((latest) => ({
+        const loginUrl = saveLoginUrl(error);
+        updateState((latest) => loginUrl ? {
+          ...latest,
+          validation: "",
+          status: "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
+          saveLoginUrl: loginUrl,
+        } : {
           ...latest,
           validation: errorMessage(error, "Could not save board."),
           status: "Could not save board. Your editor changes were kept.",
-        }));
+        });
       }
     });
   }, [boardOperations, client, controller, isBusy, updateState]);

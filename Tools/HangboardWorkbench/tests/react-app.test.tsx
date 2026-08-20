@@ -394,6 +394,56 @@ test("failed board selection keeps the prior editor and failed save keeps unsave
   });
 });
 
+test("recoverable save authentication failure keeps edits and offers safe separate-tab login", async () => {
+  const image = imageFixture();
+  const saveAttempts: EditorDocument[] = [];
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(_boardId, document) {
+        saveAttempts.push(document);
+        if (saveAttempts.length === 1) {
+          throw Object.assign(
+            new Error("GitHub authentication expired or insufficient permissions"),
+            { loginUrl: "/auth/login" },
+          );
+        }
+        return boardFixture("board-a", document);
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+    await app.change("#hold-type-select", "pinch");
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+
+    await app.click("#save-button");
+
+    assert.equal(saveAttempts.length, 1);
+    assert.equal(saveAttempts[0]?.regions[0]?.type, "pinch");
+    assert.equal(app.documentValue("#hold-type-select"), "pinch");
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
+    const status = app.document.querySelector<HTMLElement>("#editor-status");
+    assert.match(status?.textContent ?? "", /return here and save again/i);
+    assert.equal(status?.firstChild?.nodeType, Node.TEXT_NODE);
+    const login = status?.querySelector<HTMLAnchorElement>("a");
+    assert.equal(login?.previousSibling?.textContent, " ");
+    assert.equal(login?.getAttribute("href"), "/auth/login");
+    assert.equal(login?.getAttribute("target"), "_blank");
+    assert.equal(login?.getAttribute("rel"), "noopener noreferrer");
+
+    await app.click("#save-button");
+
+    assert.equal(saveAttempts.length, 2);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(app.text("#editor-status"), "Board saved.");
+    assert.equal(app.document.querySelector("#editor-status a"), null);
+  });
+});
+
 test("an old delayed save cannot overwrite a newer document identity", async () => {
   const image = imageFixture();
   const save = deferred<Board>();
