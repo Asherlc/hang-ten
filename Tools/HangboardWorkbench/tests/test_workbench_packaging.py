@@ -48,7 +48,7 @@ def test_authored_frontend_sources_are_typescript() -> None:
         for path in (
             *EDITOR_ROOT.iterdir(),
             *(EDITOR_ROOT / "src").rglob("*"),
-            *(EDITOR_ROOT / "tests").glob("*.test.*"),
+            *(EDITOR_ROOT / "tests").rglob("*"),
         )
         if path.is_file() and path.suffix in frontend_suffixes
     }

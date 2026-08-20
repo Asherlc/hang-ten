@@ -52,18 +52,16 @@ HOSTED_TOKEN = "ghp_hosted_session"
 HOSTED_BRANCH = "workbench-default"
 
 
-class _ScriptSourceParser(HTMLParser):
+class _ScriptTagParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
-        self.sources: list[str] = []
+        self.sources: list[str | None] = []
 
     def handle_starttag(
         self, tag: str, attrs: list[tuple[str, str | None]]
     ) -> None:
         if tag == "script":
-            source = dict(attrs).get("src")
-            if source is not None:
-                self.sources.append(source)
+            self.sources.append(dict(attrs).get("src"))
 
 
 def _write_library(root: Path) -> Path:
@@ -323,7 +321,7 @@ def test_root_serves_only_the_bundled_react_frontend(tmp_path: Path) -> None:
             assert response.status == 200
             html = response.read().decode("utf-8")
 
-    parser = _ScriptSourceParser()
+    parser = _ScriptTagParser()
     parser.feed(html)
     assert '<div id="root"></div>' in html
     assert parser.sources == ["app.js"]
