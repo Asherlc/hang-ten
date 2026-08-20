@@ -115,7 +115,18 @@ internal enum BoardTargetResolver {
     static func substituteHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
         let primary = resolveHoldIDs(for: target, on: board)
         if !primary.isEmpty { return primary }
-        return closestMatch(for: target, on: board)
+        let closestPrimary = closestMatch(for: target, on: board)
+        if !closestPrimary.isEmpty { return closestPrimary }
+        guard target.feature?.holdKind == .pocket else { return [] }
+        for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
+            let fallbackTarget = HoldTarget.feature(
+                fallback,
+                fingerCapacity: target.fingerCapacity
+            )
+            let closestFallback = closestMatch(for: fallbackTarget, on: board)
+            if !closestFallback.isEmpty { return closestFallback }
+        }
+        return []
     }
 
     static func substituteHolds(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {

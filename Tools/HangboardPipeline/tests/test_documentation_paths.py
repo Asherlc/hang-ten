@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shlex
 from pathlib import Path
 
 import yaml
@@ -21,15 +22,29 @@ def _ci_workflow() -> dict[str, object]:
 
 def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() -> None:
     """Removing direct package validation would let unregistered content ship."""
-    ci_workflow = CI_WORKFLOW.read_text(encoding="utf-8")
+    ci_workflow_text = CI_WORKFLOW.read_text(encoding="utf-8")
+    workflow = _ci_workflow()
+    jobs = workflow["jobs"]
+    test_job = jobs["test"]
+    xctest_step = next(
+        step for step in test_job["steps"] if step.get("name") == "Run XCTest suite"
+    )
+    xctest_command = xctest_step["run"]
+    xctest_tokens = shlex.split(xctest_command)
     active_docs = "\n".join(
         path.read_text(encoding="utf-8") for path in (README, ADDING_A_BOARD)
     )
 
-    assert "packages validate --root Hangboards" in ci_workflow
-    assert "pytest tests -q" in ci_workflow
-    assert "stage-board-packages.py" in ci_workflow
-    assert "BoardPackageStoreTests" in ci_workflow
+    assert "packages validate --root Hangboards" in ci_workflow_text
+    assert "pytest tests -q" in ci_workflow_text
+    assert "stage-board-packages.py" in ci_workflow_text
+    assert "xcodebuild" in xctest_command
+    assert "-only-testing" not in xctest_command
+    assert "-skip-testing" not in xctest_command
+    worker_flag = "-maximum-parallel-testing-workers"
+    assert xctest_tokens.count(worker_flag) == 1
+    assert xctest_tokens[xctest_tokens.index(worker_flag) + 1] == "1"
+    assert "test 2>&1" in xctest_command
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
     assert "exactly two states" not in active_docs
@@ -61,26 +76,28 @@ def test_ci_python_job_provisions_uv_before_running_pipeline_tests() -> None:
     assert test_indices
     assert uv_index < min(test_indices)
 
+
 def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> None:
-    """Path-gated matrix jobs must not leave branch protection waiting."""
+    """A path-gated test job must not leave branch protection waiting."""
     workflow = _ci_workflow()
     jobs = workflow["jobs"]
-    ios_build = jobs["build-ios"]
+    test_job = jobs["test"]
     required_check = jobs["build-required"]
 
     required_name = "Build (Debug simulator)"
     assert [job["name"] for job in jobs.values()].count(required_name) == 1
 
-    assert ios_build["name"] == "Build iOS (${{ matrix.name }})"
+    assert "build-ios" not in jobs
+    assert test_job["name"] == "Test (iOS Simulator)"
     expected_predicate = (
         "github.event_name != 'pull_request' || "
         "needs.changes.outputs.ios == 'true' || "
         "needs.changes.outputs.workflow == 'true' || "
         "needs.changes.outputs.shared_board_content == 'true'"
     )
-    assert " ".join(ios_build["if"].split()) == expected_predicate
+    assert " ".join(test_job["if"].split()) == expected_predicate
     assert required_check["name"] == required_name
-    assert required_check["needs"] == ["changes", "build-ios"]
+    assert required_check["needs"] == ["changes", "test"]
     assert required_check["if"] == "always() && github.event.action != 'closed'"
     assert required_check["runs-on"] == "ubuntu-latest"
 
@@ -90,31 +107,35 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
         if step.get("name") == "Report required build status"
     )
     assert report_step["env"]["CHANGES_RESULT"] == "${{ needs.changes.result }}"
-    assert report_step["env"]["BUILD_RESULT"] == "${{ needs.build-ios.result }}"
+    assert report_step["env"]["BUILD_RESULT"] == "${{ needs.test.result }}"
     assert report_step["env"]["BUILD_REQUIRED"] == "${{ " + expected_predicate + " }}"
     assert '[[ "$BUILD_RESULT" != "success" ]]' in report_step["run"]
     assert '[[ "$BUILD_RESULT" != "skipped" ]]' in report_step["run"]
 
 
-def test_ci_concurrency_does_not_cancel_a_pull_request_edited_run() -> None:
-    """An edit at the same SHA must not cancel its synchronize build."""
+def test_ci_pull_request_triggers_exclude_edited_events() -> None:
+    """Editing PR metadata must not enqueue duplicate CI work."""
     workflow = _ci_workflow()
-    concurrency = workflow["concurrency"]
+    triggers = workflow.get("on", workflow.get(True))
+    pull_request = triggers["pull_request"]
 
-    assert concurrency["group"] == (
-        "ci-${{ github.workflow }}-${{ github.ref }}-"
-        "${{ github.event.action == 'edited' && 'edited' || 'code' }}"
-    )
-    assert concurrency["cancel-in-progress"] is True
+    assert "edited" not in pull_request["types"]
+    assert pull_request["types"] == [
+        "opened",
+        "synchronize",
+        "reopened",
+        "ready_for_review",
+        "closed",
+    ]
 
 
 def test_ci_concurrency_cancels_a_stale_synchronize_run() -> None:
     """A new push (or PR close) must cancel a build still running for that ref."""
     workflow = _ci_workflow()
-    group = workflow["concurrency"]["group"]
+    concurrency = workflow["concurrency"]
 
-    assert "|| github.event_name" not in group
-    assert "'edited'" in group
+    assert concurrency["group"] == "ci-${{ github.workflow }}-${{ github.ref }}"
+    assert concurrency["cancel-in-progress"] is True
 
 
 def test_staging_smoke_command_sets_the_required_xcode_destination() -> None:

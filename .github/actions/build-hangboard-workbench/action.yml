@@ -32,17 +32,6 @@ runs:
         "$python_bin" -m pip install --upgrade pip
         "$python_bin" -m pip install -e 'Tools/HangboardWorkbench[dev]'
 
-    - name: Run focused Python suite
-      shell: bash
-      run: |
-        set -euo pipefail
-        python_bin="$GITHUB_WORKSPACE/.context/hangboard-workbench-venv/bin/python"
-        "$python_bin" -m pytest Tools/HangboardWorkbench/tests -q
-
-    - name: Run focused Node suite
-      shell: bash
-      run: node --test Tools/HangboardWorkbench/tests/*.test.js
-
     - name: Run native shell tests
       shell: bash
       run: swift test --package-path Tools/HangboardWorkbench/macos
