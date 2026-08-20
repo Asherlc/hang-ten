@@ -48,9 +48,28 @@ MIRRORED_PAIRS = (
     *((f"front-middle-{left}", f"front-middle-{10 - left}") for left in range(1, 5)),
     *((f"front-lower-{left}", f"front-lower-{10 - left}") for left in range(1, 5)),
 )
+EXPECTED_ROUNDED_RECT_HOLDS = {
+    "top-sloper-3",
+    "front-upper-1",
+    "front-upper-2",
+    "front-middle-1",
+    "front-middle-3",
+    "front-middle-4",
+    "front-middle-5",
+    "front-middle-6",
+    "front-middle-7",
+    "front-middle-9",
+    "front-lower-1",
+    "front-lower-3",
+    "front-lower-4",
+    "front-lower-5",
+    "front-lower-6",
+    "front-lower-7",
+    "front-lower-9",
+}
 
 
-def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
+def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
     with Image.open(PACKAGE_ROOT / board.presentation_asset_path) as image:
@@ -65,13 +84,23 @@ def test_beastmaker_2000_inventory_paths_and_symmetry() -> None:
         "jug": 1,
     }
 
+    rounded_rect_holds = {
+        hold.id
+        for hold in holds.values()
+        if hold.geometry[0].shape.type == "roundedRect"
+    }
+    assert rounded_rect_holds == EXPECTED_ROUNDED_RECT_HOLDS
+
     for hold in holds.values():
         assert len(hold.geometry) == 1
         piece = hold.geometry[0]
-        assert piece.shape.type == "path"
-        assert piece.shape.commands[0].command == "move"
-        assert piece.shape.commands[-1].command == "close"
-        assert len(piece.shape.commands) >= 6
+        if piece.shape.type == "path":
+            assert piece.shape.commands[0].command == "move"
+            assert piece.shape.commands[-1].command == "close"
+            assert len(piece.shape.commands) >= 6
+        else:
+            assert piece.shape.type == "roundedRect"
+            assert piece.shape.corner_radius_fraction is not None
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
