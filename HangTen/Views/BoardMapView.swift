@@ -51,9 +51,10 @@ private struct PhysicalHoldVisual: View {
     let highlightMode: BoardHighlightMode
     let onTap: ((BoardHold) -> Void)?
 
+    @ViewBuilder
     var body: some View {
         let shape = BoardHoldPathShape(pieces: hold.geometry)
-        ZStack {
+        let visual = ZStack {
             shape
                 .fill(isHighlighted ? highlightFill.opacity(0.38) : Color.clear)
             .overlay {
@@ -63,14 +64,19 @@ private struct PhysicalHoldVisual: View {
                 )
             }
         }
-        .contentShape(.interaction, shape)
-        .contentShape(.accessibility, shape)
-        .onTapGesture {
-            onTap?(hold)
+        if let onTap {
+            visual
+                .contentShape(.interaction, shape)
+                .contentShape(.accessibility, shape)
+                .onTapGesture {
+                    onTap(hold)
+                }
+                .accessibilityLabel(hold.name)
+                .accessibilityElement(children: .combine)
+                .accessibilityAddTraits(.isButton)
+        } else {
+            visual
         }
-        .accessibilityLabel(hold.name)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isButton)
     }
 
     private var highlightFill: Color {

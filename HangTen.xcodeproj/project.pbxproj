@@ -91,6 +91,7 @@
 		AA0000000000000000000070 /* BoardStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000070 /* BoardStorageTests.swift */; };
 		AA0000000000000000000071 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardStorage.swift */; };
 		AA00000000000000000000A1 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A1 /* TelemetryTests.swift */; };
+		AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */; };
 		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
 		AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* PostHogTelemetry.swift */; };
 		AB0000000000000000000003 /* OpenTelemetryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */; };
@@ -188,6 +189,7 @@
 		BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryAudit.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A1 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPickerFiltersTests.swift; sourceTree = "<group>"; };
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* PostHogTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogTelemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTelemetryDiagnostics.swift; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
+				BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -629,6 +632,7 @@
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
+				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
 				AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
