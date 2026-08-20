@@ -95,7 +95,9 @@ test("the browser client lists and opens direct boards", async () => {
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
 });
 
-test("backend requests carry a finite timeout signal", async () => {
+test("backend requests carry a fifteen-second timeout signal", async (context) => {
+  const timeoutSignal = new AbortController().signal;
+  const timeout = context.mock.method(AbortSignal, "timeout", () => timeoutSignal);
   let requestOptions: RequestInit | undefined;
   const { runtime } = runtimeFixture(async (_input, options) => {
     requestOptions = options;
@@ -104,7 +106,9 @@ test("backend requests carry a finite timeout signal", async () => {
 
   await createWorkbenchClient(runtime).listBoards();
 
-  assert.ok(requestOptions?.signal instanceof AbortSignal);
+  assert.equal(timeout.mock.callCount(), 1);
+  assert.deepEqual(timeout.mock.calls[0]?.arguments, [15_000]);
+  assert.equal(requestOptions?.signal, timeoutSignal);
 });
 
 test("the browser entry module can be imported without a document", async () => {
