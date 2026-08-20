@@ -22,7 +22,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(packageStore.semantics(for: compactMapping.boardID), [:])
         XCTAssertEqual(
             store.plan(id: "research.max-hangs")?.steps.first?.targets,
-            [.ids(expectedHoldIDs)]
+            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)]
         )
     }
 
@@ -811,7 +811,10 @@ final class PlanStorageTests: XCTestCase {
         )
 
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
-        XCTAssertEqual(step.targets, [.ids("edge-19-left", "edge-19-right")])
+        XCTAssertEqual(
+            step.targets,
+            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)]
+        )
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
@@ -909,7 +912,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .ids("edge-19-left", "edge-19-right"),
+                    target: .feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug),
                     timing: .fixed,
                     duration: 7
                 ),
@@ -1171,6 +1174,57 @@ final class PlanStorageTests: XCTestCase {
                 .first { $0.feature == .mediumPinch }
         )
         XCTAssertFalse(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
+    }
+
+    @MainActor
+    func testAuditedPlansAreBoardFlexibleAndSubstituteOnEveryRegisteredBoard() throws {
+        let auditedPlanIDs: Set<String> = [
+            "research.max-hangs",
+            "research.force-feedback-f80",
+            "research.force-feedback-f100",
+            "research.eva-int-hangs",
+            "research.seven-three-repeaters",
+            "research.abrahangs",
+            "coach.horst-seven-fifty-three",
+            "coach.bechtel-three-six-nine",
+            "coach.density-hangs",
+            "device.zlagboard-sixty-sixty"
+        ]
+        let auditedPlans = LegacyPlanSeedCatalog.all.filter { auditedPlanIDs.contains($0.id) }
+
+        XCTAssertEqual(auditedPlans.map(\.id).count, auditedPlanIDs.count)
+        XCTAssertTrue(auditedPlans.allSatisfy { $0.boardID == nil })
+        XCTAssertTrue(auditedPlans.allSatisfy { plan in
+            plan.steps.flatMap(\.targets).allSatisfy(\.holdIDs.isEmpty)
+        })
+
+        let suiteName = "PlanStorageTests.boardFlexiblePlans.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let nonCompactBoard = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id != BoardCatalog.defaultBoard.id }
+        )
+        store.selectBoard(nonCompactBoard)
+
+        XCTAssertTrue(auditedPlanIDs.isSubset(of: Set(store.plans.map(\.id))))
+
+        for board in BoardCatalog.all {
+            for plan in auditedPlans {
+                let workTargets = plan.steps.flatMap { step in
+                    step.segments
+                        .filter { $0.kind == .work }
+                        .flatMap(\.targets)
+                }
+                XCTAssertFalse(workTargets.isEmpty, "\(plan.id) must include work targets")
+                XCTAssertTrue(
+                    workTargets.allSatisfy {
+                        !BoardTargetResolver.substituteHoldIDs(for: $0, on: board).isEmpty
+                    },
+                    "\(plan.id) must substitute every work target on \(board.id)"
+                )
+            }
+        }
     }
 
     func testHoopersRoundTwoKeepsFiveRecruitmentRepsPerHandAcrossThreeSets() throws {
@@ -1521,7 +1575,7 @@ final class PlanStorageTests: XCTestCase {
         case "research.max-hangs":
             return ["subtitle", "accessory", "count", "duration", "interval"]
         case "research.force-feedback-f100":
-            return ["subtitle", "instruction", "count", "interval"]
+            return ["instruction", "count", "interval"]
         case "research.eva-int-hangs":
             return ["subtitle", "instruction", "accessory", "count", "duration", "interval"]
         case "research.abrahangs":

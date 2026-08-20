@@ -259,13 +259,13 @@ rtk env PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest \
 rtk node --test Tools/HangboardWorkbench/tests/workbench*.test.js
 # 44 passed, 0 failed
 
-rtk scripts/hangboard-tools.sh packages validate --root Hangboards
+rtk scripts/hangboard-packages.sh validate --root Hangboards
 # 34 completed packages; zero drafts
 
-rtk scripts/hangboard-tools.sh packages simplify-hold-paths --root Hangboards
+rtk scripts/hangboard-packages.sh simplify-hold-paths --root Hangboards
 # 34 boards; changed=false for every board; 1,180 editable points retained
 
-rtk scripts/hangboard-tools.sh packages normalize-presentations --root Hangboards
+rtk scripts/hangboard-packages.sh normalize-presentations --root Hangboards
 # 34 boards; changed=false for every board
 
 rtk env PYTHONPATH=.context/task-2-pythonpath python3 -m \

@@ -53,6 +53,7 @@ HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/hand-palm.svg
 HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/Contents.json
 HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/hand-peace.svg
 HangTen/Resources/PlanLibrary.json
+HangTen/Views/AppSettingsView.swift
 HangTen/Views/BoardMapView.swift
 HangTen/Views/CustomRoutineEditorView.swift
 HangTen/Views/DesignSystem.swift
@@ -60,5 +61,6 @@ HangTen/Views/GripDiagramView.swift
 HangTen/Views/MotherboardViews.swift
 HangTen/Views/MotherboardWorkoutPreparationView.swift
 HangTen/Views/RootView.swift
+HangTen/Views/TrainView.swift
 HangTen/Views/WorkoutStepPickerView.swift
 HangTen/Views/WorkoutSummaryView.swift

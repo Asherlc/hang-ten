@@ -1,46 +1,90 @@
 # Metolius board-package evidence audit
 
-Checked 2026-08-12. This audit covers the four generated-image candidates in
-`Hangboards/`. The candidate raster is not manufacturer evidence for a package:
-it remains a presentation-only `assets/primary.png` until a complete package can
-be authored. No candidate below is registered in `catalog.json`.
+Checked 2026-08-12 and re-reviewed 2026-08-19. This audit records the official
+Metolius evidence used to create four complete flat packages. Every canonical
+region was directly authored against the official front view and checked against
+the model-specific numbered/depth diagram. The presentation PNGs are lossless
+format conversions of the official JPEGs; they were not cropped or geometrically
+processed.
 
-The package schema requires a source for every physical hold field, including
-`gripType`, `fingerCapacity`, `cueStyle`, and `features`. The Metolius material
-below labels visible hold groups and, where stated, depth and pocket-finger
-counts. It does not, however, establish an evidence map for every individual
-physical cavity and every required app field. A picture can support selection
-of the retained primary image, but cannot supply unsupported `cueStyle` or
-`features`.
+The Metolius material below labels visible hold groups and, where stated, depth
+and pocket-finger counts. Official diagrams and imagery support direct
+boundaries; optional capacity, posture, and feature values remain omitted unless
+the model-specific source establishes them.
 In particular, the Wood Grips Compact II diagram and manual are model-specific
 and were not used for any conclusion here.
 
-| Candidate | Dedicated official sources reviewed | What the documents establish | Exact source-backed package blocker | Result |
-| --- | --- | --- | --- | --- |
-| `metolius-climbers-edge` | [Climbers Edge product page](https://www.metoliusclimbing.com/products/climbers-edge-board); [shared training-board manual](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826) | Product identity and published overall size; the marketing list names six edge depths, a round sloper, a flat sloper, and jugs. | No Climbers Edge numbered hold guide, depth/layout diagram, or product-specific training guide is published. The product page does not map the six depths to individual physical hold boundaries or state required grip/finger/cue/feature fields. The shared manual has no model hold map. | Keep `assets/primary.png` only; unregistered. |
-| `metolius-contact` | [Contact product page](https://www.metoliusclimbing.com/products/contact-training-board); [Contact numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/con-num-dep_341f2901-a11e-4256-a4c3-0531110c730e.jpg?v=1762201170); [Contact training guide](https://www.metoliusclimbing.com/pages/contact-training-guide) | Product size, symmetric numbered layout, labeled variable pinches, outer jugs, round and flat slopers, 11 labeled pocket families with stated size/finger counts, and four labeled central-edge depths. | The sources label hold groups, but do not publish a canonical one-to-one record for every physical cavity with the package's required field coverage. In particular, no source supports the app-specific `cueStyle`/`features` values, and the product calls the pinches "variable" without values that can be assigned to individual physical pinch holds. Supplying those fields would be inference. | Keep `assets/primary.png` only; unregistered. |
-| `metolius-project` | [Project product page](https://www.metoliusclimbing.com/products/project-training-board); [Project numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307) | Product size, symmetric numbered layout, labeled outer jugs, 55 mm flat slopers, 53 mm round sloper, six numbered pocket families with stated depth/finger counts, and three numbered edge depths. | The diagram labels repeated hold groups but does not establish package evidence for every individual physical cavity and required field. It does not support the app-specific `cueStyle`/`features` values for jugs, slopers, pockets, or edges; the product page's generic training-guide link is not a Project semantic map. | Keep `assets/primary.png` only; unregistered. |
-| `metolius-simulator-3d` | [Metolius 2010 catalog](https://www.metoliusclimbing.com/pdf/Metolius_2010.pdf); [Simulator 3D numbered depth diagram](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep.jpg?v=1759460619); [Simulator 3D training guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) | The catalog gives the 28 in × 8.75 in board dimensions; the diagram labels the symmetric hold groups and stated depth/finger-count pocket and edge groups; the guide names routine targets. | The numbered diagram and guide identify groups, not a canonical physical-hold record with every package field. They do not support the app-specific `cueStyle`/`features` values for the labeled jugs, slopers, pockets, and edges. The diagram can support factual hold frames, but cannot manufacture the missing semantic field evidence. | Keep `assets/primary.png` only; unregistered. |
+| Candidate | Dedicated official sources reviewed | What the documents establish | Historical evidence limitation |
+| --- | --- | --- | --- |
+| `metolius-climbers-edge` | [product](https://www.metoliusclimbing.com/products/climbers-edge-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/The-Climber_s-Edge-Training-Board_67ebe212-d205-4f2c-9ca9-048b1792351d.jpg?v=1765309719); [official specification/depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/Climber_s-Edge-Spec.jpg?v=1765309719); [shared training-board manual](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826) | Identity, dimensions, visible boundaries, exact symmetric 15-contact inventory, six edge depths, one 40 mm-radius round sloper, two 20-degree flat slopers, and two jugs. | No optional grip posture or capacity facts were added. |
+| `metolius-contact` | [product](https://www.metoliusclimbing.com/products/contact-training-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/Contact-Hangboard-black-white.jpg?v=1759459002); [official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/con-num-dep_341f2901-a11e-4256-a4c3-0531110c730e.jpg?v=1762201170); [training guide](https://www.metoliusclimbing.com/pages/contact-training-guide) | Identity, dimensions, perfect symmetry, visible boundaries, two pinches, two jugs, two round slopers, 22 mirrored pockets, one center flat sloper, and four center edges: 33 contacts. | No app-specific cue or feature values were added. |
+| `metolius-project` | [product](https://www.metoliusclimbing.com/products/project-training-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/Project-Board-black-white-swirl.jpg?v=1759459896); [official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307) | Identity, dimensions, perfect symmetry, visible boundaries, mirrored positions 1 through 7, and center positions 8 through 10: 17 contacts. | No app-specific cue or feature values were added. |
+| `metolius-simulator-3d` | [product](https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/Simulator-black-white.jpg?v=1759460469); [official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085); [training guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) | Identity, dimensions, symmetric visible boundaries, mirrored positions 1 through 13, and center positions 14 through 18: 31 contacts. | No app-specific cue or feature values were added. |
 
-## Exact blockers
+## Frozen inventories and field mappings
 
-### `metolius-climbers-edge`
+The product pages supply `manufacturer`, `name`, `productURL`, `dimensions`,
+and the conservative subtitle. The official front JPEG for each model supplies
+`assets/primary.png` and the visible boundary of every geometry region. The
+official diagram supplies the numbered position, kind, millimeter value, and
+finger count where it explicitly labels them. `sizeMillimeters` records the
+published edge/pocket depth only; radius/diameter labels on slopers stay in the
+source-backed name because they are not edge depth. Every unmentioned optional
+field is omitted.
 
-The exact source-backed package blocker is recorded in this candidate's table row above.
+### Climber's Edge — 15 contacts
 
-### `metolius-contact`
+- Top surfaces: two jugs, two 20-degree flat slopers, and one center 40
+  mm-radius round sloper.
+- Upper edge row: mirrored 20 mm (`5`) and 15 mm (`3`) contacts around one
+  center 10 mm (`1`) contact.
+- Lower edge row: mirrored 17.5 mm (`6`) and 12.5 mm (`4`) contacts around one
+  center 7.5 mm (`2`) contact.
+- The source publishes half-millimeter depths; the current package schema only
+  accepts positive integer `sizeMillimeters`, so 17.5, 12.5, and 7.5 remain in
+  the hold names and are not rounded into structured values.
 
-The exact source-backed package blocker is recorded in this candidate's table row above.
+### Contact — 33 contacts
 
-### `metolius-project`
+- Mirrored surface positions: `1` variable-width pinches, `2` outer jugs, and
+  `3` 63 mm round slopers. Center `15` is the 53 mm flat sloper.
+- Mirrored pocket positions `4` through `14` map exactly to the diagram's
+  published depth/finger pairs: 30/4, 40/2, 20/3, 30/3, 32/2, 20/4, 25/3,
+  25/2, 12/4, 17/3, and 17/2.
+- Center edges `16` through `19` map to 15, 35, 28, and 23 mm.
 
-The exact source-backed package blocker is recorded in this candidate's table row above.
+### Project — 17 contacts
 
-### `metolius-simulator-3d`
+- Mirrored positions `1` through `7`: outer jug; 55 mm flat sloper; 45 mm
+  3-finger pocket; 30 mm edge; 40 mm 2-finger pocket; 22 mm 3-finger pocket;
+  22 mm 2-finger pocket.
+- Center positions `8` through `10`: 53 mm round sloper, 39 mm edge, and 16 mm
+  edge.
 
-The exact source-backed package blocker is recorded in this candidate's table row above.
+### Simulator 3-D — 31 contacts
 
-To move any of these candidates into the runtime catalog, Metolius must publish
-model-specific material that maps every physical hold and explicitly supports
-the missing required fields, or the package schema must be redesigned to make
-those fields genuinely optional with a separate approved evidence contract.
+- Mirrored positions `1` through `13`: outer jug; 55 mm flat sloper; 65 mm
+  round sloper; 30 mm 3-finger pocket; 25 mm edge; 19 mm edge; 36 mm edge;
+  15 mm 3-finger pocket; 35 mm 3-finger pocket; 17 mm 3-finger pocket; 14 mm
+  edge; 30 mm 2-finger pocket; 14 mm 2-finger pocket.
+- Center positions `14` through `18`: jug; 50 mm 3-finger pocket; 37 mm
+  3-finger pocket; 28 mm 2-finger pocket; 32 mm 2-finger pocket.
+
+The manufacturer expressly identifies Contact and Project as CAD/CAM symmetric;
+the Simulator and Climber's Edge diagrams also present mirrored physical
+contacts. Paired geometry therefore uses exact normalized frame mirroring. The
+regular recessed contacts use manually selected constraints; sculpted jugs,
+slopers, and pinches remain freeform except the visibly circular Contact round
+slopers. Canonical geometry, not the constraint metadata, remains the runtime
+render/highlight/hit-test source.
+
+During the 2026-08-19 visual re-review, the Contact `1` pair was deliberately
+redrawn around the narrow, visible side-pinch rails in the official front view;
+the surrounding white image background is excluded. Simulator positions `2`
+and `3` were likewise redrawn around only the visible flat- and round-sloper
+top surfaces, with their upper boundaries inset to the product silhouette.
+Every freeform paired top/outer surface is stored as an exact horizontal mirror.
+All 74 constrained paths were materialized from the checked-in Workbench
+primitive definitions (including its current cubic circle constant) and then
+saved as tight canonical path frames; reapplying each saved constraint is an
+exact no-op.

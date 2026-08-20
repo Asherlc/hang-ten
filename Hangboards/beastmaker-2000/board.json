@@ -413,10 +413,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.485463197006}
         }
-      ],
-      "sizeMillimeters": 40,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -433,10 +429,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.485463197006}
         }
-      ],
-      "sizeMillimeters": 20,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -591,11 +583,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496835543663}
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
       ]
     },
     {
@@ -750,12 +737,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496667434846}
         }
-      ],
-      "sizeMillimeters": 15,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     },
     {
@@ -846,10 +827,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 27,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -866,13 +843,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.454543707209}
         }
-      ],
-      "sizeMillimeters": 20,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
@@ -889,18 +859,11 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.456080834551}
         }
-      ],
-      "sizeMillimeters": 22,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
       "id": "front-lower-5",
-      "name": "Front Lower 5",
+      "name": "22 mm Center Edge",
       "kind": "edge",
       "geometry": [
         {
@@ -913,13 +876,7 @@
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
         }
       ],
-      "sizeMillimeters": 21,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ]
+      "sizeMillimeters": 22
     },
     {
       "id": "front-lower-6",
@@ -935,13 +892,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.456080834551}
         }
-      ],
-      "sizeMillimeters": 22,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
@@ -958,13 +908,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.454543707209}
         }
-      ],
-      "sizeMillimeters": 20,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
       ]
     },
     {
@@ -1055,10 +998,6 @@
             ]
           }
         }
-      ],
-      "sizeMillimeters": 27,
-      "features": [
-        "pocket"
       ]
     },
     {
@@ -1075,12 +1014,6 @@
           },
           "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496667434846}
         }
-      ],
-      "sizeMillimeters": 15,
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "smallEdge"
       ]
     }
   ]

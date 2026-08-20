@@ -77,7 +77,7 @@ class FakeGitHubClient:
 
     def get_tree(self, token: str, branch: str) -> tuple[TreeEntry, ...]:
         self.calls.append(Call("get_tree", (token, branch)))
-        files = self._files(branch)
+        files = self._files(self._branch_for_ref(branch))
         paths = set(files)
         for path in tuple(files):
             parents = path.split("/")[:-1]
@@ -150,6 +150,16 @@ class FakeGitHubClient:
             return self._branches[branch]
         except KeyError as error:
             raise GitHubNotFoundError("branch is not available") from error
+
+    def _branch_for_ref(self, reference: str) -> str:
+        if reference in self._branches:
+            return reference
+        branch = next(
+            (name for name, head in self._heads.items() if head == reference), None
+        )
+        if branch is None:
+            raise GitHubNotFoundError("branch head is not available")
+        return branch
 
     def _initial_head_sha(
         self, branch: str, files: Mapping[str, tuple[bytes, str]]

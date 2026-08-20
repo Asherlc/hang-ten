@@ -1,8 +1,9 @@
 # Rock Prodigy Training Center source-evidence audit
 
-Originally checked 2026-08-10; re-audited 2026-08-13 against the direct-source
-package contract. The board is not registered or bundled. Its directory is an
-unregistered image candidate containing only `assets/primary.png`.
+Originally checked 2026-08-10; re-audited 2026-08-13 and directly authored
+2026-08-19. The former incomplete package and art were removed and were not
+used as authoring inputs. The replacement paths were drawn directly under
+`docs/ADDING_A_BOARD.md`.
 
 ## Direct manufacturer sources
 
@@ -17,23 +18,33 @@ names seven broad training grips: warm-up jug, large open-hand edge, deep
 two-finger pocket, small semi-closed crimp, shallow three-finger pocket, wide
 pinch, and sloper.
 
-## Registration blocker
+## Completed authoring interpretation
 
 ### `trango-rock-prodigy-training-center`
 
-The former 26-hold runtime model included exact rail ranges, pocket depths,
-pinch sizes, normalized frames, finger capacities, and logical contacts. Those
-details were mapped to a depth guide hosted by a third-party retailer and to
-pre-migration Swift data. Neither source satisfies the requirement that every
-factual hold field map to direct official manufacturer evidence.
+The former 26-hold model mixed third-party depth claims with pre-migration data;
+none of its data or paths were restored. The current front view resolves 12
+logical contacts per symmetric half: four guide-corroborated contact surfaces
+(warm-up jug, sloper, large open-hand edge, and wide pinch), two variable rails,
+one lower outer edge, one lower inner pocket, one upper outer compound pocket,
+one upper inner pocket, one bottom outer compound pocket, and one bottom inner
+pocket. Each compound pocket is a single physical contact with two visibly
+disconnected lobes, giving 24 logical holds and 28 geometry pieces.
 
-The official sources above do not exhaustively establish the detailed 26-hold
-model. Therefore its three package sidecars and board-specific runtime plan were
-removed. No reduced or inferred package was substituted. Registration can be
-reconsidered only when Trango publishes a direct exhaustive hold guide that
-supports every required field, normalized hold frame, semantic target, and
-asset.
+The guide's deep two-finger, shallow three-finger, and small semi-closed-crimp
+terms describe selected training positions, but it does not provide a
+one-to-one location/depth map for every visible cavity. The package therefore
+uses conservative spatial names for all cavities and omits depth, capacity,
+posture, and feature metadata. “More than 30 grip positions” describes variable
+locations and grip combinations on the continuous rails and pockets; it is not
+a count of separately selectable physical contacts.
 
-There is no package `review/` directory, approximate outline, README, or
-separate presentation declaration. The retained `assets/primary.png` is an
-unregistered catalog image and is not staged into the app.
+The product page establishes `12.1 × 9.1 in` per side and says the design is
+perfectly symmetric. The official square JPEG was converted to PNG without
+cropping, registration, or geometric alteration. The left-side paths were
+authored directly from that image and the right side was mirrored exactly.
+Only the visibly regular inner pockets use operator-selected oval constraints;
+the sculpted rails, compound pockets, and contact surfaces remain freeform.
+All six constrained pieces pass the production `+1 px` resize invariants. A
+zero-distance save can reserialize decimal precision, so they are verified for
+oval consistency and no visible snap rather than claimed as byte-exact.

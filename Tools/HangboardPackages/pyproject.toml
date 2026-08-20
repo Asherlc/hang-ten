@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hangboard-package-validator"
+version = "0.1.0"
+requires-python = ">=3.11.4"
+dependencies = [
+    "numpy>=2.4.6",
+    "opencv-python-headless>=5.0.0.93",
+    "Pillow>=12.3.0",
+]
+
+[project.optional-dependencies]
+dev = ["Pillow>=12.3.0", "pytest>=9.1.1", "PyYAML>=6.0.2"]
+
+[project.scripts]
+hangboard-packages = "hangboard_packages.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

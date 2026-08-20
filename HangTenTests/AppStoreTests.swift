@@ -7,6 +7,7 @@ import UIKit
 @MainActor
 final class AppStoreTests: XCTestCase {
     private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
+    private static let selectedBoardIDKey = "HangTen.selectedBoardID.v1"
 
     deinit {}
 
@@ -24,6 +25,28 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(telemetry.events, [
             .boardSelected(family: .compactII)
         ])
+    }
+
+    func testSelectedBoardPersistsAndRestoresByStableID() throws {
+        let defaults = makeDefaults()
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id != BoardCatalog.defaultBoard.id }
+        )
+
+        AppStore(defaults: defaults).selectBoard(board)
+        let restored = AppStore(defaults: defaults)
+
+        XCTAssertEqual(defaults.string(forKey: Self.selectedBoardIDKey), board.id)
+        XCTAssertEqual(restored.selectedBoard.id, board.id)
+    }
+
+    func testUnknownPersistedBoardFallsBackToCatalogDefault() {
+        let defaults = makeDefaults()
+        defaults.set("removed.board", forKey: Self.selectedBoardIDKey)
+
+        let store = AppStore(defaults: defaults)
+
+        XCTAssertEqual(store.selectedBoard.id, BoardCatalog.defaultBoard.id)
     }
 
     func testSelectingBoardDerivesTelemetryFamilyFromBoardIDSuffix() {

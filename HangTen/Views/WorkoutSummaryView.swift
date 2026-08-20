@@ -72,12 +72,43 @@ struct WorkoutSummaryView: View {
     }
 }
 
+struct HistoryView: View {
+    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var settings: MotherboardSettingsStore
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some View {
+        NavigationStack {
+            WorkoutSessionHistoryView(
+                sessions: store.sessionHistory,
+                unit: settings.forceUnit,
+                persistenceError: store.sessionPersistenceError
+            )
+        }
+        .onAppear {
+            store.refreshHealthAuthorization()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                store.refreshHealthAuthorization()
+            }
+        }
+    }
+}
+
 struct WorkoutSessionHistoryView: View {
     let sessions: [WorkoutSessionRecord]
     let unit: MotherboardForceUnit
+    var persistenceError: String? = nil
 
     var body: some View {
         List {
+            if let persistenceError {
+                Label(persistenceError, systemImage: "exclamationmark.triangle.fill")
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.holdActiveDeep)
+            }
+
             if sessions.isEmpty {
                 ContentUnavailableView(
                     "No saved sessions",
@@ -111,7 +142,7 @@ struct WorkoutSessionHistoryView: View {
                 }
             }
         }
-        .navigationTitle("Session history")
+        .navigationTitle("History")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

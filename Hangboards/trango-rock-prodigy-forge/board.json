@@ -1,295 +1,179 @@
 {
   "schemaVersion": 1,
-  "id": "trango-rock-prodigy-forge",
+  "id": "trango.rock-prodigy-forge",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Forge",
-  "subtitle": "Two-piece hangboard with a closed-crimp thumb rest, all-new edge profiles, drafted pockets, and usable slopers.",
+  "subtitle": "Two-piece training board with variable rails, drafted pockets, crimps, slopers, and flat edges.",
   "productURL": "https://trango.com/products/rock-prodigy-forge",
-  "dimensions": "5.25 \u00d7 12.75 in (per side)",
-  "aspectRatio": 4.162534435261708,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "dimensions": "12.75 × 5.25 in per side",
+  "aspectRatio": 1.5,
+  "presentation": { "assetPath": "assets/primary.png" },
   "holds": [
     {
-      "id": "pinch-block-left",
-      "name": "Left pinch block",
-      "kind": "pinch",
-      "features": [
-        "widePinch"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.011065519523494374,
-            "y": 0.044187327823691516,
-            "width": 0.1473990734612839,
-            "height": 0.7475482093663912
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.15
-          }
-        }
-      ]
+      "id": "sloper-30-left", "name": "Left 30-degree sloper", "kind": "sloper",
+      "geometry": [{ "frame": { "x": 0.012, "y": 0.424, "width": 0.132, "height": 0.103 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.06, 0.29] }, { "command": "line", "to": [0.70, 0.00] }, { "command": "line", "to": [1.00, 0.19] },
+        { "command": "line", "to": [0.92, 0.82] }, { "command": "line", "to": [0.20, 1.00] }, { "command": "line", "to": [0.00, 0.68] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "pinch-block-right",
-      "name": "Right pinch block",
-      "kind": "pinch",
-      "features": [
-        "widePinch"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.8395499669093315,
-            "y": 0.044187327823691516,
-            "width": 0.1473990734612839,
-            "height": 0.7475482093663912
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.15
-          }
-        }
-      ]
+      "id": "sloper-30-right", "name": "Right 30-degree sloper", "kind": "sloper",
+      "geometry": [{ "frame": { "x": 0.856, "y": 0.424, "width": 0.132, "height": 0.103 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.94, 0.29] }, { "command": "line", "to": [0.30, 0.00] }, { "command": "line", "to": [0.00, 0.19] },
+        { "command": "line", "to": [0.08, 0.82] }, { "command": "line", "to": [0.80, 1.00] }, { "command": "line", "to": [1.00, 0.68] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "edge-top-rail-left",
-      "name": "Left top edge rail",
-      "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "largeOpenHandRail"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.1838782263401721,
-            "y": 0.15702479338842976,
-            "width": 0.2846326935804104,
-            "height": 0.12694214876033058
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.45
-          }
-        }
-      ]
+      "id": "sloper-40-left", "name": "Left 40-degree sloper", "kind": "sloper",
+      "geometry": [{ "frame": { "x": 0.037, "y": 0.500, "width": 0.117, "height": 0.082 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.00, 0.22] }, { "command": "line", "to": [0.91, 0.00] }, { "command": "line", "to": [1.00, 0.54] },
+        { "command": "curve", "control1": [0.78, 0.70], "control2": [0.41, 0.96], "to": [0.20, 1.00] }, { "command": "line", "to": [0.00, 0.70] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "edge-top-rail-right",
-      "name": "Right top edge rail",
-      "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "largeOpenHandRail"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.5295036399735275,
-            "y": 0.15702479338842976,
-            "width": 0.2846326935804104,
-            "height": 0.12694214876033058
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.45
-          }
-        }
-      ]
+      "id": "sloper-40-right", "name": "Right 40-degree sloper", "kind": "sloper",
+      "geometry": [{ "frame": { "x": 0.846, "y": 0.500, "width": 0.117, "height": 0.082 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [1.00, 0.22] }, { "command": "line", "to": [0.09, 0.00] }, { "command": "line", "to": [0.00, 0.54] },
+        { "command": "curve", "control1": [0.22, 0.70], "control2": [0.59, 0.96], "to": [0.80, 1.00] }, { "command": "line", "to": [1.00, 0.70] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "edge-lower-rail-left",
-      "name": "Left lower edge rail",
-      "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "mediumEdge"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.1838782263401721,
-            "y": 0.3121763085399449,
-            "width": 0.1423163467902052,
-            "height": 0.1128374655647383
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.45
-          }
-        }
-      ]
+      "id": "large-flat-edge-left", "name": "Left large flat edge", "kind": "edge",
+      "geometry": [{ "frame": { "x": 0.308, "y": 0.421, "width": 0.160, "height": 0.028 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.00, 0.40] }, { "command": "curve", "control1": [0.18, 0.10], "control2": [0.36, 0.00], "to": [0.50, 0.00] },
+        { "command": "curve", "control1": [0.68, 0.00], "control2": [0.88, 0.08], "to": [1.00, 0.30] }, { "command": "line", "to": [1.00, 0.72] },
+        { "command": "curve", "control1": [0.76, 0.86], "control2": [0.62, 1.00], "to": [0.50, 1.00] }, { "command": "curve", "control1": [0.30, 1.00], "control2": [0.08, 0.86], "to": [0.00, 0.70] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "edge-lower-rail-right",
-      "name": "Right lower edge rail",
-      "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "mediumEdge"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.6718199867637327,
-            "y": 0.3121763085399449,
-            "width": 0.1423163467902052,
-            "height": 0.1128374655647383
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.45
-          }
-        }
-      ]
+      "id": "large-flat-edge-right", "name": "Right large flat edge", "kind": "edge",
+      "geometry": [{ "frame": { "x": 0.532, "y": 0.421, "width": 0.160, "height": 0.028 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [1.00, 0.40] }, { "command": "curve", "control1": [0.82, 0.10], "control2": [0.64, 0.00], "to": [0.50, 0.00] },
+        { "command": "curve", "control1": [0.32, 0.00], "control2": [0.12, 0.08], "to": [0.00, 0.30] }, { "command": "line", "to": [0.00, 0.72] },
+        { "command": "curve", "control1": [0.24, 0.86], "control2": [0.38, 1.00], "to": [0.50, 1.00] }, { "command": "curve", "control1": [0.70, 1.00], "control2": [0.92, 0.86], "to": [1.00, 0.70] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "pocket-upper-left",
-      "name": "Left upper pocket",
-      "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.33127729980145604,
-            "y": 0.269862258953168,
-            "width": 0.0813236267372601,
-            "height": 0.12694214876033058
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
-          }
-        }
-      ]
+      "id": "slopey-crimper-left", "name": "Left slopey crimper", "kind": "edge",
+      "geometry": [{ "frame": { "x": 0.252, "y": 0.433, "width": 0.176, "height": 0.039 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.00, 0.70] }, { "command": "curve", "control1": [0.18, 0.62], "control2": [0.35, 0.16], "to": [0.54, 0.00] },
+        { "command": "curve", "control1": [0.72, 0.06], "control2": [0.89, 0.24], "to": [1.00, 0.42] }, { "command": "line", "to": [0.96, 1.00] },
+        { "command": "curve", "control1": [0.68, 0.68], "control2": [0.28, 0.82], "to": [0.00, 0.70] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "pocket-upper-right",
-      "name": "Right upper pocket",
-      "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.5854136333553938,
-            "y": 0.269862258953168,
-            "width": 0.0813236267372601,
-            "height": 0.12694214876033058
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
-          }
-        }
-      ]
+      "id": "slopey-crimper-right", "name": "Right slopey crimper", "kind": "edge",
+      "geometry": [{ "frame": { "x": 0.572, "y": 0.433, "width": 0.176, "height": 0.039 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [1.00, 0.70] }, { "command": "curve", "control1": [0.82, 0.62], "control2": [0.65, 0.16], "to": [0.46, 0.00] },
+        { "command": "curve", "control1": [0.28, 0.06], "control2": [0.11, 0.24], "to": [0.00, 0.42] }, { "command": "line", "to": [0.04, 1.00] },
+        { "command": "curve", "control1": [0.32, 0.68], "control2": [0.72, 0.82], "to": [1.00, 0.70] }, { "command": "close" }
+      ] }, "treatment": { "type": "surface" } }]
     },
     {
-      "id": "pocket-lower-left",
-      "name": "Left lower pocket",
-      "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.33127729980145604,
-            "y": 0.4250137741046831,
-            "width": 0.0813236267372601,
-            "height": 0.12694214876033058
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
-          }
-        }
-      ]
+      "id": "variable-edge-rail-left", "name": "Left 7–20 mm variable-depth edge rail", "kind": "edge", "depthRangeMillimeters": { "lowerBound": 7, "upperBound": 20 },
+      "geometry": [{ "frame": { "x": 0.151, "y": 0.452, "width": 0.283, "height": 0.033 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.00, 0.50] }, { "command": "curve", "control1": [0.00, 0.18], "control2": [0.04, 0.00], "to": [0.08, 0.00] },
+        { "command": "line", "to": [0.92, 0.15] }, { "command": "curve", "control1": [0.98, 0.16], "control2": [1.00, 0.34], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.72], "control2": [0.97, 0.84], "to": [0.92, 0.85] }, { "command": "line", "to": [0.08, 1.00] },
+        { "command": "curve", "control1": [0.03, 1.00], "control2": [0.00, 0.78], "to": [0.00, 0.50] }, { "command": "close" }
+      ] } }]
     },
     {
-      "id": "pocket-lower-right",
-      "name": "Right lower pocket",
-      "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.5854136333553938,
-            "y": 0.4250137741046831,
-            "width": 0.0813236267372601,
-            "height": 0.12694214876033058
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
-          }
-        }
-      ]
+      "id": "variable-edge-rail-right", "name": "Right 7–20 mm variable-depth edge rail", "kind": "edge", "depthRangeMillimeters": { "lowerBound": 7, "upperBound": 20 },
+      "geometry": [{ "frame": { "x": 0.566, "y": 0.452, "width": 0.283, "height": 0.033 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [1.00, 0.50] }, { "command": "curve", "control1": [1.00, 0.18], "control2": [0.96, 0.00], "to": [0.92, 0.00] },
+        { "command": "line", "to": [0.08, 0.15] }, { "command": "curve", "control1": [0.02, 0.16], "control2": [0.00, 0.34], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.72], "control2": [0.03, 0.84], "to": [0.08, 0.85] }, { "command": "line", "to": [0.92, 1.00] },
+        { "command": "curve", "control1": [0.97, 1.00], "control2": [1.00, 0.78], "to": [1.00, 0.50] }, { "command": "close" }
+      ] } }]
     },
     {
-      "id": "pocket-crimp-bottom-left",
-      "name": "Left bottom three-finger pocket",
-      "kind": "pocket",
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.21945731303772337,
-            "y": 0.608374655647383,
-            "width": 0.0813236267372601,
-            "height": 0.1128374655647383
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
-          }
-        }
-      ]
+      "id": "closed-crimp-left", "name": "Left 7.5 mm closed crimp with thumb support", "kind": "edge",
+      "geometry": [{ "frame": { "x": 0.151, "y": 0.495, "width": 0.172, "height": 0.029 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.00, 0.15] }, { "command": "line", "to": [0.85, 0.00] }, { "command": "curve", "control1": [0.93, 0.00], "control2": [0.95, 0.30], "to": [1.00, 0.45] },
+        { "command": "curve", "control1": [0.95, 0.62], "control2": [0.95, 1.00], "to": [0.85, 1.00] }, { "command": "line", "to": [0.05, 0.95] },
+        { "command": "curve", "control1": [0.00, 0.80], "control2": [0.00, 0.32], "to": [0.00, 0.15] }, { "command": "close" }
+      ] } }]
     },
     {
-      "id": "pocket-crimp-bottom-right",
-      "name": "Right bottom three-finger pocket",
-      "kind": "pocket",
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.6972336201191264,
-            "y": 0.608374655647383,
-            "width": 0.0813236267372601,
-            "height": 0.1128374655647383
-          },
-          "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
-          }
-        }
-      ]
+      "id": "closed-crimp-right", "name": "Right 7.5 mm closed crimp with thumb support", "kind": "edge",
+      "geometry": [{ "frame": { "x": 0.677, "y": 0.495, "width": 0.172, "height": 0.029 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [1.00, 0.15] }, { "command": "line", "to": [0.15, 0.00] }, { "command": "curve", "control1": [0.07, 0.00], "control2": [0.05, 0.30], "to": [0.00, 0.45] },
+        { "command": "curve", "control1": [0.05, 0.62], "control2": [0.05, 1.00], "to": [0.15, 1.00] }, { "command": "line", "to": [0.95, 0.95] },
+        { "command": "curve", "control1": [1.00, 0.80], "control2": [1.00, 0.32], "to": [1.00, 0.15] }, { "command": "close" }
+      ] } }]
+    },
+    {
+      "id": "mr-deep-left", "name": "Left 25 mm MR deep pocket", "kind": "pocket", "sizeMillimeters": 25, "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.369, "y": 0.493, "width": 0.066, "height": 0.035 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
+    },
+    {
+      "id": "mr-deep-right", "name": "Right 25 mm MR deep pocket", "kind": "pocket", "sizeMillimeters": 25, "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.565, "y": 0.493, "width": 0.066, "height": 0.035 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
+    },
+    {
+      "id": "mr-shallow-left", "name": "Left 15 mm MR shallow pocket", "kind": "pocket", "sizeMillimeters": 15, "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.370, "y": 0.531, "width": 0.065, "height": 0.034 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
+    },
+    {
+      "id": "mr-shallow-right", "name": "Right 15 mm MR shallow pocket", "kind": "pocket", "sizeMillimeters": 15, "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.565, "y": 0.531, "width": 0.065, "height": 0.034 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
+    },
+    {
+      "id": "im-deep-left", "name": "Left IM deep pocket", "kind": "pocket", "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.184, "y": 0.563, "width": 0.062, "height": 0.028 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
+    },
+    {
+      "id": "im-deep-right", "name": "Right IM deep pocket", "kind": "pocket", "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.754, "y": 0.563, "width": 0.062, "height": 0.028 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
+    },
+    {
+      "id": "im-shallow-left", "name": "Left IM shallow pocket", "kind": "pocket", "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.246, "y": 0.562, "width": 0.069, "height": 0.029 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
+    },
+    {
+      "id": "im-shallow-right", "name": "Right IM shallow pocket", "kind": "pocket", "fingerCapacity": 2,
+      "geometry": [{ "frame": { "x": 0.685, "y": 0.562, "width": 0.069, "height": 0.029 }, "shape": { "type": "path", "commands": [
+        { "command": "move", "to": [0.50, 0.00] }, { "command": "curve", "control1": [0.776142374915, 0.00], "control2": [1.00, 0.223857625085], "to": [1.00, 0.50] },
+        { "command": "curve", "control1": [1.00, 0.776142374915], "control2": [0.776142374915, 1.00], "to": [0.50, 1.00] },
+        { "command": "curve", "control1": [0.223857625085, 1.00], "control2": [0.00, 0.776142374915], "to": [0.00, 0.50] },
+        { "command": "curve", "control1": [0.00, 0.223857625085], "control2": [0.223857625085, 0.00], "to": [0.50, 0.00] }, { "command": "close" }
+      ] }, "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 } }]
     }
   ]
 }

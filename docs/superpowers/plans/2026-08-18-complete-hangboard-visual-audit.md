@@ -47,7 +47,7 @@
 - Create: `Tools/HangboardPipeline/src/hangboard_vectorizer/board_geometry_derivation.py`
 - Create: `Tools/HangboardPipeline/tests/test_board_geometry_derivation.py`
 - Modify: `Tools/HangboardPipeline/src/hangboard_vectorizer/board_catalog_cli.py`
-- Modify: `scripts/hangboard-tools.sh`
+- Modify: `scripts/hangboard-packages.sh`
 - Modify only if sharing existing helpers is necessary: `Tools/HangboardPipeline/src/hangboard_vectorizer/board_presentation.py`, `Tools/HangboardPipeline/src/hangboard_vectorizer/board_path_simplification.py`
 
 **Interfaces:**
@@ -81,7 +81,7 @@
 - [ ] Run the generic simplifier with `--write`; accept only changes satisfying the global native-pixel error and strict point-reduction gates. Do not hand-edit contours merely to reduce points.
 - [ ] Run the generic presentation normalizer with `--write` only if its dry run finds a catalog-generic crop; preserve exact pixel content and reprojection.
 - [ ] Record all inventory preservation checks, changed fields, point counts, error metrics, and source mappings in the audit document.
-- [ ] Run `rtk scripts/hangboard-tools.sh packages validate --root Hangboards` and both generic dry runs; require all changed packages to validate and both dry runs to be idempotent.
+- [ ] Run `rtk scripts/hangboard-packages.sh validate --root Hangboards` and both generic dry runs; require all changed packages to validate and both dry runs to be idempotent.
 - [ ] Commit the task with `Audit and refine complete hangboard catalog`.
 
 ### Task 4: Generic path-to-primitive hold reduction

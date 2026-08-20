@@ -92,6 +92,14 @@ internal enum BoardTargetResolver {
             for fallback in target.fallbackFeatures {
                 let matches = matching(fallback, fingerCapacity: target.fingerCapacity, on: board)
                 if !matches.isEmpty { return matches.map(\.id) }
+
+                // A fallback identifies a physically available substitute, not
+                // the source-prescribed finger capacity. Preserve capacity for
+                // the primary target, but do not reject an explicit fallback
+                // merely because that substitute has no matching capacity.
+                let capacityAgnosticMatches = matching(fallback, fingerCapacity: nil, on: board)
+                if !capacityAgnosticMatches.isEmpty { return capacityAgnosticMatches.map(\.id) }
+
             }
             return []
         }
@@ -107,7 +115,18 @@ internal enum BoardTargetResolver {
     static func substituteHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
         let primary = resolveHoldIDs(for: target, on: board)
         if !primary.isEmpty { return primary }
-        return closestMatch(for: target, on: board)
+        let closestPrimary = closestMatch(for: target, on: board)
+        if !closestPrimary.isEmpty { return closestPrimary }
+        guard target.feature?.holdKind == .pocket else { return [] }
+        for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
+            let fallbackTarget = HoldTarget.feature(
+                fallback,
+                fingerCapacity: target.fingerCapacity
+            )
+            let closestFallback = closestMatch(for: fallbackTarget, on: board)
+            if !closestFallback.isEmpty { return closestFallback }
+        }
+        return []
     }
 
     static func substituteHolds(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
@@ -127,7 +146,21 @@ internal enum BoardTargetResolver {
 
     private static func closestMatch(for target: HoldTarget, on board: TrainingBoard) -> [String] {
         if let feature = target.feature {
-            return byFeatureGroup(feature, target: target, on: board)
+            let primary = byFeatureGroup(feature, target: target, on: board)
+            if !primary.isEmpty { return primary }
+            // resolveHoldIDs already tried each fallback as an exact tagged
+            // match; a board missing that tagging (or the primary feature's
+            // kind entirely, e.g. no pockets) still deserves a same-kind
+            // substitution for its declared fallbacks before giving up. This
+            // intentionally skips byFeatureGroup's own further rescues (edge
+            // boards standing in for pockets): a plan author who named one
+            // specific fallback feature didn't ask for that fallback's
+            // fallbacks too.
+            for fallback in target.fallbackFeatures {
+                let matches = sameKindOrGroup(fallback, target: target, on: board)
+                if !matches.isEmpty { return matches }
+            }
+            return []
         }
         guard let kind = target.kind else { return [] }
         let sameKind = preferringFingerCapacity(
@@ -140,6 +173,27 @@ internal enum BoardTargetResolver {
     }
 
     private static func byFeatureGroup(_ feature: HoldFeature, target: HoldTarget, on board: TrainingBoard) -> [String] {
+        let direct = sameKindOrGroup(feature, target: target, on: board)
+        if !direct.isEmpty { return direct }
+
+        if feature.holdKind == .edge {
+            let pockets = crossKindPockets(for: target, on: board)
+            if !pockets.isEmpty { return pockets.map(\.id) }
+        }
+
+        if let capacity = target.fingerCapacity {
+            let crossKind = board.holds.filter { $0.fingerCapacity == capacity }
+            if !crossKind.isEmpty { return crossKind.map(\.id) }
+        }
+
+        return []
+    }
+
+    /// A feature's own group tag, then its physical kind regardless of
+    /// tagging. Deliberately stops short of `byFeatureGroup`'s further
+    /// cross-kind rescues, which exist for a target's own declared feature,
+    /// not for stepping through a declared fallback's fallbacks.
+    private static func sameKindOrGroup(_ feature: HoldFeature, target: HoldTarget, on board: TrainingBoard) -> [String] {
         let group = feature.featureGroup
         let groupFeatures = Set(HoldFeature.allCases.filter { $0.featureGroup == group })
 
@@ -153,19 +207,7 @@ internal enum BoardTargetResolver {
 
         let sameKind = board.holds.filter { $0.kind == feature.holdKind }
         let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
-        if !preferredSameKind.isEmpty { return preferredSameKind.map(\.id) }
-
-        if feature.holdKind == .edge {
-            let pockets = crossKindPockets(for: target, on: board)
-            if !pockets.isEmpty { return pockets.map(\.id) }
-        }
-
-        if let capacity = target.fingerCapacity {
-            let crossKind = board.holds.filter { $0.fingerCapacity == capacity }
-            if !crossKind.isEmpty { return crossKind.map(\.id) }
-        }
-
-        return []
+        return preferredSameKind.map(\.id)
     }
 
     /// When the target specifies a finger count, prefer candidates that

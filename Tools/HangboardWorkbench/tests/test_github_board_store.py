@@ -6,7 +6,9 @@ import json
 import shutil
 import struct
 import sys
+import threading
 import zlib
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import replace
 from pathlib import Path
 
@@ -18,7 +20,7 @@ sys.path.insert(0, str(WORKBENCH_ROOT))
 import board_package
 import github_board_store
 from fake_github_client import FakeGitHubClient
-from github_client import GitHubForbiddenError
+from github_client import GitHubForbiddenError, GitHubNotFoundError
 from workbench_fixtures import PRIMARY_IMAGE, board_document
 
 TOKEN = "test-token"
@@ -160,6 +162,172 @@ class _ForbiddenSaveClient(FakeGitHubClient):
         raise GitHubForbiddenError("write denied")
 
 
+class _OverlappingBlobClient(FakeGitHubClient):
+    """Requires concurrent blob reads without changing their returned bytes."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({BRANCH: files})
+        self._lock = threading.Lock()
+        self._barrier = threading.Barrier(2, timeout=5)
+        self._barrier_waiters_remaining = 2
+        self._active_blob_reads = 0
+        self.max_active_blob_reads = 0
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        with self._lock:
+            self._active_blob_reads += 1
+            wait_for_overlap = self._barrier_waiters_remaining > 0
+            if wait_for_overlap:
+                self._barrier_waiters_remaining -= 1
+            self.max_active_blob_reads = max(
+                self.max_active_blob_reads, self._active_blob_reads
+            )
+        try:
+            if wait_for_overlap:
+                try:
+                    self._barrier.wait()
+                except threading.BrokenBarrierError:
+                    pass
+            return super().get_blob(token, sha)
+        finally:
+            with self._lock:
+                self._active_blob_reads -= 1
+
+
+class _OneTimeMissingBlobClient(FakeGitHubClient):
+    """Makes the first blob lookup unavailable, then serves the same blob."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({BRANCH: files})
+        self._failed = False
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        content = super().get_blob(token, sha)
+        if not self._failed:
+            self._failed = True
+            raise GitHubNotFoundError("blob is not available")
+        return content
+
+
+class _FirstPackageFailureClient(FakeGitHubClient):
+    """Fails the first package image once and records which packages began."""
+
+    def __init__(self, files: dict[str, bytes], failing_sha: str) -> None:
+        super().__init__({BRANCH: files})
+        self._failing_sha = failing_sha
+        self._failed = False
+        self._started = threading.Condition()
+        self._image_barrier = threading.Barrier(
+            github_board_store._MAX_CONCURRENT_PACKAGE_LOADS, timeout=5
+        )
+        self.started_shas: set[str] = set()
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        with self._started:
+            self.started_shas.add(sha)
+            is_initial_image = (
+                len(self.started_shas)
+                <= github_board_store._MAX_CONCURRENT_PACKAGE_LOADS
+            )
+            self._started.notify_all()
+        if is_initial_image:
+            self._image_barrier.wait()
+        if sha == self._failing_sha and not self._failed:
+            self._failed = True
+            super().get_blob(token, sha)
+            raise GitHubNotFoundError("blob is not available")
+        return super().get_blob(token, sha)
+
+    def wait_for_started(self, count: int) -> set[str]:
+        with self._started:
+            assert self._started.wait_for(
+                lambda: len(self.started_shas) >= count, timeout=5
+            )
+            return set(self.started_shas)
+
+
+class _RejectingExecutor:
+    """Records the initial worker window, then rejects its first package."""
+
+    def __init__(self) -> None:
+        self.submitted_slugs: list[str] = []
+        self._futures: list[Future[github_board_store.GitHubBoardPackage]] = []
+
+    def submit(self, operation, *args, **kwargs):
+        del operation, kwargs
+        self.submitted_slugs.append(args[2])
+        future: Future[github_board_store.GitHubBoardPackage] = Future()
+        self._futures.append(future)
+        if len(self._futures) == 1:
+            future.set_exception(
+                board_package.BoardPackageError("catalog load stopped")
+            )
+        return future
+
+    def shutdown(self, wait: bool = True, *, cancel_futures: bool = False) -> None:
+        del wait
+        if cancel_futures:
+            for future in self._futures:
+                future.cancel()
+
+
+class _PausedConfiguredWindowClient(FakeGitHubClient):
+    """Pauses blob reads so the configured package-load width is observable."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({BRANCH: files})
+        self._active = threading.Condition()
+        self._active_blob_reads = 0
+        self.max_active_blob_reads = 0
+        self.release = threading.Event()
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        with self._active:
+            self._active_blob_reads += 1
+            self.max_active_blob_reads = max(
+                self.max_active_blob_reads, self._active_blob_reads
+            )
+            self._active.notify_all()
+        try:
+            assert self.release.wait(timeout=5)
+            return super().get_blob(token, sha)
+        finally:
+            with self._active:
+                self._active_blob_reads -= 1
+
+    def wait_for_active(self, count: int) -> int:
+        with self._active:
+            self._active.wait_for(
+                lambda: self.max_active_blob_reads >= count, timeout=1
+            )
+            return self.max_active_blob_reads
+
+
+class _PausedBulkClient(FakeGitHubClient):
+    """Pauses a bulk blob read while exposing later control-call progress."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({BRANCH: files})
+        self.bulk_started = threading.Event()
+        self.release_bulk = threading.Event()
+        self.second_head_completed = threading.Event()
+        self._head_lock = threading.Lock()
+        self._head_calls = 0
+
+    def get_branch_head_sha(self, token: str, branch: str) -> str:
+        head = super().get_branch_head_sha(token, branch)
+        with self._head_lock:
+            self._head_calls += 1
+            if self._head_calls == 2:
+                self.second_head_completed.set()
+        return head
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        self.bulk_started.set()
+        assert self.release_bulk.wait(timeout=5)
+        return super().get_blob(token, sha)
+
+
 def _local_package_error(
     tmp_path: Path,
     *,
@@ -211,6 +379,325 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
         "width": 1774,
         "height": 457,
     }
+
+
+def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() -> None:
+    """Fails if catalog loading serializes independent package blob reads."""
+    client = _OverlappingBlobClient(
+        {
+            **_complete_package("zeta", board_document("zeta.board")),
+            **_complete_package("alpha", board_document("alpha.board")),
+            **_complete_package("middle", board_document("middle.board")),
+            **_complete_package("delta", board_document("delta.board")),
+            **_complete_package("bravo", board_document("bravo.board")),
+            **_complete_package("echo", board_document("echo.board")),
+        }
+    )
+
+    packages = github_board_store.discover_packages(client, TOKEN, BRANCH)
+
+    assert [package.board_id for package in packages] == [
+        "alpha.board",
+        "bravo.board",
+        "delta.board",
+        "echo.board",
+        "middle.board",
+        "zeta.board",
+    ]
+    assert 2 <= client.max_active_blob_reads <= 4
+
+
+def test_cached_catalog_avoids_rescanning_over_capacity_images_for_open_and_image() -> None:
+    """Fails if an LRU blob scan evicts catalog data before an addressed read."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo"):
+        files.update(_complete_package(slug, board_document(f"{slug}.board")))
+        files[f"Hangboards/{slug}/assets/primary.png"] = _primary_image_with_text_chunk(
+            slug.encode("utf-8")
+        )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(
+        client, max_cached_blob_bytes=1, max_cached_blobs=1
+    )
+
+    listed = store.discover_packages(TOKEN, BRANCH)
+    opened = store.open_package(TOKEN, BRANCH, "charlie.board")
+    image = store.primary_image_bytes(TOKEN, BRANCH, "charlie.board")
+
+    assert [package.board_id for package in listed] == [
+        "alpha.board",
+        "bravo.board",
+        "charlie.board",
+        "delta.board",
+        "echo.board",
+    ]
+    assert opened.board_id == "charlie.board"
+    assert image == files["Hangboards/charlie/assets/primary.png"]
+    assert len(client.calls_named("get_blob")) == 14
+
+
+def test_cached_store_reloads_a_tree_evicted_at_its_configured_capacity() -> None:
+    """Fails if max_cached_trees does not evict the least-recent snapshot."""
+    files = _complete_package("fixture-board", board_document("fixture.board"))
+    client = FakeGitHubClient({"first": files, "second": files})
+    store = github_board_store.GitHubBoardStore(client, max_cached_trees=1)
+
+    store.discover_packages(TOKEN, "first")
+    store.discover_packages(TOKEN, "second")
+    store.discover_packages(TOKEN, "first")
+
+    assert len(client.calls_named("get_tree")) == 3
+
+
+def test_cached_store_skips_trees_larger_than_its_configured_byte_limit() -> None:
+    """Fails if max_cached_tree_bytes retains an oversized tree payload."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client, max_cached_tree_bytes=1)
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_tree")) == 2
+
+
+def test_cached_store_skips_trees_larger_than_its_configured_entry_limit() -> None:
+    """Fails if a tree-entry limit also prevents catalog caching."""
+    client = _client(
+        ("alpha", board_document("alpha.board")),
+        ("bravo", board_document("bravo.board")),
+    )
+    store = github_board_store.GitHubBoardStore(client, max_cached_tree_entries=1)
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_tree")) == 2
+    assert len(client.calls_named("get_blob")) == 4
+
+
+def test_control_calls_progress_while_a_bulk_catalog_read_is_paused() -> None:
+    """Fails if bulk catalog work consumes the control-call request budget."""
+    files = _complete_package("fixture-board", board_document("fixture.board"))
+    client = _PausedBulkClient(files)
+    store = github_board_store.GitHubBoardStore(
+        client,
+        max_concurrent_package_loads=1,
+        max_concurrent_control_calls=1,
+    )
+    catalogs: list[tuple[github_board_store.GitHubBoardPackage, ...]] = []
+
+    def discover() -> None:
+        catalogs.append(store.discover_packages(TOKEN, BRANCH))
+
+    first = threading.Thread(target=discover)
+    second = threading.Thread(target=discover)
+    first.start()
+    try:
+        assert client.bulk_started.wait(timeout=5)
+        second.start()
+        assert client.second_head_completed.wait(timeout=1)
+    finally:
+        client.release_bulk.set()
+        first.join(timeout=5)
+        second.join(timeout=5)
+        store.close()
+
+    assert len(catalogs) == 2
+    assert not first.is_alive()
+    assert not second.is_alive()
+
+
+@pytest.mark.parametrize(
+    "limit",
+    ["max_concurrent_package_loads", "max_concurrent_control_calls"],
+)
+def test_cached_store_rejects_nonpositive_request_limits(limit: str) -> None:
+    """Fails if a zero request budget can deadlock store operations."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+
+    with pytest.raises(ValueError, match="limits must be positive"):
+        github_board_store.GitHubBoardStore(client, **{limit: 0})
+
+
+def test_cached_store_reloads_a_catalog_evicted_at_its_capacity() -> None:
+    """Fails if catalog capacity does not evict the least-recent commit metadata."""
+    files = _complete_package("fixture-board", board_document("fixture.board"))
+    branches = {"first": files, "second": files}
+    client = FakeGitHubClient(branches)
+    store = github_board_store.GitHubBoardStore(client, max_cached_catalogs=1)
+
+    store.discover_packages(TOKEN, "first")
+    store.discover_packages(TOKEN, "second")
+    store.discover_packages(TOKEN, "first")
+
+    assert len(client.calls_named("get_blob")) == 6
+
+
+def test_cached_store_skips_catalogs_larger_than_its_configured_byte_limit() -> None:
+    """Fails if max_cached_catalog_bytes retains oversized board metadata."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client, max_cached_catalog_bytes=1)
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_blob")) == 4
+
+
+def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
+    """Fails if cache capacity lets immutable blobs grow without eviction."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(
+        client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
+    )
+
+    store.discover_packages(TOKEN, BRANCH)
+    store.open_package(TOKEN, BRANCH, "fixture.board")
+    store.primary_image_bytes(TOKEN, BRANCH, "fixture.board")
+
+    assert len(client.calls_named("get_blob")) == 6
+
+
+def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
+    """Fails if a transient GitHub blob failure is retained as a cache entry."""
+    client = _OneTimeMissingBlobClient(
+        _complete_package("fixture-board", board_document("fixture.board"))
+    )
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(
+        board_package.BoardPackageError, match="primary image is missing"
+    ):
+        store.discover_packages(TOKEN, BRANCH)
+    packages = store.discover_packages(TOKEN, BRANCH)
+
+    assert [package.board_id for package in packages] == ["fixture.board"]
+    assert len(client.calls_named("get_blob")) == 3
+
+
+def test_cached_store_partitions_immutable_reads_by_credential() -> None:
+    """Fails if one credential can consume another credential's cache entries."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client)
+
+    store.discover_packages("first-token", BRANCH)
+    store.discover_packages("second-token", BRANCH)
+
+    assert len(client.calls_named("get_tree")) == 2
+    assert len(client.calls_named("get_blob")) == 4
+
+
+def test_discovery_submits_only_one_worker_window_after_an_early_failure() -> None:
+    """Fails if a failed source-ordered package starts later queued packages."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
+        files.update(_complete_package(slug, board_document(f"{slug}.board")))
+        files[f"Hangboards/{slug}/assets/primary.png"] = _primary_image_with_text_chunk(
+            slug.encode("utf-8")
+        )
+    failing_sha = FakeGitHubClient._sha(files["Hangboards/alpha/assets/primary.png"])
+    client = _FirstPackageFailureClient(files, failing_sha)
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(board_package.BoardPackageError, match="primary image is missing"):
+        store.discover_packages(TOKEN, BRANCH)
+    started_before_retry = client.wait_for_started(7)
+    packages = store.discover_packages(TOKEN, BRANCH)
+
+    assert [package.board_id for package in packages] == [
+        "alpha.board",
+        "bravo.board",
+        "charlie.board",
+        "delta.board",
+        "echo.board",
+        "foxtrot.board",
+    ]
+    assert len(started_before_retry) == 7
+
+
+@pytest.mark.parametrize("max_concurrent_package_loads", [0, -1])
+@pytest.mark.parametrize("supply_executor", [False, True])
+def test_discovery_rejects_nonpositive_package_load_limits(
+    max_concurrent_package_loads: int, supply_executor: bool
+) -> None:
+    """Fails if the public discovery helper accepts an unusable worker budget."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        executor = pool if supply_executor else None
+        with pytest.raises(ValueError, match="limits must be positive"):
+            github_board_store.discover_packages(
+                client,
+                TOKEN,
+                BRANCH,
+                executor=executor,
+                max_concurrent_package_loads=max_concurrent_package_loads,
+            )
+
+    assert not client.calls_named("get_tree")
+
+
+def test_cached_store_submits_its_configured_smaller_package_load_window() -> None:
+    """Fails if a lower configured worker limit still queues the default window."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
+        files.update(_complete_package(slug, board_document(f"{slug}.board")))
+    store = github_board_store.GitHubBoardStore(
+        FakeGitHubClient({BRANCH: files}), max_concurrent_package_loads=2
+    )
+    store._executor.shutdown()
+    executor = _RejectingExecutor()
+    store._executor = executor
+
+    try:
+        with pytest.raises(board_package.BoardPackageError, match="catalog load stopped"):
+            store.discover_packages(TOKEN, BRANCH)
+    finally:
+        store.close()
+
+    assert executor.submitted_slugs == ["alpha", "bravo"]
+
+
+def test_cached_store_uses_its_configured_larger_package_load_window() -> None:
+    """Fails if a higher configured worker limit remains capped at the default."""
+    files: dict[str, bytes] = {}
+    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
+        files.update(_complete_package(slug, board_document(f"{slug}.board")))
+        files[f"Hangboards/{slug}/assets/primary.png"] = _primary_image_with_text_chunk(
+            slug.encode("utf-8")
+        )
+    client = _PausedConfiguredWindowClient(files)
+    store = github_board_store.GitHubBoardStore(
+        client, max_concurrent_package_loads=6
+    )
+
+    with ThreadPoolExecutor(max_workers=1) as requests:
+        discovery = requests.submit(store.discover_packages, TOKEN, BRANCH)
+        try:
+            active_before_release = client.wait_for_active(6)
+        finally:
+            client.release.set()
+        try:
+            packages = discovery.result(timeout=5)
+        finally:
+            store.close()
+
+    assert len(packages) == 6
+    assert active_before_release == 6
+
+
+def test_snapshot_rejects_a_branch_other_than_its_pinned_branch() -> None:
+    """Fails if a snapshot can read or mutate a branch it did not pin."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client)
+    snapshot = store._snapshot(TOKEN, BRANCH, cache_blobs=True)
+
+    with pytest.raises(RuntimeError, match="branch does not match"):
+        snapshot.get_tree(TOKEN, "other")
+    with pytest.raises(RuntimeError, match="branch does not match"):
+        snapshot.put_file(TOKEN, "new.txt", "other", b"new", "Add file", None)
+
+    store.close()
 
 
 @pytest.mark.parametrize(

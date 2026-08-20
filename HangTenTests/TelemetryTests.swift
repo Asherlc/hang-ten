@@ -3,6 +3,19 @@ import PostHog
 @testable import HangTen
 
 final class TelemetryTests: XCTestCase {
+    func testRootTabsUseTimelessOrderAndReviewRouting() {
+        XCTAssertEqual(RootTab.allCases, [.train, .plans, .history])
+        XCTAssertEqual(RootTab.initial(environment: [:]), .train)
+        XCTAssertEqual(
+            RootTab.initial(environment: ["HANGTEN_REVIEW_PLANS": "1"]),
+            .plans
+        )
+        XCTAssertEqual(
+            RootTab.initial(environment: ["HANGTEN_REVIEW_HISTORY": "1"]),
+            .history
+        )
+    }
+
     func testConfigurationWithoutAProjectTokenBuildsNoOpDependencies() {
         let configuration = PostHogConfiguration(
             projectToken: "$(POSTHOG_CLIENT_TOKEN)",
@@ -85,8 +98,19 @@ final class TelemetryTests: XCTestCase {
             error: TestError()
         )
 
-        XCTAssertEqual(HangTenTelemetryEvent.appTabSelected(tab: .today).name, "app tab selected")
-        XCTAssertEqual(HangTenTelemetryEvent.appTabSelected(tab: .today).properties, ["tab": "today"])
+        XCTAssertEqual(HangTenTelemetryEvent.appTabSelected(tab: .train).name, "app tab selected")
+        XCTAssertEqual(
+            [
+                HangTenTelemetryEvent.AppTab.train.rawValue,
+                HangTenTelemetryEvent.AppTab.plans.rawValue,
+                HangTenTelemetryEvent.AppTab.history.rawValue
+            ],
+            ["train", "plans", "history"]
+        )
+        XCTAssertEqual(
+            HangTenTelemetryEvent.appTabSelected(tab: .train).properties,
+            ["tab": "train"]
+        )
         XCTAssertEqual(HangTenTelemetryEvent.planBrowsed(source: .catalog).properties, ["source": "catalog"])
         XCTAssertEqual(HangTenTelemetryEvent.workoutStarted(source: .favorite).properties, ["source": "favorite"])
         XCTAssertEqual(HangTenTelemetryEvent.boardSelected(family: .compactII).properties, ["board_family": "compact_ii"])

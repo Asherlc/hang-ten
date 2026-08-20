@@ -97,11 +97,10 @@ invalid image data, or an interrupted write leave the saved package unchanged.
 
 ## Capture a visual catalog
 
-The catalog capture command starts an isolated loopback Workbench server and one
-headless Chrome DevTools session. It reads the completed-board order from
-`GET /api/boards`, opens each board through the existing editor, waits for its
-expected encoded primary-image URL and exactly the board document's SVG region
-count, then captures the unchanged `#editor-svg` surface at a fixed viewport.
+The catalog capture command starts an isolated loopback Workbench server and a
+headless Chrome DevTools session. It opens each completed board through the
+editor, waits for its primary image and SVG regions, then captures the unchanged
+`#editor-svg` surface at a fixed viewport.
 
 ```sh
 rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
@@ -111,13 +110,41 @@ rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
   --port 4173
 ```
 
-The output directory receives one labeled, board-ID-derived PNG per completed
-board, a `manifest.json` in API catalog order (including each board's exact
-region count), and a labeled `contact-sheet.png` containing every manifest
-entry. The command prints a JSON summary on success; failures identify a stage
-(`setup`, `server`, `chrome`, `api`, `board`, `readiness`, `capture`, or
-`output`) and, where applicable, the board ID. Chrome and server child
-processes are terminated before the command returns.
+The output includes one labeled PNG per board, an API-order `manifest.json`,
+and a labeled `contact-sheet.png`. The command terminates its Chrome and server
+children before returning.
+
+## Outline shape constraints
+
+The **Outline shape** picker reflects the selected geometry piece and offers
+**Custom**, **Oval**, **Circle**, **Pill**, **Rounded rectangle**, and
+**Rectangle**. Choosing a preset replaces that piece's outline with the exact
+primitive and keeps the selection constrained as it is moved, rotated, and
+resized. Constrained outlines use a shape-aligned box with eight handles: edge
+handles resize one dimension and corner handles resize both. Circles retain a
+1:1 aspect ratio during either kind of resize.
+
+Choosing **Custom** removes the constraint without changing the current
+outline, then restores point and Bezier-control editing. Saving persists the
+selected constraint and orientation in `board.json`, so the same picker state
+and constrained handles return when the package is reopened.
+
+A geometry piece may include this optional object alongside its existing
+`frame` and `shape`:
+
+```json
+"shapeConstraint": {
+  "shape": "oval",
+  "rotationDegrees": 15
+}
+```
+
+`shape` must be exactly one of `oval`, `circle`, `pill`, `roundedRectangle`, or
+`rectangle`. `rotationDegrees` must be a finite number normalized to the
+half-open range `[-180, 180)`. Omitting `shapeConstraint` means the piece is
+Custom/freeform. The existing `frame` and `shape` remain the authoritative
+rendering geometry, including position and size; `shapeConstraint` records only
+the geometric invariant and its orientation.
 
 ## Run the Apple Silicon macOS release
 
@@ -143,7 +170,7 @@ an opt-in server mode (`--allow-remote`) of the same Workbench codebase.
 ## Verification
 
 ```sh
+cd Tools/HangboardWorkbench && npm ci && npm run typecheck && npm test && npm run check:bundle
 uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests
-node --test Tools/HangboardWorkbench/tests/workbench*.test.js
 swift test --package-path Tools/HangboardWorkbench/macos
 ```
