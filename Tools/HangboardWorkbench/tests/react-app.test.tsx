@@ -206,6 +206,17 @@ async function withHook(
   }
 }
 
+test("renderReact restores browser globals when the initial render throws", async () => {
+  const originalDocument = globalThis.document;
+  function BrokenApp(): ReactElement {
+    throw new Error("render failure");
+  }
+
+  await assert.rejects(renderReact(<BrokenApp />), /render failure/u);
+
+  assert.equal(globalThis.document, originalDocument);
+});
+
 test("the React shell preserves the direct-workbench DOM and renders logged-out auth safely", async () => {
   await withApp(dependenciesFixture({
     client: {
@@ -403,7 +414,7 @@ test("a successful save always reports Board saved after committing the saved do
   });
 });
 
-test("replacing dependencies cannot let stale initialization overwrite coordinated Git state", async () => {
+test("replacing dependencies starts current Git initialization when obsolete work never settles", async () => {
   const staleStatus = deferred<GitStatus>();
   let staleBoards = 0;
   let freshGitCalls = 0;
@@ -438,12 +449,6 @@ test("replacing dependencies cannot let stale initialization overwrite coordinat
     await app.flush();
     assert.equal(app.disabled("#git-refresh-button"), true);
     await app.flush(() => replaceDependencies?.(replacementDependencies));
-    assert.equal(freshGitCalls, 0, "replacement initialization waits for the coordinated Git slot");
-
-    await app.flush(() => staleStatus.resolve(gitStatus({
-      currentBranch: "stale",
-      branches: ["stale"],
-    })));
     await app.flush();
 
     assert.equal(app.text("#git-auth-status"), "Logged in as new-user");

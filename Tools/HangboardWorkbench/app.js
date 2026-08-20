@@ -21896,10 +21896,12 @@
     (0, import_react.useEffect)(() => {
       stateRef.current = state;
     }, [state]);
-    const boardOperationsRef = (0, import_react.useRef)(null);
-    if (boardOperationsRef.current === null) {
-      boardOperationsRef.current = controller2.createBoardOperationCoordinator({
+    const operationsRef = (0, import_react.useRef)(null);
+    if (operationsRef.current?.dependencies !== dependencies) {
+      const generation = (operationsRef.current?.generation ?? 0) + 1;
+      const board = controller2.createBoardOperationCoordinator({
         onBusyChange: (busy) => {
+          if (operationsRef.current?.generation !== generation) return;
           if (!busy) {
             for (const resolve of boardIdleWaitersRef.current) resolve();
             boardIdleWaitersRef.current.clear();
@@ -21907,11 +21909,9 @@
           updateState((current) => ({ ...current, busyBoard: busy }));
         }
       });
-    }
-    const gitOperationsRef = (0, import_react.useRef)(null);
-    if (gitOperationsRef.current === null) {
-      gitOperationsRef.current = controller2.createBoardOperationCoordinator({
+      const git = controller2.createBoardOperationCoordinator({
         onBusyChange: (busy) => {
+          if (operationsRef.current?.generation !== generation) return;
           if (!busy) {
             for (const resolve of gitIdleWaitersRef.current) resolve();
             gitIdleWaitersRef.current.clear();
@@ -21919,9 +21919,9 @@
           updateState((current) => ({ ...current, busyGit: busy }));
         }
       });
+      operationsRef.current = { dependencies, generation, board, git };
     }
-    const boardOperations = boardOperationsRef.current;
-    const gitOperations = gitOperationsRef.current;
+    const { board: boardOperations, git: gitOperations } = operationsRef.current;
     const isBusy = (0, import_react.useCallback)(() => boardOperations.isBusy || gitOperations.isBusy, [boardOperations, gitOperations]);
     const waitForBoardIdle = (0, import_react.useCallback)(async (isActive) => {
       while (boardOperations.isBusy && isActive()) {
@@ -23245,6 +23245,24 @@
     ] });
   }
 
+  // src/native-bridge.ts
+  function isRecord(value) {
+    return typeof value === "object" && value !== null;
+  }
+  function hasDiagnosticHandler(value) {
+    return isRecord(value) && typeof value.postMessage === "function";
+  }
+  function postNativeDiagnostic(browserGlobal, diagnostic) {
+    if (!isRecord(browserGlobal)) return;
+    const webkit = browserGlobal.webkit;
+    if (!isRecord(webkit)) return;
+    const messageHandlers = webkit.messageHandlers;
+    if (!isRecord(messageHandlers)) return;
+    const handler = messageHandlers.workbenchDiagnostics;
+    if (!hasDiagnosticHandler(handler)) return;
+    handler.postMessage(diagnostic);
+  }
+
   // src/path-editor.ts
   var path_editor_exports = {};
   __export(path_editor_exports, {
@@ -23438,7 +23456,7 @@
   }
 
   // src/workbench-client.ts
-  function isRecord(value) {
+  function isRecord2(value) {
     return typeof value === "object" && value !== null && !Array.isArray(value);
   }
   function isStringArray(value) {
@@ -23448,33 +23466,33 @@
     return value === void 0 || typeof value === "string";
   }
   function isHoldRegion(value) {
-    if (!isRecord(value)) return false;
+    if (!isRecord2(value)) return false;
     const metadata = value.metadata;
-    return typeof value.key === "string" && typeof value.displayPath === "string" && (value.id === void 0 || typeof value.id === "number") && isOptionalString(value.type) && (metadata === void 0 || isRecord(metadata) && typeof metadata.holdID === "string" && typeof metadata.pieceIndex === "number");
+    return typeof value.key === "string" && typeof value.displayPath === "string" && (value.id === void 0 || typeof value.id === "number") && isOptionalString(value.type) && (metadata === void 0 || isRecord2(metadata) && typeof metadata.holdID === "string" && typeof metadata.pieceIndex === "number");
   }
   function isBoardSummary(value) {
-    return isRecord(value) && typeof value.boardId === "string" && typeof value.displayName === "string" && typeof value.holdCount === "number" && isOptionalString(value.href);
+    return isRecord2(value) && typeof value.boardId === "string" && typeof value.displayName === "string" && typeof value.holdCount === "number" && isOptionalString(value.href);
   }
   function isEditorDocumentPayload(value) {
-    return isRecord(value) && typeof value.schemaVersion === "number" && isRecord(value.canvas) && typeof value.canvas.width === "number" && typeof value.canvas.height === "number" && Array.isArray(value.regions) && value.regions.every(isHoldRegion);
+    return isRecord2(value) && typeof value.schemaVersion === "number" && isRecord2(value.canvas) && typeof value.canvas.width === "number" && typeof value.canvas.height === "number" && Array.isArray(value.regions) && value.regions.every(isHoldRegion);
   }
   function isBoard(value) {
-    return isRecord(value) && typeof value.boardId === "string" && typeof value.displayName === "string" && typeof value.holdCount === "number" && isOptionalString(value.href) && typeof value.imageUrl === "string" && isOptionalString(value.saveUrl) && isEditorDocumentPayload(value.document);
+    return isRecord2(value) && typeof value.boardId === "string" && typeof value.displayName === "string" && typeof value.holdCount === "number" && isOptionalString(value.href) && typeof value.imageUrl === "string" && isOptionalString(value.saveUrl) && isEditorDocumentPayload(value.document);
   }
   function parseBoardList(payload) {
-    if (!isRecord(payload) || !Array.isArray(payload.boards) || !payload.boards.every(isBoardSummary)) {
+    if (!isRecord2(payload) || !Array.isArray(payload.boards) || !payload.boards.every(isBoardSummary)) {
       throw new Error("Workbench returned an invalid board list");
     }
     return payload.boards;
   }
   function parseBoard(message) {
     return (payload) => {
-      if (!isRecord(payload) || !isBoard(payload.board)) throw new Error(message);
+      if (!isRecord2(payload) || !isBoard(payload.board)) throw new Error(message);
       return payload.board;
     };
   }
   function parseGitStatus(payload) {
-    if (!isRecord(payload) || !isStringArray(payload.branches)) {
+    if (!isRecord2(payload) || !isStringArray(payload.branches)) {
       throw new Error("Workbench returned an invalid branch list");
     }
     const currentBranch = typeof payload.currentBranch === "string" && payload.currentBranch ? payload.currentBranch : null;
@@ -23487,7 +23505,7 @@
     };
   }
   function parseAuthStatus(payload) {
-    if (!isRecord(payload) || typeof payload.authenticated !== "boolean") {
+    if (!isRecord2(payload) || typeof payload.authenticated !== "boolean") {
       throw new Error("Workbench returned an invalid authentication status");
     }
     return {
@@ -23498,13 +23516,13 @@
     };
   }
   function parseBranch(payload) {
-    if (!isRecord(payload) || typeof payload.branch !== "string") {
+    if (!isRecord2(payload) || typeof payload.branch !== "string") {
       throw new Error("Workbench returned an invalid branch");
     }
     return payload.branch;
   }
   function parseCommit(payload) {
-    if (!isRecord(payload) || typeof payload.commit !== "string" || typeof payload.branch !== "string" || typeof payload.message !== "string") {
+    if (!isRecord2(payload) || typeof payload.commit !== "string" || typeof payload.branch !== "string" || typeof payload.message !== "string") {
       throw new Error("Workbench returned an invalid commit");
     }
     return {
@@ -23515,20 +23533,20 @@
     };
   }
   function parsePush(payload) {
-    if (!isRecord(payload) || typeof payload.branch !== "string" || typeof payload.remote !== "string") {
+    if (!isRecord2(payload) || typeof payload.branch !== "string" || typeof payload.remote !== "string") {
       throw new Error("Workbench returned an invalid push result");
     }
     return { ok: true, branch: payload.branch, remote: payload.remote };
   }
   function parsePullRequest(payload) {
-    if (!isRecord(payload) || typeof payload.branch !== "string" || typeof payload.url !== "string") {
+    if (!isRecord2(payload) || typeof payload.branch !== "string" || typeof payload.url !== "string") {
       throw new Error("Workbench returned an invalid pull request");
     }
     return { ok: true, branch: payload.branch, url: payload.url };
   }
   function errorMessage3(error) {
     if (error instanceof Error) return error.message;
-    if (isRecord(error) && typeof error.message === "string") return error.message;
+    if (isRecord2(error) && typeof error.message === "string") return error.message;
     return "";
   }
   function createWorkbenchClient(runtime2) {
@@ -23566,12 +23584,12 @@
         reportRequestFailure(path, "unreadable-response", message, { status: response.status });
         throw new Error(message);
       }
-      const succeeded = isRecord(payload) && payload.ok === true;
+      const succeeded = isRecord2(payload) && payload.ok === true;
       if (!response.ok || !succeeded) {
-        if (response.status === 401 && isRecord(payload) && typeof payload.login_url === "string" && payload.login_url) {
+        if (response.status === 401 && isRecord2(payload) && typeof payload.login_url === "string" && payload.login_url) {
           runtime2.location.assign(payload.login_url);
         }
-        const message = isRecord(payload) && typeof payload.error === "string" && payload.error ? payload.error : `Workbench request for ${path} failed (${String(response.status)})`;
+        const message = isRecord2(payload) && typeof payload.error === "string" && payload.error ? payload.error : `Workbench request for ${path} failed (${String(response.status)})`;
         if (response.status >= 500) {
           reportRequestFailure(path, "server", message, { status: response.status });
         }
@@ -23687,29 +23705,29 @@
     saveBoardAtomically: () => saveBoardAtomically,
     validateEditorDocument: () => validateEditorDocument
   });
-  function isRecord2(value) {
+  function isRecord3(value) {
     return typeof value === "object" && value !== null && !Array.isArray(value);
   }
   function isHoldRegion2(value) {
-    if (!isRecord2(value)) return false;
+    if (!isRecord3(value)) return false;
     const metadata = value.metadata;
-    return typeof value.key === "string" && typeof value.displayPath === "string" && (value.id === void 0 || typeof value.id === "number") && (value.type === void 0 || typeof value.type === "string") && (metadata === void 0 || isRecord2(metadata) && typeof metadata.holdID === "string" && typeof metadata.pieceIndex === "number");
+    return typeof value.key === "string" && typeof value.displayPath === "string" && (value.id === void 0 || typeof value.id === "number") && (value.type === void 0 || typeof value.type === "string") && (metadata === void 0 || isRecord3(metadata) && typeof metadata.holdID === "string" && typeof metadata.pieceIndex === "number");
   }
   function isEditorDocument(value) {
-    return isRecord2(value) && typeof value.schemaVersion === "number" && isRecord2(value.canvas) && typeof value.canvas.width === "number" && typeof value.canvas.height === "number" && Array.isArray(value.regions) && value.regions.every(isHoldRegion2);
+    return isRecord3(value) && typeof value.schemaVersion === "number" && isRecord3(value.canvas) && typeof value.canvas.width === "number" && typeof value.canvas.height === "number" && Array.isArray(value.regions) && value.regions.every(isHoldRegion2);
   }
   function validateEditorDocument(document2) {
-    if (!isRecord2(document2)) {
+    if (!isRecord3(document2)) {
       throw new TypeError("Hold document is required");
     }
     const canvas = document2.canvas;
-    if (!isRecord2(canvas) || !Number.isFinite(canvas.width) || !Number.isFinite(canvas.height) || Number(canvas.width) <= 0 || Number(canvas.height) <= 0) {
+    if (!isRecord3(canvas) || !Number.isFinite(canvas.width) || !Number.isFinite(canvas.height) || Number(canvas.width) <= 0 || Number(canvas.height) <= 0) {
       throw new Error("Hold document needs a valid canvas");
     }
     if (!Array.isArray(document2.regions)) throw new Error("Hold document needs holds");
     const keys = /* @__PURE__ */ new Set();
     for (const region of document2.regions) {
-      if (!isRecord2(region) || typeof region.key !== "string" || !region.key.trim()) {
+      if (!isRecord3(region) || typeof region.key !== "string" || !region.key.trim()) {
         throw new Error("Every hold needs a key");
       }
       if (keys.has(region.key)) throw new Error("Every hold needs a unique hold key");
@@ -23799,7 +23817,7 @@
       assign: (url) => browser.location.assign(url)
     },
     postDiagnostic: (diagnostic) => {
-      browser.webkit?.messageHandlers?.workbenchDiagnostics?.postMessage(diagnostic);
+      postNativeDiagnostic(browser, diagnostic);
     },
     createImage: imageLoader,
     ...dialogs

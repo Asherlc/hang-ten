@@ -8,6 +8,7 @@ import {
   validateEditorDocument,
 } from "../src/workbench-controller.ts";
 import { createWorkbenchClient } from "../src/workbench-client.ts";
+import { postNativeDiagnostic } from "../src/native-bridge.ts";
 import * as pathEditor from "../src/path-editor.ts";
 import type {
   Board,
@@ -313,6 +314,19 @@ test("native diagnostic failures do not replace the useful request error", async
     client.listBoards(),
     /Could not reach the Hangboard Workbench backend for \/api\/boards: connection refused/,
   );
+});
+
+test("native diagnostics ignore malformed browser bridge shapes", () => {
+  const diagnostic = { path: "/api/boards", category: "network", message: "unavailable" };
+  const messages: unknown[] = [];
+
+  postNativeDiagnostic({ webkit: { messageHandlers: { workbenchDiagnostics: {} } } }, diagnostic);
+  postNativeDiagnostic({ webkit: { messageHandlers: { workbenchDiagnostics: { postMessage: "nope" } } } }, diagnostic);
+  postNativeDiagnostic({
+    webkit: { messageHandlers: { workbenchDiagnostics: { postMessage: (message: unknown) => messages.push(message) } } },
+  }, diagnostic);
+
+  assert.deepEqual(messages, [diagnostic]);
 });
 
 test("direct board loading commits image and holds together and preserves the prior editor on failure", async () => {

@@ -54,8 +54,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run Node suite
-        run: node --test Tools/HangboardWorkbench/tests/*.test.js
+      # actions/setup-node v4.4.0
+      - name: Set up Node
+        uses: actions/setup-node@1e60f620b9541d27b1a562b7c9c7b2612c9f3760
+        with:
+          node-version: '22.14.0'
+          cache: npm
+          cache-dependency-path: Tools/HangboardWorkbench/package-lock.json
+
+      - name: Install and verify React TypeScript workbench
+        working-directory: Tools/HangboardWorkbench
+        run: |
+          set -euo pipefail
+          npm ci
+          npm test
+          npm run check:bundle
 
   build:
     name: Build verified arm64 workbench

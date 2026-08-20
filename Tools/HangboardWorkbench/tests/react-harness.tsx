@@ -113,11 +113,37 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
     });
   }
 
+  let restored = false;
+  const restoreBrowserGlobals = (): void => {
+    if (restored) return;
+    restored = true;
+    dom.window.close();
+    for (const key of [...GLOBAL_KEYS].reverse()) {
+      const descriptor = descriptors.get(key);
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+      else Reflect.deleteProperty(globalThis, key);
+    }
+  };
+
   const container = requiredElement<HTMLElement>(windowValue.document, "#root");
-  const root: Root = createRoot(container);
-  await act(async () => {
-    root.render(element);
-  });
+  let root: Root | null = null;
+  try {
+    root = createRoot(container);
+    await act(async () => {
+      root?.render(element);
+    });
+  } catch (error: unknown) {
+    try {
+      await act(async () => {
+        root?.unmount();
+      });
+    } catch {
+      // Preserve the initial rendering failure after releasing test resources.
+    } finally {
+      restoreBrowserGlobals();
+    }
+    throw error;
+  }
 
   let cleaned = false;
   const harness: ReactHarness = {
@@ -243,14 +269,12 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
     async cleanup() {
       if (cleaned) return;
       cleaned = true;
-      await act(async () => {
-        root.unmount();
-      });
-      dom.window.close();
-      for (const key of [...GLOBAL_KEYS].reverse()) {
-        const descriptor = descriptors.get(key);
-        if (descriptor) Object.defineProperty(globalThis, key, descriptor);
-        else Reflect.deleteProperty(globalThis, key);
+      try {
+        await act(async () => {
+          root?.unmount();
+        });
+      } finally {
+        restoreBrowserGlobals();
       }
     },
   };

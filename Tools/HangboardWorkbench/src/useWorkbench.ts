@@ -37,6 +37,12 @@ const INITIAL_STATE: WorkbenchState = {
 
 type StateUpdate = (state: WorkbenchState) => WorkbenchState;
 type ActivityGuard = () => boolean;
+interface OperationCoordinators {
+  readonly dependencies: WorkbenchDependencies;
+  readonly generation: number;
+  readonly board: BoardOperationCoordinator;
+  readonly git: BoardOperationCoordinator;
+}
 
 function errorMessage(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
@@ -71,10 +77,12 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     stateRef.current = state;
   }, [state]);
 
-  const boardOperationsRef = useRef<BoardOperationCoordinator | null>(null);
-  if (boardOperationsRef.current === null) {
-    boardOperationsRef.current = controller.createBoardOperationCoordinator({
+  const operationsRef = useRef<OperationCoordinators | null>(null);
+  if (operationsRef.current?.dependencies !== dependencies) {
+    const generation = (operationsRef.current?.generation ?? 0) + 1;
+    const board = controller.createBoardOperationCoordinator({
       onBusyChange: (busy) => {
+        if (operationsRef.current?.generation !== generation) return;
         if (!busy) {
           for (const resolve of boardIdleWaitersRef.current) resolve();
           boardIdleWaitersRef.current.clear();
@@ -82,11 +90,9 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         updateState((current) => ({ ...current, busyBoard: busy }));
       },
     });
-  }
-  const gitOperationsRef = useRef<BoardOperationCoordinator | null>(null);
-  if (gitOperationsRef.current === null) {
-    gitOperationsRef.current = controller.createBoardOperationCoordinator({
+    const git = controller.createBoardOperationCoordinator({
       onBusyChange: (busy) => {
+        if (operationsRef.current?.generation !== generation) return;
         if (!busy) {
           for (const resolve of gitIdleWaitersRef.current) resolve();
           gitIdleWaitersRef.current.clear();
@@ -94,9 +100,9 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         updateState((current) => ({ ...current, busyGit: busy }));
       },
     });
+    operationsRef.current = { dependencies, generation, board, git };
   }
-  const boardOperations = boardOperationsRef.current;
-  const gitOperations = gitOperationsRef.current;
+  const { board: boardOperations, git: gitOperations } = operationsRef.current;
 
   const isBusy = useCallback((): boolean => (
     boardOperations.isBusy || gitOperations.isBusy

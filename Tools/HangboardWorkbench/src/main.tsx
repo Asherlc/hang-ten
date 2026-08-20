@@ -1,12 +1,12 @@
 import { createRoot, type Root } from "react-dom/client";
 
 import { WorkbenchApp } from "./WorkbenchApp.tsx";
+import { postNativeDiagnostic } from "./native-bridge.ts";
 import * as pathEditorModule from "./path-editor.ts";
 import type {
   BrowserRuntime,
   Dialogs,
   PathEditor,
-  RequestDiagnostic,
   WorkbenchController,
   WorkbenchDependencies,
 } from "./types.ts";
@@ -19,17 +19,7 @@ export function mountWorkbench(rootElement: HTMLElement, dependencies: Workbench
   return root;
 }
 
-interface NativeWorkbenchBridge {
-  webkit?: {
-    messageHandlers?: {
-      workbenchDiagnostics?: {
-        postMessage(diagnostic: RequestDiagnostic): void;
-      };
-    };
-  };
-}
-
-const browser = globalThis as typeof globalThis & NativeWorkbenchBridge;
+const browser = globalThis;
 const dialogs: Dialogs = {
   confirm: (message) => browser.confirm(message),
   prompt: (message, defaultValue) => browser.prompt(message, defaultValue),
@@ -41,7 +31,7 @@ const runtime: BrowserRuntime = {
     assign: (url) => browser.location.assign(url),
   },
   postDiagnostic: (diagnostic) => {
-    browser.webkit?.messageHandlers?.workbenchDiagnostics?.postMessage(diagnostic);
+    postNativeDiagnostic(browser, diagnostic);
   },
   createImage: imageLoader,
   ...dialogs,
