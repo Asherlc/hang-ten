@@ -180,6 +180,10 @@ function cloneConstraint(constraint: ShapeConstraint | undefined): ShapeConstrai
   return constraint ? { ...constraint } : undefined;
 }
 
+function documentsMatch(first: EditorDocument, second: EditorDocument): boolean {
+  return JSON.stringify(first) === JSON.stringify(second);
+}
+
 function isShapeConstraintShape(value: string): value is ShapeConstraintShape {
   return isConstrainedShape(value);
 }
@@ -557,6 +561,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     releasePointer(event.currentTarget);
     const candidate = previewDocumentRef.current ?? document;
     if (!candidate) return;
+    if (drag.originalDocument && documentsMatch(candidate, drag.originalDocument)) {
+      actions.replaceDocument(drag.originalDocument, { dirty: drag.originalDirty });
+      return;
+    }
     try {
       if (drag.type === "constrained-resize") {
         const hold = candidate.regions.find((region) => region.key === drag.holdKey);
@@ -670,11 +678,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       if (busy) return;
       const modifier = event.metaKey || event.ctrlKey;
       if (modifier && event.key.toLowerCase() === "z") {
+        cancelActiveEdit();
         const changed = event.shiftKey ? actions.redoDocument() : actions.undoDocument();
         if (changed) event.preventDefault();
         return;
       }
       if (event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "y") {
+        cancelActiveEdit();
         if (actions.redoDocument()) event.preventDefault();
         return;
       }

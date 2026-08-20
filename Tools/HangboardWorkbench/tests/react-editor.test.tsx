@@ -316,7 +316,11 @@ test("command/control undo and redo reverse document edits and preserve native i
     assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
     assert.equal(await app.keyDown("body", "z", { metaKey: true }), true);
     assert.equal(paths(app)[0], FIRST_PATH);
-    assert.equal(await app.keyDown("body", "z", { ctrlKey: true, shiftKey: true }), true);
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "z", { metaKey: true, shiftKey: true }), true);
     assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
     assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), false);
 
@@ -337,6 +341,41 @@ test("a new edit clears redo and a completed drag is a single undo step", async 
     assert.equal(paths(app)[0], FIRST_PATH);
     await app.keyDown("body", "ArrowRight");
     assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), false);
+  });
+});
+
+test("undo during a drag restores the committed document before building redo history", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.keyDown("body", "ArrowRight");
+    const committedPath = paths(app)[0];
+    await app.pointer('[data-hold-key="a-piece-0"]', "pointerdown", { pointerId: 7, clientX: 16, clientY: 15 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 26, clientY: 15 });
+    const previewPath = paths(app)[0];
+    assert.notEqual(previewPath, committedPath);
+
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true, shiftKey: true }), true);
+    assert.equal(paths(app)[0], committedPath);
+    assert.notEqual(paths(app)[0], previewPath);
+  });
+});
+
+test("no-op drags do not create an undo revision", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await drag(app, '[data-hold-key="a-piece-0"]', [{ x: 15, y: 15 }]);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), false);
+    assert.equal(paths(app)[0], FIRST_PATH);
+
+    await drag(app, '[data-hold-key="a-piece-0"]', [{ x: 15, y: 15 }, { x: 25, y: 15 }, { x: 15, y: 15 }]);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), false);
   });
 });
 

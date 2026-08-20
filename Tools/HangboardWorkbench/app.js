@@ -22617,6 +22617,9 @@
   function cloneConstraint(constraint) {
     return constraint ? { ...constraint } : void 0;
   }
+  function documentsMatch(first, second) {
+    return JSON.stringify(first) === JSON.stringify(second);
+  }
   function isShapeConstraintShape(value) {
     return isConstrainedShape(value);
   }
@@ -22969,6 +22972,10 @@
       releasePointer(event.currentTarget);
       const candidate = previewDocumentRef.current ?? document2;
       if (!candidate) return;
+      if (drag.originalDocument && documentsMatch(candidate, drag.originalDocument)) {
+        actions.replaceDocument(drag.originalDocument, { dirty: drag.originalDirty });
+        return;
+      }
       try {
         if (drag.type === "constrained-resize") {
           const hold = candidate.regions.find((region) => region.key === drag.holdKey);
@@ -23061,11 +23068,13 @@
         if (busy) return;
         const modifier = event.metaKey || event.ctrlKey;
         if (modifier && event.key.toLowerCase() === "z") {
+          cancelActiveEdit();
           const changed = event.shiftKey ? actions.redoDocument() : actions.undoDocument();
           if (changed) event.preventDefault();
           return;
         }
         if (event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "y") {
+          cancelActiveEdit();
           if (actions.redoDocument()) event.preventDefault();
           return;
         }
