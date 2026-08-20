@@ -29,8 +29,8 @@ unsupported capacities and posture. This package was later completed.
 | Required evidence | Official source | Coverage |
 | --- | --- | --- |
 | Product identity, board dimensions, material, and overall load rating | [Frictitious DoorMount Pro product page](https://frictitiousclimbing.com/en-ca/products/doormount-pro) | Lists Pro 7 dimensions (25.5 in × 4.5 in × 2.25 in), poplar wood hangboard, and system rating. |
-| Manufacturer front image | [DoorMount Pro 7 front image](https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=640) | Visible silhouette and layout only. |
-| Manufacturer pocket image | [DoorMount Pro pocket image](https://frictitiousclimbing.com/cdn/shop/files/DMP-Pockets.jpg?v=1779384260&width=640) | Visible pocket surface only. |
+| Manufacturer front image | [DoorMount Pro 7 front image](https://cdn.shopify.com/s/files/1/0093/8783/5451/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035) | Visible silhouette, engraved depth labels, symmetry, and continuous physical boundaries. |
+| Manufacturer pocket image | [DoorMount Pro pocket image](https://cdn.shopify.com/s/files/1/0093/8783/5451/files/DMP-Pockets.jpg?v=1779384260) | Corroborates that the pocket is integrated into the 25 mm continuous contact rather than a separately isolated cavity. |
 | Manufacturer installation imagery | [DoorMount Pro Quick Start Guide](https://frictitiousclimbing.com/en-ca/pages/doormount-pro-quick-start-guide) | Mount and orientation instructions, not a hold map. |
 
 The product page says Pro 7 has seven holds and names a pull-up jug, pockets,
@@ -42,12 +42,27 @@ and 35, 25, 20, 15, and 10 mm edges.
 must reconcile with the seven visible logical contacts. The official images may
 support those boundaries; omit capacity or posture not explicitly stated.
 
+**2026-08-19 frozen mapping:** Seven logical physical contacts are represented:
+one full-width top jug; mirrored 35 mm cavities; mirrored continuous contacts
+combining each 25 mm edge with its integrated pocket; and mirrored lower
+continuous contacts spanning the engraved 20, 15, and 10 mm steps. Engraved
+depth transitions do not create physical gaps, so the mixed and lower contacts
+must not be split into extra holds. `kind: edge` is the conservative dominant
+classification for the mixed continuous contact; no capacity is asserted. The
+official front JPEG is converted to PNG solely to satisfy the package asset
+contract, with its square canvas and presentation content otherwise unchanged.
+Only the regular 35 mm outlines receive manually selected rounded-rectangle
+constraints. The lower contacts have full-height rounded ends and use pill
+constraints. The continuous top jug and mixed contacts remain freeform. Each
+retained constraint was materialized from the current Workbench primitive and
+passes an exact zero-delta constrained resize.
+
 ## Frictitious Megalith (`frictitious.megalith`)
 
 | Required evidence | Official source | Coverage |
 | --- | --- | --- |
 | Product identity, dimensions, material, and published edge sizes | [Frictitious Megalith product page](https://frictitiousclimbing.com/products/megalith) | Lists 26.75 in × 6.5 in × 2.25 in, poplar wood, seven shoulder-width edge sizes (8–40 mm), full-width jug, a 25 mm center hold, a two-finger pocket on the 40 mm edge, and “mono pockets.” |
-| Manufacturer front imagery | [Megalith front image](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=1280) and [alternate official front image](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front-1.jpg?v=1780436232&width=3840) | Visible silhouette and layout only. |
+| Manufacturer front imagery | [Megalith front image](https://cdn.shopify.com/s/files/1/0093/8783/5451/files/Megalith-Front.jpg?v=1780436232) and [alternate official front image](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front-1.jpg?v=1780436232&width=3840) | Visible silhouette, engraved sizes, paired layout, continuous boundaries, and isolated mono cavities. |
 
 ### `frictitious-megalith`
 
@@ -55,6 +70,24 @@ support those boundaries; omit capacity or posture not explicitly stated.
 two-finger pocket, and visible mono pockets into one physical inventory. The
 official images support visible boundaries, including whether the integrated
 pocket shares a logical contact; omit any unsupported capacity or posture.
+
+**2026-08-19 frozen mapping:** Ten logical physical contacts are represented:
+one full-width jug; mirrored continuous top contacts spanning the engraved 8,
+10, and 12 mm steps; mirrored middle contacts spanning 30 and 40 mm with the
+source-described two-finger pocket integrated into the same physical cavity;
+one isolated 25 mm centre edge; mirrored continuous bottom contacts spanning 15
+and 20 mm; and two isolated mono pockets. The composite stepped contacts omit a
+single `sizeMillimeters` because more than one manufacturer-labelled depth is
+part of the same physical region. The centre edge retains 25 mm and the isolated
+monos retain source-backed one-finger capacity. The official front JPEG is
+converted to PNG only for package compatibility, without cropping or geometry
+changes. The center edge uses a manually selected rounded-rectangle constraint,
+and the circular monos use circle constraints. The paired 8/10/12 and 15/20
+cavity outlines retain their reviewed bespoke freeform curvature rather than
+forcing the Workbench's fixed preset radii. The jug and integrated 30/40/pocket
+contacts also remain freeform. Each retained constraint was materialized from
+the current Workbench primitive and passes an exact zero-delta constrained
+resize.
 
 ## Required follow-up
 
