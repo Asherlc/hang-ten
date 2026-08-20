@@ -337,6 +337,10 @@
                 "command": "close"
               }
             ]
+          },
+          "shapeConstraint": {
+            "shape": "oval",
+            "rotationDegrees": 0
           }
         }
       ]
@@ -427,6 +431,10 @@
                 "command": "close"
               }
             ]
+          },
+          "shapeConstraint": {
+            "shape": "oval",
+            "rotationDegrees": 0
           }
         }
       ]
@@ -1052,10 +1060,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.010834570312,
-            "y": 0.489873527527,
+            "x": 0.012,
+            "y": 0.498,
             "width": 0.197330859375,
-            "height": 0.055287202454
+            "height": 0.043
           },
           "shape": {
             "type": "path",
@@ -1149,10 +1157,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.791834570312,
-            "y": 0.489873527527,
+            "x": 0.790669140313,
+            "y": 0.498,
             "width": 0.197330859375,
-            "height": 0.055287202454
+            "height": 0.043
           },
           "shape": {
             "type": "path",
@@ -1246,10 +1254,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.174969737244,
-            "y": 0.615,
+            "x": 0.177,
+            "y": 0.623,
             "width": 0.165945849609,
-            "height": 0.09039375
+            "height": 0.07
           },
           "shape": {
             "type": "path",
@@ -1343,10 +1351,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.659084413147,
-            "y": 0.615,
+            "x": 0.657054150391,
+            "y": 0.623,
             "width": 0.165945849609,
-            "height": 0.09039375
+            "height": 0.07
           },
           "shape": {
             "type": "path",

@@ -111,6 +111,10 @@
                 "command": "close"
               }
             ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
           }
         }
       ]

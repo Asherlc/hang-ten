@@ -12,16 +12,16 @@
   },
   "holds": [
     { "id": "jug-rounded", "name": "Rounded jug", "kind": "jug", "geometry": [
-      { "frame": {"x": 0.06, "y": 0.39, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      { "frame": {"x": 0.06, "y": 0.39, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
     ]},
     { "id": "edge-20", "name": "20 mm rounded edge", "kind": "edge", "sizeMillimeters": 20, "geometry": [
-      { "frame": {"x": 0.06, "y": 0.45, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      { "frame": {"x": 0.06, "y": 0.45, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
     ]},
     { "id": "edge-15", "name": "15 mm rounded edge", "kind": "edge", "sizeMillimeters": 15, "geometry": [
-      { "frame": {"x": 0.06, "y": 0.51, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      { "frame": {"x": 0.06, "y": 0.51, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
     ]},
     { "id": "edge-10", "name": "10 mm rounded edge", "kind": "edge", "sizeMillimeters": 10, "geometry": [
-      { "frame": {"x": 0.06, "y": 0.565, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
+      { "frame": {"x": 0.06, "y": 0.565, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
     ]}
   ]
 }

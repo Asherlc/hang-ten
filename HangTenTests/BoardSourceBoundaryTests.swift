@@ -183,6 +183,16 @@ final class BoardSourceBoundaryTests: XCTestCase {
         XCTAssertFalse(source.contains("BoardDesign"))
     }
 
+    func testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds() throws {
+        let repositoryRoot = repositoryRootURL()
+        let sourceURL = repositoryRoot
+            .appendingPathComponent("HangTen/Views/BoardMapView.swift")
+        let source = try String(contentsOf: sourceURL, encoding: .utf8)
+
+        XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
+        XCTAssertTrue(source.contains(".frame(width: boardBounds.width, height: boardBounds.height)"))
+    }
+
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
         let repositoryRoot = repositoryRootURL()
         let packageOwnedLiterals = try packageOwnedLiterals(at: repositoryRoot)
