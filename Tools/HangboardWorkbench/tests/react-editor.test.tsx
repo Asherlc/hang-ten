@@ -335,6 +335,8 @@ test("command/control undo and redo reverse document edits and preserve native i
     input.id = "native-history-input";
     app.document.body.append(input);
     assert.equal(await app.keyDown("#native-history-input", "z", { metaKey: true }), false);
+    assert.equal(await app.keyDown("#native-history-input", "z", { ctrlKey: true }), false);
+    assert.equal(await app.keyDown("#native-history-input", "y", { ctrlKey: true }), false);
     assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
   });
 });
@@ -370,8 +372,12 @@ test("undo during a drag restores the committed document before building redo hi
   });
 });
 
-test("command/control undo consumes the browser shortcut when it cancels an active drag without history", async () => {
-  for (const shortcut of [{ ctrlKey: true }, { metaKey: true }]) {
+test("command/control undo and Ctrl redo consume browser shortcuts when cancelling an active drag without history", async () => {
+  for (const shortcut of [
+    { key: "z", options: { ctrlKey: true } },
+    { key: "z", options: { metaKey: true } },
+    { key: "y", options: { ctrlKey: true } },
+  ]) {
     await withEditor(async (app) => {
       app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
       await app.click('[data-hold-key="a-piece-0"]');
@@ -379,7 +385,7 @@ test("command/control undo consumes the browser shortcut when it cancels an acti
       await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 25, clientY: 15 });
       assert.notEqual(paths(app)[0], FIRST_PATH);
 
-      assert.equal(await app.keyDown("body", "z", shortcut), true);
+      assert.equal(await app.keyDown("body", shortcut.key, shortcut.options), true);
       assert.equal(paths(app)[0], FIRST_PATH);
     });
   }
