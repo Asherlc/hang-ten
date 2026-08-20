@@ -39,14 +39,14 @@ const runtime: BrowserRuntime = {
 const client = createWorkbenchClient(runtime);
 const controller: WorkbenchController = workbenchControllerModule;
 const pathEditor: PathEditor = pathEditorModule;
-const rootElement = browser.document.getElementById("root");
-
-if (rootElement === null) throw new Error("Workbench root element is missing");
-
-mountWorkbench(rootElement, {
-  client,
-  controller,
-  pathEditor,
-  runtime,
-  dialogs,
-});
+if (typeof browser.document !== "undefined") {
+  const rootElement = browser.document.getElementById("root");
+  if (rootElement === null) throw new Error("Workbench root element is missing");
+  mountWorkbench(rootElement, {
+    client,
+    controller,
+    pathEditor,
+    runtime,
+    dialogs,
+  });
+}

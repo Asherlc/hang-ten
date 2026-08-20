@@ -21823,6 +21823,10 @@
     const viewBox = (svg.getAttribute("viewBox") ?? "0 0 0 0").trim().split(/[\s,]+/u).map(Number);
     const [viewX = 0, viewY = 0, viewWidth = 0, viewHeight = 0] = viewBox;
     const rect = svg.getBoundingClientRect();
+    const pointerOffset = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    if (viewWidth <= 0 || viewHeight <= 0 || rect.width <= 0 || rect.height <= 0) {
+      return pointerOffset;
+    }
     const preserveAspectRatio = svg.getAttribute("preserveAspectRatio") ?? "xMidYMid meet";
     if (preserveAspectRatio.includes("none")) {
       return {
@@ -21831,6 +21835,7 @@
       };
     }
     const scale = Math.min(rect.width / viewWidth, rect.height / viewHeight);
+    if (!Number.isFinite(scale) || scale <= 0) return pointerOffset;
     const offsetX = rect.left + (rect.width - viewWidth * scale) / 2;
     const offsetY = rect.top + (rect.height - viewHeight * scale) / 2;
     return {
@@ -21851,6 +21856,7 @@
 
   // src/useWorkbench.ts
   var INITIAL_STATE = {
+    initialized: false,
     boards: [],
     board: null,
     document: null,
@@ -21892,15 +21898,10 @@
     const gitIdleWaitersRef = (0, import_react.useRef)(/* @__PURE__ */ new Set());
     const updateState = (0, import_react.useCallback)((update) => {
       if (!mountedRef.current) return;
-      setState((current) => {
-        const next = update(current);
-        stateRef.current = next;
-        return next;
-      });
+      const next = update(stateRef.current);
+      stateRef.current = next;
+      setState(next);
     }, []);
-    (0, import_react.useEffect)(() => {
-      stateRef.current = state;
-    }, [state]);
     const operationsRef = (0, import_react.useRef)(null);
     if (operationsRef.current?.dependencies !== dependencies) {
       const generation = (operationsRef.current?.generation ?? 0) + 1;
@@ -22149,7 +22150,6 @@
           validation: errorMessage(error, "Could not reload boards for the new branch."),
           status: `${failurePrefix} Could not reload boards.`
         }));
-        return;
       }
     }, [boardOperations, client2, updateState]);
     const switchBranch = (0, import_react.useCallback)(async (branchName) => {
@@ -22339,6 +22339,7 @@
     (0, import_react.useEffect)(() => {
       const generation = initializationGenerationRef.current + 1;
       initializationGenerationRef.current = generation;
+      updateState((current) => ({ ...current, initialized: false }));
       const isActive = () => mountedRef.current && initializationGenerationRef.current === generation;
       void (async () => {
         await refreshAuthState(isActive);
@@ -22346,13 +22347,15 @@
         await refreshInitialGitState(isActive);
         if (!isActive()) return;
         await reloadBoards(isActive, true);
+        if (!isActive()) return;
+        updateState((current) => ({ ...current, initialized: true }));
       })();
       return () => {
         if (initializationGenerationRef.current === generation) {
           initializationGenerationRef.current += 1;
         }
       };
-    }, [refreshAuthState, refreshInitialGitState, reloadBoards]);
+    }, [refreshAuthState, refreshInitialGitState, reloadBoards, updateState]);
     const actions = (0, import_react.useMemo)(() => ({
       refreshBoards,
       selectBoard,
@@ -22402,6 +22405,61 @@
 
   // src/useHoldEditor.ts
   var import_react2 = __toESM(require_react());
+
+  // src/shape-constraints.ts
+  var CONSTRAINED_SHAPES = [
+    "oval",
+    "circle",
+    "pill",
+    "roundedRectangle",
+    "rectangle"
+  ];
+  var CONSTRAINED_HANDLES = [
+    "nw",
+    "n",
+    "ne",
+    "e",
+    "se",
+    "s",
+    "sw",
+    "w"
+  ];
+  function isConstrainedShape(value) {
+    return typeof value === "string" && CONSTRAINED_SHAPES.includes(value);
+  }
+  function isConstrainedHandle(value) {
+    return typeof value === "string" && CONSTRAINED_HANDLES.includes(value);
+  }
+  function validateShapeConstraint(value, subject = "Shape constraint") {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) {
+      throw new Error(`${subject} is invalid`);
+    }
+    const record = value;
+    const keys = Object.keys(record);
+    if (keys.length !== 2 || !Object.hasOwn(record, "shape") || !Object.hasOwn(record, "rotationDegrees")) {
+      throw new Error(`${subject} must contain exactly shape and rotationDegrees`);
+    }
+    if (!isConstrainedShape(record.shape)) {
+      throw new Error(`${subject} has an invalid shape`);
+    }
+    if (typeof record.rotationDegrees !== "number" || !Number.isFinite(record.rotationDegrees)) {
+      throw new Error(`${subject} rotation must be finite`);
+    }
+    if (record.rotationDegrees < -180 || record.rotationDegrees >= 180) {
+      throw new Error(`${subject} rotation must be normalized to [-180, 180)`);
+    }
+    return { shape: record.shape, rotationDegrees: record.rotationDegrees };
+  }
+  function isShapeConstraint(value) {
+    try {
+      validateShapeConstraint(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // src/useHoldEditor.ts
   var EMPTY_DRAG = {
     active: false,
     type: null,
@@ -22491,7 +22549,7 @@
     return constraint ? { ...constraint } : void 0;
   }
   function isShapeConstraintShape(value) {
-    return ["oval", "circle", "pill", "roundedRectangle", "rectangle"].includes(value);
+    return isConstrainedShape(value);
   }
   function outlinePreset(shape) {
     return shape === "roundedRectangle" ? "rounded-rectangle" : shape;
@@ -22513,6 +22571,14 @@
     const previewDocumentRef = (0, import_react2.useRef)(null);
     const pendingPreviewRef = (0, import_react2.useRef)(null);
     const dragSvgRef = (0, import_react2.useRef)(null);
+    const reportInvalidPath = (0, import_react2.useCallback)((error) => {
+      actions.editDocument(() => {
+        throw error;
+      }, {
+        failureStatus: "Could not edit \u2014 selected hold has an invalid path.",
+        failureMessage: errorMessage2(error, "Selected hold path is invalid.")
+      });
+    }, [actions]);
     const rotateHold = (0, import_react2.useCallback)((degrees) => {
       if (busy || !document2 || !selectedHold) return;
       const siblingKeys = new Set(holdSiblings(document2, selectedHold).map((region) => region.key));
@@ -22707,7 +22773,7 @@
         };
       } else if (target.classList.contains("path-editor-resize-handle") && selectedHold.shapeConstraint) {
         const resizeHandle = target.getAttribute("data-handle");
-        if (!resizeHandle || !["nw", "n", "ne", "e", "se", "s", "sw", "w"].includes(resizeHandle)) return;
+        if (!isConstrainedHandle(resizeHandle)) return;
         next = {
           ...EMPTY_DRAG,
           active: true,
@@ -22720,6 +22786,13 @@
           pointerId: event.pointerId
         };
       } else if (target.classList.contains("path-editor-vertex") || target.classList.contains("path-editor-control") || target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key) {
+        let commands;
+        try {
+          commands = pathEditor2.parsePath(selectedHold.displayPath);
+        } catch (error) {
+          reportInvalidPath(error);
+          return;
+        }
         next = {
           ...EMPTY_DRAG,
           active: true,
@@ -22729,7 +22802,7 @@
           controlIndex: Number(target.getAttribute("data-control") ?? -1),
           startX: point.x,
           startY: point.y,
-          commands: pathEditor2.parsePath(selectedHold.displayPath),
+          commands,
           originalPath: selectedHold.displayPath,
           originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
           originalDirty: dirty,
@@ -22746,7 +22819,7 @@
         event.currentTarget.setPointerCapture?.(event.pointerId);
       } catch {
       }
-    }, [busy, dirty, document2, pathEditor2, selectedHold]);
+    }, [busy, dirty, document2, pathEditor2, reportInvalidPath, selectedHold]);
     const onPointerMove = (0, import_react2.useCallback)((event) => {
       const drag = dragRef.current;
       if (!drag.active || event.pointerId !== drag.pointerId || !document2) return;
@@ -22868,7 +22941,13 @@
       const target = targetElement(event);
       if (busy || !document2 || !selectedHold || selectedHold.shapeConstraint || !target || target.classList.contains("path-editor-vertex") || target.classList.contains("path-editor-control")) return;
       const point = svgPoint(event.currentTarget, event);
-      const commands = pathEditor2.parsePath(selectedHold.displayPath);
+      let commands;
+      try {
+        commands = pathEditor2.parsePath(selectedHold.displayPath);
+      } catch (error) {
+        reportInvalidPath(error);
+        return;
+      }
       for (let index = 0; index < commands.length; index += 1) {
         const command = commands[index];
         if (command.type === "Z") continue;
@@ -22888,7 +22967,7 @@
         }, { status });
         return;
       }
-    }, [actions, busy, document2, pathEditor2, selectedHold, status]);
+    }, [actions, busy, document2, pathEditor2, reportInvalidPath, selectedHold, status]);
     const onContextMenu = (0, import_react2.useCallback)((event) => {
       const target = targetElement(event);
       if (busy || !selectedHold || selectedHold.shapeConstraint || !target?.classList.contains("path-editor-vertex")) return;
@@ -23062,8 +23141,16 @@
                 fillOpacity: hold.key === selectedKey ? "0.58" : "0.3",
                 stroke: hold.key === selectedKey ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f",
                 strokeWidth: hold.key === selectedKey ? "2.2" : "1.4",
+                role: "button",
+                tabIndex: 0,
+                "aria-label": `Select hold ${hold.key}`,
                 onClick: () => {
                   if (!busy) onSelectHold(hold.key);
+                },
+                onKeyDown: (event) => {
+                  if (busy || event.key !== "Enter" && event.key !== " ") return;
+                  if (event.key === " ") event.preventDefault();
+                  onSelectHold(hold.key);
                 }
               },
               hold.key
@@ -23224,6 +23311,7 @@
           "Hold type",
           /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { id: "hold-type-select", disabled: busy, value: hold?.type ?? "", onChange: (event) => onTypeChange(event.currentTarget.value), children: [
             !hold?.type && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "" }),
+            hold?.type && !HOLD_TYPES.includes(hold.type) && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: hold.type, children: hold.type }),
             HOLD_TYPES.map((type) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: type, children: type }, type))
           ] })
         ] }),
@@ -23264,7 +23352,7 @@
     const branches = [...state.branches].sort();
     return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "toolbar git-toolbar", "aria-label": "Repository tools", children: [
       /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "eyebrow", id: "git-auth-status", children: state.authenticated && state.username ? `Logged in as ${state.username}` : /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("a", { href: "/auth/login", children: "Log in with GitHub" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "eyebrow", id: "git-status", children: state.status === "Ready." && !state.gitStatusKnown ? "Repository status" : state.currentBranch ? `${state.currentBranch}${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}` : state.gitStatusKnown ? `Detached HEAD${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}` : "Repository status unavailable" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "eyebrow", id: "git-status", children: !state.initialized && !state.gitStatusKnown ? "Repository status" : state.currentBranch ? `${state.currentBranch}${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}` : state.gitStatusKnown ? `Detached HEAD${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}` : "Repository status unavailable" }),
       /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
         "select",
         {
@@ -23363,7 +23451,7 @@
       validateEditorDocument: dependencies.controller.validateEditorDocument,
       dialogs: dependencies.dialogs
     });
-    const branchStatus = state.status === "Ready." && !state.gitStatusKnown ? "Choose a board to edit its holds." : state.currentBranch ? `Current branch: ${state.currentBranch}` : state.gitStatusKnown ? "Detached HEAD" : "No branch detected";
+    const branchStatus = !state.initialized && !state.gitStatusKnown ? "Choose a board to edit its holds." : state.currentBranch ? `Current branch: ${state.currentBranch}` : state.gitStatusKnown ? "Detached HEAD" : "No branch detected";
     const saveState = !state.board ? "No board selected" : busy ? "Working\u2026" : state.dirty ? "Unsaved changes" : "Saved";
     return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("main", { className: "app-shell direct-workbench", children: [
       /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("header", { className: "topbar", children: [
@@ -23378,8 +23466,7 @@
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button", id: "refresh-boards-button", type: "button", disabled: busy, onClick: () => void actions.refreshBoards(), children: "Boards" }),
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "save-state", id: "save-state", "aria-live": "polite", children: saveState }),
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button accent", id: "save-button", type: "button", disabled: !state.board || busy, onClick: () => void (async () => {
-            const cancelledEdit = editor.cancelActiveEdit();
-            if (cancelledEdit) await Promise.resolve();
+            editor.cancelActiveEdit();
             await actions.saveBoard();
           })(), children: "Save" })
         ] }),
@@ -23547,37 +23634,6 @@
   function formatCoordinate(value) {
     return Number.isInteger(value) ? String(value) : String(Math.round(value * 1e6) / 1e6);
   }
-  var CONSTRAINED_SHAPES = /* @__PURE__ */ new Set([
-    "oval",
-    "circle",
-    "pill",
-    "roundedRectangle",
-    "rectangle"
-  ]);
-  var CONSTRAINED_HANDLES = /* @__PURE__ */ new Set(["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
-  function validateShapeConstraint(constraint) {
-    if (typeof constraint !== "object" || constraint === null || Array.isArray(constraint)) {
-      throw new Error("Choose a valid constrained shape");
-    }
-    const record = constraint;
-    const keys = Object.keys(record);
-    if (keys.length !== 2 || !Object.hasOwn(record, "shape") || !Object.hasOwn(record, "rotationDegrees")) {
-      throw new Error("Shape constraint must contain exactly shape and rotationDegrees");
-    }
-    if (typeof record.shape !== "string" || !CONSTRAINED_SHAPES.has(record.shape)) {
-      throw new Error("Choose a valid constrained shape");
-    }
-    if (typeof record.rotationDegrees !== "number" || !Number.isFinite(record.rotationDegrees)) {
-      throw new Error("Shape rotation must be finite");
-    }
-    if (record.rotationDegrees < -180 || record.rotationDegrees >= 180) {
-      throw new Error("Shape rotation must be normalized to [-180, 180)");
-    }
-    return {
-      shape: record.shape,
-      rotationDegrees: record.rotationDegrees
-    };
-  }
   function createOutlineShapePath(pathString, preset) {
     const bounds = validPathBounds(parsePath(pathString));
     const width = bounds.maxX - bounds.minX;
@@ -23630,7 +23686,7 @@
   }
   function resizeConstrainedOutline(pathString, constraint, handle, pointer, minimumSize = 2) {
     const shapeConstraint = validateShapeConstraint(constraint);
-    if (!CONSTRAINED_HANDLES.has(handle)) throw new Error("Choose a valid resize handle");
+    if (!isConstrainedHandle(handle)) throw new Error("Choose a valid resize handle");
     assertFinitePoint(pointer, "Resize pointer must be finite");
     if (!Number.isFinite(minimumSize) || minimumSize <= 0) throw new Error("Minimum size must be positive");
     const model = constrainedOutlineModel(pathString, shapeConstraint);
@@ -24069,7 +24125,11 @@
       }
     }
     async function request(path, parser, options = {}) {
-      const requestOptions = { cache: "no-store", ...options };
+      const requestOptions = {
+        cache: "no-store",
+        ...options,
+        signal: options.signal ?? AbortSignal.timeout(15e3)
+      };
       let response;
       try {
         response = await runtime2.fetch(path, requestOptions);
@@ -24209,36 +24269,8 @@
     saveBoardAtomically: () => saveBoardAtomically,
     validateEditorDocument: () => validateEditorDocument
   });
-  var CONSTRAINED_SHAPES2 = /* @__PURE__ */ new Set([
-    "oval",
-    "circle",
-    "pill",
-    "roundedRectangle",
-    "rectangle"
-  ]);
   function isRecord3(value) {
     return typeof value === "object" && value !== null && !Array.isArray(value);
-  }
-  function isShapeConstraint(value) {
-    if (!isRecord3(value)) return false;
-    const keys = Object.keys(value);
-    return keys.length === 2 && Object.hasOwn(value, "shape") && Object.hasOwn(value, "rotationDegrees") && typeof value.shape === "string" && CONSTRAINED_SHAPES2.has(value.shape) && typeof value.rotationDegrees === "number" && Number.isFinite(value.rotationDegrees) && value.rotationDegrees >= -180 && value.rotationDegrees < 180;
-  }
-  function validateShapeConstraint2(value, holdKey) {
-    if (!isRecord3(value)) throw new Error(`Hold ${holdKey} has an invalid shape constraint`);
-    const keys = Object.keys(value);
-    if (keys.length !== 2 || !Object.hasOwn(value, "shape") || !Object.hasOwn(value, "rotationDegrees")) {
-      throw new Error(`Hold ${holdKey} shape constraint needs exactly shape and rotationDegrees`);
-    }
-    if (typeof value.shape !== "string" || !CONSTRAINED_SHAPES2.has(value.shape)) {
-      throw new Error(`Hold ${holdKey} has an invalid shape constraint shape`);
-    }
-    if (typeof value.rotationDegrees !== "number" || !Number.isFinite(value.rotationDegrees)) {
-      throw new Error(`Hold ${holdKey} shape constraint rotation must be finite`);
-    }
-    if (value.rotationDegrees < -180 || value.rotationDegrees >= 180) {
-      throw new Error(`Hold ${holdKey} shape constraint rotation must be normalized to [-180, 180)`);
-    }
   }
   function isHoldRegion2(value) {
     if (!isRecord3(value)) return false;
@@ -24268,7 +24300,7 @@
         throw new Error(`Hold ${region.key} needs one closed contour`);
       }
       if (Object.hasOwn(region, "shapeConstraint")) {
-        validateShapeConstraint2(region.shapeConstraint, region.key);
+        validateShapeConstraint(region.shapeConstraint, `Hold ${region.key} shape constraint`);
       }
       if (!isHoldRegion2(region)) {
         throw new Error(`Hold ${region.key} needs valid hold fields`);
@@ -24335,8 +24367,8 @@
 
   // src/main.tsx
   var import_jsx_runtime7 = __toESM(require_jsx_runtime());
-  function mountWorkbench(rootElement2, dependencies) {
-    const root = (0, import_client.createRoot)(rootElement2);
+  function mountWorkbench(rootElement, dependencies) {
+    const root = (0, import_client.createRoot)(rootElement);
     root.render(/* @__PURE__ */ (0, import_jsx_runtime7.jsx)(WorkbenchApp, { dependencies }));
     return root;
   }
@@ -24360,15 +24392,17 @@
   var client = createWorkbenchClient(runtime);
   var controller = workbench_controller_exports;
   var pathEditor = path_editor_exports;
-  var rootElement = browser.document.getElementById("root");
-  if (rootElement === null) throw new Error("Workbench root element is missing");
-  mountWorkbench(rootElement, {
-    client,
-    controller,
-    pathEditor,
-    runtime,
-    dialogs
-  });
+  if (typeof browser.document !== "undefined") {
+    const rootElement = browser.document.getElementById("root");
+    if (rootElement === null) throw new Error("Workbench root element is missing");
+    mountWorkbench(rootElement, {
+      client,
+      controller,
+      pathEditor,
+      runtime,
+      dialogs
+    });
+  }
 })();
 /*! Bundled license information:
 

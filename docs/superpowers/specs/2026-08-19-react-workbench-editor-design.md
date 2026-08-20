@@ -63,7 +63,7 @@ The app must not render raw server content as HTML. The login link is React mark
 
 ## Build and Packaging
 
-`package.json` and its lockfile define React, React DOM, TypeScript, esbuild, tsx, jsdom, and their exact type packages. A strict `tsconfig.json` provides a separate no-emit typecheck gate. The build script bundles `src/main.tsx` to `app.js` as a browser IIFE with an external source map omitted from packaged assets. `index.html` contains the root node and loads the three existing framework-independent scripts before the bundle.
+`package.json` and its lockfile define React, React DOM, TypeScript, esbuild, tsx, jsdom, and their exact type packages. A strict `tsconfig.json` provides a separate no-emit typecheck gate. The build script bundles `src/main.tsx` to `app.js` as a browser IIFE with an external source map omitted from packaged assets. `index.html` contains the root node and loads only the frontend `app.js` bundle.
 
 The checked-in `app.js` remains the production asset embedded by PyInstaller and served by Python. Tests verify that it is freshly generated from source. The asset manifest exposes only the HTML, CSS, and bundled `/app.js` frontend assets; no frontend dependency is required at runtime.
 

@@ -10,6 +10,10 @@ import type {
   ShapeConstraint,
   ShapeConstraintShape,
 } from "./types.ts";
+import {
+  isConstrainedHandle,
+  validateShapeConstraint,
+} from "./shape-constraints.ts";
 
 const COMMAND_ARITY: Record<PathCommandType, number> = {
   M: 1,
@@ -108,39 +112,6 @@ function formatCoordinate(value: number): string {
   return Number.isInteger(value) ? String(value) : String(Math.round(value * 1e6) / 1e6);
 }
 
-const CONSTRAINED_SHAPES = new Set<ShapeConstraintShape>([
-  "oval",
-  "circle",
-  "pill",
-  "roundedRectangle",
-  "rectangle",
-]);
-const CONSTRAINED_HANDLES = new Set<ConstrainedHandle>(["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
-
-function validateShapeConstraint(constraint: unknown): ShapeConstraint {
-  if (typeof constraint !== "object" || constraint === null || Array.isArray(constraint)) {
-    throw new Error("Choose a valid constrained shape");
-  }
-  const record = constraint as Record<string, unknown>;
-  const keys = Object.keys(record);
-  if (keys.length !== 2 || !Object.hasOwn(record, "shape") || !Object.hasOwn(record, "rotationDegrees")) {
-    throw new Error("Shape constraint must contain exactly shape and rotationDegrees");
-  }
-  if (typeof record.shape !== "string" || !CONSTRAINED_SHAPES.has(record.shape as ShapeConstraintShape)) {
-    throw new Error("Choose a valid constrained shape");
-  }
-  if (typeof record.rotationDegrees !== "number" || !Number.isFinite(record.rotationDegrees)) {
-    throw new Error("Shape rotation must be finite");
-  }
-  if (record.rotationDegrees < -180 || record.rotationDegrees >= 180) {
-    throw new Error("Shape rotation must be normalized to [-180, 180)");
-  }
-  return {
-    shape: record.shape as ShapeConstraintShape,
-    rotationDegrees: record.rotationDegrees,
-  };
-}
-
 export function createOutlineShapePath(pathString: string, preset: OutlinePreset): string {
   const bounds = validPathBounds(parsePath(pathString));
   const width = bounds.maxX - bounds.minX;
@@ -204,7 +175,7 @@ export function resizeConstrainedOutline(
   minimumSize = 2,
 ): ConstrainedResizeResult {
   const shapeConstraint = validateShapeConstraint(constraint);
-  if (!CONSTRAINED_HANDLES.has(handle)) throw new Error("Choose a valid resize handle");
+  if (!isConstrainedHandle(handle)) throw new Error("Choose a valid resize handle");
   assertFinitePoint(pointer, "Resize pointer must be finite");
   if (!Number.isFinite(minimumSize) || minimumSize <= 0) throw new Error("Minimum size must be positive");
 

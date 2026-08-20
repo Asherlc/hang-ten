@@ -2,7 +2,13 @@ import React from "react";
 
 import { holdCentroid, holdSiblings, rotationHandlePosition } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
-import type { Board, EditorDocument, PathEditor } from "../types.ts";
+import type {
+  Board,
+  ConstrainedOutlineModel,
+  EditorDocument,
+  PathCommand,
+  PathEditor,
+} from "../types.ts";
 
 const TYPE_COLORS: Readonly<Record<string, string>> = {
   jug: "#ff754f",
@@ -32,7 +38,7 @@ export function HoldCanvas({
   editor,
 }: HoldCanvasProps) {
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
-  let selectedCommands = null;
+  let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {
     try {
       selectedCommands = pathEditor.parsePath(selectedHold.displayPath);
@@ -45,7 +51,7 @@ export function HoldCanvas({
     : null;
   const rotationHandle = document && pivot ? rotationHandlePosition(pivot, document.canvas) : null;
   const selectedColor = selectedHold ? TYPE_COLORS[selectedHold.type ?? ""] ?? "#ff754f" : "#ff754f";
-  let constrainedModel = null;
+  let constrainedModel: ConstrainedOutlineModel | null = null;
   if (selectedHold?.shapeConstraint) {
     try {
       constrainedModel = pathEditor.constrainedOutlineModel(
@@ -94,7 +100,15 @@ export function HoldCanvas({
                 fillOpacity={hold.key === selectedKey ? "0.58" : "0.3"}
                 stroke={hold.key === selectedKey ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
                 strokeWidth={hold.key === selectedKey ? "2.2" : "1.4"}
+                role="button"
+                tabIndex={0}
+                aria-label={`Select hold ${hold.key}`}
                 onClick={() => { if (!busy) onSelectHold(hold.key); }}
+                onKeyDown={(event) => {
+                  if (busy || (event.key !== "Enter" && event.key !== " ")) return;
+                  if (event.key === " ") event.preventDefault();
+                  onSelectHold(hold.key);
+                }}
               />
             ))}
           </g>

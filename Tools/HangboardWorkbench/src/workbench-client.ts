@@ -188,7 +188,11 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
     parser: PayloadParser<T>,
     options: RequestInit = {},
   ): Promise<T> {
-    const requestOptions: RequestInit = { cache: "no-store", ...options };
+    const requestOptions: RequestInit = {
+      cache: "no-store",
+      ...options,
+      signal: options.signal ?? AbortSignal.timeout(15_000),
+    };
     let response: Response;
     try {
       response = await runtime.fetch(path, requestOptions);

@@ -120,6 +120,10 @@ export function svgPoint(svg: SvgCoordinateSpace, event: ClientPoint): Point {
   const viewBox = (svg.getAttribute("viewBox") ?? "0 0 0 0").trim().split(/[\s,]+/u).map(Number);
   const [viewX = 0, viewY = 0, viewWidth = 0, viewHeight = 0] = viewBox;
   const rect = svg.getBoundingClientRect();
+  const pointerOffset = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  if (viewWidth <= 0 || viewHeight <= 0 || rect.width <= 0 || rect.height <= 0) {
+    return pointerOffset;
+  }
   const preserveAspectRatio = svg.getAttribute("preserveAspectRatio") ?? "xMidYMid meet";
   if (preserveAspectRatio.includes("none")) {
     return {
@@ -128,6 +132,7 @@ export function svgPoint(svg: SvgCoordinateSpace, event: ClientPoint): Point {
     };
   }
   const scale = Math.min(rect.width / viewWidth, rect.height / viewHeight);
+  if (!Number.isFinite(scale) || scale <= 0) return pointerOffset;
   const offsetX = rect.left + (rect.width - viewWidth * scale) / 2;
   const offsetY = rect.top + (rect.height - viewHeight * scale) / 2;
   return {

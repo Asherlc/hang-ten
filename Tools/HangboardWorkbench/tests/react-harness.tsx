@@ -265,7 +265,11 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
     },
     capturedPointerId(selector) {
       const svg = requiredElement<SVGSVGElement>(windowValue.document, selector);
-      return (svg as SVGSVGElement & { __capturedPointerId?: number | null }).__capturedPointerId ?? null;
+      const instrumented = svg as SVGSVGElement & { __capturedPointerId?: number | null };
+      if (!("__capturedPointerId" in instrumented)) {
+        throw new Error(`Call setSvgGeometry before reading pointer capture: ${selector}`);
+      }
+      return instrumented.__capturedPointerId ?? null;
     },
     async flush(callback) {
       await act(async () => {
@@ -291,39 +295,3 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
   };
   return harness;
 }
-
-export const text = (harness: ReactHarness, selector: string): string => harness.text(selector);
-export const disabled = (harness: ReactHarness, selector: string): boolean => harness.disabled(selector);
-export const click = (harness: ReactHarness, selector: string): Promise<void> => harness.click(selector);
-export const input = (harness: ReactHarness, selector: string, value: string): Promise<void> => (
-  harness.input(selector, value)
-);
-export const change = (harness: ReactHarness, selector: string, value: string): Promise<void> => (
-  harness.change(selector, value)
-);
-export const keyDown = (
-  harness: ReactHarness,
-  selector: string,
-  key: string,
-  options?: KeyboardEventInit,
-): Promise<boolean> => harness.keyDown(selector, key, options);
-export const pointer = (
-  harness: ReactHarness,
-  selector: string,
-  type: string,
-  options?: PointerEventInit,
-): Promise<void> => harness.pointer(selector, type, options);
-export const mouse = (
-  harness: ReactHarness,
-  selector: string,
-  type: string,
-  options?: MouseEventInit,
-): Promise<void> => harness.mouse(selector, type, options);
-export const flush = (
-  harness: ReactHarness,
-  callback?: () => void | Promise<void>,
-): Promise<void> => harness.flush(callback);
-export const documentValue = (harness: ReactHarness, selector: string): string => (
-  harness.documentValue(selector)
-);
-export const cleanup = (harness: ReactHarness): Promise<void> => harness.cleanup();

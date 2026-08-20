@@ -12,6 +12,7 @@ import type {
 import { cloneEditorDocument } from "./editor-model.ts";
 
 const INITIAL_STATE: WorkbenchState = {
+  initialized: false,
   boards: [],
   board: null,
   document: null,
@@ -66,17 +67,13 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
 
   const updateState = useCallback((update: StateUpdate): void => {
     if (!mountedRef.current) return;
-    setState((current) => {
-      const next = update(current);
-      stateRef.current = next;
-      return next;
-    });
+    const next = update(stateRef.current);
+    stateRef.current = next;
+    setState(next);
   }, []);
 
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
-
+  // Dependency identity intentionally controls coordinator replacement and initialization.
+  // Callers that construct dependencies inline must memoize that object between renders.
   const operationsRef = useRef<OperationCoordinators | null>(null);
   if (operationsRef.current?.dependencies !== dependencies) {
     const generation = (operationsRef.current?.generation ?? 0) + 1;
@@ -352,7 +349,6 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         validation: errorMessage(error, "Could not reload boards for the new branch."),
         status: `${failurePrefix} Could not reload boards.`,
       }));
-      return;
     }
   }, [boardOperations, client, updateState]);
 
@@ -555,6 +551,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   useEffect(() => {
     const generation = initializationGenerationRef.current + 1;
     initializationGenerationRef.current = generation;
+    updateState((current) => ({ ...current, initialized: false }));
     const isActive = (): boolean => (
       mountedRef.current && initializationGenerationRef.current === generation
     );
@@ -564,13 +561,15 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       await refreshInitialGitState(isActive);
       if (!isActive()) return;
       await reloadBoards(isActive, true);
+      if (!isActive()) return;
+      updateState((current) => ({ ...current, initialized: true }));
     })();
     return () => {
       if (initializationGenerationRef.current === generation) {
         initializationGenerationRef.current += 1;
       }
     };
-  }, [refreshAuthState, refreshInitialGitState, reloadBoards]);
+  }, [refreshAuthState, refreshInitialGitState, reloadBoards, updateState]);
 
   const actions = useMemo<WorkbenchActions>(() => ({
     refreshBoards,

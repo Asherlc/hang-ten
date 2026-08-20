@@ -95,6 +95,23 @@ test("the browser client lists and opens direct boards", async () => {
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
 });
 
+test("backend requests carry a finite timeout signal", async () => {
+  let requestOptions: RequestInit | undefined;
+  const { runtime } = runtimeFixture(async (_input, options) => {
+    requestOptions = options;
+    return response({ ok: true, boards: [] });
+  });
+
+  await createWorkbenchClient(runtime).listBoards();
+
+  assert.ok(requestOptions?.signal instanceof AbortSignal);
+});
+
+test("the browser entry module can be imported without a document", async () => {
+  assert.equal(typeof globalThis.document, "undefined");
+  await assert.doesNotReject(import("../src/main.tsx"));
+});
+
 test("the browser client rejects invalid optional board URLs", async () => {
   const { runtime } = runtimeFixture(async (input) => {
     if (String(input) === "/api/boards") {
@@ -336,7 +353,6 @@ test("direct board loading commits image and holds together and preserves the pr
     naturalHeight: number;
   }
 
-  const prior = { boardId: "prior", image: { href: "prior.png" }, document: { regions: [{ key: "prior" }] } };
   const candidate = boardFixture({
     holdCount: 1,
     document: editorDocument([
@@ -367,7 +383,6 @@ test("direct board loading commits image and holds together and preserves the pr
     /Image unavailable/,
   );
   assert.deepEqual(committed, [success]);
-  assert.equal(prior.boardId, "prior");
 });
 
 test("direct board loading rejects malformed shape constraints before image loading or commit", async () => {

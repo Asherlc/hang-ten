@@ -15,6 +15,7 @@ import {
   normalizedRotationDegrees,
   svgPoint,
 } from "./editor-model.ts";
+import { isConstrainedHandle, isConstrainedShape } from "./shape-constraints.ts";
 import type {
   Dialogs,
   ConstrainedHandle,
@@ -178,7 +179,7 @@ function cloneConstraint(constraint: ShapeConstraint | undefined): ShapeConstrai
 }
 
 function isShapeConstraintShape(value: string): value is ShapeConstraintShape {
-  return ["oval", "circle", "pill", "roundedRectangle", "rectangle"].includes(value);
+  return isConstrainedShape(value);
 }
 
 function outlinePreset(shape: ShapeConstraintShape): "oval" | "circle" | "pill" | "rounded-rectangle" | "rectangle" {
@@ -202,6 +203,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const previewDocumentRef = useRef<EditorDocument | null>(null);
   const pendingPreviewRef = useRef<EditorDocument | null>(null);
   const dragSvgRef = useRef<SVGSVGElement | null>(null);
+  const reportInvalidPath = useCallback((error: unknown): void => {
+    actions.editDocument(() => { throw error; }, {
+      failureStatus: "Could not edit — selected hold has an invalid path.",
+      failureMessage: errorMessage(error, "Selected hold path is invalid."),
+    });
+  }, [actions]);
 
   const rotateHold = useCallback((degrees: number): void => {
     if (busy || !document || !selectedHold) return;
@@ -411,7 +418,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       };
     } else if (target.classList.contains("path-editor-resize-handle") && selectedHold.shapeConstraint) {
       const resizeHandle = target.getAttribute("data-handle");
-      if (!resizeHandle || !["nw", "n", "ne", "e", "se", "s", "sw", "w"].includes(resizeHandle)) return;
+      if (!isConstrainedHandle(resizeHandle)) return;
       next = {
         ...EMPTY_DRAG,
         active: true,
@@ -419,13 +426,20 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         holdKey: selectedHold.key,
         originalPath: selectedHold.displayPath,
         originalConstraint: { ...selectedHold.shapeConstraint },
-        resizeHandle: resizeHandle as ConstrainedHandle,
+        resizeHandle,
         originalDirty: dirty,
         pointerId: event.pointerId,
       };
     } else if (target.classList.contains("path-editor-vertex")
       || target.classList.contains("path-editor-control")
       || (target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key)) {
+      let commands: PathCommand[];
+      try {
+        commands = pathEditor.parsePath(selectedHold.displayPath);
+      } catch (error: unknown) {
+        reportInvalidPath(error);
+        return;
+      }
       next = {
         ...EMPTY_DRAG,
         active: true,
@@ -437,7 +451,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         controlIndex: Number(target.getAttribute("data-control") ?? -1),
         startX: point.x,
         startY: point.y,
-        commands: pathEditor.parsePath(selectedHold.displayPath),
+        commands,
         originalPath: selectedHold.displayPath,
         originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
         originalDirty: dirty,
@@ -455,7 +469,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Tests and older browsers may not implement pointer capture.
     }
-  }, [busy, dirty, document, pathEditor, selectedHold]);
+  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectedHold]);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -597,7 +611,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       || target.classList.contains("path-editor-vertex")
       || target.classList.contains("path-editor-control")) return;
     const point = svgPoint(event.currentTarget, event);
-    const commands = pathEditor.parsePath(selectedHold.displayPath);
+    let commands: PathCommand[];
+    try {
+      commands = pathEditor.parsePath(selectedHold.displayPath);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
+      return;
+    }
     for (let index = 0; index < commands.length; index += 1) {
       const command = commands[index]!;
       if (command.type === "Z") continue;
@@ -619,7 +639,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       }, { status });
       return;
     }
-  }, [actions, busy, document, pathEditor, selectedHold, status]);
+  }, [actions, busy, document, pathEditor, reportInvalidPath, selectedHold, status]);
 
   const onContextMenu = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);

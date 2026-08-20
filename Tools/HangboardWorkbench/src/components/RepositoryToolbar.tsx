@@ -18,7 +18,7 @@ export function RepositoryToolbar({ state, actions }: RepositoryToolbarProps) {
           : <a href="/auth/login">Log in with GitHub</a>}
       </span>
       <span className="eyebrow" id="git-status">
-        {state.status === "Ready." && !state.gitStatusKnown
+        {!state.initialized && !state.gitStatusKnown
           ? "Repository status"
           : state.currentBranch
           ? `${state.currentBranch}${state.hasUncommittedChanges ? " (uncommitted changes)" : ""}`

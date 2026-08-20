@@ -31,7 +31,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     validateEditorDocument: dependencies.controller.validateEditorDocument,
     dialogs: dependencies.dialogs,
   });
-  const branchStatus = state.status === "Ready." && !state.gitStatusKnown
+  const branchStatus = !state.initialized && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
     ? `Current branch: ${state.currentBranch}`
@@ -60,8 +60,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
           <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={() => void (async () => {
-            const cancelledEdit = editor.cancelActiveEdit();
-            if (cancelledEdit) await Promise.resolve();
+            editor.cancelActiveEdit();
             await actions.saveBoard();
           })()}>Save</button>
         </div>

@@ -43,14 +43,13 @@ def test_static_asset_routes_expose_only_the_packaged_bundle() -> None:
 
 def test_authored_frontend_sources_are_typescript() -> None:
     frontend_suffixes = {".cjs", ".js", ".jsx", ".mjs", ".ts", ".tsx"}
+    excluded_directories = {"node_modules", "dist", "build", ".venv", "__pycache__"}
     browser_sources = {
         path
-        for path in (
-            *EDITOR_ROOT.iterdir(),
-            *(EDITOR_ROOT / "src").rglob("*"),
-            *(EDITOR_ROOT / "tests").rglob("*"),
-        )
-        if path.is_file() and path.suffix in frontend_suffixes
+        for path in EDITOR_ROOT.rglob("*")
+        if path.is_file()
+        and path.suffix in frontend_suffixes
+        and excluded_directories.isdisjoint(path.relative_to(EDITOR_ROOT).parts)
     }
     authored_javascript = sorted(
         path.relative_to(EDITOR_ROOT).as_posix()

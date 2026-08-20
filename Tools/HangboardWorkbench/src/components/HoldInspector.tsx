@@ -49,6 +49,8 @@ export function HoldInspector({
         <label>Hold type
           <select id="hold-type-select" disabled={busy} value={hold?.type ?? ""} onChange={(event) => onTypeChange(event.currentTarget.value)}>
             {!hold?.type && <option value="" />}
+            {hold?.type && !HOLD_TYPES.includes(hold.type as typeof HOLD_TYPES[number])
+              && <option value={hold.type}>{hold.type}</option>}
             {HOLD_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
         </label>

@@ -190,6 +190,16 @@ test("svgPoint prefers inverse screen CTM and otherwise accounts for meet letter
   assert.deepEqual(svgPoint({ ...svg, getScreenCTM: () => null }, { clientX: 110, clientY: 120 }), { x: 50, y: 25 });
 });
 
+test("svgPoint preserves finite pointer offsets when fallback geometry has zero dimensions", () => {
+  const svg = {
+    getAttribute(name: string) { return name === "viewBox" ? "0 0 0 0" : null; },
+    getBoundingClientRect() { return { left: 10, top: 20, width: 0, height: 0 }; },
+    getScreenCTM() { return null; },
+  };
+
+  assert.deepEqual(svgPoint(svg, { clientX: 14, clientY: 27 }), { x: 4, y: 7 });
+});
+
 test("selection renders one declarative handle overlay with legacy visual attributes", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
@@ -200,6 +210,32 @@ test("selection renders one declarative handle overlay with legacy visual attrib
     assert.equal(handle?.getAttribute("fill"), "#fff7dc");
     assert.equal(handle?.getAttribute("stroke"), "#ff754f");
   });
+});
+
+test("hold paths expose button semantics and support Enter and Space selection", async () => {
+  await withEditor(async (app) => {
+    const target = app.document.querySelector<SVGPathElement>('[data-hold-key="b-piece-0"]');
+    assert.equal(target?.getAttribute("role"), "button");
+    assert.equal(target?.getAttribute("tabindex"), "0");
+    assert.equal(target?.getAttribute("aria-label"), "Select hold b-piece-0");
+
+    assert.equal(await app.keyDown('[data-hold-key="b-piece-0"]', "Enter"), false);
+    assert.equal(app.text("#hold-heading"), "b-piece-0");
+    assert.equal(await app.keyDown('[data-hold-key="a-piece-0"]', " "), true);
+    assert.equal(app.text("#hold-heading"), "a-piece-0");
+  });
+});
+
+test("the hold type control preserves an out-of-list document value", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "legacy-piece-0", type: "legacy-grip", displayPath: FIRST_PATH },
+  ]));
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="legacy-piece-0"]');
+
+    assert.equal(app.documentValue("#hold-type-select"), "legacy-grip");
+    assert.equal(app.text('#hold-type-select option[value="legacy-grip"]'), "legacy-grip");
+  }, dependenciesFixture(board));
 });
 
 test("Add Hold creates and selects a centered square", async () => {
@@ -456,7 +492,6 @@ test("pointer cancellation, lost capture, and a second pointer preserve the init
 });
 
 test("invalid pointer geometry rolls back the path and dirty state", async () => {
-  let validationCalls = 0;
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-hold-key="a-piece-0"]');
@@ -465,12 +500,34 @@ test("invalid pointer geometry rolls back the path and dirty state", async () =>
     assert.equal(app.text("#save-state"), "Saved");
     assert.match(app.text("#editor-status"), /reverted/i);
   }, dependenciesFixture(boardFixture(), {
-    validate(document) {
-      validationCalls += 1;
-      if (validationCalls >= 1) throw new Error("invalid contour");
-      return controller.validateEditorDocument(document);
+    validate() {
+      throw new Error("invalid contour");
     },
   }));
+});
+
+test("malformed selected paths report interaction failures instead of throwing", async () => {
+  const malformedBoard = boardFixture(documentFixture([
+    { id: 1, key: "malformed-piece-0", type: "jug", displayPath: "M 1 2 L 3 Z" },
+  ]));
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="malformed-piece-0"]');
+    await app.pointer('[data-hold-key="malformed-piece-0"]', "pointerdown", {
+      pointerId: 7,
+      clientX: 10,
+      clientY: 10,
+    });
+    assert.match(app.text("#editor-status"), /could not edit.*invalid path/i);
+  }, dependenciesFixture(malformedBoard));
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="malformed-piece-0"]');
+    await app.mouse("#editor-svg", "dblclick", { clientX: 10, clientY: 10 });
+    assert.match(app.text("#editor-status"), /could not edit.*invalid path/i);
+  }, dependenciesFixture(malformedBoard));
 });
 
 function constrainedBoardFixture(): Board {

@@ -219,6 +219,7 @@ export interface WorkbenchDependencies {
 }
 
 export interface WorkbenchState {
+  initialized: boolean;
   boards: BoardSummary[];
   board: Board | null;
   document: EditorDocument | null;

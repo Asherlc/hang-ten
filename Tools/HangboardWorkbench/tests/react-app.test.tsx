@@ -250,6 +250,40 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
   });
 });
 
+test("manual board refresh does not masquerade as completed repository initialization", async () => {
+  await withApp(dependenciesFixture({
+    client: {
+      getAuthStatus() { return new Promise<AuthStatus>(() => {}); },
+      async listBoards() { return []; },
+    },
+  }), async (app) => {
+    await app.click("#refresh-boards-button");
+
+    assert.equal(app.text("#board-status"), "Choose a board to edit its holds.");
+    assert.equal(app.text("#git-status"), "Repository status");
+  });
+});
+
+test("state-dependent actions observe updates dispatched earlier in the same task", async () => {
+  const createdBranches: string[] = [];
+  await withHook(dependenciesFixture({
+    client: {
+      async createBranch(branchName) {
+        createdBranches.push(branchName);
+        return branchName;
+      },
+    },
+  }), async (result, app) => {
+    await app.flush();
+    await app.flush(async () => {
+      result().actions.setNewBranchName("same-task-branch");
+      await result().actions.createBranch();
+    });
+
+    assert.deepEqual(createdBranches, ["same-task-branch"]);
+  });
+});
+
 test("validation renders angle-bracket error text without interpreting an image node", async () => {
   const malicious = '<img src=x onerror="globalThis.pwned=true">';
   await withApp(dependenciesFixture({

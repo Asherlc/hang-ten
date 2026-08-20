@@ -316,13 +316,13 @@ def hosted_request_json(
 def test_root_serves_only_the_bundled_react_frontend(tmp_path: Path) -> None:
     library = _write_library(tmp_path)
 
-    with running_server(library) as base:
-        with urlopen(base + "/") as response:
-            assert response.status == 200
-            html = response.read().decode("utf-8")
+    with running_server(library) as base, urlopen(base + "/") as response:
+        assert response.status == 200
+        html = response.read().decode("utf-8")
 
     parser = _ScriptTagParser()
     parser.feed(html)
+    parser.close()
     assert '<div id="root"></div>' in html
     assert parser.sources == ["app.js"]
     for legacy_script in (
