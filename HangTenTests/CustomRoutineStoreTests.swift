@@ -370,6 +370,125 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(issues.contains(.unresolvableTargets(stepIndex: 0)))
     }
 
+    func testSaveRejectsRoutineWhoseImplicitNormalizedStepsEndInRest() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let definition = CustomRoutineDefinition(
+            id: "custom.trailing-rest",
+            title: "Trailing rest",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
+            steps: [
+                WorkoutStepDefinition(
+                    id: "timed-work",
+                    title: "Timed work",
+                    instruction: "Hang, then rest.",
+                    accessory: "8s hang · 4s rest",
+                    duration: 12,
+                    phase: .hang,
+                    targets: [.holdIDs(["edge-19-left"])],
+                    activeDuration: 8
+                )
+            ]
+        )
+
+        XCTAssertThrowsError(try CustomRoutineStore(defaults: defaults).save(definition)) { error in
+            guard case .validationFailed([.terminalRestStep]) = error as? CustomRoutineStoreError else {
+                return XCTFail("Expected terminal-rest validation failure, got \(error)")
+            }
+        }
+    }
+
+    func testSaveRejectsRoutineWhoseAuthoredStepsEndInRest() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let definition = CustomRoutineDefinition(
+            id: "custom.explicit-trailing-rest",
+            title: "Explicit trailing rest",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
+            steps: [
+                validStep(targets: [.holdIDs(["edge-19-left"])]),
+                WorkoutStepDefinition(
+                    id: "rest",
+                    title: "Rest",
+                    instruction: "",
+                    accessory: "30s rest",
+                    duration: 30,
+                    phase: .rest,
+                    targets: [],
+                    segments: [
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 30)
+                    ]
+                )
+            ]
+        )
+
+        XCTAssertThrowsError(try CustomRoutineStore(defaults: defaults).save(definition)) { error in
+            guard case .validationFailed([.terminalRestStep]) = error as? CustomRoutineStoreError else {
+                return XCTFail("Expected terminal-rest validation failure, got \(error)")
+            }
+        }
+    }
+
+    func testValidationAndSaveRejectRoutineWhoseCompoundStepEndsInRest() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let definition = CustomRoutineDefinition(
+            id: "custom.compound-trailing-rest",
+            title: "Compound trailing rest",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: BoardCatalog.defaultBoard.id),
+            steps: [
+                WorkoutStepDefinition(
+                    id: "compound-trailing-rest",
+                    title: "Compound trailing rest",
+                    instruction: "Hang, then rest.",
+                    accessory: "8s hang · 4s rest",
+                    duration: 12,
+                    phase: .hang,
+                    targets: [.holdIDs(["edge-19-left"])],
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            targets: [.holdIDs(["edge-19-left"])],
+                            timing: .fixed,
+                            duration: 8
+                        ),
+                        WorkoutSegmentDefinition(
+                            kind: .rest,
+                            targets: [],
+                            timing: .fixed,
+                            duration: 4
+                        )
+                    ]
+                )
+            ]
+        )
+
+        XCTAssertEqual(
+            CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all),
+            [.terminalRestStep]
+        )
+        XCTAssertThrowsError(try CustomRoutineStore(defaults: defaults).save(definition)) { error in
+            guard case .validationFailed([.terminalRestStep]) = error as? CustomRoutineStoreError else {
+                return XCTFail("Expected terminal-rest validation failure, got \(error)")
+            }
+        }
+    }
+
     func testValidationRejectsTargetStorageThatDoesNotMatchRoutineMode() {
         let boardSpecific = CustomRoutineDefinition(
             id: "custom.board-mode-mismatch",
@@ -552,6 +671,23 @@ final class CustomRoutineStoreTests: XCTestCase {
                             duration: 4
                         )
                     ]
+                ),
+                WorkoutStepDefinition(
+                    id: "follow-up",
+                    title: "Follow-up",
+                    instruction: "Finish with work.",
+                    accessory: "6s",
+                    duration: 6,
+                    phase: .hang,
+                    targets: [.kind(.jug)],
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            targets: [.kind(.jug)],
+                            timing: .fixed,
+                            duration: 6
+                        )
+                    ]
                 )
             ]
         )
@@ -560,9 +696,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         try store.save(definition)
 
         let stored = try XCTUnwrap(store.routines.first)
-        XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest])
-        XCTAssertEqual(stored.steps.map(\.targets), [[.kind(.jug)], []])
-        XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1])
+        XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest, .hang])
+        XCTAssertEqual(stored.steps.map(\.targets), [[.kind(.jug)], [], [.kind(.jug)]])
+        XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1, 1])
 
         let reloaded = CustomRoutineStore(defaults: defaults)
         XCTAssertEqual(reloaded.routines, [stored])

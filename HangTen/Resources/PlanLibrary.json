@@ -1931,7 +1931,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-1",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -1978,7 +1978,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-2",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2019,7 +2019,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-3",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2060,7 +2060,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-4",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2101,7 +2101,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-5",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2142,7 +2142,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-6",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2183,7 +2183,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-7",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2224,7 +2224,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-8",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2265,7 +2265,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-9",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2306,7 +2306,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-10",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2347,7 +2347,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-11",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2388,7 +2388,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-12",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2447,7 +2447,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-1",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2488,7 +2488,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-2",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2529,7 +2529,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-3",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2570,7 +2570,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-4",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2611,7 +2611,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-5",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2652,7 +2652,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-6",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2693,7 +2693,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-7",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2734,7 +2734,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-8",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2775,7 +2775,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-9",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2816,7 +2816,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-10",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2857,7 +2857,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-11",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2898,7 +2898,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-12",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2957,7 +2957,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-1",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2998,7 +2998,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-2",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3039,7 +3039,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-3",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3080,7 +3080,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-4",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3121,7 +3121,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-5",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3162,7 +3162,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-6",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3203,7 +3203,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-7",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3244,7 +3244,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-8",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3285,7 +3285,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-9",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3326,7 +3326,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-10",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3367,7 +3367,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-11",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3406,9 +3406,9 @@
         {
           "accessory" : "10s hang · 6s rest · 80% MFSi",
           "activeDuration" : 10,
-          "duration" : 16,
+          "duration" : 10,
           "id" : "f80-set-3-rep-12",
-          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+          "instruction" : "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3423,11 +3423,6 @@
                 ],
                 "feature" : "smallEdge"
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 6,
-              "kind" : "rest",
               "timing" : "fixed"
             }
           ],
@@ -9024,7 +9019,7 @@
         {
           "accessory" : "Feet supported · app timer",
           "activeDuration" : 10,
-          "duration" : 60,
+          "duration" : 10,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "index",
@@ -9048,11 +9043,6 @@
                 ],
                 "feature" : "mediumEdge"
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 50,
-              "kind" : "rest",
               "timing" : "fixed"
             }
           ],
