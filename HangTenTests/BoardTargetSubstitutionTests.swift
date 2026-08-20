@@ -6,7 +6,8 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         id: String,
         kind: HoldKind = .edge,
         feature: HoldFeature? = nil,
-        fingerCapacity: Int? = nil
+        fingerCapacity: Int? = nil,
+        x: Double = 0
     ) -> BoardHold {
         BoardHold(
             id: id,
@@ -14,7 +15,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             shortLabel: id,
             detail: id,
             kind: kind,
-            frame: HoldFrame(x: 0, y: 0, width: 0.1, height: 0.1),
+            frame: HoldFrame(x: x, y: 0, width: 0.1, height: 0.1),
             fingerCapacity: fingerCapacity,
             features: feature.map { [$0] }
         )
@@ -154,6 +155,22 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
 
         XCTAssertEqual(result, ["pocket"])
+    }
+
+    func testEdgeFeatureFallbackSelectsOnePocketPerHandWhenCapacityIsUnspecified() {
+        let board = board(holds: [
+            hold(id: "upper-left", kind: .pocket, feature: .pocket, x: 0.1),
+            hold(id: "upper-right", kind: .pocket, feature: .pocket, x: 0.8),
+            hold(id: "lower-left", kind: .pocket, feature: .pocket, x: 0.2),
+            hold(id: "lower-right", kind: .pocket, feature: .pocket, x: 0.7)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.smallEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["upper-left", "upper-right"])
     }
 
     func testEdgeKindSubstitutesPocketsWhenBoardHasNoEdges() {
