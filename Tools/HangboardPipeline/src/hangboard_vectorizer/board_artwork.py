@@ -71,6 +71,15 @@ class NormalizedFrame:
         return cls(x, y, width, height)
 
 
+# A control point only needs to be finite, but the app quantizes flattened
+# contour coordinates into an Int64 by scaling by 1e12 (see
+# BoardPackageStore.swift's QuantizedBoardPoint), which traps for values
+# outside Int64's range (roughly +/-9.2e6 once scaled back down). Bounding
+# control points well inside that margin keeps a malformed board.json from
+# being accepted here only to crash the app later.
+_MAX_CONTROL_COORDINATE = 1_000_000.0
+
+
 @dataclass(frozen=True)
 class PathCommand:
     command: str
@@ -80,14 +89,16 @@ class PathCommand:
     control2: tuple[float, float] | None = None
 
     @staticmethod
-    def _point(value: Any, label: str) -> tuple[float, float]:
+    def _point(value: Any, label: str, *, constrain: bool = True) -> tuple[float, float]:
         if not isinstance(value, Sequence) or isinstance(value, str):
             raise ValueError(f"{label} must be a point")
         if len(value) != 2:
             raise ValueError(f"{label} must contain exactly two numbers")
+        minimum = 0 if constrain else -_MAX_CONTROL_COORDINATE
+        maximum = 1 if constrain else _MAX_CONTROL_COORDINATE
         return (
-            _float(value[0], label=f"{label}[0]", minimum=0, maximum=1),
-            _float(value[1], label=f"{label}[1]", minimum=0, maximum=1),
+            _float(value[0], label=f"{label}[0]", minimum=minimum, maximum=maximum),
+            _float(value[1], label=f"{label}[1]", minimum=minimum, maximum=maximum),
         )
 
     @classmethod
@@ -104,13 +115,13 @@ class PathCommand:
             return cls(command="line", to=to)
         if command == "quad":
             _closed(payload, label, required={"command", "control", "to"})
-            control = cls._point(payload["control"], f"{label}.control")
+            control = cls._point(payload["control"], f"{label}.control", constrain=False)
             to = cls._point(payload["to"], f"{label}.to")
             return cls(command="quad", control=control, to=to)
         if command == "curve":
             _closed(payload, label, required={"command", "control1", "control2", "to"})
-            control1 = cls._point(payload["control1"], f"{label}.control1")
-            control2 = cls._point(payload["control2"], f"{label}.control2")
+            control1 = cls._point(payload["control1"], f"{label}.control1", constrain=False)
+            control2 = cls._point(payload["control2"], f"{label}.control2", constrain=False)
             to = cls._point(payload["to"], f"{label}.to")
             return cls(command="curve", control1=control1, control2=control2, to=to)
         if command == "close":

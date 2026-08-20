@@ -13,6 +13,14 @@ _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
 _TOKEN = re.compile(r"[MLQCZ]|[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?")
 _EPSILON = 1e-9
 
+# The app quantizes flattened contour coordinates into an Int64 by scaling
+# by 1e12 (see BoardPackageStore.swift's QuantizedBoardPoint), which traps
+# outside Int64's range (roughly +/-9.2e6 once scaled back down). A control
+# point only needs to be finite, but a pathologically thin declared frame can
+# still blow up its frame-local coordinate here, so reject it well inside
+# that margin before it reaches board.json.
+_MAX_CONTROL_COORDINATE = 1_000_000.0
+
 
 class GeometryError(ValueError):
     """Raised when hold geometry is not one safe contiguous outline."""
@@ -101,8 +109,12 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
             if not math.isfinite(number):
                 raise GeometryError(f"{label} coordinates must be finite")
             values.append(number)
-        for x, y in zip(values[::2], values[1::2], strict=True):
-            if not 0 <= x <= width or not 0 <= y <= height:
+        # Only the point the curve actually passes through (a command's final
+        # pair) must stay on the canvas; a Bezier control point just shapes
+        # the curve between two such points and routinely falls outside it.
+        if values:
+            destination_x, destination_y = values[-2], values[-1]
+            if not 0 <= destination_x <= width or not 0 <= destination_y <= height:
                 raise GeometryError(f"{label} coordinates must stay inside the canvas")
         parsed.append((command, tuple(values)))
         index += arity
@@ -124,15 +136,15 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
 
 
 def normalized_frame_for_path(path: ClosedPath, width: int, height: int) -> NormalizedFrame:
-    """Return the normalized frame that can serialize every path control point."""
+    """Return the normalized frame tightly bounding the path's rendered contour.
+
+    Uses the flattened curve, not raw control points: a Bezier control point
+    routinely falls outside the curve it shapes, so a frame sized to contain
+    every control point would not tightly bound what actually renders.
+    """
     if width <= 0 or height <= 0:
         raise GeometryError("canvas dimensions must be positive")
-    points = [
-        (values[index], values[index + 1])
-        for command, values in path.commands
-        if command != "Z"
-        for index in range(0, len(values), 2)
-    ]
+    points = path.contour
     minimum_x = min(point[0] for point in points)
     maximum_x = max(point[0] for point in points)
     minimum_y = min(point[1] for point in points)
@@ -160,6 +172,60 @@ def union_normalized_frames(frames: Iterable[NormalizedFrame]) -> NormalizedFram
         maximum_x - minimum_x,
         maximum_y - minimum_y,
     )
+
+
+def flattened_shape_bounds(commands: list[Any]) -> tuple[float, float, float, float]:
+    """Return (min_x, max_x, min_y, max_y) of the rendered curve in a path
+    shape's own normalized [0, 1] local coordinate space.
+
+    Mirrors the Swift app's flattening exactly (32 samples per curve
+    segment) so a piece's declared frame can be checked against what
+    actually renders, not against its control points.
+    """
+    xs: list[float] = []
+    ys: list[float] = []
+    current: tuple[float, float] | None = None
+    for raw in commands:
+        name = raw.get("command") if isinstance(raw, Mapping) else None
+        if name == "move":
+            current = (raw["to"][0], raw["to"][1])
+            xs.append(current[0])
+            ys.append(current[1])
+        elif name == "line":
+            current = (raw["to"][0], raw["to"][1])
+            xs.append(current[0])
+            ys.append(current[1])
+        elif name == "quad":
+            control = (raw["control"][0], raw["control"][1])
+            end = (raw["to"][0], raw["to"][1])
+            for step in range(1, 33):
+                t = step / 32
+                inverse = 1 - t
+                xs.append(inverse * inverse * current[0] + 2 * inverse * t * control[0] + t * t * end[0])
+                ys.append(inverse * inverse * current[1] + 2 * inverse * t * control[1] + t * t * end[1])
+            current = end
+        elif name == "curve":
+            control1 = (raw["control1"][0], raw["control1"][1])
+            control2 = (raw["control2"][0], raw["control2"][1])
+            end = (raw["to"][0], raw["to"][1])
+            for step in range(1, 33):
+                t = step / 32
+                inverse = 1 - t
+                xs.append(
+                    inverse ** 3 * current[0]
+                    + 3 * inverse * inverse * t * control1[0]
+                    + 3 * inverse * t * t * control2[0]
+                    + t ** 3 * end[0]
+                )
+                ys.append(
+                    inverse ** 3 * current[1]
+                    + 3 * inverse * inverse * t * control1[1]
+                    + 3 * inverse * t * t * control2[1]
+                    + t ** 3 * end[1]
+                )
+            current = end
+        # "close" contributes no point beyond the start already recorded.
+    return min(xs), max(xs), min(ys), max(ys)
 
 
 def display_path_for_shape(
@@ -202,10 +268,21 @@ def shape_for_path(path: ClosedPath, width: int, height: int) -> tuple[Normalize
         if command in {"M", "L"}:
             commands.append({"command": "move" if command == "M" else "line", "to": points[0]})
         elif command == "Q":
-            commands.append({"command": "quad", "control": points[0], "to": points[1]})
+            commands.append({"command": "quad", "control": _bounded_control(points[0]), "to": points[1]})
         else:
-            commands.append({"command": "curve", "control1": points[0], "control2": points[1], "to": points[2]})
+            commands.append({
+                "command": "curve",
+                "control1": _bounded_control(points[0]),
+                "control2": _bounded_control(points[1]),
+                "to": points[2],
+            })
     return frame, {"type": "path", "commands": commands}
+
+
+def _bounded_control(point: list[float]) -> list[float]:
+    if any(abs(value) > _MAX_CONTROL_COORDINATE for value in point):
+        raise GeometryError("shape control point is too far outside its frame")
+    return point
 
 
 def _tokenize(raw: str, label: str) -> list[str]:
@@ -337,8 +414,15 @@ def _shape_commands(frame: NormalizedFrame, raw_commands: list[Any], width: int,
                 raise GeometryError(f"{label}.shape.commands[{index}].{key} is invalid")
             local_x = _finite_number(point[0], f"{label}.shape.commands[{index}].{key}[0]")
             local_y = _finite_number(point[1], f"{label}.shape.commands[{index}].{key}[1]")
-            if not 0 <= local_x <= 1 or not 0 <= local_y <= 1:
-                raise GeometryError(f"{label}.shape commands must stay inside their frame")
+            # Only a point the curve actually passes through ("to") must lie
+            # within the frame; a Bezier control point only shapes the curve
+            # between two such points and routinely falls outside it, but it
+            # still must stay within the app's Int64 quantization range.
+            if key == "to":
+                if not 0 <= local_x <= 1 or not 0 <= local_y <= 1:
+                    raise GeometryError(f"{label}.shape commands must stay inside their frame")
+            elif abs(local_x) > _MAX_CONTROL_COORDINATE or abs(local_y) > _MAX_CONTROL_COORDINATE:
+                raise GeometryError(f"{label}.shape control point is too far outside its frame")
             values.extend(((frame.x + local_x * frame.width) * width, (frame.y + local_y * frame.height) * height))
         commands.append((command, tuple(values)))
     return commands

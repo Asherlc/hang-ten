@@ -4,10 +4,51 @@ import type {
   HoldRegion,
   LoadedBoard,
   SavedBoard,
+  ShapeConstraint,
+  ShapeConstraintShape,
 } from "./types.ts";
+
+const CONSTRAINED_SHAPES = new Set<ShapeConstraintShape>([
+  "oval",
+  "circle",
+  "pill",
+  "roundedRectangle",
+  "rectangle",
+]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isShapeConstraint(value: unknown): value is ShapeConstraint {
+  if (!isRecord(value)) return false;
+  const keys = Object.keys(value);
+  return keys.length === 2
+    && Object.hasOwn(value, "shape")
+    && Object.hasOwn(value, "rotationDegrees")
+    && typeof value.shape === "string"
+    && CONSTRAINED_SHAPES.has(value.shape as ShapeConstraintShape)
+    && typeof value.rotationDegrees === "number"
+    && Number.isFinite(value.rotationDegrees)
+    && value.rotationDegrees >= -180
+    && value.rotationDegrees < 180;
+}
+
+function validateShapeConstraint(value: unknown, holdKey: string): asserts value is ShapeConstraint {
+  if (!isRecord(value)) throw new Error(`Hold ${holdKey} has an invalid shape constraint`);
+  const keys = Object.keys(value);
+  if (keys.length !== 2 || !Object.hasOwn(value, "shape") || !Object.hasOwn(value, "rotationDegrees")) {
+    throw new Error(`Hold ${holdKey} shape constraint needs exactly shape and rotationDegrees`);
+  }
+  if (typeof value.shape !== "string" || !CONSTRAINED_SHAPES.has(value.shape as ShapeConstraintShape)) {
+    throw new Error(`Hold ${holdKey} has an invalid shape constraint shape`);
+  }
+  if (typeof value.rotationDegrees !== "number" || !Number.isFinite(value.rotationDegrees)) {
+    throw new Error(`Hold ${holdKey} shape constraint rotation must be finite`);
+  }
+  if (value.rotationDegrees < -180 || value.rotationDegrees >= 180) {
+    throw new Error(`Hold ${holdKey} shape constraint rotation must be normalized to [-180, 180)`);
+  }
 }
 
 function isHoldRegion(value: unknown): value is HoldRegion {
@@ -17,6 +58,7 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
+    && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"
@@ -56,6 +98,9 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     if (typeof region.displayPath !== "string"
       || !/^\s*M\s+[^MZ]+\s+Z\s*$/u.test(region.displayPath)) {
       throw new Error(`Hold ${region.key} needs one closed contour`);
+    }
+    if (Object.hasOwn(region, "shapeConstraint")) {
+      validateShapeConstraint(region.shapeConstraint, region.key);
     }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);

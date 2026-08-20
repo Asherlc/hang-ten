@@ -24,6 +24,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     selectedHold,
     dirty: state.dirty,
     status: state.status,
+    busy,
     rotationDegrees: state.rotationDegrees,
     actions,
     pathEditor: dependencies.pathEditor,
@@ -58,7 +59,11 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         <div className="toolbar" aria-label="Board tools">
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
-          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={() => void actions.saveBoard()}>Save</button>
+          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={() => void (async () => {
+            const cancelledEdit = editor.cancelActiveEdit();
+            if (cancelledEdit) await Promise.resolve();
+            await actions.saveBoard();
+          })()}>Save</button>
         </div>
         <RepositoryToolbar state={state} actions={actions} />
       </header>
@@ -84,6 +89,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             board={state.board}
             document={state.document}
             selectedKey={state.selectedKey}
+            busy={busy}
             onSelectHold={actions.selectHold}
             pathEditor={dependencies.pathEditor}
             editor={editor}
@@ -94,9 +100,11 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
 
         <HoldInspector
           hold={selectedHold}
+          busy={busy}
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}
           onTypeChange={editor.changeHoldType}
+          onOutlineShapeChange={editor.changeOutlineShape}
           onRotate={(direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15))}
           onApplyRotation={editor.applyRotation}
           onDelete={editor.deleteHold}

@@ -370,6 +370,52 @@ test("direct board loading commits image and holds together and preserves the pr
   assert.equal(prior.boardId, "prior");
 });
 
+test("direct board loading rejects malformed shape constraints before image loading or commit", async () => {
+  const malformedConstraints: unknown[] = [
+    { shape: "rectangle", rotationDegrees: 180 },
+    { shape: "rectangle", rotationDegrees: -181 },
+    { shape: "rounded-rectangle", rotationDegrees: 0 },
+    { shape: "rectangle", rotationDegrees: true },
+    { shape: "rectangle", rotationDegrees: "0" },
+    { shape: "rectangle", rotationDegrees: Number.NaN },
+    { shape: "rectangle", rotationDegrees: Number.POSITIVE_INFINITY },
+    { shape: "rectangle" },
+    { shape: "rectangle", rotationDegrees: 0, legacyShape: "oval" },
+    null,
+  ];
+
+  for (const shapeConstraint of malformedConstraints) {
+    let imageLoads = 0;
+    let commits = 0;
+    await assert.rejects(
+      loadBoardAtomically({
+        boardId: "broken",
+        getBoard: async () => ({
+          boardId: "broken",
+          displayName: "Broken",
+          holdCount: 1,
+          imageUrl: "/api/boards/broken/image",
+          document: {
+            schemaVersion: 1,
+            canvas: { width: 100, height: 50 },
+            regions: [{
+              key: "hold-1",
+              displayPath: "M 1 1 L 20 1 L 20 20 Z",
+              shapeConstraint,
+            }],
+          } as EditorDocument,
+        }),
+        loadImage: async () => { imageLoads += 1; return {}; },
+        commit: () => { commits += 1; },
+      }),
+      /shape constraint/i,
+      JSON.stringify(shapeConstraint),
+    );
+    assert.equal(imageLoads, 0, JSON.stringify(shapeConstraint));
+    assert.equal(commits, 0, JSON.stringify(shapeConstraint));
+  }
+});
+
 test("the direct editor model rejects duplicate and open hold paths before saving", () => {
   const base = { schemaVersion: 1, canvas: { width: 100, height: 50 } };
   assert.throws(() => validateEditorDocument({ ...base, regions: [

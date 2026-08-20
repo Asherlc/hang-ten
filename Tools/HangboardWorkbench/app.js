@@ -21742,9 +21742,14 @@
       canvas: { ...document2.canvas },
       regions: document2.regions.map((region) => ({
         ...region,
-        ...region.metadata ? { metadata: { ...region.metadata } } : {}
+        ...region.metadata ? { metadata: { ...region.metadata } } : {},
+        ...region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}
       }))
     };
+  }
+  function normalizedConstraintRotation(degrees) {
+    const normalized = ((degrees + 180) % 360 + 360) % 360 - 180;
+    return Object.is(normalized, -0) ? 0 : normalized;
   }
   function holdSiblings(document2, hold) {
     const holdId = hold.metadata?.holdID;
@@ -22408,6 +22413,8 @@
     commands: null,
     originalPath: null,
     originalPaths: null,
+    originalConstraint: null,
+    resizeHandle: null,
     originalDirty: false,
     pivot: null,
     lastAngle: 0,
@@ -22480,12 +22487,22 @@
   function errorMessage2(error, fallback) {
     return error instanceof Error && error.message ? error.message : fallback;
   }
+  function cloneConstraint(constraint) {
+    return constraint ? { ...constraint } : void 0;
+  }
+  function isShapeConstraintShape(value) {
+    return ["oval", "circle", "pill", "roundedRectangle", "rectangle"].includes(value);
+  }
+  function outlinePreset(shape) {
+    return shape === "roundedRectangle" ? "rounded-rectangle" : shape;
+  }
   function useHoldEditor(options) {
     const {
       document: document2,
       selectedHold,
       dirty,
       status,
+      busy,
       rotationDegrees,
       actions,
       pathEditor: pathEditor2,
@@ -22497,7 +22514,7 @@
     const pendingPreviewRef = (0, import_react2.useRef)(null);
     const dragSvgRef = (0, import_react2.useRef)(null);
     const rotateHold = (0, import_react2.useCallback)((degrees) => {
-      if (!document2 || !selectedHold) return;
+      if (busy || !document2 || !selectedHold) return;
       const siblingKeys = new Set(holdSiblings(document2, selectedHold).map((region) => region.key));
       const pivot = holdCentroid(holdSiblings(document2, selectedHold), pathEditor2);
       actions.editDocument((candidate) => {
@@ -22506,14 +22523,20 @@
           const commands = pathEditor2.parsePath(region.displayPath);
           pathEditor2.rotatePath(commands, degrees % 360 * Math.PI / 180, pivot);
           region.displayPath = pathEditor2.serializePath(commands);
+          if (region.shapeConstraint) {
+            region.shapeConstraint = {
+              ...region.shapeConstraint,
+              rotationDegrees: normalizedConstraintRotation(region.shapeConstraint.rotationDegrees + degrees)
+            };
+          }
         }
       }, {
         status: "Hold rotated. Save when ready.",
         failureStatus: "Rotation reverted \u2014 contour is invalid."
       });
-    }, [actions, document2, pathEditor2, selectedHold]);
+    }, [actions, busy, document2, pathEditor2, selectedHold]);
     const addHold = (0, import_react2.useCallback)(() => {
-      if (!document2) return;
+      if (busy || !document2) return;
       const { width, height } = document2.canvas;
       const size = Math.max(20, Math.min(60, width * 0.06, height * 0.06));
       const centerX = width / 2;
@@ -22533,9 +22556,9 @@
         status: "Hold added. Drag it into place and save when ready.",
         failureMessage: "Could not add hold."
       });
-    }, [actions, document2]);
+    }, [actions, busy, document2]);
     const deleteHold = (0, import_react2.useCallback)(() => {
-      if (!document2 || !selectedHold || !dialogs2.confirm(`Delete hold "${selectedHold.key}"?`)) return;
+      if (busy || !document2 || !selectedHold || !dialogs2.confirm(`Delete hold "${selectedHold.key}"?`)) return;
       const siblingKeys = new Set(holdSiblings(document2, selectedHold).map((region) => region.key));
       actions.editDocument((candidate) => {
         candidate.regions = candidate.regions.filter((region) => !siblingKeys.has(region.key));
@@ -22544,9 +22567,9 @@
         status: "Hold deleted. Save when ready.",
         failureMessage: "Document is invalid after deletion."
       });
-    }, [actions, dialogs2, document2, selectedHold]);
+    }, [actions, busy, dialogs2, document2, selectedHold]);
     const changeHoldType = (0, import_react2.useCallback)((type) => {
-      if (!document2 || !selectedHold) return;
+      if (busy || !document2 || !selectedHold) return;
       const siblingKeys = new Set(holdSiblings(document2, selectedHold).map((region) => region.key));
       actions.editDocument((candidate) => {
         for (const region of candidate.regions) {
@@ -22556,8 +22579,26 @@
         status: "Hold recategorized. Save when ready.",
         failureMessage: "Hold type is invalid."
       });
-    }, [actions, document2, selectedHold]);
+    }, [actions, busy, document2, selectedHold]);
+    const changeOutlineShape = (0, import_react2.useCallback)((shape) => {
+      if (busy || !document2 || !selectedHold || shape !== "custom" && !isShapeConstraintShape(shape)) return;
+      const label = shape === "roundedRectangle" ? "rounded rectangle" : shape;
+      actions.editDocument((candidate) => {
+        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+        if (!hold) return;
+        if (shape === "custom") {
+          delete hold.shapeConstraint;
+        } else {
+          hold.displayPath = pathEditor2.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
+          hold.shapeConstraint = { shape, rotationDegrees: 0 };
+        }
+      }, {
+        status: shape === "custom" ? "Outline unlocked for custom editing. Save when ready." : `Outline changed to ${label}. Save when ready.`,
+        failureStatus: "Outline change reverted \u2014 contour is invalid."
+      });
+    }, [actions, busy, document2, pathEditor2, selectedHold]);
     const applyRotation = (0, import_react2.useCallback)(() => {
+      if (busy) return;
       const degrees = normalizedRotationDegrees(rotationDegrees);
       if (degrees === null) {
         if (document2) actions.replaceDocument(document2, {
@@ -22568,7 +22609,7 @@
         return;
       }
       rotateHold(degrees);
-    }, [actions, dirty, document2, rotateHold, rotationDegrees]);
+    }, [actions, busy, dirty, document2, rotateHold, rotationDegrees]);
     const restoreDrag = (0, import_react2.useCallback)((status2, validation = "") => {
       const drag = dragRef.current;
       const current = previewDocumentRef.current ?? document2;
@@ -22577,11 +22618,19 @@
       if (drag.type === "rotation") {
         for (const original of drag.originalPaths ?? []) {
           const region = restored.regions.find((candidate) => candidate.key === original.key);
-          if (region) region.displayPath = original.path;
+          if (region) {
+            region.displayPath = original.path;
+            if (original.shapeConstraint) region.shapeConstraint = { ...original.shapeConstraint };
+            else delete region.shapeConstraint;
+          }
         }
       } else {
         const region = restored.regions.find((candidate) => candidate.key === drag.holdKey);
-        if (region && drag.originalPath !== null) region.displayPath = drag.originalPath;
+        if (region && drag.originalPath !== null) {
+          region.displayPath = drag.originalPath;
+          if (drag.originalConstraint) region.shapeConstraint = { ...drag.originalConstraint };
+          else delete region.shapeConstraint;
+        }
       }
       previewDocumentRef.current = restored;
       actions.replaceDocument(restored, { dirty: drag.originalDirty, validation, status: status2 });
@@ -22596,6 +22645,19 @@
       }
       dragSvgRef.current = null;
     }, []);
+    const cancelActiveEdit = (0, import_react2.useCallback)(() => {
+      const drag = dragRef.current;
+      if (!drag.active) return false;
+      restoreDrag("Edit cancelled because another operation started.");
+      drag.active = false;
+      const svg = dragSvgRef.current;
+      if (svg) releasePointer(svg);
+      else drag.pointerId = null;
+      return true;
+    }, [releasePointer, restoreDrag]);
+    (0, import_react2.useEffect)(() => {
+      if (busy) cancelActiveEdit();
+    }, [busy, cancelActiveEdit]);
     (0, import_react2.useLayoutEffect)(() => {
       const drag = dragRef.current;
       if (!drag.active) {
@@ -22620,7 +22682,7 @@
     }, [document2, releasePointer]);
     const onPointerDown = (0, import_react2.useCallback)((event) => {
       const drag = dragRef.current;
-      if (drag.active || !document2 || !selectedHold) return;
+      if (busy || drag.active || !document2 || !selectedHold) return;
       const target = targetElement(event);
       if (!target) return;
       const point = svgPoint(event.currentTarget, event);
@@ -22633,10 +22695,28 @@
           active: true,
           type: "rotation",
           holdKey: selectedHold.key,
-          originalPaths: siblings.map((region) => ({ key: region.key, path: region.displayPath })),
+          originalPaths: siblings.map((region) => ({
+            key: region.key,
+            path: region.displayPath,
+            ...region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}
+          })),
           originalDirty: dirty,
           pivot,
           lastAngle: Math.atan2(point.y - pivot.y, point.x - pivot.x),
+          pointerId: event.pointerId
+        };
+      } else if (target.classList.contains("path-editor-resize-handle") && selectedHold.shapeConstraint) {
+        const resizeHandle = target.getAttribute("data-handle");
+        if (!resizeHandle || !["nw", "n", "ne", "e", "se", "s", "sw", "w"].includes(resizeHandle)) return;
+        next = {
+          ...EMPTY_DRAG,
+          active: true,
+          type: "constrained-resize",
+          holdKey: selectedHold.key,
+          originalPath: selectedHold.displayPath,
+          originalConstraint: { ...selectedHold.shapeConstraint },
+          resizeHandle,
+          originalDirty: dirty,
           pointerId: event.pointerId
         };
       } else if (target.classList.contains("path-editor-vertex") || target.classList.contains("path-editor-control") || target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key) {
@@ -22651,6 +22731,7 @@
           startY: point.y,
           commands: pathEditor2.parsePath(selectedHold.displayPath),
           originalPath: selectedHold.displayPath,
+          originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
           originalDirty: dirty,
           pointerId: event.pointerId
         };
@@ -22665,7 +22746,7 @@
         event.currentTarget.setPointerCapture?.(event.pointerId);
       } catch {
       }
-    }, [dirty, document2, pathEditor2, selectedHold]);
+    }, [busy, dirty, document2, pathEditor2, selectedHold]);
     const onPointerMove = (0, import_react2.useCallback)((event) => {
       const drag = dragRef.current;
       if (!drag.active || event.pointerId !== drag.pointerId || !document2) return;
@@ -22692,6 +22773,31 @@
           const commands = pathEditor2.parsePath(original.path);
           pathEditor2.rotatePath(commands, drag.totalAngle, drag.pivot);
           region.displayPath = pathEditor2.serializePath(commands);
+          if (original.shapeConstraint) {
+            region.shapeConstraint = {
+              ...original.shapeConstraint,
+              rotationDegrees: normalizedConstraintRotation(
+                original.shapeConstraint.rotationDegrees + drag.totalAngle * 180 / Math.PI
+              )
+            };
+          }
+        }
+      } else if (drag.type === "constrained-resize" && drag.originalPath && drag.originalConstraint && drag.resizeHandle) {
+        try {
+          const resized = pathEditor2.resizeConstrainedOutline(
+            drag.originalPath,
+            drag.originalConstraint,
+            drag.resizeHandle,
+            point
+          );
+          hold.displayPath = resized.displayPath;
+          hold.shapeConstraint = resized.shapeConstraint;
+        } catch (error) {
+          restoreDrag(
+            "Edit reverted \u2014 contour is invalid.",
+            errorMessage2(error, "Contour is invalid.")
+          );
+          return;
         }
       } else if (drag.commands) {
         const commands = cloneCommands(drag.commands);
@@ -22721,6 +22827,15 @@
       const candidate = previewDocumentRef.current ?? document2;
       if (!candidate) return;
       try {
+        if (drag.type === "constrained-resize") {
+          const hold = candidate.regions.find((region) => region.key === drag.holdKey);
+          if (!hold?.shapeConstraint) throw new Error("Constrained outline is unavailable.");
+          const model = pathEditor2.constrainedOutlineModel(hold.displayPath, hold.shapeConstraint);
+          const { width, height } = candidate.canvas;
+          if (!Object.values(model.handles).every(({ x, y }) => Number.isFinite(x) && Number.isFinite(y) && x >= 0 && x <= width && y >= 0 && y <= height)) {
+            throw new Error("Constrained outline must stay inside the canvas.");
+          }
+        }
         validateEditorDocument2(candidate);
         actions.replaceDocument(candidate, {
           dirty: true,
@@ -22733,7 +22848,7 @@
           errorMessage2(error, "Contour is invalid.")
         );
       }
-    }, [actions, document2, releasePointer, restoreDrag, validateEditorDocument2]);
+    }, [actions, document2, pathEditor2, releasePointer, restoreDrag, validateEditorDocument2]);
     const cancelDrag = (0, import_react2.useCallback)((event) => {
       const drag = dragRef.current;
       if (!drag.active || event.pointerId !== drag.pointerId) return;
@@ -22751,7 +22866,7 @@
     }, [restoreDrag]);
     const onDoubleClick = (0, import_react2.useCallback)((event) => {
       const target = targetElement(event);
-      if (!document2 || !selectedHold || !target || target.classList.contains("path-editor-vertex") || target.classList.contains("path-editor-control")) return;
+      if (busy || !document2 || !selectedHold || selectedHold.shapeConstraint || !target || target.classList.contains("path-editor-vertex") || target.classList.contains("path-editor-control")) return;
       const point = svgPoint(event.currentTarget, event);
       const commands = pathEditor2.parsePath(selectedHold.displayPath);
       for (let index = 0; index < commands.length; index += 1) {
@@ -22773,10 +22888,10 @@
         }, { status });
         return;
       }
-    }, [actions, document2, pathEditor2, selectedHold, status]);
+    }, [actions, busy, document2, pathEditor2, selectedHold, status]);
     const onContextMenu = (0, import_react2.useCallback)((event) => {
       const target = targetElement(event);
-      if (!selectedHold || !target?.classList.contains("path-editor-vertex")) return;
+      if (busy || !selectedHold || selectedHold.shapeConstraint || !target?.classList.contains("path-editor-vertex")) return;
       event.preventDefault();
       const index = Number(target.getAttribute("data-index"));
       if (index === 0) return;
@@ -22787,9 +22902,10 @@
         pathEditor2.deleteVertex(commands, index);
         hold.displayPath = pathEditor2.serializePath(commands);
       }, { status });
-    }, [actions, pathEditor2, selectedHold, status]);
+    }, [actions, busy, pathEditor2, selectedHold, status]);
     (0, import_react2.useEffect)(() => {
       const onKeyDown = (event) => {
+        if (busy) return;
         const target = event.target instanceof Element ? event.target : null;
         const tagName = target?.tagName.toLowerCase();
         if (target instanceof HTMLElement && target.isContentEditable || target?.getAttribute("contenteditable") === "true" || tagName === "input" || tagName === "select" || tagName === "textarea") return;
@@ -22817,13 +22933,15 @@
       };
       window.document.addEventListener("keydown", onKeyDown);
       return () => window.document.removeEventListener("keydown", onKeyDown);
-    }, [actions, document2, pathEditor2, rotateHold, selectedHold]);
+    }, [actions, busy, document2, pathEditor2, rotateHold, selectedHold]);
     return {
       addHold,
       deleteHold,
       changeHoldType,
+      changeOutlineShape,
       rotateHold,
       applyRotation,
+      cancelActiveEdit,
       onPointerDown,
       onPointerMove,
       onPointerUp: completeDrag,
@@ -22876,6 +22994,7 @@
     board,
     document: document2,
     selectedKey,
+    busy,
     onSelectHold,
     pathEditor: pathEditor2,
     editor
@@ -22892,6 +23011,17 @@
     const pivot = document2 && selectedHold && selectedCommands ? holdCentroid(holdSiblings(document2, selectedHold), pathEditor2) : null;
     const rotationHandle = document2 && pivot ? rotationHandlePosition(pivot, document2.canvas) : null;
     const selectedColor = selectedHold ? TYPE_COLORS[selectedHold.type ?? ""] ?? "#ff754f" : "#ff754f";
+    let constrainedModel = null;
+    if (selectedHold?.shapeConstraint) {
+      try {
+        constrainedModel = pathEditor2.constrainedOutlineModel(
+          selectedHold.displayPath,
+          selectedHold.shapeConstraint
+        );
+      } catch {
+        constrainedModel = null;
+      }
+    }
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "editor-views", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "canvas-viewport", id: "canvas-viewport", children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
         "svg",
@@ -22932,11 +23062,13 @@
                 fillOpacity: hold.key === selectedKey ? "0.58" : "0.3",
                 stroke: hold.key === selectedKey ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f",
                 strokeWidth: hold.key === selectedKey ? "2.2" : "1.4",
-                onClick: () => onSelectHold(hold.key)
+                onClick: () => {
+                  if (!busy) onSelectHold(hold.key);
+                }
               },
               hold.key
             )) }),
-            selectedCommands && pivot && rotationHandle && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { className: "path-editor-overlay", children: [
+            selectedCommands && pivot && rotationHandle && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { className: `path-editor-overlay${busy ? " busy" : ""}`, children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                 "line",
                 {
@@ -22962,7 +23094,36 @@
                   strokeWidth: "2"
                 }
               ),
-              selectedCommands.map((command, commandIndex) => {
+              constrainedModel ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                  "polygon",
+                  {
+                    className: "path-editor-constrained-box",
+                    points: ["nw", "ne", "se", "sw"].map((handle) => {
+                      const point = constrainedModel.handles[handle];
+                      return `${point.x},${point.y}`;
+                    }).join(" "),
+                    fill: "none",
+                    stroke: "#fff7dc",
+                    strokeWidth: "1.5",
+                    strokeDasharray: "4 3"
+                  }
+                ),
+                Object.entries(constrainedModel.handles).map(([handle, point]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                  "circle",
+                  {
+                    className: "path-editor-resize-handle",
+                    "data-handle": handle,
+                    cx: point.x,
+                    cy: point.y,
+                    r: "5",
+                    fill: selectedColor,
+                    stroke: "#fff7dc",
+                    strokeWidth: "1.5"
+                  },
+                  handle
+                ))
+              ] }) : selectedCommands.map((command, commandIndex) => {
                 if (command.type === "Z") return null;
                 const endpoint = command.points.at(-1);
                 if (!endpoint) return null;
@@ -23029,11 +23190,21 @@
   // src/components/HoldInspector.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime());
   var HOLD_TYPES = ["jug", "sloper", "edge", "pocket", "pinch"];
+  var OUTLINE_SHAPES = [
+    ["custom", "Custom"],
+    ["oval", "Oval"],
+    ["circle", "Circle"],
+    ["pill", "Pill"],
+    ["roundedRectangle", "Rounded rectangle"],
+    ["rectangle", "Rectangle"]
+  ];
   function HoldInspector({
     hold,
+    busy,
     rotationDegrees,
     onRotationDegreesChange,
     onTypeChange,
+    onOutlineShapeChange,
     onRotate,
     onApplyRotation,
     onDelete
@@ -23051,24 +23222,37 @@
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
           "Hold type",
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { id: "hold-type-select", value: hold?.type ?? "", onChange: (event) => onTypeChange(event.currentTarget.value), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { id: "hold-type-select", disabled: busy, value: hold?.type ?? "", onChange: (event) => onTypeChange(event.currentTarget.value), children: [
             !hold?.type && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "" }),
             HOLD_TYPES.map((type) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: type, children: type }, type))
           ] })
         ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { children: [
+          "Outline shape",
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            "select",
+            {
+              id: "outline-shape-select",
+              disabled: busy,
+              value: hold?.shapeConstraint?.shape ?? "custom",
+              onChange: (event) => onOutlineShapeChange(event.currentTarget.value),
+              children: OUTLINE_SHAPES.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value, children: label }, value))
+            }
+          )
+        ] }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "rotate-controls", children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", children: "Rotate hold (Shift for 45\xB0)" }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "button-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "rotate-ccw-button", className: "tool-button", title: "Rotate counterclockwise", onClick: (event) => onRotate(-1, event.shiftKey), children: "\u27F2 CCW" }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "rotate-cw-button", className: "tool-button", title: "Rotate clockwise", onClick: (event) => onRotate(1, event.shiftKey), children: "\u27F3 CW" })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "rotate-ccw-button", className: "tool-button", title: "Rotate counterclockwise", disabled: busy, onClick: (event) => onRotate(-1, event.shiftKey), children: "\u27F2 CCW" }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "rotate-cw-button", className: "tool-button", title: "Rotate clockwise", disabled: busy, onClick: (event) => onRotate(1, event.shiftKey), children: "\u27F3 CW" })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("label", { htmlFor: "rotate-by-input", children: "Rotate by" }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "rotate-by-input-row", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { id: "rotate-by-input", type: "number", step: "any", placeholder: "Degrees", value: rotationDegrees, onInput: (event) => onRotationDegreesChange(event.currentTarget.value) }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "rotate-by-apply-button", className: "tool-button", onClick: onApplyRotation, children: "Apply" })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { id: "rotate-by-input", type: "number", step: "any", placeholder: "Degrees", disabled: busy, value: rotationDegrees, onInput: (event) => onRotationDegreesChange(event.currentTarget.value) }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "rotate-by-apply-button", className: "tool-button", disabled: busy, onClick: onApplyRotation, children: "Apply" })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "delete-hold-button", className: "tool-button danger", onClick: onDelete, children: "Delete hold" })
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", id: "delete-hold-button", className: "tool-button danger", disabled: busy, onClick: onDelete, children: "Delete hold" })
       ] })
     ] });
   }
@@ -23172,6 +23356,7 @@
       selectedHold,
       dirty: state.dirty,
       status: state.status,
+      busy,
       rotationDegrees: state.rotationDegrees,
       actions,
       pathEditor: dependencies.pathEditor,
@@ -23192,7 +23377,11 @@
         /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "toolbar", "aria-label": "Board tools", children: [
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button", id: "refresh-boards-button", type: "button", disabled: busy, onClick: () => void actions.refreshBoards(), children: "Boards" }),
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "save-state", id: "save-state", "aria-live": "polite", children: saveState }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button accent", id: "save-button", type: "button", disabled: !state.board || busy, onClick: () => void actions.saveBoard(), children: "Save" })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button accent", id: "save-button", type: "button", disabled: !state.board || busy, onClick: () => void (async () => {
+            const cancelledEdit = editor.cancelActiveEdit();
+            if (cancelledEdit) await Promise.resolve();
+            await actions.saveBoard();
+          })(), children: "Save" })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(RepositoryToolbar, { state, actions })
       ] }),
@@ -23221,6 +23410,7 @@
               board: state.board,
               document: state.document,
               selectedKey: state.selectedKey,
+              busy,
               onSelectHold: actions.selectHold,
               pathEditor: dependencies.pathEditor,
               editor
@@ -23233,9 +23423,11 @@
           HoldInspector,
           {
             hold: selectedHold,
+            busy,
             rotationDegrees: state.rotationDegrees,
             onRotationDegreesChange: actions.setRotationDegrees,
             onTypeChange: editor.changeHoldType,
+            onOutlineShapeChange: editor.changeOutlineShape,
             onRotate: (direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15)),
             onApplyRotation: editor.applyRotation,
             onDelete: editor.deleteHold
@@ -23267,9 +23459,12 @@
   var path_editor_exports = {};
   __export(path_editor_exports, {
     addVertex: () => addVertex,
+    constrainedOutlineModel: () => constrainedOutlineModel,
+    createOutlineShapePath: () => createOutlineShapePath,
     deleteVertex: () => deleteVertex,
     moveVertex: () => moveVertex,
     parsePath: () => parsePath,
+    resizeConstrainedOutline: () => resizeConstrainedOutline,
     rotatePath: () => rotatePath,
     serializePath: () => serializePath
   });
@@ -23351,6 +23546,315 @@
   }
   function formatCoordinate(value) {
     return Number.isInteger(value) ? String(value) : String(Math.round(value * 1e6) / 1e6);
+  }
+  var CONSTRAINED_SHAPES = /* @__PURE__ */ new Set([
+    "oval",
+    "circle",
+    "pill",
+    "roundedRectangle",
+    "rectangle"
+  ]);
+  var CONSTRAINED_HANDLES = /* @__PURE__ */ new Set(["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
+  function validateShapeConstraint(constraint) {
+    if (typeof constraint !== "object" || constraint === null || Array.isArray(constraint)) {
+      throw new Error("Choose a valid constrained shape");
+    }
+    const record = constraint;
+    const keys = Object.keys(record);
+    if (keys.length !== 2 || !Object.hasOwn(record, "shape") || !Object.hasOwn(record, "rotationDegrees")) {
+      throw new Error("Shape constraint must contain exactly shape and rotationDegrees");
+    }
+    if (typeof record.shape !== "string" || !CONSTRAINED_SHAPES.has(record.shape)) {
+      throw new Error("Choose a valid constrained shape");
+    }
+    if (typeof record.rotationDegrees !== "number" || !Number.isFinite(record.rotationDegrees)) {
+      throw new Error("Shape rotation must be finite");
+    }
+    if (record.rotationDegrees < -180 || record.rotationDegrees >= 180) {
+      throw new Error("Shape rotation must be normalized to [-180, 180)");
+    }
+    return {
+      shape: record.shape,
+      rotationDegrees: record.rotationDegrees
+    };
+  }
+  function createOutlineShapePath(pathString, preset) {
+    const bounds = validPathBounds(parsePath(pathString));
+    const width = bounds.maxX - bounds.minX;
+    const height = bounds.maxY - bounds.minY;
+    const centerX = (bounds.minX + bounds.maxX) / 2;
+    const centerY = (bounds.minY + bounds.maxY) / 2;
+    if (preset === "oval") return serializePath(ellipseCommands(centerX, centerY, width / 2, height / 2));
+    if (preset === "circle") {
+      const radius = Math.min(width, height) / 2;
+      return serializePath(ellipseCommands(centerX, centerY, radius, radius));
+    }
+    if (preset === "pill") return serializePath(pillCommands(bounds));
+    if (preset === "rounded-rectangle") {
+      return serializePath(roundedRectangleCommands(bounds, Math.min(width, height) / 5));
+    }
+    if (preset === "rectangle") return serializePath(rectangleCommands(bounds));
+    throw new Error("Choose a valid outline preset");
+  }
+  function constrainedOutlineModel(pathString, constraint) {
+    const shapeConstraint = validateShapeConstraint(constraint);
+    const commands = parsePath(pathString);
+    const worldBounds = validPathBounds(commands);
+    const center = {
+      x: (worldBounds.minX + worldBounds.maxX) / 2,
+      y: (worldBounds.minY + worldBounds.maxY) / 2
+    };
+    const rotationRadians = shapeConstraint.rotationDegrees * Math.PI / 180;
+    rotatePath(commands, -rotationRadians, center);
+    const intrinsicBounds = validPathBounds(commands);
+    const { minX, minY, maxX, maxY } = intrinsicBounds;
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+    const localHandles = {
+      nw: { x: minX, y: minY },
+      n: { x: midX, y: minY },
+      ne: { x: maxX, y: minY },
+      e: { x: maxX, y: midY },
+      se: { x: maxX, y: maxY },
+      s: { x: midX, y: maxY },
+      sw: { x: minX, y: maxY },
+      w: { x: minX, y: midY }
+    };
+    const handles = Object.fromEntries(
+      Object.entries(localHandles).map(([handle, point]) => [
+        handle,
+        rotatePoint(point, center, rotationRadians)
+      ])
+    );
+    return { center, rotationDegrees: shapeConstraint.rotationDegrees, intrinsicBounds, handles };
+  }
+  function resizeConstrainedOutline(pathString, constraint, handle, pointer, minimumSize = 2) {
+    const shapeConstraint = validateShapeConstraint(constraint);
+    if (!CONSTRAINED_HANDLES.has(handle)) throw new Error("Choose a valid resize handle");
+    assertFinitePoint(pointer, "Resize pointer must be finite");
+    if (!Number.isFinite(minimumSize) || minimumSize <= 0) throw new Error("Minimum size must be positive");
+    const model = constrainedOutlineModel(pathString, shapeConstraint);
+    const rotationRadians = shapeConstraint.rotationDegrees * Math.PI / 180;
+    const localPointer = rotatePoint(pointer, model.center, -rotationRadians);
+    assertFinitePoint(localPointer, "Constrained resize local pointer must be finite");
+    const bounds = { ...model.intrinsicBounds };
+    const originalWidth = bounds.maxX - bounds.minX;
+    const originalHeight = bounds.maxY - bounds.minY;
+    if (handle.includes("w")) bounds.minX = Math.min(localPointer.x, bounds.maxX - minimumSize);
+    if (handle.includes("e")) bounds.maxX = Math.max(localPointer.x, bounds.minX + minimumSize);
+    if (handle.includes("n")) bounds.minY = Math.min(localPointer.y, bounds.maxY - minimumSize);
+    if (handle.includes("s")) bounds.maxY = Math.max(localPointer.y, bounds.minY + minimumSize);
+    if (shapeConstraint.shape === "circle") {
+      lockCircleBounds(bounds, model.intrinsicBounds, handle, originalWidth, originalHeight, minimumSize);
+    }
+    assertFiniteResizeBounds(bounds);
+    const commands = constrainedPrimitiveCommands(shapeConstraint.shape, bounds);
+    assertFiniteCommands(commands);
+    rotatePath(commands, rotationRadians, model.center);
+    assertFiniteCommands(commands);
+    return { displayPath: serializePath(commands), shapeConstraint };
+  }
+  function validPathBounds(commands) {
+    const bounds = pathBounds(commands);
+    const width = bounds.maxX - bounds.minX;
+    const height = bounds.maxY - bounds.minY;
+    if (!Object.values(bounds).every(Number.isFinite) || !Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+      throw new Error("Outline needs non-zero width and height");
+    }
+    return bounds;
+  }
+  function assertFinitePoint(point, message) {
+    if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) throw new Error(message);
+  }
+  function assertFiniteResizeBounds(bounds) {
+    const width = bounds.maxX - bounds.minX;
+    const height = bounds.maxY - bounds.minY;
+    if (!Object.values(bounds).every(Number.isFinite) || !Number.isFinite(width) || !Number.isFinite(height)) {
+      throw new Error("Constrained resize dimensions must be finite");
+    }
+  }
+  function assertFiniteCommands(commands) {
+    for (const command of commands) {
+      for (const point of [...command.points, ...command.controls]) {
+        assertFinitePoint(point, "Constrained resize coordinates must be finite");
+      }
+    }
+  }
+  function lockCircleBounds(bounds, originalBounds, handle, originalWidth, originalHeight, minimumSize) {
+    const changesX = handle.includes("e") || handle.includes("w");
+    const changesY = handle.includes("n") || handle.includes("s");
+    const width = bounds.maxX - bounds.minX;
+    const height = bounds.maxY - bounds.minY;
+    let diameter = changesX && changesY ? Math.abs(width - originalWidth) >= Math.abs(height - originalHeight) ? width : height : changesX ? width : height;
+    diameter = Math.max(minimumSize, diameter);
+    if (changesX) {
+      if (handle.includes("w")) bounds.minX = bounds.maxX - diameter;
+      else bounds.maxX = bounds.minX + diameter;
+    } else {
+      const centerX = (originalBounds.minX + originalBounds.maxX) / 2;
+      bounds.minX = centerX - diameter / 2;
+      bounds.maxX = centerX + diameter / 2;
+    }
+    if (changesY) {
+      if (handle.includes("n")) bounds.minY = bounds.maxY - diameter;
+      else bounds.maxY = bounds.minY + diameter;
+    } else {
+      const centerY = (originalBounds.minY + originalBounds.maxY) / 2;
+      bounds.minY = centerY - diameter / 2;
+      bounds.maxY = centerY + diameter / 2;
+    }
+  }
+  function constrainedPrimitiveCommands(shape, bounds) {
+    const width = bounds.maxX - bounds.minX;
+    const height = bounds.maxY - bounds.minY;
+    const centerX = (bounds.minX + bounds.maxX) / 2;
+    const centerY = (bounds.minY + bounds.maxY) / 2;
+    if (shape === "oval" || shape === "circle") {
+      return ellipseCommands(centerX, centerY, width / 2, height / 2);
+    }
+    if (shape === "pill") return pillCommands(bounds);
+    if (shape === "roundedRectangle") {
+      return roundedRectangleCommands(bounds, Math.min(width, height) / 5);
+    }
+    return rectangleCommands(bounds);
+  }
+  function pathBounds(commands) {
+    let minX = Number.POSITIVE_INFINITY;
+    let minY = Number.POSITIVE_INFINITY;
+    let maxX = Number.NEGATIVE_INFINITY;
+    let maxY = Number.NEGATIVE_INFINITY;
+    const include = (point) => {
+      minX = Math.min(minX, point.x);
+      minY = Math.min(minY, point.y);
+      maxX = Math.max(maxX, point.x);
+      maxY = Math.max(maxY, point.y);
+    };
+    let current = null;
+    let start = null;
+    for (const command of commands) {
+      if (command.type === "M") {
+        current = command.points[0];
+        start = current;
+        include(current);
+      } else if (command.type === "L") {
+        current = command.points[0];
+        include(current);
+      } else if (command.type === "Q" && current) {
+        includeQuadraticExtrema(current, command.controls[0], command.points[0], include);
+        current = command.points[0];
+      } else if (command.type === "C" && current) {
+        includeCubicExtrema(current, command.controls[0], command.controls[1], command.points[0], include);
+        current = command.points[0];
+      } else if (command.type === "Z" && start) {
+        include(start);
+        current = start;
+      }
+    }
+    return { minX, minY, maxX, maxY };
+  }
+  function includeQuadraticExtrema(start, control, end, include) {
+    include(start);
+    include(end);
+    for (const axis of ["x", "y"]) {
+      const denominator = start[axis] - 2 * control[axis] + end[axis];
+      if (denominator === 0) continue;
+      const amount = (start[axis] - control[axis]) / denominator;
+      if (amount > 0 && amount < 1) include(quadraticPoint(start, control, end, amount));
+    }
+  }
+  function includeCubicExtrema(start, firstControl, secondControl, end, include) {
+    include(start);
+    include(end);
+    for (const axis of ["x", "y"]) {
+      const a = -start[axis] + 3 * firstControl[axis] - 3 * secondControl[axis] + end[axis];
+      const b = 2 * (start[axis] - 2 * firstControl[axis] + secondControl[axis]);
+      const c = firstControl[axis] - start[axis];
+      for (const amount of quadraticRoots(a, b, c)) {
+        if (amount > 0 && amount < 1) include(cubicPoint(start, firstControl, secondControl, end, amount));
+      }
+    }
+  }
+  function quadraticRoots(a, b, c) {
+    if (Math.abs(a) < Number.EPSILON) return Math.abs(b) < Number.EPSILON ? [] : [-c / b];
+    const discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) return [];
+    const root = Math.sqrt(discriminant);
+    return [(-b + root) / (2 * a), (-b - root) / (2 * a)];
+  }
+  function cubicPoint(start, firstControl, secondControl, end, amount) {
+    const inverse = 1 - amount;
+    return {
+      x: inverse ** 3 * start.x + 3 * inverse ** 2 * amount * firstControl.x + 3 * inverse * amount ** 2 * secondControl.x + amount ** 3 * end.x,
+      y: inverse ** 3 * start.y + 3 * inverse ** 2 * amount * firstControl.y + 3 * inverse * amount ** 2 * secondControl.y + amount ** 3 * end.y
+    };
+  }
+  function ellipseCommands(centerX, centerY, radiusX, radiusY) {
+    const kappa = 0.5522847498307936;
+    return [
+      { type: "M", points: [{ x: centerX, y: centerY - radiusY }], controls: [] },
+      { type: "C", points: [{ x: centerX + radiusX, y: centerY }], controls: [{ x: centerX + kappa * radiusX, y: centerY - radiusY }, { x: centerX + radiusX, y: centerY - kappa * radiusY }] },
+      { type: "C", points: [{ x: centerX, y: centerY + radiusY }], controls: [{ x: centerX + radiusX, y: centerY + kappa * radiusY }, { x: centerX + kappa * radiusX, y: centerY + radiusY }] },
+      { type: "C", points: [{ x: centerX - radiusX, y: centerY }], controls: [{ x: centerX - kappa * radiusX, y: centerY + radiusY }, { x: centerX - radiusX, y: centerY + kappa * radiusY }] },
+      { type: "C", points: [{ x: centerX, y: centerY - radiusY }], controls: [{ x: centerX - radiusX, y: centerY - kappa * radiusY }, { x: centerX - kappa * radiusX, y: centerY - radiusY }] },
+      { type: "Z", points: [], controls: [] }
+    ];
+  }
+  function rectangleCommands({ minX, minY, maxX, maxY }) {
+    return [
+      { type: "M", points: [{ x: minX, y: minY }], controls: [] },
+      { type: "L", points: [{ x: maxX, y: minY }], controls: [] },
+      { type: "L", points: [{ x: maxX, y: maxY }], controls: [] },
+      { type: "L", points: [{ x: minX, y: maxY }], controls: [] },
+      { type: "Z", points: [], controls: [] }
+    ];
+  }
+  function roundedRectangleCommands(bounds, radius) {
+    const { minX, minY, maxX, maxY } = bounds;
+    const kappa = 0.5522847498307936;
+    return [
+      { type: "M", points: [{ x: minX + radius, y: minY }], controls: [] },
+      { type: "L", points: [{ x: maxX - radius, y: minY }], controls: [] },
+      { type: "C", points: [{ x: maxX, y: minY + radius }], controls: [{ x: maxX - radius + kappa * radius, y: minY }, { x: maxX, y: minY + radius - kappa * radius }] },
+      { type: "L", points: [{ x: maxX, y: maxY - radius }], controls: [] },
+      { type: "C", points: [{ x: maxX - radius, y: maxY }], controls: [{ x: maxX, y: maxY - radius + kappa * radius }, { x: maxX - radius + kappa * radius, y: maxY }] },
+      { type: "L", points: [{ x: minX + radius, y: maxY }], controls: [] },
+      { type: "C", points: [{ x: minX, y: maxY - radius }], controls: [{ x: minX + radius - kappa * radius, y: maxY }, { x: minX, y: maxY - radius + kappa * radius }] },
+      { type: "L", points: [{ x: minX, y: minY + radius }], controls: [] },
+      { type: "C", points: [{ x: minX + radius, y: minY }], controls: [{ x: minX, y: minY + radius - kappa * radius }, { x: minX + radius - kappa * radius, y: minY }] },
+      { type: "Z", points: [], controls: [] }
+    ];
+  }
+  function pillCommands(bounds) {
+    const { minX, minY, maxX, maxY } = bounds;
+    const width = maxX - minX;
+    const height = maxY - minY;
+    const kappa = 0.5522847498307936;
+    if (width >= height) {
+      const radius2 = height / 2;
+      const centerY = minY + radius2;
+      return [
+        { type: "M", points: [{ x: minX + radius2, y: minY }], controls: [] },
+        { type: "L", points: [{ x: maxX - radius2, y: minY }], controls: [] },
+        { type: "C", points: [{ x: maxX, y: centerY }], controls: [{ x: maxX - radius2 + kappa * radius2, y: minY }, { x: maxX, y: centerY - kappa * radius2 }] },
+        { type: "C", points: [{ x: maxX - radius2, y: maxY }], controls: [{ x: maxX, y: centerY + kappa * radius2 }, { x: maxX - radius2 + kappa * radius2, y: maxY }] },
+        { type: "L", points: [{ x: minX + radius2, y: maxY }], controls: [] },
+        { type: "C", points: [{ x: minX, y: centerY }], controls: [{ x: minX + radius2 - kappa * radius2, y: maxY }, { x: minX, y: centerY + kappa * radius2 }] },
+        { type: "C", points: [{ x: minX + radius2, y: minY }], controls: [{ x: minX, y: centerY - kappa * radius2 }, { x: minX + radius2 - kappa * radius2, y: minY }] },
+        { type: "Z", points: [], controls: [] }
+      ];
+    }
+    const radius = width / 2;
+    const centerX = minX + radius;
+    return [
+      { type: "M", points: [{ x: minX, y: minY + radius }], controls: [] },
+      { type: "L", points: [{ x: minX, y: maxY - radius }], controls: [] },
+      { type: "C", points: [{ x: centerX, y: maxY }], controls: [{ x: minX, y: maxY - radius + kappa * radius }, { x: centerX - kappa * radius, y: maxY }] },
+      { type: "C", points: [{ x: maxX, y: maxY - radius }], controls: [{ x: centerX + kappa * radius, y: maxY }, { x: maxX, y: maxY - radius + kappa * radius }] },
+      { type: "L", points: [{ x: maxX, y: minY + radius }], controls: [] },
+      { type: "C", points: [{ x: centerX, y: minY }], controls: [{ x: maxX, y: minY + radius - kappa * radius }, { x: centerX + kappa * radius, y: minY }] },
+      { type: "C", points: [{ x: minX, y: minY + radius }], controls: [{ x: centerX - kappa * radius, y: minY }, { x: minX, y: minY + radius - kappa * radius }] },
+      { type: "Z", points: [], controls: [] }
+    ];
   }
   function moveVertex(commands, index, deltaX, deltaY) {
     const command = commands[index];
@@ -23705,13 +24209,41 @@
     saveBoardAtomically: () => saveBoardAtomically,
     validateEditorDocument: () => validateEditorDocument
   });
+  var CONSTRAINED_SHAPES2 = /* @__PURE__ */ new Set([
+    "oval",
+    "circle",
+    "pill",
+    "roundedRectangle",
+    "rectangle"
+  ]);
   function isRecord3(value) {
     return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function isShapeConstraint(value) {
+    if (!isRecord3(value)) return false;
+    const keys = Object.keys(value);
+    return keys.length === 2 && Object.hasOwn(value, "shape") && Object.hasOwn(value, "rotationDegrees") && typeof value.shape === "string" && CONSTRAINED_SHAPES2.has(value.shape) && typeof value.rotationDegrees === "number" && Number.isFinite(value.rotationDegrees) && value.rotationDegrees >= -180 && value.rotationDegrees < 180;
+  }
+  function validateShapeConstraint2(value, holdKey) {
+    if (!isRecord3(value)) throw new Error(`Hold ${holdKey} has an invalid shape constraint`);
+    const keys = Object.keys(value);
+    if (keys.length !== 2 || !Object.hasOwn(value, "shape") || !Object.hasOwn(value, "rotationDegrees")) {
+      throw new Error(`Hold ${holdKey} shape constraint needs exactly shape and rotationDegrees`);
+    }
+    if (typeof value.shape !== "string" || !CONSTRAINED_SHAPES2.has(value.shape)) {
+      throw new Error(`Hold ${holdKey} has an invalid shape constraint shape`);
+    }
+    if (typeof value.rotationDegrees !== "number" || !Number.isFinite(value.rotationDegrees)) {
+      throw new Error(`Hold ${holdKey} shape constraint rotation must be finite`);
+    }
+    if (value.rotationDegrees < -180 || value.rotationDegrees >= 180) {
+      throw new Error(`Hold ${holdKey} shape constraint rotation must be normalized to [-180, 180)`);
+    }
   }
   function isHoldRegion2(value) {
     if (!isRecord3(value)) return false;
     const metadata = value.metadata;
-    return typeof value.key === "string" && typeof value.displayPath === "string" && (value.id === void 0 || typeof value.id === "number") && (value.type === void 0 || typeof value.type === "string") && (metadata === void 0 || isRecord3(metadata) && typeof metadata.holdID === "string" && typeof metadata.pieceIndex === "number");
+    return typeof value.key === "string" && typeof value.displayPath === "string" && (value.id === void 0 || typeof value.id === "number") && (value.type === void 0 || typeof value.type === "string") && (value.shapeConstraint === void 0 || isShapeConstraint(value.shapeConstraint)) && (metadata === void 0 || isRecord3(metadata) && typeof metadata.holdID === "string" && typeof metadata.pieceIndex === "number");
   }
   function isEditorDocument(value) {
     return isRecord3(value) && typeof value.schemaVersion === "number" && isRecord3(value.canvas) && typeof value.canvas.width === "number" && typeof value.canvas.height === "number" && Array.isArray(value.regions) && value.regions.every(isHoldRegion2);
@@ -23734,6 +24266,9 @@
       keys.add(region.key);
       if (typeof region.displayPath !== "string" || !/^\s*M\s+[^MZ]+\s+Z\s*$/u.test(region.displayPath)) {
         throw new Error(`Hold ${region.key} needs one closed contour`);
+      }
+      if (Object.hasOwn(region, "shapeConstraint")) {
+        validateShapeConstraint2(region.shapeConstraint, region.key);
       }
       if (!isHoldRegion2(region)) {
         throw new Error(`Hold ${region.key} needs valid hold fields`);

@@ -16,6 +16,7 @@ export interface HoldCanvasProps {
   board: Board | null;
   document: EditorDocument | null;
   selectedKey: string | null;
+  busy: boolean;
   onSelectHold(key: string): void;
   pathEditor: PathEditor;
   editor: HoldEditorActions;
@@ -25,6 +26,7 @@ export function HoldCanvas({
   board,
   document,
   selectedKey,
+  busy,
   onSelectHold,
   pathEditor,
   editor,
@@ -43,6 +45,17 @@ export function HoldCanvas({
     : null;
   const rotationHandle = document && pivot ? rotationHandlePosition(pivot, document.canvas) : null;
   const selectedColor = selectedHold ? TYPE_COLORS[selectedHold.type ?? ""] ?? "#ff754f" : "#ff754f";
+  let constrainedModel = null;
+  if (selectedHold?.shapeConstraint) {
+    try {
+      constrainedModel = pathEditor.constrainedOutlineModel(
+        selectedHold.displayPath,
+        selectedHold.shapeConstraint,
+      );
+    } catch {
+      constrainedModel = null;
+    }
+  }
   return (
     <div className="editor-views">
       <div className="canvas-viewport" id="canvas-viewport">
@@ -81,12 +94,12 @@ export function HoldCanvas({
                 fillOpacity={hold.key === selectedKey ? "0.58" : "0.3"}
                 stroke={hold.key === selectedKey ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
                 strokeWidth={hold.key === selectedKey ? "2.2" : "1.4"}
-                onClick={() => onSelectHold(hold.key)}
+                onClick={() => { if (!busy) onSelectHold(hold.key); }}
               />
             ))}
           </g>
           {selectedCommands && pivot && rotationHandle && (
-            <g className="path-editor-overlay">
+            <g className={`path-editor-overlay${busy ? " busy" : ""}`}>
               <line
                 className="path-editor-rotation-connector"
                 x1={pivot.x}
@@ -106,7 +119,32 @@ export function HoldCanvas({
                 stroke={selectedColor}
                 strokeWidth="2"
               />
-              {selectedCommands.map((command, commandIndex) => {
+              {constrainedModel ? <>
+                <polygon
+                  className="path-editor-constrained-box"
+                  points={["nw", "ne", "se", "sw"].map((handle) => {
+                    const point = constrainedModel.handles[handle as "nw" | "ne" | "se" | "sw"];
+                    return `${point.x},${point.y}`;
+                  }).join(" ")}
+                  fill="none"
+                  stroke="#fff7dc"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 3"
+                />
+                {Object.entries(constrainedModel.handles).map(([handle, point]) => (
+                  <circle
+                    key={handle}
+                    className="path-editor-resize-handle"
+                    data-handle={handle}
+                    cx={point.x}
+                    cy={point.y}
+                    r="5"
+                    fill={selectedColor}
+                    stroke="#fff7dc"
+                    strokeWidth="1.5"
+                  />
+                ))}
+              </> : selectedCommands.map((command, commandIndex) => {
                 if (command.type === "Z") return null;
                 const endpoint = command.points.at(-1);
                 if (!endpoint) return null;

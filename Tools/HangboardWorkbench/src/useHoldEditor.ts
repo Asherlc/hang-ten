@@ -11,22 +11,26 @@ import {
   holdSiblings,
   nextHoldId,
   nextRegionId,
+  normalizedConstraintRotation,
   normalizedRotationDegrees,
   svgPoint,
 } from "./editor-model.ts";
 import type {
   Dialogs,
+  ConstrainedHandle,
   EditorDocument,
   HoldRegion,
   PathCommand,
   PathEditor,
   Point,
+  ShapeConstraint,
+  ShapeConstraintShape,
   WorkbenchActions,
 } from "./types.ts";
 
 interface DragState {
   active: boolean;
-  type: "vertex" | "control" | "path" | "rotation" | null;
+  type: "vertex" | "control" | "path" | "rotation" | "constrained-resize" | null;
   holdKey: string | null;
   commandIndex: number;
   controlIndex: number;
@@ -34,7 +38,9 @@ interface DragState {
   startY: number;
   commands: PathCommand[] | null;
   originalPath: string | null;
-  originalPaths: Array<{ key: string; path: string }> | null;
+  originalPaths: Array<{ key: string; path: string; shapeConstraint?: ShapeConstraint }> | null;
+  originalConstraint: ShapeConstraint | null;
+  resizeHandle: ConstrainedHandle | null;
   originalDirty: boolean;
   pivot: Point | null;
   lastAngle: number;
@@ -53,6 +59,8 @@ const EMPTY_DRAG: DragState = {
   commands: null,
   originalPath: null,
   originalPaths: null,
+  originalConstraint: null,
+  resizeHandle: null,
   originalDirty: false,
   pivot: null,
   lastAngle: 0,
@@ -65,6 +73,7 @@ export interface UseHoldEditorOptions {
   selectedHold: HoldRegion | null;
   dirty: boolean;
   status: string;
+  busy: boolean;
   rotationDegrees: string;
   actions: WorkbenchActions;
   pathEditor: PathEditor;
@@ -76,8 +85,10 @@ export interface HoldEditorActions {
   addHold(): void;
   deleteHold(): void;
   changeHoldType(type: string): void;
+  changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
   applyRotation(): void;
+  cancelActiveEdit(): boolean;
   onPointerDown(event: ReactPointerEvent<SVGSVGElement>): void;
   onPointerMove(event: ReactPointerEvent<SVGSVGElement>): void;
   onPointerUp(event: ReactPointerEvent<SVGSVGElement>): void;
@@ -162,12 +173,25 @@ function errorMessage(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
 }
 
+function cloneConstraint(constraint: ShapeConstraint | undefined): ShapeConstraint | undefined {
+  return constraint ? { ...constraint } : undefined;
+}
+
+function isShapeConstraintShape(value: string): value is ShapeConstraintShape {
+  return ["oval", "circle", "pill", "roundedRectangle", "rectangle"].includes(value);
+}
+
+function outlinePreset(shape: ShapeConstraintShape): "oval" | "circle" | "pill" | "rounded-rectangle" | "rectangle" {
+  return shape === "roundedRectangle" ? "rounded-rectangle" : shape;
+}
+
 export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions {
   const {
     document,
     selectedHold,
     dirty,
     status,
+    busy,
     rotationDegrees,
     actions,
     pathEditor,
@@ -180,7 +204,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const dragSvgRef = useRef<SVGSVGElement | null>(null);
 
   const rotateHold = useCallback((degrees: number): void => {
-    if (!document || !selectedHold) return;
+    if (busy || !document || !selectedHold) return;
     const siblingKeys = new Set(holdSiblings(document, selectedHold).map((region) => region.key));
     const pivot = holdCentroid(holdSiblings(document, selectedHold), pathEditor);
     actions.editDocument((candidate) => {
@@ -189,15 +213,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const commands = pathEditor.parsePath(region.displayPath);
         pathEditor.rotatePath(commands, ((degrees % 360) * Math.PI) / 180, pivot);
         region.displayPath = pathEditor.serializePath(commands);
+        if (region.shapeConstraint) {
+          region.shapeConstraint = {
+            ...region.shapeConstraint,
+            rotationDegrees: normalizedConstraintRotation(region.shapeConstraint.rotationDegrees + degrees),
+          };
+        }
       }
     }, {
       status: "Hold rotated. Save when ready.",
       failureStatus: "Rotation reverted — contour is invalid.",
     });
-  }, [actions, document, pathEditor, selectedHold]);
+  }, [actions, busy, document, pathEditor, selectedHold]);
 
   const addHold = useCallback((): void => {
-    if (!document) return;
+    if (busy || !document) return;
     const { width, height } = document.canvas;
     const size = Math.max(20, Math.min(60, width * 0.06, height * 0.06));
     const centerX = width / 2;
@@ -217,10 +247,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       status: "Hold added. Drag it into place and save when ready.",
       failureMessage: "Could not add hold.",
     });
-  }, [actions, document]);
+  }, [actions, busy, document]);
 
   const deleteHold = useCallback((): void => {
-    if (!document || !selectedHold || !dialogs.confirm(`Delete hold "${selectedHold.key}"?`)) return;
+    if (busy || !document || !selectedHold || !dialogs.confirm(`Delete hold "${selectedHold.key}"?`)) return;
     const siblingKeys = new Set(holdSiblings(document, selectedHold).map((region) => region.key));
     actions.editDocument((candidate) => {
       candidate.regions = candidate.regions.filter((region) => !siblingKeys.has(region.key));
@@ -229,10 +259,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       status: "Hold deleted. Save when ready.",
       failureMessage: "Document is invalid after deletion.",
     });
-  }, [actions, dialogs, document, selectedHold]);
+  }, [actions, busy, dialogs, document, selectedHold]);
 
   const changeHoldType = useCallback((type: string): void => {
-    if (!document || !selectedHold) return;
+    if (busy || !document || !selectedHold) return;
     const siblingKeys = new Set(holdSiblings(document, selectedHold).map((region) => region.key));
     actions.editDocument((candidate) => {
       for (const region of candidate.regions) {
@@ -242,9 +272,30 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       status: "Hold recategorized. Save when ready.",
       failureMessage: "Hold type is invalid.",
     });
-  }, [actions, document, selectedHold]);
+  }, [actions, busy, document, selectedHold]);
+
+  const changeOutlineShape = useCallback((shape: string): void => {
+    if (busy || !document || !selectedHold || (shape !== "custom" && !isShapeConstraintShape(shape))) return;
+    const label = shape === "roundedRectangle" ? "rounded rectangle" : shape;
+    actions.editDocument((candidate) => {
+      const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+      if (!hold) return;
+      if (shape === "custom") {
+        delete hold.shapeConstraint;
+      } else {
+        hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
+        hold.shapeConstraint = { shape, rotationDegrees: 0 };
+      }
+    }, {
+      status: shape === "custom"
+        ? "Outline unlocked for custom editing. Save when ready."
+        : `Outline changed to ${label}. Save when ready.`,
+      failureStatus: "Outline change reverted — contour is invalid.",
+    });
+  }, [actions, busy, document, pathEditor, selectedHold]);
 
   const applyRotation = useCallback((): void => {
+    if (busy) return;
     const degrees = normalizedRotationDegrees(rotationDegrees);
     if (degrees === null) {
       if (document) actions.replaceDocument(document, {
@@ -255,7 +306,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       return;
     }
     rotateHold(degrees);
-  }, [actions, dirty, document, rotateHold, rotationDegrees]);
+  }, [actions, busy, dirty, document, rotateHold, rotationDegrees]);
 
   const restoreDrag = useCallback((status: string, validation = ""): void => {
     const drag = dragRef.current;
@@ -265,11 +316,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (drag.type === "rotation") {
       for (const original of drag.originalPaths ?? []) {
         const region = restored.regions.find((candidate) => candidate.key === original.key);
-        if (region) region.displayPath = original.path;
+        if (region) {
+          region.displayPath = original.path;
+          if (original.shapeConstraint) region.shapeConstraint = { ...original.shapeConstraint };
+          else delete region.shapeConstraint;
+        }
       }
     } else {
       const region = restored.regions.find((candidate) => candidate.key === drag.holdKey);
-      if (region && drag.originalPath !== null) region.displayPath = drag.originalPath;
+      if (region && drag.originalPath !== null) {
+        region.displayPath = drag.originalPath;
+        if (drag.originalConstraint) region.shapeConstraint = { ...drag.originalConstraint };
+        else delete region.shapeConstraint;
+      }
     }
     previewDocumentRef.current = restored;
     actions.replaceDocument(restored, { dirty: drag.originalDirty, validation, status });
@@ -286,6 +345,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     }
     dragSvgRef.current = null;
   }, []);
+
+  const cancelActiveEdit = useCallback((): boolean => {
+    const drag = dragRef.current;
+    if (!drag.active) return false;
+    restoreDrag("Edit cancelled because another operation started.");
+    drag.active = false;
+    const svg = dragSvgRef.current;
+    if (svg) releasePointer(svg);
+    else drag.pointerId = null;
+    return true;
+  }, [releasePointer, restoreDrag]);
+
+  useEffect(() => {
+    if (busy) cancelActiveEdit();
+  }, [busy, cancelActiveEdit]);
 
   useLayoutEffect(() => {
     const drag = dragRef.current;
@@ -312,7 +386,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const onPointerDown = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
-    if (drag.active || !document || !selectedHold) return;
+    if (busy || drag.active || !document || !selectedHold) return;
     const target = targetElement(event);
     if (!target) return;
     const point = svgPoint(event.currentTarget, event);
@@ -325,10 +399,28 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         active: true,
         type: "rotation",
         holdKey: selectedHold.key,
-        originalPaths: siblings.map((region) => ({ key: region.key, path: region.displayPath })),
+        originalPaths: siblings.map((region) => ({
+          key: region.key,
+          path: region.displayPath,
+          ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
+        })),
         originalDirty: dirty,
         pivot,
         lastAngle: Math.atan2(point.y - pivot.y, point.x - pivot.x),
+        pointerId: event.pointerId,
+      };
+    } else if (target.classList.contains("path-editor-resize-handle") && selectedHold.shapeConstraint) {
+      const resizeHandle = target.getAttribute("data-handle");
+      if (!resizeHandle || !["nw", "n", "ne", "e", "se", "s", "sw", "w"].includes(resizeHandle)) return;
+      next = {
+        ...EMPTY_DRAG,
+        active: true,
+        type: "constrained-resize",
+        holdKey: selectedHold.key,
+        originalPath: selectedHold.displayPath,
+        originalConstraint: { ...selectedHold.shapeConstraint },
+        resizeHandle: resizeHandle as ConstrainedHandle,
+        originalDirty: dirty,
         pointerId: event.pointerId,
       };
     } else if (target.classList.contains("path-editor-vertex")
@@ -347,6 +439,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         startY: point.y,
         commands: pathEditor.parsePath(selectedHold.displayPath),
         originalPath: selectedHold.displayPath,
+        originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
         originalDirty: dirty,
         pointerId: event.pointerId,
       };
@@ -362,7 +455,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Tests and older browsers may not implement pointer capture.
     }
-  }, [dirty, document, pathEditor, selectedHold]);
+  }, [busy, dirty, document, pathEditor, selectedHold]);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -390,6 +483,34 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const commands = pathEditor.parsePath(original.path);
         pathEditor.rotatePath(commands, drag.totalAngle, drag.pivot);
         region.displayPath = pathEditor.serializePath(commands);
+        if (original.shapeConstraint) {
+          region.shapeConstraint = {
+            ...original.shapeConstraint,
+            rotationDegrees: normalizedConstraintRotation(
+              original.shapeConstraint.rotationDegrees + drag.totalAngle * 180 / Math.PI,
+            ),
+          };
+        }
+      }
+    } else if (drag.type === "constrained-resize"
+      && drag.originalPath
+      && drag.originalConstraint
+      && drag.resizeHandle) {
+      try {
+        const resized = pathEditor.resizeConstrainedOutline(
+          drag.originalPath,
+          drag.originalConstraint,
+          drag.resizeHandle,
+          point,
+        );
+        hold.displayPath = resized.displayPath;
+        hold.shapeConstraint = resized.shapeConstraint;
+      } catch (error: unknown) {
+        restoreDrag(
+          "Edit reverted — contour is invalid.",
+          errorMessage(error, "Contour is invalid."),
+        );
+        return;
       }
     } else if (drag.commands) {
       const commands = cloneCommands(drag.commands);
@@ -420,6 +541,17 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const candidate = previewDocumentRef.current ?? document;
     if (!candidate) return;
     try {
+      if (drag.type === "constrained-resize") {
+        const hold = candidate.regions.find((region) => region.key === drag.holdKey);
+        if (!hold?.shapeConstraint) throw new Error("Constrained outline is unavailable.");
+        const model = pathEditor.constrainedOutlineModel(hold.displayPath, hold.shapeConstraint);
+        const { width, height } = candidate.canvas;
+        if (!Object.values(model.handles).every(({ x, y }) => (
+          Number.isFinite(x) && Number.isFinite(y) && x >= 0 && x <= width && y >= 0 && y <= height
+        ))) {
+          throw new Error("Constrained outline must stay inside the canvas.");
+        }
+      }
       validateEditorDocument(candidate);
       actions.replaceDocument(candidate, {
         dirty: true,
@@ -436,7 +568,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         errorMessage(error, "Contour is invalid."),
       );
     }
-  }, [actions, document, releasePointer, restoreDrag, validateEditorDocument]);
+  }, [actions, document, pathEditor, releasePointer, restoreDrag, validateEditorDocument]);
 
   const cancelDrag = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -461,7 +593,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const onDoubleClick = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
-    if (!document || !selectedHold || !target
+    if (busy || !document || !selectedHold || selectedHold.shapeConstraint || !target
       || target.classList.contains("path-editor-vertex")
       || target.classList.contains("path-editor-control")) return;
     const point = svgPoint(event.currentTarget, event);
@@ -487,11 +619,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       }, { status });
       return;
     }
-  }, [actions, document, pathEditor, selectedHold, status]);
+  }, [actions, busy, document, pathEditor, selectedHold, status]);
 
   const onContextMenu = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
-    if (!selectedHold || !target?.classList.contains("path-editor-vertex")) return;
+    if (busy || !selectedHold || selectedHold.shapeConstraint || !target?.classList.contains("path-editor-vertex")) return;
     event.preventDefault();
     const index = Number(target.getAttribute("data-index"));
     if (index === 0) return;
@@ -502,10 +634,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       pathEditor.deleteVertex(commands, index);
       hold.displayPath = pathEditor.serializePath(commands);
     }, { status });
-  }, [actions, pathEditor, selectedHold, status]);
+  }, [actions, busy, pathEditor, selectedHold, status]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
+      if (busy) return;
       const target = event.target instanceof Element ? event.target : null;
       const tagName = target?.tagName.toLowerCase();
       if ((target instanceof HTMLElement && target.isContentEditable)
@@ -536,14 +669,16 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     };
     window.document.addEventListener("keydown", onKeyDown);
     return () => window.document.removeEventListener("keydown", onKeyDown);
-  }, [actions, document, pathEditor, rotateHold, selectedHold]);
+  }, [actions, busy, document, pathEditor, rotateHold, selectedHold]);
 
   return {
     addHold,
     deleteHold,
     changeHoldType,
+    changeOutlineShape,
     rotateHold,
     applyRotation,
+    cancelActiveEdit,
     onPointerDown,
     onPointerMove,
     onPointerUp: completeDrag,

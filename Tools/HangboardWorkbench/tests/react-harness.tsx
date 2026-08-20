@@ -200,7 +200,18 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
     async pointer(selector, type, options = {}) {
       await harness.flush(() => {
         const EventConstructor = windowValue.PointerEvent ?? windowValue.MouseEvent;
-        const event = new EventConstructor(type, { bubbles: true, cancelable: true, ...options });
+        const event = new EventConstructor(type, {
+          bubbles: true,
+          cancelable: true,
+          ...options,
+          ...(Number.isFinite(options.clientX) ? {} : { clientX: 0 }),
+          ...(Number.isFinite(options.clientY) ? {} : { clientY: 0 }),
+        });
+        for (const coordinate of ["clientX", "clientY"] as const) {
+          if (options[coordinate] !== undefined && !Number.isFinite(options[coordinate])) {
+            Object.defineProperty(event, coordinate, { configurable: true, value: options[coordinate] });
+          }
+        }
         if (!("pointerId" in event)) {
           Object.defineProperty(event, "pointerId", {
             configurable: true,

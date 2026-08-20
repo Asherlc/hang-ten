@@ -95,6 +95,7 @@ function dependenciesFixture(board = boardFixture(), options: {
   validate?(document: unknown): EditorDocument;
   confirm?(message: string): boolean;
   boards?: readonly Board[];
+  client?: WorkbenchClient;
 } = {}): WorkbenchDependencies {
   const dialogs: Dialogs = {
     confirm: options.confirm ?? (() => true),
@@ -111,7 +112,7 @@ function dependenciesFixture(board = boardFixture(), options: {
     },
   };
   return {
-    client: clientFixture(options.boards ?? [board]),
+    client: options.client ?? clientFixture(options.boards ?? [board]),
     controller: options.validate ? { ...controller, validateEditorDocument: options.validate } : controller,
     pathEditor,
     runtime,
@@ -470,4 +471,271 @@ test("invalid pointer geometry rolls back the path and dirty state", async () =>
       return controller.validateEditorDocument(document);
     },
   }));
+});
+
+function constrainedBoardFixture(): Board {
+  const document: EditorDocument = {
+    schemaVersion: 1,
+    canvas: { width: 120, height: 80 },
+    regions: [
+      {
+        id: 1,
+        key: "a-piece-0",
+        type: "jug",
+        displayPath: "M 10 10 L 50 10 L 50 30 L 10 30 Z",
+        metadata: { holdID: "a", pieceIndex: 0 },
+        shapeConstraint: { shape: "rectangle", rotationDegrees: 0 },
+      },
+      {
+        id: 2,
+        key: "a-piece-1",
+        type: "jug",
+        displayPath: "M 60 10 L 80 10 L 80 30 L 60 30 Z",
+        metadata: { holdID: "a", pieceIndex: 1 },
+        shapeConstraint: { shape: "oval", rotationDegrees: 0 },
+      },
+      {
+        id: 3,
+        key: "b-piece-0",
+        type: "edge",
+        displayPath: "M 90 10 L 110 10 L 110 30 L 90 30 Z",
+        metadata: { holdID: "b", pieceIndex: 0 },
+      },
+    ],
+  };
+  return {
+    boardId: "board-a",
+    displayName: "Board A",
+    holdCount: 3,
+    imageUrl: "/api/boards/board-a/image",
+    document,
+  };
+}
+
+test("outline picker reflects persisted constraints and changes only the selected piece", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 20 L 50 20 L 50 40 L 10 40 Z", metadata: { holdID: "a", pieceIndex: 0 } },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, shapeConstraint: { shape: "roundedRectangle", rotationDegrees: 15 } },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.documentValue("#outline-shape-select"), "custom");
+    assert.deepEqual(
+      [...app.document.querySelectorAll<HTMLOptionElement>("#outline-shape-select option")]
+        .map((option) => [option.value, option.textContent]),
+      [["custom", "Custom"], ["oval", "Oval"], ["circle", "Circle"], ["pill", "Pill"], ["roundedRectangle", "Rounded rectangle"], ["rectangle", "Rectangle"]],
+    );
+    await app.change("#outline-shape-select", "oval");
+    assert.deepEqual(paths(app), [
+      "M 30 20 C 41.045695 20 50 24.477153 50 30 C 50 35.522847 41.045695 40 30 40 C 18.954305 40 10 35.522847 10 30 C 10 24.477153 18.954305 20 30 20 Z",
+      SECOND_PATH,
+      OTHER_PATH,
+    ]);
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+    assert.equal(app.text("#editor-status"), "Outline changed to oval. Save when ready.");
+    await app.click('[data-hold-key="a-piece-1"]');
+    assert.equal(app.documentValue("#outline-shape-select"), "roundedRectangle");
+  }, dependenciesFixture(board));
+});
+
+test("primitive selection saves an exact zero-degree constraint and Custom removes only metadata", async () => {
+  const board = boardFixture();
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#outline-shape-select", "pill");
+    const constrainedPath = paths(app)[0];
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions[0]?.shapeConstraint, { shape: "pill", rotationDegrees: 0 });
+    await app.change("#outline-shape-select", "custom");
+    assert.equal(paths(app)[0], constrainedPath);
+    await app.click("#save-button");
+    assert.equal(Object.hasOwn(saved[1]?.regions[0] ?? {}, "shapeConstraint"), false);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("invalid and busy outline actions preserve pointer-down geometry and dirty state", async () => {
+  const board = constrainedBoardFixture();
+  let resolveSave: ((board: Board) => void) | undefined;
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    saveBoard() { return new Promise((resolve) => { resolveSave = resolve; }); },
+  };
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 120, height: 80 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    const originalPath = paths(app)[0];
+    await app.click("#save-button");
+    assert.equal(app.disabled("#outline-shape-select"), true);
+    assert.equal(app.disabled("#hold-type-select"), true);
+    assert.equal(app.disabled("#rotate-cw-button"), true);
+    assert.equal(app.disabled("#delete-hold-button"), true);
+    await app.change("#outline-shape-select", "oval");
+    await app.pointer('.path-editor-resize-handle[data-handle="e"]', "pointerdown", { pointerId: 19, clientX: 50, clientY: 20 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 19, clientX: 60, clientY: 20 });
+    assert.equal(paths(app)[0], originalPath);
+    assert.equal(app.capturedPointerId("#editor-svg"), null);
+    assert.equal(app.text("#save-state"), "Working…");
+    await app.flush(() => { resolveSave?.(board); });
+  }, dependenciesFixture(board, { client }));
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    const originalPath = paths(app)[0];
+    await app.change("#outline-shape-select", "oval");
+    assert.equal(paths(app)[0], originalPath);
+    assert.equal(app.documentValue("#outline-shape-select"), "rectangle");
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.match(app.text("#editor-status"), /reverted/i);
+    assert.match(app.text("#validation-list"), /forced invalid outline/i);
+  }, dependenciesFixture(board, {
+    validate() { throw new Error("Forced invalid outline"); },
+  }));
+});
+
+test("constrained selections render an oriented box and eight handles instead of freeform controls", async () => {
+  const board = constrainedBoardFixture();
+  board.document.regions[0]!.displayPath = "M 20 5 L 35 20 L 20 35 L 5 20 Z";
+  board.document.regions[0]!.shapeConstraint = { shape: "rectangle", rotationDegrees: 45 };
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    const handles = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-resize-handle")];
+    assert.deepEqual(handles.map((handle) => handle.dataset.handle), ["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
+    assert.equal(app.document.querySelectorAll(".path-editor-constrained-box").length, 1);
+    assert.equal(app.document.querySelectorAll(".path-editor-vertex").length, 0);
+    assert.equal(app.document.querySelectorAll(".path-editor-control").length, 0);
+    assert.deepEqual(
+      ["nw", "ne", "se", "sw"].map((id) => {
+        const handle = handles.find((candidate) => candidate.dataset.handle === id)!;
+        return [Number(Number(handle.getAttribute("cx")).toFixed(6)), Number(Number(handle.getAttribute("cy")).toFixed(6))];
+      }),
+      [[20, 5], [35, 20], [20, 35], [5, 20]],
+    );
+  }, dependenciesFixture(board));
+});
+
+test("constrained resize keeps circles circular, isolates siblings, and rolls invalid endpoints back", async () => {
+  const board = constrainedBoardFixture();
+  board.document.regions[0]!.displayPath = "M 30 10 C 35.522847 10 40 14.477153 40 20 C 40 25.522847 35.522847 30 30 30 C 24.477153 30 20 25.522847 20 20 C 20 14.477153 24.477153 10 30 10 Z";
+  board.document.regions[0]!.shapeConstraint = { shape: "circle", rotationDegrees: 0 };
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 120, height: 80 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    const siblingPath = paths(app)[1];
+    await drag(app, '.path-editor-resize-handle[data-handle="e"]', [{ x: 40, y: 20 }, { x: 50, y: 20 }]);
+    assert.equal(paths(app)[0], "M 35 5 C 43.284271 5 50 11.715729 50 20 C 50 28.284271 43.284271 35 35 35 C 26.715729 35 20 28.284271 20 20 C 20 11.715729 26.715729 5 35 5 Z");
+    assert.equal(paths(app)[1], siblingPath);
+
+    const validPath = paths(app)[0];
+    await app.pointer('.path-editor-resize-handle[data-handle="e"]', "pointerdown", { pointerId: 7, clientX: 50, clientY: 20 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 130, clientY: 20 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 7, clientX: 130, clientY: 20 });
+    assert.equal(paths(app)[0], validPath);
+    assert.match(app.text("#editor-status"), /reverted/i);
+  }, dependenciesFixture(board));
+});
+
+test("constrained resize calculation failures immediately restore pointer-down geometry", async () => {
+  const board = constrainedBoardFixture();
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 120, height: 80 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    const originalPath = paths(app)[0];
+    await app.pointer('.path-editor-resize-handle[data-handle="e"]', "pointerdown", { pointerId: 29, clientX: 50, clientY: 20 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 29, clientX: 60, clientY: 20 });
+    assert.notEqual(paths(app)[0], originalPath);
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 29, clientX: Number.NaN, clientY: 20 });
+    assert.equal(paths(app)[0], originalPath);
+    assert.equal(app.documentValue("#outline-shape-select"), "rectangle");
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.match(app.text("#validation-list"), /finite/i);
+  }, dependenciesFixture(board));
+});
+
+test("starting save during constrained resize rolls the gesture back before serializing", async () => {
+  const board = constrainedBoardFixture();
+  let savedDocument: EditorDocument | undefined;
+  let resolveSave: (() => void) | undefined;
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    saveBoard(_boardId, document) {
+      savedDocument = structuredClone(document);
+      return new Promise((resolve) => {
+        resolveSave = () => resolve({ ...board, document });
+      });
+    },
+  };
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 120, height: 80 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    const originalPath = paths(app)[0]!;
+    await app.pointer('.path-editor-resize-handle[data-handle="e"]', "pointerdown", { pointerId: 23, clientX: 50, clientY: 20 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 23, clientX: 60, clientY: 20 });
+    assert.notEqual(paths(app)[0], originalPath);
+    await app.click("#save-button");
+    assert.equal(app.capturedPointerId("#editor-svg"), null);
+    assert.equal(paths(app)[0], originalPath);
+    assert.equal(savedDocument?.regions[0]?.displayPath, originalPath);
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 23, clientX: 80, clientY: 20 });
+    assert.equal(paths(app)[0], originalPath);
+    await app.flush(() => { resolveSave?.(); });
+  }, dependenciesFixture(board, { client }));
+});
+
+test("constrained movement preserves metadata while every rotation mode updates sibling angles", async () => {
+  const board = constrainedBoardFixture();
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 120, height: 80 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await drag(app, '[data-hold-key="a-piece-0"]', [{ x: 20, y: 20 }, { x: 25, y: 23 }]);
+    await app.keyDown("body", "ArrowRight");
+    await app.click("#rotate-cw-button");
+    await app.keyDown("body", "]");
+
+    const connector = app.document.querySelector<SVGLineElement>(".path-editor-rotation-connector")!;
+    const handle = app.document.querySelector<SVGCircleElement>(".path-editor-rotation-handle")!;
+    const pivot = { x: Number(connector.getAttribute("x1")), y: Number(connector.getAttribute("y1")) };
+    const start = { x: Number(handle.getAttribute("cx")), y: Number(handle.getAttribute("cy")) };
+    const radius = Math.hypot(start.x - pivot.x, start.y - pivot.y);
+    const angle = Math.atan2(start.y - pivot.y, start.x - pivot.x) + Math.PI / 2;
+    await drag(app, ".path-editor-rotation-handle", [start, {
+      x: pivot.x + radius * Math.cos(angle),
+      y: pivot.y + radius * Math.sin(angle),
+    }]);
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.slice(0, 2).map((region) => region.shapeConstraint?.rotationDegrees), [120, 120]);
+    assert.equal(Object.hasOwn(saved[0]?.regions[2] ?? {}, "shapeConstraint"), false);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("constrained pointer cancellation restores paths and angles", async () => {
+  const board = constrainedBoardFixture();
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 120, height: 80 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    const originalPaths = paths(app).slice(0, 2);
+    const handle = app.document.querySelector<SVGCircleElement>(".path-editor-rotation-handle")!;
+    const start = { x: Number(handle.getAttribute("cx")), y: Number(handle.getAttribute("cy")) };
+    await app.pointer(".path-editor-rotation-handle", "pointerdown", { pointerId: 11, clientX: start.x, clientY: start.y });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 11, clientX: start.x + 20, clientY: start.y + 20 });
+    await app.pointer("#editor-svg", "pointercancel", { pointerId: 11, clientX: start.x + 20, clientY: start.y + 20 });
+    assert.deepEqual(paths(app).slice(0, 2), originalPaths);
+    assert.equal(app.documentValue("#outline-shape-select"), "rectangle");
+  }, dependenciesFixture(board));
 });

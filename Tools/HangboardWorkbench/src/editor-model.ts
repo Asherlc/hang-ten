@@ -26,8 +26,14 @@ export function cloneEditorDocument(document: EditorDocument): EditorDocument {
     regions: document.regions.map((region) => ({
       ...region,
       ...(region.metadata ? { metadata: { ...region.metadata } } : {}),
+      ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
     })),
   };
+}
+
+export function normalizedConstraintRotation(degrees: number): number {
+  const normalized = ((degrees + 180) % 360 + 360) % 360 - 180;
+  return Object.is(normalized, -0) ? 0 : normalized;
 }
 
 export function holdSiblings(document: EditorDocument, hold: HoldRegion): HoldRegion[] {

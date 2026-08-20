@@ -11,6 +11,35 @@ export interface PathCommand {
   controls: Point[];
 }
 
+export type ShapeConstraintShape = "oval" | "circle" | "pill" | "roundedRectangle" | "rectangle";
+
+export interface ShapeConstraint {
+  shape: ShapeConstraintShape;
+  rotationDegrees: number;
+}
+
+export type OutlinePreset = Exclude<ShapeConstraintShape, "roundedRectangle"> | "rounded-rectangle";
+export type ConstrainedHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
+
+export interface Bounds {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+export interface ConstrainedOutlineModel {
+  center: Point;
+  rotationDegrees: number;
+  intrinsicBounds: Bounds;
+  handles: Record<ConstrainedHandle, Point>;
+}
+
+export interface ConstrainedResizeResult {
+  displayPath: string;
+  shapeConstraint: ShapeConstraint;
+}
+
 export interface HoldRegion {
   id?: number;
   key: string;
@@ -20,6 +49,7 @@ export interface HoldRegion {
     holdID: string;
     pieceIndex: number;
   };
+  shapeConstraint?: ShapeConstraint;
 }
 
 export interface EditorDocument {
@@ -144,6 +174,15 @@ export interface WorkbenchController {
 export interface PathEditor {
   parsePath(pathString: string): PathCommand[];
   serializePath(commands: readonly PathCommand[]): string;
+  createOutlineShapePath(pathString: string, preset: OutlinePreset): string;
+  constrainedOutlineModel(pathString: string, constraint: unknown): ConstrainedOutlineModel;
+  resizeConstrainedOutline(
+    pathString: string,
+    constraint: unknown,
+    handle: ConstrainedHandle,
+    pointer: Point,
+    minimumSize?: number,
+  ): ConstrainedResizeResult;
   moveVertex(commands: PathCommand[], index: number, dx: number, dy: number): void;
   addVertex(commands: PathCommand[], afterIndex: number, x: number, y: number): void;
   deleteVertex(commands: PathCommand[], index: number): void;

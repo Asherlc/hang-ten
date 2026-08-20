@@ -4,10 +4,26 @@ This document records the runtime behavior that spans the workout UI, audio,
 orientation, and Apple Health. Use it with the isolated simulator guide when
 changing any of those systems.
 
+## Primary navigation
+
+Train is the default root tab. It shows the selected board and favorite plans;
+`train.changeBoard` opens the full-page board picker and `train.settings` opens
+Settings. Plans exposes the same picker through `plans.changeBoard`. Picker
+choices use `boardPicker.board.<TrainingBoard.id>`, persist the selection, and
+dismiss back to the originating tab. History is a separate root tab that opens
+directly to the chronological saved-session list.
+
+The DEBUG routes `HANGTEN_REVIEW_BOARD_PICKER=1`,
+`HANGTEN_REVIEW_SETTINGS=1`, and `HANGTEN_REVIEW_HISTORY=1` open those states
+directly. `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_MOTHERBOARD=1` also
+open Settings from Train. Release builds ignore all review-only tab and
+navigation routing.
+
 ## Motherboard Bluetooth sensor
 
 The optional Motherboard sensor is a live force input, not a workout timer.
-The user explicitly taps Connect sensor in Progress; the app then scans for
+The user opens Train's gear → Settings and explicitly taps Connect sensor; the
+app then scans for
 the Bluetooth service, connects, enables TX notifications, requests the
 device's calibration rows, and starts its 30 Hz stream only after complete
 four-sensor calibration. iOS Bluetooth permission therefore follows a clear
@@ -50,7 +66,7 @@ aggregate and balance calculations; this is an unverified third-party
 compatibility choice, not manufacturer-verified wiring.
 
 `HANGTEN_REVIEW_MOTHERBOARD=1` is a DEBUG-only simulator review route. It
-selects Progress and replaces the CoreBluetooth transport with a deterministic
+opens Settings from Train and replaces the CoreBluetooth transport with a deterministic
 fixture that sends real calibration and raw notification frames through
 `MotherboardBluetoothService`. Its deterministic unloaded, loaded, peak, and
 released pattern repeats while streaming, but every raw notification is stamped
@@ -202,7 +218,7 @@ orientation remains user/device controlled.
 
 Hang Ten uses `HKObjectType.workoutType()` for both HealthKit sharing (write)
 and reading. Authorization is requested only by the visible Connect Apple
-Health action. Progress appearance and scene-activation refreshes may update
+Health action. `AppSettingsView` appearance and scene-activation refreshes may update
 the sharing status without presenting an authorization sheet or prompting;
 they query HealthKit history only after the persisted request flag is enabled.
 When `refreshHealthAuthorization` observes `.authorized` while that flag is
@@ -212,7 +228,7 @@ then refreshes/imports history.
 `HangTen.healthAuthorizationRequested.v1` gates history synchronization. Sync
 remains gated until either the user taps Connect Apple Health or
 `refreshHealthAuthorization` observes current `.authorized` and reconciles the
-missing flag without prompting. Until then, initialization, Progress
+missing flag without prompting. Until then, initialization, Settings
 appearance, scene activation, and completion logging use only the local
 `UserDefaults` history fallback; a `.notDetermined` status does not change that
 behavior. Once the flag is true, refresh and completion reconciliation may query
@@ -263,8 +279,8 @@ interpret an empty result as proof that no workouts exist or that access was
 denied. It retains local pending records and uses them as fallback until a
 readable HealthKit result can reconcile them.
 
-`HealthAuthorizationState` drives the authorization portion of the Progress
-card. Its current status copy is:
+`HealthAuthorizationState` drives the authorization portion of the Apple
+Health card in Settings. Its current status copy is:
 
 | State | Label | Detail | Action |
 | --- | --- | --- | --- |
@@ -276,7 +292,7 @@ card. Its current status copy is:
 The authorization state reflects the workout sharing/write state exposed by
 HealthKit; `Connected` does not prove that workout reads are visible, and
 HealthKit does not expose a separate readable-history authorization state. The
-Progress action is driven by the current HealthAuthorizationState. Before
+Settings action is driven by the current HealthAuthorizationState. Before
 authorization is determined it offers Connect Apple Health. Once HealthKit
 reports authorized access, it never offers Connect Apple Health, including for
 an empty .healthKit snapshot or when the persisted history-sync request flag
@@ -284,7 +300,7 @@ is false. Local fallback may offer Open app settings, while denied and
 unavailable behavior remains as shown in the table.
 
 The `.unavailable` history source does not create an action by itself. In
-`RootView.healthAction`, any Connect or Settings action shown alongside that
+`AppSettingsView.healthAction`, any Connect or Settings action shown alongside that
 source comes from the current authorization state plus the local fallback
 history; an unavailable history source alone has no action.
 
@@ -295,7 +311,7 @@ The history source copy is:
 - `.syncing`: `Syncing Hang Ten history with Apple Health…`
 - `.unavailable`: `Apple Health history is unavailable; completed sessions stay on this device.`
 
-If a completion cannot sync, the Progress card reports
+If a completion cannot sync, the Settings Apple Health card reports
 `Session was saved locally and will retry Apple Health sync.` If a refresh
 cannot sync, it reports `Apple Health history could not sync. Local history
 remains available.` A request error supplied by HealthKit is shown using its
@@ -306,14 +322,15 @@ Ten brand, plan, and session metadata, end collection, then finish the
 workout. It runs only when write authorization is granted and the end date is
 later than the start date.
 Every builder stage reports failure back to `AppStore`; the local session stays
-logged, while the Progress card explains that the Health write failed. The
+logged, while the Settings Apple Health card explains that the Health write
+failed. The
 saved interval keeps the session's original start date and ends at the earlier
 of the planned active-duration end or the athlete's Log session time. This
 prevents an early completion from writing a future HealthKit end date.
 
 The denied-state button is labeled Open app settings because iOS does not
 provide a public deep link to the exact Health permission row. Authorization
-status refreshes whenever Progress appears or its scene becomes active again.
+status refreshes whenever Settings appears or its scene becomes active again.
 History refreshes at those lifecycle points only after the request flag is
 true; before then, the app reloads the local fallback. Returning from Settings
 therefore refreshes status and, when enabled, history without prompting.
