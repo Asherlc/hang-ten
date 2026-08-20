@@ -941,6 +941,33 @@ enum PlanLibraryValidator {
                 }
             }
         }
+
+        if let index = plan.blocks.indices.last {
+            let reference = plan.blocks[index]
+            if reference.repeatCount > 0,
+               let block = blockByID[reference.blockID],
+               let terminalStep = block.steps.last,
+               stepEndsInRestAfterNormalization(terminalStep) {
+                issues.append(
+                    PlanValidationIssue(
+                        path: "\(path).blocks[\(index)].steps[\(block.steps.count - 1)]",
+                        message: "A plan cannot end in a rest step."
+                    )
+                )
+            }
+        }
+    }
+
+    private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
+        if step.segments.count > 1 {
+            return step.segments.last?.kind == .rest
+        }
+        if step.segments.isEmpty,
+           let activeDuration = step.activeDuration,
+           activeDuration < step.duration {
+            return true
+        }
+        return step.phase == .rest
     }
 
     private static func expandedIDsEmittedByNormalizer(

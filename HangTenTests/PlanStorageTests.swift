@@ -805,6 +805,53 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testPlanLibraryRejectsPlanWhoseImplicitNormalizedStepsEndInRest() {
+        let timedWork = WorkoutStepDefinition(
+            id: "timed-work",
+            title: "Timed work",
+            instruction: "Perform the activity.",
+            accessory: "8s work · 4s rest",
+            duration: 12,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            activeDuration: 8
+        )
+
+        let issues = makeLibrary(steps: [timedWork]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0].steps[0]" &&
+                $0.message == "A plan cannot end in a rest step."
+        })
+    }
+
+    func testPlanLibraryRejectsPlanWhoseCompoundStepEndsInRest() {
+        let compound = makeStep(
+            id: "compound-trailing-rest",
+            duration: 12,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 8),
+                WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 4)
+            ]
+        )
+
+        let issues = makeLibrary(steps: [compound]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0].steps[0]" &&
+                $0.message == "A plan cannot end in a rest step."
+        })
+    }
+
+    func testShippedRoutineSeedsExpandToTerminalWorkSteps() throws {
+        let terminalSteps = try LegacyPlanSeedCatalog.all.map { plan in
+            try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
+        }
+
+        XCTAssertTrue(terminalSteps.allSatisfy { $0.phase != .rest })
+    }
+
     func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
