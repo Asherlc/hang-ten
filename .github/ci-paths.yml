@@ -13,8 +13,12 @@ workbench_web:
   - 'Tools/HangboardWorkbench/**/*.html'
   - 'Tools/HangboardWorkbench/**/*.css'
   - 'Tools/HangboardWorkbench/**/*.js'
+  - 'Tools/HangboardWorkbench/**/*.ts'
+  - 'Tools/HangboardWorkbench/**/*.tsx'
   - 'Tools/HangboardWorkbench/*.js'
-  - 'Tools/HangboardWorkbench/tests/**/*.test.js'
+  - 'Tools/HangboardWorkbench/package.json'
+  - 'Tools/HangboardWorkbench/package-lock.json'
+  - 'Tools/HangboardWorkbench/tsconfig.json'
 workbench_native:
   - 'Tools/HangboardWorkbench/macos/**'
   - 'Tools/HangboardWorkbench/packaging/**'

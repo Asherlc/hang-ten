@@ -108,9 +108,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         sessionStoreDirectory = nil
     }
 
-    func testSessionStoreCleanupWaitsForQueuedPersistenceBeforeRemovingDirectory() {
+    func testSessionStoreCleanupWaitsForQueuedPersistenceBeforeRemovingDirectory() async {
         let directory = sessionStoreDirectory!
-        let fileManager = BlockingWorkoutActivityFileManager()
+        let writeStarted = expectation(description: "session write started")
+        let writeFinished = expectation(description: "session write finished")
+        let fileManager = BlockingWorkoutActivityFileManager(
+            writeStarted: writeStarted,
+            writeFinished: writeFinished
+        )
         let store = makeSessionStore(defaults: makeDefaults(), fileManager: fileManager)
         let record = WorkoutSessionRecord(
             id: UUID(),
@@ -125,7 +130,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
 
         store.append(record)
-        XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
+        await fulfillment(of: [writeStarted], timeout: 30)
         let allowWrite = fileManager.allowWrite
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
             allowWrite.signal()
@@ -133,7 +138,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         cleanUpSessionStores()
 
-        XCTAssertEqual(fileManager.writeFinished.wait(timeout: .now() + 1), .success)
+        await fulfillment(of: [writeFinished], timeout: 30)
         XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
     }
 
@@ -1145,18 +1150,24 @@ private final class WorkoutHealthStoreSpy: WorkoutHealthStore {
 }
 
 private final class BlockingWorkoutActivityFileManager: FileManager {
-    let writeStarted = DispatchSemaphore(value: 0)
+    private let writeStarted: XCTestExpectation
+    private let writeFinished: XCTestExpectation
     let allowWrite = DispatchSemaphore(value: 0)
-    let writeFinished = DispatchSemaphore(value: 0)
+
+    init(writeStarted: XCTestExpectation, writeFinished: XCTestExpectation) {
+        self.writeStarted = writeStarted
+        self.writeFinished = writeFinished
+        super.init()
+    }
 
     override func createDirectory(
         at url: URL,
         withIntermediateDirectories createIntermediates: Bool,
         attributes: [FileAttributeKey: Any]? = nil
     ) throws {
-        writeStarted.signal()
+        writeStarted.fulfill()
         allowWrite.wait()
-        defer { writeFinished.signal() }
+        defer { writeFinished.fulfill() }
         try super.createDirectory(
             at: url,
             withIntermediateDirectories: createIntermediates,

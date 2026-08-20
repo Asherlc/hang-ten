@@ -151,7 +151,7 @@ an opt-in server mode (`--allow-remote`) of the same Workbench codebase.
 ## Verification
 
 ```sh
+cd Tools/HangboardWorkbench && npm ci && npm run typecheck && npm test && npm run check:bundle
 uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests
-node --test Tools/HangboardWorkbench/tests/workbench*.test.js
 swift test --package-path Tools/HangboardWorkbench/macos
 ```

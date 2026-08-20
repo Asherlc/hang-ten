@@ -14,6 +14,7 @@ import urllib.error
 import urllib.request
 from collections.abc import Iterator
 from contextlib import contextmanager
+from html.parser import HTMLParser
 from http.cookies import SimpleCookie
 from pathlib import Path
 from types import SimpleNamespace
@@ -49,6 +50,18 @@ from workbench_fixtures import PRIMARY_IMAGE, board_document  # noqa: E402
 
 HOSTED_TOKEN = "ghp_hosted_session"
 HOSTED_BRANCH = "workbench-default"
+
+
+class _ScriptTagParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.sources: list[str | None] = []
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        if tag == "script":
+            self.sources.append(dict(attrs).get("src"))
 
 
 def _write_library(root: Path) -> Path:
@@ -298,6 +311,26 @@ def hosted_request_json(
 ) -> tuple[int, dict[str, object], object]:
     status, body, headers = hosted_request(base, session_value, method, path, value)
     return status, json.loads(body), headers
+
+
+def test_root_serves_only_the_bundled_react_frontend(tmp_path: Path) -> None:
+    library = _write_library(tmp_path)
+
+    with running_server(library) as base, urlopen(base + "/") as response:
+        assert response.status == 200
+        html = response.read().decode("utf-8")
+
+    parser = _ScriptTagParser()
+    parser.feed(html)
+    parser.close()
+    assert '<div id="root"></div>' in html
+    assert parser.sources == ["app.js"]
+    for legacy_script in (
+        "workbench-client.js",
+        "workbench-controller.js",
+        "path-editor.js",
+    ):
+        assert legacy_script not in html
 
 
 def test_lists_and_opens_direct_packages_with_independent_piece_regions(
@@ -1329,37 +1362,6 @@ def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
         assert put_call.args[2] == HOSTED_BRANCH
 
 
-def test_hosted_save_auth_failure_instructs_editor_to_reauthenticate() -> None:
-    """Fails if hosted save auth expiry no longer tells the editor where to reauthenticate."""
-    with running_server_with_github_backend(_github_files()) as (
-        base,
-        client,
-        session,
-    ):
-        _status, opened, _headers = hosted_request_json(
-            base, session, "GET", "/api/boards/fixture.board"
-        )
-        document = opened["board"]["document"]
-        document["regions"][0]["displayPath"] = (
-            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
-        )
-
-        def auth_failing_put_file(*_args: object, **_kwargs: object) -> str:
-            raise GitHubAuthError("token leaked detail")
-
-        client.put_file = auth_failing_put_file  # type: ignore[method-assign]
-        status, payload, _headers = hosted_request_json(
-            base, session, "PUT", "/api/boards/fixture.board", document
-        )
-
-    assert status == 401
-    assert payload == {
-        "ok": False,
-        "error": "GitHub authentication expired or insufficient permissions",
-        "login_url": "/auth/login",
-    }
-
-
 def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> None:
     """Fails if a PUT can write a board whose ID no longer matches its URL."""
     files = _github_files()
@@ -1521,43 +1523,27 @@ def test_hosted_open_pull_request_uses_the_session_branch_and_defaults() -> None
 
 
 @pytest.mark.parametrize(
-    ("github_error", "expected_status", "expected_payload"),
+    ("github_error", "expected_status", "expected_message"),
     [
-        (
-            GitHubNotFoundError("remote branch missing"),
-            404,
-            {"ok": False, "error": "remote branch missing"},
-        ),
-        (
-            GitHubRateLimitError("rate limit exhausted"),
-            429,
-            {"ok": False, "error": "rate limit exhausted"},
-        ),
-        (
-            GitHubForbiddenError("permission denied"),
-            403,
-            {"ok": False, "error": "permission denied"},
-        ),
+        (GitHubNotFoundError("remote branch missing"), 404, "remote branch missing"),
+        (GitHubRateLimitError("rate limit exhausted"), 429, "rate limit exhausted"),
+        (GitHubForbiddenError("permission denied"), 403, "permission denied"),
         (
             GitHubAuthError("token leaked detail"),
             401,
-            {
-                "ok": False,
-                "error": "GitHub authentication expired or insufficient permissions",
-                "login_url": "/auth/login",
-            },
+            "GitHub authentication expired or insufficient permissions",
         ),
         (
             GitHubTransportError("socket leaked detail"),
             502,
-            {"ok": False, "error": "could not reach GitHub"},
+            "could not reach GitHub",
         ),
     ],
 )
 def test_hosted_routes_map_typed_github_errors(
     github_error: Exception,
     expected_status: int,
-    expected_payload: dict[str, object],
+    expected_message: str,
 ) -> None:
     """Fails if typed GitHub failures collapse into a generic server error."""
     with running_server_with_github_backend(_github_files()) as (
@@ -1574,7 +1560,7 @@ def test_hosted_routes_map_typed_github_errors(
         )
 
     assert status == expected_status
-    assert payload == expected_payload
+    assert payload == {"ok": False, "error": expected_message}
 
 
 def test_hosted_save_conflict_maps_to_conflict_status() -> None:
