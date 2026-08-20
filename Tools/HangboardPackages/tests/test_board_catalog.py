@@ -209,6 +209,29 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
     assert constraint.rotation_degrees == -17.5
 
 
+def test_package_loader_rejects_path_that_does_not_fill_its_declared_frame(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["holds"][0]["geometry"][0]["shape"] = {
+        "type": "path",
+        "commands": [
+            {"command": "move", "to": [0.1, 0.1]},
+            {"command": "line", "to": [0.9, 0.1]},
+            {"command": "line", "to": [0.9, 0.9]},
+            {"command": "line", "to": [0.1, 0.9]},
+            {"command": "close"},
+        ],
+    }
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="frame must match its derived shape bounds"):
+        module.load_board_package(package_root)
+
+
 @pytest.mark.parametrize(
     "constraint",
     [

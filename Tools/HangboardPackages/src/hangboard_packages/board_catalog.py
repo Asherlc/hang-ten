@@ -70,6 +70,7 @@ _DEPTHS = frozenset({"deep", "shallow"})
 _SHAPE_CONSTRAINTS = frozenset(
     {"oval", "circle", "pill", "roundedRectangle", "rectangle"}
 )
+_FRAME_EDGE_TOLERANCE = 0.0000005
 
 
 def _closed(
@@ -188,6 +189,74 @@ class BoardShapeConstraint:
         return cls(shape, rotation_degrees)
 
 
+def _path_fills_declared_frame(shape: BoardShapeDocument) -> bool:
+    if shape.type == "roundedRect":
+        return True
+
+    xs: list[float] = []
+    ys: list[float] = []
+    current: tuple[float, float] | None = None
+    for command in shape.commands:
+        if command.command in {"move", "line"}:
+            assert command.to is not None
+            current = command.to
+            xs.append(current[0])
+            ys.append(current[1])
+        elif command.command == "quad":
+            assert current is not None and command.control is not None and command.to is not None
+            control = command.control
+            end = command.to
+            for step in range(1, 33):
+                t = step / 32
+                inverse = 1 - t
+                xs.append(
+                    inverse * inverse * current[0]
+                    + 2 * inverse * t * control[0]
+                    + t * t * end[0]
+                )
+                ys.append(
+                    inverse * inverse * current[1]
+                    + 2 * inverse * t * control[1]
+                    + t * t * end[1]
+                )
+            current = end
+        elif command.command == "curve":
+            assert (
+                current is not None
+                and command.control1 is not None
+                and command.control2 is not None
+                and command.to is not None
+            )
+            control1 = command.control1
+            control2 = command.control2
+            end = command.to
+            for step in range(1, 33):
+                t = step / 32
+                inverse = 1 - t
+                xs.append(
+                    inverse ** 3 * current[0]
+                    + 3 * inverse * inverse * t * control1[0]
+                    + 3 * inverse * t * t * control2[0]
+                    + t ** 3 * end[0]
+                )
+                ys.append(
+                    inverse ** 3 * current[1]
+                    + 3 * inverse * inverse * t * control1[1]
+                    + 3 * inverse * t * t * control2[1]
+                    + t ** 3 * end[1]
+                )
+            current = end
+
+    minimum_x, maximum_x = min(xs), max(xs)
+    minimum_y, maximum_y = min(ys), max(ys)
+    return (
+        minimum_x <= _FRAME_EDGE_TOLERANCE
+        and minimum_y <= _FRAME_EDGE_TOLERANCE
+        and maximum_x >= 1 - _FRAME_EDGE_TOLERANCE
+        and maximum_y >= 1 - _FRAME_EDGE_TOLERANCE
+    )
+
+
 @dataclass(frozen=True)
 class BoardGeometryPiece:
     frame: NormalizedFrame
@@ -230,9 +299,13 @@ class BoardGeometryPiece:
             if treatment_type == "recess" and treatment_payload["depth"] not in _DEPTHS:
                 raise ValueError(f"{source}.treatment.depth is unsupported")
             treatment = MappingProxyType(dict(treatment_payload))
+        frame = NormalizedFrame.from_json(payload["frame"], f"{source}.frame")
+        shape = BoardShapeDocument.from_json(payload["shape"], f"{source}.shape")
+        if not _path_fills_declared_frame(shape):
+            raise ValueError(f"{source}.frame must match its derived shape bounds")
         return cls(
-            NormalizedFrame.from_json(payload["frame"], f"{source}.frame"),
-            BoardShapeDocument.from_json(payload["shape"], f"{source}.shape"),
+            frame,
+            shape,
             treatment,
             BoardShapeConstraint.from_json(
                 payload["shapeConstraint"], f"{source}.shapeConstraint"
