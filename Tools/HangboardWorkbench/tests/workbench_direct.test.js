@@ -318,6 +318,51 @@ test("direct board loading commits image and holds together and preserves the pr
   assert.equal(prior.boardId, "prior");
 });
 
+test("direct board loading rejects malformed shape constraints before image loading or commit", async () => {
+  const { loadBoardAtomically } = require("../workbench-controller.js");
+  const malformedConstraints = [
+    { shape: "rectangle", rotationDegrees: 180 },
+    { shape: "rectangle", rotationDegrees: -181 },
+    { shape: "rounded-rectangle", rotationDegrees: 0 },
+    { shape: "rectangle", rotationDegrees: true },
+    { shape: "rectangle", rotationDegrees: "0" },
+    { shape: "rectangle", rotationDegrees: Number.NaN },
+    { shape: "rectangle", rotationDegrees: Number.POSITIVE_INFINITY },
+    { shape: "rectangle" },
+    { shape: "rectangle", rotationDegrees: 0, legacyShape: "oval" },
+    null,
+  ];
+
+  for (const shapeConstraint of malformedConstraints) {
+    let imageLoads = 0;
+    let commits = 0;
+    await assert.rejects(
+      loadBoardAtomically({
+        boardId: "broken",
+        getBoard: async () => ({
+          boardId: "broken",
+          imageUrl: "/api/boards/broken/image",
+          document: {
+            schemaVersion: 1,
+            canvas: { width: 100, height: 50 },
+            regions: [{
+              key: "hold-1",
+              displayPath: "M 1 1 L 20 1 L 20 20 Z",
+              shapeConstraint,
+            }],
+          },
+        }),
+        loadImage: async () => { imageLoads += 1; return {}; },
+        commit: () => { commits += 1; },
+      }),
+      /shape constraint/i,
+      JSON.stringify(shapeConstraint),
+    );
+    assert.equal(imageLoads, 0, JSON.stringify(shapeConstraint));
+    assert.equal(commits, 0, JSON.stringify(shapeConstraint));
+  }
+});
+
 test("the direct editor model rejects duplicate and open hold paths before saving", () => {
   const { validateEditorDocument } = require("../workbench-controller.js");
   const base = { schemaVersion: 1, canvas: { width: 100, height: 50 } };
@@ -1209,6 +1254,35 @@ test("constrained handle drag resizes only the selected piece and keeps circles 
 
   assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), "M 35 5 C 43.284271 5 50 11.715729 50 20 C 50 28.284271 43.284271 35 35 35 C 26.715729 35 20 28.284271 20 20 C 20 11.715729 26.715729 5 35 5 Z");
   assert.equal(app.elements["hold-overlay"].children[1].attributes.get("d"), siblingPath);
+});
+
+test("a constrained resize calculation error immediately rerenders the pointer-down geometry", async () => {
+  const controller = require("../workbench-controller.js");
+  const board = constrainedMultiPieceBoard();
+  const app = loadApp({
+    client: {
+      async listBoards() { return [{ boardId: "board-a", displayName: "Board A", holdCount: 2 }]; },
+      async getBoard() { return board; },
+    },
+    controller,
+  });
+  await selectFirstHold(app);
+  const svg = app.elements["editor-svg"];
+  svg.boundingClientRect = { left: 0, top: 0, width: 120, height: 80 };
+  const originalPath = app.elements["hold-overlay"].children[0].attributes.get("d");
+  const east = descendantsWithClass(svg, "path-editor-resize-handle").find((handle) => handle.dataset.handle === "e");
+
+  svg.listeners.get("pointerdown")(directPointerEvent(east, 29, 50, 20));
+  svg.listeners.get("pointermove")(directPointerEvent(east, 29, 60, 20));
+  assert.notEqual(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+
+  svg.listeners.get("pointermove")(directPointerEvent(east, 29, Number.NaN, 20));
+
+  assert.equal(app.elements["hold-overlay"].children[0].attributes.get("d"), originalPath);
+  assert.equal(app.elements["outline-shape-select"].value, "rectangle");
+  assert.equal(app.elements["save-state"].textContent, "Saved");
+  assert.equal(app.elements["validation-panel"].classList.contains("hidden"), false);
+  assert.match(app.elements["validation-list"].children[0].textContent, /finite/);
 });
 
 test("a constrained resize ending outside the canvas restores its pointer-down path, constraint, and dirty state", async () => {

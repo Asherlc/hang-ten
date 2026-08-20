@@ -616,6 +616,7 @@
         render();
       } catch (error) {
         restoreDragPaths();
+        render();
         setValidation(error.message || "Contour is invalid.");
       }
       return;

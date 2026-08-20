@@ -69,21 +69,26 @@ function createOutlineShapePath(pathString, preset) {
 const CONSTRAINED_SHAPES = new Set(["oval", "circle", "pill", "roundedRectangle", "rectangle"]);
 const CONSTRAINED_HANDLES = new Set(["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
 
-function normalizeDegrees(rotationDegrees) {
-  if (typeof rotationDegrees !== "number" || !Number.isFinite(rotationDegrees)) {
+function validateShapeConstraint(constraint) {
+  if (!constraint || typeof constraint !== "object" || Array.isArray(constraint)) {
+    throw new Error("Choose a valid constrained shape");
+  }
+  const keys = Object.keys(constraint);
+  if (keys.length !== 2 || !Object.hasOwn(constraint, "shape") || !Object.hasOwn(constraint, "rotationDegrees")) {
+    throw new Error("Shape constraint must contain exactly shape and rotationDegrees");
+  }
+  if (!CONSTRAINED_SHAPES.has(constraint.shape)) {
+    throw new Error("Choose a valid constrained shape");
+  }
+  if (typeof constraint.rotationDegrees !== "number" || !Number.isFinite(constraint.rotationDegrees)) {
     throw new Error("Shape rotation must be finite");
   }
-  const normalized = ((rotationDegrees + 180) % 360 + 360) % 360 - 180;
-  return Object.is(normalized, -0) ? 0 : normalized;
-}
-
-function validateShapeConstraint(constraint) {
-  if (!constraint || typeof constraint !== "object" || !CONSTRAINED_SHAPES.has(constraint.shape)) {
-    throw new Error("Choose a valid constrained shape");
+  if (constraint.rotationDegrees < -180 || constraint.rotationDegrees >= 180) {
+    throw new Error("Shape rotation must be normalized to [-180, 180)");
   }
   return {
     shape: constraint.shape,
-    rotationDegrees: normalizeDegrees(constraint.rotationDegrees),
+    rotationDegrees: constraint.rotationDegrees,
   };
 }
 

@@ -140,7 +140,7 @@ test("constrainedOutlineModel exposes an unrotated rectangle's intrinsic bounds 
 test("constrainedOutlineModel inverse-rotates a rectangle and maps its handles back to world space", () => {
   const model = constrainedOutlineModel(
     "M 40 10 L 40 50 L 20 50 L 20 10 Z",
-    { shape: "rectangle", rotationDegrees: 450 },
+    { shape: "rectangle", rotationDegrees: 90 },
   );
 
   assertPoint(model.center, { x: 30, y: 30 });
@@ -156,6 +156,28 @@ test("constrainedOutlineModel inverse-rotates a rectangle and maps its handles b
     sw: { x: 20, y: 10 },
     w: { x: 30, y: 10 },
   })) assertPoint(model.handles[handle], expected);
+});
+
+test("constrainedOutlineModel rejects rotations outside the normalized range", () => {
+  const path = "M 10 20 L 50 20 L 50 40 L 10 40 Z";
+
+  for (const rotationDegrees of [-181, 180, 450]) {
+    assert.throws(
+      () => constrainedOutlineModel(path, { shape: "rectangle", rotationDegrees }),
+      /normalized to \[-180, 180\)/,
+      String(rotationDegrees),
+    );
+  }
+});
+
+test("constrainedOutlineModel rejects constraint metadata with unexpected fields", () => {
+  assert.throws(
+    () => constrainedOutlineModel(
+      "M 10 20 L 50 20 L 50 40 L 10 40 Z",
+      { shape: "rectangle", rotationDegrees: 0, legacyShape: "oval" },
+    ),
+    /exactly shape and rotationDegrees/,
+  );
 });
 
 test("constrainedOutlineModel uses true quadratic and cubic extrema", () => {

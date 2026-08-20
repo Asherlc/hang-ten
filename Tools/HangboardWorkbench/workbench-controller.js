@@ -5,6 +5,27 @@
 }(typeof globalThis === "object" ? globalThis : this, () => {
   "use strict";
 
+  const CONSTRAINED_SHAPES = new Set(["oval", "circle", "pill", "roundedRectangle", "rectangle"]);
+
+  function validateShapeConstraint(constraint, holdKey) {
+    if (!constraint || typeof constraint !== "object" || Array.isArray(constraint)) {
+      throw new Error(`Hold ${holdKey} has an invalid shape constraint`);
+    }
+    const keys = Object.keys(constraint);
+    if (keys.length !== 2 || !Object.hasOwn(constraint, "shape") || !Object.hasOwn(constraint, "rotationDegrees")) {
+      throw new Error(`Hold ${holdKey} shape constraint needs exactly shape and rotationDegrees`);
+    }
+    if (!CONSTRAINED_SHAPES.has(constraint.shape)) {
+      throw new Error(`Hold ${holdKey} has an invalid shape constraint shape`);
+    }
+    if (typeof constraint.rotationDegrees !== "number" || !Number.isFinite(constraint.rotationDegrees)) {
+      throw new Error(`Hold ${holdKey} shape constraint rotation must be finite`);
+    }
+    if (constraint.rotationDegrees < -180 || constraint.rotationDegrees >= 180) {
+      throw new Error(`Hold ${holdKey} shape constraint rotation must be normalized to [-180, 180)`);
+    }
+  }
+
   function validateEditorDocument(document) {
     if (!document || typeof document !== "object" || Array.isArray(document)) {
       throw new TypeError("Hold document is required");
@@ -25,6 +46,9 @@
       if (typeof region.displayPath !== "string"
         || !/^\s*M\s+[^MZ]+\s+Z\s*$/u.test(region.displayPath)) {
         throw new Error(`Hold ${region.key} needs one closed contour`);
+      }
+      if (Object.hasOwn(region, "shapeConstraint")) {
+        validateShapeConstraint(region.shapeConstraint, region.key);
       }
     }
     return document;
