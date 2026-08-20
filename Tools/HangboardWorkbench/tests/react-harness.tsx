@@ -88,6 +88,16 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
   });
   const descriptors = new Map<GlobalKey, PropertyDescriptor | undefined>();
   const windowValue = dom.window;
+  Object.defineProperties(windowValue.HTMLElement.prototype, {
+    attachEvent: {
+      configurable: true,
+      value() {},
+    },
+    detachEvent: {
+      configurable: true,
+      value() {},
+    },
+  });
   const replacements: Record<GlobalKey, unknown> = {
     window: windowValue,
     document: windowValue.document,

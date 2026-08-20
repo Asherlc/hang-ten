@@ -516,7 +516,7 @@ export function addVertex(
 
 export function deleteVertex(commands: PathCommand[], index: number): void {
   const command = commands[index];
-  if (index === 0 || command === undefined || command.type === "Z" || commands.length <= 3) return;
+  if (index === 0 || command === undefined || command.type === "Z" || commands.length <= 4) return;
   const next = commands[(index + 1) % commands.length]!;
 
   commands.splice(index, 1);

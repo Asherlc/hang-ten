@@ -22543,6 +22543,7 @@
     originalDocument: null,
     resizeHandle: null,
     originalDirty: false,
+    changed: false,
     pivot: null,
     lastAngle: 0,
     totalAngle: 0,
@@ -22617,14 +22618,42 @@
   function cloneConstraint(constraint) {
     return constraint ? { ...constraint } : void 0;
   }
-  function documentsMatch(first, second) {
-    return JSON.stringify(first) === JSON.stringify(second);
+  function constraintsMatch(left, right) {
+    if (!left || !right) return !left && !right;
+    return left.shape === right.shape && left.rotationDegrees === right.rotationDegrees;
+  }
+  function draggedRegionsMatch(drag, left, right) {
+    const keys = drag.type === "rotation" ? (drag.originalPaths ?? []).map((original) => original.key) : drag.holdKey ? [drag.holdKey] : [];
+    return keys.every((key) => {
+      const leftRegion = left.regions.find((region) => region.key === key);
+      const rightRegion = right.regions.find((region) => region.key === key);
+      return !!leftRegion && !!rightRegion && leftRegion.displayPath === rightRegion.displayPath && constraintsMatch(leftRegion.shapeConstraint, rightRegion.shapeConstraint);
+    });
+  }
+  function dragMatchesOriginal(drag, document2) {
+    if (drag.type === "rotation") {
+      return (drag.originalPaths ?? []).every((original) => {
+        const region2 = document2.regions.find((candidate) => candidate.key === original.key);
+        return !!region2 && region2.displayPath === original.path && constraintsMatch(region2.shapeConstraint, original.shapeConstraint);
+      });
+    }
+    const region = document2.regions.find((candidate) => candidate.key === drag.holdKey);
+    return !!region && region.displayPath === drag.originalPath && constraintsMatch(region.shapeConstraint, drag.originalConstraint);
   }
   function isShapeConstraintShape(value) {
     return isConstrainedShape(value);
   }
   function outlinePreset(shape) {
     return shape === "roundedRectangle" ? "rounded-rectangle" : shape;
+  }
+  function canDeleteVertex(commands, index) {
+    const command = commands[index];
+    if (index <= 0 || !command || command.type === "M" || command.type === "Z") return false;
+    return commands.filter((candidate) => candidate.type !== "Z" && candidate.points.length > 0).length > 3;
+  }
+  function hasVertex(commands, index) {
+    const command = commands[index];
+    return !!command && command.type !== "Z" && command.points.length > 0;
   }
   function useHoldEditor(options) {
     const {
@@ -22643,6 +22672,8 @@
     const previewDocumentRef = (0, import_react2.useRef)(null);
     const pendingPreviewRef = (0, import_react2.useRef)(null);
     const dragSvgRef = (0, import_react2.useRef)(null);
+    const [vertexSelection, setVertexSelection] = (0, import_react2.useState)(null);
+    const [vertexMenuState, setVertexMenuState] = (0, import_react2.useState)(null);
     const reportInvalidPath = (0, import_react2.useCallback)((error) => {
       actions.editDocument(() => {
         throw error;
@@ -22651,6 +22682,60 @@
         failureMessage: errorMessage2(error, "Selected hold path is invalid.")
       });
     }, [actions]);
+    let selectionIsCurrent = false;
+    let canDeleteSelectedVertex = false;
+    if (!busy && document2 && selectedHold && !selectedHold.shapeConstraint && vertexSelection?.holdKey === selectedHold.key) {
+      try {
+        const commands = pathEditor2.parsePath(selectedHold.displayPath);
+        selectionIsCurrent = hasVertex(commands, vertexSelection.commandIndex);
+        canDeleteSelectedVertex = selectionIsCurrent && canDeleteVertex(commands, vertexSelection.commandIndex);
+      } catch {
+        selectionIsCurrent = false;
+        canDeleteSelectedVertex = false;
+      }
+    }
+    const selectedVertexIndex = selectionIsCurrent ? vertexSelection.commandIndex : null;
+    const vertexMenu = selectionIsCurrent && vertexMenuState?.document === document2 ? { x: vertexMenuState.x, y: vertexMenuState.y } : null;
+    const selectVertex = (0, import_react2.useCallback)((index) => {
+      if (busy || !selectedHold || selectedHold.shapeConstraint || !Number.isInteger(index) || index < 0) return;
+      try {
+        if (!hasVertex(pathEditor2.parsePath(selectedHold.displayPath), index)) return;
+        setVertexSelection({ holdKey: selectedHold.key, commandIndex: index });
+        setVertexMenuState(null);
+      } catch {
+      }
+    }, [busy, pathEditor2, selectedHold]);
+    const deleteSelectedVertex = (0, import_react2.useCallback)(() => {
+      if (!canDeleteSelectedVertex || !document2 || !selectedHold || selectedVertexIndex === null) return;
+      try {
+        const commands = pathEditor2.parsePath(selectedHold.displayPath);
+        if (!canDeleteVertex(commands, selectedVertexIndex)) return;
+        pathEditor2.deleteVertex(commands, selectedVertexIndex);
+        const nextPath = pathEditor2.serializePath(commands);
+        if (nextPath === selectedHold.displayPath) return;
+        const edited = actions.editDocument((candidate) => {
+          const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+          if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+        }, { status });
+        if (!edited) return;
+        setVertexSelection(null);
+        setVertexMenuState(null);
+      } catch (error) {
+        reportInvalidPath(error);
+      }
+    }, [
+      actions,
+      canDeleteSelectedVertex,
+      document2,
+      pathEditor2,
+      reportInvalidPath,
+      selectedHold,
+      selectedVertexIndex,
+      status
+    ]);
+    const dismissVertexMenu = (0, import_react2.useCallback)(() => {
+      setVertexMenuState((current) => current ? null : current);
+    }, []);
     const rotateHold = (0, import_react2.useCallback)((degrees) => {
       if (busy || !document2 || !selectedHold) return;
       const siblingKeys = new Set(holdSiblings(document2, selectedHold).map((region) => region.key));
@@ -22796,6 +22881,25 @@
     (0, import_react2.useEffect)(() => {
       if (busy) cancelActiveEdit();
     }, [busy, cancelActiveEdit]);
+    (0, import_react2.useEffect)(() => {
+      if (!vertexSelection || selectionIsCurrent) return;
+      setVertexSelection(null);
+      setVertexMenuState(null);
+    }, [selectionIsCurrent, vertexSelection]);
+    (0, import_react2.useEffect)(() => {
+      if (!vertexMenuState || selectionIsCurrent && vertexMenuState.document === document2) return;
+      setVertexMenuState(null);
+    }, [document2, selectionIsCurrent, vertexMenuState]);
+    (0, import_react2.useEffect)(() => {
+      if (!vertexMenu) return void 0;
+      const closeOnOutsidePointerDown = (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        if (target?.closest(".path-editor-vertex-menu")) return;
+        dismissVertexMenu();
+      };
+      window.document.addEventListener("pointerdown", closeOnOutsidePointerDown);
+      return () => window.document.removeEventListener("pointerdown", closeOnOutsidePointerDown);
+    }, [dismissVertexMenu, vertexMenu]);
     (0, import_react2.useLayoutEffect)(() => {
       const drag = dragRef.current;
       if (!drag.active) {
@@ -22823,6 +22927,11 @@
       if (busy || drag.active || !document2 || !selectedHold) return;
       const target = targetElement(event);
       if (!target) return;
+      if (event.button !== 0) return;
+      if (target.classList.contains("path-editor-vertex") && !selectedHold.shapeConstraint) {
+        const index = Number(target.getAttribute("data-index"));
+        selectVertex(index);
+      }
       const point = svgPoint(event.currentTarget, event);
       let next = null;
       if (target.classList.contains("path-editor-rotation-handle")) {
@@ -22892,13 +23001,14 @@
         event.currentTarget.setPointerCapture?.(event.pointerId);
       } catch {
       }
-    }, [busy, dirty, document2, pathEditor2, reportInvalidPath, selectedHold]);
+    }, [busy, dirty, document2, pathEditor2, reportInvalidPath, selectVertex, selectedHold]);
     const onPointerMove = (0, import_react2.useCallback)((event) => {
       const drag = dragRef.current;
       if (!drag.active || event.pointerId !== drag.pointerId || !document2) return;
       event.preventDefault();
       const point = svgPoint(event.currentTarget, event);
-      const candidate = cloneEditorDocument(previewDocumentRef.current ?? document2);
+      const preview = previewDocumentRef.current ?? document2;
+      const candidate = cloneEditorDocument(preview);
       const hold = candidate.regions.find((region) => region.key === drag.holdKey);
       if (!hold) {
         restoreDrag("Edit cancelled because the selected hold is no longer available.");
@@ -22962,8 +23072,12 @@
         }
         hold.displayPath = pathEditor2.serializePath(commands);
       }
+      drag.changed = !dragMatchesOriginal(drag, candidate);
+      if (draggedRegionsMatch(drag, preview, candidate)) return;
       previewDocumentRef.current = candidate;
-      pendingPreviewRef.current = actions.replaceDocument(candidate, { dirty: true });
+      pendingPreviewRef.current = actions.replaceDocument(candidate, {
+        dirty: drag.originalDirty || drag.changed
+      });
     }, [actions, document2, pathEditor2, releasePointer, restoreDrag]);
     const completeDrag = (0, import_react2.useCallback)((event) => {
       const drag = dragRef.current;
@@ -22972,10 +23086,8 @@
       releasePointer(event.currentTarget);
       const candidate = previewDocumentRef.current ?? document2;
       if (!candidate) return;
-      if (drag.originalDocument && documentsMatch(candidate, drag.originalDocument)) {
-        actions.replaceDocument(drag.originalDocument, { dirty: drag.originalDirty });
-        return;
-      }
+      drag.changed = !dragMatchesOriginal(drag, candidate);
+      if (!drag.changed) return;
       try {
         if (drag.type === "constrained-resize") {
           const hold = candidate.regions.find((region) => region.key === drag.holdKey);
@@ -23036,30 +23148,30 @@
         const segment = next.type === "Z" ? { type: "L", points: [{ ...commands[0].points[0] }], controls: [] } : next;
         if (closestDistanceOnSegment(start, segment, point) >= 15) continue;
         const insert = segment.type === "L" ? closestPointOnLine(start, segment.points[0], point) : point;
-        actions.editDocument((candidate) => {
+        const edited = actions.editDocument((candidate) => {
           const hold = candidate.regions.find((region) => region.key === selectedHold.key);
           if (!hold) return;
-          const edited = pathEditor2.parsePath(hold.displayPath);
-          pathEditor2.addVertex(edited, index, insert.x, insert.y);
-          hold.displayPath = pathEditor2.serializePath(edited);
+          const edited2 = pathEditor2.parsePath(hold.displayPath);
+          pathEditor2.addVertex(edited2, index, insert.x, insert.y);
+          hold.displayPath = pathEditor2.serializePath(edited2);
         }, { status });
+        if (edited) {
+          setVertexSelection(null);
+          setVertexMenuState(null);
+        }
         return;
       }
     }, [actions, busy, document2, pathEditor2, reportInvalidPath, selectedHold, status]);
     const onContextMenu = (0, import_react2.useCallback)((event) => {
       const target = targetElement(event);
       if (busy || !selectedHold || selectedHold.shapeConstraint || !target?.classList.contains("path-editor-vertex")) return;
-      event.preventDefault();
       const index = Number(target.getAttribute("data-index"));
-      if (index === 0) return;
-      actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (!hold) return;
-        const commands = pathEditor2.parsePath(hold.displayPath);
-        pathEditor2.deleteVertex(commands, index);
-        hold.displayPath = pathEditor2.serializePath(commands);
-      }, { status });
-    }, [actions, busy, pathEditor2, selectedHold, status]);
+      if (!Number.isInteger(index) || index < 0) return;
+      event.preventDefault();
+      if (!document2) return;
+      selectVertex(index);
+      setVertexMenuState({ document: document2, x: event.clientX, y: event.clientY });
+    }, [busy, document2, selectVertex, selectedHold]);
     (0, import_react2.useEffect)(() => {
       const onKeyDown = (event) => {
         const target = event.target instanceof Element ? event.target : null;
@@ -23080,6 +23192,17 @@
         }
         if (event.key === "Escape" && cancelActiveEdit()) {
           event.preventDefault();
+          return;
+        }
+        if (event.key === "Escape" && vertexMenu) {
+          event.preventDefault();
+          dismissVertexMenu();
+          return;
+        }
+        if ((event.key === "Delete" || event.key === "Backspace") && selectedVertexIndex !== null) {
+          if (!canDeleteSelectedVertex) return;
+          event.preventDefault();
+          deleteSelectedVertex();
           return;
         }
         if (event.key === "[" || event.key === "]") {
@@ -23106,10 +23229,29 @@
       };
       window.document.addEventListener("keydown", onKeyDown);
       return () => window.document.removeEventListener("keydown", onKeyDown);
-    }, [actions, busy, cancelActiveEdit, document2, pathEditor2, rotateHold, selectedHold]);
+    }, [
+      actions,
+      busy,
+      cancelActiveEdit,
+      canDeleteSelectedVertex,
+      deleteSelectedVertex,
+      dismissVertexMenu,
+      document2,
+      pathEditor2,
+      rotateHold,
+      selectedHold,
+      selectedVertexIndex,
+      vertexMenu
+    ]);
     return {
+      selectedVertexIndex,
+      vertexMenu,
+      canDeleteSelectedVertex,
       addHold,
       deleteHold,
+      selectVertex,
+      deleteSelectedVertex,
+      dismissVertexMenu,
       changeHoldType,
       changeOutlineShape,
       rotateHold,
@@ -23164,6 +23306,10 @@
     pocket: "#ee4d97",
     pinch: "#f2c94c"
   };
+  function fixedMenuCoordinate(anchor, size, viewportSize) {
+    const flipped = anchor + size > viewportSize ? anchor - size : anchor;
+    return Math.max(0, Math.min(flipped, Math.max(0, viewportSize - size)));
+  }
   function HoldCanvas({
     board,
     document: document2,
@@ -23175,8 +23321,12 @@
     zoomPercent,
     onZoomChange
   }) {
-    const viewportRef = import_react3.default.useRef(null);
-    import_react3.default.useEffect(() => {
+    const vertexMenuRef = (0, import_react3.useRef)(null);
+    const deleteVertexButtonRef = (0, import_react3.useRef)(null);
+    const selectedVertexRef = (0, import_react3.useRef)(null);
+    const [vertexMenuPosition, setVertexMenuPosition] = (0, import_react3.useState)(null);
+    const viewportRef = (0, import_react3.useRef)(null);
+    (0, import_react3.useEffect)(() => {
       const viewport = viewportRef.current;
       if (!viewport) return;
       const handleWheel = (event) => {
@@ -23212,6 +23362,21 @@
         constrainedModel = null;
       }
     }
+    (0, import_react3.useLayoutEffect)(() => {
+      const menu = vertexMenuRef.current;
+      if (!editor.vertexMenu || !menu) return;
+      const bounds = menu.getBoundingClientRect();
+      const nextPosition = {
+        anchorX: editor.vertexMenu.x,
+        anchorY: editor.vertexMenu.y,
+        x: fixedMenuCoordinate(editor.vertexMenu.x, bounds.width, window.innerWidth),
+        y: fixedMenuCoordinate(editor.vertexMenu.y, bounds.height, window.innerHeight)
+      };
+      setVertexMenuPosition((current) => current?.anchorX === nextPosition.anchorX && current.anchorY === nextPosition.anchorY && current.x === nextPosition.x && current.y === nextPosition.y ? current : nextPosition);
+      if (editor.canDeleteSelectedVertex) deleteVertexButtonRef.current?.focus();
+      else menu.focus();
+    }, [editor.canDeleteSelectedVertex, editor.vertexMenu?.x, editor.vertexMenu?.y]);
+    const displayedVertexMenuPosition = editor.vertexMenu && vertexMenuPosition?.anchorX === editor.vertexMenu.x && vertexMenuPosition.anchorY === editor.vertexMenu.y ? vertexMenuPosition : editor.vertexMenu;
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "editor-views", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
       "div",
       {
@@ -23341,14 +23506,25 @@
                       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                         "circle",
                         {
-                          className: "path-editor-vertex",
+                          ref: editor.selectedVertexIndex === commandIndex ? selectedVertexRef : void 0,
+                          className: `path-editor-vertex${editor.selectedVertexIndex === commandIndex ? " selected" : ""}`,
                           "data-index": commandIndex,
                           cx: endpoint.x,
                           cy: endpoint.y,
                           r: "6",
                           fill: selectedColor,
                           stroke: "#fff7dc",
-                          strokeWidth: "1.5"
+                          strokeWidth: "1.5",
+                          role: "button",
+                          tabIndex: busy ? -1 : 0,
+                          "aria-label": commandIndex === 0 ? "Start vertex" : `Vertex ${commandIndex + 1}`,
+                          "aria-pressed": editor.selectedVertexIndex === commandIndex,
+                          onFocus: () => editor.selectVertex(commandIndex),
+                          onKeyDown: (event) => {
+                            if (busy || event.key !== "Enter" && event.key !== " ") return;
+                            if (event.key === " ") event.preventDefault();
+                            editor.selectVertex(commandIndex);
+                          }
                         }
                       ),
                       command.controls.map((control, controlIndex) => {
@@ -23387,6 +23563,42 @@
                   })
                 ] })
               ]
+            }
+          ),
+          editor.vertexMenu && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "div",
+            {
+              ref: vertexMenuRef,
+              className: "path-editor-vertex-menu",
+              role: "menu",
+              "aria-label": "Vertex actions",
+              tabIndex: -1,
+              style: { left: displayedVertexMenuPosition?.x, top: displayedVertexMenuPosition?.y },
+              onContextMenu: (event) => event.preventDefault(),
+              onKeyDown: (event) => {
+                if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "[", "]"].includes(event.key)) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  return;
+                }
+                if (event.key !== "Escape") return;
+                event.preventDefault();
+                event.stopPropagation();
+                editor.dismissVertexMenu();
+                selectedVertexRef.current?.focus();
+              },
+              children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                "button",
+                {
+                  ref: deleteVertexButtonRef,
+                  type: "button",
+                  role: "menuitem",
+                  disabled: !editor.canDeleteSelectedVertex,
+                  "aria-disabled": !editor.canDeleteSelectedVertex,
+                  onClick: () => editor.deleteSelectedVertex(),
+                  children: "Delete"
+                }
+              )
             }
           ),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: `empty-state${document2 ? " hidden" : ""}`, id: "empty-state", children: [
@@ -24150,7 +24362,7 @@
   }
   function deleteVertex(commands, index) {
     const command = commands[index];
-    if (index === 0 || command === void 0 || command.type === "Z" || commands.length <= 3) return;
+    if (index === 0 || command === void 0 || command.type === "Z" || commands.length <= 4) return;
     const next = commands[(index + 1) % commands.length];
     commands.splice(index, 1);
     if (next.type === "Q" || next.type === "C") {

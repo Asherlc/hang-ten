@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { holdCentroid, holdSiblings, rotationHandlePosition } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
@@ -17,6 +17,18 @@ const TYPE_COLORS: Readonly<Record<string, string>> = {
   pocket: "#ee4d97",
   pinch: "#f2c94c",
 };
+
+interface VertexMenuPosition {
+  anchorX: number;
+  anchorY: number;
+  x: number;
+  y: number;
+}
+
+function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
+  const flipped = anchor + size > viewportSize ? anchor - size : anchor;
+  return Math.max(0, Math.min(flipped, Math.max(0, viewportSize - size)));
+}
 
 export interface HoldCanvasProps {
   board: Board | null;
@@ -41,8 +53,12 @@ export function HoldCanvas({
   zoomPercent,
   onZoomChange,
 }: HoldCanvasProps) {
-  const viewportRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
+  const vertexMenuRef = useRef<HTMLDivElement>(null);
+  const deleteVertexButtonRef = useRef<HTMLButtonElement>(null);
+  const selectedVertexRef = useRef<SVGCircleElement>(null);
+  const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const handleWheel = (event: WheelEvent): void => {
@@ -80,6 +96,32 @@ export function HoldCanvas({
       constrainedModel = null;
     }
   }
+  useLayoutEffect(() => {
+    const menu = vertexMenuRef.current;
+    if (!editor.vertexMenu || !menu) return;
+    const bounds = menu.getBoundingClientRect();
+    const nextPosition = {
+      anchorX: editor.vertexMenu.x,
+      anchorY: editor.vertexMenu.y,
+      x: fixedMenuCoordinate(editor.vertexMenu.x, bounds.width, window.innerWidth),
+      y: fixedMenuCoordinate(editor.vertexMenu.y, bounds.height, window.innerHeight),
+    };
+    setVertexMenuPosition((current) => (
+      current?.anchorX === nextPosition.anchorX
+        && current.anchorY === nextPosition.anchorY
+        && current.x === nextPosition.x
+        && current.y === nextPosition.y
+        ? current
+        : nextPosition
+    ));
+    if (editor.canDeleteSelectedVertex) deleteVertexButtonRef.current?.focus();
+    else menu.focus();
+  }, [editor.canDeleteSelectedVertex, editor.vertexMenu?.x, editor.vertexMenu?.y]);
+  const displayedVertexMenuPosition = editor.vertexMenu
+    && vertexMenuPosition?.anchorX === editor.vertexMenu.x
+    && vertexMenuPosition.anchorY === editor.vertexMenu.y
+    ? vertexMenuPosition
+    : editor.vertexMenu;
   return (
     <div className="editor-views">
       <div
@@ -193,7 +235,8 @@ export function HoldCanvas({
                 return (
                   <g key={`${selectedHold?.key ?? "selected"}-${commandIndex}`}>
                     <circle
-                      className="path-editor-vertex"
+                      ref={editor.selectedVertexIndex === commandIndex ? selectedVertexRef : undefined}
+                      className={`path-editor-vertex${editor.selectedVertexIndex === commandIndex ? " selected" : ""}`}
                       data-index={commandIndex}
                       cx={endpoint.x}
                       cy={endpoint.y}
@@ -201,6 +244,16 @@ export function HoldCanvas({
                       fill={selectedColor}
                       stroke="#fff7dc"
                       strokeWidth="1.5"
+                      role="button"
+                      tabIndex={busy ? -1 : 0}
+                      aria-label={commandIndex === 0 ? "Start vertex" : `Vertex ${commandIndex + 1}`}
+                      aria-pressed={editor.selectedVertexIndex === commandIndex}
+                      onFocus={() => editor.selectVertex(commandIndex)}
+                      onKeyDown={(event) => {
+                        if (busy || (event.key !== "Enter" && event.key !== " ")) return;
+                        if (event.key === " ") event.preventDefault();
+                        editor.selectVertex(commandIndex);
+                      }}
                     />
                     {command.controls.map((control, controlIndex) => {
                       const anchor = controlIndex === 0
@@ -238,6 +291,38 @@ export function HoldCanvas({
             </g>
           )}
         </svg>
+        {editor.vertexMenu && (
+          <div
+            ref={vertexMenuRef}
+            className="path-editor-vertex-menu"
+            role="menu"
+            aria-label="Vertex actions"
+            tabIndex={-1}
+            style={{ left: displayedVertexMenuPosition?.x, top: displayedVertexMenuPosition?.y }}
+            onContextMenu={(event) => event.preventDefault()}
+            onKeyDown={(event) => {
+              if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "[", "]"].includes(event.key)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+              }
+              if (event.key !== "Escape") return;
+              event.preventDefault();
+              event.stopPropagation();
+              editor.dismissVertexMenu();
+              selectedVertexRef.current?.focus();
+            }}
+          >
+            <button
+              ref={deleteVertexButtonRef}
+              type="button"
+              role="menuitem"
+              disabled={!editor.canDeleteSelectedVertex}
+              aria-disabled={!editor.canDeleteSelectedVertex}
+              onClick={() => editor.deleteSelectedVertex()}
+            >Delete</button>
+          </div>
+        )}
         <div className={`empty-state${document ? " hidden" : ""}`} id="empty-state">
           <strong>Select a board</strong>
           <span>Its image and holds load together.</span>

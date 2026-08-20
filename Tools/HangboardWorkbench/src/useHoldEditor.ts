@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
@@ -44,10 +44,22 @@ interface DragState {
   originalDocument: EditorDocument | null;
   resizeHandle: ConstrainedHandle | null;
   originalDirty: boolean;
+  changed: boolean;
   pivot: Point | null;
   lastAngle: number;
   totalAngle: number;
   pointerId: number | null;
+}
+
+interface VertexSelection {
+  holdKey: string;
+  commandIndex: number;
+}
+
+interface VertexMenuState {
+  document: EditorDocument;
+  x: number;
+  y: number;
 }
 
 const EMPTY_DRAG: DragState = {
@@ -65,6 +77,7 @@ const EMPTY_DRAG: DragState = {
   originalDocument: null,
   resizeHandle: null,
   originalDirty: false,
+  changed: false,
   pivot: null,
   lastAngle: 0,
   totalAngle: 0,
@@ -85,8 +98,14 @@ export interface UseHoldEditorOptions {
 }
 
 export interface HoldEditorActions {
+  selectedVertexIndex: number | null;
+  vertexMenu: { x: number; y: number } | null;
+  canDeleteSelectedVertex: boolean;
   addHold(): void;
   deleteHold(): void;
+  selectVertex(index: number): void;
+  deleteSelectedVertex(): void;
+  dismissVertexMenu(): void;
   changeHoldType(type: string): void;
   changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
@@ -180,8 +199,44 @@ function cloneConstraint(constraint: ShapeConstraint | undefined): ShapeConstrai
   return constraint ? { ...constraint } : undefined;
 }
 
-function documentsMatch(first: EditorDocument, second: EditorDocument): boolean {
-  return JSON.stringify(first) === JSON.stringify(second);
+function constraintsMatch(
+  left: ShapeConstraint | null | undefined,
+  right: ShapeConstraint | null | undefined,
+): boolean {
+  if (!left || !right) return !left && !right;
+  return left.shape === right.shape && left.rotationDegrees === right.rotationDegrees;
+}
+
+function draggedRegionsMatch(
+  drag: DragState,
+  left: EditorDocument,
+  right: EditorDocument,
+): boolean {
+  const keys = drag.type === "rotation"
+    ? (drag.originalPaths ?? []).map((original) => original.key)
+    : drag.holdKey ? [drag.holdKey] : [];
+  return keys.every((key) => {
+    const leftRegion = left.regions.find((region) => region.key === key);
+    const rightRegion = right.regions.find((region) => region.key === key);
+    return !!leftRegion && !!rightRegion
+      && leftRegion.displayPath === rightRegion.displayPath
+      && constraintsMatch(leftRegion.shapeConstraint, rightRegion.shapeConstraint);
+  });
+}
+
+function dragMatchesOriginal(drag: DragState, document: EditorDocument): boolean {
+  if (drag.type === "rotation") {
+    return (drag.originalPaths ?? []).every((original) => {
+      const region = document.regions.find((candidate) => candidate.key === original.key);
+      return !!region
+        && region.displayPath === original.path
+        && constraintsMatch(region.shapeConstraint, original.shapeConstraint);
+    });
+  }
+  const region = document.regions.find((candidate) => candidate.key === drag.holdKey);
+  return !!region
+    && region.displayPath === drag.originalPath
+    && constraintsMatch(region.shapeConstraint, drag.originalConstraint);
 }
 
 function isShapeConstraintShape(value: string): value is ShapeConstraintShape {
@@ -190,6 +245,17 @@ function isShapeConstraintShape(value: string): value is ShapeConstraintShape {
 
 function outlinePreset(shape: ShapeConstraintShape): "oval" | "circle" | "pill" | "rounded-rectangle" | "rectangle" {
   return shape === "roundedRectangle" ? "rounded-rectangle" : shape;
+}
+
+function canDeleteVertex(commands: readonly PathCommand[], index: number): boolean {
+  const command = commands[index];
+  if (index <= 0 || !command || command.type === "M" || command.type === "Z") return false;
+  return commands.filter((candidate) => candidate.type !== "Z" && candidate.points.length > 0).length > 3;
+}
+
+function hasVertex(commands: readonly PathCommand[], index: number): boolean {
+  const command = commands[index];
+  return !!command && command.type !== "Z" && command.points.length > 0;
 }
 
 export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions {
@@ -209,12 +275,77 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const previewDocumentRef = useRef<EditorDocument | null>(null);
   const pendingPreviewRef = useRef<EditorDocument | null>(null);
   const dragSvgRef = useRef<SVGSVGElement | null>(null);
+  const [vertexSelection, setVertexSelection] = useState<VertexSelection | null>(null);
+  const [vertexMenuState, setVertexMenuState] = useState<VertexMenuState | null>(null);
   const reportInvalidPath = useCallback((error: unknown): void => {
     actions.editDocument(() => { throw error; }, {
       failureStatus: "Could not edit — selected hold has an invalid path.",
       failureMessage: errorMessage(error, "Selected hold path is invalid."),
     });
   }, [actions]);
+
+  let selectionIsCurrent = false;
+  let canDeleteSelectedVertex = false;
+  if (!busy && document && selectedHold && !selectedHold.shapeConstraint
+    && vertexSelection?.holdKey === selectedHold.key) {
+    try {
+      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      selectionIsCurrent = hasVertex(commands, vertexSelection.commandIndex);
+      canDeleteSelectedVertex = selectionIsCurrent
+        && canDeleteVertex(commands, vertexSelection.commandIndex);
+    } catch {
+      selectionIsCurrent = false;
+      canDeleteSelectedVertex = false;
+    }
+  }
+  const selectedVertexIndex = selectionIsCurrent ? vertexSelection!.commandIndex : null;
+  const vertexMenu = selectionIsCurrent && vertexMenuState?.document === document
+    ? { x: vertexMenuState.x, y: vertexMenuState.y }
+    : null;
+
+  const selectVertex = useCallback((index: number): void => {
+    if (busy || !selectedHold || selectedHold.shapeConstraint || !Number.isInteger(index) || index < 0) return;
+    try {
+      if (!hasVertex(pathEditor.parsePath(selectedHold.displayPath), index)) return;
+      setVertexSelection({ holdKey: selectedHold.key, commandIndex: index });
+      setVertexMenuState(null);
+    } catch {
+      // Invalid paths do not render selectable vertices.
+    }
+  }, [busy, pathEditor, selectedHold]);
+
+  const deleteSelectedVertex = useCallback((): void => {
+    if (!canDeleteSelectedVertex || !document || !selectedHold || selectedVertexIndex === null) return;
+    try {
+      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      if (!canDeleteVertex(commands, selectedVertexIndex)) return;
+      pathEditor.deleteVertex(commands, selectedVertexIndex);
+      const nextPath = pathEditor.serializePath(commands);
+      if (nextPath === selectedHold.displayPath) return;
+      const edited = actions.editDocument((candidate) => {
+        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+      }, { status });
+      if (!edited) return;
+      setVertexSelection(null);
+      setVertexMenuState(null);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
+    }
+  }, [
+    actions,
+    canDeleteSelectedVertex,
+    document,
+    pathEditor,
+    reportInvalidPath,
+    selectedHold,
+    selectedVertexIndex,
+    status,
+  ]);
+
+  const dismissVertexMenu = useCallback((): void => {
+    setVertexMenuState((current) => current ? null : current);
+  }, []);
 
   const rotateHold = useCallback((degrees: number): void => {
     if (busy || !document || !selectedHold) return;
@@ -374,6 +505,28 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (busy) cancelActiveEdit();
   }, [busy, cancelActiveEdit]);
 
+  useEffect(() => {
+    if (!vertexSelection || selectionIsCurrent) return;
+    setVertexSelection(null);
+    setVertexMenuState(null);
+  }, [selectionIsCurrent, vertexSelection]);
+
+  useEffect(() => {
+    if (!vertexMenuState || (selectionIsCurrent && vertexMenuState.document === document)) return;
+    setVertexMenuState(null);
+  }, [document, selectionIsCurrent, vertexMenuState]);
+
+  useEffect(() => {
+    if (!vertexMenu) return undefined;
+    const closeOnOutsidePointerDown = (event: PointerEvent): void => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (target?.closest(".path-editor-vertex-menu")) return;
+      dismissVertexMenu();
+    };
+    window.document.addEventListener("pointerdown", closeOnOutsidePointerDown);
+    return () => window.document.removeEventListener("pointerdown", closeOnOutsidePointerDown);
+  }, [dismissVertexMenu, vertexMenu]);
+
   useLayoutEffect(() => {
     const drag = dragRef.current;
     if (!drag.active) {
@@ -402,6 +555,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (busy || drag.active || !document || !selectedHold) return;
     const target = targetElement(event);
     if (!target) return;
+    if (event.button !== 0) return;
+    if (target.classList.contains("path-editor-vertex") && !selectedHold.shapeConstraint) {
+      const index = Number(target.getAttribute("data-index"));
+      selectVertex(index);
+    }
     const point = svgPoint(event.currentTarget, event);
     let next: DragState | null = null;
     if (target.classList.contains("path-editor-rotation-handle")) {
@@ -476,14 +634,15 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Tests and older browsers may not implement pointer capture.
     }
-  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectedHold]);
+  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectVertex, selectedHold]);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
     if (!drag.active || event.pointerId !== drag.pointerId || !document) return;
     event.preventDefault();
     const point = svgPoint(event.currentTarget, event);
-    const candidate = cloneEditorDocument(previewDocumentRef.current ?? document);
+    const preview = previewDocumentRef.current ?? document;
+    const candidate = cloneEditorDocument(preview);
     const hold = candidate.regions.find((region) => region.key === drag.holdKey);
     if (!hold) {
       restoreDrag("Edit cancelled because the selected hold is no longer available.");
@@ -550,8 +709,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       }
       hold.displayPath = pathEditor.serializePath(commands);
     }
+    drag.changed = !dragMatchesOriginal(drag, candidate);
+    if (draggedRegionsMatch(drag, preview, candidate)) return;
     previewDocumentRef.current = candidate;
-    pendingPreviewRef.current = actions.replaceDocument(candidate, { dirty: true });
+    pendingPreviewRef.current = actions.replaceDocument(candidate, {
+      dirty: drag.originalDirty || drag.changed,
+    });
   }, [actions, document, pathEditor, releasePointer, restoreDrag]);
 
   const completeDrag = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
@@ -561,10 +724,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     releasePointer(event.currentTarget);
     const candidate = previewDocumentRef.current ?? document;
     if (!candidate) return;
-    if (drag.originalDocument && documentsMatch(candidate, drag.originalDocument)) {
-      actions.replaceDocument(drag.originalDocument, { dirty: drag.originalDirty });
-      return;
-    }
+    drag.changed = !dragMatchesOriginal(drag, candidate);
+    if (!drag.changed) return;
     try {
       if (drag.type === "constrained-resize") {
         const hold = candidate.regions.find((region) => region.key === drag.holdKey);
@@ -642,13 +803,17 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         : next;
       if (closestDistanceOnSegment(start, segment, point) >= 15) continue;
       const insert = segment.type === "L" ? closestPointOnLine(start, segment.points[0]!, point) : point;
-      actions.editDocument((candidate) => {
+      const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
         if (!hold) return;
         const edited = pathEditor.parsePath(hold.displayPath);
         pathEditor.addVertex(edited, index, insert.x, insert.y);
         hold.displayPath = pathEditor.serializePath(edited);
       }, { status });
+      if (edited) {
+        setVertexSelection(null);
+        setVertexMenuState(null);
+      }
       return;
     }
   }, [actions, busy, document, pathEditor, reportInvalidPath, selectedHold, status]);
@@ -656,17 +821,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const onContextMenu = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
     if (busy || !selectedHold || selectedHold.shapeConstraint || !target?.classList.contains("path-editor-vertex")) return;
-    event.preventDefault();
     const index = Number(target.getAttribute("data-index"));
-    if (index === 0) return;
-    actions.editDocument((candidate) => {
-      const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-      if (!hold) return;
-      const commands = pathEditor.parsePath(hold.displayPath);
-      pathEditor.deleteVertex(commands, index);
-      hold.displayPath = pathEditor.serializePath(commands);
-    }, { status });
-  }, [actions, busy, pathEditor, selectedHold, status]);
+    if (!Number.isInteger(index) || index < 0) return;
+    event.preventDefault();
+    if (!document) return;
+    selectVertex(index);
+    setVertexMenuState({ document, x: event.clientX, y: event.clientY });
+  }, [busy, document, selectVertex, selectedHold]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
@@ -690,6 +851,17 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       }
       if (event.key === "Escape" && cancelActiveEdit()) {
         event.preventDefault();
+        return;
+      }
+      if (event.key === "Escape" && vertexMenu) {
+        event.preventDefault();
+        dismissVertexMenu();
+        return;
+      }
+      if ((event.key === "Delete" || event.key === "Backspace") && selectedVertexIndex !== null) {
+        if (!canDeleteSelectedVertex) return;
+        event.preventDefault();
+        deleteSelectedVertex();
         return;
       }
       if (event.key === "[" || event.key === "]") {
@@ -717,11 +889,30 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     };
     window.document.addEventListener("keydown", onKeyDown);
     return () => window.document.removeEventListener("keydown", onKeyDown);
-  }, [actions, busy, cancelActiveEdit, document, pathEditor, rotateHold, selectedHold]);
+  }, [
+    actions,
+    busy,
+    cancelActiveEdit,
+    canDeleteSelectedVertex,
+    deleteSelectedVertex,
+    dismissVertexMenu,
+    document,
+    pathEditor,
+    rotateHold,
+    selectedHold,
+    selectedVertexIndex,
+    vertexMenu,
+  ]);
 
   return {
+    selectedVertexIndex,
+    vertexMenu,
+    canDeleteSelectedVertex,
     addHold,
     deleteHold,
+    selectVertex,
+    deleteSelectedVertex,
+    dismissVertexMenu,
     changeHoldType,
     changeOutlineShape,
     rotateHold,
