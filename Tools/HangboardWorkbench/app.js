@@ -23180,14 +23180,14 @@
         if (busy) return;
         const modifier = event.metaKey || event.ctrlKey;
         if (modifier && event.key.toLowerCase() === "z") {
-          cancelActiveEdit();
+          const cancelled = cancelActiveEdit();
           const changed = event.shiftKey ? actions.redoDocument() : actions.undoDocument();
-          if (changed) event.preventDefault();
+          if (cancelled || changed) event.preventDefault();
           return;
         }
         if (event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "y") {
-          cancelActiveEdit();
-          if (actions.redoDocument()) event.preventDefault();
+          const cancelled = cancelActiveEdit();
+          if (cancelled || actions.redoDocument()) event.preventDefault();
           return;
         }
         if (event.key === "Escape" && cancelActiveEdit()) {
