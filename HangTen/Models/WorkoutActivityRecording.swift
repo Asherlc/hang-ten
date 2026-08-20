@@ -221,8 +221,19 @@ internal enum BoardTargetResolver {
 
     private static func crossKindPockets(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
         let pockets = board.holds.filter { $0.kind == .pocket }
-        guard let capacity = target.fingerCapacity else { return pockets }
+        guard let capacity = target.fingerCapacity else {
+            return onePocketPerHand(from: pockets)
+        }
         return pockets.filter { $0.fingerCapacity == capacity }
+    }
+
+    /// An unconstrained edge-to-pocket substitution represents a two-handed
+    /// hang, so highlight one pocket on each half of the board rather than
+    /// every pocket that could theoretically satisfy the substitution.
+    private static func onePocketPerHand(from pockets: [BoardHold]) -> [BoardHold] {
+        let left = pockets.first { $0.frame.x + $0.frame.width / 2 < 0.5 }
+        let right = pockets.first { $0.frame.x + $0.frame.width / 2 >= 0.5 }
+        return [left, right].compactMap { $0 }
     }
 }
 
