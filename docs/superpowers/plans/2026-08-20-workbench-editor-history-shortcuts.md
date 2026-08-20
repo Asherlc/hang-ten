@@ -1,6 +1,6 @@
 # Workbench Editor History and Shortcuts Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Assign each implementation or configuration task to a fresh subagent. After every task, the controller must review that task's diff and verification evidence before assigning the next task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add reversible editor document history and standard desktop keyboard shortcuts for undo, redo, save, and drag cancellation.
 
@@ -19,6 +19,11 @@
 - Loading or saving a board resets history; a failed save preserves unsaved edits and local history.
 - Preserve existing document validation, dirty-state, selection, and busy-operation behavior.
 
+## Execution and Resource Lifecycle
+
+- Treat every numbered task below as a separate assignment: a fresh subagent implements only that task, then the controller performs its review checkpoint (diff plus stated verification) before the next task begins.
+- If a task creates an external resource, include `CONDUCTOR_WORKSPACE_NAME` in its name, record ownership immediately in the workspace, install an exit trap to delete that exact resource, and shut it down, delete it, and verify deletion before the task completes. Do not alter shared, standard, or unknown resources.
+
 ---
 
 ## File Structure
@@ -29,18 +34,14 @@
 - `Tools/HangboardWorkbench/src/WorkbenchApp.tsx`: routes the save shortcut through drag cancellation and `saveBoard`.
 - `Tools/HangboardWorkbench/tests/react-editor.test.tsx`: asserts user-visible history and shortcut behavior through the rendered app.
 
-### Task 1: Document history and editor keyboard shortcuts
+### Task 1: Write failing rendered-editor coverage
 
 **Files:**
-- Modify: `Tools/HangboardWorkbench/src/types.ts:257-274`
-- Modify: `Tools/HangboardWorkbench/src/useWorkbench.ts:25-40, 214-272, 505-640`
-- Modify: `Tools/HangboardWorkbench/src/useHoldEditor.ts:356-365, 659-692`
-- Modify: `Tools/HangboardWorkbench/src/WorkbenchApp.tsx:17-46`
 - Test: `Tools/HangboardWorkbench/tests/react-editor.test.tsx:297-390, 760-845`
 
 **Interfaces:**
-- Consumes: `cloneEditorDocument(document: EditorDocument): EditorDocument`, `WorkbenchActions.editDocument`, `WorkbenchActions.replaceDocument`, and `HoldEditorActions.cancelActiveEdit(): boolean`.
-- Produces: `WorkbenchActions.undoDocument(): boolean` and `WorkbenchActions.redoDocument(): boolean`; each returns `true` only when a document revision was applied.
+- Consumes: the rendered `WorkbenchApp`, existing test fixtures, and global document listeners.
+- Produces: failing user-visible coverage for undo, redo, drag cancellation, and save shortcuts.
 
 - [ ] **Step 1: Write the failing rendered-editor tests**
 
@@ -117,6 +118,17 @@ Run: `cd Tools/HangboardWorkbench && npm run test:react -- --test-name-pattern="
 
 Expected: FAIL because `WorkbenchActions` has no undo/redo implementation and no global handlers respond to the new key combinations.
 
+**Verification:** Run the focused React test command above and retain its expected failing output for the controller review checkpoint.
+
+### Task 2: Add bounded immutable history to `useWorkbench`
+
+**Files:**
+- Modify: `Tools/HangboardWorkbench/src/useWorkbench.ts:25-40, 214-272, 505-640`
+
+**Interfaces:**
+- Consumes: `cloneEditorDocument(document: EditorDocument): EditorDocument`, `WorkbenchActions.editDocument`, and `WorkbenchActions.replaceDocument`.
+- Produces: private bounded undo/redo snapshot handling, ready for public `undoDocument()` and `redoDocument()` callbacks.
+
 - [ ] **Step 3: Add bounded immutable history to `useWorkbench`**
 
 Define a small private history model near `INITIAL_STATE`, using `useRef` so preview rendering does not create a revision:
@@ -145,6 +157,19 @@ Create `historyRef` once in `useWorkbench`. Extend `DocumentUpdateOptions` with 
 Implement `undoDocument` and `redoDocument` by cloning the current document to the opposite stack, popping a snapshot, and updating state with that clone. Preserve the selection only if `next.regions.some(region => region.key === current.selectedKey)`; otherwise set it to `null`. Both actions set `dirty: true`, `validation: ""`, and status text of `"Undo. Save when ready."` or `"Redo. Save when ready."`. Return `false` without changing state when no board/document or no snapshot exists.
 
 Call `resetHistory(historyRef.current)` in the successful `selectBoard` commit and successful `saveBoard` commit, and in `clearEditor`.
+
+**Verification:** Run `cd Tools/HangboardWorkbench && npm run test:react -- --test-name-pattern="undo|redo|escape|save"`. The newly added coverage may remain failing until Tasks 3 and 4 connect the editor and save shortcuts; record the output for the controller review checkpoint.
+
+### Task 3: Expose history actions and keep drag previews out of history
+
+**Files:**
+- Modify: `Tools/HangboardWorkbench/src/types.ts:257-274`
+- Modify: `Tools/HangboardWorkbench/src/useWorkbench.ts:25-40, 214-272, 505-640`
+- Modify: `Tools/HangboardWorkbench/src/useHoldEditor.ts:356-365, 659-692`
+
+**Interfaces:**
+- Consumes: Task 2's history model, `WorkbenchActions.replaceDocument`, and `HoldEditorActions.cancelActiveEdit(): boolean`.
+- Produces: `WorkbenchActions.undoDocument(): boolean` and `WorkbenchActions.redoDocument(): boolean`; each returns `true` only when a document revision was applied.
 
 - [ ] **Step 4: Expose the new actions and keep drag previews out of history**
 
@@ -175,6 +200,17 @@ if (event.key === "Escape" && cancelActiveEdit()) event.preventDefault();
 
 Ensure the effect dependency array contains the new actions and `cancelActiveEdit`.
 
+**Verification:** Run `cd Tools/HangboardWorkbench && npm run test:react -- --test-name-pattern="undo|redo|escape"`; expected: PASS for the undo, redo, and Escape coverage. Retain the output for the controller review checkpoint.
+
+### Task 4: Add the save shortcut in `WorkbenchApp`
+
+**Files:**
+- Modify: `Tools/HangboardWorkbench/src/WorkbenchApp.tsx:17-46`
+
+**Interfaces:**
+- Consumes: `editor.cancelActiveEdit()`, `actions.saveBoard()`, `busy`, and `state.board`.
+- Produces: a shared `saveFromShortcut` callback used by the Save button and the document-level `Command/Ctrl+S` handler.
+
 - [ ] **Step 5: Add the save shortcut in `WorkbenchApp`**
 
 Create a memoized `saveFromShortcut` callback which returns early if `busy` or `state.board` is absent, otherwise calls `editor.cancelActiveEdit()` before `void actions.saveBoard()`. Add a `useEffect` document listener that ignores editable targets and only prevents `metaKey || ctrlKey` plus case-insensitive `s` when `saveFromShortcut` will act:
@@ -199,6 +235,22 @@ React.useEffect(() => {
 
 Use the same `saveFromShortcut` callback from the existing Save button so both paths share drag cancellation behavior.
 
+**Verification:** Run `cd Tools/HangboardWorkbench && npm run test:react -- --test-name-pattern="save"`; expected: PASS for save-shortcut coverage. Retain the output for the controller review checkpoint.
+
+### Task 5: Run focused tests, then the full frontend verification suite
+
+**Files:**
+- Verify: `Tools/HangboardWorkbench/src/types.ts`
+- Verify: `Tools/HangboardWorkbench/src/useWorkbench.ts`
+- Verify: `Tools/HangboardWorkbench/src/useHoldEditor.ts`
+- Verify: `Tools/HangboardWorkbench/src/WorkbenchApp.tsx`
+- Verify: `Tools/HangboardWorkbench/tests/react-editor.test.tsx`
+- Verify generated output: `Tools/HangboardWorkbench/app.js`
+
+**Interfaces:**
+- Verifies: the completed public history actions, editor keyboard handlers, save callback, and rendered-editor behavior from Tasks 1-4.
+- Produces: focused and full-suite evidence for the controller review checkpoint.
+
 - [ ] **Step 6: Run focused tests, then the full frontend verification suite**
 
 Run: `cd Tools/HangboardWorkbench && npm run test:react -- --test-name-pattern="undo|redo|escape|save"`
@@ -209,6 +261,20 @@ Run: `cd Tools/HangboardWorkbench && npm test && npm run check:bundle`
 
 Expected: all strict typecheck, module tests, React tests, build, and generated-bundle freshness checks pass.
 
+### Task 6: Commit the implementation
+
+**Files:**
+- Commit: `Tools/HangboardWorkbench/src/types.ts`
+- Commit: `Tools/HangboardWorkbench/src/useWorkbench.ts`
+- Commit: `Tools/HangboardWorkbench/src/useHoldEditor.ts`
+- Commit: `Tools/HangboardWorkbench/src/WorkbenchApp.tsx`
+- Commit: `Tools/HangboardWorkbench/tests/react-editor.test.tsx`
+- Commit: `Tools/HangboardWorkbench/app.js`
+
+**Interfaces:**
+- Consumes: the reviewed changes and passing verification evidence from Tasks 1-5.
+- Produces: a single implementation commit.
+
 - [ ] **Step 7: Commit the implementation**
 
 ```bash
@@ -217,3 +283,5 @@ git commit -m "Add editor undo redo shortcuts"
 ```
 
 After independently checking the commit diff and test output, push the new commit to `origin/add-editor-undo-redo-shortcuts`.
+
+**Verification:** Inspect the committed diff and confirm the Task 5 evidence still applies before the controller's final review checkpoint.
