@@ -190,7 +190,24 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
         XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
-        XCTAssertTrue(source.contains(".frame(width: boardBounds.width, height: boardBounds.height)"))
+        let physicalHoldVisualFrame =
+            "                    )\n" +
+            "                    .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                }\n" +
+            "            }"
+        XCTAssertTrue(
+            source.contains(physicalHoldVisualFrame),
+            "Each PhysicalHoldVisual must receive the board's explicit bounds."
+        )
+        let outerZStackFrame =
+            "            }\n" +
+            "            .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "        }\n" +
+            "        .aspectRatio(board.aspectRatio, contentMode: .fit)"
+        XCTAssertTrue(
+            source.contains(outerZStackFrame),
+            "The outer board ZStack must receive the board's explicit bounds."
+        )
     }
 
     func testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts() throws {
