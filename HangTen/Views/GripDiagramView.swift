@@ -53,7 +53,7 @@ struct GripDiagramView: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
         .accessibilityLabel("\(cueLabel), \(accessibilityCueLabel), both hands")
     }
 
