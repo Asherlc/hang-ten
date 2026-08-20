@@ -362,6 +362,28 @@ def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
             assert result.returncode == 0, result.stderr
 
 
+def test_generated_bundle_is_built_before_every_python_suite():
+    workflows = (
+        _workflow(PR_WORKFLOW_PATH),
+        _workflow(),
+    )
+
+    for workflow in workflows:
+        job = workflow["jobs"]["test-python"]
+        setup = _step(job, "Set up Node")
+        assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+        assert setup["with"]["node-version"] == "22.14.0"
+        assert (
+            setup["with"]["cache-dependency-path"]
+            == "Tools/HangboardWorkbench/package-lock.json"
+        )
+
+        bundle = _step(job, "Build generated Workbench bundle")
+        assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+        assert "npm ci" in bundle["run"]
+        assert "npm run check:bundle" in bundle["run"]
+
+
 def test_signed_workbench_preserves_and_uploads_debug_symbols_to_sentry():
     release = _workflow()["jobs"]["release"]
     install = _step(release, "Install pinned Sentry CLI")
