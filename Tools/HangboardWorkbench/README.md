@@ -95,6 +95,38 @@ the decoded image within 0.1% relative error.
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.
 
+## Outline shape constraints
+
+The **Outline shape** picker reflects the selected geometry piece and offers
+**Custom**, **Oval**, **Circle**, **Pill**, **Rounded rectangle**, and
+**Rectangle**. Choosing a preset replaces that piece's outline with the exact
+primitive and keeps the selection constrained as it is moved, rotated, and
+resized. Constrained outlines use a shape-aligned box with eight handles: edge
+handles resize one dimension and corner handles resize both. Circles retain a
+1:1 aspect ratio during either kind of resize.
+
+Choosing **Custom** removes the constraint without changing the current
+outline, then restores point and Bezier-control editing. Saving persists the
+selected constraint and orientation in `board.json`, so the same picker state
+and constrained handles return when the package is reopened.
+
+A geometry piece may include this optional object alongside its existing
+`frame` and `shape`:
+
+```json
+"shapeConstraint": {
+  "shape": "oval",
+  "rotationDegrees": 15
+}
+```
+
+`shape` must be exactly one of `oval`, `circle`, `pill`, `roundedRectangle`, or
+`rectangle`. `rotationDegrees` must be a finite number normalized to the
+half-open range `[-180, 180)`. Omitting `shapeConstraint` means the piece is
+Custom/freeform. The existing `frame` and `shape` remain the authoritative
+rendering geometry, including position and size; `shapeConstraint` records only
+the geometric invariant and its orientation.
+
 ## Run the Apple Silicon macOS release
 
 Download the workbench ZIP and its checksum from a release, verify the

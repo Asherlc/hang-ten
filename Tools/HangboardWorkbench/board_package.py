@@ -90,6 +90,9 @@ _HOLD_FEATURES = frozenset(
 )
 _TREATMENT_TYPES = frozenset({"surface", "shelf", "recess"})
 _RECESS_DEPTHS = frozenset({"shallow", "deep"})
+_SHAPE_CONSTRAINTS = frozenset(
+    {"oval", "circle", "pill", "roundedRectangle", "rectangle"}
+)
 _FRAME_EDGE_TOLERANCE = 0.0000005
 _RECOVERY_DIRECTORY_NAME = ".workbench-recovery"
 _STAGING_DIRECTORY_PREFIXES = (".workbench-edit-", ".workbench-save-")
@@ -145,12 +148,14 @@ class _EditorDocumentPackage(Protocol):
     image_height: int
 
 
-class _EditorPiecesByHold(dict[str, list[tuple[int, str, Any]]]):
+class _EditorPiecesByHold(dict[str, list[tuple[int, str, Any, dict[str, object] | None]]]):
     """Editor pieces with paths already derived from an equivalent live board."""
 
     def __init__(
         self,
-        pieces: Mapping[str, list[tuple[int, str, Any]]],
+        pieces: Mapping[
+            str, list[tuple[int, str, Any, dict[str, object] | None]]
+        ],
         current_paths: Mapping[tuple[str, int], ClosedPath],
     ) -> None:
         super().__init__(pieces)
@@ -262,15 +267,18 @@ def editor_document(package: _EditorDocumentPackage) -> dict[str, object]:
                 )
             except (GeometryError, KeyError, TypeError) as error:
                 raise BoardPackageError(f"hold {key} has invalid geometry") from error
-            regions.append(
-                {
-                    "id": region_id,
-                    "key": key,
-                    "type": hold["kind"],
-                    "displayPath": path.data,
-                    "metadata": {"holdID": hold_id, "pieceIndex": piece_index},
-                }
-            )
+            region: dict[str, object] = {
+                "id": region_id,
+                "key": key,
+                "type": hold["kind"],
+                "displayPath": path.data,
+                "metadata": {"holdID": hold_id, "pieceIndex": piece_index},
+            }
+            if "shapeConstraint" in piece:
+                region["shapeConstraint"] = _parse_shape_constraint(
+                    piece["shapeConstraint"], f"hold {key}.shapeConstraint"
+                )
+            regions.append(region)
             region_id += 1
     return {
         "schemaVersion": 1,
@@ -297,9 +305,13 @@ def save_editor_document(
         width, height = live.image_width, live.image_height
         parsed_regions = _validate_editor_document(document, width, height)
 
-        pieces_by_hold: dict[str, list[tuple[int, str, Any]]] = {}
-        for hold_id, piece_index, kind, path in parsed_regions.values():
-            pieces_by_hold.setdefault(hold_id, []).append((piece_index, kind, path))
+        pieces_by_hold: dict[
+            str, list[tuple[int, str, Any, dict[str, object] | None]]
+        ] = {}
+        for hold_id, piece_index, kind, path, shape_constraint in parsed_regions.values():
+            pieces_by_hold.setdefault(hold_id, []).append(
+                (piece_index, kind, path, shape_constraint)
+            )
         for pieces in pieces_by_hold.values():
             pieces.sort(key=lambda item: item[0])
 
@@ -334,7 +346,9 @@ def save_editor_document(
 
 def _apply_editor_document(
     board: dict[str, Any],
-    pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
+    pieces_by_hold: Mapping[
+        str, list[tuple[int, str, Any, dict[str, object] | None]]
+    ],
     width: int,
     height: int,
 ) -> dict[str, Any]:
@@ -354,7 +368,7 @@ def _apply_editor_document(
         pieces = pieces_by_hold[hold_id]
         existing = existing_by_id.get(hold_id)
         geometry: list[dict[str, Any]] = []
-        for piece_index, _kind, path in pieces:
+        for piece_index, _kind, path, shape_constraint in pieces:
             existing_geometry = existing["geometry"] if existing is not None else []
             if piece_index < len(existing_geometry):
                 piece = existing_geometry[piece_index]
@@ -363,10 +377,17 @@ def _apply_editor_document(
                     frame, shape = shape_for_path(path, width, height)
                     piece["frame"] = frame.to_json()
                     piece["shape"] = _rounded_json(shape)
+                if shape_constraint is None:
+                    piece.pop("shapeConstraint", None)
+                else:
+                    piece["shapeConstraint"] = dict(shape_constraint)
                 geometry.append(piece)
             else:
                 frame, shape = shape_for_path(path, width, height)
-                geometry.append({"frame": frame.to_json(), "shape": _rounded_json(shape)})
+                piece = {"frame": frame.to_json(), "shape": _rounded_json(shape)}
+                if shape_constraint is not None:
+                    piece["shapeConstraint"] = dict(shape_constraint)
+                geometry.append(piece)
         hold_json = (
             existing
             if existing is not None
@@ -380,7 +401,9 @@ def _apply_editor_document(
 
 
 def _current_display_paths(
-    pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
+    pieces_by_hold: Mapping[
+        str, list[tuple[int, str, Any, dict[str, object] | None]]
+    ],
     current_holds: Mapping[str, Any],
     width: int,
     height: int,
@@ -391,7 +414,7 @@ def _current_display_paths(
     for hold_id, pieces in pieces_by_hold.items():
         hold = current_holds.get(hold_id)
         geometry = hold["geometry"] if hold is not None else []
-        for piece_index, _kind, _path in pieces:
+        for piece_index, _kind, _path, _shape_constraint in pieces:
             if piece_index < len(geometry):
                 piece = geometry[piece_index]
                 paths[(hold_id, piece_index)] = display_path_for_shape(
@@ -402,7 +425,9 @@ def _current_display_paths(
 
 
 def _editor_document_is_dirty(
-    pieces_by_hold: Mapping[str, list[tuple[int, str, Any]]],
+    pieces_by_hold: Mapping[
+        str, list[tuple[int, str, Any, dict[str, object] | None]]
+    ],
     current_holds: Mapping[str, Any],
     current_paths: Mapping[tuple[str, int], ClosedPath],
 ) -> bool:
@@ -412,9 +437,20 @@ def _editor_document_is_dirty(
         hold = current_holds[hold_id]
         if hold["kind"] != pieces[0][1] or len(hold["geometry"]) != len(pieces):
             return True
-        for piece_index, _kind, path in pieces:
+        for piece_index, _kind, path, shape_constraint in pieces:
             current_path = current_paths.get((hold_id, piece_index))
             if current_path is None or path.data != current_path.data:
+                return True
+            piece = hold["geometry"][piece_index]
+            current_constraint = (
+                _parse_shape_constraint(
+                    piece["shapeConstraint"],
+                    f"hold {_piece_key(hold_id, piece_index)}.shapeConstraint",
+                )
+                if "shapeConstraint" in piece
+                else None
+            )
+            if current_constraint != shape_constraint:
                 return True
     return False
 
@@ -697,7 +733,10 @@ def _validate_piece(
     if not isinstance(piece, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _required_and_allowed_keys(
-        piece, {"frame", "shape"}, {"frame", "shape", "treatment"}, label
+        piece,
+        {"frame", "shape"},
+        {"frame", "shape", "treatment", "shapeConstraint"},
+        label,
     )
     try:
         NormalizedFrame.from_json(piece["frame"], f"{label}.frame")
@@ -711,6 +750,8 @@ def _validate_piece(
         raise BoardPackageError(f"{label}.frame must match its derived shape bounds")
     if "treatment" in piece:
         _validate_treatment(piece["treatment"], f"{label}.treatment")
+    if "shapeConstraint" in piece:
+        _parse_shape_constraint(piece["shapeConstraint"], f"{label}.shapeConstraint")
 
 
 def _shape_fills_declared_frame(shape: object) -> bool:
@@ -752,11 +793,30 @@ def _validate_treatment(value: object, label: str) -> None:
         _enum(value["depth"], _RECESS_DEPTHS, f"{label}.depth")
 
 
+def _parse_shape_constraint(value: object, label: str) -> dict[str, object]:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    _exact_keys(value, {"shape", "rotationDegrees"}, label)
+    shape = _enum(value.get("shape"), _SHAPE_CONSTRAINTS, f"{label}.shape")
+    rotation = value.get("rotationDegrees")
+    if (
+        isinstance(rotation, bool)
+        or not isinstance(rotation, (int, float))
+        or not -180 <= rotation < 180
+        or not math.isfinite(rotation)
+    ):
+        raise BoardPackageError(
+            f"{label}.rotationDegrees must be finite and in [-180, 180)"
+        )
+    return {"shape": shape, "rotationDegrees": float(rotation)}
+
+
 def _validate_editor_document(
     document: Mapping[str, Any], width: int, height: int
-) -> dict[str, tuple[str, int, str, Any]]:
+) -> dict[str, tuple[str, int, str, Any, dict[str, object] | None]]:
     """Parse and cross-validate an editor document, allowing added/removed/
-    recategorized holds. Returns key -> (holdID, pieceIndex, kind, parsed path)."""
+    recategorized holds. Returns key -> (holdID, pieceIndex, kind, parsed path,
+    shape constraint)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
     _exact_keys(document, {"schemaVersion", "canvas", "regions"}, "editor document")
@@ -767,15 +827,18 @@ def _validate_editor_document(
     if not isinstance(regions, list) or not regions:
         raise BoardPackageError("editor document regions must be a non-empty array")
 
-    parsed: dict[str, tuple[str, int, str, Any]] = {}
+    parsed: dict[
+        str, tuple[str, int, str, Any, dict[str, object] | None]
+    ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
     kind_by_hold: dict[str, str] = {}
     for region in regions:
         if not isinstance(region, Mapping):
             raise BoardPackageError("editor document contains an invalid hold piece")
-        _exact_keys(
+        _required_and_allowed_keys(
             region,
             {"id", "key", "type", "displayPath", "metadata"},
+            {"id", "key", "type", "displayPath", "metadata", "shapeConstraint"},
             "editor region",
         )
         key = region.get("key")
@@ -806,6 +869,13 @@ def _validate_editor_document(
             )
         except GeometryError as error:
             raise BoardPackageError(str(error)) from error
+        shape_constraint = (
+            _parse_shape_constraint(
+                region["shapeConstraint"], f"editor region {key}.shapeConstraint"
+            )
+            if "shapeConstraint" in region
+            else None
+        )
 
         pieces = pieces_by_hold.setdefault(hold_id, {})
         if piece_index in pieces:
@@ -815,7 +885,7 @@ def _validate_editor_document(
         if existing_kind is not None and existing_kind != kind:
             raise BoardPackageError(f"hold {hold_id} pieces must share one kind")
         kind_by_hold[hold_id] = kind
-        parsed[key] = (hold_id, piece_index, kind, parsed_path)
+        parsed[key] = (hold_id, piece_index, kind, parsed_path, shape_constraint)
 
     for hold_id, pieces in pieces_by_hold.items():
         if set(pieces) != set(range(len(pieces))):

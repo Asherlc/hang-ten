@@ -725,10 +725,11 @@ private struct BoardPackageGeometryDocument: Decodable {
         case frame
         case shape
         case treatment
+        case shapeConstraint
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["frame", "shape", "treatment"])
+        try decoder.rejectUnknownKeys(["frame", "shape", "treatment", "shapeConstraint"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
         shape = try container.decode(BoardGeometryShapeDocument.self, forKey: .shape)
@@ -736,6 +737,12 @@ private struct BoardPackageGeometryDocument: Decodable {
             BoardGeometryTreatmentDocument.self,
             forKey: .treatment
         )
+        if container.contains(.shapeConstraint) {
+            _ = try container.decode(
+                BoardPackageShapeConstraintDocument.self,
+                forKey: .shapeConstraint
+            )
+        }
     }
 
     func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
@@ -748,6 +755,35 @@ private struct BoardPackageGeometryDocument: Decodable {
             shape: shape,
             treatment: treatment
         )
+    }
+}
+
+private struct BoardPackageShapeConstraintDocument: Decodable {
+    private enum Shape: String, Decodable {
+        case oval
+        case circle
+        case pill
+        case roundedRectangle
+        case rectangle
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case shape
+        case rotationDegrees
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["shape", "rotationDegrees"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        _ = try container.decode(Shape.self, forKey: .shape)
+        let rotationDegrees = try container.decode(Double.self, forKey: .rotationDegrees)
+        guard rotationDegrees.isFinite, (-180..<180).contains(rotationDegrees) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .rotationDegrees,
+                in: container,
+                debugDescription: "rotationDegrees must be finite and in [-180, 180)"
+            )
+        }
     }
 }
 

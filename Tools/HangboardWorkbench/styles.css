@@ -76,6 +76,12 @@ button:disabled { cursor: default; opacity: .4; }
 .path-editor-vertex:active { cursor: grabbing; }
 .path-editor-control { cursor: move; }
 .path-editor-line { pointer-events: none; }
+.path-editor-constrained-box { pointer-events: none; }
+.path-editor-resize-handle { cursor: nwse-resize; touch-action: none; }
+.path-editor-resize-handle[data-handle="n"], .path-editor-resize-handle[data-handle="s"] { cursor: ns-resize; }
+.path-editor-resize-handle[data-handle="e"], .path-editor-resize-handle[data-handle="w"] { cursor: ew-resize; }
+.path-editor-resize-handle[data-handle="ne"], .path-editor-resize-handle[data-handle="sw"] { cursor: nesw-resize; }
+.path-editor-overlay.busy { pointer-events: none; }
 .path-editor-rotation-connector { pointer-events: none; }
 .path-editor-rotation-handle { cursor: grab; touch-action: none; }
 .path-editor-rotation-handle:active { cursor: grabbing; }

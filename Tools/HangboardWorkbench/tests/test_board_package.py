@@ -197,13 +197,20 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         document, package.image_width, package.image_height
     )
     pieces_by_hold: dict[str, list[tuple[int, str, object]]] = {}
-    for hold_id, piece_index, kind, path in parsed.values():
-        pieces_by_hold.setdefault(hold_id, []).append((piece_index, kind, path))
+    for hold_id, piece_index, kind, path, shape_constraint in parsed.values():
+        pieces_by_hold.setdefault(hold_id, []).append(
+            (piece_index, kind, path, shape_constraint)
+        )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])
     first_hold_id = next(iter(pieces_by_hold))
     first_piece = pieces_by_hold[first_hold_id][0]
-    pieces_by_hold[first_hold_id][0] = (first_piece[0], "sloper", first_piece[2])
+    pieces_by_hold[first_hold_id][0] = (
+        first_piece[0],
+        "sloper",
+        first_piece[2],
+        first_piece[3],
+    )
     original = copy.deepcopy(package.board)
 
     updated = board_package._apply_editor_document(
@@ -794,6 +801,124 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
         {"holdID": "hold-left", "pieceIndex": 0},
         {"holdID": "hold-left", "pieceIndex": 1},
     ]
+
+
+def test_shape_constraint_round_trips_and_preserves_unrelated_geometry(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shapeConstraint", {"shape": "oval", "rotationDegrees": 15}
+        ),
+    )
+    package = board_package.load_board_package(package_root)
+    sibling_before = copy.deepcopy(package.board["holds"][0]["geometry"][1])
+    document = board_package.editor_document(package)
+
+    assert document["regions"][0]["shapeConstraint"] == {
+        "shape": "oval",
+        "rotationDegrees": 15.0,
+    }
+    document["regions"][0]["shapeConstraint"] = {
+        "shape": "pill",
+        "rotationDegrees": -45,
+    }
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    reopened = board_package.open_package(library, saved.board_id)
+
+    first_geometry = reopened.board["holds"][0]["geometry"]
+    assert first_geometry[0]["shapeConstraint"] == {
+        "shape": "pill",
+        "rotationDegrees": -45.0,
+    }
+    assert first_geometry[1] == sibling_before
+    assert first_geometry[1]["treatment"] == {"type": "surface"}
+
+
+def test_omitting_editor_shape_constraint_removes_stored_constraint(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shapeConstraint", {"shape": "rectangle", "rotationDegrees": 0}
+        ),
+    )
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][0].pop("shapeConstraint")
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert "shapeConstraint" not in saved.board["holds"][0]["geometry"][0]
+    assert "shapeConstraint" not in _read_board(package_root)["holds"][0]["geometry"][0]
+
+
+@pytest.mark.parametrize(
+    "constraint",
+    [
+        {"shape": "triangle", "rotationDegrees": 0},
+        {"shape": "oval", "rotationDegrees": True},
+        {"shape": "oval", "rotationDegrees": float("inf")},
+        {"shape": "oval", "rotationDegrees": 10**1000},
+        {"shape": "oval", "rotationDegrees": -180.0001},
+        {"shape": "oval", "rotationDegrees": 180},
+        {"shape": "oval", "rotationDegrees": 0, "unexpected": True},
+    ],
+)
+def test_package_rejects_invalid_shape_constraints(
+    tmp_path: Path, constraint: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shapeConstraint", constraint
+        ),
+    )
+
+    with pytest.raises(BoardPackageError, match="shapeConstraint"):
+        board_package.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    "constraint",
+    [
+        {"shape": "triangle", "rotationDegrees": 0},
+        {"shape": "circle", "rotationDegrees": False},
+        {"shape": "circle", "rotationDegrees": float("nan")},
+        {"shape": "circle", "rotationDegrees": -181},
+        {"shape": "circle", "rotationDegrees": 180},
+        {"shape": "circle", "rotationDegrees": 0, "unexpected": True},
+    ],
+)
+def test_save_rejects_invalid_editor_shape_constraints(
+    tmp_path: Path, constraint: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["regions"][0]["shapeConstraint"] = constraint
+
+    with pytest.raises(BoardPackageError, match="shapeConstraint"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 def test_open_save_round_trip_keeps_board_json_and_creates_no_sidecar(

@@ -47,6 +47,341 @@ function serializePath(commands) {
 
 function fmt(n) { return Number.isInteger(n) ? String(n) : String(Math.round(n * 1e6) / 1e6); }
 
+function createOutlineShapePath(pathString, preset) {
+  const bounds = pathBounds(parsePath(pathString));
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  if (width <= 0 || height <= 0) throw new Error("Outline needs non-zero width and height");
+  const cx = (bounds.minX + bounds.maxX) / 2;
+  const cy = (bounds.minY + bounds.maxY) / 2;
+
+  if (preset === "oval") return serializePath(ellipseCommands(cx, cy, width / 2, height / 2));
+  if (preset === "circle") {
+    const radius = Math.min(width, height) / 2;
+    return serializePath(ellipseCommands(cx, cy, radius, radius));
+  }
+  if (preset === "pill") return serializePath(pillCommands(bounds));
+  if (preset === "rounded-rectangle") return serializePath(roundedRectangleCommands(bounds, Math.min(width, height) / 5));
+  if (preset === "rectangle") return serializePath(rectangleCommands(bounds));
+  throw new Error("Choose a valid outline preset");
+}
+
+const CONSTRAINED_SHAPES = new Set(["oval", "circle", "pill", "roundedRectangle", "rectangle"]);
+const CONSTRAINED_HANDLES = new Set(["nw", "n", "ne", "e", "se", "s", "sw", "w"]);
+
+function validateShapeConstraint(constraint) {
+  if (!constraint || typeof constraint !== "object" || Array.isArray(constraint)) {
+    throw new Error("Choose a valid constrained shape");
+  }
+  const keys = Object.keys(constraint);
+  if (keys.length !== 2 || !Object.hasOwn(constraint, "shape") || !Object.hasOwn(constraint, "rotationDegrees")) {
+    throw new Error("Shape constraint must contain exactly shape and rotationDegrees");
+  }
+  if (!CONSTRAINED_SHAPES.has(constraint.shape)) {
+    throw new Error("Choose a valid constrained shape");
+  }
+  if (typeof constraint.rotationDegrees !== "number" || !Number.isFinite(constraint.rotationDegrees)) {
+    throw new Error("Shape rotation must be finite");
+  }
+  if (constraint.rotationDegrees < -180 || constraint.rotationDegrees >= 180) {
+    throw new Error("Shape rotation must be normalized to [-180, 180)");
+  }
+  return {
+    shape: constraint.shape,
+    rotationDegrees: constraint.rotationDegrees,
+  };
+}
+
+function constrainedOutlineModel(pathString, constraint) {
+  const shapeConstraint = validateShapeConstraint(constraint);
+  const commands = parsePath(pathString);
+  const worldBounds = validPathBounds(commands);
+  const center = {
+    x: (worldBounds.minX + worldBounds.maxX) / 2,
+    y: (worldBounds.minY + worldBounds.maxY) / 2,
+  };
+  const rotationRadians = shapeConstraint.rotationDegrees * Math.PI / 180;
+  rotatePath(commands, -rotationRadians, center);
+  const intrinsicBounds = validPathBounds(commands);
+  const { minX, minY, maxX, maxY } = intrinsicBounds;
+  const midX = (minX + maxX) / 2;
+  const midY = (minY + maxY) / 2;
+  const localHandles = {
+    nw: { x: minX, y: minY },
+    n: { x: midX, y: minY },
+    ne: { x: maxX, y: minY },
+    e: { x: maxX, y: midY },
+    se: { x: maxX, y: maxY },
+    s: { x: midX, y: maxY },
+    sw: { x: minX, y: maxY },
+    w: { x: minX, y: midY },
+  };
+  const handles = Object.fromEntries(
+    Object.entries(localHandles).map(([handle, point]) => [handle, rotatePoint(point, center, rotationRadians)]),
+  );
+  return { center, rotationDegrees: shapeConstraint.rotationDegrees, intrinsicBounds, handles };
+}
+
+function validPathBounds(commands) {
+  const bounds = pathBounds(commands);
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  if (
+    !Object.values(bounds).every(Number.isFinite)
+    || !Number.isFinite(width)
+    || !Number.isFinite(height)
+    || width <= 0
+    || height <= 0
+  ) {
+    throw new Error("Outline needs non-zero width and height");
+  }
+  return bounds;
+}
+
+function assertFinitePoint(point, message) {
+  if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) throw new Error(message);
+}
+
+function assertFiniteResizeBounds(bounds) {
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  if (
+    !Object.values(bounds).every(Number.isFinite)
+    || !Number.isFinite(width)
+    || !Number.isFinite(height)
+  ) {
+    throw new Error("Constrained resize dimensions must be finite");
+  }
+}
+
+function assertFiniteCommands(commands) {
+  for (const command of commands) {
+    for (const point of [...command.points, ...command.controls]) {
+      assertFinitePoint(point, "Constrained resize coordinates must be finite");
+    }
+  }
+}
+
+function resizeConstrainedOutline(pathString, constraint, handle, pointer, minimumSize = 2) {
+  const shapeConstraint = validateShapeConstraint(constraint);
+  if (!CONSTRAINED_HANDLES.has(handle)) throw new Error("Choose a valid resize handle");
+  if (!pointer || !Number.isFinite(pointer.x) || !Number.isFinite(pointer.y)) {
+    throw new Error("Resize pointer must be finite");
+  }
+  if (!Number.isFinite(minimumSize) || minimumSize <= 0) throw new Error("Minimum size must be positive");
+
+  const model = constrainedOutlineModel(pathString, shapeConstraint);
+  const rotationRadians = shapeConstraint.rotationDegrees * Math.PI / 180;
+  const localPointer = rotatePoint(pointer, model.center, -rotationRadians);
+  assertFinitePoint(localPointer, "Constrained resize local pointer must be finite");
+  const bounds = { ...model.intrinsicBounds };
+  const originalWidth = bounds.maxX - bounds.minX;
+  const originalHeight = bounds.maxY - bounds.minY;
+
+  if (handle.includes("w")) bounds.minX = Math.min(localPointer.x, bounds.maxX - minimumSize);
+  if (handle.includes("e")) bounds.maxX = Math.max(localPointer.x, bounds.minX + minimumSize);
+  if (handle.includes("n")) bounds.minY = Math.min(localPointer.y, bounds.maxY - minimumSize);
+  if (handle.includes("s")) bounds.maxY = Math.max(localPointer.y, bounds.minY + minimumSize);
+
+  if (shapeConstraint.shape === "circle") {
+    lockCircleBounds(bounds, model.intrinsicBounds, handle, originalWidth, originalHeight, minimumSize);
+  }
+  assertFiniteResizeBounds(bounds);
+
+  const commands = constrainedPrimitiveCommands(shapeConstraint.shape, bounds);
+  assertFiniteCommands(commands);
+  rotatePath(commands, rotationRadians, model.center);
+  assertFiniteCommands(commands);
+  return { displayPath: serializePath(commands), shapeConstraint };
+}
+
+function lockCircleBounds(bounds, originalBounds, handle, originalWidth, originalHeight, minimumSize) {
+  const changesX = handle.includes("e") || handle.includes("w");
+  const changesY = handle.includes("n") || handle.includes("s");
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  let diameter;
+
+  if (changesX && changesY) {
+    diameter = Math.abs(width - originalWidth) >= Math.abs(height - originalHeight) ? width : height;
+  } else {
+    diameter = changesX ? width : height;
+  }
+  diameter = Math.max(minimumSize, diameter);
+
+  if (changesX) {
+    if (handle.includes("w")) bounds.minX = bounds.maxX - diameter;
+    else bounds.maxX = bounds.minX + diameter;
+  } else {
+    const centerX = (originalBounds.minX + originalBounds.maxX) / 2;
+    bounds.minX = centerX - diameter / 2;
+    bounds.maxX = centerX + diameter / 2;
+  }
+
+  if (changesY) {
+    if (handle.includes("n")) bounds.minY = bounds.maxY - diameter;
+    else bounds.maxY = bounds.minY + diameter;
+  } else {
+    const centerY = (originalBounds.minY + originalBounds.maxY) / 2;
+    bounds.minY = centerY - diameter / 2;
+    bounds.maxY = centerY + diameter / 2;
+  }
+}
+
+function constrainedPrimitiveCommands(shape, bounds) {
+  const width = bounds.maxX - bounds.minX;
+  const height = bounds.maxY - bounds.minY;
+  const cx = (bounds.minX + bounds.maxX) / 2;
+  const cy = (bounds.minY + bounds.maxY) / 2;
+  if (shape === "oval" || shape === "circle") return ellipseCommands(cx, cy, width / 2, height / 2);
+  if (shape === "pill") return pillCommands(bounds);
+  if (shape === "roundedRectangle") return roundedRectangleCommands(bounds, Math.min(width, height) / 5);
+  return rectangleCommands(bounds);
+}
+
+function pathBounds(commands) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  const include = (point) => {
+    minX = Math.min(minX, point.x);
+    minY = Math.min(minY, point.y);
+    maxX = Math.max(maxX, point.x);
+    maxY = Math.max(maxY, point.y);
+  };
+  let current = null;
+  let start = null;
+  for (const command of commands) {
+    if (command.type === "M") {
+      current = command.points[0];
+      start = current;
+      include(current);
+    } else if (command.type === "L") {
+      include(command.points[0]);
+      current = command.points[0];
+    } else if (command.type === "Q") {
+      includeQuadraticExtrema(current, command.controls[0], command.points[0], include);
+      current = command.points[0];
+    } else if (command.type === "C") {
+      includeCubicExtrema(current, command.controls[0], command.controls[1], command.points[0], include);
+      current = command.points[0];
+    } else if (command.type === "Z" && start) {
+      include(start);
+      current = start;
+    }
+  }
+  return { minX, minY, maxX, maxY };
+}
+
+function includeQuadraticExtrema(p0, p1, p2, include) {
+  include(p0);
+  include(p2);
+  for (const axis of ["x", "y"]) {
+    const denominator = p0[axis] - 2 * p1[axis] + p2[axis];
+    if (denominator === 0) continue;
+    const t = (p0[axis] - p1[axis]) / denominator;
+    if (t > 0 && t < 1) include(bezierQuad(p0, p1, p2, t));
+  }
+}
+
+function includeCubicExtrema(p0, p1, p2, p3, include) {
+  include(p0);
+  include(p3);
+  for (const axis of ["x", "y"]) {
+    const a = -p0[axis] + 3 * p1[axis] - 3 * p2[axis] + p3[axis];
+    const b = 2 * (p0[axis] - 2 * p1[axis] + p2[axis]);
+    const c = p1[axis] - p0[axis];
+    for (const t of quadraticRoots(a, b, c)) {
+      if (t > 0 && t < 1) include(bezierCubic(p0, p1, p2, p3, t));
+    }
+  }
+}
+
+function quadraticRoots(a, b, c) {
+  if (Math.abs(a) < Number.EPSILON) return Math.abs(b) < Number.EPSILON ? [] : [-c / b];
+  const discriminant = b * b - 4 * a * c;
+  if (discriminant < 0) return [];
+  const root = Math.sqrt(discriminant);
+  return [(-b + root) / (2 * a), (-b - root) / (2 * a)];
+}
+
+function bezierCubic(p0, p1, p2, p3, t) {
+  const u = 1 - t;
+  return {
+    x: u ** 3 * p0.x + 3 * u ** 2 * t * p1.x + 3 * u * t ** 2 * p2.x + t ** 3 * p3.x,
+    y: u ** 3 * p0.y + 3 * u ** 2 * t * p1.y + 3 * u * t ** 2 * p2.y + t ** 3 * p3.y,
+  };
+}
+
+function ellipseCommands(cx, cy, rx, ry) {
+  const k = 0.5522847498307936;
+  return [
+    { type: "M", points: [{ x: cx, y: cy - ry }], controls: [] },
+    { type: "C", points: [{ x: cx + rx, y: cy }], controls: [{ x: cx + k * rx, y: cy - ry }, { x: cx + rx, y: cy - k * ry }] },
+    { type: "C", points: [{ x: cx, y: cy + ry }], controls: [{ x: cx + rx, y: cy + k * ry }, { x: cx + k * rx, y: cy + ry }] },
+    { type: "C", points: [{ x: cx - rx, y: cy }], controls: [{ x: cx - k * rx, y: cy + ry }, { x: cx - rx, y: cy + k * ry }] },
+    { type: "C", points: [{ x: cx, y: cy - ry }], controls: [{ x: cx - rx, y: cy - k * ry }, { x: cx - k * rx, y: cy - ry }] },
+    { type: "Z", points: [], controls: [] },
+  ];
+}
+
+function rectangleCommands({ minX, minY, maxX, maxY }) {
+  return [
+    { type: "M", points: [{ x: minX, y: minY }], controls: [] },
+    { type: "L", points: [{ x: maxX, y: minY }], controls: [] },
+    { type: "L", points: [{ x: maxX, y: maxY }], controls: [] },
+    { type: "L", points: [{ x: minX, y: maxY }], controls: [] },
+    { type: "Z", points: [], controls: [] },
+  ];
+}
+
+function roundedRectangleCommands({ minX, minY, maxX, maxY }, radius) {
+  const k = 0.5522847498307936;
+  return [
+    { type: "M", points: [{ x: minX + radius, y: minY }], controls: [] },
+    { type: "L", points: [{ x: maxX - radius, y: minY }], controls: [] },
+    { type: "C", points: [{ x: maxX, y: minY + radius }], controls: [{ x: maxX - radius + k * radius, y: minY }, { x: maxX, y: minY + radius - k * radius }] },
+    { type: "L", points: [{ x: maxX, y: maxY - radius }], controls: [] },
+    { type: "C", points: [{ x: maxX - radius, y: maxY }], controls: [{ x: maxX, y: maxY - radius + k * radius }, { x: maxX - radius + k * radius, y: maxY }] },
+    { type: "L", points: [{ x: minX + radius, y: maxY }], controls: [] },
+    { type: "C", points: [{ x: minX, y: maxY - radius }], controls: [{ x: minX + radius - k * radius, y: maxY }, { x: minX, y: maxY - radius + k * radius }] },
+    { type: "L", points: [{ x: minX, y: minY + radius }], controls: [] },
+    { type: "C", points: [{ x: minX + radius, y: minY }], controls: [{ x: minX, y: minY + radius - k * radius }, { x: minX + radius - k * radius, y: minY }] },
+    { type: "Z", points: [], controls: [] },
+  ];
+}
+
+function pillCommands(bounds) {
+  const { minX, minY, maxX, maxY } = bounds;
+  const width = maxX - minX;
+  const height = maxY - minY;
+  const k = 0.5522847498307936;
+  if (width >= height) {
+    const radius = height / 2;
+    const cy = minY + radius;
+    return [
+      { type: "M", points: [{ x: minX + radius, y: minY }], controls: [] },
+      { type: "L", points: [{ x: maxX - radius, y: minY }], controls: [] },
+      { type: "C", points: [{ x: maxX, y: cy }], controls: [{ x: maxX - radius + k * radius, y: minY }, { x: maxX, y: cy - k * radius }] },
+      { type: "C", points: [{ x: maxX - radius, y: maxY }], controls: [{ x: maxX, y: cy + k * radius }, { x: maxX - radius + k * radius, y: maxY }] },
+      { type: "L", points: [{ x: minX + radius, y: maxY }], controls: [] },
+      { type: "C", points: [{ x: minX, y: cy }], controls: [{ x: minX + radius - k * radius, y: maxY }, { x: minX, y: cy + k * radius }] },
+      { type: "C", points: [{ x: minX + radius, y: minY }], controls: [{ x: minX, y: cy - k * radius }, { x: minX + radius - k * radius, y: minY }] },
+      { type: "Z", points: [], controls: [] },
+    ];
+  }
+  const radius = width / 2;
+  const cx = minX + radius;
+  return [
+    { type: "M", points: [{ x: minX, y: minY + radius }], controls: [] },
+    { type: "L", points: [{ x: minX, y: maxY - radius }], controls: [] },
+    { type: "C", points: [{ x: cx, y: maxY }], controls: [{ x: minX, y: maxY - radius + k * radius }, { x: cx - k * radius, y: maxY }] },
+    { type: "C", points: [{ x: maxX, y: maxY - radius }], controls: [{ x: cx + k * radius, y: maxY }, { x: maxX, y: maxY - radius + k * radius }] },
+    { type: "L", points: [{ x: maxX, y: minY + radius }], controls: [] },
+    { type: "C", points: [{ x: cx, y: minY }], controls: [{ x: maxX, y: minY + radius - k * radius }, { x: cx + k * radius, y: minY }] },
+    { type: "C", points: [{ x: minX, y: minY + radius }], controls: [{ x: cx - k * radius, y: minY }, { x: minX, y: minY + radius - k * radius }] },
+    { type: "Z", points: [], controls: [] },
+  ];
+}
+
 function moveVertex(commands, index, dx, dy) {
   const cmd = commands[index];
   if (!cmd || cmd.type === "Z") return;
@@ -139,6 +474,16 @@ function subdivideCubic(p0, c1, c2, p3) {
   };
 }
 
-const pathEditorExports = { parsePath, serializePath, moveVertex, addVertex, deleteVertex, rotatePath };
+const pathEditorExports = {
+  parsePath,
+  serializePath,
+  createOutlineShapePath,
+  constrainedOutlineModel,
+  resizeConstrainedOutline,
+  moveVertex,
+  addVertex,
+  deleteVertex,
+  rotatePath,
+};
 if (typeof module !== "undefined") module.exports = pathEditorExports;
 if (typeof globalThis !== "undefined") globalThis.HoldPathEditor = pathEditorExports;

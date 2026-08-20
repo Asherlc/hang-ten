@@ -38,6 +38,86 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: imageURL), try presentationBytes())
     }
 
+    func testStoreAcceptsShapeConstraintWithoutChangingRuntimeBoardShape() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shapeConstraint"] = [
+                    "shape": "oval",
+                    "rotationDegrees": 15
+                ]
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let firstPiece = try XCTUnwrap(board.holds.first?.geometry.first)
+
+        XCTAssertEqual(
+            firstPiece.shape,
+            .roundedRect(cornerRadiusFraction: 0.2)
+        )
+    }
+
+    func testStoreRejectsInvalidShapeConstraints() throws {
+        let invalidConstraints: [[String: Any]] = [
+            ["rotationDegrees": 0],
+            ["shape": "oval"],
+            ["shape": "triangle", "rotationDegrees": 0],
+            ["shape": "circle", "rotationDegrees": true],
+            ["shape": "rectangle", "rotationDegrees": -180.01],
+            ["shape": "oval", "rotationDegrees": 180],
+            ["shape": "oval", "rotationDegrees": 0, "unexpected": true]
+        ]
+        for constraint in invalidConstraints {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                    geometry[0]["shapeConstraint"] = constraint
+                    holds[0]["geometry"] = geometry
+                    board["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
+    }
+
+    func testStoreRejectsNonFiniteShapeConstraintRotation() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let boardURL = hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            try self.mutateBoard(at: boardURL) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shapeConstraint"] = [
+                    "shape": "pill",
+                    "rotationDegrees": 0
+                ]
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            }
+            let finiteJSON = try XCTUnwrap(String(data: Data(contentsOf: boardURL), encoding: .utf8))
+            let nonFiniteJSON = finiteJSON.replacingOccurrences(
+                of: "\"rotationDegrees\":0",
+                with: "\"rotationDegrees\":1e999"
+            )
+            XCTAssertNotEqual(nonFiniteJSON, finiteJSON)
+            try Data(nonFiniteJSON.utf8).write(to: boardURL)
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
     /// Swift's discovery sort must agree with the Workbench's directory
     /// discovery order on the same shared non-ASCII fixture cases, so the
     /// two independent sort implementations can't silently diverge.

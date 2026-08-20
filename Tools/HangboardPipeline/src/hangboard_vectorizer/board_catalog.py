@@ -65,6 +65,9 @@ _HOLD_FEATURES = frozenset(
 )
 _TREATMENTS = frozenset({"surface", "shelf", "recess"})
 _DEPTHS = frozenset({"deep", "shallow"})
+_SHAPE_CONSTRAINTS = frozenset(
+    {"oval", "circle", "pill", "roundedRectangle", "rectangle"}
+)
 
 
 def _closed(
@@ -113,9 +116,15 @@ def is_board_package_slug(value: object) -> bool:
 
 
 def _number(value: Any, source: str) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{source} must be finite")
-    return float(value)
+    try:
+        result = float(value)
+    except OverflowError as error:
+        raise ValueError(f"{source} must be finite") from error
+    if not math.isfinite(result):
+        raise ValueError(f"{source} must be finite")
+    return result
 
 
 def _positive_integer(value: Any, source: str) -> int:
@@ -158,15 +167,41 @@ class MillimeterRange:
 
 
 @dataclass(frozen=True)
+class BoardShapeConstraint:
+    shape: str
+    rotation_degrees: float
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> BoardShapeConstraint:
+        payload = _mapping(value, source)
+        _closed(payload, {"shape", "rotationDegrees"}, source)
+        shape = _string(payload["shape"], f"{source}.shape")
+        if shape not in _SHAPE_CONSTRAINTS:
+            raise ValueError(f"{source}.shape is unsupported")
+        rotation_degrees = _number(
+            payload["rotationDegrees"], f"{source}.rotationDegrees"
+        )
+        if not -180 <= rotation_degrees < 180:
+            raise ValueError(f"{source}.rotationDegrees must be in [-180, 180)")
+        return cls(shape, rotation_degrees)
+
+
+@dataclass(frozen=True)
 class BoardGeometryPiece:
     frame: NormalizedFrame
     shape: BoardShapeDocument
     treatment: Mapping[str, Any] | None
+    shape_constraint: BoardShapeConstraint | None
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardGeometryPiece":
         payload = _mapping(value, source)
-        _closed(payload, {"frame", "shape"}, source, optional={"treatment"})
+        _closed(
+            payload,
+            {"frame", "shape"},
+            source,
+            optional={"treatment", "shapeConstraint"},
+        )
         treatment = None
         if "treatment" in payload:
             treatment_payload = _mapping(payload["treatment"], f"{source}.treatment")
@@ -197,6 +232,11 @@ class BoardGeometryPiece:
             NormalizedFrame.from_json(payload["frame"], f"{source}.frame"),
             BoardShapeDocument.from_json(payload["shape"], f"{source}.shape"),
             treatment,
+            BoardShapeConstraint.from_json(
+                payload["shapeConstraint"], f"{source}.shapeConstraint"
+            )
+            if "shapeConstraint" in payload
+            else None,
         )
 
 
