@@ -174,22 +174,62 @@ struct TrainView: View {
 struct BoardPickerView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @State private var filters = BoardPickerFilters()
+
+    private var filteredBoards: [TrainingBoard] {
+        filters.filteredBoards(from: BoardCatalog.all)
+    }
+
+    private var manufacturerOptions: [String] {
+        BoardPickerFilters.manufacturerOptions(from: BoardCatalog.all)
+    }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 16) {
-                ForEach(BoardCatalog.all) { board in
-                    Button {
-                        store.selectBoard(board)
-                        dismiss()
-                    } label: {
-                        BoardPickerCard(
-                            board: board,
-                            isSelected: board.id == store.selectedBoard.id
-                        )
+                Picker("Manufacturer", selection: $filters.manufacturer) {
+                    Text("All manufacturers")
+                        .tag(nil as String?)
+                    ForEach(manufacturerOptions, id: \.self) { manufacturer in
+                        Text(manufacturer)
+                            .tag(Optional(manufacturer))
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("boardPicker.board.\(board.id)")
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("boardPicker.manufacturerFilter")
+
+                if filteredBoards.isEmpty {
+                    VStack(spacing: 8) {
+                        Text("No boards match your filters.")
+                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.hangInk)
+                        Text("Try a different search or manufacturer.")
+                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                        Button("Clear filters") {
+                            filters.clear()
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.hangGreenDark)
+                        .accessibilityIdentifier("boardPicker.clearFilters")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 36)
+                } else {
+                    ForEach(filteredBoards) { board in
+                        Button {
+                            store.selectBoard(board)
+                            dismiss()
+                        } label: {
+                            BoardPickerCard(
+                                board: board,
+                                isSelected: board.id == store.selectedBoard.id
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("boardPicker.board.\(board.id)")
+                    }
                 }
             }
             .padding(.horizontal, 20)
@@ -199,6 +239,56 @@ struct BoardPickerView: View {
         .background(Color.hangBackground)
         .navigationTitle("Choose board")
         .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: $filters.searchText, prompt: "Search boards")
+        .accessibilityIdentifier("boardPicker.search")
+    }
+}
+
+struct BoardPickerFilters {
+    var searchText = ""
+    var manufacturer: String?
+
+    var isEmpty: Bool {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && manufacturer == nil
+    }
+
+    static func manufacturerOptions(from boards: [TrainingBoard]) -> [String] {
+        var manufacturerByNormalizedName: [String: String] = [:]
+        for board in boards {
+            let normalizedName = normalized(board.manufacturer)
+            if manufacturerByNormalizedName[normalizedName] == nil {
+                manufacturerByNormalizedName[normalizedName] = board.manufacturer
+            }
+        }
+        return manufacturerByNormalizedName.values.sorted {
+            $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
+        }
+    }
+
+    func filteredBoards(from boards: [TrainingBoard]) -> [TrainingBoard] {
+        boards.filter(matches)
+    }
+
+    mutating func clear() {
+        searchText = ""
+        manufacturer = nil
+    }
+
+    private func matches(_ board: TrainingBoard) -> Bool {
+        let matchesManufacturer = manufacturer.map {
+            Self.normalized(board.manufacturer) == Self.normalized($0)
+        } ?? true
+        guard matchesManufacturer else { return false }
+
+        let searchTerm = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !searchTerm.isEmpty else { return true }
+        return [board.name, board.manufacturer, board.subtitle].contains {
+            Self.normalized($0).contains(Self.normalized(searchTerm))
+        }
+    }
+
+    private static func normalized(_ text: String) -> String {
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
     }
 }
 
