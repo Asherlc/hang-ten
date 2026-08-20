@@ -309,6 +309,67 @@ test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavio
   });
 });
 
+test("command/control undo and redo reverse document edits and preserve native input behavior", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.keyDown("body", "ArrowRight");
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+    assert.equal(await app.keyDown("body", "z", { metaKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true, shiftKey: true }), true);
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), false);
+
+    const input = app.document.createElement("input");
+    input.id = "native-history-input";
+    app.document.body.append(input);
+    assert.equal(await app.keyDown("#native-history-input", "z", { metaKey: true }), false);
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+  });
+});
+
+test("a new edit clears redo and a completed drag is a single undo step", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await drag(app, '[data-hold-key="a-piece-0"]', [{ x: 15, y: 15 }, { x: 20, y: 15 }, { x: 25, y: 15 }]);
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    await app.keyDown("body", "ArrowRight");
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), false);
+  });
+});
+
+test("escape cancels a drag and command/control save saves only outside editable targets", async () => {
+  const board = boardFixture();
+  let saves = 0;
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(boardId: string, document: EditorDocument): Promise<Board> {
+      saves += 1;
+      return { ...board, boardId, document };
+    },
+  } satisfies WorkbenchClient;
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.pointer('[data-hold-key="a-piece-0"]', "pointerdown", { pointerId: 7, clientX: 15, clientY: 15 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 25, clientY: 15 });
+    assert.notEqual(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "Escape"), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "s", { metaKey: true }), true);
+    await app.flush();
+    assert.equal(saves, 1);
+
+    const input = app.document.createElement("input");
+    input.id = "native-save-input";
+    app.document.body.append(input);
+    assert.equal(await app.keyDown("#native-save-input", "s", { ctrlKey: true }), false);
+    assert.equal(saves, 1);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("bracket keys and buttons rotate by 15 and 45 degrees", async () => {
   const pivot = { x: 80 / 3, y: 40 / 3 };
   await withEditor(async (app) => {

@@ -41,6 +41,7 @@ interface DragState {
   originalPath: string | null;
   originalPaths: Array<{ key: string; path: string; shapeConstraint?: ShapeConstraint }> | null;
   originalConstraint: ShapeConstraint | null;
+  originalDocument: EditorDocument | null;
   resizeHandle: ConstrainedHandle | null;
   originalDirty: boolean;
   pivot: Point | null;
@@ -61,6 +62,7 @@ const EMPTY_DRAG: DragState = {
   originalPath: null,
   originalPaths: null,
   originalConstraint: null,
+  originalDocument: null,
   resizeHandle: null,
   originalDirty: false,
   pivot: null,
@@ -459,6 +461,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       };
     }
     if (!next) return;
+    next.originalDocument = cloneEditorDocument(document);
     event.preventDefault();
     dragRef.current = next;
     previewDocumentRef.current = document;
@@ -569,6 +572,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       validateEditorDocument(candidate);
       actions.replaceDocument(candidate, {
         dirty: true,
+        historySnapshot: drag.originalDocument ?? undefined,
         validation: "",
         status: drag.type === "rotation"
           ? "Hold rotated. Save when ready."
@@ -658,12 +662,26 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
-      if (busy) return;
       const target = event.target instanceof Element ? event.target : null;
       const tagName = target?.tagName.toLowerCase();
       if ((target instanceof HTMLElement && target.isContentEditable)
         || target?.getAttribute("contenteditable") === "true"
         || tagName === "input" || tagName === "select" || tagName === "textarea") return;
+      if (busy) return;
+      const modifier = event.metaKey || event.ctrlKey;
+      if (modifier && event.key.toLowerCase() === "z") {
+        const changed = event.shiftKey ? actions.redoDocument() : actions.undoDocument();
+        if (changed) event.preventDefault();
+        return;
+      }
+      if (event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "y") {
+        if (actions.redoDocument()) event.preventDefault();
+        return;
+      }
+      if (event.key === "Escape" && cancelActiveEdit()) {
+        event.preventDefault();
+        return;
+      }
       if (event.key === "[" || event.key === "]") {
         if (!selectedHold) return;
         event.preventDefault();
@@ -689,7 +707,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     };
     window.document.addEventListener("keydown", onKeyDown);
     return () => window.document.removeEventListener("keydown", onKeyDown);
-  }, [actions, busy, document, pathEditor, rotateHold, selectedHold]);
+  }, [actions, busy, cancelActiveEdit, document, pathEditor, rotateHold, selectedHold]);
 
   return {
     addHold,

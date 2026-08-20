@@ -246,6 +246,7 @@ export interface WorkbenchState {
 
 export interface DocumentUpdateOptions {
   dirty?: boolean;
+  historySnapshot?: EditorDocument;
   selectedKey?: string | null;
   validation?: string;
   status?: string;
@@ -270,6 +271,8 @@ export interface WorkbenchActions {
   setRotationDegrees(value: string): void;
   replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;
+  undoDocument(): boolean;
+  redoDocument(): boolean;
   updateDocument(document: EditorDocument, status?: string): void;
 }
 
