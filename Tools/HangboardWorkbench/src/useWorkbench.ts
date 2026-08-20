@@ -9,6 +9,7 @@ import type {
   WorkbenchDependencies,
   WorkbenchState,
 } from "./types.ts";
+import { cloneEditorDocument } from "./editor-model.ts";
 
 const INITIAL_STATE: WorkbenchState = {
   boards: [],
@@ -36,17 +37,6 @@ const INITIAL_STATE: WorkbenchState = {
 
 type StateUpdate = (state: WorkbenchState) => WorkbenchState;
 type ActivityGuard = () => boolean;
-
-function cloneEditorDocument(document: EditorDocument): EditorDocument {
-  return {
-    schemaVersion: document.schemaVersion,
-    canvas: { width: document.canvas.width, height: document.canvas.height },
-    regions: document.regions.map((region) => ({
-      ...region,
-      ...(region.metadata ? { metadata: { ...region.metadata } } : {}),
-    })),
-  };
-}
 
 function errorMessage(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
@@ -502,6 +492,47 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     });
   }, [client, dialogs, gitOperations, isBusy, updateState]);
 
+  const replaceDocument = useCallback<WorkbenchActions["replaceDocument"]>((document, options = {}) => {
+    const nextDocument = cloneEditorDocument(document);
+    updateState((current) => ({
+      ...current,
+      document: nextDocument,
+      dirty: options.dirty ?? true,
+      ...(Object.hasOwn(options, "selectedKey") ? { selectedKey: options.selectedKey ?? null } : {}),
+      validation: options.validation ?? "",
+      status: options.status ?? current.status,
+    }));
+  }, [updateState]);
+
+  const editDocument = useCallback<WorkbenchActions["editDocument"]>((edit, options = {}) => {
+    const current = stateRef.current;
+    if (!current.document) return false;
+    const nextDocument = cloneEditorDocument(current.document);
+    try {
+      edit(nextDocument);
+      controller.validateEditorDocument(nextDocument);
+    } catch (error: unknown) {
+      updateState((latest) => ({
+        ...latest,
+        validation: errorMessage(error, options.failureMessage ?? "Contour is invalid."),
+        status: options.failureStatus ?? latest.status,
+      }));
+      return false;
+    }
+    updateState((latest) => {
+      if (latest.document !== current.document) return latest;
+      return {
+        ...latest,
+        document: nextDocument,
+        dirty: options.dirty ?? true,
+        ...(Object.hasOwn(options, "selectedKey") ? { selectedKey: options.selectedKey ?? null } : {}),
+        validation: options.validation ?? "",
+        status: options.status ?? "Hold document updated. Save when ready.",
+      };
+    });
+    return true;
+  }, [controller, updateState]);
+
   useEffect(() => {
     mountedRef.current = true;
     return () => {
@@ -559,15 +590,10 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     setRotationDegrees(value) {
       updateState((current) => ({ ...current, rotationDegrees: value }));
     },
+    replaceDocument,
+    editDocument,
     updateDocument(document, status = "Hold document updated. Save when ready.") {
-      const nextDocument = cloneEditorDocument(document);
-      updateState((current) => ({
-        ...current,
-        document: nextDocument,
-        dirty: true,
-        validation: "",
-        status,
-      }));
+      replaceDocument(document, { status });
     },
   }), [
     commitChanges,
@@ -576,6 +602,8 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     pushBranch,
     refreshBoards,
     refreshGit,
+    replaceDocument,
+    editDocument,
     saveBoard,
     selectBoard,
     switchBranch,

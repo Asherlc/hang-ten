@@ -1,5 +1,8 @@
+import React from "react";
+
 import type { HoldRegion, WorkbenchDependencies } from "./types.ts";
 import { useWorkbench } from "./useWorkbench.ts";
+import { useHoldEditor } from "./useHoldEditor.ts";
 import { BoardLibrary } from "./components/BoardLibrary.tsx";
 import { HoldCanvas } from "./components/HoldCanvas.tsx";
 import { HoldInspector } from "./components/HoldInspector.tsx";
@@ -16,6 +19,16 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
+  const editor = useHoldEditor({
+    document: state.document,
+    selectedHold,
+    dirty: state.dirty,
+    rotationDegrees: state.rotationDegrees,
+    actions,
+    pathEditor: dependencies.pathEditor,
+    validateEditorDocument: dependencies.controller.validateEditorDocument,
+    dialogs: dependencies.dialogs,
+  });
   const branchStatus = state.status === "Ready." && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
@@ -64,13 +77,15 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
               <span className="eyebrow">Board</span>
               <strong id="board-name">{state.board?.displayName ?? "No board selected"}</strong>
             </div>
-            <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || busy}>Add hold</button>
+            <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || busy} onClick={editor.addHold}>Add hold</button>
           </div>
           <HoldCanvas
             board={state.board}
             document={state.document}
             selectedKey={state.selectedKey}
             onSelectHold={actions.selectHold}
+            pathEditor={dependencies.pathEditor}
+            editor={editor}
           />
           <ValidationPanel validation={state.validation} />
           <footer className="statusbar"><span id="editor-status">{state.status}</span></footer>
@@ -80,10 +95,10 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           hold={selectedHold}
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}
-          onTypeChange={() => {}}
-          onRotate={() => {}}
-          onApplyRotation={() => {}}
-          onDelete={() => {}}
+          onTypeChange={editor.changeHoldType}
+          onRotate={(direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15))}
+          onApplyRotation={editor.applyRotation}
+          onDelete={editor.deleteHold}
         />
       </section>
     </main>

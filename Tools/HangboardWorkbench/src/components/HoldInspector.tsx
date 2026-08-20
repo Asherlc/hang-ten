@@ -1,3 +1,5 @@
+import React from "react";
+
 import type { HoldRegion } from "../types.ts";
 
 const HOLD_TYPES = ["jug", "sloper", "edge", "pocket", "pinch"] as const;
@@ -7,7 +9,7 @@ export interface HoldInspectorProps {
   rotationDegrees: string;
   onRotationDegreesChange(value: string): void;
   onTypeChange(type: string): void;
-  onRotate(degrees: number): void;
+  onRotate(direction: -1 | 1, shiftKey: boolean): void;
   onApplyRotation(): void;
   onDelete(): void;
 }
@@ -41,8 +43,8 @@ export function HoldInspector({
         <div className="rotate-controls">
           <span className="eyebrow">Rotate hold (Shift for 45°)</span>
           <div className="button-row">
-            <button type="button" id="rotate-ccw-button" className="tool-button" title="Rotate counterclockwise" onClick={() => onRotate(-15)}>⟲ CCW</button>
-            <button type="button" id="rotate-cw-button" className="tool-button" title="Rotate clockwise" onClick={() => onRotate(15)}>⟳ CW</button>
+            <button type="button" id="rotate-ccw-button" className="tool-button" title="Rotate counterclockwise" onClick={(event) => onRotate(-1, event.shiftKey)}>⟲ CCW</button>
+            <button type="button" id="rotate-cw-button" className="tool-button" title="Rotate clockwise" onClick={(event) => onRotate(1, event.shiftKey)}>⟳ CW</button>
           </div>
           <label htmlFor="rotate-by-input">Rotate by</label>
           <span className="rotate-by-input-row">

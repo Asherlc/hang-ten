@@ -203,6 +203,15 @@ export interface WorkbenchState {
   boardsError: string;
 }
 
+export interface DocumentUpdateOptions {
+  dirty?: boolean;
+  selectedKey?: string | null;
+  validation?: string;
+  status?: string;
+  failureStatus?: string;
+  failureMessage?: string;
+}
+
 export interface WorkbenchActions {
   refreshBoards(): Promise<void>;
   selectBoard(boardId: string): Promise<void>;
@@ -218,6 +227,8 @@ export interface WorkbenchActions {
   openPullRequest(): Promise<void>;
   selectHold(key: string | null): void;
   setRotationDegrees(value: string): void;
+  replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): void;
+  editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;
   updateDocument(document: EditorDocument, status?: string): void;
 }
 

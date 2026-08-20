@@ -46,8 +46,14 @@ export interface ReactHarness {
   click(selector: string): Promise<void>;
   input(selector: string, value: string): Promise<void>;
   change(selector: string, value: string): Promise<void>;
-  keyDown(selector: string, key: string, options?: KeyboardEventInit): Promise<void>;
+  keyDown(selector: string, key: string, options?: KeyboardEventInit): Promise<boolean>;
   pointer(selector: string, type: string, options?: PointerEventInit): Promise<void>;
+  mouse(selector: string, type: string, options?: MouseEventInit): Promise<void>;
+  setSvgGeometry(selector: string, options: {
+    rect: Pick<DOMRect, "left" | "top" | "width" | "height">;
+    screenCTM?: DOMMatrix | null;
+  }): void;
+  capturedPointerId(selector: string): number | null;
   flush(callback?: () => void | Promise<void>): Promise<void>;
   documentValue(selector: string): string;
   cleanup(): Promise<void>;
@@ -128,7 +134,9 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
     },
     async click(selector) {
       await harness.flush(() => {
-        requiredElement<HTMLElement>(windowValue.document, selector).click();
+        const element = requiredElement<Element>(windowValue.document, selector);
+        if (element instanceof windowValue.HTMLElement) element.click();
+        else element.dispatchEvent(new windowValue.MouseEvent("click", { bubbles: true, cancelable: true }));
       });
     },
     async input(selector, value) {
@@ -149,19 +157,78 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
       });
     },
     async keyDown(selector, key, options = {}) {
+      let defaultPrevented = false;
       await harness.flush(() => {
-        requiredElement<Element>(windowValue.document, selector).dispatchEvent(
-          new windowValue.KeyboardEvent("keydown", { bubbles: true, key, ...options }),
-        );
+        const element = requiredElement<Element>(windowValue.document, selector);
+        const event = new windowValue.KeyboardEvent("keydown", {
+          bubbles: true,
+          cancelable: true,
+          key,
+          ...options,
+        });
+        element.dispatchEvent(event);
+        defaultPrevented = event.defaultPrevented;
       });
+      return defaultPrevented;
     },
     async pointer(selector, type, options = {}) {
       await harness.flush(() => {
         const EventConstructor = windowValue.PointerEvent ?? windowValue.MouseEvent;
+        const event = new EventConstructor(type, { bubbles: true, cancelable: true, ...options });
+        if (!("pointerId" in event)) {
+          Object.defineProperty(event, "pointerId", {
+            configurable: true,
+            value: options.pointerId ?? 0,
+          });
+        }
+        requiredElement<Element>(windowValue.document, selector).dispatchEvent(event);
+      });
+    },
+    async mouse(selector, type, options = {}) {
+      await harness.flush(() => {
         requiredElement<Element>(windowValue.document, selector).dispatchEvent(
-          new EventConstructor(type, { bubbles: true, ...options }),
+          new windowValue.MouseEvent(type, { bubbles: true, cancelable: true, ...options }),
         );
       });
+    },
+    setSvgGeometry(selector, { rect, screenCTM }) {
+      const svg = requiredElement<SVGSVGElement>(windowValue.document, selector);
+      let capturedPointerId: number | null = null;
+      Object.defineProperty(svg, "getBoundingClientRect", {
+        configurable: true,
+        value: () => ({
+          ...rect,
+          x: rect.left,
+          y: rect.top,
+          right: rect.left + rect.width,
+          bottom: rect.top + rect.height,
+          toJSON: () => ({}),
+        }),
+      });
+      Object.defineProperty(svg, "getScreenCTM", {
+        configurable: true,
+        value: () => screenCTM ?? null,
+      });
+      Object.defineProperties(svg, {
+        setPointerCapture: {
+          configurable: true,
+          value: (pointerId: number) => { capturedPointerId = pointerId; },
+        },
+        releasePointerCapture: {
+          configurable: true,
+          value: (pointerId: number) => {
+            if (capturedPointerId === pointerId) capturedPointerId = null;
+          },
+        },
+        __capturedPointerId: {
+          configurable: true,
+          get: () => capturedPointerId,
+        },
+      });
+    },
+    capturedPointerId(selector) {
+      const svg = requiredElement<SVGSVGElement>(windowValue.document, selector);
+      return (svg as SVGSVGElement & { __capturedPointerId?: number | null }).__capturedPointerId ?? null;
     },
     async flush(callback) {
       await act(async () => {
@@ -204,13 +271,19 @@ export const keyDown = (
   selector: string,
   key: string,
   options?: KeyboardEventInit,
-): Promise<void> => harness.keyDown(selector, key, options);
+): Promise<boolean> => harness.keyDown(selector, key, options);
 export const pointer = (
   harness: ReactHarness,
   selector: string,
   type: string,
   options?: PointerEventInit,
 ): Promise<void> => harness.pointer(selector, type, options);
+export const mouse = (
+  harness: ReactHarness,
+  selector: string,
+  type: string,
+  options?: MouseEventInit,
+): Promise<void> => harness.mouse(selector, type, options);
 export const flush = (
   harness: ReactHarness,
   callback?: () => void | Promise<void>,

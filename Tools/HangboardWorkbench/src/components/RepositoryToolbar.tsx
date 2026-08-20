@@ -1,3 +1,5 @@
+import React from "react";
+
 import type { WorkbenchActions, WorkbenchState } from "../types.ts";
 
 export interface RepositoryToolbarProps {
