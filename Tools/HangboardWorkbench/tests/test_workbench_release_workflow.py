@@ -373,6 +373,7 @@ def test_generated_bundle_is_built_before_every_python_suite():
         setup = _step(job, "Set up Node")
         assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
         assert setup["with"]["node-version"] == "22.14.0"
+        assert setup["with"]["cache"] == "npm"
         assert (
             setup["with"]["cache-dependency-path"]
             == "Tools/HangboardWorkbench/package-lock.json"
@@ -383,6 +384,35 @@ def test_generated_bundle_is_built_before_every_python_suite():
         assert "npm ci" in bundle["run"]
         assert "npm run check:bundle" in bundle["run"]
 
+        steps = job["steps"]
+        assert steps.index(setup) < steps.index(bundle)
+        assert steps.index(bundle) < steps.index(_step(job, "Set up Python"))
+        assert steps.index(bundle) < steps.index(_step(job, "Run Python suite"))
+
+
+def test_generated_bundle_is_built_before_signed_release_packaging():
+    release = _workflow()["jobs"]["release"]
+    setup = _step(release, "Set up Node")
+    assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+    assert setup["with"]["node-version"] == "22.14.0"
+    assert setup["with"]["cache"] == "npm"
+    assert (
+        setup["with"]["cache-dependency-path"]
+        == "Tools/HangboardWorkbench/package-lock.json"
+    )
+
+    bundle = _step(release, "Build generated Workbench bundle")
+    assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+    assert "npm ci" in bundle["run"]
+    assert "npm run check:bundle" in bundle["run"]
+
+    steps = release["steps"]
+    assert steps.index(setup) < steps.index(bundle)
+    assert steps.index(bundle) < steps.index(_step(release, "Set up Python"))
+    assert steps.index(bundle) < steps.index(
+        _step(release, "Build, sign, and archive workbench app")
+    )
+
 
 def test_native_bundle_is_built_before_native_packaging():
     steps = _build_action()["steps"]
@@ -390,6 +420,7 @@ def test_native_bundle_is_built_before_native_packaging():
     setup = _step(_build_action(), "Set up Node")
     assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
     assert setup["with"]["node-version"] == "22.14.0"
+    assert setup["with"]["cache"] == "npm"
     assert (
         setup["with"]["cache-dependency-path"]
         == "Tools/HangboardWorkbench/package-lock.json"
@@ -406,6 +437,8 @@ def test_native_bundle_is_built_before_native_packaging():
         if step["name"] == "Build unsigned native app"
     )
     bundle = steps[bundle_index]
+    setup_index = steps.index(setup)
+    assert setup_index < bundle_index
     assert bundle_index < native_index
     assert bundle["working-directory"] == "Tools/HangboardWorkbench"
     assert "npm ci" in bundle["run"]

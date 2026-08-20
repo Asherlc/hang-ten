@@ -143,6 +143,21 @@ jobs:
           cd release
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 
+      # actions/setup-node v4.4.0
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.14.0'
+          cache: npm
+          cache-dependency-path: Tools/HangboardWorkbench/package-lock.json
+
+      - name: Build generated Workbench bundle
+        working-directory: Tools/HangboardWorkbench
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run check:bundle
+
       # actions/setup-python v6.3.0
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
