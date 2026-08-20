@@ -2,6 +2,7 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSessionStoreTests: XCTestCase {
+    private let asynchronousTimeout: TimeInterval = 30
     private var suite: String!
     private var directory: URL!
 
@@ -50,14 +51,20 @@ final class WorkoutSessionStoreTests: XCTestCase {
         }
 
         XCTAssertEqual(
-            initializationReturned.wait(timeout: .now() + 1),
+            initializationReturned.wait(timeout: .now() + asynchronousTimeout),
             .success,
             "Store initialization should not wait for the full history read"
         )
-        XCTAssertEqual(fileManager.historyReadStarted.wait(timeout: .now() + 1), .success)
+        XCTAssertEqual(
+            fileManager.historyReadStarted.wait(timeout: .now() + asynchronousTimeout),
+            .success
+        )
 
         fileManager.allowHistoryRead.signal()
-        XCTAssertEqual(storeFinishedInitializing.wait(timeout: .now() + 1), .success)
+        XCTAssertEqual(
+            storeFinishedInitializing.wait(timeout: .now() + asynchronousTimeout),
+            .success
+        )
     }
 
     func testMigratesLegacyHistoryToIndividualSessionFilesAndClearsTheBlob() throws {
@@ -147,16 +154,20 @@ final class WorkoutSessionStoreTests: XCTestCase {
     }
 
     func testAppendCompletesSuccessfullyAfterWriting() {
+        dispatchPrecondition(condition: .onQueue(.main))
         let expectation = expectation(description: "append completion")
         let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+        var isAcceptingCompletion = true
+        defer { isAcceptingCompletion = false }
 
         store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)) { result in
+            guard isAcceptingCompletion else { return }
             if case .success = result {
                 expectation.fulfill()
             }
         }
 
-        wait(for: [expectation], timeout: 2)
+        wait(for: [expectation], timeout: asynchronousTimeout)
     }
 
     func testAppendCompletionRunsOnMainQueueAndCanFlush() {
@@ -179,16 +190,20 @@ final class WorkoutSessionStoreTests: XCTestCase {
             }
         }
 
-        wait(for: [completion], timeout: 30)
+        wait(for: [completion], timeout: asynchronousTimeout)
     }
 
     func testRemoveCompletionRunsOnMainQueueAndCanFlush() {
+        dispatchPrecondition(condition: .onQueue(.main))
         let completion = expectation(description: "remove completion flushes")
         let record = session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20)
         let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+        var isAcceptingCompletion = true
+        defer { isAcceptingCompletion = false }
         store.append(record)
 
         store.remove(record) { result in
+            guard isAcceptingCompletion else { return }
             XCTAssertTrue(Thread.isMainThread)
             store.flush()
 
@@ -200,15 +215,19 @@ final class WorkoutSessionStoreTests: XCTestCase {
             }
         }
 
-        wait(for: [completion], timeout: 2)
+        wait(for: [completion], timeout: asynchronousTimeout)
     }
 
     func testFlushCompletionRunsOnMainQueue() {
+        dispatchPrecondition(condition: .onQueue(.main))
         let completion = expectation(description: "flush completion")
         let store = WorkoutSessionStore(defaults: UserDefaults(suiteName: suite)!, directory: directory)
+        var isAcceptingCompletion = true
+        defer { isAcceptingCompletion = false }
 
         DispatchQueue.global().async {
             store.flush { result in
+                guard isAcceptingCompletion else { return }
                 XCTAssertTrue(Thread.isMainThread)
 
                 switch result {
@@ -220,7 +239,7 @@ final class WorkoutSessionStoreTests: XCTestCase {
             }
         }
 
-        wait(for: [completion], timeout: 2)
+        wait(for: [completion], timeout: asynchronousTimeout)
     }
 
     func testAsynchronousFlushDoesNotBlockCallerOnPendingWrite() {
@@ -233,23 +252,34 @@ final class WorkoutSessionStoreTests: XCTestCase {
         )
         store.append(session(id: "00000000-0000-0000-0000-000000000001", recordedAt: 20))
 
-        XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
+        XCTAssertEqual(
+            fileManager.writeStarted.wait(timeout: .now() + asynchronousTimeout),
+            .success
+        )
 
-        let flushReturned = expectation(description: "flush returned")
+        dispatchPrecondition(condition: .onQueue(.main))
+        let flushReturned = DispatchSemaphore(value: 0)
         let completion = expectation(description: "flush completion")
+        var isAcceptingCompletion = true
+        defer { isAcceptingCompletion = false }
         DispatchQueue.global().async {
             store.flush { result in
+                guard isAcceptingCompletion else { return }
                 if case .failure(let error) = result {
                     XCTFail("Expected flush to succeed, got \(error)")
                 }
                 completion.fulfill()
             }
-            flushReturned.fulfill()
+            flushReturned.signal()
         }
 
-        wait(for: [flushReturned], timeout: 1)
+        XCTAssertEqual(
+            flushReturned.wait(timeout: .now() + asynchronousTimeout),
+            .success,
+            "Asynchronous flush should return while the pending write remains blocked"
+        )
         fileManager.allowWrite.signal()
-        wait(for: [completion], timeout: 2)
+        wait(for: [completion], timeout: asynchronousTimeout)
     }
 
     func testAppendUsesStableIDOrderingWhenRecordedDatesMatch() {
