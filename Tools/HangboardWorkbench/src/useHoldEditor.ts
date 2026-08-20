@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
@@ -64,6 +64,7 @@ export interface UseHoldEditorOptions {
   document: EditorDocument | null;
   selectedHold: HoldRegion | null;
   dirty: boolean;
+  status: string;
   rotationDegrees: string;
   actions: WorkbenchActions;
   pathEditor: PathEditor;
@@ -166,6 +167,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     document,
     selectedHold,
     dirty,
+    status,
     rotationDegrees,
     actions,
     pathEditor,
@@ -174,6 +176,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   } = options;
   const dragRef = useRef<DragState>({ ...EMPTY_DRAG });
   const previewDocumentRef = useRef<EditorDocument | null>(null);
+  const pendingPreviewRef = useRef<EditorDocument | null>(null);
+  const dragSvgRef = useRef<SVGSVGElement | null>(null);
 
   const rotateHold = useCallback((degrees: number): void => {
     if (!document || !selectedHold) return;
@@ -280,7 +284,31 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Pointer capture can already be gone when the browser reports cancellation.
     }
+    dragSvgRef.current = null;
   }, []);
+
+  useLayoutEffect(() => {
+    const drag = dragRef.current;
+    if (!drag.active) {
+      previewDocumentRef.current = document;
+      pendingPreviewRef.current = null;
+      return;
+    }
+    if (document === pendingPreviewRef.current) {
+      previewDocumentRef.current = document;
+      pendingPreviewRef.current = null;
+      return;
+    }
+    if (document === previewDocumentRef.current) return;
+    const svg = dragSvgRef.current;
+    drag.active = false;
+    if (svg) releasePointer(svg);
+    else drag.pointerId = null;
+    dragRef.current = { ...EMPTY_DRAG };
+    dragSvgRef.current = null;
+    previewDocumentRef.current = document;
+    pendingPreviewRef.current = null;
+  }, [document, releasePointer]);
 
   const onPointerDown = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -327,6 +355,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     event.preventDefault();
     dragRef.current = next;
     previewDocumentRef.current = document;
+    pendingPreviewRef.current = null;
+    dragSvgRef.current = event.currentTarget;
     try {
       event.currentTarget.setPointerCapture?.(event.pointerId);
     } catch {
@@ -379,7 +409,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       hold.displayPath = pathEditor.serializePath(commands);
     }
     previewDocumentRef.current = candidate;
-    actions.replaceDocument(candidate, { dirty: true });
+    pendingPreviewRef.current = actions.replaceDocument(candidate, { dirty: true });
   }, [actions, document, pathEditor, releasePointer, restoreDrag]);
 
   const completeDrag = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
@@ -426,6 +456,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       : "Edit cancelled. Changes reverted.");
     drag.active = false;
     drag.pointerId = null;
+    dragSvgRef.current = null;
   }, [restoreDrag]);
 
   const onDoubleClick = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
@@ -453,10 +484,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const edited = pathEditor.parsePath(hold.displayPath);
         pathEditor.addVertex(edited, index, insert.x, insert.y);
         hold.displayPath = pathEditor.serializePath(edited);
-      });
+      }, { status });
       return;
     }
-  }, [actions, document, pathEditor, selectedHold]);
+  }, [actions, document, pathEditor, selectedHold, status]);
 
   const onContextMenu = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
@@ -470,8 +501,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       const commands = pathEditor.parsePath(hold.displayPath);
       pathEditor.deleteVertex(commands, index);
       hold.displayPath = pathEditor.serializePath(commands);
-    });
-  }, [actions, pathEditor, selectedHold]);
+    }, { status });
+  }, [actions, pathEditor, selectedHold, status]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {

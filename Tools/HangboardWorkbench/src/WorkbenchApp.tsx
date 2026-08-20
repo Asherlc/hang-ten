@@ -23,6 +23,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     document: state.document,
     selectedHold,
     dirty: state.dirty,
+    status: state.status,
     rotationDegrees: state.rotationDegrees,
     actions,
     pathEditor: dependencies.pathEditor,

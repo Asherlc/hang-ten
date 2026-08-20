@@ -502,6 +502,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       validation: options.validation ?? "",
       status: options.status ?? current.status,
     }));
+    return nextDocument;
   }, [updateState]);
 
   const editDocument = useCallback<WorkbenchActions["editDocument"]>((edit, options = {}) => {

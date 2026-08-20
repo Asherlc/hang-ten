@@ -56,13 +56,26 @@ function gitStatus(): GitStatus {
   return { ok: true, currentBranch: "main", branches: ["main"], dirty: false, statusLines: [] };
 }
 
-function clientFixture(board: Board): WorkbenchClient {
+function clientFixture(boards: readonly Board[]): WorkbenchClient {
+  const firstBoard = boards[0];
+  if (!firstBoard) throw new Error("At least one board fixture is required");
   return {
     async listBoards(): Promise<BoardSummary[]> {
-      return [{ boardId: board.boardId, displayName: board.displayName, holdCount: board.holdCount }];
+      return boards.map((board) => ({
+        boardId: board.boardId,
+        displayName: board.displayName,
+        holdCount: board.holdCount,
+      }));
     },
-    async getBoard(): Promise<Board> { return board; },
-    async saveBoard(_boardId, document): Promise<Board> { return { ...board, document }; },
+    async getBoard(boardId): Promise<Board> {
+      const board = boards.find((candidate) => candidate.boardId === boardId);
+      if (!board) throw new Error(`Unknown board: ${boardId}`);
+      return board;
+    },
+    async saveBoard(boardId, document): Promise<Board> {
+      const board = boards.find((candidate) => candidate.boardId === boardId) ?? firstBoard;
+      return { ...board, document };
+    },
     async getGitStatus(): Promise<GitStatus> { return gitStatus(); },
     async getAuthStatus(): Promise<AuthStatus> { return { ok: true, authenticated: false }; },
     async listBranches(): Promise<GitStatus> { return gitStatus(); },
@@ -81,6 +94,7 @@ function clientFixture(board: Board): WorkbenchClient {
 function dependenciesFixture(board = boardFixture(), options: {
   validate?(document: unknown): EditorDocument;
   confirm?(message: string): boolean;
+  boards?: readonly Board[];
 } = {}): WorkbenchDependencies {
   const dialogs: Dialogs = {
     confirm: options.confirm ?? (() => true),
@@ -97,7 +111,7 @@ function dependenciesFixture(board = boardFixture(), options: {
     },
   };
   return {
-    client: clientFixture(board),
+    client: clientFixture(options.boards ?? [board]),
     controller: options.validate ? { ...controller, validateEditorDocument: options.validate } : controller,
     pathEditor,
     runtime,
@@ -339,6 +353,83 @@ test("double-click inserts a vertex and context menu deletes vertices except the
     await app.mouse('.path-editor-vertex[data-index="0"]', "contextmenu");
     assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
+});
+
+test("double-click insertion preserves prior status while clearing validation and marking dirty", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.input("#rotate-by-input", "0");
+    await app.click("#rotate-by-apply-button");
+    const priorStatus = app.text("#editor-status");
+    assert.match(priorStatus, /finite, non-zero rotation/i);
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), false);
+
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+
+    assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(app.text("#editor-status"), priorStatus);
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("context-menu deletion preserves prior status while clearing validation and marking dirty", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="square"]');
+    await app.input("#rotate-by-input", "0");
+    await app.click("#rotate-by-apply-button");
+    const priorStatus = app.text("#editor-status");
+    assert.match(priorStatus, /finite, non-zero rotation/i);
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), false);
+
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu");
+
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(app.text("#editor-status"), priorStatus);
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("replacing the document cancels an active gesture without letting later pointer events clobber it", async () => {
+  const replacementDocument = documentFixture([
+    { id: 40, key: "replacement", type: "edge", displayPath: "M 60 5 L 90 5 L 90 35 Z" },
+  ]);
+  const replacementBoard: Board = {
+    ...boardFixture(replacementDocument),
+    boardId: "board-b",
+    displayName: "Board B",
+    imageUrl: "/api/boards/board-b/image",
+  };
+  const initialBoard = boardFixture();
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.pointer('.path-editor-vertex[data-index="1"]', "pointerdown", {
+      pointerId: 7,
+      clientX: 20,
+      clientY: 10,
+    });
+    assert.equal(app.capturedPointerId("#editor-svg"), 7);
+
+    await app.click("#board-list button:nth-child(2)");
+    await app.flush();
+
+    assert.equal(app.text("#board-name"), "Board B");
+    assert.deepEqual(paths(app), ["M 60 5 L 90 5 L 90 35 Z"]);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(app.capturedPointerId("#editor-svg"), null);
+
+    for (const type of ["pointermove", "pointerup", "pointercancel", "lostpointercapture"]) {
+      await app.pointer("#editor-svg", type, { pointerId: 7, clientX: 45, clientY: 35 });
+      assert.deepEqual(paths(app), ["M 60 5 L 90 5 L 90 35 Z"], type);
+      assert.equal(app.text("#save-state"), "Saved", type);
+      assert.equal(app.text("#board-name"), "Board B", type);
+    }
+  }, dependenciesFixture(initialBoard, { boards: [initialBoard, replacementBoard] }));
 });
 
 test("pointer cancellation, lost capture, and a second pointer preserve the initiating snapshot", async () => {

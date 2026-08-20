@@ -227,7 +227,7 @@ export interface WorkbenchActions {
   openPullRequest(): Promise<void>;
   selectHold(key: string | null): void;
   setRotationDegrees(value: string): void;
-  replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): void;
+  replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;
   updateDocument(document: EditorDocument, status?: string): void;
 }
