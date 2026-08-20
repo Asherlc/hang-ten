@@ -1723,6 +1723,14 @@
           "accessory" : "7s hang · app recovery 3m · half crimp",
           "activeDuration" : 7,
           "duration" : 187,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-1",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
@@ -1769,6 +1777,14 @@
           "accessory" : "7s hang · app recovery 3m · half crimp",
           "activeDuration" : 7,
           "duration" : 187,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-2",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
@@ -1809,6 +1825,14 @@
           "accessory" : "7s hang · app recovery 3m · half crimp",
           "activeDuration" : 7,
           "duration" : 187,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-3",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
@@ -1849,6 +1873,14 @@
           "accessory" : "7s hang · app recovery 3m · half crimp",
           "activeDuration" : 7,
           "duration" : 187,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-4",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
@@ -1889,6 +1921,14 @@
           "accessory" : "7s hang · half crimp",
           "activeDuration" : 7,
           "duration" : 7,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-5",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",

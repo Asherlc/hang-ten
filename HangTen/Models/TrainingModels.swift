@@ -1501,7 +1501,8 @@ enum LegacyPlanSeedCatalog {
                 active: 7,
                 rest: 180,
                 targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
             hangStep(
                 id: "max-hangs-2",
@@ -1511,7 +1512,8 @@ enum LegacyPlanSeedCatalog {
                 active: 7,
                 rest: 180,
                 targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
             hangStep(
                 id: "max-hangs-3",
@@ -1521,7 +1523,8 @@ enum LegacyPlanSeedCatalog {
                 active: 7,
                 rest: 180,
                 targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
             hangStep(
                 id: "max-hangs-4",
@@ -1531,7 +1534,8 @@ enum LegacyPlanSeedCatalog {
                 active: 7,
                 rest: 180,
                 targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
             hangStep(
                 id: "max-hangs-5",
@@ -1541,7 +1545,8 @@ enum LegacyPlanSeedCatalog {
                 active: 7,
                 rest: 0,
                 targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
         ])
     )

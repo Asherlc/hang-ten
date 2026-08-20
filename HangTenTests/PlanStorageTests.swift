@@ -839,6 +839,23 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle])
     }
 
+    func testMaxHangsWorkStepsKeepSourceBackedFourFingerCue() {
+        let workSteps = PlanCatalog.maxHangs.steps.filter {
+            $0.phase == .hang
+        }
+
+        XCTAssertEqual(workSteps.map(\.id), [
+            "max-hangs-1",
+            "max-hangs-2",
+            "max-hangs-3",
+            "max-hangs-4",
+            "max-hangs-5"
+        ])
+        XCTAssertTrue(workSteps.allSatisfy {
+            $0.fingerConfiguration?.orderedFingers == [.index, .middle, .ring, .pinky]
+        })
+    }
+
     func testUnsupportedBuiltInGripAndFingerOverridesAreAbsent() throws {
         let plansWithoutSourceBackedCues = [
             LegacyPlanSeedCatalog.metoliusEntry,
