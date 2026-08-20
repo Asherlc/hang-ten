@@ -671,6 +671,23 @@ final class CustomRoutineStoreTests: XCTestCase {
                             duration: 4
                         )
                     ]
+                ),
+                WorkoutStepDefinition(
+                    id: "follow-up",
+                    title: "Follow-up",
+                    instruction: "Finish with work.",
+                    accessory: "6s",
+                    duration: 6,
+                    phase: .hang,
+                    targets: [.kind(.jug)],
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            targets: [.kind(.jug)],
+                            timing: .fixed,
+                            duration: 6
+                        )
+                    ]
                 )
             ]
         )
@@ -679,9 +696,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         try store.save(definition)
 
         let stored = try XCTUnwrap(store.routines.first)
-        XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest])
-        XCTAssertEqual(stored.steps.map(\.targets), [[.kind(.jug)], []])
-        XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1])
+        XCTAssertEqual(stored.steps.map(\.phase), [.hang, .rest, .hang])
+        XCTAssertEqual(stored.steps.map(\.targets), [[.kind(.jug)], [], [.kind(.jug)]])
+        XCTAssertEqual(stored.steps.map { $0.segments.count }, [1, 1, 1])
 
         let reloaded = CustomRoutineStore(defaults: defaults)
         XCTAssertEqual(reloaded.routines, [stored])
