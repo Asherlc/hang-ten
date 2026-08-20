@@ -1,10 +1,62 @@
 import { createRoot, type Root } from "react-dom/client";
 
 import { WorkbenchApp } from "./WorkbenchApp.tsx";
-import type { WorkbenchDependencies } from "./types.ts";
+import * as pathEditorModule from "./path-editor.ts";
+import type {
+  BrowserRuntime,
+  Dialogs,
+  PathEditor,
+  RequestDiagnostic,
+  WorkbenchController,
+  WorkbenchDependencies,
+} from "./types.ts";
+import { createWorkbenchClient } from "./workbench-client.ts";
+import * as workbenchControllerModule from "./workbench-controller.ts";
 
 export function mountWorkbench(rootElement: HTMLElement, dependencies: WorkbenchDependencies): Root {
   const root = createRoot(rootElement);
   root.render(<WorkbenchApp dependencies={dependencies} />);
   return root;
 }
+
+interface NativeWorkbenchBridge {
+  webkit?: {
+    messageHandlers?: {
+      workbenchDiagnostics?: {
+        postMessage(diagnostic: RequestDiagnostic): void;
+      };
+    };
+  };
+}
+
+const browser = globalThis as typeof globalThis & NativeWorkbenchBridge;
+const dialogs: Dialogs = {
+  confirm: (message) => browser.confirm(message),
+  prompt: (message, defaultValue) => browser.prompt(message, defaultValue),
+};
+const imageLoader = (): HTMLImageElement => new browser.Image();
+const runtime: BrowserRuntime = {
+  fetch: (input, init) => browser.fetch(input, init),
+  location: {
+    assign: (url) => browser.location.assign(url),
+  },
+  postDiagnostic: (diagnostic) => {
+    browser.webkit?.messageHandlers?.workbenchDiagnostics?.postMessage(diagnostic);
+  },
+  createImage: imageLoader,
+  ...dialogs,
+};
+const client = createWorkbenchClient(runtime);
+const controller: WorkbenchController = workbenchControllerModule;
+const pathEditor: PathEditor = pathEditorModule;
+const rootElement = browser.document.getElementById("root");
+
+if (rootElement === null) throw new Error("Workbench root element is missing");
+
+mountWorkbench(rootElement, {
+  client,
+  controller,
+  pathEditor,
+  runtime,
+  dialogs,
+});
