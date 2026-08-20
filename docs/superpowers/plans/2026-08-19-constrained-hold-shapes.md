@@ -17,7 +17,7 @@
 - Existing `frame` and `shape` remain the only runtime rendering geometry.
 - Absence of `shapeConstraint` means Custom/freeform; no existing board is inferred or migrated.
 - Constraint operations affect only the selected geometry piece except existing physical-hold rotation, which continues to rotate every sibling and updates each constrained sibling angle.
-- No board-specific code, coordinates, templates, or tuning.
+- Directly authored board-specific paths and coordinates are expected package data; no board-specific runtime code or pixel-derived automatic classification/generation.
 
 ---
 
@@ -26,8 +26,8 @@
 **Files:**
 - Modify: `Tools/HangboardWorkbench/board_package.py`
 - Modify: `Tools/HangboardWorkbench/tests/test_board_package.py`
-- Modify: `Tools/HangboardPipeline/src/hangboard_vectorizer/board_catalog.py`
-- Modify: `Tools/HangboardPipeline/tests/test_board_catalog.py`
+- Modify: `Tools/HangboardPackages/src/hangboard_packages/board_catalog.py`
+- Modify: `Tools/HangboardPackages/tests/test_board_catalog.py`
 - Modify: `HangTen/Models/BoardPackageStore.swift`
 - Modify: `HangTenTests/BoardPackageStoreTests.swift`
 
@@ -50,19 +50,19 @@ Expected: failures because geometry pieces and editor regions reject `shapeConst
 
 Add one private parser returning a normalized copied constraint. Allow the piece and editor-region optional keys, carry the value through parsed editor tuples, include it in dirty detection, and add/remove it during `_apply_editor_document`. Do not change rendering geometry conversion.
 
-- [ ] **Step 4: Add failing pipeline and Swift decoder tests**
+- [ ] **Step 4: Add failing package-validator and Swift decoder tests**
 
-Use literal valid and invalid JSON fixtures. Assert pipeline parsing retains the two fields, Swift accepts a constrained piece and produces the same runtime `BoardShape`, and both reject unknown fields, invalid enums, booleans/non-finite values, and out-of-range angles.
+Use literal valid and invalid JSON fixtures. Assert package validation retains the two fields, Swift accepts a constrained piece and produces the same runtime `BoardShape`, and both reject unknown fields, invalid enums, booleans/non-finite values, and out-of-range angles.
 
 - [ ] **Step 5: Run focused cross-consumer tests and verify RED**
 
-Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPipeline/tests/test_board_catalog.py`
+Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_board_catalog.py`
 
 Run: `rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:HangTenTests/BoardPackageStoreTests`
 
-- [ ] **Step 6: Implement strict pipeline and Swift decoding**
+- [ ] **Step 6: Implement strict package validation and Swift decoding**
 
-Extend geometry-piece allowed keys and add focused value types that validate the exact object. Retain the pipeline value. Decode and validate, but intentionally discard, the Swift value before existing runtime adaptation.
+Extend geometry-piece allowed keys and add focused value types that validate the exact object. Retain the package value. Decode and validate, but intentionally discard, the Swift value before existing runtime adaptation.
 
 - [ ] **Step 7: Run focused tests GREEN and commit**
 
@@ -151,7 +151,7 @@ Explain the stateful picker, shape-aligned handles, Custom unlock, persistence, 
 
 Run: `rtk node --test Tools/HangboardWorkbench/tests/*.test.js`.
 
-Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests Tools/HangboardPipeline/tests`.
+Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests Tools/HangboardPackages/tests`.
 
 Run: `rtk swift test --package-path Tools/HangboardWorkbench/macos`.
 

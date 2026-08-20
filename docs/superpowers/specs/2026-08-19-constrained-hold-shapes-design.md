@@ -19,7 +19,7 @@ Each geometry piece may contain this optional object alongside `frame`, `shape`,
 
 The existing `frame` and `shape` remain the sole rendering, highlighting, and hit-testing geometry. They also retain position and size. `shapeConstraint` records only the invariant and orientation needed to reconstruct shape-aligned editing behavior. It does not mention or depend on a particular editor.
 
-All strict package consumers accept and validate the optional object. Workbench exposes it on the corresponding editor region and round-trips additions, updates, and removals. Swift and pipeline consumers do not use it to render. Existing packages require no migration.
+All strict package consumers accept and validate the optional object. Workbench exposes it on the corresponding editor region and round-trips additions, updates, and removals. Swift and the package validator do not use it to render. Existing packages require no migration.
 
 ## Inspector and handles
 
@@ -41,7 +41,7 @@ The path stays the rendering source of truth. If malformed constraint metadata o
 
 The Workbench editor document carries an optional `shapeConstraint` on each region. Backend validation rejects unknown keys, unknown shape values, booleans/non-finite angles, and angles outside `[-180, 180)`. Save dirty detection includes constraint changes even when a path is unchanged. Adding or changing a constraint stores it on the matching geometry piece; choosing Custom removes it. Unrelated `treatment` data and sibling pieces remain unchanged.
 
-The iOS package decoder and pipeline board parser accept and strictly validate `shapeConstraint`, then ignore it when adapting runtime board shapes. This preserves current rendering exactly.
+The iOS package decoder and package validator accept and strictly validate `shapeConstraint`; the iOS adapter ignores it when creating runtime board shapes. This preserves current rendering exactly.
 
 ## Failure behavior
 
@@ -57,4 +57,4 @@ The picker and handles are disabled during board or Git operations. A resize tha
 
 ## Scope
 
-No board-specific paths, coordinates, templates, or tuning are permitted. Existing freeform editing remains unchanged. No existing board is automatically labeled as a primitive.
+Directly authored board-specific paths and coordinates are expected package data. Board-specific runtime code and pixel-derived automatic classification or generation are not permitted. Existing freeform editing remains unchanged, and no existing board is automatically labeled as a primitive.
