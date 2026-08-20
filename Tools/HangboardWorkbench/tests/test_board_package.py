@@ -190,6 +190,25 @@ def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:
     assert board_package._png_dimensions_from_bytes(image) == (1774, 457)
 
 
+def test_completed_packages_match_their_primary_image_aspect_ratio() -> None:
+    """Every published board declares the aspect ratio of its manufacturer image."""
+    mismatches: list[str] = []
+    for package in sorted((REPOSITORY_ROOT / "Hangboards").iterdir()):
+        board_path = package / "board.json"
+        if not board_path.is_file():
+            continue
+        board = json.loads(board_path.read_text(encoding="utf-8"))
+        width, height = board_package._png_dimensions(package / "assets" / "primary.png")
+        image_aspect_ratio = width / height
+        declared_aspect_ratio = board["aspectRatio"]
+        if abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio > 0.001:
+            mismatches.append(
+                f"{package.name}: declared {declared_aspect_ratio}, image {width}/{height}"
+            )
+
+    assert not mismatches, "\n".join(mismatches)
+
+
 def test_apply_editor_document_returns_updated_board_without_mutating_its_input() -> None:
     package = board_package.load_board_package(CANONICAL_PACKAGE)
     document = board_package.editor_document(package)

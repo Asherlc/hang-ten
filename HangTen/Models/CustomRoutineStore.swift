@@ -123,6 +123,7 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case duplicateStepID(stepIndex: Int)
     case invalidDuration(stepIndex: Int)
     case invalidActiveDuration(stepIndex: Int)
+    case terminalRestStep
     case missingTargets(stepIndex: Int)
     case restStepHasTargets(stepIndex: Int)
     case unknownBoard(boardID: String)
@@ -152,6 +153,8 @@ enum CustomRoutineValidator {
         }
         if definition.steps.isEmpty {
             issues.append(.missingSteps)
+        } else if definition.steps.last.map(stepEndsInRestAfterNormalization) == true {
+            issues.append(.terminalRestStep)
         }
 
         let boards: [TrainingBoard]
@@ -283,6 +286,18 @@ enum CustomRoutineValidator {
                 }
             }
         }
+    }
+
+    private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
+        if step.segments.count > 1 {
+            return step.segments.last?.kind == .rest
+        }
+        if step.segments.isEmpty,
+           let activeDuration = step.activeDuration,
+           activeDuration < step.duration {
+            return true
+        }
+        return step.phase == .rest
     }
 
     private static func validate(

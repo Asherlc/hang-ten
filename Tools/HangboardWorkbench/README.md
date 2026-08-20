@@ -95,6 +95,25 @@ the decoded image within 0.1% relative error.
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.
 
+## Capture a visual catalog
+
+The catalog capture command starts an isolated loopback Workbench server and a
+headless Chrome DevTools session. It opens each completed board through the
+editor, waits for its primary image and SVG regions, then captures the unchanged
+`#editor-svg` surface at a fixed viewport.
+
+```sh
+rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
+  --repository-root /absolute/path/to/hang-ten \
+  --output-root /absolute/path/to/catalog-captures \
+  --chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --port 4173
+```
+
+The output includes one labeled PNG per board, an API-order `manifest.json`,
+and a labeled `contact-sheet.png`. The command terminates its Chrome and server
+children before returning.
+
 ## Outline shape constraints
 
 The **Outline shape** picker reflects the selected geometry piece and offers

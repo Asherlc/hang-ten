@@ -226,6 +226,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
         guard ownsActiveSpeech(utterance) else { return }
         speechOwnership.finishActive(utterance)
         isSpeaking = false
+        deactivateAudioSessionIfSpeechStopped()
     }
 
     nonisolated func speechSynthesizer(

@@ -21877,10 +21877,14 @@
     rotationDegrees: "",
     validation: "",
     status: "Ready.",
+    saveLoginUrl: null,
     boardsError: ""
   };
   function errorMessage(error, fallback) {
     return error instanceof Error && error.message ? error.message : fallback;
+  }
+  function saveLoginUrl(error) {
+    return typeof error === "object" && error !== null && "loginUrl" in error && error.loginUrl === "/auth/login" ? error.loginUrl : null;
   }
   function selectedBranch(status) {
     if (status.currentBranch && status.branches.includes(status.currentBranch)) {
@@ -22046,7 +22050,7 @@
     }, [gitOperations, refreshGitState, waitForGitIdle]);
     const selectBoard = (0, import_react.useCallback)(async (boardId) => {
       if (!boardId || isBusy()) return;
-      updateState((current) => ({ ...current, validation: "" }));
+      updateState((current) => ({ ...current, validation: "", saveLoginUrl: null }));
       await boardOperations.perform(async ({ isCurrent }) => {
         let committed = false;
         try {
@@ -22088,12 +22092,14 @@
       } catch (error) {
         updateState((value) => ({
           ...value,
-          validation: errorMessage(error, "Hold document is invalid.")
+          validation: errorMessage(error, "Hold document is invalid."),
+          saveLoginUrl: null
         }));
         return;
       }
       const boardId = current.board.boardId;
       const documentIdentity = current.document;
+      updateState((value) => ({ ...value, saveLoginUrl: null }));
       await boardOperations.perform(async ({ isCurrent }) => {
         try {
           await controller2.saveBoardAtomically({
@@ -22119,11 +22125,17 @@
           });
         } catch (error) {
           if (!isCurrent()) return;
-          updateState((latest) => ({
+          const loginUrl = saveLoginUrl(error);
+          updateState((latest) => loginUrl ? {
+            ...latest,
+            validation: "",
+            status: "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
+            saveLoginUrl: loginUrl
+          } : {
             ...latest,
             validation: errorMessage(error, "Could not save board."),
             status: "Could not save board. Your editor changes were kept."
-          }));
+          });
         }
       });
     }, [boardOperations, client2, controller2, isBusy, updateState]);
@@ -22133,7 +22145,8 @@
         board: null,
         document: null,
         selectedKey: null,
-        dirty: false
+        dirty: false,
+        saveLoginUrl: null
       }));
     }, [updateState]);
     const reloadBoardsAfterBranch = (0, import_react.useCallback)(async (failurePrefix) => {
@@ -23504,7 +23517,13 @@
             }
           ),
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(ValidationPanel, { validation: state.validation }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("footer", { className: "statusbar", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { id: "editor-status", children: state.status }) })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("footer", { className: "statusbar", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("span", { id: "editor-status", children: [
+            state.status,
+            state.saveLoginUrl && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
+              " ",
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("a", { href: state.saveLoginUrl, target: "_blank", rel: "noopener noreferrer", children: "Reauthenticate" })
+            ] })
+          ] }) })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           HoldInspector,
@@ -24125,10 +24144,11 @@
       }
     }
     async function request(path, parser, options = {}) {
+      const { redirectOnUnauthorized = true, ...fetchOptions } = options;
       const requestOptions = {
         cache: "no-store",
-        ...options,
-        signal: options.signal ?? AbortSignal.timeout(15e3)
+        ...fetchOptions,
+        signal: fetchOptions.signal ?? AbortSignal.timeout(15e3)
       };
       let response;
       try {
@@ -24150,14 +24170,17 @@
       }
       const succeeded = isRecord2(payload) && payload.ok === true;
       if (!response.ok || !succeeded) {
-        if (response.status === 401 && isRecord2(payload) && typeof payload.login_url === "string" && payload.login_url) {
-          runtime2.location.assign(payload.login_url);
-        }
+        const loginUrl = response.status === 401 && isRecord2(payload) && payload.login_url === "/auth/login" ? payload.login_url : null;
         const message = isRecord2(payload) && typeof payload.error === "string" && payload.error ? payload.error : `Workbench request for ${path} failed (${String(response.status)})`;
         if (response.status >= 500) {
           reportRequestFailure(path, "server", message, { status: response.status });
         }
-        throw new Error(message);
+        const error = new Error(message);
+        if (loginUrl) {
+          error.loginUrl = loginUrl;
+          if (redirectOnUnauthorized) runtime2.location.assign(loginUrl);
+        }
+        throw error;
       }
       return parser(payload);
     }
@@ -24175,6 +24198,7 @@
         `/api/boards/${encodeURIComponent(boardId)}`,
         parseBoard("Workbench returned an invalid saved board"),
         {
+          redirectOnUnauthorized: false,
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(document2)

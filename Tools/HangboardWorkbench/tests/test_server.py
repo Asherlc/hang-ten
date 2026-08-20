@@ -1362,6 +1362,37 @@ def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
         assert put_call.args[2] == HOSTED_BRANCH
 
 
+def test_hosted_save_auth_failure_instructs_editor_to_reauthenticate() -> None:
+    """Fails if hosted save auth expiry no longer tells the editor where to reauthenticate."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        _status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.board"
+        )
+        document = opened["board"]["document"]
+        document["regions"][0]["displayPath"] = (
+            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+        )
+
+        def auth_failing_put_file(*_args: object, **_kwargs: object) -> str:
+            raise GitHubAuthError("token leaked detail")
+
+        client.put_file = auth_failing_put_file  # type: ignore[method-assign]
+        status, payload, _headers = hosted_request_json(
+            base, session, "PUT", "/api/boards/fixture.board", document
+        )
+
+    assert status == 401
+    assert payload == {
+        "ok": False,
+        "error": "GitHub authentication expired or insufficient permissions",
+        "login_url": "/auth/login",
+    }
+
+
 def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> None:
     """Fails if a PUT can write a board whose ID no longer matches its URL."""
     files = _github_files()
@@ -1523,27 +1554,43 @@ def test_hosted_open_pull_request_uses_the_session_branch_and_defaults() -> None
 
 
 @pytest.mark.parametrize(
-    ("github_error", "expected_status", "expected_message"),
+    ("github_error", "expected_status", "expected_payload"),
     [
-        (GitHubNotFoundError("remote branch missing"), 404, "remote branch missing"),
-        (GitHubRateLimitError("rate limit exhausted"), 429, "rate limit exhausted"),
-        (GitHubForbiddenError("permission denied"), 403, "permission denied"),
+        (
+            GitHubNotFoundError("remote branch missing"),
+            404,
+            {"ok": False, "error": "remote branch missing"},
+        ),
+        (
+            GitHubRateLimitError("rate limit exhausted"),
+            429,
+            {"ok": False, "error": "rate limit exhausted"},
+        ),
+        (
+            GitHubForbiddenError("permission denied"),
+            403,
+            {"ok": False, "error": "permission denied"},
+        ),
         (
             GitHubAuthError("token leaked detail"),
             401,
-            "GitHub authentication expired or insufficient permissions",
+            {
+                "ok": False,
+                "error": "GitHub authentication expired or insufficient permissions",
+                "login_url": "/auth/login",
+            },
         ),
         (
             GitHubTransportError("socket leaked detail"),
             502,
-            "could not reach GitHub",
+            {"ok": False, "error": "could not reach GitHub"},
         ),
     ],
 )
 def test_hosted_routes_map_typed_github_errors(
     github_error: Exception,
     expected_status: int,
-    expected_message: str,
+    expected_payload: dict[str, object],
 ) -> None:
     """Fails if typed GitHub failures collapse into a generic server error."""
     with running_server_with_github_backend(_github_files()) as (
@@ -1560,7 +1607,7 @@ def test_hosted_routes_map_typed_github_errors(
         )
 
     assert status == expected_status
-    assert payload == {"ok": False, "error": expected_message}
+    assert payload == expected_payload
 
 
 def test_hosted_save_conflict_maps_to_conflict_status() -> None:

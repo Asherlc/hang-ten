@@ -240,6 +240,7 @@ export interface WorkbenchState {
   rotationDegrees: string;
   validation: string;
   status: string;
+  saveLoginUrl: string | null;
   boardsError: string;
 }
 

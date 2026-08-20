@@ -1568,10 +1568,10 @@ enum LegacyPlanSeedCatalog {
                         hangStep(
                             id: "f80-set-\(set)-rep-\(rep)",
                             title: "F80 · set \(set), rep \(rep)",
-                            instruction: "Hang with both hands at 80% MFSi on the study hold for 10 seconds, then rest for 6 seconds.",
+                            instruction: "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
-                            rest: 6,
+                            rest: set == 3 && rep == 12 ? 0 : 6,
                             targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)],
                             gripType: nil
                         )
@@ -1772,7 +1772,7 @@ enum LegacyPlanSeedCatalog {
                         instruction: "Keep both feet supported and the intensity low throughout.",
                         accessory: "Feet supported · app timer",
                         active: 10,
-                        rest: 50,
+                        rest: index < grips.count - 1 ? 50 : 0,
                         targets: grip.targets,
                         gripType: grip.grip,
                         fingerConfiguration: grip.fingerConfiguration

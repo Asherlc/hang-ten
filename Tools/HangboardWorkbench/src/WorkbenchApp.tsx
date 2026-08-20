@@ -94,7 +94,12 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             editor={editor}
           />
           <ValidationPanel validation={state.validation} />
-          <footer className="statusbar"><span id="editor-status">{state.status}</span></footer>
+          <footer className="statusbar">
+            <span id="editor-status">
+              {state.status}
+              {state.saveLoginUrl && <>{" "}<a href={state.saveLoginUrl} target="_blank" rel="noopener noreferrer">Reauthenticate</a></>}
+            </span>
+          </footer>
         </section>
 
         <HoldInspector
