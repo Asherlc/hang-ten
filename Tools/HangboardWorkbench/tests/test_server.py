@@ -14,6 +14,7 @@ import urllib.error
 import urllib.request
 from collections.abc import Iterator
 from contextlib import contextmanager
+from html.parser import HTMLParser
 from http.cookies import SimpleCookie
 from pathlib import Path
 from types import SimpleNamespace
@@ -49,6 +50,18 @@ from workbench_fixtures import PRIMARY_IMAGE, board_document  # noqa: E402
 
 HOSTED_TOKEN = "ghp_hosted_session"
 HOSTED_BRANCH = "workbench-default"
+
+
+class _ScriptTagParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.sources: list[str | None] = []
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        if tag == "script":
+            self.sources.append(dict(attrs).get("src"))
 
 
 def _write_library(root: Path) -> Path:
@@ -298,6 +311,26 @@ def hosted_request_json(
 ) -> tuple[int, dict[str, object], object]:
     status, body, headers = hosted_request(base, session_value, method, path, value)
     return status, json.loads(body), headers
+
+
+def test_root_serves_only_the_bundled_react_frontend(tmp_path: Path) -> None:
+    library = _write_library(tmp_path)
+
+    with running_server(library) as base, urlopen(base + "/") as response:
+        assert response.status == 200
+        html = response.read().decode("utf-8")
+
+    parser = _ScriptTagParser()
+    parser.feed(html)
+    parser.close()
+    assert '<div id="root"></div>' in html
+    assert parser.sources == ["app.js"]
+    for legacy_script in (
+        "workbench-client.js",
+        "workbench-controller.js",
+        "path-editor.js",
+    ):
+        assert legacy_script not in html
 
 
 def test_lists_and_opens_direct_packages_with_independent_piece_regions(
