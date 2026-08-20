@@ -239,7 +239,11 @@ struct BoardPickerView: View {
         .background(Color.hangBackground)
         .navigationTitle("Choose board")
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $filters.searchText, prompt: "Search boards")
+        .searchable(
+            text: $filters.searchText,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Search boards"
+        )
         .accessibilityIdentifier("boardPicker.search")
     }
 }
