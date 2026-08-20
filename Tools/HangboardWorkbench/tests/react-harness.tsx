@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import { act } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import type { Root } from "react-dom/client";
 import { JSDOM } from "jsdom";
 
 type GlobalKey =
@@ -137,6 +137,7 @@ export async function renderReact(element: ReactElement): Promise<ReactHarness> 
   };
 
   const container = requiredElement<HTMLElement>(windowValue.document, "#root");
+  const { createRoot } = await import("react-dom/client");
   let root: Root | null = null;
   try {
     root = createRoot(container);

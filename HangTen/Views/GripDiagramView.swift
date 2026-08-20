@@ -53,7 +53,7 @@ struct GripDiagramView: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
         .accessibilityLabel("\(cueLabel), \(accessibilityCueLabel), both hands")
     }
 
@@ -116,8 +116,9 @@ struct GripHandCueCard: View {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
                 .stroke(Color.hangLine.opacity(0.85), lineWidth: 1)
         }
-        .accessibilityElement(children: .ignore)
+        .accessibilityElement(children: .contain)
         .accessibilityLabel(accessibilityLabel)
+        .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier)")
     }
 
     @ViewBuilder private var gripPoseCue: some View {
@@ -127,7 +128,7 @@ struct GripHandCueCard: View {
                     .resizable()
                     .renderingMode(.template)
                     .scaledToFit()
-                    .scaleEffect(x: mirrorScale, y: 1)
+                    .scaleEffect(x: side.handArtworkMirrorScale, y: 1)
                     .foregroundStyle(Color.hangInk.opacity(0.82))
             }
         }
@@ -135,15 +136,28 @@ struct GripHandCueCard: View {
 
     @ViewBuilder private var fingerSetCue: some View {
         if let fingerConfiguration {
-            CueGlyph(label: fingerConfiguration.orderedFingers.map(\.shortLabel).joined(separator: "+")) {
-                FingerCueGlyph(fingerConfiguration: fingerConfiguration)
-                    .scaleEffect(x: mirrorScale, y: 1)
+            CueGlyph(label: visibleFingerLabel) {
+                FingerCueGlyph(
+                    fingerConfiguration: fingerConfiguration,
+                    fingerSlots: visibleFingerSlots
+                )
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("workout.gripCue.\(side.accessibilityIdentifier).fingers")
         }
     }
 
-    private var mirrorScale: CGFloat {
-        side == .right ? -1 : 1
+    var visibleFingerSlots: [FingerSlot] {
+        side == .left ? Array(FingerSlot.allCases.reversed()) : FingerSlot.allCases
+    }
+
+    var visibleFingerLabel: String {
+        guard let fingerConfiguration else { return "" }
+
+        return visibleFingerSlots
+            .filter(fingerConfiguration.engagedFingers.contains)
+            .map(\.shortLabel)
+            .joined(separator: "+")
     }
 
     private func gripPoseAsset(for posture: GripType) -> String {
@@ -179,12 +193,26 @@ struct GripHandCueCard: View {
     }
 }
 
+extension GripCueSide {
+    var handArtworkMirrorScale: CGFloat {
+        self == .left ? -1 : 1
+    }
+
+    var accessibilityIdentifier: String {
+        switch self {
+        case .left: "left"
+        case .right: "right"
+        }
+    }
+}
+
 private struct FingerCueGlyph: View {
     let fingerConfiguration: FingerConfiguration
+    let fingerSlots: [FingerSlot]
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 3) {
-            ForEach(FingerSlot.allCases) { finger in
+            ForEach(fingerSlots) { finger in
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .fill(
                         fingerConfiguration.engagedFingers.contains(finger)

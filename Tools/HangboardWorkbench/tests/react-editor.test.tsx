@@ -234,6 +234,13 @@ test("canvas zoom controls and Alt-wheel adjust a bounded zoom while preserving 
   });
 });
 
+test("Alt-wheel zoom accepts a horizontal-only wheel delta", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaX: -1, deltaY: 0, altKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+  });
+});
+
 test("pointer edits retain SVG coordinates at a zoomed canvas size", async () => {
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 200, height: 100 } });

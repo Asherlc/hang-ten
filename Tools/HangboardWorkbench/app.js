@@ -23253,6 +23253,20 @@
     const deleteVertexButtonRef = (0, import_react3.useRef)(null);
     const selectedVertexRef = (0, import_react3.useRef)(null);
     const [vertexMenuPosition, setVertexMenuPosition] = (0, import_react3.useState)(null);
+    const viewportRef = (0, import_react3.useRef)(null);
+    (0, import_react3.useEffect)(() => {
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+      const handleWheel = (event) => {
+        if (!event.altKey || !document2) return;
+        const delta = event.deltaY === 0 ? event.deltaX : event.deltaY;
+        if (delta === 0) return;
+        event.preventDefault();
+        onZoomChange(delta < 0 ? 1 : -1);
+      };
+      viewport.addEventListener("wheel", handleWheel, { passive: false });
+      return () => viewport.removeEventListener("wheel", handleWheel);
+    }, [document2, onZoomChange]);
     const selectedHold = document2?.regions.find((region) => region.key === selectedKey) ?? null;
     let selectedCommands = null;
     if (selectedHold) {
@@ -23296,11 +23310,7 @@
       {
         className: "canvas-viewport",
         id: "canvas-viewport",
-        onWheel: (event) => {
-          if (!event.altKey || !document2 || event.deltaY === 0) return;
-          event.preventDefault();
-          onZoomChange(event.deltaY < 0 ? 1 : -1);
-        },
+        ref: viewportRef,
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
             "svg",
