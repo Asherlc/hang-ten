@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shlex
 from pathlib import Path
 
 import yaml
@@ -29,6 +30,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
         step for step in test_job["steps"] if step.get("name") == "Run XCTest suite"
     )
     xctest_command = xctest_step["run"]
+    xctest_tokens = shlex.split(xctest_command)
     active_docs = "\n".join(
         path.read_text(encoding="utf-8") for path in (README, ADDING_A_BOARD)
     )
@@ -39,6 +41,9 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "xcodebuild" in xctest_command
     assert "-only-testing" not in xctest_command
     assert "-skip-testing" not in xctest_command
+    worker_flag = "-maximum-parallel-testing-workers"
+    assert xctest_tokens.count(worker_flag) == 1
+    assert xctest_tokens[xctest_tokens.index(worker_flag) + 1] == "1"
     assert "test 2>&1" in xctest_command
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
