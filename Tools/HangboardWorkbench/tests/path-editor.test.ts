@@ -470,7 +470,7 @@ test("addVertex subdivides a C segment after a non-M command, leaving the preced
   assert.deepEqual(commands[3]?.points, [{ x: 100, y: 0 }]);
 });
 
-test("deleteVertex removes a vertex and converts adjacent curves to lines", () => {
+test("deleteVertex removes a vertex from a four-vertex contour and converts adjacent curves to lines", () => {
   const commands = parsePath("M 0 0 L 25 50 L 50 0 L 75 50 Z");
   deleteVertex(commands, 2);
   assert.equal(commands.length, 4);
@@ -495,24 +495,22 @@ test("deleteVertex refuses to delete the M vertex", () => {
   assert.equal(commands[0]?.type, "M");
 });
 
-test("deleteVertex on the vertex before Z wraps correctly", () => {
+test("deleteVertex refuses to reduce a triangle below three vertices", () => {
   const commands = parsePath("M 0 0 L 50 0 L 100 50 Z");
   deleteVertex(commands, 2);
-  assert.equal(commands.length, 3);
-  assert.equal(commands[0]?.type, "M");
-  assert.equal(commands[1]?.type, "L");
-  assert.equal(commands[2]?.type, "Z");
+  assert.equal(commands.length, 4);
+  assert.equal(serializePath(commands), "M 0 0 L 50 0 L 100 50 Z");
 });
 
 test("deleteVertex on the vertex before Z leaves a curved prev segment untouched", () => {
-  const commands = parsePath("M 0 0 Q 40 80 80 0 L 120 40 Z");
-  deleteVertex(commands, 2);
-  assert.equal(commands.length, 3);
+  const commands = parsePath("M 0 0 L 20 20 Q 40 80 80 0 L 120 40 Z");
+  deleteVertex(commands, 3);
+  assert.equal(commands.length, 4);
   assert.equal(commands[0]?.type, "M");
-  assert.equal(commands[1]?.type, "Q");
-  assert.deepEqual(commands[1]?.points, [{ x: 80, y: 0 }]);
-  assert.deepEqual(commands[1]?.controls, [{ x: 40, y: 80 }]);
-  assert.equal(commands[2]?.type, "Z");
+  assert.equal(commands[2]?.type, "Q");
+  assert.deepEqual(commands[2]?.points, [{ x: 80, y: 0 }]);
+  assert.deepEqual(commands[2]?.controls, [{ x: 40, y: 80 }]);
+  assert.equal(commands[3]?.type, "Z");
 });
 
 test("rotatePath rotates every anchor point 90 degrees clockwise around the pivot", () => {
