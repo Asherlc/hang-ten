@@ -42,6 +42,26 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     validateEditorDocument: dependencies.controller.validateEditorDocument,
     dialogs: dependencies.dialogs,
   });
+  const saveFromShortcut = React.useCallback(() => {
+    if (busy || !state.board) return;
+    editor.cancelActiveEdit();
+    void actions.saveBoard();
+  }, [actions, busy, editor, state.board]);
+  React.useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent): void => {
+      const target = event.target instanceof Element ? event.target : null;
+      const tag = target?.tagName.toLowerCase();
+      const editable = (target instanceof HTMLElement && target.isContentEditable)
+        || target?.getAttribute("contenteditable") === "true"
+        || tag === "input" || tag === "select" || tag === "textarea";
+      if (editable || !(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
+      if (busy || !state.board) return;
+      event.preventDefault();
+      saveFromShortcut();
+    };
+    window.document.addEventListener("keydown", onKeyDown);
+    return () => window.document.removeEventListener("keydown", onKeyDown);
+  }, [busy, saveFromShortcut, state.board]);
   const branchStatus = !state.initialized && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
@@ -70,10 +90,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         <div className="toolbar" aria-label="Board tools">
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
-          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={() => void (async () => {
-            editor.cancelActiveEdit();
-            await actions.saveBoard();
-          })()}>Save</button>
+          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
         </div>
         <RepositoryToolbar state={state} actions={actions} />
       </header>

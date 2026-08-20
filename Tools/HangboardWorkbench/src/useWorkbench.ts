@@ -37,6 +37,23 @@ const INITIAL_STATE: WorkbenchState = {
   boardsError: "",
 };
 
+const MAX_DOCUMENT_HISTORY = 100;
+interface DocumentHistory {
+  undo: EditorDocument[];
+  redo: EditorDocument[];
+}
+
+function resetHistory(history: DocumentHistory): void {
+  history.undo = [];
+  history.redo = [];
+}
+
+function recordHistory(history: DocumentHistory, document: EditorDocument): void {
+  history.undo.push(cloneEditorDocument(document));
+  if (history.undo.length > MAX_DOCUMENT_HISTORY) history.undo.shift();
+  history.redo = [];
+}
+
 type StateUpdate = (state: WorkbenchState) => WorkbenchState;
 type ActivityGuard = () => boolean;
 interface OperationCoordinators {
@@ -72,6 +89,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const stateRef = useRef(state);
   const mountedRef = useRef(true);
   const initializationGenerationRef = useRef(0);
+  const historyRef = useRef<DocumentHistory>({ undo: [], redo: [] });
   const boardIdleWaitersRef = useRef(new Set<() => void>());
   const gitIdleWaitersRef = useRef(new Set<() => void>());
 
@@ -258,6 +276,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
           loadImage,
           commit: ({ board, document }) => {
             if (!isCurrent()) return;
+            resetHistory(historyRef.current);
             updateState((current) => ({
               ...current,
               board,
@@ -313,6 +332,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
               if (latest.board?.boardId !== boardId || latest.document !== documentIdentity) {
                 return latest;
               }
+              resetHistory(historyRef.current);
               return {
                 ...latest,
                 board,
@@ -342,6 +362,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   }, [boardOperations, client, controller, isBusy, updateState]);
 
   const clearEditor = useCallback((): void => {
+    resetHistory(historyRef.current);
     updateState((current) => ({
       ...current,
       board: null,
@@ -515,6 +536,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
 
   const replaceDocument = useCallback<WorkbenchActions["replaceDocument"]>((document, options = {}) => {
     const nextDocument = cloneEditorDocument(document);
+    if (options.historySnapshot) recordHistory(historyRef.current, options.historySnapshot);
     updateState((current) => ({
       ...current,
       document: nextDocument,
@@ -541,19 +563,58 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       }));
       return false;
     }
-    updateState((latest) => {
-      if (latest.document !== current.document) return latest;
-      return {
-        ...latest,
-        document: nextDocument,
-        dirty: options.dirty ?? true,
-        ...(Object.hasOwn(options, "selectedKey") ? { selectedKey: options.selectedKey ?? null } : {}),
-        validation: options.validation ?? "",
-        status: options.status ?? "Hold document updated. Save when ready.",
-      };
+    if (stateRef.current.document !== current.document) return true;
+    replaceDocument(nextDocument, {
+      ...options,
+      historySnapshot: current.document,
+      status: options.status ?? "Hold document updated. Save when ready.",
     });
     return true;
-  }, [controller, updateState]);
+  }, [controller, replaceDocument, updateState]);
+
+  const undoDocument = useCallback<WorkbenchActions["undoDocument"]>(() => {
+    const current = stateRef.current;
+    const snapshot = historyRef.current.undo.pop();
+    if (!current.board || !current.document || !snapshot) {
+      if (snapshot) historyRef.current.undo.push(snapshot);
+      return false;
+    }
+    historyRef.current.redo.push(cloneEditorDocument(current.document));
+    const document = cloneEditorDocument(snapshot);
+    updateState((latest) => ({
+      ...latest,
+      document,
+      selectedKey: document.regions.some((region) => region.key === current.selectedKey)
+        ? current.selectedKey
+        : null,
+      dirty: true,
+      validation: "",
+      status: "Undo. Save when ready.",
+    }));
+    return true;
+  }, [updateState]);
+
+  const redoDocument = useCallback<WorkbenchActions["redoDocument"]>(() => {
+    const current = stateRef.current;
+    const snapshot = historyRef.current.redo.pop();
+    if (!current.board || !current.document || !snapshot) {
+      if (snapshot) historyRef.current.redo.push(snapshot);
+      return false;
+    }
+    historyRef.current.undo.push(cloneEditorDocument(current.document));
+    const document = cloneEditorDocument(snapshot);
+    updateState((latest) => ({
+      ...latest,
+      document,
+      selectedKey: document.regions.some((region) => region.key === current.selectedKey)
+        ? current.selectedKey
+        : null,
+      dirty: true,
+      validation: "",
+      status: "Redo. Save when ready.",
+    }));
+    return true;
+  }, [updateState]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -617,6 +678,8 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     },
     replaceDocument,
     editDocument,
+    undoDocument,
+    redoDocument,
     updateDocument(document, status = "Hold document updated. Save when ready.") {
       replaceDocument(document, { status });
     },
@@ -629,9 +692,11 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     refreshGit,
     replaceDocument,
     editDocument,
+    redoDocument,
     saveBoard,
     selectBoard,
     switchBranch,
+    undoDocument,
     updateState,
   ]);
 

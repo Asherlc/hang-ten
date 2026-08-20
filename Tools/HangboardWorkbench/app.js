@@ -21883,6 +21883,16 @@
     saveLoginUrl: null,
     boardsError: ""
   };
+  var MAX_DOCUMENT_HISTORY = 100;
+  function resetHistory(history) {
+    history.undo = [];
+    history.redo = [];
+  }
+  function recordHistory(history, document2) {
+    history.undo.push(cloneEditorDocument(document2));
+    if (history.undo.length > MAX_DOCUMENT_HISTORY) history.undo.shift();
+    history.redo = [];
+  }
   function errorMessage(error, fallback) {
     return error instanceof Error && error.message ? error.message : fallback;
   }
@@ -21901,6 +21911,7 @@
     const stateRef = (0, import_react.useRef)(state);
     const mountedRef = (0, import_react.useRef)(true);
     const initializationGenerationRef = (0, import_react.useRef)(0);
+    const historyRef = (0, import_react.useRef)({ undo: [], redo: [] });
     const boardIdleWaitersRef = (0, import_react.useRef)(/* @__PURE__ */ new Set());
     const gitIdleWaitersRef = (0, import_react.useRef)(/* @__PURE__ */ new Set());
     const updateState = (0, import_react.useCallback)((update) => {
@@ -22063,6 +22074,7 @@
             loadImage,
             commit: ({ board, document: document2 }) => {
               if (!isCurrent()) return;
+              resetHistory(historyRef.current);
               updateState((current) => ({
                 ...current,
                 board,
@@ -22115,6 +22127,7 @@
                 if (latest.board?.boardId !== boardId || latest.document !== documentIdentity) {
                   return latest;
                 }
+                resetHistory(historyRef.current);
                 return {
                   ...latest,
                   board,
@@ -22143,6 +22156,7 @@
       });
     }, [boardOperations, client2, controller2, isBusy, updateState]);
     const clearEditor = (0, import_react.useCallback)(() => {
+      resetHistory(historyRef.current);
       updateState((current) => ({
         ...current,
         board: null,
@@ -22303,6 +22317,7 @@
     }, [client2, dialogs2, gitOperations, isBusy, updateState]);
     const replaceDocument = (0, import_react.useCallback)((document2, options = {}) => {
       const nextDocument = cloneEditorDocument(document2);
+      if (options.historySnapshot) recordHistory(historyRef.current, options.historySnapshot);
       updateState((current) => ({
         ...current,
         document: nextDocument,
@@ -22328,19 +22343,52 @@
         }));
         return false;
       }
-      updateState((latest) => {
-        if (latest.document !== current.document) return latest;
-        return {
-          ...latest,
-          document: nextDocument,
-          dirty: options.dirty ?? true,
-          ...Object.hasOwn(options, "selectedKey") ? { selectedKey: options.selectedKey ?? null } : {},
-          validation: options.validation ?? "",
-          status: options.status ?? "Hold document updated. Save when ready."
-        };
+      if (stateRef.current.document !== current.document) return true;
+      replaceDocument(nextDocument, {
+        ...options,
+        historySnapshot: current.document,
+        status: options.status ?? "Hold document updated. Save when ready."
       });
       return true;
-    }, [controller2, updateState]);
+    }, [controller2, replaceDocument, updateState]);
+    const undoDocument = (0, import_react.useCallback)(() => {
+      const current = stateRef.current;
+      const snapshot = historyRef.current.undo.pop();
+      if (!current.board || !current.document || !snapshot) {
+        if (snapshot) historyRef.current.undo.push(snapshot);
+        return false;
+      }
+      historyRef.current.redo.push(cloneEditorDocument(current.document));
+      const document2 = cloneEditorDocument(snapshot);
+      updateState((latest) => ({
+        ...latest,
+        document: document2,
+        selectedKey: document2.regions.some((region) => region.key === current.selectedKey) ? current.selectedKey : null,
+        dirty: true,
+        validation: "",
+        status: "Undo. Save when ready."
+      }));
+      return true;
+    }, [updateState]);
+    const redoDocument = (0, import_react.useCallback)(() => {
+      const current = stateRef.current;
+      const snapshot = historyRef.current.redo.pop();
+      if (!current.board || !current.document || !snapshot) {
+        if (snapshot) historyRef.current.redo.push(snapshot);
+        return false;
+      }
+      historyRef.current.undo.push(cloneEditorDocument(current.document));
+      const document2 = cloneEditorDocument(snapshot);
+      updateState((latest) => ({
+        ...latest,
+        document: document2,
+        selectedKey: document2.regions.some((region) => region.key === current.selectedKey) ? current.selectedKey : null,
+        dirty: true,
+        validation: "",
+        status: "Redo. Save when ready."
+      }));
+      return true;
+    }, [updateState]);
     (0, import_react.useEffect)(() => {
       mountedRef.current = true;
       return () => {
@@ -22399,6 +22447,8 @@
       },
       replaceDocument,
       editDocument,
+      undoDocument,
+      redoDocument,
       updateDocument(document2, status = "Hold document updated. Save when ready.") {
         replaceDocument(document2, { status });
       }
@@ -22411,9 +22461,11 @@
       refreshGit,
       replaceDocument,
       editDocument,
+      redoDocument,
       saveBoard,
       selectBoard,
       switchBranch,
+      undoDocument,
       updateState
     ]);
     return { state, actions };
@@ -22488,6 +22540,7 @@
     originalPath: null,
     originalPaths: null,
     originalConstraint: null,
+    originalDocument: null,
     resizeHandle: null,
     originalDirty: false,
     changed: false,
@@ -22938,6 +22991,7 @@
         };
       }
       if (!next) return;
+      next.originalDocument = cloneEditorDocument(document2);
       event.preventDefault();
       dragRef.current = next;
       previewDocumentRef.current = document2;
@@ -23047,6 +23101,7 @@
         validateEditorDocument2(candidate);
         actions.replaceDocument(candidate, {
           dirty: true,
+          historySnapshot: drag.originalDocument ?? void 0,
           validation: "",
           status: drag.type === "rotation" ? "Hold rotated. Save when ready." : "Contour updated. Save when ready."
         });
@@ -23119,10 +23174,26 @@
     }, [busy, document2, selectVertex, selectedHold]);
     (0, import_react2.useEffect)(() => {
       const onKeyDown = (event) => {
-        if (busy) return;
         const target = event.target instanceof Element ? event.target : null;
         const tagName = target?.tagName.toLowerCase();
         if (target instanceof HTMLElement && target.isContentEditable || target?.getAttribute("contenteditable") === "true" || tagName === "input" || tagName === "select" || tagName === "textarea") return;
+        if (busy) return;
+        const modifier = event.metaKey || event.ctrlKey;
+        if (modifier && event.key.toLowerCase() === "z") {
+          const cancelled = cancelActiveEdit();
+          const changed = event.shiftKey ? actions.redoDocument() : actions.undoDocument();
+          if (cancelled || changed) event.preventDefault();
+          return;
+        }
+        if (event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "y") {
+          const cancelled = cancelActiveEdit();
+          if (cancelled || actions.redoDocument()) event.preventDefault();
+          return;
+        }
+        if (event.key === "Escape" && cancelActiveEdit()) {
+          event.preventDefault();
+          return;
+        }
         if (event.key === "Escape" && vertexMenu) {
           event.preventDefault();
           dismissVertexMenu();
@@ -23161,6 +23232,7 @@
     }, [
       actions,
       busy,
+      cancelActiveEdit,
       canDeleteSelectedVertex,
       deleteSelectedVertex,
       dismissVertexMenu,
@@ -23725,6 +23797,24 @@
       validateEditorDocument: dependencies.controller.validateEditorDocument,
       dialogs: dependencies.dialogs
     });
+    const saveFromShortcut = import_react4.default.useCallback(() => {
+      if (busy || !state.board) return;
+      editor.cancelActiveEdit();
+      void actions.saveBoard();
+    }, [actions, busy, editor, state.board]);
+    import_react4.default.useEffect(() => {
+      const onKeyDown = (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        const tag = target?.tagName.toLowerCase();
+        const editable = target instanceof HTMLElement && target.isContentEditable || target?.getAttribute("contenteditable") === "true" || tag === "input" || tag === "select" || tag === "textarea";
+        if (editable || !(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
+        if (busy || !state.board) return;
+        event.preventDefault();
+        saveFromShortcut();
+      };
+      window.document.addEventListener("keydown", onKeyDown);
+      return () => window.document.removeEventListener("keydown", onKeyDown);
+    }, [busy, saveFromShortcut, state.board]);
     const branchStatus = !state.initialized && !state.gitStatusKnown ? "Choose a board to edit its holds." : state.currentBranch ? `Current branch: ${state.currentBranch}` : state.gitStatusKnown ? "Detached HEAD" : "No branch detected";
     const saveState = !state.board ? "No board selected" : busy ? "Working\u2026" : state.dirty ? "Unsaved changes" : "Saved";
     return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("main", { className: "app-shell direct-workbench", children: [
@@ -23739,10 +23829,7 @@
         /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "toolbar", "aria-label": "Board tools", children: [
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button", id: "refresh-boards-button", type: "button", disabled: busy, onClick: () => void actions.refreshBoards(), children: "Boards" }),
           /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "save-state", id: "save-state", "aria-live": "polite", children: saveState }),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button accent", id: "save-button", type: "button", disabled: !state.board || busy, onClick: () => void (async () => {
-            editor.cancelActiveEdit();
-            await actions.saveBoard();
-          })(), children: "Save" })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "tool-button accent", id: "save-button", type: "button", disabled: !state.board || busy, onClick: saveFromShortcut, children: "Save" })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(RepositoryToolbar, { state, actions })
       ] }),
