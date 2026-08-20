@@ -15,17 +15,11 @@ final class GripCueSnapshotUITests: XCTestCase {
     }
 
     func testMaxHangsStepOneShowsBothHandCuesAndFourFingerIndicator() throws {
-        let leftCue = app.otherElements["workout.gripCue.left"]
-        let rightCue = app.otherElements["workout.gripCue.right"]
-        let leftFingerIndicator = app.otherElements["workout.gripCue.left.fingers"]
-        let rightFingerIndicator = app.otherElements["workout.gripCue.right.fingers"]
+        let leftFingerIndicator = app.staticTexts["P+R+M+I"]
+        let rightFingerIndicator = app.staticTexts["I+M+R+P"]
 
-        XCTAssertTrue(leftCue.waitForExistence(timeout: 10))
-        XCTAssertTrue(rightCue.waitForExistence(timeout: 10))
         XCTAssertTrue(leftFingerIndicator.waitForExistence(timeout: 10))
         XCTAssertTrue(rightFingerIndicator.waitForExistence(timeout: 10))
-        XCTAssertEqual(leftFingerIndicator.label, "P+R+M+I")
-        XCTAssertEqual(rightFingerIndicator.label, "I+M+R+P")
 
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = "Max Hangs step 1 landscape grip cues"

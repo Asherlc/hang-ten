@@ -888,7 +888,7 @@ final class PlanStorageTests: XCTestCase {
 
     func testMaxHangsWorkStepsKeepSourceBackedFourFingerCue() {
         let workSteps = PlanCatalog.maxHangs.steps.filter {
-            $0.phase == .hang
+            $0.segments.contains { $0.kind == .work }
         }
 
         XCTAssertEqual(workSteps.map(\.id), [
