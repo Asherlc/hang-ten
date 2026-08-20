@@ -100,6 +100,9 @@
 		AB0000000000000000000006 /* OpenTelemetrySdk in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000003 /* OpenTelemetrySdk */; };
 		AB0000000000000000000007 /* OpenTelemetryProtocolExporterHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */; };
 		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
+		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
+		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
+		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +127,9 @@
 		BB0000000000000000000019 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000020 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000021 /* MotherboardModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModelsTests.swift; sourceTree = "<group>"; };
+		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
 		BB0000000000000000000076 /* ProgressorProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressorProtocolTests.swift; sourceTree = "<group>"; };
@@ -219,6 +225,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AE0000000000000000000005 /* HangTenUITests Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE0000000000000000000003 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -227,6 +241,7 @@
 			children = (
 				DD0000000000000000000002 /* HangTen */,
 				DD0000000000000000000007 /* HangTenTests */,
+				AE0000000000000000000006 /* HangTenUITests */,
 				DD0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -249,6 +264,7 @@
 			children = (
 				BB0000000000000000000010 /* HangTen.app */,
 				BB0000000000000000000019 /* HangTenTests.xctest */,
+				AE0000000000000000000004 /* HangTenUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -369,15 +385,31 @@
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
+				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
 				BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */,
 			);
 			path = HangTenTests;
+			sourceTree = "<group>";
+		};
+		AE0000000000000000000006 /* HangTenUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
+			);
+			path = HangTenUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXContainerItemProxy section */
 		990000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE0000000000000000000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE0000000000000000000001;
+			remoteInfo = HangTen;
+		};
+		AE0000000000000000000007 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EE0000000000000000000010 /* Project object */;
 			proxyType = 1;
@@ -391,6 +423,11 @@
 			isa = PBXTargetDependency;
 			target = EE0000000000000000000001 /* HangTen */;
 			targetProxy = 990000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		AE0000000000000000000008 /* HangTen target dependency */ = {
+			isa = PBXTargetDependency;
+			target = EE0000000000000000000001 /* HangTen */;
+			targetProxy = AE0000000000000000000007 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -439,6 +476,23 @@
 			productReference = BB0000000000000000000019 /* HangTenTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		AE0000000000000000000009 /* HangTenUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AE0000000000000000000010 /* Build configuration list for PBXNativeTarget "HangTenUITests" */;
+			buildPhases = (
+				AE0000000000000000000011 /* HangTenUITests Sources */,
+				AE0000000000000000000005 /* HangTenUITests Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AE0000000000000000000008 /* HangTen target dependency */,
+			);
+			name = HangTenUITests;
+			productName = HangTenUITests;
+			productReference = AE0000000000000000000004 /* HangTenUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -453,6 +507,10 @@
 						CreatedOnToolsVersion = 26.6;
 					};
 					EE0000000000000000000002 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = EE0000000000000000000001;
+					};
+					AE0000000000000000000009 = {
 						CreatedOnToolsVersion = 26.6;
 						TestTargetID = EE0000000000000000000001;
 					};
@@ -476,9 +534,10 @@
 				HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */,
 				HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
-			targets = (
+				targets = (
 				EE0000000000000000000001 /* HangTen */,
 				EE0000000000000000000002 /* HangTenTests */,
+				AE0000000000000000000009 /* HangTenUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -634,6 +693,15 @@
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
 				AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */,
+				AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AE0000000000000000000011 /* HangTenUITests Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -903,6 +971,48 @@
 			};
 			name = Release;
 		};
+		AE0000000000000000000012 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training.uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HangTen;
+			};
+			name = Debug;
+		};
+		AE0000000000000000000013 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training.uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HangTen;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -929,6 +1039,15 @@
 			buildConfigurations = (
 				FF0000000000000000000023 /* Debug */,
 				FF0000000000000000000024 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AE0000000000000000000010 /* Build configuration list for PBXNativeTarget "HangTenUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE0000000000000000000012 /* Debug */,
+				AE0000000000000000000013 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
