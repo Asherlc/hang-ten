@@ -658,6 +658,85 @@ def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
         board_package.load_board_package(package)
 
 
+def test_rejects_path_whose_rendered_curve_escapes_declared_frame(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {"command": "line", "to": [1, 0]},
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "quad", "control": [-16, 2], "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+
+    with pytest.raises(
+        BoardPackageError, match="frame must match its derived shape bounds"
+    ):
+        board_package.load_board_package(package)
+
+
+def test_header_only_discovery_rejects_a_leading_curve_as_a_board_package_error(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {
+                        "command": "curve",
+                        "control1": [0, 0],
+                        "control2": [1, 1],
+                        "to": [1, 1],
+                    }
+                ],
+            },
+        ),
+    )
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+@pytest.mark.parametrize(
+    "commands",
+    [
+        [{"command": "move", "to": []}],
+        [{"command": "move", "to": ["left", "top"]}],
+    ],
+    ids=["empty-move-coordinates", "string-move-coordinates"],
+)
+def test_header_only_discovery_wraps_malformed_path_commands_as_board_package_errors(
+    commands: list[dict[str, object]], tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape", {"type": "path", "commands": commands}
+        ),
+    )
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
 @pytest.mark.parametrize(
     "fixture",
     VALIDATION_FIXTURES["outOfBoundsFrames"],
