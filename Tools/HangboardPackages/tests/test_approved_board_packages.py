@@ -40,25 +40,25 @@ COMPACT_HOLD_BOUNDS = {
     # jug-left/right, edge-29-*, and edge-19-* were retightened so their
     # declared frame exactly matches their path's flattened bounds; see
     # "Fix hold geometry bounds and aspect-ratio metadata mismatches".
-    "jug-left": (0.000, 0.000, 0.165, 0.23715),
+    "jug-left": (0.038, 0.035, 0.127, 0.180),
     "sloper-flat-left": (0.158, 0.035, 0.190, 0.128),
     "sloper-round-center": (0.352, 0.035, 0.296, 0.128),
     "sloper-flat-right": (0.652, 0.035, 0.190, 0.128),
-    "jug-right": (0.835, 0.000, 0.165, 0.23715),
-    "edge-29-left": (0.021, 0.2531, 0.165, 0.2538),
+    "jug-right": (0.835, 0.035, 0.127, 0.180),
+    "edge-29-left": (0.050, 0.255, 0.136, 0.235),
     "pocket-29-three-left": (0.199, 0.365, 0.109, 0.148),
     "pocket-29-two-left": (0.328, 0.370, 0.077, 0.147),
     "pocket-29-four-center": (0.425, 0.365, 0.150, 0.148),
     "pocket-29-two-right": (0.595, 0.370, 0.077, 0.147),
     "pocket-29-three-right": (0.692, 0.365, 0.109, 0.148),
-    "edge-29-right": (0.814, 0.2531, 0.165, 0.2538),
-    "edge-19-left": (0.035, 0.626125, 0.160, 0.231525),
+    "edge-29-right": (0.814, 0.255, 0.136, 0.235),
+    "edge-19-left": (0.060, 0.630, 0.135, 0.215),
     "pocket-19-three-left": (0.216, 0.733, 0.104, 0.140),
     "pocket-19-three-right": (0.680, 0.733, 0.104, 0.140),
     "pocket-19-two-left": (0.336, 0.733, 0.073, 0.140),
     "pocket-19-two-right": (0.591, 0.733, 0.073, 0.140),
     "pocket-19-four-center": (0.425, 0.733, 0.150, 0.140),
-    "edge-19-right": (0.805, 0.626125, 0.160, 0.231525),
+    "edge-19-right": (0.805, 0.630, 0.135, 0.215),
 }
 
 # Each value is (source-backed kind, depth, capacity, structural pocket grip,

@@ -8,7 +8,8 @@ struct BoardMapView: View {
     var onHoldTap: ((BoardHold) -> Void)?
 
     var body: some View {
-        GeometryReader { _ in
+        GeometryReader { proxy in
+            let boardBounds = proxy.size
             ZStack {
                 BoardPresentationImage(board: board)
 
@@ -19,8 +20,10 @@ struct BoardMapView: View {
                         highlightMode: highlightMode,
                         onTap: onHoldTap
                     )
+                    .frame(width: boardBounds.width, height: boardBounds.height)
                 }
             }
+            .frame(width: boardBounds.width, height: boardBounds.height)
         }
         .aspectRatio(board.aspectRatio, contentMode: .fit)
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
