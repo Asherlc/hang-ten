@@ -59,6 +59,8 @@ export interface HoldCanvasProps {
   zoomPercent: number;
   onZoomChange(direction: number): boolean | void;
   canZoomChange(direction: number): boolean;
+  onPinchZoomChange(direction: number): boolean | void;
+  canPinchZoomChange(direction: number): boolean;
   guides: readonly Guide[];
   onMoveGuide(id: string, coordinate: number): void;
 }
@@ -75,6 +77,8 @@ export function HoldCanvas({
   zoomPercent,
   onZoomChange,
   canZoomChange,
+  onPinchZoomChange,
+  canPinchZoomChange,
   guides,
   onMoveGuide,
 }: HoldCanvasProps) {
@@ -89,9 +93,13 @@ export function HoldCanvas({
   const editorRef = useRef(editor);
   const onZoomChangeRef = useRef(onZoomChange);
   const canZoomChangeRef = useRef(canZoomChange);
+  const onPinchZoomChangeRef = useRef(onPinchZoomChange);
+  const canPinchZoomChangeRef = useRef(canPinchZoomChange);
   editorRef.current = editor;
   onZoomChangeRef.current = onZoomChange;
   canZoomChangeRef.current = canZoomChange;
+  onPinchZoomChangeRef.current = onPinchZoomChange;
+  canPinchZoomChangeRef.current = canPinchZoomChange;
   const releaseGuidePointer = (pointerId: number): void => {
     const drag = guideDragRef.current;
     if (!drag || drag.pointerId !== pointerId) return;
@@ -127,12 +135,22 @@ export function HoldCanvas({
       const distance = touchDistance(event.touches);
       const previousDistance = touchPinchDistanceRef.current;
       if (!previousDistance || distance === 0) return;
-      const scale = distance / previousDistance;
-      if (scale >= TOUCH_PINCH_ZOOM_THRESHOLD || scale <= 1 / TOUCH_PINCH_ZOOM_THRESHOLD) {
-        const direction = scale > 1 ? 1 : -1;
-        if (canZoomChangeRef.current(direction)) onZoomChangeRef.current(direction);
-        touchPinchDistanceRef.current = distance;
+      let thresholdDistance = previousDistance;
+      while (distance / thresholdDistance >= TOUCH_PINCH_ZOOM_THRESHOLD) {
+        if (!canPinchZoomChangeRef.current(1) || onPinchZoomChangeRef.current(1) === false) {
+          thresholdDistance = distance;
+          break;
+        }
+        thresholdDistance *= TOUCH_PINCH_ZOOM_THRESHOLD;
       }
+      while (distance / thresholdDistance <= 1 / TOUCH_PINCH_ZOOM_THRESHOLD) {
+        if (!canPinchZoomChangeRef.current(-1) || onPinchZoomChangeRef.current(-1) === false) {
+          thresholdDistance = distance;
+          break;
+        }
+        thresholdDistance /= TOUCH_PINCH_ZOOM_THRESHOLD;
+      }
+      touchPinchDistanceRef.current = thresholdDistance;
       event.preventDefault();
     };
     const handleTouchEnd = (event: TouchEvent): void => {
@@ -150,17 +168,22 @@ export function HoldCanvas({
       const delta = event.deltaY === 0 ? event.deltaX : event.deltaY;
       if (delta === 0) return;
       if (event.ctrlKey && !event.altKey) {
-        const direction = delta < 0 ? 1 : -1;
-        if (!canZoomChangeRef.current(direction)) {
-          pinchZoomDeltaRef.current = 0;
-          return;
-        }
         pinchZoomDeltaRef.current += delta;
-        if (Math.abs(pinchZoomDeltaRef.current) < PINCH_ZOOM_DELTA_THRESHOLD) {
-          event.preventDefault();
-          return;
+        let zoomChanged = false;
+        while (Math.abs(pinchZoomDeltaRef.current) >= PINCH_ZOOM_DELTA_THRESHOLD) {
+          const direction = pinchZoomDeltaRef.current < 0 ? 1 : -1;
+          if (!canPinchZoomChangeRef.current(direction) || onPinchZoomChangeRef.current(direction) === false) {
+            pinchZoomDeltaRef.current = 0;
+            break;
+          }
+          pinchZoomDeltaRef.current -= Math.sign(pinchZoomDeltaRef.current) * PINCH_ZOOM_DELTA_THRESHOLD;
+          zoomChanged = true;
         }
-        pinchZoomDeltaRef.current = 0;
+        const pendingDirection = pinchZoomDeltaRef.current < 0 ? 1 : -1;
+        if (zoomChanged || (pinchZoomDeltaRef.current !== 0 && canPinchZoomChangeRef.current(pendingDirection))) {
+          event.preventDefault();
+        }
+        return;
       }
       if (onZoomChangeRef.current(delta < 0 ? 1 : -1) === true) event.preventDefault();
     };
