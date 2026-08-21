@@ -30,6 +30,15 @@ final class CheckoutSelectionTests: XCTestCase {
         XCTAssertEqual(result.path, root.resolvingSymlinksInPath().path)
     }
 
+    func testValidatedURLRejectsRepositoryRootSuppliedThroughASymlink() throws {
+        let root = try makeCheckout()
+        let symlink = root.deletingLastPathComponent().appending(path: "repository-link-\(UUID().uuidString)")
+        temporaryDirectories.append(symlink)
+        try FileManager.default.createSymbolicLink(at: symlink, withDestinationURL: root)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(symlink))
+    }
+
     func testValidatedURLRejectsEachMissingRepositoryMarker() throws {
         for marker in [
             ".git",

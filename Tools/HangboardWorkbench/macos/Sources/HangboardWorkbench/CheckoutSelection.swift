@@ -51,19 +51,20 @@ final class CheckoutSelection {
         guard url.isFileURL else {
             throw ValidationError.notHangTenCheckout
         }
-        let normalized = url.standardizedFileURL.resolvingSymlinksInPath()
-        guard isDirectory(normalized, fileManager: fileManager),
+        let lexical = url.standardizedFileURL
+        guard fileType(at: lexical, fileManager: fileManager) != .typeSymbolicLink,
+              isDirectory(lexical, fileManager: fileManager),
               isRegularFileOrDirectory(
-                  normalized.appending(path: ".git"),
+                  lexical.appending(path: ".git"),
                   fileManager: fileManager
               ),
               isDirectory(
-                  normalized.appending(path: "Hangboards"),
+                  lexical.appending(path: "Hangboards"),
                   fileManager: fileManager
               ) else {
             throw ValidationError.notHangTenCheckout
         }
-        return normalized
+        return lexical.resolvingSymlinksInPath()
     }
 
     private static func isDirectory(_ url: URL, fileManager: FileManager) -> Bool {

@@ -513,9 +513,9 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
     private func diagnosticDetail(_ detail: String, session: BackendController.Session) -> String {
         let mismatch = session.runtimeIdentity != "unknown" && session.checkoutIdentity != "unknown"
             && session.runtimeIdentity != session.checkoutIdentity
-            ? "\nBuild mismatch: the packaged runtime and selected checkout are from different commits."
+            ? "\nBuild mismatch: the packaged runtime and selected local repository are from different commits."
             : ""
-        return "\(detail)\n\nBackend: \(session.url.absoluteString)\nRuntime build: \(session.runtimeIdentity)\nCheckout build: \(session.checkoutIdentity)\(mismatch)\nCheckout: \(activeCheckout?.path ?? "unknown")"
+        return "\(detail)\n\nBackend: \(session.url.absoluteString)\nRuntime build: \(session.runtimeIdentity)\nLocal repository build: \(session.checkoutIdentity)\(mismatch)\nLocal repository: \(activeCheckout?.path ?? "unknown")"
     }
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

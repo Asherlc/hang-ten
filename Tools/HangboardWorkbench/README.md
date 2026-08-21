@@ -165,9 +165,9 @@ unzip hangboard-workbench-macos-arm64.zip
 open "Hangboard Workbench.app"
 ```
 
-On first launch the native window asks you to **Choose Hang Ten Checkout…**.
+On first launch the native window asks you to **Choose Local Repository…**.
 The app remembers the last valid checkout and uses the selected checkout on
-later launches; choose **Choose Another Checkout…** from the app menu to
+later launches; choose **Choose Another Local Repository…** from the app menu to
 switch. All edits remain ordinary local Git changes for normal Git review.
 
 Local editor users can continue to use the packaged app; hosted deployment uses
