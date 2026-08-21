@@ -24,6 +24,7 @@ const INITIAL_STATE: WorkbenchState = {
   gitStatusKnown: false,
   hasUncommittedChanges: false,
   dirty: false,
+  autosaveEnabled: true,
   busyBoard: false,
   savingBoard: false,
   busyGit: false,
@@ -40,6 +41,8 @@ const INITIAL_STATE: WorkbenchState = {
 };
 
 const MAX_DOCUMENT_HISTORY = 100;
+const AUTOSAVE_DELAY_MS = 750;
+const AUTOSAVE_STORAGE_KEY = "hangboard-workbench:autosave-enabled";
 interface DocumentHistory {
   undo: EditorDocument[];
   redo: EditorDocument[];
@@ -85,6 +88,25 @@ function selectedBranch(status: GitStatus): string {
   return [...status.branches].sort()[0] ?? "";
 }
 
+function autosaveEnabledFromStorage(storage: WorkbenchDependencies["runtime"]["storage"]): boolean {
+  try {
+    return storage?.getItem(AUTOSAVE_STORAGE_KEY) !== "false";
+  } catch {
+    return true;
+  }
+}
+
+function persistAutosavePreference(
+  storage: WorkbenchDependencies["runtime"]["storage"],
+  enabled: boolean,
+): void {
+  try {
+    storage?.setItem(AUTOSAVE_STORAGE_KEY, String(enabled));
+  } catch {
+    // Storage may be unavailable in private browsing or embedded webviews.
+  }
+}
+
 function validSelection(document: EditorDocument, keys: readonly string[], primary: string | null): {
   selectedKeys: string[];
   selectedKey: string | null;
@@ -99,7 +121,10 @@ function validSelection(document: EditorDocument, keys: readonly string[], prima
 
 export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchResult {
   const { client, controller, dialogs, runtime } = dependencies;
-  const [state, setState] = useState<WorkbenchState>(INITIAL_STATE);
+  const [state, setState] = useState<WorkbenchState>(() => ({
+    ...INITIAL_STATE,
+    autosaveEnabled: autosaveEnabledFromStorage(runtime.storage),
+  }));
   const stateRef = useRef(state);
   const mountedRef = useRef(true);
   const initializationGenerationRef = useRef(0);
@@ -107,12 +132,20 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const boardIdleWaitersRef = useRef(new Set<() => void>());
   const gitIdleWaitersRef = useRef(new Set<() => void>());
   const saveGenerationRef = useRef<number | null>(null);
+  const autosaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autosaveAttemptedDocumentRef = useRef<EditorDocument | null>(null);
 
   const updateState = useCallback((update: StateUpdate): void => {
     if (!mountedRef.current) return;
     const next = update(stateRef.current);
     stateRef.current = next;
     setState(next);
+  }, []);
+
+  const cancelAutosave = useCallback((): void => {
+    if (autosaveTimerRef.current === null) return;
+    clearTimeout(autosaveTimerRef.current);
+    autosaveTimerRef.current = null;
   }, []);
 
   // Dependency identity intentionally controls coordinator replacement and initialization.
@@ -318,7 +351,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     });
   }, [boardOperations, client, controller, isBusy, loadImage, updateState]);
 
-  const saveBoard = useCallback(async (): Promise<void> => {
+  const saveBoard = useCallback(async (automatic = false): Promise<void> => {
     if (isBusy() || stateRef.current.savingBoard) return;
     const current = stateRef.current;
     if (!current.board || !current.document) return;
@@ -334,6 +367,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }
     const boardId = current.board.boardId;
     const documentIdentity = current.document;
+    autosaveAttemptedDocumentRef.current = documentIdentity;
     const saveGeneration = operationGeneration;
     saveGenerationRef.current = saveGeneration;
     updateState((value) => ({ ...value, saveLoginUrl: null, savingBoard: true }));
@@ -361,7 +395,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
                   ...selection,
                   dirty: false,
                   validation: "",
-                  status: "Board saved.",
+                  status: automatic ? "Board autosaved." : "Board saved.",
                 };
               });
             },
@@ -372,12 +406,16 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
           updateState((latest) => loginUrl ? {
             ...latest,
             validation: "",
-            status: "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
+            status: automatic
+              ? "Could not autosave board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept."
+              : "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
             saveLoginUrl: loginUrl,
           } : {
             ...latest,
             validation: errorMessage(error, "Could not save board."),
-            status: "Could not save board. Your editor changes were kept.",
+            status: automatic
+              ? "Could not autosave board. Your editor changes were kept."
+              : "Could not save board. Your editor changes were kept.",
           });
         }
       });
@@ -388,6 +426,16 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       updateState((value) => ({ ...value, savingBoard: false }));
     }
   }, [boardOperations, client, controller, isBusy, operationGeneration, updateState]);
+
+  const setAutosaveEnabled = useCallback((enabled: boolean): void => {
+    if (!enabled) cancelAutosave();
+    persistAutosavePreference(runtime.storage, enabled);
+    updateState((current) => ({
+      ...current,
+      autosaveEnabled: enabled,
+      status: enabled ? "Autosave enabled." : "Autosave disabled. Save manually when ready.",
+    }));
+  }, [cancelAutosave, runtime.storage, updateState]);
 
   const clearEditor = useCallback((): void => {
     resetHistory(historyRef.current);
@@ -650,6 +698,36 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   }, [updateState]);
 
   useEffect(() => {
+    cancelAutosave();
+    if (!state.autosaveEnabled
+      || !state.dirty
+      || state.savingBoard
+      || state.busyBoard
+      || !state.board
+      || !state.document
+      || autosaveAttemptedDocumentRef.current === state.document) return;
+    try {
+      controller.validateEditorDocument(state.document);
+    } catch {
+      return;
+    }
+    const document = state.document;
+    autosaveTimerRef.current = setTimeout(() => {
+      autosaveTimerRef.current = null;
+      const current = stateRef.current;
+      if (!current.autosaveEnabled
+        || !current.dirty
+        || current.document !== document
+        || current.savingBoard
+        || current.busyBoard
+        || autosaveAttemptedDocumentRef.current === document) return;
+      autosaveAttemptedDocumentRef.current = document;
+      void saveBoard(true);
+    }, AUTOSAVE_DELAY_MS);
+    return cancelAutosave;
+  }, [cancelAutosave, controller, saveBoard, state.autosaveEnabled, state.board, state.busyBoard, state.dirty, state.document, state.savingBoard]);
+
+  useEffect(() => {
     if (boardOperations.isBusy || saveGenerationRef.current === operationGeneration) return;
     updateState((current) => (
       current.busyBoard || current.savingBoard
@@ -662,13 +740,14 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      cancelAutosave();
       initializationGenerationRef.current += 1;
       for (const resolve of boardIdleWaitersRef.current) resolve();
       boardIdleWaitersRef.current.clear();
       for (const resolve of gitIdleWaitersRef.current) resolve();
       gitIdleWaitersRef.current.clear();
     };
-  }, []);
+  }, [cancelAutosave]);
 
   useEffect(() => {
     const generation = initializationGenerationRef.current + 1;
@@ -697,6 +776,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     refreshBoards,
     selectBoard,
     saveBoard,
+    setAutosaveEnabled,
     refreshGit,
     setSelectedBranch(branchName) {
       updateState((current) => ({ ...current, selectedBranch: branchName }));
@@ -750,6 +830,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     redoDocument,
     saveBoard,
     selectBoard,
+    setAutosaveEnabled,
     switchBranch,
     undoDocument,
     updateState,

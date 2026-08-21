@@ -21,17 +21,25 @@ const CANVAS_ZOOM_STEP = 25;
 export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const { state, actions } = useWorkbench(dependencies);
   const [canvasZoom, setCanvasZoom] = React.useState(100);
+  const canvasZoomRef = React.useRef(canvasZoom);
   const [guides, setGuides] = React.useState<Guide[]>([]);
   const [mobileBoardsOpen, setMobileBoardsOpen] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [mobileHoldSheetOpen, setMobileHoldSheetOpen] = React.useState(false);
   const nextGuideId = React.useRef(1);
-  const changeCanvasZoom = React.useCallback((direction: number) => {
-    setCanvasZoom((zoom) => Math.min(
-      MAX_CANVAS_ZOOM,
-      Math.max(MIN_CANVAS_ZOOM, zoom + Math.sign(direction) * CANVAS_ZOOM_STEP),
-    ));
+  const canZoomChange = React.useCallback((direction: number): boolean => {
+    const step = Math.sign(direction) * CANVAS_ZOOM_STEP;
+    const nextZoom = canvasZoomRef.current + step;
+    return nextZoom >= MIN_CANVAS_ZOOM && nextZoom <= MAX_CANVAS_ZOOM;
   }, []);
+  const changeCanvasZoom = React.useCallback((direction: number): boolean => {
+    const step = Math.sign(direction) * CANVAS_ZOOM_STEP;
+    const nextZoom = canvasZoomRef.current + step;
+    if (!canZoomChange(direction)) return false;
+    canvasZoomRef.current = nextZoom;
+    setCanvasZoom(nextZoom);
+    return true;
+  }, [canZoomChange]);
   const busy = state.busyBoard || state.busyGit;
   const editorBusy = state.busyGit || (state.busyBoard && !state.savingBoard);
   const selectedHold: HoldRegion | null = state.document?.regions.find(
@@ -83,14 +91,20 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
       const editable = (target instanceof HTMLElement && target.isContentEditable)
         || target?.getAttribute("contenteditable") === "true"
         || tag === "input" || tag === "select" || tag === "textarea";
-      if (editable || !(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
+      if (editable) return;
+      if (event.metaKey && (event.key === "+" || event.key === "-")) {
+        if (!state.document || busy) return;
+        if (changeCanvasZoom(event.key === "+" ? 1 : -1)) event.preventDefault();
+        return;
+      }
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
       if (busy || !state.board) return;
       event.preventDefault();
       saveFromShortcut();
     };
     window.document.addEventListener("keydown", onKeyDown);
     return () => window.document.removeEventListener("keydown", onKeyDown);
-  }, [busy, saveFromShortcut, state.board]);
+  }, [busy, changeCanvasZoom, saveFromShortcut, state.board, state.document]);
   const branchStatus = !state.initialized && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
@@ -120,6 +134,18 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
           <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
+          <label className="tool-button" htmlFor="autosave-toggle">
+            <input
+              id="autosave-toggle"
+              type="checkbox"
+              checked={state.autosaveEnabled}
+              onChange={(event) => actions.setAutosaveEnabled(event.currentTarget.checked)}
+            />
+            Autosave
+          </label>
+          <span className="save-state" id="autosave-state" aria-live="polite">
+            {state.autosaveEnabled ? "Autosave on" : "Autosave off"}
+          </span>
         </div>
         <div className="mobile-toolbar" aria-label="Mobile board tools">
           <button className="tool-button" id="mobile-boards-button" type="button" aria-expanded={mobileBoardsOpen} onClick={() => setMobileBoardsOpen((open) => !open)}>Boards</button>
@@ -185,6 +211,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             editor={editor}
             zoomPercent={canvasZoom}
             onZoomChange={changeCanvasZoom}
+            canZoomChange={canZoomChange}
             guides={guides}
             onMoveGuide={moveGuide}
           />

@@ -64,6 +64,7 @@ interface VertexMenuState {
   y: number;
   kind: "vertex" | "segment";
   segmentAfterIndex: number | null;
+  segmentPoint: Point | null;
   invoker: Element;
 }
 
@@ -112,7 +113,9 @@ export interface HoldEditorActions {
   selectedVertexIndex: number | null;
   vertexMenu: { x: number; y: number; kind: "vertex" | "segment" } | null;
   canDeleteSelectedVertex: boolean;
+  selectedVertexIsInflection: boolean;
   canRoundSelectedVertex: boolean;
+  canAddInflectionPoint: boolean;
   canMakeSelectedSegmentBendable: boolean;
   canMakeSelectedSegmentStraight: boolean;
   canMakeSelectedSegmentHorizontal: boolean;
@@ -122,6 +125,7 @@ export interface HoldEditorActions {
   selectVertex(index: number): void;
   deleteSelectedVertex(): void;
   roundSelectedVertex(): void;
+  addInflectionPoint(): void;
   makeSelectedSegmentBendable(): void;
   makeSelectedSegmentStraight(): void;
   makeSelectedSegmentHorizontal(): void;
@@ -356,7 +360,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   let selectionIsCurrent = false;
   let canDeleteSelectedVertex = false;
+  let selectedVertexIsInflection = false;
   let canRoundSelectedVertex = false;
+  let canAddInflectionPoint = false;
   let canMakeSelectedSegmentBendable = false;
   let canMakeSelectedSegmentStraight = false;
   let canMakeSelectedSegmentHorizontal = false;
@@ -368,6 +374,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         selectionIsCurrent = hasVertex(commands, vertexSelection.commandIndex);
         canDeleteSelectedVertex = selectionIsCurrent
           && canDeleteVertex(commands, vertexSelection.commandIndex);
+        selectedVertexIsInflection = selectionIsCurrent
+          && pathEditor.isInflectionVertex(commands, vertexSelection.commandIndex);
       }
       if (selectionIsCurrent && vertexSelection) {
         const candidate = cloneCommands(commands);
@@ -376,6 +384,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       if (vertexMenuState?.document === document
         && vertexMenuState.holdKey === selectedHold.key
         && vertexMenuState.segmentAfterIndex !== null) {
+        const inflectionCandidate = cloneCommands(commands);
+        canAddInflectionPoint = vertexMenuState.segmentPoint !== null
+          && pathEditor.addInflectionPoint(
+            inflectionCandidate,
+            vertexMenuState.segmentAfterIndex,
+            vertexMenuState.segmentPoint,
+          );
         const candidate = cloneCommands(commands);
         canMakeSelectedSegmentBendable = pathEditor.makeSegmentBendable(
           candidate,
@@ -400,7 +415,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       selectionIsCurrent = false;
       canDeleteSelectedVertex = false;
+      selectedVertexIsInflection = false;
       canRoundSelectedVertex = false;
+      canAddInflectionPoint = false;
       canMakeSelectedSegmentBendable = false;
       canMakeSelectedSegmentStraight = false;
       canMakeSelectedSegmentHorizontal = false;
@@ -473,6 +490,36 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       reportInvalidPath(error);
     }
   }, [actions, canRoundSelectedVertex, document, pathEditor, reportInvalidPath, selectedHold, selectedVertexIndex, vertexMenuState]);
+
+  const addInflectionPoint = useCallback((): void => {
+    const afterIndex = vertexMenuState?.segmentAfterIndex;
+    const point = vertexMenuState?.segmentPoint;
+    if (!canAddInflectionPoint || !document || !selectedHold || !point
+      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    try {
+      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      if (!pathEditor.addInflectionPoint(commands, afterIndex, point)) return;
+      const nextPath = pathEditor.serializePath(commands);
+      const edited = actions.editDocument((candidate) => {
+        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+      }, { status: "Inflection point added. Save when ready." });
+      if (!edited) return;
+      setVertexSelection(null);
+      setVertexMenuState(null);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
+    }
+  }, [
+    actions,
+    canAddInflectionPoint,
+    document,
+    pathEditor,
+    reportInvalidPath,
+    selectedHold,
+    vertexMenuState?.segmentAfterIndex,
+    vertexMenuState?.segmentPoint,
+  ]);
 
   const makeSelectedSegmentBendable = useCallback((): void => {
     const afterIndex = vertexMenuState?.segmentAfterIndex;
@@ -1109,6 +1156,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         y: event.clientY,
         kind: "vertex",
         segmentAfterIndex: null,
+        segmentPoint: null,
         invoker: target,
       });
       return;
@@ -1116,13 +1164,16 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!target.classList.contains("region-shape") || target.getAttribute("data-hold-key") !== selectedHold.key) return;
     try {
       const commands = pathEditor.parsePath(selectedHold.displayPath);
-      const afterIndex = closestEditableSegmentIndex(commands, svgPoint(event.currentTarget, event));
+      const point = svgPoint(event.currentTarget, event);
+      const afterIndex = closestEditableSegmentIndex(commands, point);
       if (afterIndex === null) return;
+      const inflectionCandidate = cloneCommands(commands);
       const bendableCandidate = cloneCommands(commands);
       const straightCandidate = cloneCommands(commands);
       const horizontalCandidate = cloneCommands(commands);
       const verticalCandidate = cloneCommands(commands);
-      if (!pathEditor.makeSegmentBendable(bendableCandidate, afterIndex)
+      if (!pathEditor.addInflectionPoint(inflectionCandidate, afterIndex, point)
+        && !pathEditor.makeSegmentBendable(bendableCandidate, afterIndex)
         && !pathEditor.makeSegmentStraight(straightCandidate, afterIndex)
         && !pathEditor.snapSegmentHorizontal(horizontalCandidate, afterIndex)
         && !pathEditor.snapSegmentVertical(verticalCandidate, afterIndex)) return;
@@ -1135,6 +1186,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         y: event.clientY,
         kind: "segment",
         segmentAfterIndex: afterIndex,
+        segmentPoint: point,
         invoker: target,
       });
     } catch (error: unknown) {
@@ -1221,7 +1273,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     selectedVertexIndex,
     vertexMenu,
     canDeleteSelectedVertex,
+    selectedVertexIsInflection,
     canRoundSelectedVertex,
+    canAddInflectionPoint,
     canMakeSelectedSegmentBendable,
     canMakeSelectedSegmentStraight,
     canMakeSelectedSegmentHorizontal,
@@ -1231,6 +1285,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     selectVertex,
     deleteSelectedVertex,
     roundSelectedVertex,
+    addInflectionPoint,
     makeSelectedSegmentBendable,
     makeSelectedSegmentStraight,
     makeSelectedSegmentHorizontal,
