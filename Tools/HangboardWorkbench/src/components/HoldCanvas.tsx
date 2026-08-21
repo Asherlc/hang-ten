@@ -85,6 +85,12 @@ export function HoldCanvas({
   const pinchZoomDeltaRef = useRef(0);
   const touchPinchDistanceRef = useRef<number | null>(null);
   const touchPinchActiveRef = useRef(false);
+  const editorRef = useRef(editor);
+  const onZoomChangeRef = useRef(onZoomChange);
+  const canZoomChangeRef = useRef(canZoomChange);
+  editorRef.current = editor;
+  onZoomChangeRef.current = onZoomChange;
+  canZoomChangeRef.current = canZoomChange;
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -100,7 +106,7 @@ export function HoldCanvas({
       if (distance === 0) return;
       touchPinchActiveRef.current = true;
       touchPinchDistanceRef.current = distance;
-      editor.cancelActiveEdit();
+      editorRef.current.cancelActiveEdit();
       event.preventDefault();
     };
     const handleTouchMove = (event: TouchEvent): void => {
@@ -111,7 +117,7 @@ export function HoldCanvas({
       const scale = distance / previousDistance;
       if (scale >= TOUCH_PINCH_ZOOM_THRESHOLD || scale <= 1 / TOUCH_PINCH_ZOOM_THRESHOLD) {
         const direction = scale > 1 ? 1 : -1;
-        if (canZoomChange(direction)) onZoomChange(direction);
+        if (canZoomChangeRef.current(direction)) onZoomChangeRef.current(direction);
         touchPinchDistanceRef.current = distance;
       }
       event.preventDefault();
@@ -160,7 +166,7 @@ export function HoldCanvas({
       viewport.removeEventListener("touchcancel", handleTouchEnd);
       viewport.removeEventListener("wheel", handleWheel);
     };
-  }, [canZoomChange, document, editor, onZoomChange]);
+  }, [document]);
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
   let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {

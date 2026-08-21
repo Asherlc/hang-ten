@@ -331,6 +331,36 @@ test("collapsing the mobile hold sheet retains the selected hold", async () => {
   });
 });
 
+test("selecting a hold on another board does not reopen an explicitly opened mobile sheet", async () => {
+  const image = imageFixture();
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async listBoards() {
+        return [
+          { boardId: "board-a", displayName: "Board A", holdCount: 1 },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1 },
+        ];
+      },
+      async getBoard(boardId) { return boardFixture(boardId); },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button:first-child");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+    await app.click("#mobile-open-hold-sheet-button");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+
+    await app.click("#board-list button:nth-child(2)");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+
+    assert.equal(app.text("#board-name"), "Board B");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
+  });
+});
+
 test("autosave restores the saved browser preference", async () => {
   const image = imageFixture();
   const storage = storageFixture({ "hangboard-workbench:autosave-enabled": "false" });

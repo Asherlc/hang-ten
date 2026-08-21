@@ -372,7 +372,7 @@ test("Ctrl-pinch does not consume a sub-threshold event when canvas zoom is at i
   });
 });
 
-test("two-finger touch pinch zooms the canvas without intercepting one-finger touches", async () => {
+test("two-finger touch pinch continues zooming across rerenders without intercepting one-finger touches", async () => {
   await withEditor(async (app) => {
     assert.equal(await touchCanvas(app, "touchstart", [{ clientX: 20, clientY: 20 }]), false);
     assert.equal(await touchCanvas(app, "touchmove", [{ clientX: 35, clientY: 20 }]), false);
@@ -387,6 +387,11 @@ test("two-finger touch pinch zooms the canvas without intercepting one-finger to
       { clientX: 90, clientY: 20 },
     ]), true);
     assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 0, clientY: 20 },
+      { clientX: 100, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "150%");
     assert.equal(await touchCanvas(app, "touchend", []), false);
   });
 });

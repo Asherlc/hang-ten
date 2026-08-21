@@ -51,6 +51,9 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   React.useEffect(() => {
     setGuides([]);
   }, [state.board?.boardId]);
+  React.useEffect(() => {
+    setMobileHoldSheetOpen(false);
+  }, [state.board?.boardId]);
   const addGuide = React.useCallback((axis: GuideAxis): void => {
     if (!selectedHoldCenter) return;
     setGuides((current) => [...current, {
