@@ -1041,6 +1041,57 @@
           }
         }
       ]
+    },
+    {
+      "id": "hold-11",
+      "name": "Hold 11",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.4609375,
+            "y": 0.44140625,
+            "width": 0.078125,
+            "height": 0.1171875
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
