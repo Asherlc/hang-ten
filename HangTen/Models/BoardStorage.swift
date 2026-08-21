@@ -200,7 +200,9 @@ struct BoardHoldDefinition: Codable, Hashable {
         try container.encodeIfPresent(features, forKey: .features)
     }
 
-    func trainingBoardHold() throws -> BoardHold {
+    func trainingBoardHold(
+        presentationID: String = BoardPresentation.legacyPrimaryID
+    ) throws -> BoardHold {
         if let fingerCapacity,
            !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
             throw BoardGeometryAdaptationError.invalid(
@@ -226,7 +228,8 @@ struct BoardHoldDefinition: Codable, Hashable {
             depthRangeMillimeters: depthRangeMillimeters.map {
                 $0.lowerBound...$0.upperBound
             },
-            features: features.map(Set.init)
+            features: features.map(Set.init),
+            presentationID: presentationID
         )
     }
 }
@@ -275,10 +278,20 @@ struct BoardDefinition: Codable, Hashable {
             subtitle: subtitle,
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
-            holds: try holds.map { try $0.trainingBoardHold() },
+            holds: try holds.map {
+                try $0.trainingBoardHold(presentationID: BoardPresentation.legacyPrimaryID)
+            },
             semanticHolds: semanticHolds,
             productURL: productURL,
-            photoAssetName: photoAssetName
+            photoAssetName: photoAssetName,
+            presentations: [
+                BoardPresentation(
+                    id: BoardPresentation.legacyPrimaryID,
+                    name: "Primary",
+                    aspectRatio: CGFloat(aspectRatio),
+                    isDefault: true
+                )
+            ]
         )
     }
 }

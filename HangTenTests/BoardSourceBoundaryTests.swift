@@ -158,8 +158,30 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
-            XCTAssertEqual(assetEntries, ["primary.png"])
-            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 1)
+            let schemaVersion = try XCTUnwrap(boardDocument["schemaVersion"] as? Int)
+            XCTAssertTrue(schemaVersion == 1 || schemaVersion == 2)
+            if schemaVersion == 1 {
+                XCTAssertEqual(assetEntries, ["primary.png"])
+                XCTAssertTrue(holds.allSatisfy { $0["presentationID"] == nil })
+            } else {
+                let presentations = try XCTUnwrap(
+                    boardDocument["presentations"] as? [[String: Any]]
+                )
+                let declaredAssets = Set(
+                    presentations.compactMap { presentation in
+                        (presentation["assetPath"] as? String).map {
+                            URL(fileURLWithPath: $0).lastPathComponent
+                        }
+                    }
+                )
+                XCTAssertEqual(assetEntries, declaredAssets)
+                let presentationIDs = Set(
+                    presentations.compactMap { $0["id"] as? String }
+                )
+                XCTAssertTrue(holds.allSatisfy {
+                    ($0["presentationID"] as? String).map(presentationIDs.contains) == true
+                })
+            }
             XCTAssertEqual(boardDocument["id"] as? String, board.id)
             XCTAssertFalse(holds.isEmpty)
             XCTAssertTrue(holds.allSatisfy { !($0["geometry"] as? [[String: Any]] ?? []).isEmpty })
@@ -191,19 +213,19 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
         let physicalHoldVisualFrame =
-            "                    )\n" +
-            "                    .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                }\n" +
-            "            }"
+            "                        )\n" +
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                    }\n" +
+            "                }"
         XCTAssertTrue(
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
         let outerZStackFrame =
+            "                }\n" +
+            "                .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "            }\n" +
-            "            .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "        }\n" +
-            "        .aspectRatio(board.aspectRatio, contentMode: .fit)"
+            "            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)"
         XCTAssertTrue(
             source.contains(outerZStackFrame),
             "The outer board ZStack must receive the board's explicit bounds."
@@ -422,6 +444,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
             if let presentation = boardObject["presentation"] as? [String: Any],
                let assetPath = presentation["assetPath"] as? String {
+                let assetURL = URL(fileURLWithPath: assetPath)
+                identifiers.insert(assetPath)
+                identifiers.insert(assetURL.lastPathComponent)
+                identifiers.insert(assetURL.deletingPathExtension().lastPathComponent)
+            }
+            for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {
+                guard let assetPath = presentation["assetPath"] as? String else { continue }
                 let assetURL = URL(fileURLWithPath: assetPath)
                 identifiers.insert(assetPath)
                 identifiers.insert(assetURL.lastPathComponent)

@@ -393,6 +393,7 @@ struct BoardHold: Identifiable, Hashable {
     let sizeMillimeters: Int?
     let depthRangeMillimeters: ClosedRange<Int>?
     let features: Set<HoldFeature>?
+    let presentationID: String
 
     static let validFingerCapacityRange = 1...4
 
@@ -405,7 +406,8 @@ struct BoardHold: Identifiable, Hashable {
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
-        features: Set<HoldFeature>? = nil
+        features: Set<HoldFeature>? = nil,
+        presentationID: String = BoardPresentation.legacyPrimaryID
     ) {
         precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
         if let fingerCapacity {
@@ -432,6 +434,7 @@ struct BoardHold: Identifiable, Hashable {
         self.sizeMillimeters = sizeMillimeters
         self.depthRangeMillimeters = depthRangeMillimeters
         self.features = features
+        self.presentationID = presentationID
     }
 
     /// Narrow source compatibility for hand-built workout and test fixtures.
@@ -468,7 +471,8 @@ struct BoardHold: Identifiable, Hashable {
             gripType: gripType,
             fingerCapacity: fingerCapacity,
             depthRangeMillimeters: depthRangeMillimeters,
-            features: features
+            features: features,
+            presentationID: BoardPresentation.legacyPrimaryID
         )
     }
 
@@ -482,6 +486,13 @@ struct BoardHold: Identifiable, Hashable {
     }
 }
 
+struct BoardPresentation: Identifiable, Hashable {
+    let id: String
+    let name: String
+    let aspectRatio: CGFloat
+    let isDefault: Bool
+}
+
 struct TrainingBoard: Identifiable, Hashable {
     let id: String
     let manufacturer: String
@@ -490,6 +501,7 @@ struct TrainingBoard: Identifiable, Hashable {
     let dimensions: String
     let aspectRatio: CGFloat
     let holds: [BoardHold]
+    let presentations: [BoardPresentation]
     /// Board-owned semantic targets loaded alongside the physical hold data.
     /// The empty default preserves hand-built board fixtures and catalog entries.
     let semanticHolds: [String: SemanticHoldMappingDefinition]
@@ -508,7 +520,8 @@ struct TrainingBoard: Identifiable, Hashable {
         holds: [BoardHold],
         semanticHolds: [String: SemanticHoldMappingDefinition] = [:],
         productURL: URL,
-        photoAssetName: String?
+        photoAssetName: String?,
+        presentations: [BoardPresentation] = []
     ) {
         self.id = id
         self.manufacturer = manufacturer
@@ -517,12 +530,29 @@ struct TrainingBoard: Identifiable, Hashable {
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
         self.holds = holds
+        self.presentations = presentations.isEmpty
+            ? [
+                BoardPresentation(
+                    id: BoardPresentation.legacyPrimaryID,
+                    name: "Primary",
+                    aspectRatio: aspectRatio,
+                    isDefault: true
+                )
+            ]
+            : presentations
         self.semanticHolds = semanticHolds
         self.productURL = productURL
         self.photoAssetName = photoAssetName
     }
 
+    var defaultPresentation: BoardPresentation {
+        presentations.first(where: \.isDefault) ?? presentations[0]
+    }
 
+    func presentation(id: String?) -> BoardPresentation? {
+        guard let id else { return nil }
+        return presentations.first { $0.id == id }
+    }
 }
 
 struct HoldTarget: Hashable {
