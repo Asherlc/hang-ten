@@ -18,6 +18,7 @@ import {
 import { isConstrainedHandle, isConstrainedShape } from "./shape-constraints.ts";
 import type {
   Dialogs,
+  Bounds,
   ConstrainedHandle,
   EditorDocument,
   HoldRegion,
@@ -49,7 +50,7 @@ interface DragState {
   lastAngle: number;
   totalAngle: number;
   pointerId: number | null;
-  pathCenter: Point | null;
+  pathBounds: Bounds | null;
 }
 
 interface VertexSelection {
@@ -88,7 +89,7 @@ const EMPTY_DRAG: DragState = {
   lastAngle: 0,
   totalAngle: 0,
   pointerId: null,
-  pathCenter: null,
+  pathBounds: null,
 };
 
 const GUIDE_SNAP_TOLERANCE = 6;
@@ -171,6 +172,22 @@ function nearbyGuideCoordinate(coordinates: readonly number[], value: number): n
     if (closest === null || Math.abs(coordinate - value) < Math.abs(closest - value)) closest = coordinate;
   }
   return closest;
+}
+
+function nearbyGuideEdgeOffset(
+  coordinates: readonly number[],
+  minimum: number,
+  maximum: number,
+  delta: number,
+): number {
+  let closestOffset: number | null = null;
+  for (const edge of [minimum, maximum]) {
+    const coordinate = nearbyGuideCoordinate(coordinates, edge + delta);
+    if (coordinate === null) continue;
+    const offset = coordinate - (edge + delta);
+    if (closestOffset === null || Math.abs(offset) < Math.abs(closestOffset)) closestOffset = offset;
+  }
+  return closestOffset ?? 0;
 }
 
 function closestPointOnLine(start: Point, end: Point, point: Point): Point {
@@ -935,8 +952,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
         originalDirty: dirty,
         pointerId: event.pointerId,
-        pathCenter: target.classList.contains("region-shape")
-          ? holdCentroid([selectedHold], pathEditor)
+        pathBounds: target.classList.contains("region-shape")
+          ? pathEditor.pathBounds(commands)
           : null,
       };
     }
@@ -1023,11 +1040,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           control.y += deltaY;
         }
       } else if (drag.type === "path") {
-        if (!event.altKey && drag.pathCenter) {
-          const snappedX = nearbyGuideCoordinate(verticalGuideXs, drag.pathCenter.x + deltaX);
-          const snappedY = nearbyGuideCoordinate(horizontalGuideYs, drag.pathCenter.y + deltaY);
-          if (snappedX !== null) deltaX += snappedX - (drag.pathCenter.x + deltaX);
-          if (snappedY !== null) deltaY += snappedY - (drag.pathCenter.y + deltaY);
+        if (!event.altKey && drag.pathBounds) {
+          deltaX += nearbyGuideEdgeOffset(
+            verticalGuideXs,
+            drag.pathBounds.minX,
+            drag.pathBounds.maxX,
+            deltaX,
+          );
+          deltaY += nearbyGuideEdgeOffset(
+            horizontalGuideYs,
+            drag.pathBounds.minY,
+            drag.pathBounds.maxY,
+            deltaY,
+          );
         }
         translateCommands(commands, deltaX, deltaY);
       }

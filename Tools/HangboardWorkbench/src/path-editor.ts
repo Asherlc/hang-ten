@@ -291,7 +291,7 @@ function constrainedPrimitiveCommands(shape: ShapeConstraintShape, bounds: Bound
   return rectangleCommands(bounds);
 }
 
-function pathBounds(commands: readonly PathCommand[]): Bounds {
+export function pathBounds(commands: readonly PathCommand[]): Bounds {
   let minX = Number.POSITIVE_INFINITY;
   let minY = Number.POSITIVE_INFINITY;
   let maxX = Number.NEGATIVE_INFINITY;
