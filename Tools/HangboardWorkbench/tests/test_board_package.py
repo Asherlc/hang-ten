@@ -1032,7 +1032,21 @@ def test_save_persists_a_quadratic_display_path_as_a_canonical_path_shape(
 
     shape = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]
     assert shape["type"] == "path"
-    assert shape["commands"][1]["command"] == "quad"
+    assert shape["commands"] == [
+        {"command": "move", "to": [0.0, 0.142857142857]},
+        {
+            "command": "quad",
+            "control": [0.5, -0.142857142857],
+            "to": [1.0, 0.142857142857],
+        },
+        {"command": "line", "to": [1.0, 1.0]},
+        {"command": "line", "to": [0.0, 1.0]},
+        {"command": "close"},
+    ]
+    reopened = board_package.open_package(library, "fixture.board")
+    assert board_package.editor_document(reopened)["regions"][0]["displayPath"] == (
+        "M 177.4 91.4 Q 266.1 45.7 354.8 91.4 L 354.8 228.5 L 177.4 228.5 Z"
+    )
 
 
 def test_changed_save_derives_current_display_paths_once_per_piece(

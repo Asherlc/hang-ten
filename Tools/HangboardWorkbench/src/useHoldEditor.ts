@@ -58,9 +58,12 @@ interface VertexSelection {
 
 interface VertexMenuState {
   document: EditorDocument;
+  holdKey: string;
   x: number;
   y: number;
+  kind: "vertex" | "segment";
   segmentAfterIndex: number | null;
+  invoker: Element;
 }
 
 const EMPTY_DRAG: DragState = {
@@ -100,7 +103,7 @@ export interface UseHoldEditorOptions {
 
 export interface HoldEditorActions {
   selectedVertexIndex: number | null;
-  vertexMenu: { x: number; y: number } | null;
+  vertexMenu: { x: number; y: number; kind: "vertex" | "segment" } | null;
   canDeleteSelectedVertex: boolean;
   canRoundSelectedVertex: boolean;
   canMakeSelectedSegmentBendable: boolean;
@@ -110,7 +113,7 @@ export interface HoldEditorActions {
   deleteSelectedVertex(): void;
   roundSelectedVertex(): void;
   makeSelectedSegmentBendable(): void;
-  dismissVertexMenu(): void;
+  dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
   changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
@@ -268,16 +271,25 @@ function closestStraightSegmentIndex(
   point: Point,
   maximumDistance = 15,
 ): number | null {
+  let closestIndex: number | null = null;
+  let closestDistance = maximumDistance;
   for (let index = 0; index + 1 < commands.length; index += 1) {
     const start = commands[index]?.points.at(-1);
     const next = commands[index + 1];
-    if (!start || next?.type !== "L") continue;
-    const closest = closestPointOnLine(start, next.points[0]!, point);
-    if (Math.hypot(point.x - closest.x, point.y - closest.y) < maximumDistance) {
-      return index;
+    const end = next?.type === "L"
+      ? next.points[0]
+      : next?.type === "Z" && index + 1 === commands.length - 1 && commands[0]?.type === "M"
+        ? commands[0].points[0]
+        : undefined;
+    if (!start || !end) continue;
+    const closest = closestPointOnLine(start, end, point);
+    const distance = Math.hypot(point.x - closest.x, point.y - closest.y);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = index;
     }
   }
-  return null;
+  return closestIndex;
 }
 
 export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions {
@@ -322,7 +334,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const candidate = cloneCommands(commands);
         canRoundSelectedVertex = pathEditor.roundVertex(candidate, vertexSelection.commandIndex);
       }
-      if (vertexMenuState?.document === document && vertexMenuState.segmentAfterIndex !== null) {
+      if (vertexMenuState?.document === document
+        && vertexMenuState.holdKey === selectedHold.key
+        && vertexMenuState.segmentAfterIndex !== null) {
         const candidate = cloneCommands(commands);
         canMakeSelectedSegmentBendable = pathEditor.makeSegmentBendable(
           candidate,
@@ -338,9 +352,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   }
   const selectedVertexIndex = selectionIsCurrent ? vertexSelection!.commandIndex : null;
   const menuIsCurrent = vertexMenuState?.document === document
+    && vertexMenuState.holdKey === selectedHold?.key
     && (selectionIsCurrent || vertexMenuState.segmentAfterIndex !== null);
   const vertexMenu = menuIsCurrent
-    ? { x: vertexMenuState.x, y: vertexMenuState.y }
+    ? { x: vertexMenuState.x, y: vertexMenuState.y, kind: vertexMenuState.kind }
     : null;
 
   const selectVertex = useCallback((index: number): void => {
@@ -384,7 +399,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   ]);
 
   const roundSelectedVertex = useCallback((): void => {
-    if (!canRoundSelectedVertex || !document || !selectedHold || selectedVertexIndex === null) return;
+    if (!canRoundSelectedVertex || !document || !selectedHold || selectedVertexIndex === null
+      || vertexMenuState?.holdKey !== selectedHold.key || vertexMenuState.segmentAfterIndex !== null) return;
     try {
       const commands = pathEditor.parsePath(selectedHold.displayPath);
       if (!pathEditor.roundVertex(commands, selectedVertexIndex)) return;
@@ -399,11 +415,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
-  }, [actions, canRoundSelectedVertex, document, pathEditor, reportInvalidPath, selectedHold, selectedVertexIndex]);
+  }, [actions, canRoundSelectedVertex, document, pathEditor, reportInvalidPath, selectedHold, selectedVertexIndex, vertexMenuState]);
 
   const makeSelectedSegmentBendable = useCallback((): void => {
     const afterIndex = vertexMenuState?.segmentAfterIndex;
-    if (!canMakeSelectedSegmentBendable || !document || !selectedHold || afterIndex === null || afterIndex === undefined) return;
+    if (!canMakeSelectedSegmentBendable || !document || !selectedHold
+      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
     try {
       const commands = pathEditor.parsePath(selectedHold.displayPath);
       if (!pathEditor.makeSegmentBendable(commands, afterIndex)) return;
@@ -428,8 +445,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     vertexMenuState?.segmentAfterIndex,
   ]);
 
-  const dismissVertexMenu = useCallback((): void => {
-    setVertexMenuState((current) => current ? null : current);
+  const dismissVertexMenu = useCallback((restoreFocus = false): void => {
+    setVertexMenuState((current) => {
+      if (!current) return current;
+      if (restoreFocus && (current.invoker instanceof HTMLElement || current.invoker instanceof SVGElement)) {
+        current.invoker.focus();
+      }
+      return null;
+    });
   }, []);
 
   const rotateHold = useCallback((degrees: number): void => {
@@ -911,7 +934,15 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       if (!Number.isInteger(index) || index < 0) return;
       event.preventDefault();
       selectVertex(index);
-      setVertexMenuState({ document, x: event.clientX, y: event.clientY, segmentAfterIndex: null });
+      setVertexMenuState({
+        document,
+        holdKey: selectedHold.key,
+        x: event.clientX,
+        y: event.clientY,
+        kind: "vertex",
+        segmentAfterIndex: null,
+        invoker: target,
+      });
       return;
     }
     if (!target.classList.contains("region-shape") || target.getAttribute("data-hold-key") !== selectedHold.key) return;
@@ -923,7 +954,15 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       if (!pathEditor.makeSegmentBendable(candidate, afterIndex)) return;
       event.preventDefault();
       setVertexSelection(null);
-      setVertexMenuState({ document, x: event.clientX, y: event.clientY, segmentAfterIndex: afterIndex });
+      setVertexMenuState({
+        document,
+        holdKey: selectedHold.key,
+        x: event.clientX,
+        y: event.clientY,
+        kind: "segment",
+        segmentAfterIndex: afterIndex,
+        invoker: target,
+      });
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
@@ -955,7 +994,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       }
       if (event.key === "Escape" && vertexMenu) {
         event.preventDefault();
-        dismissVertexMenu();
+        dismissVertexMenu(true);
         return;
       }
       if ((event.key === "Delete" || event.key === "Backspace") && selectedVertexIndex !== null) {

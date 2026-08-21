@@ -54,9 +54,6 @@ export function HoldCanvas({
   onZoomChange,
 }: HoldCanvasProps) {
   const vertexMenuRef = useRef<HTMLDivElement>(null);
-  const deleteVertexButtonRef = useRef<HTMLButtonElement>(null);
-  const curveActionButtonRef = useRef<HTMLButtonElement>(null);
-  const selectedVertexRef = useRef<SVGCircleElement>(null);
   const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -115,11 +112,9 @@ export function HoldCanvas({
         ? current
         : nextPosition
     ));
-    if (editor.canDeleteSelectedVertex) deleteVertexButtonRef.current?.focus();
-    else if (editor.canRoundSelectedVertex || editor.canMakeSelectedSegmentBendable) {
-      curveActionButtonRef.current?.focus();
-    }
-    else menu.focus();
+    const firstEnabledItem = [...menu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')]
+      .find((item) => !item.disabled);
+    (firstEnabledItem ?? menu).focus();
   }, [
     editor.canDeleteSelectedVertex,
     editor.canMakeSelectedSegmentBendable,
@@ -245,7 +240,6 @@ export function HoldCanvas({
                 return (
                   <g key={`${selectedHold?.key ?? "selected"}-${commandIndex}`}>
                     <circle
-                      ref={editor.selectedVertexIndex === commandIndex ? selectedVertexRef : undefined}
                       className={`path-editor-vertex${editor.selectedVertexIndex === commandIndex ? " selected" : ""}`}
                       data-index={commandIndex}
                       cx={endpoint.x}
@@ -306,25 +300,37 @@ export function HoldCanvas({
             ref={vertexMenuRef}
             className="path-editor-vertex-menu"
             role="menu"
-            aria-label="Vertex actions"
+            aria-label={editor.vertexMenu.kind === "vertex" ? "Vertex actions" : "Line actions"}
             tabIndex={-1}
             style={{ left: displayedVertexMenuPosition?.x, top: displayedVertexMenuPosition?.y }}
             onContextMenu={(event) => event.preventDefault()}
             onKeyDown={(event) => {
-              if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "[", "]"].includes(event.key)) {
+              const items = [...(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'))]
+                .filter((item) => !item.disabled);
+              if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
                 event.preventDefault();
                 event.stopPropagation();
+                if (items.length === 0) return;
+                if (event.key === "Home") {
+                  items[0]?.focus();
+                  return;
+                }
+                if (event.key === "End") {
+                  items.at(-1)?.focus();
+                  return;
+                }
+                const currentIndex = items.indexOf(window.document.activeElement as HTMLButtonElement);
+                const direction = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+                items[(currentIndex + direction + items.length) % items.length]?.focus();
                 return;
               }
               if (event.key !== "Escape") return;
               event.preventDefault();
               event.stopPropagation();
-              editor.dismissVertexMenu();
-              selectedVertexRef.current?.focus();
+              editor.dismissVertexMenu(true);
             }}
           >
             {editor.selectedVertexIndex !== null && <button
-              ref={deleteVertexButtonRef}
               type="button"
               role="menuitem"
               disabled={!editor.canDeleteSelectedVertex}
@@ -332,14 +338,12 @@ export function HoldCanvas({
               onClick={() => editor.deleteSelectedVertex()}
             >Delete</button>}
             {editor.canRoundSelectedVertex && <button
-              ref={curveActionButtonRef}
               id="round-corner-action"
               type="button"
               role="menuitem"
               onClick={() => editor.roundSelectedVertex()}
             >Round corner</button>}
             {editor.canMakeSelectedSegmentBendable && <button
-              ref={curveActionButtonRef}
               id="make-bendable-action"
               type="button"
               role="menuitem"

@@ -546,18 +546,28 @@ export function deleteVertex(commands: PathCommand[], index: number): void {
 export function makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean {
   const start = commands[afterIndex]?.points.at(-1);
   const next = commands[afterIndex + 1];
-  if (!start || next?.type !== "L") return false;
-  const end = next.points[0];
+  if (!start) return false;
+  const closingEdge = next?.type === "Z" && afterIndex + 1 === commands.length - 1;
+  const end = closingEdge
+    ? commands[0]?.type === "M" ? commands[0].points[0] : undefined
+    : next?.type === "L" ? next.points[0] : undefined;
   if (!end || pointsMatch(start, end)) return false;
-  commands[afterIndex + 1] = {
+  const curve: PathCommand = {
     type: "Q",
     points: [{ ...end }],
     controls: [interpolate(start, end, 0.5)],
   };
+  if (closingEdge) {
+    commands.splice(afterIndex + 1, 1, curve, { type: "Z", points: [], controls: [] });
+  } else {
+    commands[afterIndex + 1] = curve;
+  }
   return true;
 }
 
 export function roundVertex(commands: PathCommand[], index: number): boolean {
+  if (index === 0) return roundStartVertex(commands);
+  if (index === commands.length - 2) return roundLastVertex(commands);
   const previous = commands[index - 1];
   const vertex = commands[index];
   const next = commands[index + 1];
@@ -579,6 +589,57 @@ export function roundVertex(commands: PathCommand[], index: number): boolean {
     1,
     { type: "Q", points: [outgoing], controls: [{ ...corner }] },
     { type: "L", points: [{ ...end }], controls: [] },
+  );
+  return true;
+}
+
+function roundStartVertex(commands: PathCommand[]): boolean {
+  const vertex = commands[0];
+  const next = commands[1];
+  const previous = commands.at(-2);
+  if (vertex?.type !== "M" || next?.type !== "L" || previous?.type !== "L" || commands.at(-1)?.type !== "Z") {
+    return false;
+  }
+  const start = previous.points.at(-1);
+  const corner = vertex.points[0];
+  const end = next.points[0];
+  if (!start || !corner || !end || pointsMatch(start, corner) || pointsMatch(corner, end) || areCollinear(start, corner, end)) {
+    return false;
+  }
+
+  const trim = 0.2;
+  vertex.points = [interpolate(corner, start, trim)];
+  commands.splice(
+    1,
+    1,
+    { type: "Q", points: [interpolate(corner, end, trim)], controls: [{ ...corner }] },
+    { type: "L", points: [{ ...end }], controls: [] },
+  );
+  return true;
+}
+
+function roundLastVertex(commands: PathCommand[]): boolean {
+  const previous = commands[commands.length - 3];
+  const vertex = commands[commands.length - 2];
+  const close = commands.at(-1);
+  const startCommand = commands[0];
+  if (previous?.type !== "L" || vertex?.type !== "L" || close?.type !== "Z" || startCommand?.type !== "M") {
+    return false;
+  }
+  const start = previous.points.at(-1);
+  const corner = vertex.points[0];
+  const end = startCommand.points[0];
+  if (!start || !corner || !end || pointsMatch(start, corner) || pointsMatch(corner, end) || areCollinear(start, corner, end)) {
+    return false;
+  }
+
+  const trim = 0.2;
+  vertex.points = [interpolate(corner, start, trim)];
+  commands.splice(
+    commands.length - 1,
+    1,
+    { type: "Q", points: [interpolate(corner, end, trim)], controls: [{ ...corner }] },
+    { type: "Z", points: [], controls: [] },
   );
   return true;
 }

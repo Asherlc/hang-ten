@@ -81,6 +81,16 @@ test("makeSegmentBendable replaces a straight segment with a geometrically ident
   assert.equal(makeSegmentBendable(commands, 0), false, "curves cannot be converted twice");
 });
 
+test("makeSegmentBendable converts a closing edge while retaining one final close command", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
+
+  assert.equal(makeSegmentBendable(commands, 2), true);
+  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 Q 5 5 0 0 Z");
+  assert.equal(commands.filter((command) => command.type === "M").length, 1);
+  assert.equal(commands.filter((command) => command.type === "Z").length, 1);
+  assert.equal(commands.at(-1)?.type, "Z");
+});
+
 test("roundVertex trims adjacent straight segments and retains the sharp point as the quadratic control", () => {
   const commands = parsePath("M 0 0 L 10 0 L 10 10 L 0 10 Z");
 
@@ -88,11 +98,30 @@ test("roundVertex trims adjacent straight segments and retains the sharp point a
   assert.equal(serializePath(commands), "M 0 0 L 8 0 Q 10 0 10 2 L 10 10 L 0 10 Z");
 });
 
-test("roundVertex leaves degenerate, curved, and start vertices unchanged", () => {
+test("roundVertex rounds the first vertex through the closing edge without changing closure structure", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 L 0 10 Z");
+
+  assert.equal(roundVertex(commands, 0), true);
+  assert.equal(serializePath(commands), "M 0 2 Q 0 0 2 0 L 10 0 L 10 10 L 0 10 Z");
+  assert.equal(commands.filter((command) => command.type === "M").length, 1);
+  assert.equal(commands.filter((command) => command.type === "Z").length, 1);
+  assert.equal(commands.at(-1)?.type, "Z");
+});
+
+test("roundVertex rounds the last vertex through the closing edge without changing closure structure", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 L 0 10 Z");
+
+  assert.equal(roundVertex(commands, 3), true);
+  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 L 2 10 Q 0 10 0 8 Z");
+  assert.equal(commands.filter((command) => command.type === "M").length, 1);
+  assert.equal(commands.filter((command) => command.type === "Z").length, 1);
+  assert.equal(commands.at(-1)?.type, "Z");
+});
+
+test("roundVertex leaves degenerate and curved vertices unchanged", () => {
   for (const [path, index] of [
     ["M 0 0 L 10 0 L 20 0 Z", 1],
     ["M 0 0 Q 5 0 10 0 L 10 10 Z", 1],
-    ["M 0 0 L 10 0 L 10 10 Z", 0],
   ] as const) {
     const commands = parsePath(path);
     assert.equal(roundVertex(commands, index), false, path);
