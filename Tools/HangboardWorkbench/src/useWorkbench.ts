@@ -106,6 +106,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const historyRef = useRef<DocumentHistory>({ undo: [], redo: [] });
   const boardIdleWaitersRef = useRef(new Set<() => void>());
   const gitIdleWaitersRef = useRef(new Set<() => void>());
+  const saveGenerationRef = useRef<number | null>(null);
 
   const updateState = useCallback((update: StateUpdate): void => {
     if (!mountedRef.current) return;
@@ -119,6 +120,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const operationsRef = useRef<OperationCoordinators | null>(null);
   if (operationsRef.current?.dependencies !== dependencies) {
     const generation = (operationsRef.current?.generation ?? 0) + 1;
+    saveGenerationRef.current = null;
     const board = controller.createBoardOperationCoordinator({
       onBusyChange: (busy) => {
         if (operationsRef.current?.generation !== generation) return;
@@ -141,7 +143,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     });
     operationsRef.current = { dependencies, generation, board, git };
   }
-  const { board: boardOperations, git: gitOperations } = operationsRef.current;
+  const { generation: operationGeneration, board: boardOperations, git: gitOperations } = operationsRef.current;
 
   const isBusy = useCallback((): boolean => (
     boardOperations.isBusy || gitOperations.isBusy
@@ -332,6 +334,8 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }
     const boardId = current.board.boardId;
     const documentIdentity = current.document;
+    const saveGeneration = operationGeneration;
+    saveGenerationRef.current = saveGeneration;
     updateState((value) => ({ ...value, saveLoginUrl: null, savingBoard: true }));
     try {
       await boardOperations.perform(async ({ isCurrent }) => {
@@ -378,9 +382,12 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         }
       });
     } finally {
+      if (operationsRef.current?.generation !== saveGeneration
+        || saveGenerationRef.current !== saveGeneration) return;
+      saveGenerationRef.current = null;
       updateState((value) => ({ ...value, savingBoard: false }));
     }
-  }, [boardOperations, client, controller, isBusy, updateState]);
+  }, [boardOperations, client, controller, isBusy, operationGeneration, updateState]);
 
   const clearEditor = useCallback((): void => {
     resetHistory(historyRef.current);
@@ -641,6 +648,15 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }));
     return true;
   }, [updateState]);
+
+  useEffect(() => {
+    if (boardOperations.isBusy || saveGenerationRef.current === operationGeneration) return;
+    updateState((current) => (
+      current.busyBoard || current.savingBoard
+        ? { ...current, busyBoard: false, savingBoard: false }
+        : current
+    ));
+  }, [boardOperations, operationGeneration, updateState]);
 
   useEffect(() => {
     mountedRef.current = true;
