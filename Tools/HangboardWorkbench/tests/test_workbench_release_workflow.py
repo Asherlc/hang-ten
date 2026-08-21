@@ -281,7 +281,7 @@ def _native_release_quick_start(path: Path) -> str:
     return " ".join(quick_start.split())
 
 
-def test_release_readmes_document_the_native_checkout_workflow():
+def test_release_readmes_document_the_native_local_repository_workflow():
     for path in RELEASE_README_PATHS:
         quick_start = _native_release_quick_start(path)
 
@@ -290,10 +290,10 @@ def test_release_readmes_document_the_native_checkout_workflow():
             "native window",
             "first launch",
             "last valid checkout",
-            "Choose Hang Ten Checkout…",
+            "Choose Local Repository…",
             "selected checkout",
             "normal Git review",
-            "**Choose Another Checkout…**",
+            "**Choose Another Local Repository…**",
             "hosted deployment uses",
             "--allow-remote",
         ):
