@@ -121,6 +121,7 @@ export interface HoldEditorActions {
   canMakeSelectedSegmentHorizontal: boolean;
   canMakeSelectedSegmentVertical: boolean;
   addHold(): void;
+  duplicateAndMirrorHold(): void;
   deleteHold(): void;
   selectVertex(index: number): void;
   deleteSelectedVertex(): void;
@@ -297,6 +298,21 @@ function selectedPhysicalHolds(document: EditorDocument, selectedKeys: readonly 
     groups.set(siblings.map((sibling) => sibling.key).join("\u0000"), siblings);
   }
   return [...groups.values()];
+}
+
+function mirroredPath(path: string, canvasWidth: number, pathEditor: PathEditor): string {
+  const commands = pathEditor.parsePath(path);
+  for (const command of commands) {
+    for (const point of [...command.points, ...command.controls]) point.x = canvasWidth - point.x;
+  }
+  return pathEditor.serializePath(commands);
+}
+
+function uniqueRegionKey(document: EditorDocument, baseKey: string): string {
+  if (!document.regions.some((region) => region.key === baseKey)) return baseKey;
+  let suffix = 2;
+  while (document.regions.some((region) => region.key === `${baseKey}-${suffix}`)) suffix += 1;
+  return `${baseKey}-${suffix}`;
 }
 
 function hasVertex(commands: readonly PathCommand[], index: number): boolean {
@@ -679,6 +695,53 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       failureMessage: "Could not add hold.",
     });
   }, [actions, busy, document]);
+
+  const duplicateAndMirrorHold = useCallback((): void => {
+    if (busy || !document || !selectedHold) return;
+    const holds = selectedPhysicalHolds(document, selectedKeys);
+    const planningDocument = cloneEditorDocument(document);
+    const duplicates: Array<{ source: HoldRegion; id: number; key: string; holdId: string; pieceIndex: number }> = [];
+    const duplicateKeyBySourceKey = new Map<string, string>();
+    for (const hold of holds) {
+      const holdId = nextHoldId(planningDocument);
+      for (let index = 0; index < hold.length; index += 1) {
+        const source = hold[index]!;
+        const pieceIndex = source.metadata?.pieceIndex ?? index;
+        const key = uniqueRegionKey(planningDocument, `${holdId}-piece-${pieceIndex}`);
+        const id = nextRegionId(planningDocument);
+        planningDocument.regions.push({ ...source, id, key, metadata: { holdID: holdId, pieceIndex } });
+        duplicates.push({ source, id, key, holdId, pieceIndex });
+        duplicateKeyBySourceKey.set(source.key, key);
+      }
+    }
+    const duplicateKeys = duplicates.map((duplicate) => duplicate.key);
+    const edited = actions.editDocument((candidate) => {
+      for (const duplicate of duplicates) {
+        const { source, id, key, holdId, pieceIndex } = duplicate;
+        candidate.regions.push({
+          ...source,
+          id,
+          key,
+          displayPath: mirroredPath(source.displayPath, candidate.canvas.width, pathEditor),
+          metadata: { holdID: holdId, pieceIndex },
+          ...(source.shapeConstraint ? {
+            shapeConstraint: {
+              ...source.shapeConstraint,
+              rotationDegrees: normalizedConstraintRotation(-source.shapeConstraint.rotationDegrees),
+            },
+          } : {}),
+        });
+      }
+    }, {
+      selectedKey: duplicateKeyBySourceKey.get(selectedHold.key) ?? duplicateKeys[0] ?? null,
+      selectedKeys: duplicateKeys,
+      status: "Hold duplicated and mirrored. Save when ready.",
+      failureStatus: "Duplicate reverted — contour is invalid.",
+    });
+    if (!edited) return;
+    setVertexSelection(null);
+    setVertexMenuState(null);
+  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
 
   const deleteHold = useCallback((): void => {
     if (busy || !document || !selectedHold) return;
@@ -1281,6 +1344,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     canMakeSelectedSegmentHorizontal,
     canMakeSelectedSegmentVertical,
     addHold,
+    duplicateAndMirrorHold,
     deleteHold,
     selectVertex,
     deleteSelectedVertex,

@@ -619,6 +619,54 @@ test("delete and type changes apply to every piece sharing holdID", async () => 
   });
 });
 
+test("duplicate and mirror reflects every selected physical hold with fresh hold identities", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 10 Q 15 5 20 10 L 20 20 Z", metadata: { holdID: "a", pieceIndex: 0 }, shapeConstraint: { shape: "oval", rotationDegrees: 15 } },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: "M 30 10 L 40 10 L 40 20 Z", metadata: { holdID: "a", pieceIndex: 1 } },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: "M 70 10 L 80 10 L 80 20 Z", metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+
+    assert.equal(app.text("#hold-heading"), "hold-3-piece-0");
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.document.querySelector('[data-hold-key="hold-3-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-hold-key="hold-3-piece-1"]')?.getAttribute("aria-pressed"), "true");
+    assert.deepEqual(paths(app).slice(3), [
+      "M 90 10 Q 85 5 80 10 L 80 20 Z",
+      "M 70 10 L 60 10 L 60 20 Z",
+    ]);
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.slice(3), [
+      {
+        id: 4,
+        key: "hold-3-piece-0",
+        type: "jug",
+        displayPath: "M 90 10 Q 85 5 80 10 L 80 20 Z",
+        metadata: { holdID: "hold-3", pieceIndex: 0 },
+        shapeConstraint: { shape: "oval", rotationDegrees: -15 },
+      },
+      {
+        id: 5,
+        key: "hold-3-piece-1",
+        type: "jug",
+        displayPath: "M 70 10 L 60 10 L 60 20 Z",
+        metadata: { holdID: "hold-3", pieceIndex: 1 },
+      },
+    ]);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("finger capacity loads in the inspector, applies to every physical piece, and new holds are unset", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, fingerCapacity: 2 },
