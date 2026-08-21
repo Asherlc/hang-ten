@@ -14,6 +14,27 @@ from conftest import load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
+FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
+FOUNDRY_HOLDS = (
+    ("pinch-1-left", "Left #1 variable pinch", "pinch", None, None),
+    ("jug-2-left", "Left #2 outer jug", "jug", None, None),
+    ("pocket-3-left", "Left #3 32 mm 4-finger pocket", "pocket", 32, 4),
+    ("pocket-4-left", "Left #4 22 mm 3-finger pocket", "pocket", 22, 3),
+    ("pocket-5-left", "Left #5 30 mm 2-finger pocket", "pocket", 30, 2),
+    ("pocket-6-left", "Left #6 15 mm 3-finger pocket", "pocket", 15, 3),
+    ("pocket-7-left", "Left #7 21 mm 2-finger pocket", "pocket", 21, 2),
+    ("sloper-8-center", "Center #8 53 mm flat sloper", "sloper", None, None),
+    ("edge-9-center", "Center #9 16 mm edge", "edge", 16, None),
+    ("edge-10-center", "Center #10 30 mm edge", "edge", 30, None),
+    ("edge-11-center", "Center #11 23 mm edge", "edge", 23, None),
+    ("pocket-7-right", "Right #7 21 mm 2-finger pocket", "pocket", 21, 2),
+    ("pocket-6-right", "Right #6 15 mm 3-finger pocket", "pocket", 15, 3),
+    ("pocket-5-right", "Right #5 30 mm 2-finger pocket", "pocket", 30, 2),
+    ("pocket-4-right", "Right #4 22 mm 3-finger pocket", "pocket", 22, 3),
+    ("pocket-3-right", "Right #3 32 mm 4-finger pocket", "pocket", 32, 4),
+    ("jug-2-right", "Right #2 outer jug", "jug", None, None),
+    ("pinch-1-right", "Right #1 variable pinch", "pinch", None, None),
+)
 COMPACT_HOLDS = (
     ("jug-left", "Left outer jug"),
     ("sloper-flat-left", "Left 56 mm flat sloper"),
@@ -118,6 +139,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("lattice-triple-rung", "lattice-triple-rung"),
         ("metolius.climbers-edge", "metolius-climbers-edge"),
         ("metolius.contact", "metolius-contact"),
+        ("metolius.foundry", "metolius-foundry"),
         ("metolius.project", "metolius-project"),
         ("metolius.simulator-3d", "metolius-simulator-3d"),
         ("moon.armstrong", "moon-armstrong"),
@@ -183,6 +205,73 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
     }
 
     assert relative_paths == {"assets", "assets/primary.png", "board.json"}
+
+
+def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
+    board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.foundry"
+    assert board["presentations"] == [
+        {
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 2.0,
+            "default": True,
+        }
+    ]
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+            hold.get("fingerCapacity"),
+        )
+        for hold in board["holds"]
+    ) == FOUNDRY_HOLDS
+    assert all(hold["presentationID"] == "front" for hold in board["holds"])
+    assert all(hold["geometry"] for hold in board["holds"])
+
+
+def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
+    board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for position in range(1, 8):
+        prefix = "pinch" if position == 1 else "jug" if position == 2 else "pocket"
+        left = holds[f"{prefix}-{position}-left"]["geometry"][0]
+        right = holds[f"{prefix}-{position}-right"]["geometry"][0]
+        left_frame = left["frame"]
+        right_frame = right["frame"]
+
+        assert right_frame["x"] == pytest.approx(
+            1 - left_frame["x"] - left_frame["width"]
+        )
+        assert right_frame["y"] == left_frame["y"]
+        assert right_frame["width"] == left_frame["width"]
+        assert right_frame["height"] == left_frame["height"]
+        assert right.get("shapeConstraint") == left.get("shapeConstraint")
+
+        left_commands = left["shape"]["commands"]
+        right_commands = right["shape"]["commands"]
+        if position >= 3:
+            # These regular paths are themselves horizontally symmetric.
+            assert right_commands == left_commands
+            continue
+
+        assert len(right_commands) == len(left_commands)
+        for left_command, right_command in zip(left_commands, right_commands, strict=True):
+            assert right_command["command"] == left_command["command"]
+            for point_key in ("to", "control", "control1", "control2"):
+                if point_key not in left_command:
+                    assert point_key not in right_command
+                    continue
+                assert right_command[point_key][0] == pytest.approx(
+                    1 - left_command[point_key][0]
+                )
+                assert right_command[point_key][1] == left_command[point_key][1]
 
 
 def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry() -> None:

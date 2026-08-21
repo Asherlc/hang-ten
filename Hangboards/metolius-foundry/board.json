@@ -1,0 +1,363 @@
+{
+  "schemaVersion": 2,
+  "id": "metolius.foundry",
+  "manufacturer": "Metolius",
+  "name": "Foundry Training Board",
+  "subtitle": "Compact symmetric training board with tapered pinches, jugs, pockets, a flat sloper, and edges.",
+  "productURL": "https://www.metoliusclimbing.com/products/foundry-training-board",
+  "dimensions": "22.75 × 8.5 in",
+  "aspectRatio": 2.0,
+  "presentations": [
+    {
+      "id": "front",
+      "name": "Front",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
+  "holds": [
+    {
+      "id": "pinch-1-left",
+      "name": "Left #1 variable pinch",
+      "kind": "pinch",
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.057, "y": 0.255, "width": 0.164, "height": 0.570 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [1.000, 0.000] },
+          { "command": "curve", "control1": [0.780, 0.020], "control2": [0.470, 0.120], "to": [0.260, 0.300] },
+          { "command": "curve", "control1": [0.100, 0.430], "control2": [0.020, 0.530], "to": [0.000, 0.620] },
+          { "command": "curve", "control1": [0.030, 0.820], "control2": [0.180, 0.970], "to": [0.410, 1.000] },
+          { "command": "curve", "control1": [0.680, 0.930], "control2": [0.850, 0.650], "to": [0.920, 0.300] },
+          { "command": "curve", "control1": [0.950, 0.160], "control2": [0.980, 0.060], "to": [1.000, 0.000] },
+          { "command": "close" }
+        ] },
+        "treatment": { "type": "surface" }
+      }]
+    },
+    {
+      "id": "jug-2-left",
+      "name": "Left #2 outer jug",
+      "kind": "jug",
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.220, "y": 0.167, "width": 0.120, "height": 0.205 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.380, 0.000] },
+          { "command": "curve", "control1": [0.600, 0.000], "control2": [0.820, 0.040], "to": [1.000, 0.180] },
+          { "command": "curve", "control1": [0.980, 0.480], "control2": [0.900, 0.760], "to": [0.760, 0.900] },
+          { "command": "curve", "control1": [0.680, 0.960], "control2": [0.600, 1.000], "to": [0.530, 1.000] },
+          { "command": "curve", "control1": [0.300, 1.000], "control2": [0.140, 0.930], "to": [0.050, 0.790] },
+          { "command": "curve", "control1": [0.010, 0.680], "control2": [0.000, 0.590], "to": [0.000, 0.520] },
+          { "command": "curve", "control1": [0.030, 0.240], "control2": [0.180, 0.070], "to": [0.380, 0.000] },
+          { "command": "close" }
+        ] },
+        "treatment": { "type": "surface" }
+      }]
+    },
+    {
+      "id": "pocket-3-left",
+      "name": "Left #3 32 mm 4-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 32,
+      "fingerCapacity": 4,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.222, "y": 0.385, "width": 0.112, "height": 0.078 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.100, 0.000] }, { "command": "line", "to": [0.900, 0.000] },
+          { "command": "curve", "control1": [0.955, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.955, 1.000], "to": [0.900, 1.000] },
+          { "command": "line", "to": [0.100, 1.000] }, { "command": "curve", "control1": [0.045, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.045, 0.000], "to": [0.100, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-4-left",
+      "name": "Left #4 22 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 22,
+      "fingerCapacity": 3,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.172, "y": 0.514, "width": 0.094, "height": 0.066 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.100, 0.000] }, { "command": "line", "to": [0.900, 0.000] },
+          { "command": "curve", "control1": [0.955, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.955, 1.000], "to": [0.900, 1.000] },
+          { "command": "line", "to": [0.100, 1.000] }, { "command": "curve", "control1": [0.045, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.045, 0.000], "to": [0.100, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-5-left",
+      "name": "Left #5 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "fingerCapacity": 2,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.284, "y": 0.514, "width": 0.055, "height": 0.066 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.180, 0.000] }, { "command": "line", "to": [0.820, 0.000] },
+          { "command": "curve", "control1": [0.920, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.920, 1.000], "to": [0.820, 1.000] },
+          { "command": "line", "to": [0.180, 1.000] }, { "command": "curve", "control1": [0.080, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.080, 0.000], "to": [0.180, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-6-left",
+      "name": "Left #6 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 15,
+      "fingerCapacity": 3,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.172, "y": 0.621, "width": 0.094, "height": 0.068 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.100, 0.000] }, { "command": "line", "to": [0.900, 0.000] },
+          { "command": "curve", "control1": [0.955, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.955, 1.000], "to": [0.900, 1.000] },
+          { "command": "line", "to": [0.100, 1.000] }, { "command": "curve", "control1": [0.045, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.045, 0.000], "to": [0.100, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-7-left",
+      "name": "Left #7 21 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 21,
+      "fingerCapacity": 2,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.284, "y": 0.621, "width": 0.055, "height": 0.068 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.180, 0.000] }, { "command": "line", "to": [0.820, 0.000] },
+          { "command": "curve", "control1": [0.920, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.920, 1.000], "to": [0.820, 1.000] },
+          { "command": "line", "to": [0.180, 1.000] }, { "command": "curve", "control1": [0.080, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.080, 0.000], "to": [0.180, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "sloper-8-center",
+      "name": "Center #8 53 mm flat sloper",
+      "kind": "sloper",
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.330, "y": 0.174, "width": 0.340, "height": 0.115 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.060, 1.000] },
+          { "command": "curve", "control1": [0.020, 0.900], "control2": [0.000, 0.790], "to": [0.000, 0.700] },
+          { "command": "curve", "control1": [0.020, 0.260], "control2": [0.080, 0.080], "to": [0.150, 0.000] },
+          { "command": "curve", "control1": [0.340, 0.000], "control2": [0.660, 0.000], "to": [0.850, 0.000] },
+          { "command": "curve", "control1": [0.920, 0.080], "control2": [0.980, 0.260], "to": [1.000, 0.700] },
+          { "command": "curve", "control1": [1.000, 0.790], "control2": [0.980, 0.900], "to": [0.940, 1.000] },
+          { "command": "line", "to": [0.060, 1.000] },
+          { "command": "close" }
+        ] },
+        "treatment": { "type": "surface" }
+      }]
+    },
+    {
+      "id": "edge-9-center",
+      "name": "Center #9 16 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 16,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.361, "y": 0.283, "width": 0.278, "height": 0.080 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.080, 0.000] }, { "command": "line", "to": [0.920, 0.000] },
+          { "command": "curve", "control1": [0.965, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.965, 1.000], "to": [0.920, 1.000] },
+          { "command": "line", "to": [0.080, 1.000] }, { "command": "curve", "control1": [0.035, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.035, 0.000], "to": [0.080, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "edge-10-center",
+      "name": "Center #10 30 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 30,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.362, "y": 0.397, "width": 0.276, "height": 0.117 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.100, 0.000] }, { "command": "line", "to": [0.900, 0.000] },
+          { "command": "curve", "control1": [0.955, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.955, 1.000], "to": [0.900, 1.000] },
+          { "command": "line", "to": [0.100, 1.000] }, { "command": "curve", "control1": [0.045, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.045, 0.000], "to": [0.100, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "edge-11-center",
+      "name": "Center #11 23 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 23,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.363, "y": 0.585, "width": 0.274, "height": 0.105 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.090, 0.000] }, { "command": "line", "to": [0.910, 0.000] },
+          { "command": "curve", "control1": [0.960, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.960, 1.000], "to": [0.910, 1.000] },
+          { "command": "line", "to": [0.090, 1.000] }, { "command": "curve", "control1": [0.040, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.040, 0.000], "to": [0.090, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-7-right",
+      "name": "Right #7 21 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 21,
+      "fingerCapacity": 2,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.661, "y": 0.621, "width": 0.055, "height": 0.068 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.180, 0.000] }, { "command": "line", "to": [0.820, 0.000] },
+          { "command": "curve", "control1": [0.920, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.920, 1.000], "to": [0.820, 1.000] },
+          { "command": "line", "to": [0.180, 1.000] }, { "command": "curve", "control1": [0.080, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.080, 0.000], "to": [0.180, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-6-right",
+      "name": "Right #6 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 15,
+      "fingerCapacity": 3,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.734, "y": 0.621, "width": 0.094, "height": 0.068 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.100, 0.000] }, { "command": "line", "to": [0.900, 0.000] },
+          { "command": "curve", "control1": [0.955, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.955, 1.000], "to": [0.900, 1.000] },
+          { "command": "line", "to": [0.100, 1.000] }, { "command": "curve", "control1": [0.045, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.045, 0.000], "to": [0.100, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-5-right",
+      "name": "Right #5 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "fingerCapacity": 2,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.661, "y": 0.514, "width": 0.055, "height": 0.066 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.180, 0.000] }, { "command": "line", "to": [0.820, 0.000] },
+          { "command": "curve", "control1": [0.920, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.920, 1.000], "to": [0.820, 1.000] },
+          { "command": "line", "to": [0.180, 1.000] }, { "command": "curve", "control1": [0.080, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.080, 0.000], "to": [0.180, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-4-right",
+      "name": "Right #4 22 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 22,
+      "fingerCapacity": 3,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.734, "y": 0.514, "width": 0.094, "height": 0.066 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.100, 0.000] }, { "command": "line", "to": [0.900, 0.000] },
+          { "command": "curve", "control1": [0.955, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.955, 1.000], "to": [0.900, 1.000] },
+          { "command": "line", "to": [0.100, 1.000] }, { "command": "curve", "control1": [0.045, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.045, 0.000], "to": [0.100, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "pocket-3-right",
+      "name": "Right #3 32 mm 4-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 32,
+      "fingerCapacity": 4,
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.666, "y": 0.385, "width": 0.112, "height": 0.078 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.100, 0.000] }, { "command": "line", "to": [0.900, 0.000] },
+          { "command": "curve", "control1": [0.955, 0.000], "control2": [1.000, 0.090], "to": [1.000, 0.200] },
+          { "command": "line", "to": [1.000, 0.800] }, { "command": "curve", "control1": [1.000, 0.910], "control2": [0.955, 1.000], "to": [0.900, 1.000] },
+          { "command": "line", "to": [0.100, 1.000] }, { "command": "curve", "control1": [0.045, 1.000], "control2": [0.000, 0.910], "to": [0.000, 0.800] },
+          { "command": "line", "to": [0.000, 0.200] }, { "command": "curve", "control1": [0.000, 0.090], "control2": [0.045, 0.000], "to": [0.100, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "jug-2-right",
+      "name": "Right #2 outer jug",
+      "kind": "jug",
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.660, "y": 0.167, "width": 0.120, "height": 0.205 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.620, 0.000] },
+          { "command": "curve", "control1": [0.400, 0.000], "control2": [0.180, 0.040], "to": [0.000, 0.180] },
+          { "command": "curve", "control1": [0.020, 0.480], "control2": [0.100, 0.760], "to": [0.240, 0.900] },
+          { "command": "curve", "control1": [0.320, 0.960], "control2": [0.400, 1.000], "to": [0.470, 1.000] },
+          { "command": "curve", "control1": [0.700, 1.000], "control2": [0.860, 0.930], "to": [0.950, 0.790] },
+          { "command": "curve", "control1": [0.990, 0.680], "control2": [1.000, 0.590], "to": [1.000, 0.520] },
+          { "command": "curve", "control1": [0.970, 0.240], "control2": [0.820, 0.070], "to": [0.620, 0.000] },
+          { "command": "close" }
+        ] },
+        "treatment": { "type": "surface" }
+      }]
+    },
+    {
+      "id": "pinch-1-right",
+      "name": "Right #1 variable pinch",
+      "kind": "pinch",
+      "presentationID": "front",
+      "geometry": [{
+        "frame": { "x": 0.779, "y": 0.255, "width": 0.164, "height": 0.570 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.000, 0.000] },
+          { "command": "curve", "control1": [0.220, 0.020], "control2": [0.530, 0.120], "to": [0.740, 0.300] },
+          { "command": "curve", "control1": [0.900, 0.430], "control2": [0.980, 0.530], "to": [1.000, 0.620] },
+          { "command": "curve", "control1": [0.970, 0.820], "control2": [0.820, 0.970], "to": [0.590, 1.000] },
+          { "command": "curve", "control1": [0.320, 0.930], "control2": [0.150, 0.650], "to": [0.080, 0.300] },
+          { "command": "curve", "control1": [0.050, 0.160], "control2": [0.020, 0.060], "to": [0.000, 0.000] },
+          { "command": "close" }
+        ] },
+        "treatment": { "type": "surface" }
+      }]
+    }
+  ]
+}
