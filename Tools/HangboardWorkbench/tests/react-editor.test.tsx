@@ -656,23 +656,99 @@ test("double-click inserts a vertex while right-click selects it and waits for a
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("vertex menu navigation keys stay in the menu without editing the selected hold", async () => {
+test("vertex menu rounds a corner as a persisted quadratic", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="square"]');
+
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: 30, clientY: 10 });
+    assert.equal(app.text("#round-corner-action"), "Round corner");
+    await app.click("#round-corner-action");
+    assert.equal(paths(app)[0], "M 10 10 L 26 10 Q 30 10 30 14 L 30 30 L 10 30 Z");
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+    assert.equal(app.document.querySelector(".path-editor-vertex.selected"), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("straight-segment menu converts a segment to a bendable quadratic", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    assert.equal(app.document.querySelector('[role="menu"]')?.getAttribute("aria-label"), "Line actions");
+    assert.equal(app.text("#make-bendable-action"), "Make bendable");
+    const invokingLine = app.document.querySelector<SVGPathElement>('[data-hold-key="square"]');
+    assert.ok(invokingLine);
+    assert.equal(await app.keyDown("#make-bendable-action", "Escape"), true);
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+    assert.equal(app.document.activeElement, invokingLine);
+
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+    assert.equal(paths(app)[0], "M 10 10 Q 20 10 30 10 L 30 30 L 10 30 Z");
+    assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="0"]'));
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("straight-segment context menu chooses the closest eligible edge", async () => {
+  const path = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: path }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 28, clientY: 15 });
+    await app.click("#make-bendable-action");
+
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 Q 30 20 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("changing holds closes a stale line menu before it can edit the new selection", async () => {
+  const firstPath = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
+  const secondPath = "M 60 10 L 80 10 L 80 30 L 60 30 Z";
+  const document = documentFixture([
+    { id: 1, key: "first", type: "jug", displayPath: firstPath },
+    { id: 2, key: "second", type: "edge", displayPath: secondPath },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="first"]');
+    await app.mouse('[data-hold-key="first"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    assert.ok(app.document.querySelector('[role="menu"]'));
+
+    await app.click('[data-hold-key="second"]');
+
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+    assert.deepEqual(paths(app), [firstPath, secondPath]);
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("vertex menu arrow navigation moves between actions without editing the selected hold", async () => {
   const squarePath = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: squarePath }]);
   await withEditor(async (app) => {
     await app.click('[data-hold-key="square"]');
     await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
 
-    const menuItem = app.document.querySelector<HTMLElement>('[role="menuitem"]');
-    assert.ok(menuItem);
-    assert.equal(app.document.activeElement, menuItem);
-    for (const key of ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "[", "]"]) {
-      assert.equal(await app.keyDown('[role="menuitem"]', key), true);
+    const deleteItem = app.document.querySelector<HTMLElement>('[role="menuitem"]');
+    const roundItem = app.document.querySelector<HTMLElement>("#round-corner-action");
+    assert.ok(deleteItem);
+    assert.ok(roundItem);
+    assert.equal(app.document.activeElement, deleteItem);
+    assert.equal(await app.keyDown('[role="menuitem"]', "ArrowDown"), true);
+    assert.equal(app.document.activeElement, roundItem);
+    assert.equal(await app.keyDown("#round-corner-action", "ArrowUp"), true);
+    assert.equal(app.document.activeElement, deleteItem);
+    for (const shortcut of ["[", "]"]) {
+      assert.equal(await app.keyDown('[role="menuitem"]', shortcut), true);
       assert.equal(paths(app)[0], squarePath);
-      assert.equal(app.text("#save-state"), "Saved");
       assert.ok(app.document.querySelector('[role="menu"]'));
-      assert.equal(app.document.activeElement, menuItem);
     }
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.ok(app.document.querySelector('[role="menu"]'));
   }, dependenciesFixture(boardFixture(square)));
 });
 
