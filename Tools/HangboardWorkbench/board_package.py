@@ -684,6 +684,36 @@ def _validate_board(
         identifiers.add(hold_id)
 
 
+def validate_catalog_board(board: Mapping[str, Any]) -> None:
+    """Validate board metadata that does not depend on decoding its primary image."""
+    _exact_keys(board, _BOARD_FIELDS, "board.json")
+    _schema_version_one(board.get("schemaVersion"), "board.json.schemaVersion")
+    _identifier(board.get("id"), "board.json.id")
+    for field in ("manufacturer", "name", "subtitle", "dimensions"):
+        _non_empty_string(board.get(field), f"board.json.{field}")
+    _https_url(board.get("productURL"), "board.json.productURL")
+    _positive_number(board.get("aspectRatio"), "board.json.aspectRatio")
+    if board.get("presentation") != {"assetPath": "assets/primary.png"}:
+        raise BoardPackageError(
+            "board.json.presentation must declare assets/primary.png"
+        )
+    holds = board.get("holds")
+    if not isinstance(holds, list) or not holds:
+        raise BoardPackageError("board.json.holds must be a non-empty array")
+    identifiers: set[str] = set()
+    for index, hold in enumerate(holds):
+        hold_id = _validate_hold(
+            hold,
+            1,
+            1,
+            f"board.json.holds[{index}]",
+            validate_geometry=False,
+        )
+        if hold_id in identifiers:
+            raise BoardPackageError("duplicate hold ID")
+        identifiers.add(hold_id)
+
+
 def _validate_hold(
     hold: object, width: int, height: int, label: str, *, validate_geometry: bool = True
 ) -> str:

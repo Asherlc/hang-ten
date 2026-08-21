@@ -25,6 +25,8 @@ _MAX_CACHED_TREE_ENTRIES = 50_000
 _MAX_CACHED_TREE_BYTES = 16 * 1024 * 1024
 _MAX_CACHED_CATALOGS = 16
 _MAX_CACHED_CATALOG_BYTES = 16 * 1024 * 1024
+_MAX_CACHED_OPENED_PACKAGES = 16
+_MAX_CACHED_OPENED_PACKAGE_BYTES = 16 * 1024 * 1024
 _MAX_CACHED_BLOBS = 128
 _MAX_CACHED_BLOB_BYTES = 32 * 1024 * 1024
 
@@ -67,6 +69,8 @@ class GitHubBoardStore:
         max_cached_tree_bytes: int = _MAX_CACHED_TREE_BYTES,
         max_cached_catalogs: int = _MAX_CACHED_CATALOGS,
         max_cached_catalog_bytes: int = _MAX_CACHED_CATALOG_BYTES,
+        max_cached_opened_packages: int = _MAX_CACHED_OPENED_PACKAGES,
+        max_cached_opened_package_bytes: int = _MAX_CACHED_OPENED_PACKAGE_BYTES,
         max_cached_blobs: int = _MAX_CACHED_BLOBS,
         max_cached_blob_bytes: int = _MAX_CACHED_BLOB_BYTES,
         max_concurrent_package_loads: int = _MAX_CONCURRENT_PACKAGE_LOADS,
@@ -79,6 +83,8 @@ class GitHubBoardStore:
                 max_cached_tree_bytes,
                 max_cached_catalogs,
                 max_cached_catalog_bytes,
+                max_cached_opened_packages,
+                max_cached_opened_package_bytes,
                 max_cached_blobs,
                 max_cached_blob_bytes,
                 max_concurrent_package_loads,
@@ -93,6 +99,8 @@ class GitHubBoardStore:
         self._max_cached_tree_bytes = max_cached_tree_bytes
         self._max_cached_catalogs = max_cached_catalogs
         self._max_cached_catalog_bytes = max_cached_catalog_bytes
+        self._max_cached_opened_packages = max_cached_opened_packages
+        self._max_cached_opened_package_bytes = max_cached_opened_package_bytes
         self._max_cached_blobs = max_cached_blobs
         self._max_cached_blob_bytes = max_cached_blob_bytes
         self._max_concurrent_package_loads = max_concurrent_package_loads
@@ -100,12 +108,17 @@ class GitHubBoardStore:
             OrderedDict()
         )
         self._catalogs: OrderedDict[
-            tuple[bytes, str], tuple[GitHubBoardPackage, ...]
+            tuple[bytes, str], tuple[GitHubBoardListing, ...]
         ] = OrderedDict()
         self._tree_sizes: dict[tuple[bytes, str], int] = {}
         self._catalog_sizes: dict[tuple[bytes, str], int] = {}
         self._tree_bytes = 0
         self._catalog_bytes = 0
+        self._opened_packages: OrderedDict[
+            tuple[bytes, str, str], GitHubBoardPackage
+        ] = OrderedDict()
+        self._opened_package_sizes: dict[tuple[bytes, str, str], int] = {}
+        self._opened_package_bytes = 0
         self._blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
         self._blob_bytes = 0
         self._lock = threading.RLock()
@@ -121,7 +134,7 @@ class GitHubBoardStore:
         )
         self._tree_flights: dict[tuple[bytes, str], Future[tuple[TreeEntry, ...]]] = {}
         self._catalog_flights: dict[
-            tuple[bytes, str], Future[tuple[GitHubBoardPackage, ...]]
+            tuple[bytes, str], Future[tuple[GitHubBoardListing, ...]]
         ] = {}
         self._blob_flights: dict[tuple[bytes, str], Future[bytes]] = {}
         self._operations = threading.Condition(self._lock)
@@ -131,10 +144,10 @@ class GitHubBoardStore:
 
     def discover_packages(
         self, token: str, branch: str
-    ) -> tuple[GitHubBoardPackage, ...]:
+    ) -> tuple[GitHubBoardListing, ...]:
         with self._operation():
             snapshot = self._snapshot(token, branch, cache_blobs=False)
-            return _copy_packages(self._catalog(snapshot, token, branch))
+            return _copy_listings(self._catalog(snapshot, token, branch))
 
     def open_package(
         self, token: str, branch: str, board_id: str
@@ -145,9 +158,11 @@ class GitHubBoardStore:
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
-            return _load_selected_package(
+            package = _load_selected_package(
                 snapshot.with_blob_cache(), token, branch, selected.slug, board_id
             )
+            self._cache_opened_package(token, branch, package)
+            return package
 
     def primary_image_bytes(self, token: str, branch: str, board_id: str) -> bytes:
         with self._operation():
@@ -173,16 +188,54 @@ class GitHubBoardStore:
         expected_board_id: str | None = None,
     ) -> tuple[GitHubBoardPackage, str]:
         with self._operation():
-            snapshot = self._snapshot(token, branch, cache_blobs=True)
-            saved = save_editor_document(
-                snapshot,
+            slug = board_package._slug(slug)
+            live = self._opened_package(token, branch, slug)
+            if live is None:
+                live = self._open_slug_for_save(
+                    token, branch, slug, expected_board_id=expected_board_id
+                )
+            saved = _save_loaded_editor_document(
+                _StoreMutationClient(self, token, branch),
                 token,
                 branch,
                 slug,
+                live,
                 document,
                 expected_board_id=expected_board_id,
             )
-            self._discard_credential_entries(_credential_key(token))
+            self._cache_opened_package(token, branch, saved[0])
+            return saved
+
+    def save_board_editor_document(
+        self,
+        token: str,
+        branch: str,
+        board_id: str,
+        document: Mapping[str, Any],
+    ) -> tuple[GitHubBoardPackage, str]:
+        """Save a selected board, reusing its fully validated opened package."""
+        with self._operation():
+            board_id = board_package._identifier(board_id, "board ID")
+            live = self._opened_package_by_board_id(token, branch, board_id)
+            if live is None:
+                snapshot = self._snapshot(token, branch, cache_blobs=True)
+                selected = _selected_package(
+                    self._catalog(snapshot, token, branch), board_id
+                )
+                live = _load_selected_package(
+                    snapshot, token, branch, selected.slug, board_id
+                )
+                self._cache_opened_package(token, branch, live)
+            saved = _save_loaded_editor_document(
+                _StoreMutationClient(self, token, branch),
+                token,
+                branch,
+                live.slug,
+                live,
+                document,
+                expected_board_id=board_id,
+            )
+            self._cache_opened_package(token, branch, saved[0])
             return saved
 
     def close(self) -> None:
@@ -265,7 +318,7 @@ class GitHubBoardStore:
 
     def _catalog(
         self, snapshot: _CachedSnapshotClient, token: str, branch: str
-    ) -> tuple[GitHubBoardPackage, ...]:
+    ) -> tuple[GitHubBoardListing, ...]:
         key = (snapshot.credential_key, snapshot.commit_sha)
         with self._lock:
             catalog = self._catalogs.get(key)
@@ -273,14 +326,8 @@ class GitHubBoardStore:
                 self._catalogs.move_to_end(key)
                 return catalog
 
-        def load() -> tuple[GitHubBoardPackage, ...]:
-            catalog = discover_packages(
-                snapshot,
-                token,
-                branch,
-                executor=self._executor,
-                max_concurrent_package_loads=self._max_concurrent_package_loads,
-            )
+        def load() -> tuple[GitHubBoardListing, ...]:
+            catalog = discover_package_listings(snapshot, token, branch)
             cache_size = _catalog_cache_size(catalog)
             if cache_size <= self._max_cached_catalog_bytes:
                 with self._lock:
@@ -300,6 +347,72 @@ class GitHubBoardStore:
             return catalog
 
         return self._single_flight(self._catalog_flights, key, load)
+
+    def _opened_package(
+        self, token: str, branch: str, slug: str
+    ) -> GitHubBoardPackage | None:
+        key = (_credential_key(token), branch, slug)
+        with self._lock:
+            package = self._opened_packages.get(key)
+            if package is not None:
+                self._opened_packages.move_to_end(key)
+            return package
+
+    def _opened_package_by_board_id(
+        self, token: str, branch: str, board_id: str
+    ) -> GitHubBoardPackage | None:
+        credential_key = _credential_key(token)
+        with self._lock:
+            for key in reversed(self._opened_packages):
+                package = self._opened_packages[key]
+                if key[:2] == (credential_key, branch) and package.board_id == board_id:
+                    self._opened_packages.move_to_end(key)
+                    return package
+        return None
+
+    def _open_slug_for_save(
+        self,
+        token: str,
+        branch: str,
+        slug: str,
+        *,
+        expected_board_id: str | None,
+    ) -> GitHubBoardPackage:
+        snapshot = self._snapshot(token, branch, cache_blobs=True)
+        package = _load_slug(
+            snapshot, token, branch, slug, inspect_png_header_only=False
+        )
+        if expected_board_id is not None:
+            expected_board_id = board_package._identifier(expected_board_id, "board ID")
+            if package.board_id != expected_board_id:
+                raise board_package.BoardSaveConflictError(
+                    "board identity changed; reload and try again"
+                )
+        self._cache_opened_package(token, branch, package)
+        return package
+
+    def _cache_opened_package(
+        self, token: str, branch: str, package: GitHubBoardPackage
+    ) -> None:
+        key = (_credential_key(token), branch, package.slug)
+        size = _package_cache_size(package)
+        if size > self._max_cached_opened_package_bytes:
+            return
+        with self._lock:
+            previous = self._opened_packages.pop(key, None)
+            if previous is not None:
+                self._opened_package_bytes -= self._opened_package_sizes.pop(key)
+            self._opened_packages[key] = package
+            self._opened_package_sizes[key] = size
+            self._opened_package_bytes += size
+            while (
+                len(self._opened_packages) > self._max_cached_opened_packages
+                or self._opened_package_bytes > self._max_cached_opened_package_bytes
+            ):
+                discarded_key, _discarded = self._opened_packages.popitem(last=False)
+                self._opened_package_bytes -= self._opened_package_sizes.pop(
+                    discarded_key
+                )
 
     def _blob(
         self, token: str, credential_key: bytes, sha: str, *, cache: bool
@@ -378,44 +491,34 @@ class GitHubBoardStore:
             with self._lock:
                 flights.pop(key, None)
 
-    def _discard_credential_entries(self, credential_key: bytes) -> None:
-        with self._lock:
-            retained_trees: OrderedDict[tuple[bytes, str], tuple[TreeEntry, ...]] = (
-                OrderedDict()
-            )
-            retained_tree_sizes: dict[tuple[bytes, str], int] = {}
-            self._tree_bytes = 0
-            for key, tree in self._trees.items():
-                if key[0] == credential_key:
-                    continue
-                retained_trees[key] = tree
-                size = self._tree_sizes[key]
-                retained_tree_sizes[key] = size
-                self._tree_bytes += size
-            self._trees = retained_trees
-            self._tree_sizes = retained_tree_sizes
-            retained_catalogs: OrderedDict[
-                tuple[bytes, str], tuple[GitHubBoardPackage, ...]
-            ] = OrderedDict()
-            retained_catalog_sizes: dict[tuple[bytes, str], int] = {}
-            self._catalog_bytes = 0
-            for key, catalog in self._catalogs.items():
-                if key[0] == credential_key:
-                    continue
-                retained_catalogs[key] = catalog
-                size = self._catalog_sizes[key]
-                retained_catalog_sizes[key] = size
-                self._catalog_bytes += size
-            self._catalogs = retained_catalogs
-            self._catalog_sizes = retained_catalog_sizes
-            retained_blobs: OrderedDict[tuple[bytes, str], bytes] = OrderedDict()
-            self._blob_bytes = 0
-            for key, blob in self._blobs.items():
-                if key[0] == credential_key:
-                    continue
-                retained_blobs[key] = blob
-                self._blob_bytes += len(blob)
-            self._blobs = retained_blobs
+class _StoreMutationClient:
+    """Pins a write to one credential and branch without reading a snapshot."""
+
+    def __init__(self, store: GitHubBoardStore, token: str, branch: str) -> None:
+        self._store = store
+        self._token = token
+        self._branch = branch
+
+    def put_file(
+        self,
+        token: str,
+        path: str,
+        branch: str,
+        content: bytes,
+        message: str,
+        sha: str | None,
+    ) -> str:
+        if token != self._token or branch != self._branch:
+            raise RuntimeError("GitHub mutation credentials or branch do not match")
+        return self._store._call_control(
+            self._store._client.put_file,
+            token,
+            path,
+            branch,
+            content,
+            message,
+            sha,
+        )
 
 
 class _CachedSnapshotClient:
@@ -496,6 +599,23 @@ class _CachedSnapshotClient:
         self._require_token(token)
         if branch != self._branch:
             raise RuntimeError("GitHub snapshot branch does not match")
+
+
+@dataclass(frozen=True, slots=True)
+class GitHubBoardListing:
+    """Metadata validated without downloading a package primary image."""
+
+    slug: str
+    board: dict[str, Any]
+    board_json_sha: str
+
+    @property
+    def board_id(self) -> str:
+        return self.board["id"]
+
+    @property
+    def hold_ids(self) -> tuple[str, ...]:
+        return tuple(hold["id"] for hold in self.board["holds"])
 
 
 @dataclass(frozen=True, slots=True)
@@ -587,6 +707,31 @@ def discover_packages(
     return tuple(sorted(completed_packages, key=_package_sort_key))
 
 
+def discover_package_listings(
+    client: _GitHubSnapshotClient, token: str, branch: str
+) -> tuple[GitHubBoardListing, ...]:
+    """List complete package metadata without downloading primary image blobs."""
+    groups = _package_groups(client.get_tree(token, branch))
+    listings: list[GitHubBoardListing] = []
+    board_ids: set[str] = set()
+    for slug, entries in groups.items():
+        if not _is_completed(entries):
+            if not _is_primary_only_draft(entries):
+                _raise_for_incomplete_layout(slug, entries)
+            continue
+        board_entry = entries["board.json"]
+        board = _load_board_json(_get_blob(client, token, board_entry, "board.json"))
+        board_package.validate_catalog_board(board)
+        listing = GitHubBoardListing(slug, board, board_entry.sha)
+        if listing.board_id in board_ids:
+            raise board_package.BoardPackageError(
+                f"duplicate board ID: {listing.board_id}"
+            )
+        board_ids.add(listing.board_id)
+        listings.append(listing)
+    return tuple(sorted(listings, key=_package_sort_key))
+
+
 def open_package(
     client: _GitHubSnapshotClient, token: str, branch: str, board_id: str
 ) -> GitHubBoardPackage:
@@ -624,6 +769,28 @@ def save_editor_document(
     """Validate and conditionally commit an editor document to its live package."""
     slug = board_package._slug(slug)
     live = _load_slug(client, token, branch, slug, inspect_png_header_only=False)
+    return _save_loaded_editor_document(
+        client,
+        token,
+        branch,
+        slug,
+        live,
+        document,
+        expected_board_id=expected_board_id,
+    )
+
+
+def _save_loaded_editor_document(
+    client: _GitHubMutationClient,
+    token: str,
+    branch: str,
+    slug: str,
+    live: GitHubBoardPackage,
+    document: Mapping[str, Any],
+    *,
+    expected_board_id: str | None = None,
+) -> tuple[GitHubBoardPackage, str]:
+    """Validate and conditionally commit against a previously opened package."""
     if expected_board_id is not None:
         expected_board_id = board_package._identifier(expected_board_id, "board ID")
         if live.board_id != expected_board_id:
@@ -721,15 +888,13 @@ def _load_completed_packages(
     return packages
 
 
-def _copy_packages(
-    packages: tuple[GitHubBoardPackage, ...]
-) -> tuple[GitHubBoardPackage, ...]:
+def _copy_listings(
+    packages: tuple[GitHubBoardListing, ...]
+) -> tuple[GitHubBoardListing, ...]:
     return tuple(
-        GitHubBoardPackage(
+        GitHubBoardListing(
             package.slug,
             deepcopy(package.board),
-            package.image_width,
-            package.image_height,
             package.board_json_sha,
         )
         for package in packages
@@ -977,7 +1142,7 @@ def _get_blob(
 
 
 def _package_sort_key(
-    package: GitHubBoardPackage,
+    package: GitHubBoardListing | GitHubBoardPackage,
 ) -> tuple[str, str, str, str, str, str]:
     return (
         package.board["manufacturer"].lower(),
@@ -1003,7 +1168,7 @@ def _tree_cache_size(tree: tuple[TreeEntry, ...]) -> int:
     )
 
 
-def _catalog_cache_size(catalog: tuple[GitHubBoardPackage, ...]) -> int:
+def _catalog_cache_size(catalog: tuple[GitHubBoardListing, ...]) -> int:
     """Return deterministic UTF-8 metadata bytes retained for one catalog entry."""
     return sum(
         len(package.slug.encode("utf-8"))
@@ -1018,6 +1183,22 @@ def _catalog_cache_size(catalog: tuple[GitHubBoardPackage, ...]) -> int:
         )
         + 16
         for package in catalog
+    )
+
+
+def _package_cache_size(package: GitHubBoardPackage) -> int:
+    return (
+        len(package.slug.encode("utf-8"))
+        + len(package.board_json_sha.encode("utf-8"))
+        + len(
+            json.dumps(
+                package.board,
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode("utf-8")
+        )
+        + 16
     )
 
 
