@@ -1,39 +1,29 @@
 # Hangboard Workbench
 
-Hangboard Workbench is the local authoring suite for direct board packages.
+Hangboard Workbench edits direct board packages. The packaged macOS app is the
+only local-checkout editor; browser-hosted deployments use GitHub-backed storage.
 It discovers completed boards, opens the primary image and hold geometry together,
 edits hold contours, validates the package, and saves the result atomically.
 
-## Run from a checkout
+## Run as a hosted editor
 
 From the repository root:
 
 ```sh
 cd Tools/HangboardWorkbench && npm ci && npm run check:bundle
 cd ../..
-rtk python3 Tools/HangboardWorkbench/server.py
+rtk python3 Tools/HangboardWorkbench/server.py \
+  --allow-remote \
+  --github-client-id <id> \
+  --github-client-secret <secret> \
+  --session-secret <secret>
 ```
 
 The local server and package operations require the generated UI bundle. Run
 `npm ci && npm run check:bundle` in `Tools/HangboardWorkbench` before those
 operations.
 
-Open `http://127.0.0.1:4173`. The **Boards** button lists the completed
-packages in `Hangboards/`. Selecting a board loads its image and all of its
-holds. **Save** writes directly to that board package; it does not commit or
-push your Git changes.
-
-For a different checkout, provide its root explicitly:
-
-```sh
-rtk python3 Tools/HangboardWorkbench/server.py \
-  --repository-root /absolute/path/to/hang-ten
-```
-
-### Hosted server mode (same editor, remote access)
-
-If you want to use Workbench through a hosted server without downloading
-the app, run:
+For a different deployment checkout, provide its root explicitly:
 
 ```sh
 rtk python3 Tools/HangboardWorkbench/server.py \
@@ -42,31 +32,29 @@ rtk python3 Tools/HangboardWorkbench/server.py \
   --port 4173 \
   --allow-remote \
   --github-client-id <id> \
-  --github-client-secret <secret>
+  --github-client-secret <secret> \
+  --session-secret <secret>
 ```
 
 Host this process with HTTPS in front (for example via a reverse proxy or your
 provider’s platform TLS), then point browsers to your public URL.
-`--allow-remote` is intentionally opt-in, because it allows non-loopback
-clients, and it requires `--github-client-id`/`--github-client-secret` from a
-GitHub OAuth App so that remote clients must sign in before mutating the
-repository. See "Repository workflow actions from the editor UI" below for how
-to set up the OAuth App.
+`--allow-remote` is required for the browser server. It uses GitHub OAuth and
+GitHub-backed board storage, so each **Save** creates a GitHub commit on the
+selected branch. See "Repository workflow actions from the editor UI" below
+for how to set up the OAuth App.
 
 ### Repository workflow actions from the editor UI
 
 From the hosted editor toolbar you can:
 
 - Switch branches.
-- Commit current repository changes with a message.
-- Push the current branch to a remote (`origin` by default).
-- Open a pull request from the current branch using the authenticated `gh` CLI.
+- Create a branch from the current branch.
+- Save directly to the selected GitHub branch.
+- Open a pull request using the authenticated GitHub session.
 
-In local (loopback-only) mode, the PR action expects `gh` to be available in
-the server environment and logged into GitHub with permission to create pull
-requests. If `gh` is missing, the `/api/git/open-pr` endpoint returns a 500
-error. If `gh` runs and fails, the endpoint returns a 400 error with the
-reported reason.
+The packaged macOS app is the only supported local-checkout workflow. Its
+**Save** action writes to the chosen checkout; commit and push remain explicit
+Git review steps.
 
 Hosted deployments (`--allow-remote`) instead require a GitHub OAuth App:
 start the server with `--github-client-id` and `--github-client-secret` to
@@ -80,9 +68,8 @@ To set up a GitHub OAuth App:
 2. Set its callback URL to `http://<your-host>/auth/callback`.
 3. Start the server with `--allow-remote --github-client-id <id> --github-client-secret <secret>`.
 
-Security note: this still writes directly to the repository checkout. For
-production use, place it behind authentication/authorization and only expose
-trusted users.
+Security note: hosted saves write to GitHub under the authenticated user's
+session. Place the deployment behind appropriate access controls.
 
 ## Board packages
 
@@ -117,8 +104,9 @@ rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
 ```
 
 The output includes one labeled PNG per board, an API-order `manifest.json`,
-and a labeled `contact-sheet.png`. The command terminates its Chrome and server
-children before returning.
+and a labeled `contact-sheet.png`. It uses a dedicated capture-only loopback
+launcher rather than the browser-hosted server, then terminates its Chrome and
+server children before returning.
 
 ## Outline shape constraints
 
