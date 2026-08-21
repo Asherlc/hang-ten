@@ -584,7 +584,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         requestBackendRestart(session: session)
     }
 
-    private func showMessage(title: String, detail: String, retryTitle: String = "Choose Another Checkout…") {
+    private func showMessage(title: String, detail: String, retryTitle: String = "Choose Another Local Repository…") {
         let titleLabel = NSTextField(labelWithString: title)
         titleLabel.font = .systemFont(ofSize: 22, weight: .semibold)
         titleLabel.alignment = .center

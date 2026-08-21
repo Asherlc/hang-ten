@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 import XCTest
 @testable import HangboardWorkbench
@@ -53,6 +54,37 @@ final class CheckoutSelectionTests: XCTestCase {
         try Data("gitdir: /tmp/example\n".utf8).write(to: root.appending(path: ".git"))
 
         XCTAssertEqual(try CheckoutSelection.validatedURL(root), root.resolvingSymlinksInPath())
+    }
+
+    func testValidatedURLRejectsASymlinkedGitMarker() throws {
+        let root = try makeCheckout()
+        let gitMarker = root.appending(path: ".git")
+        let target = root.appending(path: "git-metadata", directoryHint: .isDirectory)
+        try FileManager.default.removeItem(at: gitMarker)
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: gitMarker, withDestinationURL: target)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
+    }
+
+    func testValidatedURLRejectsANonFileOrDirectoryGitMarker() throws {
+        let root = try makeCheckout()
+        let gitMarker = root.appending(path: ".git")
+        try FileManager.default.removeItem(at: gitMarker)
+        XCTAssertEqual(gitMarker.path.withCString { mkfifo($0, 0o600) }, 0)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
+    }
+
+    func testValidatedURLRejectsASymlinkedBoardLibrary() throws {
+        let root = try makeCheckout()
+        let hangboards = root.appending(path: "Hangboards")
+        let target = root.appending(path: "linked-hangboards", directoryHint: .isDirectory)
+        try FileManager.default.removeItem(at: hangboards)
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: hangboards, withDestinationURL: target)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
     }
 
     func testRememberStoresOnlyTheNormalizedCheckoutPath() throws {

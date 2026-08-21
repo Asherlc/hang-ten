@@ -53,7 +53,10 @@ final class CheckoutSelection {
         }
         let normalized = url.standardizedFileURL.resolvingSymlinksInPath()
         guard isDirectory(normalized, fileManager: fileManager),
-              fileManager.fileExists(atPath: normalized.appending(path: ".git").path),
+              isRegularFileOrDirectory(
+                  normalized.appending(path: ".git"),
+                  fileManager: fileManager
+              ),
               isDirectory(
                   normalized.appending(path: "Hangboards"),
                   fileManager: fileManager
@@ -64,7 +67,19 @@ final class CheckoutSelection {
     }
 
     private static func isDirectory(_ url: URL, fileManager: FileManager) -> Bool {
-        var isDirectory = ObjCBool(false)
-        return fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue
+        fileType(at: url, fileManager: fileManager) == .typeDirectory
+    }
+
+    private static func isRegularFileOrDirectory(_ url: URL, fileManager: FileManager) -> Bool {
+        switch fileType(at: url, fileManager: fileManager) {
+        case .typeRegular, .typeDirectory:
+            true
+        default:
+            false
+        }
+    }
+
+    private static func fileType(at url: URL, fileManager: FileManager) -> FileAttributeType? {
+        try? fileManager.attributesOfItem(atPath: url.path)[.type] as? FileAttributeType
     }
 }
