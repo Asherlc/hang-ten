@@ -679,6 +679,57 @@
         }
       ],
       "fingerCapacity": 2
+    },
+    {
+      "id": "hold-7",
+      "name": "Hold 7",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.47,
+            "y": 0.44,
+            "width": 0.06,
+            "height": 0.12
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
