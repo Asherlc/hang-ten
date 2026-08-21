@@ -1815,3 +1815,54 @@ final class WorkoutSessionStateTests: XCTestCase {
         XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
     }
 }
+final class CountdownAudioSchedulerTests: XCTestCase {
+    // Catches a regression that schedules only the currently displayed countdown number.
+    func testThreeSchedulesEveryCountdownCueAtOneSecondOffsets() {
+        let backend = RecordingCountdownAudioSchedulingBackend()
+        let scheduler = CountdownAudioScheduler(backend: backend)
+
+        XCTAssertTrue(scheduler.schedule(remainingFrom: "3", startHostTime: 100))
+        XCTAssertEqual(backend.schedules.count, 1)
+        XCTAssertEqual(backend.schedules[0].schedule.cues.map(\.phrase), ["3", "2", "1"])
+        XCTAssertEqual(backend.schedules[0].schedule.cues.map(\.offset), [0, 1, 2])
+        XCTAssertEqual(backend.schedules[0].startHostTime, 100)
+    }
+
+    // Catches a regression that always restarts a full countdown after a later tick.
+    func testTwoSchedulesOnlyTheRemainingCountdownCues() {
+        let backend = RecordingCountdownAudioSchedulingBackend()
+        let scheduler = CountdownAudioScheduler(backend: backend)
+
+        XCTAssertTrue(scheduler.schedule(remainingFrom: "2", startHostTime: 101))
+        XCTAssertEqual(backend.schedules[0].schedule.cues.map(\.phrase), ["2", "1"])
+        XCTAssertEqual(backend.schedules[0].schedule.cues.map(\.offset), [0, 1])
+    }
+
+    // Catches a regression that queues a second sequence when SwiftUI publishes a later tick.
+    func testDuplicateActiveCountdownDoesNotScheduleAnyAdditionalCue() {
+        let backend = RecordingCountdownAudioSchedulingBackend()
+        let scheduler = CountdownAudioScheduler(backend: backend)
+
+        XCTAssertTrue(scheduler.schedule(remainingFrom: "3", startHostTime: 100))
+        XCTAssertFalse(scheduler.schedule(remainingFrom: "2", startHostTime: 101))
+        XCTAssertEqual(backend.schedules.count, 1)
+        XCTAssertEqual(backend.schedules[0].schedule.cues.map(\.phrase), ["3", "2", "1"])
+    }
+}
+
+private final class RecordingCountdownAudioSchedulingBackend: CountdownAudioSchedulingBackend {
+    struct ScheduledSequence {
+        let schedule: CountdownAudioSchedule
+        let startHostTime: UInt64
+    }
+
+    private(set) var schedules: [ScheduledSequence] = []
+
+    func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
+        schedules.append(ScheduledSequence(schedule: schedule, startHostTime: startHostTime))
+        return true
+    }
+
+    func stop() {}
+}
+
