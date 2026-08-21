@@ -338,6 +338,24 @@ test("batch inspector actions change every selected physical hold and undo resto
   });
 });
 
+test("batch deletion names every selected physical hold and leaves the document intact when cancelled", async () => {
+  const prompts: string[] = [];
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+    await app.click("#delete-hold-button");
+
+    assert.deepEqual(prompts, ["Delete 2 selected holds and all of their pieces?"]);
+    assert.deepEqual(paths(app), [FIRST_PATH, SECOND_PATH, OTHER_PATH]);
+    assert.equal(app.text("#hold-heading"), "b-piece-0");
+  }, dependenciesFixture(boardFixture(), {
+    confirm(message) {
+      prompts.push(message);
+      return false;
+    },
+  }));
+});
+
 test("the hold type control preserves an out-of-list document value", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "legacy-piece-0", type: "legacy-grip", displayPath: FIRST_PATH },

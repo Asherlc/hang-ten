@@ -56,3 +56,34 @@ Outcome: TypeScript check passed; module tests 81/81 passed; React tests 83/83 p
 - Confirmed rotation is per physical-hold centroid, preserving the relationship of each hold's pieces.
 - Confirmed all document ingress points sanitize selected keys; `rtk git diff --check` reported no whitespace errors.
 - No schema or persisted API contract changed. No known concerns.
+
+## Review fix 1/5 — accurate batch deletion confirmation
+
+The delete action previously confirmed only the primary key even though it deleted every selected physical hold and each hold's sibling pieces. It now retains `Delete hold "<primary-key>"?` for one physical hold and, for a batch, asks `Delete <count> selected holds and all of their pieces?` before any edit occurs.
+
+Added a focused React editor test that selects two physical holds, captures the exact batch prompt, returns `false`, and verifies all paths plus the primary selection remain intact.
+
+RED command:
+
+```sh
+rtk npm run test:react -- --test-name-pattern='batch deletion names'
+```
+
+RED output: the new test failed as expected because it received `Delete hold "b-piece-0"?` rather than the explicit batch prompt.
+
+GREEN focused command:
+
+```sh
+rtk npm run test:react -- --test-name-pattern='batch deletion names|batch inspector actions|delete and type changes'
+```
+
+GREEN output: 84 React tests passed, 0 failed.
+
+Final verification:
+
+```sh
+rtk npm test
+rtk npm run check:bundle
+```
+
+Output: TypeScript check passed; module tests 81/81 passed; React tests 84/84 passed; esbuild bundle completed (`app.js`, 1.2 MB). `rtk git diff --check` passed.

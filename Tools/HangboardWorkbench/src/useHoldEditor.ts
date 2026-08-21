@@ -536,8 +536,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   }, [actions, busy, document]);
 
   const deleteHold = useCallback((): void => {
-    if (busy || !document || !selectedHold || !dialogs.confirm(`Delete hold "${selectedHold.key}"?`)) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    if (busy || !document || !selectedHold) return;
+    const holds = selectedPhysicalHolds(document, selectedKeys);
+    const confirmation = holds.length === 1
+      ? `Delete hold "${selectedHold.key}"?`
+      : `Delete ${holds.length} selected holds and all of their pieces?`;
+    if (!dialogs.confirm(confirmation)) return;
+    const siblingKeys = new Set(holds.flatMap((hold) => hold.map((region) => region.key)));
     actions.editDocument((candidate) => {
       candidate.regions = candidate.regions.filter((region) => !siblingKeys.has(region.key));
     }, {
