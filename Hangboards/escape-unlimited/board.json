@@ -35,15 +35,7 @@
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.004,
-                  0.36
-                ],
-                "control2": [
-                  0.022,
-                  0.065
-                ],
+                "command": "line",
                 "to": [
                   0.06,
                   0.0
