@@ -544,3 +544,170 @@ The temporary Workbench server was shut down and its localhost port was verified
 free. Interactive Workbench canvas review plus full in-app active-highlight and
 hit-test review remain for the plan's final catalog-wide visual-validation
 task.
+
+## Tension Flash Board
+
+Reviewed 2026-08-21.
+
+### Official evidence
+
+- [Current Flash Board product page](https://tensionclimbing.com/products/flash-board-2)
+  establishes the manufacturer, exact product name, compact cylindrical form,
+  portable cord suspension, and published edge list: Small Crimps, 8 mm,
+  10 mm, 15 mm, and 20 mm. It does not publish overall dimensions or map a
+  listed depth to any visible gallery position.
+- [Current official hangboards page](https://tensionclimbing.com/pages/hangboards)
+  independently describes the Flash Board as compact and cylindrical and
+  publishes the same list, spelling the first item as approximately 6 mm
+  crimps. That approximate value was not converted into an exact measurement.
+- [Official straight-on three-edge gallery image](https://cdn.shopify.com/s/files/1/0653/3706/5653/files/FlashBoard2.png?v=1726542491)
+  establishes one usable orientation with three separately bounded recessed
+  contacts (left, center, right), the cylindrical body, and paired cord
+  passages at both ends.
+- [Official full oblique two-edge gallery image](https://cdn.shopify.com/s/files/1/0653/3706/5653/files/FlashBoard1.png?v=1726542491)
+  establishes the opposite usable orientation: two separately bounded
+  recesses, one narrow small-crimp surface outboard of each recess, and an
+  uninterrupted center body area.
+- [Official left two-edge detail](https://cdn.shopify.com/s/files/1/0653/3706/5653/files/FlashBoard3.png?v=1726542491)
+  and [official right two-edge detail](https://cdn.shopify.com/s/files/1/0653/3706/5653/files/FlashBoard4.png?v=1726542491)
+  independently confirm the recess/crimp separation at both ends. They were
+  used as relief evidence, not for inferred measurements.
+- [Official Flash Board overview page](https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board)
+  links Tension's own overview video. It supplied no additional measurement or
+  manufacturer face name.
+
+No reseller measurement, review claim, generated illustration, or other board
+package supplied a product fact. The official 2048 × 2048 gallery images were
+manually inspected. No detection, segmentation, registration, crop, trace,
+mask, contour, or vectorization workflow was used.
+
+### Field and surface inventory mapping
+
+| `board.json` field | Exact source mapping |
+| --- | --- |
+| `id` | Repository-stable identifier for the exact product named Flash Board by Tension. |
+| `manufacturer` / `name` | `Tension` and `Flash Board`, from the manufacturer domain and product title. |
+| `subtitle` | Conservative restatement of the page's compact cylindrical description and exact edge list. |
+| `productURL` | Canonical current manufacturer product page above. |
+| `dimensions` | The schema requires a nonempty string, while no current official Tension source publishes physical dimensions. `Not published by manufacturer` records that limitation without introducing a reseller value. |
+| `aspectRatio` | Presentation-art metadata only: the default 1536 × 1024 PNG is exactly `1.5`; this is not a product dimension. |
+| `presentations` | `three-edge` and `two-edge` are concise repository display descriptions of the two official-gallery orientations, not manufacturer face names. |
+| `holds[].kind` | `edge` follows Tension's own `Edges` heading and `Crimps` label. |
+| omitted optional fields | No individual depth, range, capacity, posture, feature tag, material, or training claim was added. |
+
+The official pages publish the global size set but do not map 8, 10, 15, or
+20 mm to a specific visible recess. Assigning those depths visually would be an
+unsupported inference, so all seven contacts intentionally omit
+`sizeMillimeters` while retaining the complete source-visible inventory:
+
+| Presentation | `board.json` contact(s) | Exact source-backed mapping |
+| --- | --- | --- |
+| `three-edge` (default) | `three-edge-left`, `three-edge-center`, `three-edge-right` | Three distinct recesses in official `FlashBoard2.png`. |
+| `two-edge` | `two-edge-left`, `two-edge-right` | Two distinct recesses confirmed by official `FlashBoard1.png`, `FlashBoard3.png`, and `FlashBoard4.png`. |
+| `two-edge` | `small-crimp-left`, `small-crimp-right` | Two physically separate narrow outboard contacts mapped to Tension's plural `Small Crimps`; the approximately 6 mm category is not stored as an exact value. |
+
+### AI-simplified presentation illustrations (NON-EVIDENCE)
+
+Both PNGs were generated with the built-in image-generation tool. Official
+Tension gallery images were references only for the already frozen silhouette,
+surface count, cord passages, and contact layout. Generated art established no
+product fact and supplied no geometry.
+
+`assets/primary.png` is the default three-edge presentation, 1536 × 1024
+(aspect `1.5`, SHA-256
+`c7e3fe0813c3be33e2f61122a84a3d1421b32d081f0eba47a1a4509af602dcf2`).
+Prompt:
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog default presentation image
+>
+> Input images: Image 1 is Tension Climbing's official straight-on Flash Board photograph and is the authoritative reference for this exact three-edge cylindrical orientation, body silhouette, three separate edge recesses, end cord slots, spacing, and proportions.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact Tension Flash Board orientation. Preserve exactly three distinct rounded rectangular edge recesses aligned across the visible cylindrical wood surface, with one left, one center, and one right contact. Preserve the cylindrical portable body and the paired black cord slots near both ends.
+>
+> Scene/backdrop: plain neutral off-white background.
+>
+> Style/medium: polished simplified 3D product illustration, smooth pale natural wood with subtle soft shading, visually compatible with a clean hangboard catalog.
+>
+> Composition/framing: straight-on, centered, wide landscape composition with generous even padding; board fully visible, horizontal, level, and occupying most of the canvas width.
+>
+> Lighting/mood: soft neutral studio light that makes all three recessed usable surfaces clearly readable without dramatic shadows.
+>
+> Constraints: exact three-edge orientation from the reference; preserve exactly three edge recesses, their separation, spacing, overall long cylindrical outline, and four end cord slots; omit loose cord entirely so no cord crosses or obscures the board; no added or missing holds; no text; no logo; no numbers; no hands; no mounting wall; no watermark. Do not create geometry masks, contours, overlays, outlines, highlights, or annotations.
+>
+> Avoid: extra grooves, pockets, jugs, pinches, slopers, mounting holes, labels, brand marks, decorative elements, rope loops, knots, or cast shadows crossing the product.
+
+`assets/two-edge-surface.png` is the alternate presentation, 1774 × 887
+(aspect `2.0`, SHA-256
+`37eba0201081ffdc62d49d52841879a7fac702d51498a7549e94dfc8e17f8818`).
+Initial prompt:
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog alternate presentation image
+>
+> Input images: Images 1–3 are Tension Climbing's official Flash Board photographs of the opposite cylindrical orientation. Together they are the authoritative references for this exact two-edge surface, body silhouette, two separate edge recesses, small end crimps, end cord slots, spacing, and proportions.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact Tension Flash Board orientation. Preserve exactly two distinct rounded rectangular edge recesses, one on the left and one on the right, with the broad unbroken wood/logo area at center. Preserve one small transverse crimp immediately outboard of each recess and the paired black cord slots near both ends.
+>
+> Scene/backdrop: plain neutral off-white background.
+>
+> Style/medium: polished simplified 3D product illustration, smooth pale natural wood with subtle soft shading, visually compatible with a clean hangboard catalog.
+>
+> Composition/framing: straight-on, centered, wide landscape composition with generous even padding; board fully visible, horizontal, level, and occupying most of the canvas width.
+>
+> Lighting/mood: soft neutral studio light that makes both recessed usable surfaces and both small crimps clearly readable without dramatic shadows.
+>
+> Constraints: exact two-edge orientation from the references; preserve exactly two edge recesses and two small crimps, their separation, spacing, overall long cylindrical outline, and four end cord slots; omit loose cord entirely so no cord crosses or obscures the board; remove the burned brand logo; no added or missing holds; no text; no logo; no numbers; no hands; no mounting wall; no watermark. Do not create geometry masks, contours, overlays, outlines, highlights, or annotations.
+>
+> Avoid: center recess, third recess, extra grooves, pockets, jugs, pinches, slopers, mounting holes, labels, brand marks, decorative elements, rope loops, knots, or cast shadows crossing the product.
+
+The initial alternate result kept every contact but rendered only one cord
+passage per end. A focused built-in edit corrected that non-contact detail:
+
+> Use case: precise-object-edit
+>
+> Asset type: Hang Ten hangboard catalog alternate presentation image
+>
+> Input image: Image 1 is the edit target, an accepted simplified straight-on two-edge Tension Flash Board illustration.
+>
+> Primary request: Correct only the cord-slot count. Add one matching narrow black cord slot immediately beside the existing slot at each end, producing exactly two parallel black cord slots at the left end and exactly two parallel black cord slots at the right end (four slots total), as on the official product.
+>
+> Constraints: change only the cord-slot count and placement; preserve the exact canvas, board position, cylindrical silhouette, pale wood, two rounded rectangular edge recesses, left and right small transverse crimps, broad center wood area, lighting, scale, and off-white background unchanged. Keep the board perfectly straight-on, horizontal, and centered. No loose cord, no text, no logo, no numbers, no hands, no watermark. Do not add, remove, resize, or shift any contact surface. Do not create geometry masks, contours, overlays, outlines, highlights, or annotations.
+
+Human acceptance compared both finals with all four official gallery images.
+The default retains exactly three recesses; the alternate retains exactly two
+recesses, two small crimps, and paired end passages. Apart from the built-in
+corrective generation step, the PNGs were only copied into the package. No
+crop, registration, segmentation, mask, contour extraction, vectorization, or
+automatic geometry operation was applied.
+
+### Direct geometry mapping and review
+
+All seven closed paths were deliberately authored in normalized canvas
+coordinates and reviewed against the accepted illustration and corresponding
+official orientation evidence. The five regular recesses use operator-selected
+`roundedRectangle` constraints. The two narrow crimps use custom curves. The
+saved paths remain the only rendering, highlight, and hit-test source.
+
+| Contact | Canonical frame | Direct review decision |
+| --- | --- | --- |
+| `three-edge-left` | `x 0.139, y 0.456, w 0.212, h 0.112` | Follows only the left default-surface recess. |
+| `three-edge-center` | `x 0.396, y 0.456, w 0.210, h 0.112` | Follows only the center recess. |
+| `three-edge-right` | `x 0.645, y 0.456, w 0.216, h 0.112` | Follows only the right recess. |
+| `two-edge-left` | `x 0.159, y 0.443, w 0.216, h 0.130` | Follows the left recess and excludes its crimp. |
+| `two-edge-right` | `x 0.642, y 0.443, w 0.187, h 0.130` | Follows the right recess and excludes its crimp. |
+| `small-crimp-left` | `x 0.118, y 0.411, w 0.024, h 0.174` | Custom path follows only the narrow left crimp. |
+| `small-crimp-right` | `x 0.858, y 0.411, w 0.024, h 0.174` | X-reversed custom path follows only the narrow right crimp. |
+
+Package validation checks both PNG ratios, exact asset set, hold IDs, explicit
+presentation ownership, and path geometry. Focused package assertions freeze
+the `3 + 4` inventory and require individual depths to remain omitted.
+Workbench package extraction reports the ordered presentations as
+`three-edge` (1536 × 1024, default) and `two-edge` (1774 × 887), returns exactly
+the three default-surface IDs when switched to `three-edge`, and exactly the
+four alternate-surface IDs when switched to `two-edge`. Focused Workbench v2
+tests also pass for per-presentation filtering and preservation on save.
+Interactive canvas overlay review and full in-app active-highlight/hit-test
+review remain for the plan's final catalog-wide visual-validation task.

@@ -17,6 +17,7 @@ COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
 DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
+FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
 PRIME_RIB_HOLDS = (
     ("edge-38", "38 mm edge", "edge", 38),
     ("edge-23", "23 mm edge", "edge", 23),
@@ -166,6 +167,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
             "trango-rock-prodigy-training-center",
         ),
         ("tension.grindstone", "tension-grindstone"),
+        ("tension.flash-board", "tension-flash-board"),
         ("tension.honestone", "tension-honestone"),
         ("tension.whetstone", "tension-whetstone"),
         ("yy.verticalboard-evo", "yy-verticalboard-evo"),
@@ -314,6 +316,65 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
         hold["geometry"][0]["shape"]["type"] == "path"
         for hold in board["holds"]
     )
+
+
+def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
+    board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "tension.flash-board"
+    assert board["dimensions"] == "Not published by manufacturer"
+    assert board["presentations"] == [
+        {
+            "id": "three-edge",
+            "name": "Three-edge surface",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        },
+        {
+            "id": "two-edge",
+            "name": "Two-edge surface",
+            "assetPath": "assets/two-edge-surface.png",
+            "aspectRatio": 2.0,
+            "default": False,
+        },
+    ]
+
+    holds_by_presentation = {
+        presentation_id: tuple(
+            hold["id"]
+            for hold in board["holds"]
+            if hold["presentationID"] == presentation_id
+        )
+        for presentation_id in ("three-edge", "two-edge")
+    }
+    assert holds_by_presentation == {
+        "three-edge": (
+            "three-edge-left",
+            "three-edge-center",
+            "three-edge-right",
+        ),
+        "two-edge": (
+            "two-edge-left",
+            "two-edge-right",
+            "small-crimp-left",
+            "small-crimp-right",
+        ),
+    }
+    assert all(hold["kind"] == "edge" for hold in board["holds"])
+    assert all("sizeMillimeters" not in hold for hold in board["holds"])
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(hold["geometry"][0]["shape"]["type"] == "path" for hold in board["holds"])
+
+    expected_sizes = {
+        "assets/primary.png": (1536, 1024),
+        "assets/two-edge-surface.png": (1774, 887),
+    }
+    for asset_path, expected_size in expected_sizes.items():
+        with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
+            assert image.format == "PNG"
+            assert image.size == expected_size
 
 
 def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
