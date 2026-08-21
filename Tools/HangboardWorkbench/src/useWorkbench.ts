@@ -367,7 +367,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }
     const boardId = current.board.boardId;
     const documentIdentity = current.document;
-    if (automatic) autosaveAttemptedDocumentRef.current = documentIdentity;
+    autosaveAttemptedDocumentRef.current = documentIdentity;
     const saveGeneration = operationGeneration;
     saveGenerationRef.current = saveGeneration;
     updateState((value) => ({ ...value, saveLoginUrl: null, savingBoard: true }));
@@ -719,7 +719,8 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         || !current.dirty
         || current.document !== document
         || current.savingBoard
-        || current.busyBoard) return;
+        || current.busyBoard
+        || autosaveAttemptedDocumentRef.current === document) return;
       autosaveAttemptedDocumentRef.current = document;
       void saveBoard(true);
     }, AUTOSAVE_DELAY_MS);

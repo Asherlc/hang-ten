@@ -278,6 +278,23 @@ test("autosave restores the saved browser preference", async () => {
   });
 });
 
+test("changing autosave persists the preference for a future app mount", async () => {
+  const image = imageFixture();
+  const storage = storageFixture();
+  const runtime = { ...image.runtime, storage } as BrowserRuntime;
+  const dependencies = dependenciesFixture({ runtime });
+
+  await withApp(dependencies, async (app) => {
+    await app.click("#autosave-toggle");
+    assert.equal(storage.getItem("hangboard-workbench:autosave-enabled"), "false");
+  });
+
+  await withApp(dependencies, async (app) => {
+    const autosave = app.document.querySelector<HTMLInputElement>("#autosave-toggle");
+    assert.equal(autosave?.checked, false);
+  });
+});
+
 test("manual board refresh does not masquerade as completed repository initialization", async () => {
   await withApp(dependenciesFixture({
     client: {
@@ -655,6 +672,38 @@ test("a failed autosave waits for another document change before trying again", 
     await harness.flush(() => failedSave.reject(new Error("storage unavailable")));
     await harness.flush(() => wait(800));
     assert.equal(saves, 1);
+  });
+});
+
+test("a failed manual save waits for another document change before autosaving", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard() {
+        saves += 1;
+        throw new Error("storage unavailable");
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await load;
+    });
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 7 7 L 27 7 L 27 27 Z"),
+      "Edited.",
+    ));
+
+    await harness.flush(() => result().actions.saveBoard());
+    assert.equal(saves, 1);
+    await harness.flush(() => wait(800));
+    assert.equal(saves, 1);
+    assert.equal(result().state.dirty, true);
   });
 });
 
