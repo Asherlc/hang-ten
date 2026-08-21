@@ -77,6 +77,7 @@ export function HoldCanvas({
   const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const guideDragRef = useRef<GuideDragState | null>(null);
+  const modifierSelectionRef = useRef<string | null>(null);
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -184,6 +185,9 @@ export function HoldCanvas({
   const onGuidePointerEnd = (event: React.PointerEvent<SVGSVGElement>): void => {
     releaseGuidePointer(event.currentTarget, event.pointerId);
   };
+  const clearModifierSelection = (key: string): void => {
+    if (modifierSelectionRef.current === key) modifierSelectionRef.current = null;
+  };
   return (
     <div className="editor-views">
       <div
@@ -284,7 +288,22 @@ export function HoldCanvas({
                 tabIndex={0}
                 aria-label={`Select hold ${hold.key}`}
                 aria-pressed={selectedKeys.includes(hold.key)}
-                onClick={(event) => { if (!busy) onSelectHold(hold.key, event.metaKey || event.ctrlKey); }}
+                onPointerDown={(event) => {
+                  if (busy || event.button !== 0 || (!event.metaKey && !event.ctrlKey)) return;
+                  modifierSelectionRef.current = hold.key;
+                  event.stopPropagation();
+                  onSelectHold(hold.key, true);
+                }}
+                onPointerCancel={() => clearModifierSelection(hold.key)}
+                onContextMenu={() => clearModifierSelection(hold.key)}
+                onClick={(event) => {
+                  if (busy) return;
+                  if (modifierSelectionRef.current === hold.key) {
+                    clearModifierSelection(hold.key);
+                    return;
+                  }
+                  onSelectHold(hold.key, event.metaKey || event.ctrlKey);
+                }}
                 onKeyDown={(event) => {
                   if (busy || (event.key !== "Enter" && event.key !== " ")) return;
                   if (event.key === " ") event.preventDefault();
