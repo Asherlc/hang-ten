@@ -21,7 +21,7 @@ import board_package
 import github_board_store
 from fake_github_client import FakeGitHubClient
 from github_client import GitHubForbiddenError, GitHubNotFoundError
-from workbench_fixtures import PRIMARY_IMAGE, board_document
+from workbench_fixtures import PRIMARY_IMAGE, board_document, board_document_v2
 
 TOKEN = "test-token"
 BRANCH = "main"
@@ -912,6 +912,37 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     ).hexdigest()
     assert put[0].args[3] == expected_content
     assert saved.board_json_sha == expected_sha
+
+
+def test_v2_hosted_save_preserves_unselected_holds_and_presentation_assets() -> None:
+    board = board_document_v2("fixture.v2")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    client = FakeGitHubClient({BRANCH: files})
+    opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.v2")
+    document = board_package.editor_document(opened, "front")
+    back_before = copy.deepcopy(opened.board["holds"][1])
+    assets_before = {
+        path: client.file_bytes(BRANCH, path)
+        for path in (
+            "Hangboards/fixture-v2/assets/primary.png",
+            "Hangboards/fixture-v2/assets/back.png",
+        )
+    }
+    for region in document["regions"]:
+        region["type"] = "sloper"
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-v2", document
+    )
+
+    assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
+    assert github_board_store.presentation_image_bytes(
+        client, TOKEN, BRANCH, "fixture.v2", "back"
+    ) == assets_before["Hangboards/fixture-v2/assets/back.png"]
+    assert {
+        path: client.file_bytes(BRANCH, path) for path in assets_before
+    } == assets_before
 
 
 def test_stale_sha_conflict_becomes_a_board_save_conflict() -> None:

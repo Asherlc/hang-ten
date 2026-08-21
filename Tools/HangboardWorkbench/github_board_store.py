@@ -150,18 +150,28 @@ class GitHubBoardStore:
             )
 
     def primary_image_bytes(self, token: str, branch: str, board_id: str) -> bytes:
+        return self.presentation_image_bytes(token, branch, board_id, None)
+
+    def presentation_image_bytes(
+        self,
+        token: str,
+        branch: str,
+        board_id: str,
+        presentation_id: str | None,
+    ) -> bytes:
         with self._operation():
             board_id = board_package._identifier(board_id, "board ID")
             snapshot = self._snapshot(token, branch, cache_blobs=False)
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
-            package, image = _load_selected_package_with_image(
+            package, images = _load_selected_package_with_image(
                 snapshot.with_blob_cache(), token, branch, selected.slug, board_id
             )
             if package.board_id != board_id:
                 raise board_package.BoardNotAvailableError("board is not available")
-            return image
+            presentation = package.presentation(presentation_id)
+            return images[presentation.asset_path]
 
     def save_editor_document(
         self,
@@ -505,6 +515,7 @@ class GitHubBoardPackage:
     image_width: int
     image_height: int
     board_json_sha: str
+    presentations: tuple[board_package.BoardPresentation, ...] = ()
 
     @property
     def board_id(self) -> str:
@@ -513,6 +524,18 @@ class GitHubBoardPackage:
     @property
     def hold_ids(self) -> tuple[str, ...]:
         return tuple(hold["id"] for hold in self.board["holds"])
+
+    def presentation(
+        self, presentation_id: str | None = None
+    ) -> board_package.BoardPresentation:
+        selected = (
+            next((item for item in self.presentations if item.id == presentation_id), None)
+            if presentation_id is not None
+            else next((item for item in self.presentations if item.is_default), None)
+        )
+        if selected is None:
+            raise board_package.BoardPackageError("presentation is not available")
+        return selected
 
     def hold_frame(self, hold_id: str) -> NormalizedFrame:
         hold = next(
@@ -600,16 +623,27 @@ def primary_image_bytes(
     client: _GitHubSnapshotClient, token: str, branch: str, board_id: str
 ) -> bytes:
     """Return an authenticated board's fully validated primary image bytes."""
+    return presentation_image_bytes(client, token, branch, board_id, None)
+
+
+def presentation_image_bytes(
+    client: _GitHubSnapshotClient,
+    token: str,
+    branch: str,
+    board_id: str,
+    presentation_id: str | None,
+) -> bytes:
+    """Return one authenticated board presentation's validated image bytes."""
     board_id = board_package._identifier(board_id, "board ID")
     selected = _selected_package(discover_packages(client, token, branch), board_id)
-    package, image = _load_slug_with_image(client, token, branch, selected.slug)
+    package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id == board_id:
-        return image
+        return images[package.presentation(presentation_id).asset_path]
     selected = _selected_package(discover_packages(client, token, branch), board_id)
-    package, image = _load_slug_with_image(client, token, branch, selected.slug)
+    package, images = _load_slug_with_image(client, token, branch, selected.slug)
     if package.board_id != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
-    return image
+    return images[package.presentation(presentation_id).asset_path]
 
 
 def save_editor_document(
@@ -630,8 +664,18 @@ def save_editor_document(
             raise board_package.BoardSaveConflictError(
                 "board identity changed; reload and try again"
             )
-    width, height = live.image_width, live.image_height
-    parsed_regions = board_package._validate_editor_document(document, width, height)
+    requested_presentation_id = document.get("presentationID")
+    presentation = live.presentation(
+        requested_presentation_id if isinstance(requested_presentation_id, str) else None
+    )
+    width, height = presentation.image_width, presentation.image_height
+    parsed_regions = board_package._validate_editor_document(
+        document,
+        width,
+        height,
+        presentation.id,
+        require_presentation_id=live.board.get("schemaVersion") == 2,
+    )
 
     pieces_by_hold: dict[
         str, list[tuple[int, str, Any, dict[str, object] | None]]
@@ -643,7 +687,11 @@ def save_editor_document(
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])
 
-    current_holds = {hold["id"]: hold for hold in live.board["holds"]}
+    current_holds = {
+        hold["id"]: hold
+        for hold in live.board["holds"]
+        if hold.get("presentationID", "primary") == presentation.id
+    }
     current_paths = board_package._current_display_paths(
         pieces_by_hold, current_holds, width, height
     )
@@ -657,8 +705,11 @@ def save_editor_document(
         board_package._EditorPiecesByHold(pieces_by_hold, current_paths),
         width,
         height,
+        presentation_id=presentation.id,
     )
-    board_package._validate_board(board, width, height)
+    board_package._validate_board(
+        board, width, height, presentations=live.presentations
+    )
     content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
     try:
         commit_sha = client.put_file(
@@ -672,7 +723,12 @@ def save_editor_document(
     except GitHubConflictError as error:
         raise board_package.BoardSaveConflictError(str(error)) from error
     return GitHubBoardPackage(
-        slug, board, width, height, _git_blob_sha(content)
+        slug,
+        board,
+        live.image_width,
+        live.image_height,
+        _git_blob_sha(content),
+        live.presentations,
     ), commit_sha
 
 
@@ -731,6 +787,7 @@ def _copy_packages(
             package.image_width,
             package.image_height,
             package.board_json_sha,
+            package.presentations,
         )
         for package in packages
     )
@@ -757,11 +814,11 @@ def _load_selected_package_with_image(
     branch: str,
     slug: str,
     board_id: str,
-) -> tuple[GitHubBoardPackage, bytes]:
-    package, image = _load_slug_with_image(client, token, branch, slug)
+) -> tuple[GitHubBoardPackage, dict[str, bytes]]:
+    package, images = _load_slug_with_image(client, token, branch, slug)
     if package.board_id != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
-    return package, image
+    return package, images
 
 
 def _load_slug(
@@ -814,17 +871,17 @@ def _selected_package(
 
 def _load_slug_with_image(
     client: _GitHubSnapshotClient, token: str, branch: str, slug: str
-) -> tuple[GitHubBoardPackage, bytes]:
+) -> tuple[GitHubBoardPackage, dict[str, bytes]]:
     groups = _package_groups(client.get_tree(token, branch))
     entries = groups.get(slug)
     if entries is None:
         raise board_package.BoardPackageError("board package is not available")
     if not _is_completed(entries):
         _raise_for_incomplete_layout(slug, entries)
-    package, image = _load_package_from_entries(
+    package, images = _load_package_from_entries(
         client, token, slug, entries, inspect_png_header_only=False, include_image=True
     )
-    return package, image
+    return package, images
 
 
 @overload
@@ -848,7 +905,7 @@ def _load_package_from_entries(
     *,
     inspect_png_header_only: bool,
     include_image: Literal[True],
-) -> tuple[GitHubBoardPackage, bytes]: ...
+) -> tuple[GitHubBoardPackage, dict[str, bytes]]: ...
 
 
 def _load_package_from_entries(
@@ -859,21 +916,75 @@ def _load_package_from_entries(
     *,
     inspect_png_header_only: bool,
     include_image: bool = False,
-) -> GitHubBoardPackage | tuple[GitHubBoardPackage, bytes]:
-    image_entry = entries["assets/primary.png"]
-    image = _get_blob(client, token, image_entry, "package primary image")
-    width, height = (
-        board_package._png_header_dimensions_from_bytes(image[:33])
-        if inspect_png_header_only
-        else board_package._png_dimensions_from_bytes(image)
-    )
+) -> GitHubBoardPackage | tuple[GitHubBoardPackage, dict[str, bytes]]:
+    asset_entries = {
+        path: entry
+        for path, entry in entries.items()
+        if path.startswith("assets/") and entry.type == "blob"
+    }
+    images: dict[str, bytes] = {}
+    dimensions: dict[str, tuple[int, int]] = {}
+    primary_entry = asset_entries.get("assets/primary.png")
+    if primary_entry is not None:
+        primary_image = _get_blob(
+            client, token, primary_entry, "package primary image"
+        )
+        images["assets/primary.png"] = primary_image
+        dimensions["assets/primary.png"] = (
+            board_package._png_header_dimensions_from_bytes(primary_image[:33])
+            if inspect_png_header_only
+            else board_package._png_dimensions_from_bytes(primary_image)
+        )
     board_entry = entries["board.json"]
     board = _load_board_json(_get_blob(client, token, board_entry, "board.json"))
-    board_package._validate_board(
-        board, width, height, validate_geometry=not inspect_png_header_only
+    presentation_values = board_package._parse_board_presentations(board)
+    expected_assets = {item[2] for item in presentation_values}
+    if set(asset_entries) != expected_assets:
+        if board.get("schemaVersion") == 1:
+            raise board_package.BoardPackageError(
+                "board package must contain only board.json and assets/primary.png"
+            )
+        raise board_package.BoardPackageError(
+            "board package assets must exactly match its presentations"
+        )
+    for asset_path, image_entry in sorted(asset_entries.items()):
+        if asset_path in images:
+            continue
+        image = _get_blob(client, token, image_entry, "package presentation image")
+        images[asset_path] = image
+        dimensions[asset_path] = (
+            board_package._png_header_dimensions_from_bytes(image[:33])
+            if inspect_png_header_only
+            else board_package._png_dimensions_from_bytes(image)
+        )
+    presentations = tuple(
+        board_package.BoardPresentation(
+            presentation_id,
+            name,
+            asset_path,
+            aspect_ratio,
+            is_default,
+            *dimensions[asset_path],
+        )
+        for presentation_id, name, asset_path, aspect_ratio, is_default in presentation_values
     )
-    package = GitHubBoardPackage(slug, board, width, height, board_entry.sha)
-    return (package, image) if include_image else package
+    default = next(item for item in presentations if item.is_default)
+    board_package._validate_board(
+        board,
+        default.image_width,
+        default.image_height,
+        presentations=presentations,
+        validate_geometry=not inspect_png_header_only,
+    )
+    package = GitHubBoardPackage(
+        slug,
+        board,
+        default.image_width,
+        default.image_height,
+        board_entry.sha,
+        presentations,
+    )
+    return (package, images) if include_image else package
 
 
 def _package_groups(tree: tuple[TreeEntry, ...]) -> dict[str, dict[str, TreeEntry]]:
@@ -900,10 +1011,19 @@ def _package_groups(tree: tuple[TreeEntry, ...]) -> dict[str, dict[str, TreeEntr
 
 
 def _is_completed(entries: Mapping[str, TreeEntry]) -> bool:
-    return set(entries) == {"board.json", "assets", "assets/primary.png"} and (
-        entries["board.json"].type == "blob"
+    return (
+        entries.get("board.json") is not None
+        and entries["board.json"].type == "blob"
+        and entries.get("assets") is not None
         and entries["assets"].type == "tree"
-        and entries["assets/primary.png"].type == "blob"
+        and any(
+            path.startswith("assets/") and entry.type == "blob"
+            for path, entry in entries.items()
+        )
+        and all(
+            path in {"board.json", "assets"} or path.startswith("assets/")
+            for path in entries
+        )
     )
 
 
@@ -920,7 +1040,9 @@ def _raise_for_incomplete_layout(slug: str, entries: Mapping[str, TreeEntry]) ->
             entries["assets"].type == "tree"
             and entries["assets/primary.png"].type != "blob"
         ):
-            raise board_package.BoardPackageError("package primary image is missing")
+            raise board_package.BoardPackageError(
+                "board package must contain only board.json and assets/primary.png"
+            )
         if entries["board.json"].type != "blob":
             raise board_package.BoardPackageError("board.json is missing")
     if "board.json" in entries:

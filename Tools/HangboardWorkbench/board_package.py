@@ -8,7 +8,7 @@ import fcntl
 import json
 import math
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import shutil
 import stat
@@ -47,6 +47,8 @@ _BOARD_FIELDS = frozenset(
         "holds",
     }
 )
+_BOARD_COMMON_FIELDS = _BOARD_FIELDS - {"presentation"}
+_BOARD_V2_FIELDS = _BOARD_COMMON_FIELDS | {"presentations"}
 _HOLD_REQUIRED_FIELDS = frozenset({"id", "name", "kind", "geometry"})
 _HOLD_OPTIONAL_FIELDS = frozenset(
     {
@@ -111,11 +113,23 @@ class BoardNotAvailableError(BoardPackageError):
 
 
 @dataclass(frozen=True, slots=True)
+class BoardPresentation:
+    id: str
+    name: str
+    asset_path: str
+    aspect_ratio: float
+    is_default: bool
+    image_width: int
+    image_height: int
+
+
+@dataclass(frozen=True, slots=True)
 class BoardPackage:
     root: Path
     board: dict[str, Any]
     image_width: int
     image_height: int
+    presentations: tuple[BoardPresentation, ...]
 
     @property
     def board_id(self) -> str:
@@ -124,6 +138,19 @@ class BoardPackage:
     @property
     def hold_ids(self) -> tuple[str, ...]:
         return tuple(hold["id"] for hold in self.board["holds"])
+
+    def presentation(self, presentation_id: str | None = None) -> BoardPresentation:
+        selected = (
+            next(
+                (item for item in self.presentations if item.id == presentation_id),
+                None,
+            )
+            if presentation_id is not None
+            else next((item for item in self.presentations if item.is_default), None)
+        )
+        if selected is None:
+            raise BoardPackageError("presentation is not available")
+        return selected
 
     def hold_frame(self, hold_id: str) -> NormalizedFrame:
         """Derive one physical hold's interaction bounds from all of its pieces."""
@@ -146,6 +173,9 @@ class _EditorDocumentPackage(Protocol):
     board: dict[str, Any]
     image_width: int
     image_height: int
+    presentations: tuple[BoardPresentation, ...]
+
+    def presentation(self, presentation_id: str | None = None) -> BoardPresentation: ...
 
 
 class _EditorPiecesByHold(dict[str, list[tuple[int, str, Any, dict[str, object] | None]]]):
@@ -213,30 +243,72 @@ def _load_board_package(
         )
     assets = root / "assets"
     if not assets.is_dir() or assets.is_symlink():
-        raise BoardPackageError(
-            "board package must contain only board.json and assets/primary.png"
+        raise BoardPackageError("board package assets must be a directory")
+    dimensions: dict[str, tuple[int, int]] = {}
+    primary = assets / "primary.png"
+    if primary.is_file() and not primary.is_symlink():
+        dimensions["assets/primary.png"] = (
+            _png_header_dimensions(primary)
+            if inspect_png_header_only
+            else _png_dimensions(primary)
         )
-    if {item.name for item in assets.iterdir()} != {"primary.png"}:
-        raise BoardPackageError(
-            "board package must contain only board.json and assets/primary.png"
-        )
-    image = assets / "primary.png"
-    if not image.is_file() or image.is_symlink():
-        raise BoardPackageError("package primary image is missing")
-    width, height = (
-        _png_header_dimensions(image)
-        if inspect_png_header_only
-        else _png_dimensions(image)
-    )
     board = _load_json(root / "board.json", "board.json")
+    presentation_values = _parse_board_presentations(board)
+    expected_assets = {item[2] for item in presentation_values}
+    actual_assets = {
+        item.relative_to(root).as_posix()
+        for item in assets.rglob("*")
+        if item.is_file()
+    }
+    if actual_assets != expected_assets:
+        if board.get("schemaVersion") == 1:
+            raise BoardPackageError(
+                "board package must contain only board.json and assets/primary.png"
+            )
+        raise BoardPackageError("board package assets must exactly match its presentations")
+    for asset_path in sorted(expected_assets):
+        if asset_path in dimensions:
+            continue
+        image = root / asset_path
+        if not image.is_file() or image.is_symlink():
+            raise BoardPackageError("package presentation image is missing")
+        dimensions[asset_path] = (
+            _png_header_dimensions(image)
+            if inspect_png_header_only
+            else _png_dimensions(image)
+        )
+    presentations = tuple(
+        BoardPresentation(
+            presentation_id,
+            name,
+            asset_path,
+            aspect_ratio,
+            is_default,
+            *dimensions[asset_path],
+        )
+        for presentation_id, name, asset_path, aspect_ratio, is_default in presentation_values
+    )
+    default = next(item for item in presentations if item.is_default)
     # Discovery (header-only PNG inspection) only needs enough validation to
     # list a board safely -- it doesn't read hold geometry, so skip the
     # O(pieces^2) self-intersection check there too. The specific board a
     # caller opens or saves is always reloaded through this function with
     # inspect_png_header_only=False, which still validates its geometry in
     # full before anyone reads or writes it.
-    _validate_board(board, width, height, validate_geometry=not inspect_png_header_only)
-    return BoardPackage(root, board, width, height)
+    _validate_board(
+        board,
+        default.image_width,
+        default.image_height,
+        presentations=presentations,
+        validate_geometry=not inspect_png_header_only,
+    )
+    return BoardPackage(
+        root,
+        board,
+        default.image_width,
+        default.image_height,
+        presentations,
+    )
 
 
 def primary_image_path(package: BoardPackage) -> Path:
@@ -248,12 +320,30 @@ def primary_image_path(package: BoardPackage) -> Path:
     return image
 
 
-def editor_document(package: _EditorDocumentPackage) -> dict[str, object]:
+def presentation_image_path(
+    package: BoardPackage, presentation_id: str | None = None
+) -> Path:
+    """Return one validated presentation image confined to its package."""
+    presentation = package.presentation(presentation_id)
+    image = package.root / presentation.asset_path
+    if not image.is_file() or image.is_symlink():
+        raise BoardPackageError("package presentation image is missing")
+    _png_dimensions(image)
+    return image
+
+
+def editor_document(
+    package: _EditorDocumentPackage, presentation_id: str | None = None
+) -> dict[str, object]:
     """Expose every geometry piece as an independently keyed editable region."""
-    width, height = package.image_width, package.image_height
+    presentation = package.presentation(presentation_id)
+    width, height = presentation.image_width, presentation.image_height
     regions: list[dict[str, object]] = []
     region_id = 1
     for hold in package.board["holds"]:
+        hold_presentation_id = hold.get("presentationID", "primary")
+        if hold_presentation_id != presentation.id:
+            continue
         hold_id = hold["id"]
         for piece_index, piece in enumerate(hold["geometry"]):
             key = _piece_key(hold_id, piece_index)
@@ -272,7 +362,11 @@ def editor_document(package: _EditorDocumentPackage) -> dict[str, object]:
                 "key": key,
                 "type": hold["kind"],
                 "displayPath": path.data,
-                "metadata": {"holdID": hold_id, "pieceIndex": piece_index},
+                "metadata": {
+                    "holdID": hold_id,
+                    "pieceIndex": piece_index,
+                    "presentationID": presentation.id,
+                },
             }
             if "shapeConstraint" in piece:
                 region["shapeConstraint"] = _parse_shape_constraint(
@@ -282,6 +376,7 @@ def editor_document(package: _EditorDocumentPackage) -> dict[str, object]:
             region_id += 1
     return {
         "schemaVersion": 1,
+        "presentationID": presentation.id,
         "canvas": {"width": width, "height": height},
         "regions": regions,
     }
@@ -302,8 +397,18 @@ def save_editor_document(
         if live is None:
             raise BoardPackageError("board package is not available")
         live = load_board_package(live.root)
-        width, height = live.image_width, live.image_height
-        parsed_regions = _validate_editor_document(document, width, height)
+        requested_presentation_id = document.get("presentationID")
+        presentation = live.presentation(
+            requested_presentation_id if isinstance(requested_presentation_id, str) else None
+        )
+        width, height = presentation.image_width, presentation.image_height
+        parsed_regions = _validate_editor_document(
+            document,
+            width,
+            height,
+            presentation.id,
+            require_presentation_id=live.board.get("schemaVersion") == 2,
+        )
 
         pieces_by_hold: dict[
             str, list[tuple[int, str, Any, dict[str, object] | None]]
@@ -315,7 +420,11 @@ def save_editor_document(
         for pieces in pieces_by_hold.values():
             pieces.sort(key=lambda item: item[0])
 
-        current_holds = {hold["id"]: hold for hold in live.board["holds"]}
+        current_holds = {
+            hold["id"]: hold
+            for hold in live.board["holds"]
+            if hold.get("presentationID", "primary") == presentation.id
+        }
         # Derive current display paths before staging a candidate so unchanged
         # editor documents avoid an unnecessary package rewrite.
         current_paths = _current_display_paths(pieces_by_hold, current_holds, width, height)
@@ -333,6 +442,7 @@ def save_editor_document(
                 _EditorPiecesByHold(pieces_by_hold, current_paths),
                 width,
                 height,
+                presentation_id=presentation.id,
             )
             _write_json(board_path, board)
             # _replace_package_locked already fully validates `candidate` (the
@@ -351,10 +461,17 @@ def _apply_editor_document(
     ],
     width: int,
     height: int,
+    *,
+    presentation_id: str | None = None,
 ) -> dict[str, Any]:
     """Return a board with editable regions merged into its holds."""
     copied_board = json.loads(json.dumps(board))
-    existing_by_id = {hold["id"]: hold for hold in copied_board["holds"]}
+    existing_by_id = {
+        hold["id"]: hold
+        for hold in copied_board["holds"]
+        if presentation_id is None
+        or hold.get("presentationID", "primary") == presentation_id
+    }
     current_paths = (
         pieces_by_hold.current_paths
         if isinstance(pieces_by_hold, _EditorPiecesByHold)
@@ -395,8 +512,27 @@ def _apply_editor_document(
         )
         hold_json["kind"] = pieces[0][1]
         hold_json["geometry"] = geometry
+        if presentation_id is not None and copied_board.get("schemaVersion") == 2:
+            hold_json["presentationID"] = presentation_id
         updated_holds.append(hold_json)
-    copied_board["holds"] = updated_holds
+    if presentation_id is None:
+        copied_board["holds"] = updated_holds
+    else:
+        updated_by_id = {hold["id"]: hold for hold in updated_holds}
+        merged_holds: list[dict[str, Any]] = []
+        emitted: set[str] = set()
+        for hold in copied_board["holds"]:
+            if hold.get("presentationID", "primary") != presentation_id:
+                merged_holds.append(hold)
+                continue
+            replacement = updated_by_id.get(hold["id"])
+            if replacement is not None:
+                merged_holds.append(replacement)
+                emitted.add(hold["id"])
+        merged_holds.extend(
+            hold for hold in updated_holds if hold["id"] not in emitted
+        )
+        copied_board["holds"] = merged_holds
     return copied_board
 
 
@@ -638,11 +774,68 @@ def _remove_empty_recovery_directory(recovery: Path | None) -> None:
         pass
 
 
+def _parse_board_presentations(
+    board: Mapping[str, Any],
+) -> tuple[tuple[str, str, str, float, bool], ...]:
+    schema_version = board.get("schemaVersion")
+    if isinstance(schema_version, bool) or schema_version not in {1, 2}:
+        raise BoardPackageError("board.json.schemaVersion must be 1 or 2")
+    if schema_version == 1:
+        _required_and_allowed_keys(
+            board,
+            _BOARD_COMMON_FIELDS,
+            _BOARD_FIELDS,
+            "board.json",
+        )
+        if "presentation" in board and board["presentation"] != {
+            "assetPath": "assets/primary.png"
+        }:
+            raise BoardPackageError(
+                "board.json.presentation must declare assets/primary.png"
+            )
+        return (("primary", "Primary", "assets/primary.png", _positive_number(
+            board.get("aspectRatio"), "board.json.aspectRatio"
+        ), True),)
+
+    _exact_keys(board, _BOARD_V2_FIELDS, "board.json")
+    raw_presentations = board.get("presentations")
+    if not isinstance(raw_presentations, list) or not raw_presentations:
+        raise BoardPackageError("board.json.presentations must be a non-empty array")
+    presentations: list[tuple[str, str, str, float, bool]] = []
+    identifiers: set[str] = set()
+    defaults = 0
+    for index, value in enumerate(raw_presentations):
+        label = f"board.json.presentations[{index}]"
+        if not isinstance(value, Mapping):
+            raise BoardPackageError(f"{label} must be an object")
+        _exact_keys(value, {"id", "name", "assetPath", "aspectRatio", "default"}, label)
+        presentation_id = _identifier(value.get("id"), f"{label}.id")
+        if presentation_id in identifiers:
+            raise BoardPackageError("duplicate presentation ID")
+        identifiers.add(presentation_id)
+        name = _non_empty_string(value.get("name"), f"{label}.name")
+        asset_path = _presentation_asset_path(value.get("assetPath"), f"{label}.assetPath")
+        aspect_ratio = _positive_number(value.get("aspectRatio"), f"{label}.aspectRatio")
+        is_default = value.get("default")
+        if not isinstance(is_default, bool):
+            raise BoardPackageError(f"{label}.default must be a boolean")
+        defaults += int(is_default)
+        presentations.append((presentation_id, name, asset_path, aspect_ratio, is_default))
+    if defaults != 1:
+        raise BoardPackageError("board.json.presentations must have exactly one default")
+    return tuple(presentations)
+
+
 def _validate_board(
-    board: Mapping[str, Any], width: int, height: int, *, validate_geometry: bool = True
+    board: Mapping[str, Any],
+    width: int,
+    height: int,
+    *,
+    presentations: tuple[BoardPresentation, ...] | None = None,
+    validate_geometry: bool = True,
 ) -> None:
-    _exact_keys(board, _BOARD_FIELDS, "board.json")
-    _schema_version_one(board.get("schemaVersion"), "board.json.schemaVersion")
+    parsed_presentations = _parse_board_presentations(board)
+    schema_version = board["schemaVersion"]
     _identifier(board.get("id"), "board.json.id")
     for field in ("manufacturer", "name", "subtitle", "dimensions"):
         _non_empty_string(board.get(field), f"board.json.{field}")
@@ -650,38 +843,75 @@ def _validate_board(
     aspect_ratio = _positive_number(
         board.get("aspectRatio"), "board.json.aspectRatio"
     )
-    image_aspect_ratio = width / height
-    relative_error = abs(aspect_ratio - image_aspect_ratio) / image_aspect_ratio
-    if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
-        raise BoardPackageError(
-            "board.json.aspectRatio must match the primary image width/height within 0.1%"
-        )
-    presentation = board.get("presentation")
-    if presentation != {"assetPath": "assets/primary.png"}:
-        raise BoardPackageError(
-            "board.json.presentation must declare assets/primary.png"
-        )
+    if schema_version == 1:
+        image_aspect_ratio = width / height
+        relative_error = abs(aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+        if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
+            raise BoardPackageError(
+                "board.json.aspectRatio must match the primary image width/height within 0.1%"
+            )
+    elif presentations is not None:
+        for presentation in presentations:
+            image_aspect_ratio = presentation.image_width / presentation.image_height
+            relative_error = abs(presentation.aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+            if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
+                raise BoardPackageError(
+                    f"board.json presentation {presentation.id}.aspectRatio must match its image width/height within 0.1%"
+                )
     holds = board.get("holds")
     if not isinstance(holds, list) or not holds:
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
+    presentation_ids = {item[0] for item in parsed_presentations}
+    dimensions_by_id = {
+        item.id: (item.image_width, item.image_height)
+        for item in presentations or ()
+    }
     for index, hold in enumerate(holds):
         label = f"board.json.holds[{index}]"
-        hold_id = _validate_hold(hold, width, height, label, validate_geometry=validate_geometry)
+        hold_presentation_id = (
+            _identifier(
+                hold.get("presentationID") if isinstance(hold, Mapping) else None,
+                f"{label}.presentationID",
+            )
+            if schema_version == 2
+            else "primary"
+        )
+        if hold_presentation_id not in presentation_ids:
+            raise BoardPackageError(f"{label}.presentationID is unknown")
+        hold_width, hold_height = dimensions_by_id.get(
+            hold_presentation_id, (width, height)
+        )
+        hold_id = _validate_hold(
+            hold,
+            hold_width,
+            hold_height,
+            label,
+            requires_presentation_id=schema_version == 2,
+            validate_geometry=validate_geometry,
+        )
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
 
 
 def _validate_hold(
-    hold: object, width: int, height: int, label: str, *, validate_geometry: bool = True
+    hold: object,
+    width: int,
+    height: int,
+    label: str,
+    *,
+    requires_presentation_id: bool = False,
+    validate_geometry: bool = True,
 ) -> str:
     if not isinstance(hold, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _required_and_allowed_keys(
         hold,
         _HOLD_REQUIRED_FIELDS,
-        _HOLD_REQUIRED_FIELDS | _HOLD_OPTIONAL_FIELDS,
+        _HOLD_REQUIRED_FIELDS
+        | _HOLD_OPTIONAL_FIELDS
+        | ({"presentationID"} if requires_presentation_id else set()),
         label,
     )
     hold_id = _identifier(hold.get("id"), f"{label}.id")
@@ -812,15 +1042,32 @@ def _parse_shape_constraint(value: object, label: str) -> dict[str, object]:
 
 
 def _validate_editor_document(
-    document: Mapping[str, Any], width: int, height: int
+    document: Mapping[str, Any],
+    width: int,
+    height: int,
+    presentation_id: str | None = None,
+    *,
+    require_presentation_id: bool = False,
 ) -> dict[str, tuple[str, int, str, Any, dict[str, object] | None]]:
     """Parse and cross-validate an editor document, allowing added/removed/
     recategorized holds. Returns key -> (holdID, pieceIndex, kind, parsed path,
     shape constraint)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
-    _exact_keys(document, {"schemaVersion", "canvas", "regions"}, "editor document")
+    _required_and_allowed_keys(
+        document,
+        {"schemaVersion", "canvas", "regions"},
+        {"schemaVersion", "presentationID", "canvas", "regions"},
+        "editor document",
+    )
     _schema_version_one(document.get("schemaVersion"), "editor document.schemaVersion")
+    document_presentation_id = document.get("presentationID")
+    if document_presentation_id is not None:
+        document_presentation_id = _identifier(
+            document_presentation_id, "editor document.presentationID"
+        )
+    if presentation_id is not None and document_presentation_id != presentation_id:
+        raise BoardPackageError("editor document presentation does not match the selected surface")
     if document.get("canvas") != {"width": width, "height": height}:
         raise BoardPackageError("editor document canvas does not match the primary image")
     regions = document.get("regions")
@@ -852,7 +1099,25 @@ def _validate_editor_document(
         metadata = region.get("metadata")
         if not isinstance(metadata, Mapping):
             raise BoardPackageError(f"editor region {key}.metadata must be an object")
-        _exact_keys(metadata, {"holdID", "pieceIndex"}, f"editor region {key}.metadata")
+        _required_and_allowed_keys(
+            metadata,
+            {"holdID", "pieceIndex"},
+            {"holdID", "pieceIndex", "presentationID"},
+            f"editor region {key}.metadata",
+        )
+        region_presentation_id = metadata.get("presentationID")
+        if region_presentation_id is not None:
+            region_presentation_id = _identifier(
+                region_presentation_id,
+                f"editor region {key}.metadata.presentationID",
+            )
+        if presentation_id is not None and (
+            region_presentation_id != presentation_id
+            and (require_presentation_id or region_presentation_id is not None)
+        ):
+            raise BoardPackageError(
+                f"editor region {key} presentation does not match the selected surface"
+            )
         hold_id = _identifier(metadata.get("holdID"), f"editor region {key}.metadata.holdID")
         piece_index = metadata.get("pieceIndex")
         if (
@@ -1051,6 +1316,21 @@ def _identifier(value: object, label: str) -> str:
     if not isinstance(value, str) or not _IDENTIFIER.fullmatch(value):
         raise BoardPackageError(f"{label} must be identifier-shaped")
     return value
+
+
+def _presentation_asset_path(value: object, label: str) -> str:
+    asset_path = _non_empty_string(value, label)
+    path = PurePosixPath(asset_path)
+    if (
+        path.is_absolute()
+        or path.parts[:1] != ("assets",)
+        or len(path.parts) < 2
+        or any(part in {".", ".."} for part in path.parts)
+        or path.as_posix() != asset_path
+        or path.suffix != ".png"
+    ):
+        raise BoardPackageError(f"{label} must name a PNG beneath assets/")
+    return asset_path
 
 
 def _slug(value: object) -> str:

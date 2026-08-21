@@ -106,6 +106,7 @@ export interface UseHoldEditorOptions {
   dialogs: Dialogs;
   horizontalGuideYs: readonly number[];
   verticalGuideXs: readonly number[];
+  reservedHoldIDs?: readonly string[];
 }
 
 export interface HoldEditorActions {
@@ -335,6 +336,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     dialogs,
     horizontalGuideYs,
     verticalGuideXs,
+    reservedHoldIDs = [],
   } = options;
   const dragRef = useRef<DragState>({ ...EMPTY_DRAG });
   const previewDocumentRef = useRef<EditorDocument | null>(null);
@@ -553,7 +555,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const size = Math.max(20, Math.min(60, width * 0.06, height * 0.06));
     const centerX = width / 2;
     const centerY = height / 2;
-    const holdId = nextHoldId(document);
+    const holdId = nextHoldId(document, reservedHoldIDs);
     const key = `${holdId}-piece-0`;
     actions.editDocument((candidate) => {
       candidate.regions.push({
@@ -561,7 +563,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         key,
         type: "edge",
         displayPath: `M ${centerX - size} ${centerY - size} L ${centerX + size} ${centerY - size} L ${centerX + size} ${centerY + size} L ${centerX - size} ${centerY + size} Z`,
-        metadata: { holdID: holdId, pieceIndex: 0 },
+        metadata: {
+          holdID: holdId,
+          pieceIndex: 0,
+          ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+        },
       });
     }, {
       selectedKey: key,
@@ -569,7 +575,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       status: "Hold added. Drag it into place and save when ready.",
       failureMessage: "Could not add hold.",
     });
-  }, [actions, busy, document]);
+  }, [actions, busy, document, reservedHoldIDs]);
 
   const deleteHold = useCallback((): void => {
     if (busy || !document || !selectedHold) return;

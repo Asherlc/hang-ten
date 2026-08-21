@@ -22,7 +22,8 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"
-        && typeof metadata.pieceIndex === "number"));
+        && typeof metadata.pieceIndex === "number"
+        && (metadata.presentationID === undefined || typeof metadata.presentationID === "string")));
 }
 
 function isEditorDocument(value: unknown): value is EditorDocument {
@@ -48,6 +49,12 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     throw new Error("Hold document needs a valid canvas");
   }
   if (!Array.isArray(document.regions)) throw new Error("Hold document needs holds");
+  const presentationID = typeof document.presentationID === "string"
+    ? document.presentationID
+    : null;
+  if (document.presentationID !== undefined && !presentationID) {
+    throw new Error("Hold document needs a valid presentation");
+  }
   const keys = new Set<string>();
   for (const region of document.regions) {
     if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
@@ -64,6 +71,9 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);
+    }
+    if (presentationID && region.metadata?.presentationID !== presentationID) {
+      throw new Error(`Hold ${region.key} must belong to the selected presentation`);
     }
   }
   if (!isEditorDocument(document)) {
@@ -83,6 +93,10 @@ export async function loadBoardAtomically<ImageType>(options: {
   const board = await getBoard(boardId);
   if (!board || board.boardId !== boardId || !board.imageUrl) {
     throw new Error("Workbench returned an invalid board");
+  }
+  if (board.selectedPresentationID
+    && board.document.presentationID !== board.selectedPresentationID) {
+    throw new Error("Workbench returned a mismatched presentation");
   }
   validateEditorDocument(board.document);
   const image = await loadImage(board.imageUrl);

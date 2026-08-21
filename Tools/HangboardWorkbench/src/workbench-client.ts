@@ -37,7 +37,17 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"
-        && typeof metadata.pieceIndex === "number"));
+        && typeof metadata.pieceIndex === "number"
+        && isOptionalString(metadata.presentationID)));
+}
+
+function isBoardPresentation(value: unknown): boolean {
+  return isRecord(value)
+    && typeof value.presentationID === "string"
+    && typeof value.displayName === "string"
+    && typeof value.imageUrl === "string"
+    && (value.holdIDs === undefined || isStringArray(value.holdIDs))
+    && typeof value.default === "boolean";
 }
 
 function isBoardSummary(value: unknown): value is BoardSummary {
@@ -66,6 +76,9 @@ function isBoard(value: unknown): value is Board {
     && isOptionalString(value.href)
     && typeof value.imageUrl === "string"
     && isOptionalString(value.saveUrl)
+    && isOptionalString(value.selectedPresentationID)
+    && (value.presentations === undefined
+      || (Array.isArray(value.presentations) && value.presentations.every(isBoardPresentation)))
     && isEditorDocumentPayload(value.document);
 }
 
@@ -242,9 +255,12 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
     return request("/api/boards", parseBoardList);
   }
 
-  async function getBoard(boardId: string): Promise<Board> {
+  async function getBoard(boardId: string, presentationID?: string): Promise<Board> {
+    const query = presentationID
+      ? `?presentationID=${encodeURIComponent(presentationID)}`
+      : "";
     return request(
-      `/api/boards/${encodeURIComponent(boardId)}`,
+      `/api/boards/${encodeURIComponent(boardId)}${query}`,
       parseBoard("Workbench returned an invalid board"),
     );
   }

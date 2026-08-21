@@ -318,6 +318,55 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     });
   }, [boardOperations, client, controller, isBusy, loadImage, updateState]);
 
+  const selectPresentation = useCallback(async (presentationID: string): Promise<void> => {
+    const current = stateRef.current;
+    if (!current.board || !presentationID || isBusy()
+      || current.board.selectedPresentationID === presentationID) return;
+    if (current.dirty) {
+      updateState((value) => ({
+        ...value,
+        validation: "Save or undo the current surface changes before switching surfaces.",
+        status: "Surface not changed. Unsaved edits were kept.",
+      }));
+      return;
+    }
+    const boardId = current.board.boardId;
+    updateState((value) => ({ ...value, validation: "", saveLoginUrl: null }));
+    await boardOperations.perform(async ({ isCurrent }) => {
+      let committed = false;
+      try {
+        await controller.loadBoardAtomically({
+          boardId,
+          getBoard: (requestedBoardID) => client.getBoard(requestedBoardID, presentationID),
+          loadImage,
+          commit: ({ board, document }) => {
+            if (!isCurrent() || board.selectedPresentationID !== presentationID) return;
+            resetHistory(historyRef.current);
+            updateState((value) => ({
+              ...value,
+              board,
+              document: cloneEditorDocument(document),
+              selectedKey: null,
+              selectedKeys: [],
+              dirty: false,
+            }));
+            committed = true;
+          },
+        });
+        if (committed) {
+          updateState((value) => ({ ...value, status: "Board surface loaded." }));
+        }
+      } catch (error: unknown) {
+        if (!isCurrent()) return;
+        updateState((value) => ({
+          ...value,
+          validation: errorMessage(error, "Could not load board surface."),
+          status: "Could not load board surface. The current editor was kept.",
+        }));
+      }
+    });
+  }, [boardOperations, client, controller, isBusy, loadImage, updateState]);
+
   const saveBoard = useCallback(async (): Promise<void> => {
     if (isBusy() || stateRef.current.savingBoard) return;
     const current = stateRef.current;
@@ -712,6 +761,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     commitChanges,
     pushBranch,
     openPullRequest,
+    selectPresentation,
     selectHold(key, toggle = false) {
       updateState((current) => {
         if (!key || !current.document?.regions.some((region) => region.key === key)) {
@@ -749,6 +799,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     editDocument,
     redoDocument,
     saveBoard,
+    selectPresentation,
     selectBoard,
     switchBranch,
     undoDocument,

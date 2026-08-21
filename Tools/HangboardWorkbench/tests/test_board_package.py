@@ -38,6 +38,7 @@ from workbench_fixtures import (  # noqa: E402
     CANONICAL_PACKAGE,
     PRIMARY_IMAGE,
     board_document,
+    board_document_v2,
 )
 
 
@@ -150,6 +151,90 @@ def _package_snapshot(package: Path) -> dict[str, bytes]:
         for path in sorted(package.rglob("*"))
         if path.is_file()
     }
+
+
+def _write_v2_package(library: Path) -> Path:
+    package = library / "fixture-v2"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    shutil.copyfile(PRIMARY_IMAGE, assets / "back.png")
+    _write_json(package / "board.json", board_document_v2("fixture.v2"))
+    return package
+
+
+def test_v2_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_v2_package(library)
+
+    package = board_package.load_board_package(package_root)
+    front = board_package.editor_document(package)
+    back = board_package.editor_document(package, "back")
+
+    assert [presentation.id for presentation in package.presentations] == ["front", "back"]
+    assert front["presentationID"] == "front"
+    assert back["presentationID"] == "back"
+    assert {region["metadata"]["presentationID"] for region in front["regions"]} == {"front"}
+    assert {region["metadata"]["presentationID"] for region in back["regions"]} == {"back"}
+    assert [region["metadata"]["holdID"] for region in front["regions"]] == [
+        "hold-left",
+        "hold-left",
+    ]
+    assert [region["metadata"]["holdID"] for region in back["regions"]] == [
+        "hold-back",
+        "hold-back",
+    ]
+
+
+def test_v1_without_optional_presentation_uses_the_primary_surface(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(package_root, lambda board: board.pop("presentation"))
+
+    package = board_package.load_board_package(package_root)
+
+    assert [presentation.id for presentation in package.presentations] == ["primary"]
+    assert board_package.editor_document(package)["presentationID"] == "primary"
+
+
+def test_v2_save_changes_only_the_selected_presentation_and_preserves_assets(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_v2_package(library)
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package, "front")
+    before = _package_snapshot(package_root)
+    back_before = copy.deepcopy(package.board["holds"][1])
+    for region in document["regions"]:
+        region["type"] = "sloper"
+    document["regions"].append(
+        {
+            "id": 3,
+            "key": "new-front-piece-0",
+            "type": "edge",
+            "displayPath": "M 800 200 L 900 200 L 900 300 L 800 300 Z",
+            "metadata": {
+                "holdID": "new-front",
+                "pieceIndex": 0,
+                "presentationID": "front",
+            },
+        }
+    )
+
+    saved = board_package.save_editor_document(library, "fixture-v2", document)
+
+    assert board_package.editor_document(saved, "front")["presentationID"] == "front"
+    assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
+    new_hold = next(hold for hold in saved.board["holds"] if hold["id"] == "new-front")
+    assert new_hold["presentationID"] == "front"
+    after = _package_snapshot(package_root)
+    assert after["assets/primary.png"] == before["assets/primary.png"]
+    assert after["assets/back.png"] == before["assets/back.png"]
 
 
 def test_canonical_package_has_the_exact_single_file_inventory() -> None:
@@ -804,8 +889,8 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
         "hold-left-piece-1",
     ]
     assert [region["metadata"] for region in document["regions"]] == [
-        {"holdID": "hold-left", "pieceIndex": 0},
-        {"holdID": "hold-left", "pieceIndex": 1},
+        {"holdID": "hold-left", "pieceIndex": 0, "presentationID": "primary"},
+        {"holdID": "hold-left", "pieceIndex": 1, "presentationID": "primary"},
     ]
 
 

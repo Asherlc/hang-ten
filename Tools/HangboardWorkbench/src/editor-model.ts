@@ -22,6 +22,7 @@ interface ClientPoint {
 export function cloneEditorDocument(document: EditorDocument): EditorDocument {
   return {
     schemaVersion: document.schemaVersion,
+    ...(document.presentationID ? { presentationID: document.presentationID } : {}),
     canvas: { ...document.canvas },
     regions: document.regions.map((region) => ({
       ...region,
@@ -141,8 +142,14 @@ export function svgPoint(svg: SvgCoordinateSpace, event: ClientPoint): Point {
   };
 }
 
-export function nextHoldId(document: EditorDocument): string {
-  const ids = new Set(document.regions.map((region) => region.metadata?.holdID));
+export function nextHoldId(
+  document: EditorDocument,
+  reservedHoldIDs: readonly string[] = [],
+): string {
+  const ids = new Set([
+    ...document.regions.map((region) => region.metadata?.holdID),
+    ...reservedHoldIDs,
+  ]);
   let number = ids.size + 1;
   while (ids.has(`hold-${number}`)) number += 1;
   return `hold-${number}`;

@@ -156,7 +156,100 @@ test("model helpers group physical holds and derive collision-free identifiers",
   assert.deepEqual(holdSiblings(document, document.regions[2]!).map((region) => region.key), ["legacy"]);
   assert.deepEqual(holdCentroid(document.regions, pathEditor), { x: 130 / 3, y: 40 / 3 });
   assert.equal(nextHoldId(document), "hold-4");
+  assert.equal(nextHoldId(document, ["hold-4", "hold-5"]), "hold-6");
   assert.equal(nextRegionId(document), 10);
+});
+
+test("switching presentations changes the focused canvas and scopes new holds", async () => {
+  const presentations = [
+    {
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/board-a/image?presentationID=front",
+      default: true,
+    },
+    {
+      presentationID: "back",
+      displayName: "Back",
+      imageUrl: "/api/boards/board-a/image?presentationID=back",
+      default: false,
+    },
+  ];
+  const frontDocument: EditorDocument = {
+    schemaVersion: 1,
+    presentationID: "front",
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      id: 1,
+      key: "front-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "front", pieceIndex: 0, presentationID: "front" },
+    }],
+  };
+  const backDocument: EditorDocument = {
+    schemaVersion: 1,
+    presentationID: "back",
+    canvas: { width: 80, height: 120 },
+    regions: [{
+      id: 1,
+      key: "back-piece-0",
+      type: "edge",
+      displayPath: "M 10 30 L 20 30 L 20 40 Z",
+      metadata: { holdID: "back", pieceIndex: 0, presentationID: "back" },
+    }],
+  };
+  const focusedBoard = (presentationID: "front" | "back"): Board => ({
+    boardId: "board-a",
+    displayName: "Board A",
+    holdCount: 2,
+    holdIDs: ["front", "back", "hold-1"],
+    selectedPresentationID: presentationID,
+    presentations,
+    imageUrl: `/api/boards/board-a/image?presentationID=${presentationID}`,
+    document: presentationID === "front" ? frontDocument : backDocument,
+  });
+  let savedDocument: EditorDocument | null = null;
+  const client: WorkbenchClient = {
+    ...clientFixture([focusedBoard("front")]),
+    async getBoard(_boardID, presentationID): Promise<Board> {
+      return focusedBoard(presentationID === "back" ? "back" : "front");
+    },
+    async saveBoard(_boardID, document): Promise<Board> {
+      savedDocument = document;
+      return { ...focusedBoard("back"), document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    assert.equal(app.documentValue("#presentation-select"), "front");
+    assert.equal(app.document.querySelectorAll("#hold-overlay .region-shape").length, 1);
+    assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), presentations[0]?.imageUrl);
+    await app.click('[data-hold-key="front-piece-0"]');
+    await app.click("#add-horizontal-guide-button");
+    assert.equal(app.document.querySelectorAll("#guide-overlay line").length, 1);
+
+    await app.change("#presentation-select", "back");
+    await app.flush();
+
+    assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), presentations[1]?.imageUrl);
+    assert.deepEqual(paths(app), ["M 10 30 L 20 30 L 20 40 Z"]);
+    assert.equal(app.document.querySelectorAll("#guide-overlay line").length, 0);
+    assert.equal(app.text("#hold-heading"), "No selection");
+
+    assert.equal(app.disabled("#add-hold-button"), false);
+    await app.click("#add-hold-button");
+    assert.equal(app.disabled("#save-button"), false);
+    await app.click("#save-button");
+    await app.flush();
+    await app.flush();
+
+    assert.equal(savedDocument?.presentationID, "back");
+    const added = savedDocument?.regions.find((region) => region.metadata?.holdID.startsWith("hold-"));
+    assert.equal(added?.metadata?.holdID, "hold-4");
+    assert.equal(added?.metadata?.presentationID, "back");
+    assert.ok(savedDocument?.regions.every((region) => region.metadata?.presentationID === "back"));
+  }, dependenciesFixture(focusedBoard("front"), { client }));
 });
 
 test("rotation handles stay separated and inside both top-edge and narrow canvases", () => {
