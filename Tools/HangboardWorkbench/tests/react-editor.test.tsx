@@ -288,6 +288,31 @@ test("modifier selection toggles highlighted holds while plain selection replace
   });
 });
 
+test("Command-click selection survives its trailing plain click", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.pointer('[data-hold-key="b-piece-0"]', "pointerdown", { pointerId: 42, metaKey: true });
+    await app.pointer('[data-hold-key="b-piece-0"]', "pointerup", { pointerId: 42, metaKey: true });
+    await app.mouse('[data-hold-key="b-piece-0"]', "click");
+
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-hold-key="b-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.text("#hold-heading"), "b-piece-0");
+  });
+});
+
+test("a cancelled Command-click does not suppress the next normal click", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.pointer('[data-hold-key="b-piece-0"]', "pointerdown", { pointerId: 42, metaKey: true });
+    await app.pointer('[data-hold-key="b-piece-0"]', "pointercancel", { pointerId: 42, metaKey: true });
+    await app.click('[data-hold-key="b-piece-0"]');
+
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.document.querySelector('[data-hold-key="b-piece-0"]')?.getAttribute("aria-pressed"), "true");
+  });
+});
+
 test("batch inspector actions change every selected physical hold and undo restores them", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
