@@ -81,7 +81,7 @@ export function HoldCanvas({
     const viewport = viewportRef.current;
     if (!viewport) return;
     const handleWheel = (event: WheelEvent): void => {
-      if (!event.altKey || !document) return;
+      if ((!event.altKey && !event.ctrlKey) || !document) return;
       const delta = event.deltaY === 0 ? event.deltaX : event.deltaY;
       if (delta === 0) return;
       event.preventDefault();
