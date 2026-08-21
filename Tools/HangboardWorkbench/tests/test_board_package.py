@@ -1014,6 +1014,27 @@ def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
     assert not (library / "catalog.json").exists()
 
 
+def test_save_persists_a_quadratic_display_path_as_a_canonical_path_shape(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["regions"][0]["displayPath"] = (
+        "M 177.4 91.4 Q 266.1 45.7 354.8 91.4 L 354.8 228.5 L 177.4 228.5 Z"
+    )
+
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    shape = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]
+    assert shape["type"] == "path"
+    assert shape["commands"][1]["command"] == "quad"
+
+
 def test_changed_save_derives_current_display_paths_once_per_piece(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -543,6 +543,58 @@ export function deleteVertex(commands: PathCommand[], index: number): void {
   }
 }
 
+export function makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean {
+  const start = commands[afterIndex]?.points.at(-1);
+  const next = commands[afterIndex + 1];
+  if (!start || next?.type !== "L") return false;
+  const end = next.points[0];
+  if (!end || pointsMatch(start, end)) return false;
+  commands[afterIndex + 1] = {
+    type: "Q",
+    points: [{ ...end }],
+    controls: [interpolate(start, end, 0.5)],
+  };
+  return true;
+}
+
+export function roundVertex(commands: PathCommand[], index: number): boolean {
+  const previous = commands[index - 1];
+  const vertex = commands[index];
+  const next = commands[index + 1];
+  if (!previous?.points.at(-1) || vertex?.type !== "L" || next?.type !== "L") return false;
+
+  const start = previous.points.at(-1)!;
+  const corner = vertex.points[0];
+  const end = next.points[0];
+  if (!corner || !end || pointsMatch(start, corner) || pointsMatch(corner, end) || areCollinear(start, corner, end)) {
+    return false;
+  }
+
+  const trim = 0.2;
+  const incoming = interpolate(corner, start, trim);
+  const outgoing = interpolate(corner, end, trim);
+  vertex.points = [incoming];
+  commands.splice(
+    index + 1,
+    1,
+    { type: "Q", points: [outgoing], controls: [{ ...corner }] },
+    { type: "L", points: [{ ...end }], controls: [] },
+  );
+  return true;
+}
+
+function pointsMatch(left: Point, right: Point): boolean {
+  return left.x === right.x && left.y === right.y;
+}
+
+function areCollinear(start: Point, corner: Point, end: Point): boolean {
+  const incomingX = corner.x - start.x;
+  const incomingY = corner.y - start.y;
+  const outgoingX = end.x - corner.x;
+  const outgoingY = end.y - corner.y;
+  return Math.abs(incomingX * outgoingY - incomingY * outgoingX) <= 1e-9;
+}
+
 function rotatePoint(point: Point, pivot: Point, angleRadians: number): Point {
   const cosine = Math.cos(angleRadians);
   const sine = Math.sin(angleRadians);

@@ -55,6 +55,7 @@ export function HoldCanvas({
 }: HoldCanvasProps) {
   const vertexMenuRef = useRef<HTMLDivElement>(null);
   const deleteVertexButtonRef = useRef<HTMLButtonElement>(null);
+  const curveActionButtonRef = useRef<HTMLButtonElement>(null);
   const selectedVertexRef = useRef<SVGCircleElement>(null);
   const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -115,8 +116,17 @@ export function HoldCanvas({
         : nextPosition
     ));
     if (editor.canDeleteSelectedVertex) deleteVertexButtonRef.current?.focus();
+    else if (editor.canRoundSelectedVertex || editor.canMakeSelectedSegmentBendable) {
+      curveActionButtonRef.current?.focus();
+    }
     else menu.focus();
-  }, [editor.canDeleteSelectedVertex, editor.vertexMenu?.x, editor.vertexMenu?.y]);
+  }, [
+    editor.canDeleteSelectedVertex,
+    editor.canMakeSelectedSegmentBendable,
+    editor.canRoundSelectedVertex,
+    editor.vertexMenu?.x,
+    editor.vertexMenu?.y,
+  ]);
   const displayedVertexMenuPosition = editor.vertexMenu
     && vertexMenuPosition?.anchorX === editor.vertexMenu.x
     && vertexMenuPosition.anchorY === editor.vertexMenu.y
@@ -313,14 +323,28 @@ export function HoldCanvas({
               selectedVertexRef.current?.focus();
             }}
           >
-            <button
+            {editor.selectedVertexIndex !== null && <button
               ref={deleteVertexButtonRef}
               type="button"
               role="menuitem"
               disabled={!editor.canDeleteSelectedVertex}
               aria-disabled={!editor.canDeleteSelectedVertex}
               onClick={() => editor.deleteSelectedVertex()}
-            >Delete</button>
+            >Delete</button>}
+            {editor.canRoundSelectedVertex && <button
+              ref={curveActionButtonRef}
+              id="round-corner-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.roundSelectedVertex()}
+            >Round corner</button>}
+            {editor.canMakeSelectedSegmentBendable && <button
+              ref={curveActionButtonRef}
+              id="make-bendable-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentBendable()}
+            >Make bendable</button>}
           </div>
         )}
         <div className={`empty-state${document ? " hidden" : ""}`} id="empty-state">

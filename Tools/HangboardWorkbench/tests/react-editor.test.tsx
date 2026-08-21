@@ -564,6 +564,34 @@ test("double-click inserts a vertex while right-click selects it and waits for a
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("vertex menu rounds a corner as a persisted quadratic", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="square"]');
+
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: 30, clientY: 10 });
+    assert.equal(app.text("#round-corner-action"), "Round corner");
+    await app.click("#round-corner-action");
+    assert.equal(paths(app)[0], "M 10 10 L 26 10 Q 30 10 30 14 L 30 30 L 10 30 Z");
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+    assert.equal(app.document.querySelector(".path-editor-vertex.selected"), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("straight-segment menu converts a segment to a bendable quadratic", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    assert.equal(app.text("#make-bendable-action"), "Make bendable");
+    await app.click("#make-bendable-action");
+    assert.equal(paths(app)[0], "M 10 10 Q 20 10 30 10 L 30 30 L 10 30 Z");
+    assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="0"]'));
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("vertex menu navigation keys stay in the menu without editing the selected hold", async () => {
   const squarePath = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: squarePath }]);

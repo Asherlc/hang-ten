@@ -6,8 +6,10 @@ import {
   constrainedOutlineModel,
   createOutlineShapePath,
   deleteVertex,
+  makeSegmentBendable,
   moveVertex,
   parsePath,
+  roundVertex,
   resizeConstrainedOutline,
   rotatePath,
   serializePath,
@@ -69,6 +71,33 @@ test("serializePath handles integer coordinates cleanly", () => {
     { type: "Z", points: [], controls: [] },
   ];
   assert.equal(serializePath(commands), "M 0 0 L 100 0 L 50 80 Z");
+});
+
+test("makeSegmentBendable replaces a straight segment with a geometrically identical quadratic", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
+
+  assert.equal(makeSegmentBendable(commands, 0), true);
+  assert.equal(serializePath(commands), "M 0 0 Q 5 0 10 0 L 10 10 Z");
+  assert.equal(makeSegmentBendable(commands, 0), false, "curves cannot be converted twice");
+});
+
+test("roundVertex trims adjacent straight segments and retains the sharp point as the quadratic control", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 L 0 10 Z");
+
+  assert.equal(roundVertex(commands, 1), true);
+  assert.equal(serializePath(commands), "M 0 0 L 8 0 Q 10 0 10 2 L 10 10 L 0 10 Z");
+});
+
+test("roundVertex leaves degenerate, curved, and start vertices unchanged", () => {
+  for (const [path, index] of [
+    ["M 0 0 L 10 0 L 20 0 Z", 1],
+    ["M 0 0 Q 5 0 10 0 L 10 10 Z", 1],
+    ["M 0 0 L 10 0 L 10 10 Z", 0],
+  ] as const) {
+    const commands = parsePath(path);
+    assert.equal(roundVertex(commands, index), false, path);
+    assert.equal(serializePath(commands), path);
+  }
 });
 
 test("createOutlineShapePath replaces an outline with an oval inside the same bounding box", () => {
