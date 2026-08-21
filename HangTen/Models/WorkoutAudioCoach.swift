@@ -97,13 +97,17 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     private let synthesizer: any WorkoutSpeechSynthesizing
     private let audioSession: any WorkoutAudioSessionManaging
+    private let countdownScheduler: any CountdownAudioScheduling
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
+    private var ownsCountdownSchedule = false
+    private var deferredDeactivationTask: Task<Void, Never>?
     private var deactivationRetryTask: Task<Void, Never>?
     private var remainingDeactivationRetries: Int
     private var speechOwnership = WorkoutSpeechOwnership()
 
     private static let maximumDeactivationRetries = 1
+    private static let countdownCueSessionGrace = Duration.milliseconds(1_250)
 
     override convenience init() {
         self.init(
@@ -112,12 +116,30 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         )
     }
 
-    init(
+    convenience init(
         synthesizer: any WorkoutSpeechSynthesizing,
         audioSession: any WorkoutAudioSessionManaging
     ) {
+        self.init(
+            synthesizer: synthesizer,
+            audioSession: audioSession,
+            countdownScheduler: CountdownAudioScheduler(
+                preferredLanguageCode: Self.preferredLanguageCode,
+                rate: 0.50,
+                pitchMultiplier: 1.0,
+                volume: 1.0
+            )
+        )
+    }
+
+    init(
+        synthesizer: any WorkoutSpeechSynthesizing,
+        audioSession: any WorkoutAudioSessionManaging,
+        countdownScheduler: any CountdownAudioScheduling
+    ) {
         self.synthesizer = synthesizer
         self.audioSession = audioSession
+        self.countdownScheduler = countdownScheduler
         self.remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
         super.init()
         synthesizer.delegate = self
@@ -125,6 +147,9 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     func speak(_ phrase: String) {
         guard !phrase.isEmpty else { return }
+        cancelOwnedCountdownSchedule()
+        deferredDeactivationTask?.cancel()
+        deferredDeactivationTask = nil
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
         configureAudioSessionIfNeeded()
@@ -140,35 +165,93 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         synthesizer.speak(utterance)
     }
 
-    func stop() {
+    @discardableResult
+    func startCountdown(remainingFrom phrase: String, startUptime: TimeInterval) -> Bool {
+        guard !ownsCountdownSchedule else { return false }
+
+        deferredDeactivationTask?.cancel()
+        deferredDeactivationTask = nil
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
+        guard configureAudioSessionIfNeeded() else { return false }
+
+        let startHostTime = AVAudioTime.hostTime(forSeconds: startUptime)
+        guard countdownScheduler.schedule(
+            remainingFrom: phrase,
+            startHostTime: startHostTime
+        ) else {
+            logger.error("Unable to pre-schedule numeric countdown from \(phrase, privacy: .public)")
+            deactivateAudioSessionIfSpeechStopped()
+            return false
+        }
+
+        ownsCountdownSchedule = true
+        return true
+    }
+
+    func stop() {
+        deferredDeactivationTask?.cancel()
+        deferredDeactivationTask = nil
+        deactivationRetryTask?.cancel()
+        deactivationRetryTask = nil
+        countdownScheduler.stop()
+        ownsCountdownSchedule = false
         speechOwnership.requestStop()
         isSpeaking = false
         synthesizer.stopSpeaking(at: .immediate)
         deactivateAudioSessionIfSpeechStopped()
     }
 
-    private var preferredLanguageCode: String {
+    private static var preferredLanguageCode: String {
         Locale.preferredLanguages.first ?? "en-US"
     }
 
-    private func configureAudioSessionIfNeeded() {
-        guard !configuredAudioSession else { return }
+    private var preferredLanguageCode: String {
+        Self.preferredLanguageCode
+    }
+
+    @discardableResult
+    private func configureAudioSessionIfNeeded() -> Bool {
+        guard !configuredAudioSession else { return true }
 
         do {
             try audioSession.configureForSpokenCues()
             try audioSession.activate()
             configuredAudioSession = true
             remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
+            return true
         } catch {
             logger.error("Unable to activate spoken cue audio session: \(error.localizedDescription, privacy: .public)")
+            return false
         }
+    }
+
+    private func cancelOwnedCountdownSchedule() {
+        guard ownsCountdownSchedule else { return }
+        countdownScheduler.stop()
+        ownsCountdownSchedule = false
     }
 
     private func deactivateAudioSessionIfSpeechStopped() {
         guard !synthesizer.isSpeaking else { return }
         deactivateAudioSession()
+    }
+
+    private func scheduleAudioSessionDeactivationAfterCue() {
+        guard !synthesizer.isSpeaking else { return }
+
+        deferredDeactivationTask?.cancel()
+        deferredDeactivationTask = Task { @MainActor [weak self] in
+            do {
+                try await Task.sleep(for: WorkoutAudioCoach.countdownCueSessionGrace)
+            } catch {
+                return
+            }
+
+            guard !Task.isCancelled, let self else { return }
+            deferredDeactivationTask = nil
+            deactivateAudioSessionIfSpeechStopped()
+        }
     }
 
     private func deactivateAudioSession() {
@@ -226,7 +309,7 @@ extension WorkoutAudioCoach: AVSpeechSynthesizerDelegate {
         guard ownsActiveSpeech(utterance) else { return }
         speechOwnership.finishActive(utterance)
         isSpeaking = false
-        deactivateAudioSessionIfSpeechStopped()
+        scheduleAudioSessionDeactivationAfterCue()
     }
 
     nonisolated func speechSynthesizer(
