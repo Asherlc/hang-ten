@@ -27,6 +27,10 @@ function isOptionalString(value: unknown): value is string | undefined {
   return value === undefined || typeof value === "string";
 }
 
+function isFingerCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 4;
+}
+
 function isHoldRegion(value: unknown): value is EditorDocument["regions"][number] {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -34,6 +38,7 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && isOptionalString(value.type)
+    && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"

@@ -391,6 +391,34 @@ test("delete and type changes apply to every piece sharing holdID", async () => 
   });
 });
 
+test("finger capacity loads in the inspector, applies to every physical piece, and new holds are unset", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, fingerCapacity: 2 },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, fingerCapacity: 2 },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.documentValue("#finger-capacity-select"), "2");
+    await app.change("#finger-capacity-select", "4");
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.slice(0, 2).map((region) => region.fingerCapacity), [4, 4]);
+    assert.equal(Object.hasOwn(saved[0]?.regions[2] ?? {}, "fingerCapacity"), false);
+
+    await app.click("#add-hold-button");
+    assert.equal(app.documentValue("#finger-capacity-select"), "");
+  }, dependenciesFixture(board, { client }));
+});
+
 test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavior", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
