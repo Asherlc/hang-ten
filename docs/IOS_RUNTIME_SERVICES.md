@@ -101,11 +101,21 @@ explicit resume.
 
 `WorkoutAudioCoach` wraps `AVSpeechSynthesizer` and configures
 `AVAudioSession` as `.playback` with `.spokenAudio` and `.duckOthers`. The
-speaker preference is persisted with `@AppStorage`. When an utterance ends or
-the routine pauses/exits, the audio session deactivates with
-`.notifyOthersOnDeactivation` so other audio is no longer ducked.
-Cancellation waits for the speech delegate before deactivation, preventing an
-AVAudioSession-busy teardown from leaving other audio ducked.
+speaker preference is persisted with `@AppStorage`. Numeric `3`, `2`, `1`
+buffers are rendered before their monotonic start boundary and host-time
+scheduled together as one sequence. Cold, empty voice renders are retried only
+during prewarm; exhaustion leaves numeric audio silent and never starts a late
+live-speech fallback. Initial and skip countdowns wait for prewarm, then audio
+and the visual `3` share one monotonic boundary. Fixed segments arm the sequence
+at the preceding `4` tick for the future `3` boundary. The visible countdown
+remains exactly three seconds. One audio session is retained through
+the final one-second slot, and later timeline updates do not enqueue `2` or `1`
+again. Nonnumeric cues
+continue through normal speech synthesis and deactivate the session when
+speech finishes. Pausing, disabling cues, or exiting cancels scheduled
+countdown playback immediately. Cancellation waits for the speech delegate
+before deactivation, preventing an AVAudioSession-busy teardown from leaving
+other audio ducked.
 
 Audio moments are derived from clock state:
 

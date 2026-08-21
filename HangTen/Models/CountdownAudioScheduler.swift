@@ -31,7 +31,24 @@ struct CountdownAudioSchedule: Equatable {
     }
 }
 
+struct CountdownAudioRenderAttemptPolicy {
+    static let maximumAttempts = 3
+
+    static func shouldRetry(
+        completedAttempts: Int,
+        renderedBufferCount: Int
+    ) -> Bool {
+        renderedBufferCount == 0 && completedAttempts < maximumAttempts
+    }
+
+    static func shouldIgnoreCallback(phraseIsAlreadyPrepared: Bool) -> Bool {
+        phraseIsAlreadyPrepared
+    }
+}
+
 protocol CountdownAudioScheduling: AnyObject {
+    func prewarm(completion: @escaping (Bool) -> Void)
+
     @discardableResult
     func schedule(remainingFrom: String, startHostTime: UInt64) -> Bool
 
@@ -39,18 +56,70 @@ protocol CountdownAudioScheduling: AnyObject {
 }
 
 protocol CountdownAudioSchedulingBackend: AnyObject {
+    func prewarm(completion: @escaping (Bool) -> Void)
+
     @discardableResult
     func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool
 
     func stop()
 }
 
+protocol CountdownAudioLifecycleLogging: AnyObject {
+    func prewarmCompleted(succeeded: Bool)
+    func scheduleAccepted(_ schedule: CountdownAudioSchedule, startHostTime: UInt64)
+    func scheduleRejected(_ schedule: CountdownAudioSchedule, startHostTime: UInt64)
+}
+
+private final class SystemCountdownAudioLifecycleLogger: CountdownAudioLifecycleLogging {
+    private let logger = Logger(subsystem: "com.hangten.training", category: "CountdownAudio")
+
+    func prewarmCompleted(succeeded: Bool) {
+        if succeeded {
+            logger.notice("Countdown audio prewarm ready")
+        } else {
+            logger.error("Countdown audio prewarm failed; numeric countdowns will remain silent")
+        }
+    }
+
+    func scheduleAccepted(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) {
+        let phrases = schedule.cues.map(\.phrase).joined(separator: ",")
+        let offsets = schedule.cues.map { String(format: "%.3f", $0.offset) }.joined(separator: ",")
+        logger.notice(
+            "Accepted countdown schedule phrases=\(phrases, privacy: .public) startHostTime=\(startHostTime, privacy: .public) offsets=\(offsets, privacy: .public)"
+        )
+    }
+
+    func scheduleRejected(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) {
+        let phrases = schedule.cues.map(\.phrase).joined(separator: ",")
+        logger.error(
+            "Rejected countdown schedule phrases=\(phrases, privacy: .public) startHostTime=\(startHostTime, privacy: .public); no live-speech fallback"
+        )
+    }
+}
+
 final class CountdownAudioScheduler: CountdownAudioScheduling {
     private let backend: any CountdownAudioSchedulingBackend
+    private let lifecycleLogger: any CountdownAudioLifecycleLogging
     private var hasActiveSchedule = false
 
     init(backend: any CountdownAudioSchedulingBackend) {
         self.backend = backend
+        self.lifecycleLogger = SystemCountdownAudioLifecycleLogger()
+    }
+
+    init(
+        backend: any CountdownAudioSchedulingBackend,
+        lifecycleLogger: any CountdownAudioLifecycleLogging
+    ) {
+        self.backend = backend
+        self.lifecycleLogger = lifecycleLogger
+    }
+
+    func prewarm(completion: @escaping (Bool) -> Void) {
+        backend.prewarm { [lifecycleLogger] succeeded in
+            lifecycleLogger.prewarmCompleted(succeeded: succeeded)
+            completion(succeeded)
+        }
     }
 
     convenience init(
@@ -71,15 +140,20 @@ final class CountdownAudioScheduler: CountdownAudioScheduling {
 
     @discardableResult
     func schedule(remainingFrom phrase: String, startHostTime: UInt64) -> Bool {
-        guard !hasActiveSchedule else { return false }
-
         let schedule = CountdownAudioSchedule(remainingFrom: phrase)
+        guard !hasActiveSchedule else {
+            lifecycleLogger.scheduleRejected(schedule, startHostTime: startHostTime)
+            return false
+        }
+
         guard !schedule.cues.isEmpty,
               backend.schedule(schedule, startHostTime: startHostTime) else {
+            lifecycleLogger.scheduleRejected(schedule, startHostTime: startHostTime)
             return false
         }
 
         hasActiveSchedule = true
+        lifecycleLogger.scheduleAccepted(schedule, startHostTime: startHostTime)
         return true
     }
 
@@ -107,6 +181,7 @@ final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBacke
     private let playback: any CountdownAudioBufferPlayback
     private let currentHostTime: () -> UInt64
     private var retainedPlaybackBuffers: [AVAudioPCMBuffer] = []
+    private var isPrewarmed = false
 
     init(
         buffersForSchedule: @escaping (CountdownAudioSchedule) -> [String: [AVAudioPCMBuffer]]?,
@@ -118,6 +193,27 @@ final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBacke
         self.currentHostTime = currentHostTime
     }
 
+    func prewarm(completion: @escaping (Bool) -> Void) {
+        completion(prewarm(CountdownAudioSchedule(remainingFrom: "3")))
+    }
+
+    @discardableResult
+    func prewarm(_ schedule: CountdownAudioSchedule) -> Bool {
+        guard let buffersByPhrase = buffersForSchedule(schedule),
+              let scheduledBuffers = scheduledBuffers(
+                for: schedule,
+                buffersByPhrase: buffersByPhrase,
+                startHostTime: 0
+              ),
+              let format = scheduledBuffers.first?.buffer.format else {
+            return false
+        }
+
+        playback.prepare(format: format)
+        isPrewarmed = true
+        return true
+    }
+
     @discardableResult
     func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
         guard let buffersByPhrase = buffersForSchedule(schedule),
@@ -126,12 +222,11 @@ final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBacke
                 buffersByPhrase: buffersByPhrase,
                 startHostTime: startHostTime
               ),
-              let format = scheduledBuffers.first?.buffer.format,
               currentHostTime() < startHostTime else {
             return false
         }
 
-        playback.prepare(format: format)
+        guard isPrewarmed || prewarm(schedule) else { return false }
         do {
             try playback.start()
         } catch {
@@ -164,6 +259,7 @@ final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBacke
     func stop() {
         playback.stop()
         retainedPlaybackBuffers.removeAll()
+        isPrewarmed = false
     }
 
     private func scheduledBuffers(
@@ -239,13 +335,27 @@ private final class SystemCountdownAudioBufferPlayback: CountdownAudioBufferPlay
 }
 
 private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedulingBackend {
+    private enum PreparationState {
+        case idle
+        case preparingPlayback
+        case ready
+        case failed
+    }
+
     private let synthesizer = AVSpeechSynthesizer()
     private let playback = SystemCountdownAudioBufferPlayback()
+    private let preferredLanguageCode: String
+    private let rate: Float
+    private let pitchMultiplier: Float
+    private let volume: Float
     private let stateLock = NSLock()
     private let logger = Logger(subsystem: "com.hangten.training", category: "CountdownAudio")
     private var pendingBuffers: [String: [AVAudioPCMBuffer]] = [:]
     private var preparedBuffers: [String: [AVAudioPCMBuffer]] = [:]
     private var failedPhrases: Set<String> = []
+    private var renderAttempts: [String: Int] = [:]
+    private var preparationState: PreparationState = .idle
+    private var prewarmCompletions: [(Bool) -> Void] = []
     private lazy var bufferSchedulingBackend = CountdownAudioBufferSchedulingBackend(
         buffersForSchedule: { [weak self] schedule in
             self?.preparedSnapshot(for: schedule)
@@ -262,20 +372,52 @@ private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedul
         pitchMultiplier: Float,
         volume: Float
     ) {
+        self.preferredLanguageCode = preferredLanguageCode
+        self.rate = rate
+        self.pitchMultiplier = pitchMultiplier
+        self.volume = volume
         for phrase in ["3", "2", "1"] {
             pendingBuffers[phrase] = []
         }
 
         for phrase in ["3", "2", "1"] {
-            let utterance = AVSpeechUtterance(string: phrase)
-            utterance.voice = AVSpeechSynthesisVoice(language: preferredLanguageCode)
-            utterance.rate = rate
-            utterance.pitchMultiplier = pitchMultiplier
-            utterance.volume = volume
-            synthesizer.write(utterance) { [weak self] buffer in
-                self?.receive(buffer, for: phrase)
+            render(phrase)
+        }
+    }
+
+    private func render(_ phrase: String) {
+        withStateLock {
+            renderAttempts[phrase, default: 0] += 1
+            pendingBuffers[phrase] = []
+        }
+        let utterance = AVSpeechUtterance(string: phrase)
+        utterance.voice = AVSpeechSynthesisVoice(language: preferredLanguageCode)
+        utterance.rate = rate
+        utterance.pitchMultiplier = pitchMultiplier
+        utterance.volume = volume
+        synthesizer.write(utterance) { [weak self] buffer in
+            self?.receive(buffer, for: phrase)
+        }
+    }
+
+    func prewarm(completion: @escaping (Bool) -> Void) {
+        let immediateResult: Bool? = withStateLock {
+            switch preparationState {
+            case .ready:
+                return true
+            case .failed:
+                return false
+            case .idle, .preparingPlayback:
+                prewarmCompletions.append(completion)
+                return nil
             }
         }
+
+        if let immediateResult {
+            completion(immediateResult)
+            return
+        }
+        preparePlaybackIfBuffersResolved()
     }
 
     @discardableResult
@@ -295,40 +437,143 @@ private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedul
 
     func stop() {
         bufferSchedulingBackend.stop()
+        withStateLock {
+            switch preparationState {
+            case .ready:
+                preparationState = .idle
+            case .idle, .preparingPlayback, .failed:
+                break
+            }
+        }
     }
 
     private func receive(_ buffer: AVAudioBuffer, for phrase: String) {
         guard let pcmBuffer = buffer as? AVAudioPCMBuffer else {
+            logger.error("Countdown PCM render failed phrase=\(phrase, privacy: .public) reason=non-PCM-buffer")
             withStateLock {
                 failedPhrases.insert(phrase)
                 pendingBuffers.removeValue(forKey: phrase)
             }
+            preparePlaybackIfBuffersResolved()
             return
         }
 
         guard pcmBuffer.frameLength > 0 else {
-            withStateLock {
-                guard let buffers = pendingBuffers.removeValue(forKey: phrase),
-                      !buffers.isEmpty else {
+            let shouldRetry: Bool = withStateLock {
+                if CountdownAudioRenderAttemptPolicy.shouldIgnoreCallback(
+                    phraseIsAlreadyPrepared: preparedBuffers[phrase] != nil
+                ) {
+                    pendingBuffers.removeValue(forKey: phrase)
+                    return false
+                }
+                let buffers = pendingBuffers.removeValue(forKey: phrase) ?? []
+                let completedAttempts = renderAttempts[phrase, default: 0]
+                if CountdownAudioRenderAttemptPolicy.shouldRetry(
+                    completedAttempts: completedAttempts,
+                    renderedBufferCount: buffers.count
+                ) {
+                    return true
+                }
+                guard !buffers.isEmpty else {
+                    logger.error(
+                        "Countdown PCM render failed phrase=\(phrase, privacy: .public) reason=empty-terminal-render attempts=\(completedAttempts, privacy: .public)"
+                    )
                     failedPhrases.insert(phrase)
-                    return
+                    return false
                 }
                 preparedBuffers[phrase] = buffers
+                return false
             }
+            if shouldRetry {
+                let nextAttempt = withStateLock { renderAttempts[phrase, default: 0] + 1 }
+                logger.notice(
+                    "Retrying empty countdown PCM render phrase=\(phrase, privacy: .public) attempt=\(nextAttempt, privacy: .public)"
+                )
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    self?.render(phrase)
+                }
+                return
+            }
+            preparePlaybackIfBuffersResolved()
             return
         }
 
         guard let retainedBuffer = retainedCopy(of: pcmBuffer) else {
+            logger.error(
+                "Countdown PCM render failed phrase=\(phrase, privacy: .public) reason=copy-failed frames=\(pcmBuffer.frameLength, privacy: .public) format=\(pcmBuffer.format.description, privacy: .public)"
+            )
             withStateLock {
                 failedPhrases.insert(phrase)
                 pendingBuffers.removeValue(forKey: phrase)
             }
+            preparePlaybackIfBuffersResolved()
             return
         }
 
         withStateLock {
-            guard failedPhrases.contains(phrase) == false else { return }
+            guard failedPhrases.contains(phrase) == false,
+                  preparedBuffers[phrase] == nil else { return }
             pendingBuffers[phrase, default: []].append(retainedBuffer)
+        }
+    }
+
+    private func preparePlaybackIfBuffersResolved() {
+        enum Resolution {
+            case wait
+            case fail([(Bool) -> Void])
+            case prepare
+        }
+
+        let resolution: Resolution = withStateLock {
+            guard case .idle = preparationState else { return .wait }
+            if !failedPhrases.isEmpty {
+                preparationState = .failed
+                let completions = prewarmCompletions
+                prewarmCompletions.removeAll()
+                return .fail(completions)
+            }
+            guard ["3", "2", "1"].allSatisfy({ preparedBuffers[$0]?.isEmpty == false }) else {
+                return .wait
+            }
+            preparationState = .preparingPlayback
+            return .prepare
+        }
+
+        switch resolution {
+        case .wait:
+            return
+        case .fail(let completions):
+            completions.forEach { $0(false) }
+        case .prepare:
+            if let buffers = preparedSnapshot(
+                for: CountdownAudioSchedule(remainingFrom: "3")
+            ) {
+                let diagnostics = ["3", "2", "1"].compactMap { phrase -> String? in
+                    guard let phraseBuffers = buffers[phrase] else { return nil }
+                    let duration = phraseBuffers.reduce(0.0) { total, buffer in
+                        guard buffer.format.sampleRate > 0 else { return total }
+                        return total + TimeInterval(buffer.frameLength) / buffer.format.sampleRate
+                    }
+                    let sampleRates = Set(phraseBuffers.map { Int($0.format.sampleRate) })
+                        .sorted()
+                        .map(String.init)
+                        .joined(separator: "/")
+                    return "\(phrase):\(String(format: "%.3f", duration))s@\(sampleRates)Hz"
+                }.joined(separator: ",")
+                logger.notice(
+                    "Prepared countdown PCM diagnostics \(diagnostics, privacy: .public)"
+                )
+            }
+            let succeeded = bufferSchedulingBackend.prewarm(
+                CountdownAudioSchedule(remainingFrom: "3")
+            )
+            let completions: [(Bool) -> Void] = withStateLock {
+                preparationState = succeeded ? .ready : .failed
+                let completions = prewarmCompletions
+                prewarmCompletions.removeAll()
+                return completions
+            }
+            completions.forEach { $0(succeeded) }
         }
     }
 

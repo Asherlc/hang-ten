@@ -664,6 +664,98 @@ final class WorkoutClockTests: XCTestCase {
 }
 
 final class CountdownAudioSchedulerTests: XCTestCase {
+    func testEmptyColdRenderRetriesBeforeCountdownArming() {
+        XCTAssertTrue(
+            CountdownAudioRenderAttemptPolicy.shouldRetry(
+                completedAttempts: 1,
+                renderedBufferCount: 0
+            )
+        )
+        XCTAssertFalse(
+            CountdownAudioRenderAttemptPolicy.shouldRetry(
+                completedAttempts: 2,
+                renderedBufferCount: 1
+            )
+        )
+        XCTAssertTrue(
+            CountdownAudioRenderAttemptPolicy.shouldIgnoreCallback(
+                phraseIsAlreadyPrepared: true
+            )
+        )
+    }
+
+    func testEmptyRenderRetryExhaustionFailsWithoutScheduling() {
+        XCTAssertFalse(
+            CountdownAudioRenderAttemptPolicy.shouldRetry(
+                completedAttempts: CountdownAudioRenderAttemptPolicy.maximumAttempts,
+                renderedBufferCount: 0
+            )
+        )
+
+        let backend = RecordingCountdownAudioSchedulingBackend(scheduleResult: false)
+        let lifecycleLogger = RecordingCountdownAudioLifecycleLogger()
+        let scheduler = CountdownAudioScheduler(
+            backend: backend,
+            lifecycleLogger: lifecycleLogger
+        )
+        scheduler.prewarm { _ in }
+
+        XCTAssertFalse(scheduler.schedule(remainingFrom: "3", startHostTime: 100))
+        XCTAssertFalse(lifecycleLogger.events.contains { event in
+            if case .scheduleAccepted = event { return true }
+            return false
+        })
+    }
+
+    func testLifecycleLoggerRecordsPrewarmAndAcceptedHostTimeOffsets() {
+        let backend = RecordingCountdownAudioSchedulingBackend()
+        let lifecycleLogger = RecordingCountdownAudioLifecycleLogger()
+        let scheduler = CountdownAudioScheduler(
+            backend: backend,
+            lifecycleLogger: lifecycleLogger
+        )
+
+        scheduler.prewarm { _ in }
+        XCTAssertTrue(scheduler.schedule(remainingFrom: "3", startHostTime: 100))
+
+        XCTAssertEqual(
+            lifecycleLogger.events,
+            [
+                .prewarmCompleted(succeeded: true),
+                .scheduleAccepted(phrases: ["3", "2", "1"], startHostTime: 100, offsets: [0, 1, 2])
+            ]
+        )
+    }
+
+    func testLifecycleLoggerRecordsRejectedScheduleWithoutFallback() {
+        let backend = RecordingCountdownAudioSchedulingBackend(scheduleResult: false)
+        let lifecycleLogger = RecordingCountdownAudioLifecycleLogger()
+        let scheduler = CountdownAudioScheduler(
+            backend: backend,
+            lifecycleLogger: lifecycleLogger
+        )
+
+        XCTAssertFalse(scheduler.schedule(remainingFrom: "3", startHostTime: 100))
+        XCTAssertEqual(
+            lifecycleLogger.events,
+            [.scheduleRejected(phrases: ["3", "2", "1"], startHostTime: 100)]
+        )
+    }
+
+    func testPrewarmCompletesOnlyAfterBackendPreparation() {
+        let backend = RecordingCountdownAudioSchedulingBackend(
+            automaticallyCompletesPrewarm: false
+        )
+        let scheduler = CountdownAudioScheduler(backend: backend)
+        var result: Bool?
+
+        scheduler.prewarm { result = $0 }
+
+        XCTAssertNil(result)
+        backend.completePrewarm(succeeded: true)
+        XCTAssertEqual(result, true)
+    }
+
     // Catches a regression that schedules only the currently displayed countdown number.
     func testThreeSchedulesEveryCountdownCueAtOneSecondOffsets() {
         let backend = RecordingCountdownAudioSchedulingBackend()
@@ -699,6 +791,34 @@ final class CountdownAudioSchedulerTests: XCTestCase {
 }
 
 final class CountdownAudioBufferSchedulingBackendTests: XCTestCase {
+    func testPrewarmPreparesEngineBeforeAnyBufferIsScheduled() {
+        let playback = RecordingCountdownAudioBufferPlayback()
+        let backend = CountdownAudioBufferSchedulingBackend(
+            buffersForSchedule: { _ in
+                [
+                    "3": [makeCountdownPCMBuffer(duration: 0.5)],
+                    "2": [makeCountdownPCMBuffer(duration: 0.5)],
+                    "1": [makeCountdownPCMBuffer(duration: 0.5)]
+                ]
+            },
+            playback: playback,
+            currentHostTime: { 0 }
+        )
+
+        XCTAssertTrue(backend.prewarm(CountdownAudioSchedule(remainingFrom: "3")))
+        XCTAssertEqual(playback.events, [.prepare])
+
+        XCTAssertTrue(
+            backend.schedule(
+                CountdownAudioSchedule(remainingFrom: "3"),
+                startHostTime: AVAudioTime.hostTime(forSeconds: 100)
+            )
+        )
+        XCTAssertEqual(playback.prepareCallCount, 1)
+        XCTAssertEqual(playback.events.first, .prepare)
+        XCTAssertEqual(playback.events.filter { $0 == .start }.count, 1)
+    }
+
     // Catches cue offsets being converted from seconds with the wrong host-time scale.
     func testCueOffsetsConvertToExactHostTimesAndAllScheduleBeforePlay() {
         let playback = RecordingCountdownAudioBufferPlayback()
@@ -904,13 +1024,72 @@ private final class RecordingCountdownAudioSchedulingBackend: CountdownAudioSche
     }
 
     private(set) var schedules: [ScheduledSequence] = []
+    private let automaticallyCompletesPrewarm: Bool
+    private let scheduleResult: Bool
+    private var prewarmCompletion: ((Bool) -> Void)?
+
+    init(
+        automaticallyCompletesPrewarm: Bool = true,
+        scheduleResult: Bool = true
+    ) {
+        self.automaticallyCompletesPrewarm = automaticallyCompletesPrewarm
+        self.scheduleResult = scheduleResult
+    }
+
+    func prewarm(completion: @escaping (Bool) -> Void) {
+        if automaticallyCompletesPrewarm {
+            completion(true)
+        } else {
+            prewarmCompletion = completion
+        }
+    }
+
+    func completePrewarm(succeeded: Bool) {
+        let completion = prewarmCompletion
+        prewarmCompletion = nil
+        completion?(succeeded)
+    }
 
     func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
+        guard scheduleResult else { return false }
         schedules.append(ScheduledSequence(schedule: schedule, startHostTime: startHostTime))
         return true
     }
 
     func stop() {}
+}
+
+private final class RecordingCountdownAudioLifecycleLogger: CountdownAudioLifecycleLogging {
+    enum Event: Equatable {
+        case prewarmCompleted(succeeded: Bool)
+        case scheduleAccepted(phrases: [String], startHostTime: UInt64, offsets: [TimeInterval])
+        case scheduleRejected(phrases: [String], startHostTime: UInt64)
+    }
+
+    private(set) var events: [Event] = []
+
+    func prewarmCompleted(succeeded: Bool) {
+        events.append(.prewarmCompleted(succeeded: succeeded))
+    }
+
+    func scheduleAccepted(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) {
+        events.append(
+            .scheduleAccepted(
+                phrases: schedule.cues.map(\.phrase),
+                startHostTime: startHostTime,
+                offsets: schedule.cues.map(\.offset)
+            )
+        )
+    }
+
+    func scheduleRejected(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) {
+        events.append(
+            .scheduleRejected(
+                phrases: schedule.cues.map(\.phrase),
+                startHostTime: startHostTime
+            )
+        )
+    }
 }
 
 @MainActor
@@ -955,6 +1134,21 @@ final class WorkoutSpeechOwnershipTests: XCTestCase {
 
 @MainActor
 final class WorkoutAudioCoachTests: XCTestCase {
+    // Catches a workout arming before numeric PCM and the audio engine are ready.
+    func testCoachPublishesCountdownReadinessOnlyAfterPrewarmCompletes() async {
+        let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: RecordingWorkoutAudioSession(),
+            countdownScheduler: scheduler
+        )
+
+        XCTAssertEqual(coach.countdownPreparationState, .preparing)
+        scheduler.completePrewarm(succeeded: true)
+        await Task.yield()
+        XCTAssertEqual(coach.countdownPreparationState, .ready)
+    }
+
     // Catches a regression that lets later SwiftUI countdown ticks enqueue another sequence.
     func testCountdownStartsOnePreScheduledSequenceAndIgnoresLaterTicks() {
         let audioSession = RecordingWorkoutAudioSession()
@@ -1014,66 +1208,50 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertEqual(events, ["countdown.stop", "session.deactivate"])
     }
 
-    func testCompletedCountdownCueKeepsAudioSessionActiveForNextCueWithinGraceInterval() async {
+    // Catches countdown ownership surviving after its final one-second slot.
+    func testScheduledCountdownCompletionStopsPlaybackBeforeDeactivatingAudioSession() {
+        var events: [String] = []
         let audioSession = RecordingWorkoutAudioSession()
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            events.append("session.deactivate")
+        }
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let scheduler = RecordingCountdownAudioScheduler(onStop: {
+            events.append("countdown.stop")
+        })
+        let completionScheduler = RecordingWorkoutCountdownCompletionScheduler()
         let coach = WorkoutAudioCoach(
             synthesizer: synthesizer,
-            audioSession: audioSession
+            audioSession: audioSession,
+            countdownScheduler: scheduler,
+            countdownCompletionScheduler: completionScheduler
         )
-        let deactivation = expectation(description: "deactivates after the second cue grace interval")
-        audioSession.onSuccessfulNotificationAwareDeactivation = {
-            deactivation.fulfill()
-        }
 
-        coach.speak("3")
-        let firstUtterance = synthesizer.utterances[0]
-        synthesizer.isSpeaking = false
-        synthesizer.sendFinish(of: firstUtterance)
-        await Task.yield()
+        XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
+        XCTAssertEqual(completionScheduler.scheduledUptime, 103)
 
-        XCTAssertEqual(audioSession.deactivationCount, 0)
+        completionScheduler.complete()
 
-        try? await Task.sleep(for: .milliseconds(700))
-        coach.speak("2")
+        XCTAssertEqual(events, ["countdown.stop", "session.deactivate"])
 
-        XCTAssertEqual(audioSession.activationCount, 1)
-        XCTAssertEqual(audioSession.deactivationCount, 0)
-
-        try? await Task.sleep(for: .milliseconds(700))
-        XCTAssertEqual(audioSession.deactivationCount, 0)
-
-        synthesizer.isSpeaking = false
-        synthesizer.sendFinish(of: synthesizer.utterances[1])
-        await Task.yield()
-        XCTAssertEqual(audioSession.deactivationCount, 0)
-
-        await fulfillment(of: [deactivation], timeout: 2)
-        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 200))
+        XCTAssertEqual(scheduler.startedSequences, [["3", "2", "1"], ["3", "2", "1"]])
     }
 
-    func testStopDuringCountdownGraceDeactivatesAudioSessionImmediately() async {
+    // Catches a rejected late schedule falling back to queued live speech.
+    func testRejectedCountdownScheduleStaysSilentAndReleasesAudioSession() {
         let audioSession = RecordingWorkoutAudioSession()
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
+        let scheduler = RecordingCountdownAudioScheduler(scheduleResult: false)
         let coach = WorkoutAudioCoach(
             synthesizer: synthesizer,
-            audioSession: audioSession
+            audioSession: audioSession,
+            countdownScheduler: scheduler
         )
 
-        coach.speak("3")
-        synthesizer.isSpeaking = false
-        synthesizer.sendFinish(of: synthesizer.utterances[0])
-        for _ in 0..<20 where coach.isSpeaking {
-            await Task.yield()
-        }
-
-        XCTAssertFalse(coach.isSpeaking)
-        XCTAssertEqual(audioSession.deactivationCount, 0)
-
-        coach.stop()
-
+        XCTAssertFalse(coach.startCountdown(remainingFrom: "3", startUptime: 100))
+        XCTAssertTrue(synthesizer.utterances.isEmpty)
         XCTAssertEqual(audioSession.deactivationCount, 1)
-        XCTAssertTrue(audioSession.didDeactivateWithNotification)
     }
 
     func testSpeakDoesNotCallStopBeforeEachCue() {
@@ -1142,11 +1320,6 @@ final class WorkoutAudioCoachTests: XCTestCase {
             synthesizer: synthesizer,
             audioSession: audioSession
         )
-        let deactivation = expectation(description: "deactivates after the final cue grace interval")
-        audioSession.onSuccessfulNotificationAwareDeactivation = {
-            deactivation.fulfill()
-        }
-
         coach.speak("3")
         coach.speak("2")
 
@@ -1158,7 +1331,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
 
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[1])
-        await fulfillment(of: [deactivation], timeout: 2)
+        await Task.yield()
 
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
@@ -1189,29 +1362,25 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertTrue(coach.isSpeaking)
         XCTAssertEqual(audioSession.deactivationCount, 0)
 
+        synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: replacementUtterance)
         await Task.yield()
 
         XCTAssertFalse(coach.isSpeaking)
-        XCTAssertEqual(audioSession.deactivationCount, 0)
+        XCTAssertEqual(audioSession.deactivationCount, 1)
     }
 
-    func testCueCompletionDeactivatesAudioSessionAfterGraceAndNotifiesOtherApps() async {
+    func testCueCompletionImmediatelyDeactivatesAudioSessionAndNotifiesOtherApps() async {
         let audioSession = RecordingWorkoutAudioSession()
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
         let coach = WorkoutAudioCoach(
             synthesizer: synthesizer,
             audioSession: audioSession
         )
-        let deactivation = expectation(description: "deactivates after the cue grace interval")
-        audioSession.onSuccessfulNotificationAwareDeactivation = {
-            deactivation.fulfill()
-        }
-
         coach.speak("3")
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[0])
-        await fulfillment(of: [deactivation], timeout: 2)
+        await Task.yield()
 
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
@@ -1304,6 +1473,9 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
     private lazy var scheduler = CountdownAudioScheduler(backend: backend)
     private(set) var stopCallCount = 0
     private let onStop: () -> Void
+    private let scheduleResult: Bool
+    private let automaticallyCompletesPrewarm: Bool
+    private var prewarmCompletion: ((Bool) -> Void)?
 
     var startedSequences: [[String]] {
         backend.schedules.map { sequence in
@@ -1311,18 +1483,63 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
         }
     }
 
-    init(onStop: @escaping () -> Void = {}) {
+    init(
+        onStop: @escaping () -> Void = {},
+        scheduleResult: Bool = true,
+        automaticallyCompletesPrewarm: Bool = true
+    ) {
         self.onStop = onStop
+        self.scheduleResult = scheduleResult
+        self.automaticallyCompletesPrewarm = automaticallyCompletesPrewarm
+    }
+
+    func prewarm(completion: @escaping (Bool) -> Void) {
+        if automaticallyCompletesPrewarm {
+            completion(true)
+        } else {
+            prewarmCompletion = completion
+        }
+    }
+
+    func completePrewarm(succeeded: Bool) {
+        let completion = prewarmCompletion
+        prewarmCompletion = nil
+        completion?(succeeded)
     }
 
     func schedule(remainingFrom: String, startHostTime: UInt64) -> Bool {
-        scheduler.schedule(remainingFrom: remainingFrom, startHostTime: startHostTime)
+        guard scheduleResult else { return false }
+        return scheduler.schedule(remainingFrom: remainingFrom, startHostTime: startHostTime)
     }
 
     func stop() {
         stopCallCount += 1
         scheduler.stop()
         onStop()
+    }
+}
+
+@MainActor
+private final class RecordingWorkoutCountdownCompletionScheduler:
+    WorkoutCountdownCompletionScheduling
+{
+    private(set) var scheduledUptime: TimeInterval?
+    private var completion: (() -> Void)?
+
+    func schedule(atUptime uptime: TimeInterval, completion: @escaping () -> Void) {
+        scheduledUptime = uptime
+        self.completion = completion
+    }
+
+    func cancel() {
+        scheduledUptime = nil
+        completion = nil
+    }
+
+    func complete() {
+        let completion = completion
+        cancel()
+        completion?()
     }
 }
 
@@ -1403,6 +1620,45 @@ private enum RecordingWorkoutAudioSessionError: Error {
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
+    func testDebugCountdownCaptureLeadDoesNotChangeVisibleCountdownDuration() {
+        XCTAssertEqual(
+            WorkoutSessionPolicy.countdownAudioArmLead(
+                environment: ["HANGTEN_REVIEW_COUNTDOWN_CAPTURE": "1"]
+            ),
+            5
+        )
+        XCTAssertEqual(WorkoutSessionPolicy.countdownDuration(for: .initial), 3)
+        XCTAssertEqual(WorkoutSessionPolicy.countdownDuration(for: .skip), 3)
+    }
+
+    // Catches a first start crossing its exact boundary before prewarm resolves.
+    func testFirstCountdownWaitsForPrewarmButFailurePreservesVisualCountdown() {
+        XCTAssertTrue(
+            WorkoutSessionPolicy.shouldDeferCountdownStart(
+                isFirstStart: true,
+                preparationState: .preparing
+            )
+        )
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldDeferCountdownStart(
+                isFirstStart: true,
+                preparationState: .ready
+            )
+        )
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldDeferCountdownStart(
+                isFirstStart: true,
+                preparationState: .failed
+            )
+        )
+        XCTAssertTrue(
+            WorkoutSessionPolicy.shouldDeferCountdownStart(
+                isFirstStart: false,
+                preparationState: .preparing
+            )
+        )
+    }
+
     func testCountdownDurationsKeepInitialAndSkipStartAtThree() {
         let now = Date(timeIntervalSinceReferenceDate: 2_000)
 
@@ -1815,17 +2071,96 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
     private let stepID = "f80-set-2-rep-3"
 
     func testMissingAudioMomentLeavesInFlightCueUntouched() {
-        XCTAssertEqual(WorkoutAudioCuePolicy.action(for: nil), .none)
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: nil,
+                countdownStartUptime: nil
+            ),
+            .none
+        )
     }
 
-    func testNumericAudioMomentRequestsSpeechWithoutAStageLabel() {
-        let moment = WorkoutAudioMoment(key: "skip-3", phrase: "3")
+    func testNonnumericAudioMomentKeepsLiveSpeechRouting() {
+        let moment = WorkoutAudioMoment(key: "step-start", phrase: "Begin minute one")
 
         XCTAssertEqual(
-            WorkoutAudioCuePolicy.action(for: moment),
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: moment,
+                countdownStartUptime: nil
+            ),
             .speak(moment)
         )
-        XCTAssertTrue(moment.phrase.allSatisfy { $0.isNumber })
+    }
+
+    // Catches an initial countdown being routed as three independent live-speech calls.
+    func testInitialThreeStartsOneSchedulerOwnedSequence() {
+        let three = WorkoutAudioMoment(key: "initial-3", phrase: "3")
+
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: three,
+                countdownStartUptime: 100
+            ),
+            .startCountdown(remainingFrom: "3", startUptime: 100)
+        )
+        assertLaterCountdownTicksHaveNoIndependentAction(
+            three: three,
+            two: WorkoutAudioMoment(key: "initial-2", phrase: "2"),
+            one: WorkoutAudioMoment(key: "initial-1", phrase: "1")
+        )
+    }
+
+    // Catches a skip countdown bypassing the scheduler-owned sequence route.
+    func testSkipThreeStartsOneSchedulerOwnedSequence() {
+        let three = WorkoutAudioMoment(key: "skip-3", phrase: "3")
+
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: three,
+                countdownStartUptime: 200
+            ),
+            .startCountdown(remainingFrom: "3", startUptime: 200)
+        )
+        assertLaterCountdownTicksHaveNoIndependentAction(
+            three: three,
+            two: WorkoutAudioMoment(key: "skip-2", phrase: "2"),
+            one: WorkoutAudioMoment(key: "skip-1", phrase: "1")
+        )
+    }
+
+    // Catches a fixed segment's final three seconds being sent to live speech.
+    func testFinalSegmentThreeStartsOneSchedulerOwnedSequence() {
+        let three = WorkoutAudioMoment(key: "\(stepID)-active-3", phrase: "3")
+
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: three,
+                countdownStartUptime: 300
+            ),
+            .startCountdown(remainingFrom: "3", startUptime: 300)
+        )
+        assertLaterCountdownTicksHaveNoIndependentAction(
+            three: three,
+            two: WorkoutAudioMoment(key: "\(stepID)-active-2", phrase: "2"),
+            one: WorkoutAudioMoment(key: "\(stepID)-active-1", phrase: "1")
+        )
+    }
+
+    // Catches delayed first delivery dropping the complete remaining numeric sequence.
+    func testLaterNumberStartsRemainingSequenceWhenNoEarlierMomentWasDelivered() {
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: WorkoutAudioMoment(key: "initial-2", phrase: "2"),
+                countdownStartUptime: 101
+            ),
+            .startCountdown(remainingFrom: "2", startUptime: 101)
+        )
     }
 
     func testSkipCountdownCueUsesOnlyTheCountdownNumber() {
@@ -1882,6 +2217,19 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
         }
     }
 
+    func testFixedSegmentArmsThreeAtThePrecedingFourSecondTick() {
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.scheduledMoment(
+                stepID: stepID,
+                segmentName: "active",
+                initialCountdown: 0,
+                intervalSecondsRemaining: 4,
+                isComplete: false
+            ),
+            WorkoutAudioMoment(key: "\(stepID)-active-3", phrase: "3")
+        )
+    }
+
     func testSegmentStartAndNormalIntervalReturnNoCue() {
         XCTAssertNil(
             WorkoutAudioCuePolicy.moment(
@@ -1908,27 +2256,35 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
 
     func testCompletionDuringInitialCountdownLeavesInFlightCueUntouched() {
         XCTAssertEqual(
-            WorkoutAudioCuePolicy.action(for: WorkoutAudioCuePolicy.moment(
-                stepID: stepID,
-                segmentName: "active",
-                initialCountdown: 3,
-                intervalSecondsRemaining: 60,
-                isComplete: true
-            )),
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: WorkoutAudioCuePolicy.moment(
+                    stepID: stepID,
+                    segmentName: "active",
+                    initialCountdown: 3,
+                    intervalSecondsRemaining: 60,
+                    isComplete: true
+                ),
+                countdownStartUptime: 100
+            ),
             .none
         )
     }
 
     func testCompletionDuringSkipCountdownLeavesInFlightCueUntouched() {
         XCTAssertEqual(
-            WorkoutAudioCuePolicy.action(for: WorkoutAudioCuePolicy.moment(
-                stepID: stepID,
-                segmentName: "active",
-                initialCountdown: 2,
-                intervalSecondsRemaining: 60,
-                isComplete: true,
-                countdownKind: .skip
-            )),
+            WorkoutAudioCuePolicy.action(
+                previous: nil,
+                current: WorkoutAudioCuePolicy.moment(
+                    stepID: stepID,
+                    segmentName: "active",
+                    initialCountdown: 2,
+                    intervalSecondsRemaining: 60,
+                    isComplete: true,
+                    countdownKind: .skip
+                ),
+                countdownStartUptime: 100
+            ),
             .none
         )
     }
@@ -1948,6 +2304,35 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 key: "\(stepID)-rest-2",
                 phrase: "2"
             )
+        )
+    }
+
+    private func assertLaterCountdownTicksHaveNoIndependentAction(
+        three: WorkoutAudioMoment,
+        two: WorkoutAudioMoment,
+        one: WorkoutAudioMoment,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(
+                previous: three,
+                current: two,
+                countdownStartUptime: 101
+            ),
+            .none,
+            file: file,
+            line: line
+        )
+        XCTAssertEqual(
+            WorkoutAudioCuePolicy.action(
+                previous: two,
+                current: one,
+                countdownStartUptime: 102
+            ),
+            .none,
+            file: file,
+            line: line
         )
     }
 }
@@ -2007,6 +2392,35 @@ final class WorkoutSessionStateTests: XCTestCase {
         state.transitionExpiredCountdown(at: uptime + 3)
 
         XCTAssertEqual(state.currentElapsed(planDuration: 90, at: uptime + 4.25), 1.25, accuracy: 0.000_1)
+    }
+
+    func testPreparedInitialCountdownBeginsAtArmBoundaryAndRemainsExactlyThreeSeconds() {
+        let armedAt: TimeInterval = 100.1
+        let wallClockArm = Date(timeIntervalSinceReferenceDate: 3_000.1)
+        var state = WorkoutSessionState()
+
+        XCTAssertNil(state.activeStartUptime)
+        state.toggleRunning(uptime: armedAt, now: wallClockArm)
+
+        XCTAssertEqual(state.countdownRemaining(at: armedAt), 3)
+        XCTAssertEqual(state.countdownRemaining(at: armedAt + 2.999), 1)
+        XCTAssertEqual(state.countdownRemaining(at: armedAt + 3), 0)
+        XCTAssertEqual(state.activeStartUptime, armedAt + 3)
+    }
+
+    func testPreparedSkipCountdownBeginsAtArmBoundaryAndRemainsExactlyThreeSeconds() {
+        let armedAt: TimeInterval = 200.1
+        var state = WorkoutSessionState(
+            activeStartUptime: 190,
+            pausedElapsed: 0,
+            routineStartedAt: Date(timeIntervalSinceReferenceDate: 2_900)
+        )
+
+        state.startSkipCountdown(to: 60, at: armedAt)
+
+        XCTAssertEqual(state.countdownRemaining(at: armedAt), 3)
+        XCTAssertEqual(state.countdownRemaining(at: armedAt + 3), 0)
+        XCTAssertEqual(state.activeStartUptime, armedAt + 3)
     }
 
     func testRunningSkipIntoRestTransitionsImmediatelyAndKeepsRunning() {
