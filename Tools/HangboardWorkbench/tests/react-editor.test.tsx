@@ -1341,7 +1341,7 @@ test("primitive selection saves an exact zero-degree constraint and Custom remov
   }, dependenciesFixture(board, { client }));
 });
 
-test("invalid and busy outline actions preserve pointer-down geometry and dirty state", async () => {
+test("invalid outline actions preserve geometry while save-in-progress edits remain unsaved", async () => {
   const board = constrainedBoardFixture();
   let resolveSave: ((board: Board) => void) | undefined;
   const client: WorkbenchClient = {
@@ -1353,17 +1353,19 @@ test("invalid and busy outline actions preserve pointer-down geometry and dirty 
     await app.click('[data-hold-key="a-piece-0"]');
     const originalPath = paths(app)[0];
     await app.click("#save-button");
-    assert.equal(app.disabled("#outline-shape-select"), true);
-    assert.equal(app.disabled("#hold-type-select"), true);
-    assert.equal(app.disabled("#rotate-cw-button"), true);
-    assert.equal(app.disabled("#delete-hold-button"), true);
+    assert.equal(app.disabled("#outline-shape-select"), false);
+    assert.equal(app.disabled("#hold-type-select"), false);
+    assert.equal(app.disabled("#rotate-cw-button"), false);
+    assert.equal(app.disabled("#delete-hold-button"), false);
     await app.change("#outline-shape-select", "oval");
     await app.pointer('.path-editor-resize-handle[data-handle="e"]', "pointerdown", { pointerId: 19, clientX: 50, clientY: 20 });
     await app.pointer("#editor-svg", "pointermove", { pointerId: 19, clientX: 60, clientY: 20 });
-    assert.equal(paths(app)[0], originalPath);
-    assert.equal(app.capturedPointerId("#editor-svg"), null);
+    assert.notEqual(paths(app)[0], originalPath);
+    assert.equal(app.capturedPointerId("#editor-svg"), 19);
     assert.equal(app.text("#save-state"), "Working…");
     await app.flush(() => { resolveSave?.(board); });
+    assert.notEqual(paths(app)[0], originalPath);
+    assert.equal(app.text("#save-state"), "Unsaved changes");
   }, dependenciesFixture(board, { client }));
 
   await withEditor(async (app) => {

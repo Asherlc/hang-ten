@@ -558,6 +558,42 @@ test("an old delayed save cannot overwrite a newer document identity", async () 
   });
 });
 
+test("hold editing remains available during a save and survives its stale response", async () => {
+  const image = imageFixture();
+  const save = deferred<Board>();
+  const savedDocuments: EditorDocument[] = [];
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      saveBoard(boardId, document) {
+        savedDocuments.push(document);
+        return save.promise;
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+    await app.change("#hold-type-select", "sloper");
+
+    await app.click("#save-button");
+
+    assert.equal(savedDocuments.length, 1);
+    assert.equal(savedDocuments[0]?.regions[0]?.type, "sloper");
+    assert.equal(app.disabled("#save-button"), true);
+    assert.equal(app.disabled("#board-list button"), true);
+    assert.equal(app.disabled("#hold-type-select"), false);
+    assert.equal(app.disabled("#add-hold-button"), false);
+
+    await app.change("#hold-type-select", "pinch");
+    await app.flush(() => save.resolve(boardFixture("board-a", savedDocuments[0]!)));
+
+    assert.equal(app.documentValue("#hold-type-select"), "pinch");
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+  });
+});
+
 test("a successful save always reports Board saved after committing the saved document", async () => {
   const image = imageFixture();
   let saves = 0;
