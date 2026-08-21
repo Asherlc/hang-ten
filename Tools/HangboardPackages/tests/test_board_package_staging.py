@@ -11,7 +11,9 @@ import pytest
 from conftest import (
     ALTERNATE_PRIMARY_PNG_BYTES,
     PRIMARY_PNG_BYTES,
+    SECONDARY_PNG_BYTES,
     write_board_package,
+    write_multi_presentation_board_package,
     write_primary_only_draft,
 )
 
@@ -111,6 +113,29 @@ def test_repeated_staging_refreshes_nested_package_bytes(
     module.stage_board_packages(repository_root, destination)
 
     assert staged_primary.read_bytes() == ALTERNATE_PRIMARY_PNG_BYTES
+
+
+def test_staging_copies_the_exact_schema_v2_declared_asset_set(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_staging_module()
+    repository_root = tmp_path / "repository"
+    hangboards = repository_root / "Hangboards"
+    package_source = REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
+    package_destination = (
+        repository_root / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
+    )
+    shutil.copytree(package_source, package_destination)
+    package = write_multi_presentation_board_package(hangboards / "dual-model")
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+
+    module.stage_board_packages(repository_root, destination)
+
+    staged_assets = destination / package.name / "assets"
+    assert {path.name for path in staged_assets.iterdir()} == {"primary.png", "back.png"}
+    assert (staged_assets / "primary.png").read_bytes() == PRIMARY_PNG_BYTES
+    assert (staged_assets / "back.png").read_bytes() == SECONDARY_PNG_BYTES
 
 
 def test_staging_fails_closed_for_a_malformed_completed_package(

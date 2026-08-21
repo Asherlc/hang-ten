@@ -148,6 +148,28 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
     assert not (HANGBOARDS_ROOT / "catalog.json").exists()
 
 
+def test_approved_packages_declare_their_complete_presentation_asset_set() -> None:
+    inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
+
+    for package in inventory.packages:
+        document = json.loads((package.root / "board.json").read_text(encoding="utf-8"))
+        actual_assets = {
+            path.relative_to(package.root).as_posix()
+            for path in (package.root / "assets").rglob("*")
+            if path.is_file()
+        }
+        if document["schemaVersion"] == 1:
+            assert document.get("presentation") == {"assetPath": "assets/primary.png"}
+            assert actual_assets == {"assets/primary.png"}
+        elif document["schemaVersion"] == 2:
+            assert "presentation" not in document
+            assert actual_assets == {
+                presentation["assetPath"] for presentation in document["presentations"]
+            }
+        else:  # The loader is responsible for rejecting unsupported schemas.
+            raise AssertionError(f"unexpected schemaVersion: {document['schemaVersion']}")
+
+
 def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -> None:
     relative_paths = {
         path.relative_to(COMPACT_ROOT).as_posix()

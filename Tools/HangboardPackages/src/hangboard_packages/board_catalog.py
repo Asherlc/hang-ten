@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import importlib.util
 import json
 import math
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import struct
 from types import MappingProxyType
@@ -33,7 +33,6 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _PACKAGE_ENTRIES = frozenset({"board.json", "assets"})
-_ASSET_ENTRIES = frozenset({"primary.png"})
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
 _GRIP_TYPES = frozenset(
     {
@@ -134,6 +133,27 @@ def _positive_integer(value: Any, source: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
         raise ValueError(f"{source} must be a positive integer")
     return value
+
+
+def _boolean(value: Any, source: str) -> bool:
+    if not isinstance(value, bool):
+        raise ValueError(f"{source} must be a boolean")
+    return value
+
+
+def _asset_path(value: Any, source: str) -> str:
+    asset_path = _string(value, source)
+    path = PurePosixPath(asset_path)
+    if (
+        path.is_absolute()
+        or path.parts[:1] != ("assets",)
+        or len(path.parts) < 2
+        or any(part in {".", ".."} for part in path.parts)
+        or path.as_posix() != asset_path
+        or path.suffix != ".png"
+    ):
+        raise ValueError(f"{source} must name a PNG beneath assets/")
+    return asset_path
 
 
 def _load_json(path: Path, label: str) -> Mapping[str, Any]:
@@ -316,6 +336,25 @@ class BoardGeometryPiece:
 
 
 @dataclass(frozen=True)
+class BoardPresentation:
+    id: str
+    name: str
+    asset_path: str
+    is_default: bool
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "BoardPresentation":
+        payload = _mapping(value, source)
+        _closed(payload, {"id", "name", "assetPath", "default"}, source)
+        return cls(
+            _identifier(payload["id"], f"{source}.id"),
+            _string(payload["name"], f"{source}.name"),
+            _asset_path(payload["assetPath"], f"{source}.assetPath"),
+            _boolean(payload["default"], f"{source}.default"),
+        )
+
+
+@dataclass(frozen=True)
 class BoardHold:
     id: str
     name: str
@@ -326,6 +365,7 @@ class BoardHold:
     grip_type: str | None
     finger_capacity: int | None
     features: tuple[str, ...] | None
+    presentation_id: str
 
     @property
     def frame(self) -> NormalizedFrame:
@@ -341,7 +381,7 @@ class BoardDocument:
     id: str
     facts: Mapping[str, Any]
     holds: tuple[BoardHold, ...]
-    presentation_asset_path: str | None
+    presentations: tuple[BoardPresentation, ...]
 
     @property
     def manufacturer(self) -> str:
@@ -350,6 +390,15 @@ class BoardDocument:
     @property
     def name(self) -> str:
         return self.facts["name"]
+
+    @property
+    def presentation_asset_path(self) -> str:
+        """Return the default surface's asset path for legacy consumers."""
+        return next(
+            presentation.asset_path
+            for presentation in self.presentations
+            if presentation.is_default
+        )
 
 
 @dataclass(frozen=True)
@@ -373,7 +422,13 @@ def _load_geometry(value: Any, source: str) -> tuple[BoardGeometryPiece, ...]:
     )
 
 
-def _load_hold(value: Any, source: str) -> BoardHold:
+def _load_hold(
+    value: Any,
+    source: str,
+    *,
+    presentation_id: str,
+    requires_presentation_id: bool,
+) -> BoardHold:
     payload = _mapping(value, source)
     _closed(
         payload,
@@ -385,7 +440,8 @@ def _load_hold(value: Any, source: str) -> BoardHold:
             "gripType",
             "fingerCapacity",
             "features",
-        },
+        }
+        | ({"presentationID"} if requires_presentation_id else set()),
     )
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
@@ -433,7 +489,22 @@ def _load_hold(value: Any, source: str) -> BoardHold:
         grip_type,
         finger_capacity,
         features,
+        presentation_id,
     )
+
+
+def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"{source} must be a non-empty array")
+    presentations = tuple(
+        BoardPresentation.from_json(item, f"{source}[{index}]")
+        for index, item in enumerate(value)
+    )
+    if len({presentation.id for presentation in presentations}) != len(presentations):
+        raise ValueError("duplicate presentation id")
+    if sum(presentation.is_default for presentation in presentations) != 1:
+        raise ValueError("board.json.presentations must have exactly one default presentation")
+    return presentations
 
 
 def _load_board(value: Mapping[str, Any]) -> BoardDocument:
@@ -448,42 +519,69 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "aspectRatio",
         "holds",
     }
-    _closed(value, required, "board.json", optional={"presentation"})
-    if isinstance(value["schemaVersion"], bool) or value["schemaVersion"] != 1:
-        raise ValueError("board.json.schemaVersion must be 1")
+    schema_version = value["schemaVersion"]
+    if isinstance(schema_version, bool) or schema_version not in {1, 2}:
+        raise ValueError("board.json.schemaVersion must be 1 or 2")
+    if schema_version == 1:
+        _closed(value, required, "board.json", optional={"presentation"})
+        presentation_asset_path = "assets/primary.png"
+        if "presentation" in value:
+            presentation = _mapping(value["presentation"], "board.json.presentation")
+            _closed(presentation, {"assetPath"}, "board.json.presentation")
+            presentation_asset_path = _string(
+                presentation["assetPath"], "board.json.presentation.assetPath"
+            )
+            if presentation_asset_path != "assets/primary.png":
+                raise ValueError(
+                    "board.json.presentation.assetPath must be assets/primary.png"
+                )
+        presentations = (
+            BoardPresentation("primary", "Primary", presentation_asset_path, True),
+        )
+    else:
+        _closed(value, required | {"presentations"}, "board.json")
+        presentations = _load_presentations(value["presentations"], "board.json.presentations")
     facts: dict[str, Any] = {}
     for key in ("manufacturer", "name", "subtitle", "productURL", "dimensions"):
         facts[key] = _string(value[key], f"board.json.{key}")
     facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")
-    presentation_asset_path = None
-    if "presentation" in value:
-        presentation = _mapping(value["presentation"], "board.json.presentation")
-        _closed(presentation, {"assetPath"}, "board.json.presentation")
-        presentation_asset_path = _string(
-            presentation["assetPath"], "board.json.presentation.assetPath"
-        )
-        if presentation_asset_path != "assets/primary.png":
-            raise ValueError("board.json.presentation.assetPath must be assets/primary.png")
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
         raise ValueError("board.json.holds must be a non-empty array")
-    holds = tuple(
-        _load_hold(item, f"board.json.holds[{index}]")
-        for index, item in enumerate(raw_holds)
-    )
-    if len({hold.id for hold in holds}) != len(holds):
+    presentation_ids = {presentation.id for presentation in presentations}
+    holds: list[BoardHold] = []
+    for index, item in enumerate(raw_holds):
+        source = f"board.json.holds[{index}]"
+        payload = _mapping(item, source)
+        presentation_id = "primary"
+        if schema_version == 2:
+            presentation_id = _identifier(
+                payload.get("presentationID"), f"{source}.presentationID"
+            )
+            if presentation_id not in presentation_ids:
+                raise ValueError(f"{source}.presentationID is an unknown presentationID")
+        holds.append(
+            _load_hold(
+                payload,
+                source,
+                presentation_id=presentation_id,
+                requires_presentation_id=schema_version == 2,
+            )
+        )
+    holds_tuple = tuple(holds)
+    if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),
-        holds,
-        presentation_asset_path,
+        holds_tuple,
+        presentations,
     )
 
 
-def _validate_finished_shape(root: Path) -> None:
+def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
     _require_no_symlinks(root)
     entries = {item.name for item in root.iterdir()}
     unknown = entries - _PACKAGE_ENTRIES
@@ -498,23 +596,29 @@ def _validate_finished_shape(root: Path) -> None:
         raise ValueError("board.json must be a regular non-symlink file")
     if assets.is_symlink() or not assets.is_dir():
         raise ValueError("assets must be a regular non-symlink directory")
-    asset_entries = {item.name for item in assets.iterdir()}
-    unknown_assets = asset_entries - _ASSET_ENTRIES
-    missing_assets = _ASSET_ENTRIES - asset_entries
+    expected_assets = {presentation.asset_path for presentation in board.presentations}
+    actual_assets = {
+        item.relative_to(root).as_posix() for item in assets.rglob("*") if item.is_file()
+    }
+    unknown_assets = actual_assets - expected_assets
+    missing_assets = expected_assets - actual_assets
     if unknown_assets:
-        raise ValueError(f"unknown asset: {sorted(unknown_assets)[0]}")
+        raise ValueError(f"undeclared presentation asset: {sorted(unknown_assets)[0]}")
     if missing_assets:
-        raise ValueError("board package is missing assets/primary.png")
-    primary = assets / "primary.png"
-    if primary.is_symlink() or not primary.is_file():
-        raise ValueError("assets/primary.png must be a regular non-symlink file")
-    _validate_png_structure(primary)
+        raise ValueError(
+            f"missing declared presentation asset: {sorted(missing_assets)[0]}"
+        )
+    for asset_path in sorted(expected_assets):
+        asset = root / asset_path
+        if asset.is_symlink() or not asset.is_file():
+            raise ValueError(f"{asset_path} must be a regular non-symlink file")
+        _validate_png_structure(asset, asset_path)
 
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
-def _validate_png_structure(path: Path) -> None:
+def _validate_png_structure(path: Path, asset_path: str) -> None:
     """Validate PNG framing without depending on a third-party image library.
 
     This module is loaded by a bare system interpreter during Xcode's board
@@ -524,10 +628,10 @@ def _validate_png_structure(path: Path) -> None:
     try:
         data = path.read_bytes()
     except OSError as error:
-        raise ValueError("assets/primary.png must be a readable file") from error
+        raise ValueError(f"{asset_path} must be a readable file") from error
 
     if data[:8] != _PNG_SIGNATURE:
-        raise ValueError("assets/primary.png must be a PNG image")
+        raise ValueError(f"{asset_path} must be a PNG image")
 
     offset = 8
     seen_ihdr = False
@@ -536,50 +640,51 @@ def _validate_png_structure(path: Path) -> None:
     try:
         while offset < len(data):
             if offset + 8 > len(data):
-                raise ValueError("assets/primary.png has a truncated chunk header")
+                raise ValueError(f"{asset_path} has a truncated chunk header")
             length, chunk_type = struct.unpack_from(">I4s", data, offset)
             body_start = offset + 8
             body_end = body_start + length
             crc_end = body_end + 4
             if crc_end > len(data):
-                raise ValueError("assets/primary.png has a truncated chunk body")
+                raise ValueError(f"{asset_path} has a truncated chunk body")
             body = data[body_start:body_end]
             (declared_crc,) = struct.unpack_from(">I", data, body_end)
             actual_crc = zlib.crc32(chunk_type + body) & 0xFFFFFFFF
             if declared_crc != actual_crc:
-                raise ValueError("assets/primary.png has a corrupt chunk checksum")
+                raise ValueError(f"{asset_path} has a corrupt chunk checksum")
             if not seen_ihdr:
                 if chunk_type != b"IHDR":
-                    raise ValueError("assets/primary.png must start with an IHDR chunk")
+                    raise ValueError(f"{asset_path} must start with an IHDR chunk")
                 if len(body) != 13:
-                    raise ValueError("assets/primary.png has a malformed IHDR chunk")
+                    raise ValueError(f"{asset_path} has a malformed IHDR chunk")
                 width, height = struct.unpack_from(">II", body, 0)
                 seen_ihdr = True
             if chunk_type == b"IDAT":
                 seen_idat = True
             if chunk_type == b"IEND":
                 if body:
-                    raise ValueError("assets/primary.png has a malformed IEND chunk")
+                    raise ValueError(f"{asset_path} has a malformed IEND chunk")
                 if not seen_idat:
-                    raise ValueError("assets/primary.png must contain image data")
+                    raise ValueError(f"{asset_path} must contain image data")
                 if crc_end != len(data):
-                    raise ValueError("assets/primary.png has trailing data after IEND")
+                    raise ValueError(f"{asset_path} has trailing data after IEND")
                 if width is None or height is None or width <= 0 or height <= 0:
-                    raise ValueError("assets/primary.png must declare positive dimensions")
+                    raise ValueError(f"{asset_path} must declare positive dimensions")
                 return
             offset = crc_end
     except struct.error as error:
-        raise ValueError("assets/primary.png must be a decodable PNG image") from error
+        raise ValueError(f"{asset_path} must be a decodable PNG image") from error
 
-    raise ValueError("assets/primary.png is missing its IEND chunk")
+    raise ValueError(f"{asset_path} is missing its IEND chunk")
 
 
 def load_board_package(package_root: Path) -> BoardPackage:
     root = Path(package_root)
     if root.is_symlink() or not root.is_dir():
         raise ValueError(f"board package does not exist as a regular directory: {root}")
-    _validate_finished_shape(root)
+    _require_no_symlinks(root)
     board = _load_board(_load_json(root / "board.json", "board.json"))
+    _validate_finished_shape(root, board)
     return BoardPackage(root.resolve(), board)
 
 
