@@ -855,3 +855,138 @@ Focused package assertions freeze the exact `2 + 2` reversible inventory,
 published sizes and kinds, declared asset dimensions, and operator-selected
 constraints. Workbench extraction/surface-switching and final visual-review
 results are recorded in the Task 9 report.
+
+## Metolius Rock Rings 3D
+
+Reviewed 2026-08-21.
+
+### Official evidence
+
+- [Current product page](https://www.metoliusclimbing.com/collections/training-equipment/products/rock-rings-3d)
+  establishes the manufacturer and exact model name; a set of two independent
+  units; portable identity; flexible single-point suspension; CAD/CAM perfect
+  symmetry; and current dimensions of 184 × 146 × 57 mm. Its imperial
+  dimension rendering is missing punctuation, so the exact current metric
+  values are used in `board.json`.
+- [Official straight-on paired product photograph](https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123)
+  establishes the two separately suspended left/right units, identical tapered
+  body layout, cord routing, upper outer contact, and three vertically separated
+  pocket openings on each unit. The alternate
+  [official blue/white color photograph](https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-blue-white.jpg?v=1759460123)
+  confirms that the physical layout is unchanged across the two current color
+  variants; color is not encoded as a product fact or presentation.
+- [Official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/Rock-Ring-Depts.jpg?v=1762201543)
+  establishes the exact per-unit top-to-bottom contact inventory: `1` jug,
+  `2` 40 mm four-finger pocket, `3` 32 mm three-finger pocket, and `4` 25 mm
+  two-finger pocket.
+- [Official Rock Ring training guide](https://www.metoliusclimbing.com/pages/rock-ring-training-guide)
+  independently describes the compact portable single-point-suspended pair and
+  names jugs, four-finger edges, three-finger pockets, and two-finger pockets in
+  its routine. Its
+  [official pair image](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Rock_Rings-th.jpg?v=1759521022)
+  and [official numbered layout image](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/roc-num-dep.jpg?v=1759521022)
+  confirm the same paired front layout and numbered contact order. The routine
+  text supplied no package coaching field or geometry.
+- [Official Training Board and Rock Rings instructions](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826)
+  expressly classify Rock Rings as suspended devices that hang from solid
+  anchor points. The generic manual adds no model-specific contact, measurement,
+  posture, or alternate usable face.
+
+No reseller source, search-result summary, generated illustration, or existing
+package supplied a product fact, contact, dimension, or geometry decision.
+
+### Field, presentation, and inventory mapping
+
+| `board.json` field | Exact official-source mapping |
+| --- | --- |
+| `id`, `manufacturer`, `name`, `productURL` | Repository-stable identifier plus the exact current Metolius/model identity and canonical current product URL. |
+| `subtitle` | Conservative restatement of the product page's portable paired independent suspension plus the numbered diagram's one-jug/three-pocket inventory per unit. |
+| `dimensions` | Exact current product-page metric values `184 × 146 × 57 mm`, without supplementing the page's malformed imperial rendering. |
+| `presentations` | A single schema-v2 `front-pair` presentation follows every current official layout image. Single-point joint rotation is a suspension behavior, not evidence of another usable contact face, so no alternate presentation is fabricated. |
+| `holds[].kind` | `jug` and `pocket` directly follow the official numbered depth diagram. |
+| `holds[].sizeMillimeters` | Present only for the three pockets on each unit and copied from positions `2` through `4`: 40, 32, and 25 mm. |
+| `holds[].fingerCapacity` | Present only for the pockets and copied from the official four-, three-, and two-finger labels. |
+| omitted optional fields | No grip posture, depth range, feature tag, material, color, training cue, or other measurement was added. |
+
+The product photograph requires left and right components to remain separately
+selectable physical contacts. The explicit CAD/CAM perfect-symmetry statement,
+the identical numbered layout, and the official paired images support exact
+horizontal mirroring of the corresponding canonical frames. This freezes eight
+contacts on one honest paired-front presentation:
+
+| Diagram position | Left/right `board.json` contacts | Exact source-backed mapping |
+| --- | --- | --- |
+| `1` | `jug-left`, `jug-right` | One broad upper jug contact on each independently suspended unit. |
+| `2` | `pocket-40-four-left`, `pocket-40-four-right` | One 40 mm four-finger pocket per unit. |
+| `3` | `pocket-32-three-left`, `pocket-32-three-right` | One 32 mm three-finger pocket per unit. |
+| `4` | `pocket-25-two-left`, `pocket-25-two-right` | One 25 mm two-finger pocket per unit. |
+
+No rear or rotated presentation is declared: none of the current official
+sources identifies a different usable contact on another side. The two color
+variants share one physical package and are not duplicate presentations.
+
+### AI-simplified primary illustration (NON-EVIDENCE)
+
+`assets/primary.png` was generated with the built-in image-generation tool.
+The official paired product photograph was reference Image 1 for silhouette,
+two-unit arrangement, cord suspension, and contact placement. The official
+numbered diagram was reference Image 2 for the already frozen contact inventory
+and separation. Generated art established no product fact and supplied no
+geometry.
+
+The accepted PNG is 1536 × 1024 pixels (aspect `1.5`, SHA-256
+`679f403f74b50b63099574b1fc8a39c75c54c27f1a70d66a1a0ec637d4ea6837`).
+Prompt:
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog primary presentation image
+>
+> Input images: Image 1 is Metolius's official straight-on Rock Rings 3D pair photograph and is the authoritative reference for the two independent suspended units, paired left/right arrangement, each unit's silhouette, cord suspension, and physical contact placement. Image 2 is Metolius's official numbered Rock Ring depth guide and is supporting reference for the exact four-contact layout on each unit: upper outer jug surface, 40 mm four-finger pocket, 32 mm three-finger pocket, and 25 mm two-finger pocket.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact pair of Rock Rings 3D. Show exactly two separate suspended resin units, one left and one right, at equal height. Preserve exactly four usable contacts on each unit in the documented top-to-bottom layout: one broad upper jug surface surrounding the top opening, one wide 40 mm four-finger pocket, one medium 32 mm three-finger pocket, and one small 25 mm two-finger pocket. Keep the pair perfectly symmetric as documented by the manufacturer.
+>
+> Scene/backdrop: plain neutral off-white background.
+>
+> Style/medium: polished simplified 3D product illustration, smooth light-gray resin with restrained fine texture and subtle soft shading; remove all black/blue swirl coloration, printed branding, labels, and numbers.
+>
+> Composition/framing: exact straight-on view, centered landscape canvas, both complete units fully visible and separated by generous center space; show red-and-black suspension cords rising vertically and out of frame without knots dominating the composition and without overlapping any contact.
+>
+> Lighting/mood: soft neutral studio lighting that makes every jug and pocket contact boundary clearly readable without dramatic shadows.
+>
+> Constraints: exactly two independent units; exact bilateral pair symmetry; exactly four contacts per unit and eight total contacts; preserve the tapered rounded triangular body, top cord attachment positions, pocket count, relative pocket widths, vertical spacing, and proportions from the official references; the upper jug must remain visibly distinct from the 40 mm pocket floor directly beneath it; no added or missing holds; no text; no logo; no numbers; no hands; no wall; no watermark. Do not create geometry masks, contours, overlays, outlines, highlights, or annotations.
+>
+> Avoid: alternate rear surfaces, extra grooves, edges, pinches, slopers, mounting holes, labels, brand marks, decorative elements, perspective skew, contact overlap, ropes crossing the devices, or generic gymnastic rings.
+
+Human acceptance compared the final directly with the official paired product
+photograph, numbered depth diagram, training-guide images, and manual. The final
+retains two separate suspended units, the three documented pocket openings on
+each, and a distinct broad upper jug contact above each 40 mm pocket. It adds no
+rear surface, recess, label, or selectable contact. The generated PNG was copied
+directly into the package with no crop, registration, detection, segmentation,
+mask, contour extraction, vectorization, simplification, or other automatic
+geometry operation.
+
+### Direct geometry mapping and review
+
+All eight normalized closed paths were deliberately authored after direct
+inspection of the accepted illustration and official evidence. The left unit's
+four contacts were authored individually. The corresponding right frames and
+paths are exact horizontal mirrors under Metolius's explicit perfect-symmetry
+claim. The three regular pocket openings per unit use operator-selected
+`roundedRectangle` constraints; the broad curved jug surfaces use custom paths.
+Constraints are editing metadata only; the saved paths remain the sole normal,
+active, and hit-test geometry.
+
+| Contact pair | Left canonical frame; right mirror | Direct review decision |
+| --- | --- | --- |
+| `jug-left` / `jug-right` | Left `x 0.145, y 0.322, w 0.306, h 0.143`; exact right mirror | Custom curved path follows only the broad upper contact above the first opening and excludes cord, background, and the 40 mm pocket. |
+| `pocket-40-four-left` / `pocket-40-four-right` | Left `x 0.206, y 0.454, w 0.176, h 0.091`; exact right mirror | Rounded path encloses only the upper four-finger pocket opening. |
+| `pocket-32-three-left` / `pocket-32-three-right` | Left `x 0.231, y 0.615, w 0.136, h 0.082`; exact right mirror | Rounded path encloses only the middle three-finger pocket opening. |
+| `pocket-25-two-left` / `pocket-25-two-right` | Left `x 0.248, y 0.760, w 0.096, h 0.068`; exact right mirror | Rounded path encloses only the lower two-finger pocket opening. |
+
+The package parser validates the single declared PNG, exact ratio, eight unique
+hold IDs, nonempty normalized paths, and explicit presentation ownership.
+Focused assertions freeze the exact `4 + 4` inventory, measurements,
+capacities, and perfect paired mirrors. Workbench extraction and final review
+results are recorded in the Task 10 report.

@@ -19,6 +19,7 @@ FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
 LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
+ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
 PRIME_RIB_HOLDS = (
     ("edge-38", "38 mm edge", "edge", 38),
     ("edge-23", "23 mm edge", "edge", 23),
@@ -151,6 +152,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("metolius.contact", "metolius-contact"),
         ("metolius.foundry", "metolius-foundry"),
         ("metolius.light-rail-2", "metolius-light-rail-2"),
+        ("metolius.rock-rings-3d", "metolius-rock-rings-3d"),
         ("metolius.prime-rib", "metolius-prime-rib"),
         ("metolius.project", "metolius-project"),
         ("metolius.simulator-3d", "metolius-simulator-3d"),
@@ -445,6 +447,123 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
         with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
             assert image.format == "PNG"
             assert image.size == expected_size
+
+
+def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
+    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.rock-rings-3d"
+    assert board["dimensions"] == "184 × 146 × 57 mm"
+    assert board["presentations"] == [
+        {
+            "id": "front-pair",
+            "name": "Front pair",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        }
+    ]
+
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+            hold.get("fingerCapacity"),
+            hold["presentationID"],
+        )
+        for hold in board["holds"]
+    ) == (
+        ("jug-left", "Left unit jug", "jug", None, None, "front-pair"),
+        (
+            "pocket-40-four-left",
+            "Left unit 40 mm four-finger pocket",
+            "pocket",
+            40,
+            4,
+            "front-pair",
+        ),
+        (
+            "pocket-32-three-left",
+            "Left unit 32 mm three-finger pocket",
+            "pocket",
+            32,
+            3,
+            "front-pair",
+        ),
+        (
+            "pocket-25-two-left",
+            "Left unit 25 mm two-finger pocket",
+            "pocket",
+            25,
+            2,
+            "front-pair",
+        ),
+        ("jug-right", "Right unit jug", "jug", None, None, "front-pair"),
+        (
+            "pocket-40-four-right",
+            "Right unit 40 mm four-finger pocket",
+            "pocket",
+            40,
+            4,
+            "front-pair",
+        ),
+        (
+            "pocket-32-three-right",
+            "Right unit 32 mm three-finger pocket",
+            "pocket",
+            32,
+            3,
+            "front-pair",
+        ),
+        (
+            "pocket-25-two-right",
+            "Right unit 25 mm two-finger pocket",
+            "pocket",
+            25,
+            2,
+            "front-pair",
+        ),
+    )
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(hold["geometry"][0]["shape"]["type"] == "path" for hold in board["holds"])
+    assert all(
+        hold["geometry"][0]["shapeConstraint"]
+        == {"shape": "roundedRectangle", "rotationDegrees": 0}
+        for hold in board["holds"]
+        if hold["kind"] == "pocket"
+    )
+
+    with Image.open(ROCK_RINGS_ROOT / "assets" / "primary.png") as image:
+        assert image.format == "PNG"
+        assert image.size == (1536, 1024)
+
+
+def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
+    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for left_id, right_id in (
+        ("jug-left", "jug-right"),
+        ("pocket-40-four-left", "pocket-40-four-right"),
+        ("pocket-32-three-left", "pocket-32-three-right"),
+        ("pocket-25-two-left", "pocket-25-two-right"),
+    ):
+        left = holds[left_id]["geometry"][0]
+        right = holds[right_id]["geometry"][0]
+        left_frame = left["frame"]
+        right_frame = right["frame"]
+
+        assert right_frame["x"] == pytest.approx(
+            1 - left_frame["x"] - left_frame["width"]
+        )
+        assert right_frame["y"] == left_frame["y"]
+        assert right_frame["width"] == left_frame["width"]
+        assert right_frame["height"] == left_frame["height"]
+        assert right["shape"] == left["shape"]
+        assert right.get("shapeConstraint") == left.get("shapeConstraint")
 
 
 def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
