@@ -48,8 +48,9 @@ export interface HoldCanvasProps {
   board: Board | null;
   document: EditorDocument | null;
   selectedKey: string | null;
+  selectedKeys: readonly string[];
   busy: boolean;
-  onSelectHold(key: string): void;
+  onSelectHold(key: string, toggle: boolean): void;
   pathEditor: PathEditor;
   editor: HoldEditorActions;
   zoomPercent: number;
@@ -62,6 +63,7 @@ export function HoldCanvas({
   board,
   document,
   selectedKey,
+  selectedKeys,
   busy,
   onSelectHold,
   pathEditor,
@@ -275,17 +277,18 @@ export function HoldCanvas({
                 data-hold-key={hold.key}
                 d={hold.displayPath}
                 fill={TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
-                fillOpacity={hold.key === selectedKey ? "0.58" : "0.3"}
-                stroke={hold.key === selectedKey ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
-                strokeWidth={hold.key === selectedKey ? "2.2" : "1.4"}
+                fillOpacity={selectedKeys.includes(hold.key) ? "0.58" : "0.3"}
+                stroke={selectedKeys.includes(hold.key) ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
+                strokeWidth={selectedKeys.includes(hold.key) ? "2.2" : "1.4"}
                 role="button"
                 tabIndex={0}
                 aria-label={`Select hold ${hold.key}`}
-                onClick={() => { if (!busy) onSelectHold(hold.key); }}
+                aria-pressed={selectedKeys.includes(hold.key)}
+                onClick={(event) => { if (!busy) onSelectHold(hold.key, event.metaKey || event.ctrlKey); }}
                 onKeyDown={(event) => {
                   if (busy || (event.key !== "Enter" && event.key !== " ")) return;
                   if (event.key === " ") event.preventDefault();
-                  onSelectHold(hold.key);
+                  onSelectHold(hold.key, event.metaKey || event.ctrlKey);
                 }}
               />
             ))}

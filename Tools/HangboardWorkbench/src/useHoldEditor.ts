@@ -39,7 +39,7 @@ interface DragState {
   startY: number;
   commands: PathCommand[] | null;
   originalPath: string | null;
-  originalPaths: Array<{ key: string; path: string; shapeConstraint?: ShapeConstraint }> | null;
+  originalPaths: Array<{ key: string; path: string; pivot?: Point; shapeConstraint?: ShapeConstraint }> | null;
   originalConstraint: ShapeConstraint | null;
   originalDocument: EditorDocument | null;
   resizeHandle: ConstrainedHandle | null;
@@ -95,6 +95,7 @@ const GUIDE_SNAP_TOLERANCE = 6;
 export interface UseHoldEditorOptions {
   document: EditorDocument | null;
   selectedHold: HoldRegion | null;
+  selectedKeys: readonly string[];
   dirty: boolean;
   status: string;
   busy: boolean;
@@ -276,6 +277,17 @@ function canDeleteVertex(commands: readonly PathCommand[], index: number): boole
   return commands.filter((candidate) => candidate.type !== "Z" && candidate.points.length > 0).length > 3;
 }
 
+function selectedPhysicalHolds(document: EditorDocument, selectedKeys: readonly string[]): HoldRegion[][] {
+  const selected = new Set(selectedKeys);
+  const groups = new Map<string, HoldRegion[]>();
+  for (const region of document.regions) {
+    if (!selected.has(region.key)) continue;
+    const siblings = holdSiblings(document, region);
+    groups.set(siblings.map((sibling) => sibling.key).join("\u0000"), siblings);
+  }
+  return [...groups.values()];
+}
+
 function hasVertex(commands: readonly PathCommand[], index: number): boolean {
   const command = commands[index];
   return !!command && command.type !== "Z" && command.points.length > 0;
@@ -311,6 +323,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const {
     document,
     selectedHold,
+    selectedKeys,
     dirty,
     status,
     busy,
@@ -474,26 +487,29 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const rotateHold = useCallback((degrees: number): void => {
     if (busy || !document || !selectedHold) return;
-    const siblingKeys = new Set(holdSiblings(document, selectedHold).map((region) => region.key));
-    const pivot = holdCentroid(holdSiblings(document, selectedHold), pathEditor);
+    const holds = selectedPhysicalHolds(document, selectedKeys);
     actions.editDocument((candidate) => {
-      for (const region of candidate.regions) {
-        if (!siblingKeys.has(region.key)) continue;
-        const commands = pathEditor.parsePath(region.displayPath);
-        pathEditor.rotatePath(commands, ((degrees % 360) * Math.PI) / 180, pivot);
-        region.displayPath = pathEditor.serializePath(commands);
-        if (region.shapeConstraint) {
-          region.shapeConstraint = {
-            ...region.shapeConstraint,
-            rotationDegrees: normalizedConstraintRotation(region.shapeConstraint.rotationDegrees + degrees),
-          };
+      for (const hold of holds) {
+        const siblingKeys = new Set(hold.map((region) => region.key));
+        const pivot = holdCentroid(hold, pathEditor);
+        for (const region of candidate.regions) {
+          if (!siblingKeys.has(region.key)) continue;
+          const commands = pathEditor.parsePath(region.displayPath);
+          pathEditor.rotatePath(commands, ((degrees % 360) * Math.PI) / 180, pivot);
+          region.displayPath = pathEditor.serializePath(commands);
+          if (region.shapeConstraint) {
+            region.shapeConstraint = {
+              ...region.shapeConstraint,
+              rotationDegrees: normalizedConstraintRotation(region.shapeConstraint.rotationDegrees + degrees),
+            };
+          }
         }
       }
     }, {
       status: "Hold rotated. Save when ready.",
       failureStatus: "Rotation reverted — contour is invalid.",
     });
-  }, [actions, busy, document, pathEditor, selectedHold]);
+  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
 
   const addHold = useCallback((): void => {
     if (busy || !document) return;
@@ -513,26 +529,33 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       });
     }, {
       selectedKey: key,
+      selectedKeys: [key],
       status: "Hold added. Drag it into place and save when ready.",
       failureMessage: "Could not add hold.",
     });
   }, [actions, busy, document]);
 
   const deleteHold = useCallback((): void => {
-    if (busy || !document || !selectedHold || !dialogs.confirm(`Delete hold "${selectedHold.key}"?`)) return;
-    const siblingKeys = new Set(holdSiblings(document, selectedHold).map((region) => region.key));
+    if (busy || !document || !selectedHold) return;
+    const holds = selectedPhysicalHolds(document, selectedKeys);
+    const confirmation = holds.length === 1
+      ? `Delete hold "${selectedHold.key}"?`
+      : `Delete ${holds.length} selected holds and all of their pieces?`;
+    if (!dialogs.confirm(confirmation)) return;
+    const siblingKeys = new Set(holds.flatMap((hold) => hold.map((region) => region.key)));
     actions.editDocument((candidate) => {
       candidate.regions = candidate.regions.filter((region) => !siblingKeys.has(region.key));
     }, {
       selectedKey: null,
+      selectedKeys: [],
       status: "Hold deleted. Save when ready.",
       failureMessage: "Document is invalid after deletion.",
     });
-  }, [actions, busy, dialogs, document, selectedHold]);
+  }, [actions, busy, dialogs, document, selectedHold, selectedKeys]);
 
   const changeHoldType = useCallback((type: string): void => {
     if (busy || !document || !selectedHold) return;
-    const siblingKeys = new Set(holdSiblings(document, selectedHold).map((region) => region.key));
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
     actions.editDocument((candidate) => {
       for (const region of candidate.regions) {
         if (siblingKeys.has(region.key)) region.type = type;
@@ -541,19 +564,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       status: "Hold recategorized. Save when ready.",
       failureMessage: "Hold type is invalid.",
     });
-  }, [actions, busy, document, selectedHold]);
+  }, [actions, busy, document, selectedHold, selectedKeys]);
 
   const changeOutlineShape = useCallback((shape: string): void => {
     if (busy || !document || !selectedHold || (shape !== "custom" && !isShapeConstraintShape(shape))) return;
     const label = shape === "roundedRectangle" ? "rounded rectangle" : shape;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
     actions.editDocument((candidate) => {
-      const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-      if (!hold) return;
-      if (shape === "custom") {
-        delete hold.shapeConstraint;
-      } else {
-        hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
-        hold.shapeConstraint = { shape, rotationDegrees: 0 };
+      for (const hold of candidate.regions) {
+        if (!siblingKeys.has(hold.key)) continue;
+        if (shape === "custom") {
+          delete hold.shapeConstraint;
+        } else {
+          hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
+          hold.shapeConstraint = { shape, rotationDegrees: 0 };
+        }
       }
     }, {
       status: shape === "custom"
@@ -561,7 +586,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         : `Outline changed to ${label}. Save when ready.`,
       failureStatus: "Outline change reverted — contour is invalid.",
     });
-  }, [actions, busy, document, pathEditor, selectedHold]);
+  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
 
   const applyRotation = useCallback((): void => {
     if (busy) return;
@@ -690,16 +715,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (target.classList.contains("path-editor-rotation-handle")) {
       const siblings = holdSiblings(document, selectedHold);
       const pivot = holdCentroid(siblings, pathEditor);
+      const holds = selectedPhysicalHolds(document, selectedKeys);
       next = {
         ...EMPTY_DRAG,
         active: true,
         type: "rotation",
         holdKey: selectedHold.key,
-        originalPaths: siblings.map((region) => ({
-          key: region.key,
-          path: region.displayPath,
-          ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
-        })),
+        originalPaths: holds.flatMap((hold) => {
+          const holdPivot = holdCentroid(hold, pathEditor);
+          return hold.map((region) => ({
+            key: region.key,
+            path: region.displayPath,
+            pivot: holdPivot,
+            ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
+          }));
+        }),
         originalDirty: dirty,
         pivot,
         lastAngle: Math.atan2(point.y - pivot.y, point.x - pivot.x),
@@ -762,7 +792,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Tests and older browsers may not implement pointer capture.
     }
-  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectVertex, selectedHold]);
+  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectVertex, selectedHold, selectedKeys]);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -789,7 +819,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const region = candidate.regions.find((value) => value.key === original.key);
         if (!region) continue;
         const commands = pathEditor.parsePath(original.path);
-        pathEditor.rotatePath(commands, drag.totalAngle, drag.pivot);
+        pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
         region.displayPath = pathEditor.serializePath(commands);
         if (original.shapeConstraint) {
           region.shapeConstraint = {

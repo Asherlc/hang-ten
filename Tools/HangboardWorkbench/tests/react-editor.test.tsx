@@ -266,6 +266,96 @@ test("hold paths expose button semantics and support Enter and Space selection",
   });
 });
 
+test("modifier selection toggles highlighted holds while plain selection replaces the batch and keeps one primary overlay", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-hold-key="b-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.text("#hold-heading"), "b-piece-0");
+    assert.equal(app.document.querySelectorAll(".path-editor-overlay").length, 1);
+
+    assert.equal(await app.keyDown('[data-hold-key="a-piece-1"]', "Enter", { metaKey: true }), false);
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-1"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.text("#hold-heading"), "a-piece-1");
+
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-1"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.document.querySelector('[data-hold-key="b-piece-0"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.text("#hold-heading"), "a-piece-0");
+  });
+});
+
+test("batch inspector actions change every selected physical hold and undo restores them", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+
+    await app.change("#hold-type-select", "pinch");
+    assert.deepEqual([...app.document.querySelectorAll<SVGPathElement>(".region-shape")].map((path) => path.getAttribute("fill")), ["#f2c94c", "#f2c94c", "#f2c94c"]);
+
+    await app.change("#outline-shape-select", "rectangle");
+    assert.deepEqual([...app.document.querySelectorAll<SVGPathElement>(".region-shape")].map((path) => path.getAttribute("d")), [
+      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
+      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
+      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
+    ]);
+
+    await app.click("#rotate-cw-button");
+    assert.notDeepEqual(paths(app), [
+      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
+      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
+      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
+    ]);
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.deepEqual(paths(app), [
+      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
+      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
+      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
+    ]);
+
+    await app.input("#rotate-by-input", "23.5");
+    await app.click("#rotate-by-apply-button");
+    assert.notDeepEqual(paths(app), [
+      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
+      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
+      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
+    ]);
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.deepEqual(paths(app), [
+      "M 10 10 L 20 10 L 20 20 L 10 20 Z",
+      "M 30 10 L 40 10 L 40 20 L 30 20 Z",
+      "M 70 10 L 80 10 L 80 20 L 70 20 Z",
+    ]);
+
+    await app.click("#delete-hold-button");
+    assert.deepEqual(paths(app), []);
+    assert.equal(app.text("#hold-heading"), "No selection");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app).length, 3);
+  });
+});
+
+test("batch deletion names every selected physical hold and leaves the document intact when cancelled", async () => {
+  const prompts: string[] = [];
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+    await app.click("#delete-hold-button");
+
+    assert.deepEqual(prompts, ["Delete 2 selected holds and all of their pieces?"]);
+    assert.deepEqual(paths(app), [FIRST_PATH, SECOND_PATH, OTHER_PATH]);
+    assert.equal(app.text("#hold-heading"), "b-piece-0");
+  }, dependenciesFixture(boardFixture(), {
+    confirm(message) {
+      prompts.push(message);
+      return false;
+    },
+  }));
+});
+
 test("the hold type control preserves an out-of-list document value", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "legacy-piece-0", type: "legacy-grip", displayPath: FIRST_PATH },
@@ -628,6 +718,35 @@ test("rotation drag rotates every sibling from pointer-down paths around the sha
     assert.equal(paths(app)[0], rotate(FIRST_PATH, 90, pivot));
     assert.equal(paths(app)[1], rotate(SECOND_PATH, 90, pivot));
     assert.equal(paths(app)[2], OTHER_PATH);
+  });
+});
+
+test("rotation drag rotates every Command-selected physical hold around its own centroid", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-hold-key="b-piece-0"]')?.getAttribute("aria-pressed"), "true");
+
+    const connector = app.document.querySelector<SVGLineElement>(".path-editor-rotation-connector")!;
+    const handle = app.document.querySelector<SVGCircleElement>(".path-editor-rotation-handle")!;
+    const primaryPivot = { x: Number(connector.getAttribute("x1")), y: Number(connector.getAttribute("y1")) };
+    const start = { x: Number(handle.getAttribute("cx")), y: Number(handle.getAttribute("cy")) };
+    const radius = Math.hypot(start.x - primaryPivot.x, start.y - primaryPivot.y);
+    const startAngle = Math.atan2(start.y - primaryPivot.y, start.x - primaryPivot.x);
+    const end = {
+      x: primaryPivot.x + radius * Math.cos(startAngle + Math.PI / 2),
+      y: primaryPivot.y + radius * Math.sin(startAngle + Math.PI / 2),
+    };
+
+    await drag(app, ".path-editor-rotation-handle", [start, end]);
+
+    const physicalAPivot = holdCentroid(documentFixture().regions.slice(0, 2), pathEditor);
+    const physicalBPivot = holdCentroid([documentFixture().regions[2]!], pathEditor);
+    assert.equal(paths(app)[0], rotate(FIRST_PATH, 90, physicalAPivot));
+    assert.equal(paths(app)[1], rotate(SECOND_PATH, 90, physicalAPivot));
+    assert.equal(paths(app)[2], rotate(OTHER_PATH, 90, physicalBPivot));
   });
 });
 
@@ -1172,7 +1291,7 @@ function constrainedBoardFixture(): Board {
   };
 }
 
-test("outline picker reflects persisted constraints and changes only the selected piece", async () => {
+test("outline picker reflects persisted constraints and changes every piece of the selected physical hold", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 20 L 50 20 L 50 40 L 10 40 Z", metadata: { holdID: "a", pieceIndex: 0 } },
     { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, shapeConstraint: { shape: "roundedRectangle", rotationDegrees: 15 } },
@@ -1189,13 +1308,13 @@ test("outline picker reflects persisted constraints and changes only the selecte
     await app.change("#outline-shape-select", "oval");
     assert.deepEqual(paths(app), [
       "M 30 20 C 41.045695 20 50 24.477153 50 30 C 50 35.522847 41.045695 40 30 40 C 18.954305 40 10 35.522847 10 30 C 10 24.477153 18.954305 20 30 20 Z",
-      SECOND_PATH,
+      "M 35 10 C 37.761424 10 40 12.238576 40 15 C 40 17.761424 37.761424 20 35 20 C 32.238576 20 30 17.761424 30 15 C 30 12.238576 32.238576 10 35 10 Z",
       OTHER_PATH,
     ]);
     assert.equal(app.text("#save-state"), "Unsaved changes");
     assert.equal(app.text("#editor-status"), "Outline changed to oval. Save when ready.");
     await app.click('[data-hold-key="a-piece-1"]');
-    assert.equal(app.documentValue("#outline-shape-select"), "roundedRectangle");
+    assert.equal(app.documentValue("#outline-shape-select"), "oval");
   }, dependenciesFixture(board));
 });
 

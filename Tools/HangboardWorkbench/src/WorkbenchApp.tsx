@@ -55,6 +55,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const editor = useHoldEditor({
     document: state.document,
     selectedHold,
+    selectedKeys: state.selectedKeys,
     dirty: state.dirty,
     status: state.status,
     busy,
@@ -162,6 +163,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             board={state.board}
             document={state.document}
             selectedKey={state.selectedKey}
+            selectedKeys={state.selectedKeys}
             busy={busy}
             onSelectHold={actions.selectHold}
             pathEditor={dependencies.pathEditor}
@@ -182,6 +184,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
 
         <HoldInspector
           hold={selectedHold}
+          selectedCount={state.selectedKeys.length}
           busy={busy}
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}

@@ -14,6 +14,7 @@ const OUTLINE_SHAPES = [
 
 export interface HoldInspectorProps {
   hold: HoldRegion | null;
+  selectedCount: number;
   busy: boolean;
   rotationDegrees: string;
   onRotationDegreesChange(value: string): void;
@@ -26,6 +27,7 @@ export interface HoldInspectorProps {
 
 export function HoldInspector({
   hold,
+  selectedCount,
   busy,
   rotationDegrees,
   onRotationDegreesChange,
@@ -41,6 +43,7 @@ export function HoldInspector({
         <div>
           <span className="eyebrow">Hold</span>
           <h2 id="hold-heading">{hold?.key ?? "No selection"}</h2>
+          {selectedCount > 1 && <span id="selected-hold-count">{selectedCount} selected</span>}
         </div>
       </div>
       <div className={`inspector-empty${hold ? " hidden" : ""}`} id="hold-empty">Select a hold to edit its closed contour.</div>
