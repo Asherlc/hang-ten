@@ -18,10 +18,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.026,
-            "y": 0.399,
-            "width": 0.185877148438,
-            "height": 0.045190866089
+            "x": 0.034221627839,
+            "y": 0.336367745648,
+            "width": 0.186058857478,
+            "height": 0.044037882184
           },
           "shape": {
             "type": "path",
@@ -30,74 +30,74 @@
                 "command": "move",
                 "to": [
                   0.0,
-                  0.5638307517694809
+                  0.510453458979
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.02044361037348346,
-                  0.1301147888698804
+                  0.021927997051,
+                  0.06989404669
                 ],
                 "control2": [
-                  0.1431052726143843,
-                  0.0
+                  0.144879045633,
+                  -0.037473642188
                 ],
                 "to": [
-                  0.3679849867227024,
-                  0.0
+                  0.369457841643,
+                  0.010386229254
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.9710714927429908,
-                  0.0
+                  0.971737338466,
+                  0.138737712808
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  1.0221805186766995,
-                  0.05421449536244914
+                  1.022589008412,
+                  0.205228749819
                 ],
                 "control2": [
-                  1.001736908303216,
-                  0.4662446601170712
+                  1.000736597565,
+                  0.623542651017
                 ],
                 "to": [
-                  0.9404060771827655,
-                  0.6288881462044211
+                  0.938920930659,
+                  0.777331320152
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.6644173371407386,
-                  0.8023745313642621
+                  0.662696804863,
+                  0.89655831533
                 ],
                 "control2": [
-                  0.2453233244818017,
-                  1.0842899072490038
+                  0.243180959376,
+                  1.096556604414
                 ],
                 "to": [
-                  0.06133083112070296,
-                  0.975860916524103
+                  0.059812609014,
+                  0.946170945286
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.02044361037348346,
-                  0.8891177239441831
+                  0.019282448597,
+                  0.848487083581
                 ],
                 "control2": [
+                  -0.000604695895,
+                  0.688417597279
+                ],
+                "to": [
                   0.0,
-                  0.7373171369293219
-                ],
-                "to": [
-                  0.0,
-                  0.5638307517694809
+                  0.510453458979
                 ]
               },
               {
@@ -592,7 +592,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -715,7 +715,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -838,7 +838,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -961,7 +961,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1084,7 +1084,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1206,7 +1206,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1328,7 +1328,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1450,7 +1450,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1572,7 +1572,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1694,7 +1694,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
