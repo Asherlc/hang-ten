@@ -699,6 +699,75 @@ final class CountdownAudioSchedulerTests: XCTestCase {
 }
 
 final class CountdownAudioBufferSchedulingBackendTests: XCTestCase {
+    // Catches cue offsets being converted from seconds with the wrong host-time scale.
+    func testCueOffsetsConvertToExactHostTimesAndAllScheduleBeforePlay() {
+        let playback = RecordingCountdownAudioBufferPlayback()
+        let startHostTime = AVAudioTime.hostTime(forSeconds: 100)
+        let backend = CountdownAudioBufferSchedulingBackend(
+            buffersForSchedule: { _ in
+                [
+                    "3": [makeCountdownPCMBuffer(duration: 0.5)],
+                    "2": [makeCountdownPCMBuffer(duration: 0.5)],
+                    "1": [makeCountdownPCMBuffer(duration: 0.5)]
+                ]
+            },
+            playback: playback,
+            currentHostTime: { 0 }
+        )
+
+        XCTAssertTrue(
+            backend.schedule(
+                CountdownAudioSchedule(remainingFrom: "3"),
+                startHostTime: startHostTime
+            )
+        )
+
+        let oneSecond = AVAudioTime.hostTime(forSeconds: 1)
+        XCTAssertEqual(
+            playback.scheduledHostTimes,
+            [startHostTime, startHostTime + oneSecond, startHostTime + (2 * oneSecond)]
+        )
+        let expectedEvents: [RecordingCountdownAudioBufferPlayback.Event] = [
+            .prepare,
+            .start,
+            .schedule(startHostTime),
+            .schedule(startHostTime + oneSecond),
+            .schedule(startHostTime + (2 * oneSecond)),
+            .play
+        ]
+        XCTAssertEqual(playback.events, expectedEvents)
+    }
+
+    // Catches callback chunks within one cue being scheduled at the same time.
+    func testMultipleCueBuffersUseAccumulatedSampleDurationHostOffsets() {
+        let playback = RecordingCountdownAudioBufferPlayback()
+        let startHostTime = AVAudioTime.hostTime(forSeconds: 100)
+        let backend = CountdownAudioBufferSchedulingBackend(
+            buffersForSchedule: { _ in
+                [
+                    "1": [
+                        makeCountdownPCMBuffer(duration: 0.25),
+                        makeCountdownPCMBuffer(duration: 0.5)
+                    ]
+                ]
+            },
+            playback: playback,
+            currentHostTime: { 0 }
+        )
+
+        XCTAssertTrue(
+            backend.schedule(
+                CountdownAudioSchedule(remainingFrom: "1"),
+                startHostTime: startHostTime
+            )
+        )
+
+        XCTAssertEqual(
+            playback.scheduledHostTimes,
+            [startHostTime, startHostTime + AVAudioTime.hostTime(forSeconds: 0.25)]
+        )
+    }
+
     // Catches a deadline crossing after buffers are queued but before playback starts.
     func testDeadlineCrossingImmediatelyBeforePlayClearsScheduledBuffers() {
         let playback = RecordingCountdownAudioBufferPlayback()
@@ -774,30 +843,48 @@ final class CountdownAudioBufferSchedulingBackendTests: XCTestCase {
 }
 
 private final class RecordingCountdownAudioBufferPlayback: CountdownAudioBufferPlayback {
+    enum Event: Equatable {
+        case prepare
+        case start
+        case schedule(UInt64)
+        case play
+        case stop
+    }
+
     private(set) var prepareCallCount = 0
     private(set) var scheduledBufferCount = 0
     private(set) var scheduledBufferCountBeforeLastStop = 0
     private(set) var playCallCount = 0
     private(set) var stopCallCount = 0
+    private(set) var scheduledHostTimes: [UInt64] = []
+    private(set) var events: [Event] = []
 
     func prepare(format: AVAudioFormat) {
         prepareCallCount += 1
+        events.append(.prepare)
     }
 
-    func start() throws {}
+    func start() throws {
+        events.append(.start)
+    }
 
     func schedule(_ buffer: AVAudioPCMBuffer, atHostTime hostTime: UInt64) {
         scheduledBufferCount += 1
+        scheduledHostTimes.append(hostTime)
+        events.append(.schedule(hostTime))
     }
 
     func play() {
         playCallCount += 1
+        events.append(.play)
     }
 
     func stop() {
         stopCallCount += 1
         scheduledBufferCountBeforeLastStop = scheduledBufferCount
         scheduledBufferCount = 0
+        scheduledHostTimes.removeAll()
+        events.append(.stop)
     }
 }
 
