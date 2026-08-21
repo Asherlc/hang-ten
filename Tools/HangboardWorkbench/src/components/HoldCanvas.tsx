@@ -307,6 +307,11 @@ export function HoldCanvas({
             onKeyDown={(event) => {
               const items = [...(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'))]
                 .filter((item) => !item.disabled);
+              if (["[", "]"].includes(event.key)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+              }
               if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
                 event.preventDefault();
                 event.stopPropagation();

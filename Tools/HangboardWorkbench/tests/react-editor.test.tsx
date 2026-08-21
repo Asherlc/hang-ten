@@ -650,7 +650,11 @@ test("vertex menu arrow navigation moves between actions without editing the sel
     assert.equal(app.document.activeElement, roundItem);
     assert.equal(await app.keyDown("#round-corner-action", "ArrowUp"), true);
     assert.equal(app.document.activeElement, deleteItem);
-    assert.equal(paths(app)[0], squarePath);
+    for (const shortcut of ["[", "]"]) {
+      assert.equal(await app.keyDown('[role="menuitem"]', shortcut), true);
+      assert.equal(paths(app)[0], squarePath);
+      assert.ok(app.document.querySelector('[role="menu"]'));
+    }
     assert.equal(app.text("#save-state"), "Saved");
     assert.ok(app.document.querySelector('[role="menu"]'));
   }, dependenciesFixture(boardFixture(square)));
