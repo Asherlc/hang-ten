@@ -634,11 +634,11 @@ def save_editor_document(
     parsed_regions = board_package._validate_editor_document(document, width, height)
 
     pieces_by_hold: dict[
-        str, list[tuple[int, str, Any, dict[str, object] | None]]
+        str, list[board_package._EditorPiece]
     ] = {}
-    for hold_id, piece_index, kind, path, shape_constraint in parsed_regions.values():
+    for hold_id, piece_index, kind, path, shape_constraint, finger_capacity in parsed_regions.values():
         pieces_by_hold.setdefault(hold_id, []).append(
-            (piece_index, kind, path, shape_constraint)
+            (piece_index, kind, path, shape_constraint, finger_capacity)
         )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])

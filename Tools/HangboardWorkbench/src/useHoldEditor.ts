@@ -124,6 +124,7 @@ export interface HoldEditorActions {
   makeSelectedSegmentStraight(): void;
   dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
+  changeFingerCapacity(capacity: number | undefined): void;
   changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
   applyRotation(): void;
@@ -599,6 +600,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     }, {
       status: "Hold recategorized. Save when ready.",
       failureMessage: "Hold type is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
+  const changeFingerCapacity = useCallback((capacity: number | undefined): void => {
+    if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 4))) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        if (capacity === undefined) delete region.fingerCapacity;
+        else region.fingerCapacity = capacity;
+      }
+    }, {
+      status: "Finger capacity changed. Save when ready.",
+      failureMessage: "Finger capacity is invalid.",
     });
   }, [actions, busy, document, selectedHold, selectedKeys]);
 
@@ -1152,6 +1168,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     makeSelectedSegmentStraight,
     dismissVertexMenu,
     changeHoldType,
+    changeFingerCapacity,
     changeOutlineShape,
     rotateHold,
     applyRotation,

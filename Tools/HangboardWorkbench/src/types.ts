@@ -49,6 +49,7 @@ export interface HoldRegion {
     holdID: string;
     pieceIndex: number;
   };
+  fingerCapacity?: number;
   shapeConstraint?: ShapeConstraint;
 }
 

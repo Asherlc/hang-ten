@@ -501,6 +501,30 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
   }
 });
 
+test("the direct editor model rejects inconsistent finger capacities for one physical hold", () => {
+  assert.throws(
+    () => validateEditorDocument({
+      schemaVersion: 1,
+      canvas: { width: 100, height: 50 },
+      regions: [
+        {
+          key: "hold-1-piece-0",
+          displayPath: "M 1 1 L 20 1 L 20 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 0 },
+          fingerCapacity: 2,
+        },
+        {
+          key: "hold-1-piece-1",
+          displayPath: "M 30 1 L 40 1 L 40 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 1 },
+          fingerCapacity: 3,
+        },
+      ],
+    }),
+    /finger capacity/i,
+  );
+});
+
 test("a rejected save keeps the editor document untouched", async () => {
   const document = editorDocument([
     { key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20 Z" },

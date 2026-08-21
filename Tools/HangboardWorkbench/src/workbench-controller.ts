@@ -11,6 +11,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isFingerCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 4;
+}
+
 function isHoldRegion(value: unknown): value is HoldRegion {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -18,6 +22,7 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
+    && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
     && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)
@@ -49,6 +54,7 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   }
   if (!Array.isArray(document.regions)) throw new Error("Hold document needs holds");
   const keys = new Set<string>();
+  const fingerCapacityByHoldId = new Map<string, number | undefined>();
   for (const region of document.regions) {
     if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
       throw new Error("Every hold needs a key");
@@ -62,8 +68,20 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     if (Object.hasOwn(region, "shapeConstraint")) {
       validateShapeConstraint(region.shapeConstraint, `Hold ${region.key} shape constraint`);
     }
+    if (Object.hasOwn(region, "fingerCapacity")
+      && !isFingerCapacity(region.fingerCapacity)) {
+      throw new Error(`Hold ${region.key} finger capacity must be between 1 and 4`);
+    }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);
+    }
+    if (region.metadata) {
+      const { holdID } = region.metadata;
+      if (fingerCapacityByHoldId.has(holdID)
+        && fingerCapacityByHoldId.get(holdID) !== region.fingerCapacity) {
+        throw new Error(`Hold ${holdID} pieces must share one finger capacity`);
+      }
+      fingerCapacityByHoldId.set(holdID, region.fingerCapacity);
     }
   }
   if (!isEditorDocument(document)) {
