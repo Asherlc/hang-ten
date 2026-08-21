@@ -24,6 +24,79 @@ YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
 YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
 YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
 YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
+
+
+def _global_path_segment_signatures(
+    geometry: dict[str, object], *, mirror_horizontally: bool = False
+) -> list[tuple[object, ...]]:
+    """Return canonical global segments, independent of traversal direction."""
+    frame = geometry["frame"]
+    commands = geometry["shape"]["commands"]
+
+    def global_point(local: list[float]) -> tuple[float, float]:
+        x = frame["x"] + local[0] * frame["width"]
+        if mirror_horizontally:
+            x = 1 - x
+        y = frame["y"] + local[1] * frame["height"]
+        return (round(x, 12), round(y, 12))
+
+    def line_signature(
+        start: tuple[float, float], end: tuple[float, float]
+    ) -> tuple[object, ...]:
+        ordered = min((start, end), (end, start))
+        return ("line", *ordered)
+
+    def curve_signature(
+        start: tuple[float, float],
+        control1: tuple[float, float],
+        control2: tuple[float, float],
+        end: tuple[float, float],
+    ) -> tuple[object, ...]:
+        forward = (start, control1, control2, end)
+        reverse = (end, control2, control1, start)
+        return ("curve", *min(forward, reverse))
+
+    start: tuple[float, float] | None = None
+    current: tuple[float, float] | None = None
+    segments: list[tuple[object, ...]] = []
+    for command in commands:
+        operation = command["command"]
+        if operation == "move":
+            start = current = global_point(command["to"])
+        elif operation == "line":
+            assert current is not None
+            end = global_point(command["to"])
+            segments.append(line_signature(current, end))
+            current = end
+        elif operation == "curve":
+            assert current is not None
+            end = global_point(command["to"])
+            segments.append(
+                curve_signature(
+                    current,
+                    global_point(command["control1"]),
+                    global_point(command["control2"]),
+                    end,
+                )
+            )
+            current = end
+        else:
+            assert operation == "close"
+            assert current is not None and start is not None
+            if current != start:
+                segments.append(line_signature(current, start))
+            current = start
+    return sorted(segments)
+
+
+def _assert_global_paths_are_horizontal_mirrors(
+    left: dict[str, object], right: dict[str, object]
+) -> None:
+    assert _global_path_segment_signatures(
+        left, mirror_horizontally=True
+    ) == _global_path_segment_signatures(right)
+
+
 PRIME_RIB_HOLDS = (
     ("edge-38", "38 mm edge", "edge", 38),
     ("edge-23", "23 mm edge", "edge", 23),
@@ -794,7 +867,22 @@ def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
     assert board["schemaVersion"] == 2
     assert board["id"] == "yy.baguette"
     assert board["dimensions"] == "47 × 4 × 4 cm"
-    assert len(board["presentations"]) == 2
+    assert board["presentations"] == [
+        {
+            "id": "stepped-face",
+            "name": "30 / 25 / 20 mm and tray face",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        },
+        {
+            "id": "reverse-face",
+            "name": "15 / 10 mm face",
+            "assetPath": "assets/reverse.png",
+            "aspectRatio": 1.5,
+            "default": False,
+        },
+    ]
     assert {
         (hold["id"], hold["kind"], hold.get("sizeMillimeters"))
         for hold in board["holds"]
@@ -806,6 +894,14 @@ def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
         ("edge-15", "edge", 15),
         ("edge-10", "edge", 10),
     }
+    assert [(hold["id"], hold["presentationID"]) for hold in board["holds"]] == [
+        ("edge-30", "stepped-face"),
+        ("tray", "stepped-face"),
+        ("edge-20", "stepped-face"),
+        ("edge-25", "stepped-face"),
+        ("edge-15", "reverse-face"),
+        ("edge-10", "reverse-face"),
+    ]
 
 
 def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> None:
@@ -814,7 +910,43 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     assert board["schemaVersion"] == 2
     assert board["id"] == "yy.baguette-evo"
     assert board["dimensions"] == "52 × 5 × 5 cm"
-    assert len(board["presentations"]) == 5
+    assert board["presentations"] == [
+        {
+            "id": "paired-25-20-15-10",
+            "name": "25 / 20 / 15 / 10 mm paired edges",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 2.0,
+            "default": True,
+        },
+        {
+            "id": "paired-12-8-6",
+            "name": "12 / 8 / 6 mm paired edges",
+            "assetPath": "assets/shallow-pairs.png",
+            "aspectRatio": 2.0,
+            "default": False,
+        },
+        {
+            "id": "central-30-25",
+            "name": "30 / 25 mm central edges",
+            "assetPath": "assets/central-30-25.png",
+            "aspectRatio": 1.5,
+            "default": False,
+        },
+        {
+            "id": "central-20-6",
+            "name": "20 / 6 mm central edges",
+            "assetPath": "assets/central-20-6.png",
+            "aspectRatio": 2.0,
+            "default": False,
+        },
+        {
+            "id": "rounded-tray",
+            "name": "Rounded tray",
+            "assetPath": "assets/tray.png",
+            "aspectRatio": 1.5,
+            "default": False,
+        },
+    ]
     assert len(board["holds"]) == 19
     assert sorted(
         hold["sizeMillimeters"]
@@ -834,19 +966,55 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     assert [(hold["id"], hold["kind"]) for hold in board["holds"] if hold["kind"] == "jug"] == [
         ("rounded-tray", "jug")
     ]
+    assert [(hold["id"], hold["presentationID"]) for hold in board["holds"]] == [
+        ("edge-20-left", "paired-25-20-15-10"),
+        ("edge-10-left", "paired-25-20-15-10"),
+        ("edge-25-left", "paired-25-20-15-10"),
+        ("edge-15-left", "paired-25-20-15-10"),
+        ("edge-15-right", "paired-25-20-15-10"),
+        ("edge-25-right", "paired-25-20-15-10"),
+        ("edge-10-right", "paired-25-20-15-10"),
+        ("edge-20-right", "paired-25-20-15-10"),
+        ("edge-12-left", "paired-12-8-6"),
+        ("edge-12-right", "paired-12-8-6"),
+        ("edge-8-left", "paired-12-8-6"),
+        ("edge-8-right", "paired-12-8-6"),
+        ("edge-6-upper", "paired-12-8-6"),
+        ("edge-6-lower", "paired-12-8-6"),
+        ("edge-central-30", "central-30-25"),
+        ("edge-central-25", "central-30-25"),
+        ("edge-central-20", "central-20-6"),
+        ("edge-central-6", "central-20-6"),
+        ("rounded-tray", "rounded-tray"),
+    ]
 
 
-def test_yy_baguette_evo_explicit_pairs_use_exact_horizontal_frame_mirrors() -> None:
+def test_yy_baguette_evo_central_30_25_paths_match_the_centered_recess() -> None:
+    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    assert holds["edge-central-30"]["geometry"][0]["frame"] == {
+        "x": 0.420,
+        "y": 0.531,
+        "width": 0.160,
+        "height": 0.030,
+    }
+    assert holds["edge-central-25"]["geometry"][0]["frame"] == {
+        "x": 0.420,
+        "y": 0.597,
+        "width": 0.160,
+        "height": 0.032,
+    }
+
+
+def test_yy_baguette_evo_explicit_pairs_use_exact_horizontal_path_mirrors() -> None:
     board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
     holds = {hold["id"]: hold for hold in board["holds"]}
 
     for size in (25, 20, 15, 12, 10, 8):
-        left = holds[f"edge-{size}-left"]["geometry"][0]["frame"]
-        right = holds[f"edge-{size}-right"]["geometry"][0]["frame"]
-        assert right["x"] == pytest.approx(1 - left["x"] - left["width"])
-        assert right["y"] == left["y"]
-        assert right["width"] == left["width"]
-        assert right["height"] == left["height"]
+        left = holds[f"edge-{size}-left"]["geometry"][0]
+        right = holds[f"edge-{size}-right"]["geometry"][0]
+        _assert_global_paths_are_horizontal_mirrors(left, right)
 
 
 def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
@@ -874,15 +1042,26 @@ def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
     )
     assert all(hold["presentationID"] == "front-pair" for hold in board["holds"])
 
+    holds = {hold["id"]: hold for hold in board["holds"]}
+    assert holds["edge-25-left"]["geometry"][0]["frame"] == {
+        "x": 0.116,
+        "y": 0.350,
+        "width": 0.121,
+        "height": 0.122,
+    }
+    assert holds["edge-20-left"]["geometry"][0]["frame"] == {
+        "x": 0.280,
+        "y": 0.350,
+        "width": 0.116,
+        "height": 0.122,
+    }
 
-def test_yy_penta_evo_pair_uses_exact_horizontal_frame_mirrors() -> None:
+
+def test_yy_penta_evo_pair_uses_exact_horizontal_path_mirrors() -> None:
     board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
     holds = {hold["id"]: hold for hold in board["holds"]}
 
     for prefix in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"):
-        left = holds[f"{prefix}-left"]["geometry"][0]["frame"]
-        right = holds[f"{prefix}-right"]["geometry"][0]["frame"]
-        assert right["x"] == pytest.approx(1 - left["x"] - left["width"])
-        assert right["y"] == left["y"]
-        assert right["width"] == left["width"]
-        assert right["height"] == left["height"]
+        left = holds[f"{prefix}-left"]["geometry"][0]
+        right = holds[f"{prefix}-right"]["geometry"][0]
+        _assert_global_paths_are_horizontal_mirrors(left, right)

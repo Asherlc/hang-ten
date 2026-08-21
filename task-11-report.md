@@ -105,13 +105,16 @@ history are preserved in the source audit.
 | Baguette Evo `central-30-25.png` | 1536 × 1024 | `86f71b252af0c0e09bcb0b260b996a2bfbbeda02b3e9a3e53342cee6d661348f` |
 | Baguette Evo `central-20-6.png` | 1774 × 887 | `d06a5f87e436a72621e30151011a314203cb1887d50c4934944a449f2a86dd24` |
 | Baguette Evo `tray.png` | 1536 × 1024 | `77237c4b6345c3b385592d159a2f5bd5ee96f43928c4387222413fcc62ad604a` |
-| Penta Evo `primary.png` | 1536 × 1024 | `dd5ced78e171293149ab2204c87d867d54b19f628fe57193f0596abcb0f77a68` |
+| Penta Evo `primary.png` | 1536 × 1024 | `d153f8c4b0842342eee3598b958f8b0b3a48d8b87d6ced80b02e41c327fc430c` |
 
 The files were copied directly from the generator outputs. There was no crop,
 registration, detection, segmentation, mask or contour extraction,
 vectorization, simplification, or generated-geometry workflow. Penta Evo's
-first output contained an unsupported lower pocket; two targeted generator
-edits removed it before the accepted file was copied.
+first output contained unsupported lower pockets, and an intermediate edit
+incorrectly merged the official upper recesses. The accepted precise-object
+edit restores two visibly separate upper recesses per unit while keeping the
+unsupported lower pockets absent; its exact prompt and rejected-variant
+history are recorded in the audit.
 
 ## Presentation and geometry decisions
 
@@ -122,9 +125,10 @@ edits removed it before the accepted file was copied.
 - Baguette Evo uses five honest orientations so duplicated edges, central
   opposing lips, and the rounded tray are not flattened into a fabricated
   composite image.
-- Penta Evo shows both independent units together. The right contact frames are
-  exact horizontal mirrors of the left because the official pair image shows
-  matching units.
+- Penta Evo shows both independent units together. Each unit retains distinct
+  25 and 20 mm upper recesses separated by solid apex wood. The right canonical
+  paths are exact global horizontal mirrors of the left because the official
+  pair image shows matching units.
 
 Every canonical path was authored deliberately in normalized coordinates after
 the official inventory was frozen. Baguette Evo's documented paired contacts
@@ -145,19 +149,34 @@ Direct Workbench extraction returned:
 The extraction asserted that every presentation had regions and that the
 presentation-region total equaled the canonical geometry-piece total.
 
+## Review corrections
+
+- Recentered Baguette Evo's `central-30-25` upper and lower canonical paths on
+  the accepted image's visible recess lips; focused bounds now freeze the
+  reviewed frames.
+- Replaced Penta Evo's merged-upper-cavity art with a 1536 × 1024 source-faithful
+  edit containing two separated upper recesses per unit, then manually redrew
+  the four upper canonical paths against it.
+- Strengthened focused tests to freeze La Baguette and Baguette Evo's ordered
+  presentation definitions, default selections, and complete hold-to-surface
+  maps. Mirror tests now compare canonical vector segments in global
+  coordinates rather than frames alone.
+
 ## Verification
 
 - Final-inventory validation — passed with all four board IDs and zero drafts.
 - Package status — passed and listed all four YY packages.
-- Focused approved-package test file — 23 passed.
-- Full HangboardPackages suite — 91 passed.
+- Focused approved-package test file — 24 passed (7 YY-specific tests).
+- Full HangboardPackages suite — 92 passed.
 - Direct Workbench extraction — all ten presentations and forty-five physical
   holds loaded with every geometry piece accounted for.
 - Full Workbench suite — 318 passed. A first sandboxed run had 264 passes and
   54 environment-only failures because localhost socket binding was denied;
   the identical suite passed after socket access was permitted.
 - Real staging-script invocation — passed against an isolated Xcode-style
-  resource destination; all four YY package manifests were present.
+  resource destination; all four YY package manifests were present, and the
+  corrected Baguette Evo and Penta Evo staged packages were byte-for-byte
+  identical to their sources.
 
 ## Limitations and deferred review
 
@@ -167,12 +186,18 @@ content, not measurement evidence. Penta Evo's missing published dimensions
 and its title/list count discrepancy are deliberately visible in the audit
 rather than silently inferred away.
 
+The affected images were reviewed at original resolution and the corrected
+documents were extracted through Workbench. An interactive Workbench browser
+pass was attempted, but no in-app or extension browser was connected to this
+workspace; the temporary listener was stopped and its port verified closed.
+
 ## Cleanup
 
 - The isolated `.context/giant-pug-task11-staging` resource tree was removed by
   its EXIT trap and verified absent.
 - Workspace-owned official source downloads and rejected generator-review
-  material under `.context/giant-pug-task11-yy` were removed after review.
+  material under `.context/giant-pug-task11-yy` and
+  `.context/giant-pug-task11-review` were removed after review.
 - Official source images are not package artifacts and were not committed.
 - No Workbench listener, simulator, container, or other external resource
   remained active.

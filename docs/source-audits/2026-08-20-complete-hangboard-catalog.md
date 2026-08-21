@@ -1221,7 +1221,7 @@ no text/logo/hands/watermark/overlays, and exact source-preserving layout):
 | --- | --- |
 | `paired-25-20-15-10` | Left sections: 20 mm `x .134–.209`, 10 mm `.209–.284`, 25 mm `.284–.359`, 15 mm `.359–.444`, all `y .552, h .078`; corresponding right sections are exact horizontal mirrors. |
 | `paired-12-8-6` | 12 mm left/right `x .121/.697, y .505, w .182, h .053`; 8 mm left/right at the same x values, `y .596, h .052`; two distinct 6 mm center contacts `x .409, w .184` at those y values. |
-| `central-30-25` | 30 mm upper lip `x .369, y .529, w .148, h .034`; 25 mm lower lip at `y .598, h .035`. |
+| `central-30-25` | 30 mm upper lip `x .420, y .531, w .160, h .030`; 25 mm lower lip `x .420, y .597, w .160, h .032`. These centered frames replace the reviewed left-shifted paths. |
 | `central-20-6` | 20 mm upper lip `x .385, y .431, w .230, h .045`; 6 mm lower lip at `y .544, h .045`. |
 | `rounded-tray` | Continuous tray `x .135, y .729, w .730, h .098`. |
 
@@ -1250,9 +1250,9 @@ Reviewed 2026-08-21.
   [paired front](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-3.webp),
   [tray/mono detail](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-1.webp), and
   [20 mm detail](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-11.webp)
-  establish the two units, mirrored layouts, stepped top edge cavity, opposing
-  side edge lips, mono and duo openings, broad lower inner tray, cord routing,
-  and laminated construction.
+  establish the two units, mirrored layouts, two separated upper edge
+  recesses per unit, opposing side edge lips, mono and duo openings, broad
+  lower inner tray, cord routing, and laminated construction.
 
 The frozen physical inventory is 14: seven independent contacts on each of
 the two units. Finger capacities 1 and 2 come directly from the official
@@ -1261,15 +1261,19 @@ trays.
 
 ### AI-simplified presentation art
 
-The built-in tool used all three official views. The initial output created an
-unsupported bottom pocket; two targeted correction edits first merged the top
-edge sections into the documented stepped cavity and then removed only the
-invented bottom recess. The accepted final `primary.png` is 1536 × 1024,
-ratio 1.5, SHA-256
-`dd5ced78e171293149ab2204c87d867d54b19f628fe57193f0596abcb0f77a68`.
+The built-in tool used all three official views. Earlier generated variants
+were rejected: the first added unsupported bottom pockets, and an intermediate
+correction incorrectly merged the two manufacturer-separated upper recesses.
+The final precise-object edit used that simplified variant as the edit target
+and the official paired-front packshot as the authoritative construction
+reference. It restored exactly two separated upper recesses per unit while
+keeping the unsupported lower pockets absent. The accepted `primary.png` is
+1536 × 1024, ratio 1.5, SHA-256
+`d153f8c4b0842342eee3598b958f8b0b3a48d8b87d6ced80b02e41c327fc430c`.
 It is NON-evidence and was not geometrically processed after generation.
 
-Final generation and correction prompts (verbatim primary requests):
+Generation and correction history (verbatim primary requests; the first three
+requests yielded superseded intermediate assets):
 
 > Create a clean AI-simplified straight-on catalog illustration of the exact Penta Evo pair. Show two separate matching pale plywood rounded pentagonal-ring units side by side, each fully visible and level. Each unit must show exactly seven usable contacts in the official arrangement: two rounded rectangular upper edge recesses (25 mm and 20 mm), two rounded rectangular side edge recesses (15 mm and 10 mm), one circular mono opening, one vertical pill-shaped duo opening, and one broad rounded tray contact along the lower inner opening. Each unit has an orange suspension cord at its top.
 
@@ -1277,23 +1281,39 @@ Final generation and correction prompts (verbatim primary requests):
 
 > Remove only the two invented horizontal rounded-rectangle recesses at the very bottom, one from each unit. Fill those areas seamlessly with matching pale laminated wood. Keep the broad curved lower inner edge of each pentagonal opening unobstructed and readable as the tray contact, exactly as in Image 2.
 
+The merge request above produced a rejected intermediate, not the accepted
+asset. Final accepted correction prompt (verbatim):
+
+> Use case: precise-object-edit
+>
+> Asset type: Hang Ten hangboard catalog primary presentation image
+>
+> Input images: Image 1 is the existing simplified Penta Evo pair and is the edit target. Image 2 is YY Vertical's official Penta Evo packshot and is the authoritative reference for the upper 25 mm and 20 mm recess construction.
+>
+> Primary request: On each of the two units in Image 1, replace only the single continuous chevron-shaped upper cavity with exactly two visibly separate routed upper recesses, one on the upper-left slope and one on the upper-right slope, matching Image 2. Preserve a clear, substantial bridge of solid pale laminated wood at the suspension apex between those recesses.
+>
+> Constraints: Keep both units' overall silhouette, positions, scale, symmetry, suspension cords, mono opening, vertical duo opening, side edge recess, broad uninterrupted lower inner tray, pale laminated wood, lighting, neutral off-white background, and framing unchanged. Keep the unsupported lower pockets absent. Do not merge the two upper recesses. Do not add text, logo, numbers, hands, watermark, outlines, highlights, annotations, masks, or geometry overlays. No new or missing contacts.
+
 ### Direct geometry mapping
 
-The left unit was authored deliberately and each right frame is its exact
-horizontal mirror, consistent with the official paired front image. Left
-frames are: 25 mm `x .105, y .345, w .125, h .120`; 20 mm `x .230` with the
-same y/size; mono `x .071, y .535, w .055, h .072`; duo `x .076, y .638,
-w .057, h .132`; 15 mm `x .331, y .544, w .053, h .100`; 10 mm at `y .644,
-h .105`; and tray `x .150, y .707, w .182, h .076`. Regular contacts use
-operator-selected oval, pill, or rectangle constraints. The lower tray uses a
-rounded-rectangle constraint and surface treatment. Each saved path is the
-sole normal, active, and hit-test boundary.
+The left unit was authored deliberately and every right canonical path is its
+exact global horizontal mirror, consistent with the official paired-front
+image. The separated sloped upper frames are: 25 mm `x .116, y .350, w .121,
+h .122` and 20 mm `x .280, y .350, w .116, h .122`. Their custom rounded paths
+follow the two independent recesses and leave solid apex wood between them;
+operator-selected rounded-rectangle constraints record rotations of -28 and
++28 degrees. Other left frames remain: mono `x .071, y .535, w .055, h .072`;
+duo `x .076, y .638, w .057, h .132`; 15 mm `x .331, y .544, w .053,
+h .100`; 10 mm at `y .644, h .105`; and tray `x .150, y .707, w .182,
+h .076`. Regular contacts use operator-selected constraints. The lower tray
+uses a rounded-rectangle constraint and surface treatment. Each saved path is
+the sole normal, active, and hit-test boundary.
 
 ### YY Vertical package verification
 
 - Final-inventory validation and package status both accepted all four direct
   packages with zero drafts.
-- The complete HangboardPackages test suite passed (91 tests), including the
+- The complete HangboardPackages test suite passed (92 tests), including the
   focused YY inventory, presentation, physical-contact, and mirror assertions.
 - Direct Workbench extraction loaded every declared presentation and accounted
   for every authored region: TravelBoard 6 holds over 2 presentations, La
@@ -1304,6 +1324,12 @@ sole normal, active, and hit-test boundary.
 - A real `scripts/stage-board-packages.py` invocation staged the four packages
   into an isolated Xcode-style resource destination. Its EXIT trap removed the
   workspace-owned staging tree and absence was verified.
+
+For the review corrections, the two affected assets were inspected at original
+resolution, the revised manifests were extracted through Workbench, and the
+full Workbench suite passed. An interactive Workbench browser inspection was
+attempted, but this workspace exposed no connected in-app or extension browser;
+the temporary localhost listener was stopped and its port verified closed.
 
 Catalog-wide iOS simulator normal/active/hit-test inspection remains assigned
 to Task 12; this audit makes no simulator-review claim.
