@@ -18,6 +18,7 @@ const TYPE_COLORS: Readonly<Record<string, string>> = {
   pinch: "#f2c94c",
 };
 const PINCH_ZOOM_DELTA_THRESHOLD = 100;
+const TOUCH_PINCH_ZOOM_THRESHOLD = 1.1;
 
 interface VertexMenuPosition {
   anchorX: number;
@@ -38,6 +39,7 @@ interface GuideDragState {
   id: string;
   axis: GuideAxis;
   pointerId: number;
+  svg: SVGSVGElement;
 }
 
 function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
@@ -82,9 +84,62 @@ export function HoldCanvas({
   const guideDragRef = useRef<GuideDragState | null>(null);
   const modifierSelectionRef = useRef<string | null>(null);
   const pinchZoomDeltaRef = useRef(0);
+  const touchPinchDistanceRef = useRef<number | null>(null);
+  const touchPinchActiveRef = useRef(false);
+  const editorRef = useRef(editor);
+  const onZoomChangeRef = useRef(onZoomChange);
+  const canZoomChangeRef = useRef(canZoomChange);
+  editorRef.current = editor;
+  onZoomChangeRef.current = onZoomChange;
+  canZoomChangeRef.current = canZoomChange;
+  const releaseGuidePointer = (pointerId: number): void => {
+    const drag = guideDragRef.current;
+    if (!drag || drag.pointerId !== pointerId) return;
+    guideDragRef.current = null;
+    try {
+      drag.svg.releasePointerCapture?.(pointerId);
+    } catch {
+      // Capture can already be released when a cancellation is reported.
+    }
+  };
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
+    const touchDistance = (touches: TouchList): number => {
+      const first = touches[0];
+      const second = touches[1];
+      if (!first || !second) return 0;
+      return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+    };
+    const handleTouchStart = (event: TouchEvent): void => {
+      if (!document || event.touches.length < 2) return;
+      const distance = touchDistance(event.touches);
+      if (distance === 0) return;
+      touchPinchActiveRef.current = true;
+      touchPinchDistanceRef.current = distance;
+      const guidePointerId = guideDragRef.current?.pointerId;
+      if (guidePointerId !== undefined) releaseGuidePointer(guidePointerId);
+      editorRef.current.cancelActiveEdit();
+      event.preventDefault();
+    };
+    const handleTouchMove = (event: TouchEvent): void => {
+      if (!document || event.touches.length < 2 || !touchPinchActiveRef.current) return;
+      const distance = touchDistance(event.touches);
+      const previousDistance = touchPinchDistanceRef.current;
+      if (!previousDistance || distance === 0) return;
+      const scale = distance / previousDistance;
+      if (scale >= TOUCH_PINCH_ZOOM_THRESHOLD || scale <= 1 / TOUCH_PINCH_ZOOM_THRESHOLD) {
+        const direction = scale > 1 ? 1 : -1;
+        if (canZoomChangeRef.current(direction)) onZoomChangeRef.current(direction);
+        touchPinchDistanceRef.current = distance;
+      }
+      event.preventDefault();
+    };
+    const handleTouchEnd = (event: TouchEvent): void => {
+      if (event.touches.length >= 2) return;
+      touchPinchActiveRef.current = false;
+      touchPinchDistanceRef.current = null;
+    };
     const handleWheel = (event: WheelEvent): void => {
       if (!event.altKey && !event.ctrlKey) {
         pinchZoomDeltaRef.current = 0;
@@ -96,7 +151,7 @@ export function HoldCanvas({
       if (delta === 0) return;
       if (event.ctrlKey && !event.altKey) {
         const direction = delta < 0 ? 1 : -1;
-        if (!canZoomChange(direction)) {
+        if (!canZoomChangeRef.current(direction)) {
           pinchZoomDeltaRef.current = 0;
           return;
         }
@@ -107,14 +162,24 @@ export function HoldCanvas({
         }
         pinchZoomDeltaRef.current = 0;
       }
-      if (onZoomChange(delta < 0 ? 1 : -1) === true) event.preventDefault();
+      if (onZoomChangeRef.current(delta < 0 ? 1 : -1) === true) event.preventDefault();
     };
+    viewport.addEventListener("touchstart", handleTouchStart, { passive: false });
+    viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
+    viewport.addEventListener("touchend", handleTouchEnd);
+    viewport.addEventListener("touchcancel", handleTouchEnd);
     viewport.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
       pinchZoomDeltaRef.current = 0;
+      touchPinchActiveRef.current = false;
+      touchPinchDistanceRef.current = null;
+      viewport.removeEventListener("touchstart", handleTouchStart);
+      viewport.removeEventListener("touchmove", handleTouchMove);
+      viewport.removeEventListener("touchend", handleTouchEnd);
+      viewport.removeEventListener("touchcancel", handleTouchEnd);
       viewport.removeEventListener("wheel", handleWheel);
     };
-  }, [canZoomChange, document, onZoomChange]);
+  }, [document]);
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
   let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {
@@ -181,20 +246,11 @@ export function HoldCanvas({
     event.stopPropagation();
     const svg = event.currentTarget.ownerSVGElement;
     if (!svg) return;
-    guideDragRef.current = { id: guide.id, axis: guide.axis, pointerId: event.pointerId };
+    guideDragRef.current = { id: guide.id, axis: guide.axis, pointerId: event.pointerId, svg };
     try {
       svg.setPointerCapture?.(event.pointerId);
     } catch {
       // Pointer capture may be unavailable in older browsers and test environments.
-    }
-  };
-  const releaseGuidePointer = (svg: SVGSVGElement, pointerId: number): void => {
-    if (guideDragRef.current?.pointerId !== pointerId) return;
-    guideDragRef.current = null;
-    try {
-      svg.releasePointerCapture?.(pointerId);
-    } catch {
-      // Capture can already be released when a cancellation is reported.
     }
   };
   const onGuidePointerMove = (event: React.PointerEvent<SVGSVGElement>): void => {
@@ -209,7 +265,7 @@ export function HoldCanvas({
     onMoveGuide(drag.id, documentCoordinate);
   };
   const onGuidePointerEnd = (event: React.PointerEvent<SVGSVGElement>): void => {
-    releaseGuidePointer(event.currentTarget, event.pointerId);
+    releaseGuidePointer(event.pointerId);
   };
   const clearModifierSelection = (key: string): void => {
     if (modifierSelectionRef.current === key) modifierSelectionRef.current = null;
@@ -233,22 +289,24 @@ export function HoldCanvas({
             height: `${zoomPercent}%`,
             minHeight: `${3.6 * zoomPercent}px`,
           }}
-          onPointerDown={editor.onPointerDown}
+          onPointerDown={(event) => {
+            if (!touchPinchActiveRef.current) editor.onPointerDown(event);
+          }}
           onPointerMove={(event) => {
             onGuidePointerMove(event);
-            editor.onPointerMove(event);
+            if (!touchPinchActiveRef.current) editor.onPointerMove(event);
           }}
           onPointerUp={(event) => {
             onGuidePointerEnd(event);
-            editor.onPointerUp(event);
+            if (!touchPinchActiveRef.current) editor.onPointerUp(event);
           }}
           onPointerCancel={(event) => {
             onGuidePointerEnd(event);
-            editor.onPointerCancel(event);
+            if (!touchPinchActiveRef.current) editor.onPointerCancel(event);
           }}
           onLostPointerCapture={(event) => {
             onGuidePointerEnd(event);
-            editor.onLostPointerCapture(event);
+            if (!touchPinchActiveRef.current) editor.onLostPointerCapture(event);
           }}
           onDoubleClick={editor.onDoubleClick}
           onContextMenu={editor.onContextMenu}

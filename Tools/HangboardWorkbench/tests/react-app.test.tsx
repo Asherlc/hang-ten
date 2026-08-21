@@ -268,7 +268,7 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
   });
 });
 
-test("mobile canvas controls open the board drawer, repository sheet, and selected-hold sheet", async () => {
+test("mobile canvas controls open the board drawer, repository sheet, and hold inspector explicitly", async () => {
   const image = imageFixture();
   let saves = 0;
   await withApp(dependenciesFixture({
@@ -284,7 +284,7 @@ test("mobile canvas controls open the board drawer, repository sheet, and select
 
     for (const id of [
       "mobile-boards-button", "mobile-menu-button", "mobile-save-button",
-      "mobile-zoom-out-button", "mobile-zoom-in-button", "mobile-add-hold-button",
+      "mobile-zoom-out-button", "mobile-zoom-in-button", "mobile-add-hold-button", "mobile-open-hold-sheet-button",
     ]) assert.ok(app.document.getElementById(id), `missing #${id}`);
 
     await app.click("#mobile-boards-button");
@@ -295,7 +295,11 @@ test("mobile canvas controls open the board drawer, repository sheet, and select
     await app.click("#board-list button");
     await app.flush(() => image.images.succeed());
     assert.equal(app.document.querySelector(".workspace-grid")?.classList.contains("mobile-boards-open"), false);
+    assert.equal(app.disabled("#mobile-open-hold-sheet-button"), true);
     await app.click("#hold-overlay path");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
+    assert.equal(app.disabled("#mobile-open-hold-sheet-button"), false);
+    await app.click("#mobile-open-hold-sheet-button");
     assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
 
     await app.click("#mobile-zoom-in-button");
@@ -315,13 +319,46 @@ test("collapsing the mobile hold sheet retains the selected hold", async () => {
     await app.flush(() => image.images.succeed());
     await app.click("#hold-overlay path");
 
-    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
     assert.equal(app.text("#hold-heading"), "hold-1");
+
+    await app.click("#mobile-open-hold-sheet-button");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
 
     await app.click("#mobile-collapse-hold-sheet-button");
 
     assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
     assert.equal(app.text("#hold-heading"), "hold-1");
+  });
+});
+
+test("selecting a hold on another board does not reopen an explicitly opened mobile sheet", async () => {
+  const image = imageFixture();
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async listBoards() {
+        return [
+          { boardId: "board-a", displayName: "Board A", holdCount: 1 },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1 },
+        ];
+      },
+      async getBoard(boardId) { return boardFixture(boardId); },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button:first-child");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+    await app.click("#mobile-open-hold-sheet-button");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+
+    await app.click("#board-list button:nth-child(2)");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+
+    assert.equal(app.text("#board-name"), "Board B");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
   });
 });
 

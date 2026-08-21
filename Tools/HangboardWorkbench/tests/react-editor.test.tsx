@@ -3,6 +3,7 @@ import test from "node:test";
 import React from "react";
 
 import { WorkbenchApp } from "../src/WorkbenchApp.tsx";
+import { HoldCanvas } from "../src/components/HoldCanvas.tsx";
 import {
   holdCentroid,
   holdSiblings,
@@ -14,6 +15,7 @@ import {
 } from "../src/editor-model.ts";
 import * as pathEditor from "../src/path-editor.ts";
 import * as controller from "../src/workbench-controller.ts";
+import type { HoldEditorActions } from "../src/useHoldEditor.ts";
 import type {
   AuthStatus,
   Board,
@@ -138,6 +140,24 @@ async function withEditor(
 function paths(app: ReactHarness): string[] {
   return [...app.document.querySelectorAll<SVGPathElement>("#hold-overlay .region-shape")]
     .map((path) => path.getAttribute("d") ?? "");
+}
+
+async function touchCanvas(
+  app: ReactHarness,
+  type: "touchstart" | "touchmove" | "touchend",
+  touches: readonly { clientX: number; clientY: number }[],
+): Promise<boolean> {
+  let defaultPrevented = false;
+  await app.flush(() => {
+    const viewport = app.document.querySelector<HTMLElement>("#canvas-viewport");
+    const windowValue = app.document.defaultView;
+    if (!viewport || !windowValue) throw new Error("Missing canvas viewport test environment");
+    const event = new windowValue.Event(type, { bubbles: true, cancelable: true });
+    Object.defineProperty(event, "touches", { configurable: true, value: touches });
+    viewport.dispatchEvent(event);
+    defaultPrevented = event.defaultPrevented;
+  });
+  return defaultPrevented;
 }
 
 function rotate(path: string, degrees: number, pivot: { x: number; y: number }): string {
@@ -351,6 +371,76 @@ test("Ctrl-pinch does not consume a sub-threshold event when canvas zoom is at i
 
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -20, ctrlKey: true }), false);
     assert.equal(app.text("#canvas-zoom-level"), "300%");
+  });
+});
+
+test("wheel zoom uses callbacks from the latest render", async () => {
+  const inertEditor = { cancelActiveEdit: () => false } as HoldEditorActions;
+  function WheelZoomHarness() {
+    const [useCurrentCallbacks, setUseCurrentCallbacks] = React.useState(false);
+    const [zoom, setZoom] = React.useState(100);
+    const canvasDocument = React.useMemo(() => documentFixture(), []);
+    const onZoomChange = useCurrentCallbacks
+      ? (direction: number) => {
+        setZoom((current) => current + direction * 25);
+        return true;
+      }
+      : () => false;
+    const canZoomChange = useCurrentCallbacks ? () => true : () => false;
+    return <>
+      <button id="use-current-wheel-callbacks" type="button" onClick={() => setUseCurrentCallbacks(true)}>Use current callbacks</button>
+      <output id="wheel-harness-zoom">{zoom}%</output>
+      <HoldCanvas
+        board={null}
+        document={canvasDocument}
+        selectedKey={null}
+        selectedKeys={[]}
+        busy={false}
+        onSelectHold={() => {}}
+        pathEditor={pathEditor}
+        editor={inertEditor}
+        zoomPercent={100}
+        onZoomChange={onZoomChange}
+        canZoomChange={canZoomChange}
+        guides={[]}
+        onMoveGuide={() => {}}
+      />
+    </>;
+  }
+
+  const app = await renderReact(<WheelZoomHarness />);
+  try {
+    await app.click("#use-current-wheel-callbacks");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
+    assert.equal(app.text("#wheel-harness-zoom"), "125%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, ctrlKey: true }), true);
+    assert.equal(app.text("#wheel-harness-zoom"), "150%");
+  } finally {
+    await app.cleanup();
+  }
+});
+
+test("two-finger touch pinch continues zooming across rerenders without intercepting one-finger touches", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await touchCanvas(app, "touchstart", [{ clientX: 20, clientY: 20 }]), false);
+    assert.equal(await touchCanvas(app, "touchmove", [{ clientX: 35, clientY: 20 }]), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    assert.equal(await touchCanvas(app, "touchstart", [
+      { clientX: 20, clientY: 20 },
+      { clientX: 80, clientY: 20 },
+    ]), true);
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 10, clientY: 20 },
+      { clientX: 90, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 0, clientY: 20 },
+      { clientX: 100, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "150%");
+    assert.equal(await touchCanvas(app, "touchend", []), false);
   });
 });
 
@@ -847,6 +937,30 @@ test("guides drag on their own axis and clear without changing the document", as
     assert.equal(app.document.querySelectorAll("[data-guide-axis]").length, 0);
     assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
     assert.equal(app.text("#save-state"), "Saved");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("starting a touch pinch stops an active guide drag", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="square"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.pointer('[data-guide-axis="horizontal"]', "pointerdown", { pointerId: 17, clientX: 50, clientY: 20 });
+    assert.equal(app.capturedPointerId("#editor-svg"), 17);
+    assert.equal(await touchCanvas(app, "touchstart", [
+      { clientX: 20, clientY: 20 },
+      { clientX: 80, clientY: 20 },
+    ]), true);
+    assert.equal(app.capturedPointerId("#editor-svg"), null);
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 17, clientX: 50, clientY: 56 });
+
+    assert.equal(app.document.querySelector('[data-guide-axis="horizontal"]')?.getAttribute("y1"), "20");
   }, dependenciesFixture(boardFixture(square)));
 });
 
