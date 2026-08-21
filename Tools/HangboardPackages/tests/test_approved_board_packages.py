@@ -180,6 +180,7 @@ def test_compact_hold_records_keep_sourced_physical_facts_and_app_routing() -> N
         "sizeMillimeters",
         "depthRangeMillimeters",
         "fingerCapacity",
+        "handCapacity",
         "gripType",
         "features",
     }

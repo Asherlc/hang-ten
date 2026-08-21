@@ -492,6 +492,13 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has an invalid finger capacity"
                 )
             }
+            if let handCapacity = hold.handCapacity,
+               !BoardHold.validHandCapacityRange.contains(handCapacity) {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has an invalid hand capacity"
+                )
+            }
             let geometryValidation = BoardHoldGeometryValidator.validate(
                 hold.geometry.map(\.holdPieceDocument),
                 holdID: hold.id,
@@ -647,6 +654,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
     let gripType: GripType?
     let fingerCapacity: Int?
+    let handCapacity: Int?
     let features: [HoldFeature]?
 
     private enum CodingKeys: String, CodingKey {
@@ -658,13 +666,14 @@ private struct BoardPackageHoldDocument: Decodable {
         case depthRangeMillimeters
         case gripType
         case fingerCapacity
+        case handCapacity
         case features
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
-            "depthRangeMillimeters", "gripType", "fingerCapacity", "features"
+            "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity", "features"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -678,6 +687,7 @@ private struct BoardPackageHoldDocument: Decodable {
         )
         gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
     }
 
@@ -708,6 +718,7 @@ private struct BoardPackageHoldDocument: Decodable {
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
             depthRangeMillimeters: depthRangeMillimeters.map {
                 $0.lowerBound...$0.upperBound
             },

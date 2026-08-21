@@ -31,11 +31,49 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(firstHold.depthRangeMillimeters)
         XCTAssertNil(firstHold.gripType)
         XCTAssertNil(firstHold.fingerCapacity)
+        XCTAssertNil(firstHold.handCapacity)
         XCTAssertNil(firstHold.features)
         XCTAssertEqual(store.semantics(for: board.id), [:])
         let imageURL = try XCTUnwrap(store.presentationImageURL(for: board))
         XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
         XCTAssertEqual(try Data(contentsOf: imageURL), try presentationBytes())
+    }
+
+    func testStorePreservesOptionalHandCapacityAndRejectsInvalidValues() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["handCapacity"] = 2
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let hold = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first?.holds.first)
+        XCTAssertEqual(hold.handCapacity, 2)
+
+        let invalidFixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["handCapacity"] = 3
+                board["holds"] = holds
+            }
+        }
+        defer { invalidFixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: invalidFixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "hold hold-left has an invalid hand capacity"
+                )
+            )
+        }
     }
 
     func testStoreAcceptsShapeConstraintWithoutChangingRuntimeBoardShape() throws {

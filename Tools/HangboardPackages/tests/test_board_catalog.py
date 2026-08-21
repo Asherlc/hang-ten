@@ -209,6 +209,26 @@ def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:
     assert constraint.rotation_degrees == -17.5
 
 
+def test_package_loader_accepts_optional_hand_capacity_and_rejects_invalid_values(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "fixture-model")
+    board_path = package_root / "board.json"
+    document = json.loads(board_path.read_text(encoding="utf-8"))
+    document["holds"][0]["handCapacity"] = 2
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    package = module.load_board_package(package_root)
+    assert package.board.holds[0].hand_capacity == 2
+
+    document["holds"][0]["handCapacity"] = 3
+    board_path.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="handCapacity must be in 1...2"):
+        module.load_board_package(package_root)
+
+
 def test_package_loader_rejects_path_that_does_not_fill_its_declared_frame(
     tmp_path: Path,
 ) -> None:

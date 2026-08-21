@@ -325,6 +325,7 @@ class BoardHold:
     depth_range_millimeters: MillimeterRange | None
     grip_type: str | None
     finger_capacity: int | None
+    hand_capacity: int | None
     features: tuple[str, ...] | None
 
     @property
@@ -384,6 +385,7 @@ def _load_hold(value: Any, source: str) -> BoardHold:
             "depthRangeMillimeters",
             "gripType",
             "fingerCapacity",
+            "handCapacity",
             "features",
         },
     )
@@ -410,6 +412,13 @@ def _load_hold(value: Any, source: str) -> BoardHold:
         )
         if finger_capacity not in range(1, 5):
             raise ValueError(f"{source}.fingerCapacity must be in 1...4")
+    hand_capacity = None
+    if "handCapacity" in payload:
+        hand_capacity = _positive_integer(
+            payload["handCapacity"], f"{source}.handCapacity"
+        )
+        if hand_capacity not in range(1, 3):
+            raise ValueError(f"{source}.handCapacity must be in 1...2")
     features = None
     if "features" in payload:
         raw_features = payload["features"]
@@ -432,6 +441,7 @@ def _load_hold(value: Any, source: str) -> BoardHold:
         depth_range,
         grip_type,
         finger_capacity,
+        hand_capacity,
         features,
     )
 

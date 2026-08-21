@@ -21,6 +21,7 @@ export interface HoldInspectorProps {
   onTypeChange(type: string): void;
   onFingerCapacityChange(capacity: number | undefined): void;
   onDepthRangeChange(depthRange: MillimeterRange | undefined): void;
+  onHandCapacityChange(capacity: number | undefined): void;
   onOutlineShapeChange(shape: string): void;
   onRotate(direction: -1 | 1, shiftKey: boolean): void;
   onApplyRotation(): void;
@@ -39,6 +40,7 @@ export function HoldInspector({
   onTypeChange,
   onFingerCapacityChange,
   onDepthRangeChange,
+  onHandCapacityChange,
   onOutlineShapeChange,
   onRotate,
   onApplyRotation,
@@ -131,6 +133,20 @@ export function HoldInspector({
             />
           </label>
         </fieldset>
+        <label>Hand capacity
+          <select
+            id="hand-capacity-select"
+            disabled={busy}
+            value={hold?.handCapacity?.toString() ?? ""}
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              onHandCapacityChange(value ? Number(value) : undefined);
+            }}
+          >
+            <option value="">Unset</option>
+            {[1, 2].map((capacity) => <option key={capacity} value={capacity}>{capacity}</option>)}
+          </select>
+        </label>
         <label>Outline shape
           <select
             id="outline-shape-select"

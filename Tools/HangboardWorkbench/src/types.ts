@@ -56,6 +56,7 @@ export interface HoldRegion {
   };
   fingerCapacity?: number;
   depthRangeMillimeters?: MillimeterRange;
+  handCapacity?: number;
   shapeConstraint?: ShapeConstraint;
 }
 
