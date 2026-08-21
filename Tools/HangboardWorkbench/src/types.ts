@@ -186,7 +186,9 @@ export interface PathEditor {
   ): ConstrainedResizeResult;
   moveVertex(commands: PathCommand[], index: number, dx: number, dy: number): void;
   addVertex(commands: PathCommand[], afterIndex: number, x: number, y: number): void;
+  addInflectionPoint(commands: PathCommand[], afterIndex: number, point: Point): boolean;
   deleteVertex(commands: PathCommand[], index: number): void;
+  isInflectionVertex(commands: readonly PathCommand[], index: number): boolean;
   roundVertex(commands: PathCommand[], index: number): boolean;
   makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean;
   makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean;

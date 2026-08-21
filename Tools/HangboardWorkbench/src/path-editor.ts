@@ -22,6 +22,7 @@ const COMMAND_ARITY: Record<PathCommandType, number> = {
   C: 3,
   Z: 0,
 };
+const MIN_STABLE_SUBDIVISION_AMOUNT = 1e-4;
 
 function isPathCommandType(value: string): value is PathCommandType {
   return Object.hasOwn(COMMAND_ARITY, value);
@@ -514,6 +515,28 @@ export function addVertex(
   });
 }
 
+export function addInflectionPoint(
+  commands: PathCommand[],
+  afterIndex: number,
+  point: Point,
+): boolean {
+  const start = commands[afterIndex]?.points.at(-1);
+  const curve = commands[afterIndex + 1];
+  if (!start || (curve?.type !== "Q" && curve?.type !== "C")) return false;
+
+  const amount = nearestCurveAmount(start, curve, point);
+  if (amount <= 0 || amount >= 1) return false;
+  const split = curve.type === "Q"
+    ? subdivideQuadratic(start, curve.controls[0]!, curve.points[0]!, amount)
+    : subdivideCubic(start, curve.controls[0]!, curve.controls[1]!, curve.points[0]!, amount);
+  commands.splice(afterIndex + 1, 1, split.left, split.right);
+  return true;
+}
+
+export function isInflectionVertex(commands: readonly PathCommand[], index: number): boolean {
+  return mergedInflectionCurve(commands, index) !== null;
+}
+
 export function deleteVertex(commands: PathCommand[], index: number): void {
   const command = commands[index];
   const drawableVertexCount = commands.filter(
@@ -529,6 +552,12 @@ export function deleteVertex(commands: PathCommand[], index: number): void {
     if (next === undefined || next.type === "Z") return;
     commands[0] = { type: "M", points: [next.points.at(-1)!], controls: [] };
     commands.splice(1, 1);
+    return;
+  }
+
+  const mergedCurve = mergedInflectionCurve(commands, index);
+  if (mergedCurve) {
+    commands.splice(index, 2, mergedCurve);
     return;
   }
 
@@ -736,20 +765,216 @@ function quadraticPoint(start: Point, control: Point, end: Point, amount: number
   };
 }
 
+function subdivideQuadratic(
+  start: Point,
+  control: Point,
+  end: Point,
+  amount: number,
+): { left: PathCommand; right: PathCommand } {
+  const firstControl = interpolate(start, control, amount);
+  const secondControl = interpolate(control, end, amount);
+  const midpoint = interpolate(firstControl, secondControl, amount);
+  return {
+    left: { type: "Q", points: [midpoint], controls: [firstControl] },
+    right: { type: "Q", points: [end], controls: [secondControl] },
+  };
+}
+
 function subdivideCubic(
   start: Point,
   firstControl: Point,
   secondControl: Point,
   end: Point,
+  amount = 0.5,
 ): { left: PathCommand; right: PathCommand } {
-  const firstMidpoint = interpolate(start, firstControl, 0.5);
-  const controlMidpoint = interpolate(firstControl, secondControl, 0.5);
-  const lastMidpoint = interpolate(secondControl, end, 0.5);
-  const leftControl = interpolate(firstMidpoint, controlMidpoint, 0.5);
-  const rightControl = interpolate(controlMidpoint, lastMidpoint, 0.5);
-  const midpoint = interpolate(leftControl, rightControl, 0.5);
+  const firstMidpoint = interpolate(start, firstControl, amount);
+  const controlMidpoint = interpolate(firstControl, secondControl, amount);
+  const lastMidpoint = interpolate(secondControl, end, amount);
+  const leftControl = interpolate(firstMidpoint, controlMidpoint, amount);
+  const rightControl = interpolate(controlMidpoint, lastMidpoint, amount);
+  const midpoint = interpolate(leftControl, rightControl, amount);
   return {
     left: { type: "C", points: [midpoint], controls: [firstMidpoint, leftControl] },
     right: { type: "C", points: [end], controls: [rightControl, lastMidpoint] },
   };
+}
+
+function nearestCurveAmount(start: Point, curve: PathCommand, point: Point): number {
+  let bestAmount = 0;
+  let bestDistanceSquared = Number.POSITIVE_INFINITY;
+  const samples = 128;
+  for (let index = 1; index < samples; index += 1) {
+    const amount = index / samples;
+    const candidate = curvePoint(start, curve, amount);
+    const distanceSquared = squaredDistance(candidate, point);
+    if (distanceSquared < bestDistanceSquared) {
+      bestAmount = amount;
+      bestDistanceSquared = distanceSquared;
+    }
+  }
+  if (bestDistanceSquared < 1e-12) return bestAmount;
+
+  let lower = Math.max(0, bestAmount - 1 / samples);
+  let upper = Math.min(1, bestAmount + 1 / samples);
+  for (let iteration = 0; iteration < 20; iteration += 1) {
+    const first = lower + (upper - lower) / 3;
+    const second = upper - (upper - lower) / 3;
+    if (squaredDistance(curvePoint(start, curve, first), point)
+      <= squaredDistance(curvePoint(start, curve, second), point)) {
+      upper = second;
+    } else {
+      lower = first;
+    }
+  }
+  return (lower + upper) / 2;
+}
+
+function curvePoint(start: Point, curve: PathCommand, amount: number): Point {
+  if (curve.type === "Q") return quadraticPoint(start, curve.controls[0]!, curve.points[0]!, amount);
+  return cubicPoint(start, curve.controls[0]!, curve.controls[1]!, curve.points[0]!, amount);
+}
+
+function squaredDistance(left: Point, right: Point): number {
+  return (left.x - right.x) ** 2 + (left.y - right.y) ** 2;
+}
+
+function mergedInflectionCurve(commands: readonly PathCommand[], index: number): PathCommand | null {
+  const previous = commands[index - 1];
+  const left = commands[index];
+  const right = commands[index + 1];
+  if (!previous?.points.at(-1) || !left || !right
+    || (left.type !== "Q" && left.type !== "C") || left.type !== right.type) return null;
+  const start = previous.points.at(-1)!;
+  const vertex = left.points[0];
+  const end = right.points[0];
+  const incomingControl = left.controls.at(-1);
+  const outgoingControl = right.controls[0];
+  if (!vertex || !end || !incomingControl || !outgoingControl) return null;
+  const incomingLength = Math.hypot(vertex.x - incomingControl.x, vertex.y - incomingControl.y);
+  const outgoingLength = Math.hypot(outgoingControl.x - vertex.x, outgoingControl.y - vertex.y);
+  const amount = mergeAmount(start, vertex, end, incomingLength, outgoingLength);
+  if (amount !== null && hasStableSubdivisionAmount(amount)) {
+    const merged = left.type === "Q"
+      ? mergeQuadratic(start, left, right, amount, subdivisionTolerance(amount))
+      : mergeCubic(start, left, right, amount);
+    if (merged) {
+      const split = merged.type === "Q"
+        ? subdivideQuadratic(start, merged.controls[0]!, end, amount)
+        : subdivideCubic(start, merged.controls[0]!, merged.controls[1]!, end, amount);
+      if (commandsMatch(split.left, left, subdivisionTolerance(amount))
+        && commandsMatch(split.right, right, subdivisionTolerance(amount))) return merged;
+    }
+  }
+
+  return left.type === "Q"
+    ? fallbackQuadraticMerge(left, right)
+    : fallbackCubicMerge(left, right);
+}
+
+function hasStableSubdivisionAmount(amount: number): boolean {
+  return Number.isFinite(amount)
+    && amount >= MIN_STABLE_SUBDIVISION_AMOUNT
+    && amount <= 1 - MIN_STABLE_SUBDIVISION_AMOUNT;
+}
+
+function mergeAmount(
+  start: Point,
+  vertex: Point,
+  end: Point,
+  incomingLength: number,
+  outgoingLength: number,
+): number | null {
+  const handleLength = incomingLength + outgoingLength;
+  if (handleLength > 1e-9) return incomingLength / handleLength;
+
+  const incomingChord = Math.hypot(vertex.x - start.x, vertex.y - start.y);
+  const outgoingChord = Math.hypot(end.x - vertex.x, end.y - vertex.y);
+  const chordLength = incomingChord + outgoingChord;
+  return chordLength > 1e-9 ? incomingChord / chordLength : null;
+}
+
+function mergeQuadratic(
+  start: Point,
+  left: PathCommand,
+  right: PathCommand,
+  amount: number,
+  tolerance: number,
+): PathCommand | null {
+  const first = left.controls[0];
+  const second = right.controls[0];
+  const end = right.points[0];
+  if (!first || !second || !end) return null;
+  const fromStart = extrapolate(start, first, amount);
+  const fromEnd = extrapolate(end, second, 1 - amount);
+  if (!pointsClose(fromStart, fromEnd, tolerance)) return null;
+  return { type: "Q", points: [{ ...end }], controls: [fromStart] };
+}
+
+function fallbackQuadraticMerge(
+  left: PathCommand,
+  right: PathCommand,
+): PathCommand | null {
+  const first = left.controls[0];
+  const second = right.controls[0];
+  const end = right.points[0];
+  if (!first || !second || !end) return null;
+  return {
+    type: "Q",
+    points: [{ ...end }],
+    controls: [stableMidpoint(first, second)],
+  };
+}
+
+function stableMidpoint(first: Point, second: Point): Point {
+  return {
+    x: first.x / 2 + second.x / 2,
+    y: first.y / 2 + second.y / 2,
+  };
+}
+
+function mergeCubic(start: Point, left: PathCommand, right: PathCommand, amount: number): PathCommand | null {
+  const first = left.controls[0];
+  const second = right.controls[1];
+  const end = right.points[0];
+  if (!first || !second || !end) return null;
+  return {
+    type: "C",
+    points: [{ ...end }],
+    controls: [extrapolate(start, first, amount), extrapolate(end, second, 1 - amount)],
+  };
+}
+
+function fallbackCubicMerge(left: PathCommand, right: PathCommand): PathCommand | null {
+  const first = left.controls[0];
+  const second = right.controls[1];
+  const end = right.points[0];
+  if (!first || !second || !end) return null;
+  return {
+    type: "C",
+    points: [{ ...end }],
+    controls: [{ ...first }, { ...second }],
+  };
+}
+
+function extrapolate(start: Point, point: Point, amount: number): Point {
+  return {
+    x: start.x + (point.x - start.x) / amount,
+    y: start.y + (point.y - start.y) / amount,
+  };
+}
+
+function subdivisionTolerance(amount: number): number {
+  return 4e-6 / Math.min(amount, 1 - amount);
+}
+
+function commandsMatch(left: PathCommand, right: PathCommand, tolerance: number): boolean {
+  return left.type === right.type
+    && left.points.length === right.points.length
+    && left.controls.length === right.controls.length
+    && left.points.every((point, index) => pointsClose(point, right.points[index]!, tolerance))
+    && left.controls.every((point, index) => pointsClose(point, right.controls[index]!, tolerance));
+}
+
+function pointsClose(left: Point, right: Point, tolerance = 1e-6): boolean {
+  return Math.abs(left.x - right.x) <= tolerance && Math.abs(left.y - right.y) <= tolerance;
 }

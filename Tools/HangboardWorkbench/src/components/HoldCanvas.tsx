@@ -163,6 +163,7 @@ export function HoldCanvas({
     (firstEnabledItem ?? menu).focus();
   }, [
     editor.canDeleteSelectedVertex,
+    editor.canAddInflectionPoint,
     editor.canMakeSelectedSegmentBendable,
     editor.canMakeSelectedSegmentStraight,
     editor.canRoundSelectedVertex,
@@ -492,13 +493,19 @@ export function HoldCanvas({
               disabled={!editor.canDeleteSelectedVertex}
               aria-disabled={!editor.canDeleteSelectedVertex}
               onClick={() => editor.deleteSelectedVertex()}
-            >Delete</button>}
+            >{editor.selectedVertexIsInflection ? "Remove inflection point" : "Delete"}</button>}
             {editor.canRoundSelectedVertex && <button
               id="round-corner-action"
               type="button"
               role="menuitem"
               onClick={() => editor.roundSelectedVertex()}
             >Round corner</button>}
+            {editor.canAddInflectionPoint && <button
+              id="add-inflection-point-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.addInflectionPoint()}
+            >Add inflection point</button>}
             {editor.canMakeSelectedSegmentBendable && <button
               id="make-bendable-action"
               type="button"
