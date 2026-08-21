@@ -652,7 +652,7 @@ struct BoardPackageStore {
             }
             let presentationID: String
             if document.schemaVersion == 1 {
-                guard hold.presentationID == nil else {
+                guard !hold.hasPresentationIDKey else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
                         reason: "schema version 1 holds cannot declare presentationID"
@@ -795,10 +795,14 @@ private struct BoardPackageBoardDocument: Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decode(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        legacyPresentation = try container.decodeIfPresent(
-            BoardPackageLegacyPresentationDocument.self,
-            forKey: .presentation
-        )
+        legacyPresentation = if container.contains(.presentation) {
+            try container.decode(
+                BoardPackageLegacyPresentationDocument.self,
+                forKey: .presentation
+            )
+        } else {
+            nil
+        }
         presentations = try container.decodeIfPresent(
             [BoardPackagePresentationDocument].self,
             forKey: .presentations
@@ -931,6 +935,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let fingerCapacity: Int?
     let features: [HoldFeature]?
     let presentationID: String?
+    let hasPresentationIDKey: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -964,6 +969,7 @@ private struct BoardPackageHoldDocument: Decodable {
         gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
+        hasPresentationIDKey = container.contains(.presentationID)
         presentationID = try container.decodeIfPresent(String.self, forKey: .presentationID)
     }
 

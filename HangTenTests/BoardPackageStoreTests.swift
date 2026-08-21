@@ -69,6 +69,44 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(store.presentationImageURL(for: board)?.lastPathComponent, "primary.png")
     }
 
+    func testStoreRejectsNullSchemaV1PresentationWhenKeyIsPresent() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["presentation"] = NSNull()
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
+    }
+
+    func testStoreRejectsSchemaV1PresentationIDKeyEvenWhenValueIsNull() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["presentationID"] = NSNull()
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(reason, "schema version 1 holds cannot declare presentationID")
+        }
+    }
+
     func testStoreLoadsSchemaV2PresentationAssetsAndScopedHolds() throws {
         let fixture = try makeSchemaV2FixtureBundle()
         defer { fixture.remove() }
@@ -96,13 +134,31 @@ final class BoardPackageStoreTests: XCTestCase {
         let mutations: [(inout [String: Any]) throws -> Void] = [
             { board in
                 var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations[0].removeValue(forKey: "id")
+                board["presentations"] = presentations
+            },
+            { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
                 presentations[1]["id"] = "front"
                 board["presentations"] = presentations
+            },
+            { board in
+                board["presentations"] = []
             },
             { board in
                 var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
                 presentations[0]["default"] = false
                 board["presentations"] = presentations
+            },
+            { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations[1]["default"] = true
+                board["presentations"] = presentations
+            },
+            { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0].removeValue(forKey: "presentationID")
+                board["holds"] = holds
             },
             { board in
                 var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
@@ -116,6 +172,134 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
+    }
+
+    func testStoreAcceptsCanonicalNestedSchemaV2AssetsWithEqualBasenames() throws {
+        let fixture = try makeSchemaV2FixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations[0]["assetPath"] = "assets/front/shared.png"
+                presentations[1]["assetPath"] = "assets/rear/shared.png"
+                board["presentations"] = presentations
+            },
+            mutateAssets: { assetsURL in
+                let frontURL = assetsURL.appendingPathComponent("front/shared.png")
+                let rearURL = assetsURL.appendingPathComponent("rear/shared.png")
+                try FileManager.default.createDirectory(
+                    at: frontURL.deletingLastPathComponent(),
+                    withIntermediateDirectories: true
+                )
+                try FileManager.default.createDirectory(
+                    at: rearURL.deletingLastPathComponent(),
+                    withIntermediateDirectories: true
+                )
+                try self.presentationBytes().write(to: frontURL)
+                try self.squarePresentationBytes().write(to: rearURL)
+                try FileManager.default.removeItem(
+                    at: assetsURL.appendingPathComponent("primary.png")
+                )
+                try FileManager.default.removeItem(
+                    at: assetsURL.appendingPathComponent("back.png")
+                )
+            }
+        )
+        defer { fixture.remove() }
+
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.boards.first)
+
+        XCTAssertEqual(
+            store.presentationImageURL(for: board, presentationID: "front").map {
+                Array($0.pathComponents.suffix(3))
+            },
+            ["assets", "front", "shared.png"]
+        )
+        XCTAssertEqual(
+            store.presentationImageURL(for: board, presentationID: "back").map {
+                Array($0.pathComponents.suffix(3))
+            },
+            ["assets", "rear", "shared.png"]
+        )
+    }
+
+    func testStoreRejectsMissingUndeclaredAndSymlinkedSchemaV2Assets() throws {
+        let mutations: [((URL) throws -> Void)] = [
+            { assetsURL in
+                try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("back.png"))
+            },
+            { assetsURL in
+                try self.squarePresentationBytes().write(
+                    to: assetsURL.appendingPathComponent("extra.png")
+                )
+            },
+            { assetsURL in
+                let backURL = assetsURL.appendingPathComponent("back.png")
+                try FileManager.default.removeItem(at: backURL)
+                try FileManager.default.createSymbolicLink(
+                    at: backURL,
+                    withDestinationURL: assetsURL.appendingPathComponent("primary.png")
+                )
+            }
+        ]
+
+        for mutateAssets in mutations {
+            let fixture = try makeSchemaV2FixtureBundle(mutateAssets: mutateAssets)
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
+    }
+
+    func testStoreRejectsNoncanonicalInPackageSchemaV2AssetPaths() throws {
+        for assetPath in [
+            "assets//back.png",
+            "assets/./back.png",
+            "assets/rear/../back.png",
+            "assets/back.jpg"
+        ] {
+            let fixture = try makeSchemaV2FixtureBundle(boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations[1]["assetPath"] = assetPath
+                board["presentations"] = presentations
+            })
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+                guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                    return XCTFail("Expected invalidPackage for \(assetPath), got \(error)")
+                }
+                XCTAssertEqual(
+                    reason,
+                    "presentation asset path must name a PNG beneath assets"
+                )
+            }
+        }
+    }
+
+    func testStoreAppliesSchemaV2AspectRatioToleranceAtPointOnePercentBoundary() throws {
+        let accepted = try makeSchemaV2FixtureBundle(boardMutation: { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[1]["aspectRatio"] = 1.001
+            board["presentations"] = presentations
+        })
+        defer { accepted.remove() }
+        XCTAssertNoThrow(try BoardPackageStore(bundle: accepted.bundle))
+
+        let rejected = try makeSchemaV2FixtureBundle(boardMutation: { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+            presentations[1]["aspectRatio"] = 1.0010001
+            board["presentations"] = presentations
+        })
+        defer { rejected.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: rejected.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertEqual(
+                reason,
+                "aspect ratio must match presentation image width/height within 0.1%"
+            )
         }
     }
 
@@ -166,26 +350,89 @@ final class BoardPackageStoreTests: XCTestCase {
 
         let defaultContent = BoardMapPresentationContent(
             board: board,
-            requestedPresentationID: nil,
-            highlightedHoldIDs: []
+            selectedPresentationID: nil
         )
         XCTAssertEqual(defaultContent.presentation.id, "front")
         XCTAssertEqual(defaultContent.holds.map(\.id), ["hold-left"])
 
-        let highlightedContent = BoardMapPresentationContent(
+        let backContent = BoardMapPresentationContent(
             board: board,
-            requestedPresentationID: nil,
-            highlightedHoldIDs: ["hold-back"]
+            selectedPresentationID: "back"
         )
-        XCTAssertEqual(highlightedContent.presentation.id, "back")
-        XCTAssertEqual(highlightedContent.holds.map(\.id), ["hold-back"])
+        XCTAssertEqual(backContent.presentation.id, "back")
+        XCTAssertEqual(backContent.holds.map(\.id), ["hold-back"])
         XCTAssertEqual(
             store.presentationImageURL(
                 for: board,
-                presentationID: highlightedContent.presentation.id
+                presentationID: backContent.presentation.id
             )?.lastPathComponent,
             "back.png"
         )
+    }
+
+    func testBoardMapSelectionPrioritizesInitialHighlightedHoldOverRequestedSurface() throws {
+        let fixture = try makeSchemaV2FixtureBundle()
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        let selection = BoardMapPresentationSelection(
+            board: board,
+            requestedPresentationID: "front",
+            activeHoldID: nil,
+            highlightedHoldIDs: ["hold-back"]
+        )
+
+        XCTAssertEqual(selection.presentationID, "back")
+    }
+
+    func testBoardMapSelectionMovesToNewActiveHoldWhenAnotherSurfaceIsAlreadyHighlighted() throws {
+        let fixture = try makeSchemaV2FixtureBundle()
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        var selection = BoardMapPresentationSelection(
+            board: board,
+            requestedPresentationID: nil,
+            activeHoldID: "hold-left",
+            highlightedHoldIDs: ["hold-left"]
+        )
+
+        selection.updateHighlights(
+            from: ["hold-left"],
+            to: ["hold-left", "hold-back"],
+            activeHoldID: "hold-back",
+            on: board
+        )
+
+        XCTAssertEqual(selection.presentationID, "back")
+    }
+
+    func testBoardMapSelectionKeepsManuallySelectedSurfaceWhileAddingAndRemovingHolds() throws {
+        let fixture = try makeSchemaV2FixtureBundle()
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        var selection = BoardMapPresentationSelection(
+            board: board,
+            requestedPresentationID: nil,
+            activeHoldID: "hold-left",
+            highlightedHoldIDs: ["hold-left"]
+        )
+
+        selection.selectPresentation(id: "back", on: board)
+        selection.updateHighlights(
+            from: ["hold-left"],
+            to: ["hold-left", "hold-back"],
+            activeHoldID: "hold-back",
+            on: board
+        )
+        XCTAssertEqual(selection.presentationID, "back")
+
+        selection.updateHighlights(
+            from: ["hold-left", "hold-back"],
+            to: ["hold-left"],
+            activeHoldID: "hold-back",
+            on: board
+        )
+        XCTAssertEqual(selection.presentationID, "back")
     }
 
     func testStoreAcceptsShapeConstraintWithoutChangingRuntimeBoardShape() throws {

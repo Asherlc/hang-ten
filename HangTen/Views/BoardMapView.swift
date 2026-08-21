@@ -7,16 +7,78 @@ struct BoardMapPresentationContent {
 
     init(
         board: TrainingBoard,
-        requestedPresentationID: String?,
-        highlightedHoldIDs: Set<String>
+        selectedPresentationID: String?
     ) {
-        let requested = board.presentation(id: requestedPresentationID)
-        let highlighted = board.holds.first {
-            highlightedHoldIDs.contains($0.id)
-        }.flatMap { board.presentation(id: $0.presentationID) }
-        let resolvedPresentation = requested ?? highlighted ?? board.defaultPresentation
+        let resolvedPresentation = board.presentation(id: selectedPresentationID)
+            ?? board.defaultPresentation
         presentation = resolvedPresentation
         holds = board.holds.filter { $0.presentationID == resolvedPresentation.id }
+    }
+}
+
+struct BoardMapPresentationSelection: Equatable {
+    private(set) var presentationID: String
+
+    init(
+        board: TrainingBoard,
+        requestedPresentationID: String?,
+        activeHoldID: String?,
+        highlightedHoldIDs: Set<String>
+    ) {
+        presentationID = Self.presentationID(
+            for: activeHoldID,
+            on: board
+        ) ?? board.holds.first(where: {
+            highlightedHoldIDs.contains($0.id)
+        })?.presentationID ?? board.presentation(id: requestedPresentationID)?.id
+            ?? board.defaultPresentation.id
+    }
+
+    mutating func selectPresentation(id: String, on board: TrainingBoard) {
+        guard let presentation = board.presentation(id: id) else { return }
+        presentationID = presentation.id
+    }
+
+    mutating func updateHighlights(
+        from previousHoldIDs: Set<String>,
+        to highlightedHoldIDs: Set<String>,
+        activeHoldID: String?,
+        on board: TrainingBoard
+    ) {
+        if let activePresentationID = Self.presentationID(for: activeHoldID, on: board) {
+            presentationID = activePresentationID
+            return
+        }
+        let addedHoldIDs = highlightedHoldIDs.subtracting(previousHoldIDs)
+        if let addedHold = board.holds.first(where: { addedHoldIDs.contains($0.id) }) {
+            presentationID = addedHold.presentationID
+        }
+    }
+
+    mutating func activateHold(id: String?, on board: TrainingBoard) {
+        guard let activePresentationID = Self.presentationID(for: id, on: board) else {
+            return
+        }
+        presentationID = activePresentationID
+    }
+
+    mutating func reset(
+        board: TrainingBoard,
+        requestedPresentationID: String?,
+        activeHoldID: String?,
+        highlightedHoldIDs: Set<String>
+    ) {
+        self = Self(
+            board: board,
+            requestedPresentationID: requestedPresentationID,
+            activeHoldID: activeHoldID,
+            highlightedHoldIDs: highlightedHoldIDs
+        )
+    }
+
+    private static func presentationID(for holdID: String?, on board: TrainingBoard) -> String? {
+        guard let holdID else { return nil }
+        return board.holds.first(where: { $0.id == holdID })?.presentationID
     }
 }
 
@@ -26,14 +88,16 @@ struct BoardMapView: View {
     let highlightMode: BoardHighlightMode
     let onHoldTap: ((BoardHold) -> Void)?
     private let requestedPresentationID: String?
+    private let activeHoldID: String?
 
-    @State private var activePresentationID: String?
+    @State private var presentationSelection: BoardMapPresentationSelection
 
     init(
         board: TrainingBoard,
         highlightedHoldIDs: Set<String> = [],
         highlightMode: BoardHighlightMode = .active,
         selectedPresentationID: String? = nil,
+        activeHoldID: String? = nil,
         onHoldTap: ((BoardHold) -> Void)? = nil
     ) {
         self.board = board
@@ -41,14 +105,21 @@ struct BoardMapView: View {
         self.highlightMode = highlightMode
         self.onHoldTap = onHoldTap
         requestedPresentationID = selectedPresentationID
-        _activePresentationID = State(initialValue: selectedPresentationID)
+        self.activeHoldID = activeHoldID
+        _presentationSelection = State(
+            initialValue: BoardMapPresentationSelection(
+                board: board,
+                requestedPresentationID: selectedPresentationID,
+                activeHoldID: activeHoldID,
+                highlightedHoldIDs: highlightedHoldIDs
+            )
+        )
     }
 
     var body: some View {
         let content = BoardMapPresentationContent(
             board: board,
-            requestedPresentationID: activePresentationID,
-            highlightedHoldIDs: highlightedHoldIDs
+            selectedPresentationID: presentationSelection.presentationID
         )
         VStack(spacing: 8) {
             if board.presentations.count > 1 {
@@ -56,7 +127,7 @@ struct BoardMapView: View {
                     "Board surface",
                     selection: Binding(
                         get: { content.presentation.id },
-                        set: { activePresentationID = $0 }
+                        set: { presentationSelection.selectPresentation(id: $0, on: board) }
                     )
                 ) {
                     ForEach(board.presentations) { presentation in
@@ -91,17 +162,32 @@ struct BoardMapView: View {
             .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)
         }
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
-        .onChange(of: highlightedHoldIDs) { _, holdIDs in
-            guard let hold = board.holds.first(where: { holdIDs.contains($0.id) }) else {
-                return
-            }
-            activePresentationID = hold.presentationID
+        .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in
+            presentationSelection.updateHighlights(
+                from: previousHoldIDs,
+                to: holdIDs,
+                activeHoldID: activeHoldID,
+                on: board
+            )
+        }
+        .onChange(of: activeHoldID) { _, holdID in
+            presentationSelection.activateHold(id: holdID, on: board)
         }
         .onChange(of: requestedPresentationID) { _, presentationID in
-            activePresentationID = presentationID
+            presentationSelection.reset(
+                board: board,
+                requestedPresentationID: presentationID,
+                activeHoldID: activeHoldID,
+                highlightedHoldIDs: highlightedHoldIDs
+            )
         }
         .onChange(of: board.id) { _, _ in
-            activePresentationID = requestedPresentationID
+            presentationSelection.reset(
+                board: board,
+                requestedPresentationID: requestedPresentationID,
+                activeHoldID: activeHoldID,
+                highlightedHoldIDs: highlightedHoldIDs
+            )
         }
     }
 }

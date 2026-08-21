@@ -4,6 +4,7 @@ import XCTest
 final class BoardSourceBoundaryTests: XCTestCase {
     private enum PackageDiscoveryError: Error {
         case invalidRootChild(String)
+        case invalidAssetPath(String)
     }
 
     func testCatalogContainsExactlyRegisteredPackageBoards() {
@@ -151,17 +152,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let packageEntries = try Set(
                 FileManager.default.contentsOfDirectory(atPath: packageURL.path)
             )
-            let assetEntries = try Set(
-                FileManager.default.contentsOfDirectory(
-                    atPath: packageURL.appendingPathComponent("assets").path
-                )
-            )
+            let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
             let schemaVersion = try XCTUnwrap(boardDocument["schemaVersion"] as? Int)
             XCTAssertTrue(schemaVersion == 1 || schemaVersion == 2)
             if schemaVersion == 1 {
-                XCTAssertEqual(assetEntries, ["primary.png"])
+                XCTAssertEqual(assetPaths, ["assets/primary.png"])
                 XCTAssertTrue(holds.allSatisfy { $0["presentationID"] == nil })
             } else {
                 let presentations = try XCTUnwrap(
@@ -169,12 +166,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 )
                 let declaredAssets = Set(
                     presentations.compactMap { presentation in
-                        (presentation["assetPath"] as? String).map {
-                            URL(fileURLWithPath: $0).lastPathComponent
-                        }
+                        presentation["assetPath"] as? String
                     }
                 )
-                XCTAssertEqual(assetEntries, declaredAssets)
+                XCTAssertEqual(assetPaths, declaredAssets)
                 let presentationIDs = Set(
                     presentations.compactMap { $0["id"] as? String }
                 )
@@ -187,6 +182,29 @@ final class BoardSourceBoundaryTests: XCTestCase {
             XCTAssertTrue(holds.allSatisfy { !($0["geometry"] as? [[String: Any]] ?? []).isEmpty })
             XCTAssertTrue(holds.allSatisfy { $0["cueStyle"] == nil })
         }
+    }
+
+    func testPackageAssetBoundaryEnumerationPreservesNestedPathsAndEqualBasenames() throws {
+        let packageURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("BoardSourceBoundaryTests-\(UUID().uuidString)")
+        let frontURL = packageURL.appendingPathComponent("assets/front/shared.png")
+        let rearURL = packageURL.appendingPathComponent("assets/rear/shared.png")
+        try FileManager.default.createDirectory(
+            at: frontURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try FileManager.default.createDirectory(
+            at: rearURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data([0]).write(to: frontURL)
+        try Data([1]).write(to: rearURL)
+        defer { try? FileManager.default.removeItem(at: packageURL) }
+
+        XCTAssertEqual(
+            try packageRelativeAssetPaths(in: packageURL),
+            ["assets/front/shared.png", "assets/rear/shared.png"]
+        )
     }
 
     func testBoardMapUsesOnePhysicalPathForHighlightingAndHitTesting() throws {
@@ -460,6 +478,39 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
 
         return identifiers
+    }
+
+    private func packageRelativeAssetPaths(in packageURL: URL) throws -> Set<String> {
+        let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
+        guard let enumerator = FileManager.default.enumerator(
+            at: assetsURL,
+            includingPropertiesForKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ]
+        ) else {
+            throw PackageDiscoveryError.invalidAssetPath("assets")
+        }
+        let packagePrefix = packageURL.standardizedFileURL.path + "/"
+        var paths = Set<String>()
+        for case let itemURL as URL in enumerator {
+            let values = try itemURL.resourceValues(forKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ])
+            guard values.isSymbolicLink != true else {
+                throw PackageDiscoveryError.invalidAssetPath(itemURL.path)
+            }
+            if values.isDirectory == true { continue }
+            let itemPath = itemURL.standardizedFileURL.path
+            guard values.isRegularFile == true, itemPath.hasPrefix(packagePrefix) else {
+                throw PackageDiscoveryError.invalidAssetPath(itemURL.path)
+            }
+            paths.insert(String(itemPath.dropFirst(packagePrefix.count)))
+        }
+        return paths
     }
 
     private func discoveredPackagePaths(at repositoryRoot: URL) throws -> [String: String] {

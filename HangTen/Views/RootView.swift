@@ -827,7 +827,11 @@ struct PlanDetailView: View {
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
             }
-            BoardMapView(board: board, highlightedHoldIDs: firstStepHoldIDs)
+            BoardMapView(
+                board: board,
+                highlightedHoldIDs: firstStepHoldIDs,
+                activeHoldID: firstStepHold?.id
+            )
                 .padding(.horizontal, 12)
             if let firstStepHoldCue {
                 GripDiagramView(
@@ -1689,7 +1693,8 @@ struct WorkoutView: View {
 				BoardMapView(
 					board: board,
 					highlightedHoldIDs: highlightedHoldIDs,
-					highlightMode: highlightMode
+					highlightMode: highlightMode,
+					activeHoldID: holdCue?.hold.id
 				)
 					.padding(.horizontal, 2)
 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
@@ -1768,7 +1773,8 @@ struct WorkoutView: View {
 					BoardMapView(
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
-						highlightMode: highlightMode
+						highlightMode: highlightMode,
+						activeHoldID: holdCue?.hold.id
 					)
 						.frame(maxWidth: .infinity)
 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
