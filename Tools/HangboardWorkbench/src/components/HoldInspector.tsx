@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { HoldRegion } from "../types.ts";
+import type { HoldRegion, MillimeterRange } from "../types.ts";
 
 const HOLD_TYPES = ["jug", "sloper", "edge", "pocket", "pinch"] as const;
 const OUTLINE_SHAPES = [
@@ -20,6 +20,7 @@ export interface HoldInspectorProps {
   onRotationDegreesChange(value: string): void;
   onTypeChange(type: string): void;
   onFingerCapacityChange(capacity: number | undefined): void;
+  onDepthRangeChange(depthRange: MillimeterRange | undefined): void;
   onOutlineShapeChange(shape: string): void;
   onRotate(direction: -1 | 1, shiftKey: boolean): void;
   onApplyRotation(): void;
@@ -37,6 +38,7 @@ export function HoldInspector({
   onRotationDegreesChange,
   onTypeChange,
   onFingerCapacityChange,
+  onDepthRangeChange,
   onOutlineShapeChange,
   onRotate,
   onApplyRotation,
@@ -86,6 +88,49 @@ export function HoldInspector({
             {[1, 2, 3, 4].map((capacity) => <option key={capacity} value={capacity}>{capacity}</option>)}
           </select>
         </label>
+        <fieldset className="depth-range-inputs">
+          <legend>Depth range (mm)</legend>
+          <label>Minimum
+            <input
+              id="depth-range-lower-input"
+              type="number"
+              min="1"
+              step="1"
+              disabled={busy}
+              value={hold?.depthRangeMillimeters?.lowerBound ?? ""}
+              onChange={(event) => {
+                const value = event.currentTarget.value;
+                if (!value) {
+                  onDepthRangeChange(undefined);
+                  return;
+                }
+                const lowerBound = Number(value);
+                const upperBound = Math.max(hold?.depthRangeMillimeters?.upperBound ?? lowerBound, lowerBound);
+                onDepthRangeChange({ lowerBound, upperBound });
+              }}
+            />
+          </label>
+          <label>Maximum
+            <input
+              id="depth-range-upper-input"
+              type="number"
+              min="1"
+              step="1"
+              disabled={busy}
+              value={hold?.depthRangeMillimeters?.upperBound ?? ""}
+              onChange={(event) => {
+                const value = event.currentTarget.value;
+                if (!value) {
+                  onDepthRangeChange(undefined);
+                  return;
+                }
+                const upperBound = Number(value);
+                const lowerBound = Math.min(hold?.depthRangeMillimeters?.lowerBound ?? upperBound, upperBound);
+                onDepthRangeChange({ lowerBound, upperBound });
+              }}
+            />
+          </label>
+        </fieldset>
         <label>Outline shape
           <select
             id="outline-shape-select"

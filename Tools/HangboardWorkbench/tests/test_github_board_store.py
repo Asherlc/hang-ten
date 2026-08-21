@@ -848,13 +848,14 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     assert saved.board_json_sha == expected_sha
 
 
-def test_changed_hosted_save_persists_optional_finger_capacity() -> None:
+def test_changed_hosted_save_persists_optional_hold_metadata() -> None:
     client = _client(("fixture-board", board_document("fixture.board")))
     document = board_package.editor_document(
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
     )
     for region in document["regions"]:
         region["fingerCapacity"] = 3
+        region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
 
     saved, _commit_sha = github_board_store.save_editor_document(
         client, TOKEN, BRANCH, "fixture-board", document
@@ -865,6 +866,14 @@ def test_changed_hosted_save_persists_optional_finger_capacity() -> None:
     )
     assert saved.board["holds"][0]["fingerCapacity"] == 3
     assert stored["holds"][0]["fingerCapacity"] == 3
+    assert saved.board["holds"][0]["depthRangeMillimeters"] == {
+        "lowerBound": 12,
+        "upperBound": 16,
+    }
+    assert stored["holds"][0]["depthRangeMillimeters"] == {
+        "lowerBound": 12,
+        "upperBound": 16,
+    }
 
 
 def test_stale_sha_conflict_becomes_a_board_save_conflict() -> None:

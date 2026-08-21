@@ -15,6 +15,17 @@ function isFingerCapacity(value: unknown): value is number {
   return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 4;
 }
 
+function isMillimeterRange(value: unknown): value is { lowerBound: number; upperBound: number } {
+  if (!isRecord(value)) return false;
+  const { lowerBound, upperBound } = value;
+  return Number.isInteger(lowerBound)
+    && Number.isInteger(upperBound)
+    && typeof lowerBound === "number"
+    && typeof upperBound === "number"
+    && lowerBound > 0
+    && upperBound >= lowerBound;
+}
+
 function isHoldRegion(value: unknown): value is HoldRegion {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -23,6 +34,7 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
+    && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
     && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)
@@ -55,6 +67,7 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   if (!Array.isArray(document.regions)) throw new Error("Hold document needs holds");
   const keys = new Set<string>();
   const fingerCapacityByHoldId = new Map<string, number | undefined>();
+  const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
   for (const region of document.regions) {
     if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
       throw new Error("Every hold needs a key");
@@ -72,6 +85,10 @@ export function validateEditorDocument(document: unknown): EditorDocument {
       && !isFingerCapacity(region.fingerCapacity)) {
       throw new Error(`Hold ${region.key} finger capacity must be between 1 and 4`);
     }
+    if (Object.hasOwn(region, "depthRangeMillimeters")
+      && !isMillimeterRange(region.depthRangeMillimeters)) {
+      throw new Error(`Hold ${region.key} depth range must be positive and ordered`);
+    }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);
     }
@@ -82,6 +99,14 @@ export function validateEditorDocument(document: unknown): EditorDocument {
         throw new Error(`Hold ${holdID} pieces must share one finger capacity`);
       }
       fingerCapacityByHoldId.set(holdID, region.fingerCapacity);
+      const depthRange = region.depthRangeMillimeters;
+      const existingDepthRange = depthRangeByHoldId.get(holdID);
+      if (depthRangeByHoldId.has(holdID)
+        && (existingDepthRange?.lowerBound !== depthRange?.lowerBound
+          || existingDepthRange?.upperBound !== depthRange?.upperBound)) {
+        throw new Error(`Hold ${holdID} pieces must share one depth range`);
+      }
+      depthRangeByHoldId.set(holdID, depthRange);
     }
   }
   if (!isEditorDocument(document)) {

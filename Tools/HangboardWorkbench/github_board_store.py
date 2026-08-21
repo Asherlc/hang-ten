@@ -803,9 +803,17 @@ def _save_loaded_editor_document(
     pieces_by_hold: dict[
         str, list[board_package._EditorPiece]
     ] = {}
-    for hold_id, piece_index, kind, path, shape_constraint, finger_capacity in parsed_regions.values():
+    for (
+        hold_id,
+        piece_index,
+        kind,
+        path,
+        shape_constraint,
+        finger_capacity,
+        depth_range,
+    ) in parsed_regions.values():
         pieces_by_hold.setdefault(hold_id, []).append(
-            (piece_index, kind, path, shape_constraint, finger_capacity)
+            (piece_index, kind, path, shape_constraint, finger_capacity, depth_range)
         )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])

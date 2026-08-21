@@ -22,6 +22,7 @@ import type {
   ConstrainedHandle,
   EditorDocument,
   HoldRegion,
+  MillimeterRange,
   PathCommand,
   PathEditor,
   Point,
@@ -135,6 +136,7 @@ export interface HoldEditorActions {
   dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
   changeFingerCapacity(capacity: number | undefined): void;
+  changeHoldDepthRange(depthRange: MillimeterRange | undefined): void;
   changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
   applyRotation(): void;
@@ -806,6 +808,26 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     });
   }, [actions, busy, document, selectedHold, selectedKeys]);
 
+  const changeHoldDepthRange = useCallback((depthRange: MillimeterRange | undefined): void => {
+    if (busy || !document || !selectedHold
+      || (depthRange !== undefined
+        && (!Number.isInteger(depthRange.lowerBound)
+          || !Number.isInteger(depthRange.upperBound)
+          || depthRange.lowerBound <= 0
+          || depthRange.upperBound < depthRange.lowerBound))) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        if (depthRange === undefined) delete region.depthRangeMillimeters;
+        else region.depthRangeMillimeters = { ...depthRange };
+      }
+    }, {
+      status: "Depth range changed. Save when ready.",
+      failureMessage: "Depth range is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
   const changeOutlineShape = useCallback((shape: string): void => {
     if (busy || !document || !selectedHold || (shape !== "custom" && !isShapeConstraintShape(shape))) return;
     const label = shape === "roundedRectangle" ? "rounded rectangle" : shape;
@@ -1382,6 +1404,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     dismissVertexMenu,
     changeHoldType,
     changeFingerCapacity,
+    changeHoldDepthRange,
     changeOutlineShape,
     rotateHold,
     applyRotation,

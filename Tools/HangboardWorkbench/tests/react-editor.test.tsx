@@ -781,6 +781,53 @@ test("finger capacity loads in the inspector, applies to every physical piece, a
   }, dependenciesFixture(board, { client }));
 });
 
+test("depth range loads in the inspector and saves across every physical piece", async () => {
+  const board = boardFixture(documentFixture([
+    {
+      id: 1,
+      key: "a-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "a", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+    },
+    {
+      id: 2,
+      key: "a-piece-1",
+      type: "jug",
+      displayPath: SECOND_PATH,
+      metadata: { holdID: "a", pieceIndex: 1 },
+      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+    },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.documentValue("#depth-range-lower-input"), "9");
+    assert.equal(app.documentValue("#depth-range-upper-input"), "10");
+    await app.change("#depth-range-lower-input", "12");
+    await app.change("#depth-range-upper-input", "16");
+    await app.click("#save-button");
+    assert.deepEqual(
+      saved[0]?.regions.slice(0, 2).map((region) => region.depthRangeMillimeters),
+      [{ lowerBound: 12, upperBound: 16 }, { lowerBound: 12, upperBound: 16 }],
+    );
+
+    await app.click("#add-hold-button");
+    assert.equal(app.documentValue("#depth-range-lower-input"), "");
+    assert.equal(app.documentValue("#depth-range-upper-input"), "");
+  }, dependenciesFixture(board, { client }));
+});
+
 test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavior", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
