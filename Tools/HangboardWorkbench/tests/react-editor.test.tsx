@@ -140,6 +140,24 @@ function paths(app: ReactHarness): string[] {
     .map((path) => path.getAttribute("d") ?? "");
 }
 
+async function touchCanvas(
+  app: ReactHarness,
+  type: "touchstart" | "touchmove" | "touchend",
+  touches: readonly { clientX: number; clientY: number }[],
+): Promise<boolean> {
+  let defaultPrevented = false;
+  await app.flush(() => {
+    const viewport = app.document.querySelector<HTMLElement>("#canvas-viewport");
+    const windowValue = app.document.defaultView;
+    if (!viewport || !windowValue) throw new Error("Missing canvas viewport test environment");
+    const event = new windowValue.Event(type, { bubbles: true, cancelable: true });
+    Object.defineProperty(event, "touches", { configurable: true, value: touches });
+    viewport.dispatchEvent(event);
+    defaultPrevented = event.defaultPrevented;
+  });
+  return defaultPrevented;
+}
+
 function rotate(path: string, degrees: number, pivot: { x: number; y: number }): string {
   const commands = pathEditor.parsePath(path);
   pathEditor.rotatePath(commands, (degrees * Math.PI) / 180, pivot);
@@ -351,6 +369,25 @@ test("Ctrl-pinch does not consume a sub-threshold event when canvas zoom is at i
 
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -20, ctrlKey: true }), false);
     assert.equal(app.text("#canvas-zoom-level"), "300%");
+  });
+});
+
+test("two-finger touch pinch zooms the canvas without intercepting one-finger touches", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await touchCanvas(app, "touchstart", [{ clientX: 20, clientY: 20 }]), false);
+    assert.equal(await touchCanvas(app, "touchmove", [{ clientX: 35, clientY: 20 }]), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    assert.equal(await touchCanvas(app, "touchstart", [
+      { clientX: 20, clientY: 20 },
+      { clientX: 80, clientY: 20 },
+    ]), true);
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 10, clientY: 20 },
+      { clientX: 90, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await touchCanvas(app, "touchend", []), false);
   });
 });
 

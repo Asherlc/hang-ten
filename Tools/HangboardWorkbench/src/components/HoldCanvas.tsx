@@ -18,6 +18,7 @@ const TYPE_COLORS: Readonly<Record<string, string>> = {
   pinch: "#f2c94c",
 };
 const PINCH_ZOOM_DELTA_THRESHOLD = 100;
+const TOUCH_PINCH_ZOOM_THRESHOLD = 1.1;
 
 interface VertexMenuPosition {
   anchorX: number;
@@ -82,9 +83,44 @@ export function HoldCanvas({
   const guideDragRef = useRef<GuideDragState | null>(null);
   const modifierSelectionRef = useRef<string | null>(null);
   const pinchZoomDeltaRef = useRef(0);
+  const touchPinchDistanceRef = useRef<number | null>(null);
+  const touchPinchActiveRef = useRef(false);
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
+    const touchDistance = (touches: TouchList): number => {
+      const first = touches[0];
+      const second = touches[1];
+      if (!first || !second) return 0;
+      return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+    };
+    const handleTouchStart = (event: TouchEvent): void => {
+      if (!document || event.touches.length < 2) return;
+      const distance = touchDistance(event.touches);
+      if (distance === 0) return;
+      touchPinchActiveRef.current = true;
+      touchPinchDistanceRef.current = distance;
+      editor.cancelActiveEdit();
+      event.preventDefault();
+    };
+    const handleTouchMove = (event: TouchEvent): void => {
+      if (!document || event.touches.length < 2 || !touchPinchActiveRef.current) return;
+      const distance = touchDistance(event.touches);
+      const previousDistance = touchPinchDistanceRef.current;
+      if (!previousDistance || distance === 0) return;
+      const scale = distance / previousDistance;
+      if (scale >= TOUCH_PINCH_ZOOM_THRESHOLD || scale <= 1 / TOUCH_PINCH_ZOOM_THRESHOLD) {
+        const direction = scale > 1 ? 1 : -1;
+        if (canZoomChange(direction)) onZoomChange(direction);
+        touchPinchDistanceRef.current = distance;
+      }
+      event.preventDefault();
+    };
+    const handleTouchEnd = (event: TouchEvent): void => {
+      if (event.touches.length >= 2) return;
+      touchPinchActiveRef.current = false;
+      touchPinchDistanceRef.current = null;
+    };
     const handleWheel = (event: WheelEvent): void => {
       if (!event.altKey && !event.ctrlKey) {
         pinchZoomDeltaRef.current = 0;
@@ -109,12 +145,22 @@ export function HoldCanvas({
       }
       if (onZoomChange(delta < 0 ? 1 : -1) === true) event.preventDefault();
     };
+    viewport.addEventListener("touchstart", handleTouchStart, { passive: false });
+    viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
+    viewport.addEventListener("touchend", handleTouchEnd);
+    viewport.addEventListener("touchcancel", handleTouchEnd);
     viewport.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
       pinchZoomDeltaRef.current = 0;
+      touchPinchActiveRef.current = false;
+      touchPinchDistanceRef.current = null;
+      viewport.removeEventListener("touchstart", handleTouchStart);
+      viewport.removeEventListener("touchmove", handleTouchMove);
+      viewport.removeEventListener("touchend", handleTouchEnd);
+      viewport.removeEventListener("touchcancel", handleTouchEnd);
       viewport.removeEventListener("wheel", handleWheel);
     };
-  }, [canZoomChange, document, onZoomChange]);
+  }, [canZoomChange, document, editor, onZoomChange]);
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
   let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {
@@ -233,22 +279,24 @@ export function HoldCanvas({
             height: `${zoomPercent}%`,
             minHeight: `${3.6 * zoomPercent}px`,
           }}
-          onPointerDown={editor.onPointerDown}
+          onPointerDown={(event) => {
+            if (!touchPinchActiveRef.current) editor.onPointerDown(event);
+          }}
           onPointerMove={(event) => {
             onGuidePointerMove(event);
-            editor.onPointerMove(event);
+            if (!touchPinchActiveRef.current) editor.onPointerMove(event);
           }}
           onPointerUp={(event) => {
             onGuidePointerEnd(event);
-            editor.onPointerUp(event);
+            if (!touchPinchActiveRef.current) editor.onPointerUp(event);
           }}
           onPointerCancel={(event) => {
             onGuidePointerEnd(event);
-            editor.onPointerCancel(event);
+            if (!touchPinchActiveRef.current) editor.onPointerCancel(event);
           }}
           onLostPointerCapture={(event) => {
             onGuidePointerEnd(event);
-            editor.onLostPointerCapture(event);
+            if (!touchPinchActiveRef.current) editor.onLostPointerCapture(event);
           }}
           onDoubleClick={editor.onDoubleClick}
           onContextMenu={editor.onContextMenu}

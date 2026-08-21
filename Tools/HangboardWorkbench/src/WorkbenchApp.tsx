@@ -204,7 +204,6 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             selectedKeys={state.selectedKeys}
             busy={editorBusy}
             onSelectHold={(key, toggle) => {
-              setMobileHoldSheetOpen(true);
               actions.selectHold(key, toggle);
             }}
             pathEditor={dependencies.pathEditor}
@@ -225,6 +224,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           <div className="mobile-canvas-controls" aria-label="Mobile canvas controls">
             <button className="tool-button" id="mobile-zoom-out-button" type="button" aria-label="Zoom out" disabled={!state.document || canvasZoom <= MIN_CANVAS_ZOOM} onClick={() => changeCanvasZoom(-1)}>−</button>
             <button className="tool-button" id="mobile-zoom-in-button" type="button" aria-label="Zoom in" disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM} onClick={() => changeCanvasZoom(1)}>+</button>
+            <button className="tool-button" id="mobile-open-hold-sheet-button" type="button" disabled={!selectedHold} onClick={() => setMobileHoldSheetOpen(true)}>Edit hold</button>
             <button className="tool-button accent" id="mobile-add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
           </div>
         </section>
