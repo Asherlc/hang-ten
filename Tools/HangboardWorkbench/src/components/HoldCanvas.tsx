@@ -139,6 +139,7 @@ export function HoldCanvas({
   }, [
     editor.canDeleteSelectedVertex,
     editor.canMakeSelectedSegmentBendable,
+    editor.canMakeSelectedSegmentStraight,
     editor.canRoundSelectedVertex,
     editor.vertexMenu?.x,
     editor.vertexMenu?.y,
@@ -461,6 +462,12 @@ export function HoldCanvas({
               role="menuitem"
               onClick={() => editor.makeSelectedSegmentBendable()}
             >Make bendable</button>}
+            {editor.canMakeSelectedSegmentStraight && <button
+              id="make-straight-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentStraight()}
+            >Make straight</button>}
           </div>
         )}
         <div className={`empty-state${document ? " hidden" : ""}`} id="empty-state">

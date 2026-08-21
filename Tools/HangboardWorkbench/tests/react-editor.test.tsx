@@ -811,6 +811,22 @@ test("straight-segment menu converts a segment to a bendable quadratic", async (
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("curved-segment menu makes a quadratic segment straight and removes its control", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 Q 20 0 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 5 });
+
+    assert.equal(app.document.querySelector('[role="menu"]')?.getAttribute("aria-label"), "Line actions");
+    assert.equal(app.text("#make-straight-action"), "Make straight");
+    await app.click("#make-straight-action");
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(app.document.querySelector('.path-editor-control[data-index="1"][data-control="0"]'), null);
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("straight-segment context menu chooses the closest eligible edge", async () => {
   const path = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: path }]);

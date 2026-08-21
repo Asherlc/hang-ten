@@ -7,6 +7,7 @@ import {
   createOutlineShapePath,
   deleteVertex,
   makeSegmentBendable,
+  makeSegmentStraight,
   moveVertex,
   parsePath,
   roundVertex,
@@ -86,6 +87,29 @@ test("makeSegmentBendable converts a closing edge while retaining one final clos
 
   assert.equal(makeSegmentBendable(commands, 2), true);
   assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 Q 5 5 0 0 Z");
+  assert.equal(commands.filter((command) => command.type === "M").length, 1);
+  assert.equal(commands.filter((command) => command.type === "Z").length, 1);
+  assert.equal(commands.at(-1)?.type, "Z");
+});
+
+test("makeSegmentStraight replaces quadratic and cubic segments with lines to their existing endpoints", () => {
+  for (const [path, expected] of [
+    ["M 0 0 Q 5 10 10 0 L 10 10 Z", "M 0 0 L 10 0 L 10 10 Z"],
+    ["M 0 0 C 2 10 8 10 10 0 L 10 10 Z", "M 0 0 L 10 0 L 10 10 Z"],
+  ] as const) {
+    const commands = parsePath(path);
+
+    assert.equal(makeSegmentStraight(commands, 0), true, path);
+    assert.equal(serializePath(commands), expected, path);
+    assert.equal(makeSegmentStraight(commands, 0), false, "straight segments cannot be converted twice");
+  }
+});
+
+test("makeSegmentStraight replaces a closing curve while retaining one final close command", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 Q 4 14 0 0 Z");
+
+  assert.equal(makeSegmentStraight(commands, 2), true);
+  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 L 0 0 Z");
   assert.equal(commands.filter((command) => command.type === "M").length, 1);
   assert.equal(commands.filter((command) => command.type === "Z").length, 1);
   assert.equal(commands.at(-1)?.type, "Z");
