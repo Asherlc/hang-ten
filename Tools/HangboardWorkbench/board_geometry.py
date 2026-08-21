@@ -43,30 +43,21 @@ class NormalizedFrame:
             if isinstance(raw, bool) or not isinstance(raw, (int, float)) or not math.isfinite(raw):
                 raise GeometryError(f"{label}.{key} must be finite")
             numbers[key] = float(raw)
-        if (
-            numbers["x"] < 0
-            or numbers["y"] < 0
-            or numbers["width"] <= 0
-            or numbers["height"] <= 0
-            or numbers["x"] + numbers["width"] > 1
-            or numbers["y"] + numbers["height"] > 1
-        ):
-            raise GeometryError(f"{label} must stay inside the normalized canvas")
+        if numbers["width"] <= 0 or numbers["height"] <= 0:
+            raise GeometryError(f"{label} width and height must be positive")
         return cls(**numbers)
 
     def to_json(self) -> dict[str, float]:
         precision = 12
         minimum_dimension = 10**-precision
-        x = min(round(self.x, precision), 1 - minimum_dimension)
-        y = min(round(self.y, precision), 1 - minimum_dimension)
-        width = round(
-            min(max(round(self.width, precision), minimum_dimension), 1 - x),
-            precision,
-        )
-        height = round(
-            min(max(round(self.height, precision), minimum_dimension), 1 - y),
-            precision,
-        )
+        if not all(math.isfinite(value) for value in (self.x, self.y, self.width, self.height)):
+            raise GeometryError("frame coordinates must be finite")
+        if self.width <= 0 or self.height <= 0:
+            raise GeometryError("frame width and height must be positive")
+        x = round(self.x, precision)
+        y = round(self.y, precision)
+        width = max(round(self.width, precision), minimum_dimension)
+        height = max(round(self.height, precision), minimum_dimension)
         return {
             "x": x,
             "y": y,
@@ -109,13 +100,6 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
             if not math.isfinite(number):
                 raise GeometryError(f"{label} coordinates must be finite")
             values.append(number)
-        # Only the point the curve actually passes through (a command's final
-        # pair) must stay on the canvas; a Bezier control point just shapes
-        # the curve between two such points and routinely falls outside it.
-        if values:
-            destination_x, destination_y = values[-2], values[-1]
-            if not 0 <= destination_x <= width or not 0 <= destination_y <= height:
-                raise GeometryError(f"{label} coordinates must stay inside the canvas")
         parsed.append((command, tuple(values)))
         index += arity
 

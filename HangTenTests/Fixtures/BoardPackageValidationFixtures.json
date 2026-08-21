@@ -66,12 +66,6 @@
       "name-lowercase.board"
     ]
   },
-  "outOfBoundsFrames": [
-    {
-      "name": "fractional-overflow",
-      "frame": {"x": 0.9, "y": 0.1, "width": 0.1000000005, "height": 0.2}
-    }
-  ],
   "malformedPathShapes": [
     {
       "name": "zero-area",

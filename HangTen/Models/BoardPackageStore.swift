@@ -841,10 +841,9 @@ struct BoardPackageFrameDocument: Codable, Hashable {
         HoldFrame(x: x, y: y, width: width, height: height)
     }
 
-    var isNormalized: Bool {
+    var isValid: Bool {
         x.isFinite && y.isFinite && width.isFinite && height.isFinite &&
-            x >= 0 && y >= 0 && width > 0 && height > 0 &&
-            x + width <= 1 && y + height <= 1
+            width > 0 && height > 0
     }
 }
 
@@ -995,7 +994,7 @@ enum BoardGeometryAdaptationError: Error, CustomStringConvertible {
 
 extension BoardHoldPieceDocument {
     func boardHoldPiece(id: String, holdID: String) throws -> BoardHoldPiece {
-        guard frame.isNormalized else {
+        guard frame.isValid else {
             throw BoardGeometryAdaptationError.invalid(
                 "hold piece \(id) has an invalid frame"
             )

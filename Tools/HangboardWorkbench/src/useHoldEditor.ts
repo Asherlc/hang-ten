@@ -865,11 +865,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const hold = candidate.regions.find((region) => region.key === drag.holdKey);
         if (!hold?.shapeConstraint) throw new Error("Constrained outline is unavailable.");
         const model = pathEditor.constrainedOutlineModel(hold.displayPath, hold.shapeConstraint);
-        const { width, height } = candidate.canvas;
         if (!Object.values(model.handles).every(({ x, y }) => (
-          Number.isFinite(x) && Number.isFinite(y) && x >= 0 && x <= width && y >= 0 && y <= height
+          Number.isFinite(x) && Number.isFinite(y)
         ))) {
-          throw new Error("Constrained outline must stay inside the canvas.");
+          throw new Error("Constrained outline coordinates must be finite.");
         }
       }
       validateEditorDocument(candidate);

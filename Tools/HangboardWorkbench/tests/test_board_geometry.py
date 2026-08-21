@@ -47,21 +47,26 @@ def test_unions_multiple_normalized_piece_frames() -> None:
     }
 
 
-def test_serialized_normalized_frame_stays_within_canvas_after_rounding() -> None:
-    x = 75918 / 91672
-    width = (91672 - 75918) / 91672
-    assert round(x, 12) + round(width, 12) == 1.000000000001
-
-    serialized = NormalizedFrame(x=x, y=x, width=width, height=width).to_json()
-
-    assert serialized["width"] == 0.17185181953
-    assert serialized["height"] == 0.17185181953
-    assert json.dumps(serialized, separators=(",", ":")) == (
-        '{"x":0.82814818047,"y":0.82814818047,'
-        '"width":0.17185181953,"height":0.17185181953}'
+def test_serialized_normalized_frame_preserves_off_canvas_coordinates_after_rounding() -> None:
+    frame = NormalizedFrame(
+        x=-0.1718518195296,
+        y=0.8281481804704,
+        width=1.25,
+        height=0.3,
     )
-    assert serialized["x"] + serialized["width"] <= 1
-    assert serialized["y"] + serialized["height"] <= 1
+
+    serialized = frame.to_json()
+
+    assert serialized == {
+        "x": -0.17185181953,
+        "y": 0.82814818047,
+        "width": 1.25,
+        "height": 0.3,
+    }
+    assert json.dumps(serialized, separators=(",", ":")) == (
+        '{"x":-0.17185181953,"y":0.82814818047,'
+        '"width":1.25,"height":0.3}'
+    )
     assert NormalizedFrame.from_json(serialized) == NormalizedFrame(**serialized)
 
 
@@ -74,8 +79,8 @@ def test_serialized_normalized_frame_keeps_tiny_edge_dimensions_positive() -> No
     ).to_json()
 
     assert serialized == {
-        "x": 0.999999999999,
-        "y": 0.999999999999,
+        "x": 1.0,
+        "y": 1.0,
         "width": 0.000000000001,
         "height": 0.000000000001,
     }
@@ -155,6 +160,14 @@ def test_parses_a_path_whose_control_point_falls_outside_the_canvas() -> None:
     assert path.data == "M 20 20 C -50 20 -50 80 20 80 L 40 80 L 40 20 Z"
 
 
+def test_parses_a_hold_whose_contour_falls_outside_the_canvas() -> None:
+    path = parse_closed_path(
+        "M -20 20 L 120 20 L 120 80 L -20 80 Z", 100, 100
+    )
+
+    assert path.data == "M -20 20 L 120 20 L 120 80 L -20 80 Z"
+
+
 def test_parses_a_pill_shaped_rounded_rectangle() -> None:
     path = display_path_for_shape(
         {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.8},
@@ -177,10 +190,6 @@ def test_parses_a_pill_shaped_rounded_rectangle() -> None:
         (
             "M 10 10 L 70 70 L 10 70 L 70 10 Z",
             "self-intersect",
-        ),
-        (
-            "M -1 10 L 30 10 L 30 30 L 10 30 Z",
-            "inside the canvas",
         ),
     ],
 )
