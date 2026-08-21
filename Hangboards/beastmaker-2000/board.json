@@ -164,7 +164,7 @@
           "frame": {
             "x": 0.349578893471,
             "y": 0.04670416844,
-            "width": 0.324281344134,
+            "width": 0.303753336279,
             "height": 0.130851707447
           },
           "shape": {
@@ -202,6 +202,10 @@
                 "command": "close"
               }
             ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
           }
         }
       ]
