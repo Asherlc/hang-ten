@@ -8,7 +8,7 @@ import struct
 import sys
 import threading
 import zlib
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from pathlib import Path
 
@@ -209,100 +209,6 @@ class _OneTimeMissingBlobClient(FakeGitHubClient):
         return content
 
 
-class _FirstPackageFailureClient(FakeGitHubClient):
-    """Fails the first package image once and records which packages began."""
-
-    def __init__(self, files: dict[str, bytes], failing_sha: str) -> None:
-        super().__init__({BRANCH: files})
-        self._failing_sha = failing_sha
-        self._failed = False
-        self._started = threading.Condition()
-        self._image_barrier = threading.Barrier(
-            github_board_store._MAX_CONCURRENT_PACKAGE_LOADS, timeout=5
-        )
-        self.started_shas: set[str] = set()
-
-    def get_blob(self, token: str, sha: str) -> bytes:
-        with self._started:
-            self.started_shas.add(sha)
-            is_initial_image = (
-                len(self.started_shas)
-                <= github_board_store._MAX_CONCURRENT_PACKAGE_LOADS
-            )
-            self._started.notify_all()
-        if is_initial_image:
-            self._image_barrier.wait()
-        if sha == self._failing_sha and not self._failed:
-            self._failed = True
-            super().get_blob(token, sha)
-            raise GitHubNotFoundError("blob is not available")
-        return super().get_blob(token, sha)
-
-    def wait_for_started(self, count: int) -> set[str]:
-        with self._started:
-            assert self._started.wait_for(
-                lambda: len(self.started_shas) >= count, timeout=5
-            )
-            return set(self.started_shas)
-
-
-class _RejectingExecutor:
-    """Records the initial worker window, then rejects its first package."""
-
-    def __init__(self) -> None:
-        self.submitted_slugs: list[str] = []
-        self._futures: list[Future[github_board_store.GitHubBoardPackage]] = []
-
-    def submit(self, operation, *args, **kwargs):
-        del operation, kwargs
-        self.submitted_slugs.append(args[2])
-        future: Future[github_board_store.GitHubBoardPackage] = Future()
-        self._futures.append(future)
-        if len(self._futures) == 1:
-            future.set_exception(
-                board_package.BoardPackageError("catalog load stopped")
-            )
-        return future
-
-    def shutdown(self, wait: bool = True, *, cancel_futures: bool = False) -> None:
-        del wait
-        if cancel_futures:
-            for future in self._futures:
-                future.cancel()
-
-
-class _PausedConfiguredWindowClient(FakeGitHubClient):
-    """Pauses blob reads so the configured package-load width is observable."""
-
-    def __init__(self, files: dict[str, bytes]) -> None:
-        super().__init__({BRANCH: files})
-        self._active = threading.Condition()
-        self._active_blob_reads = 0
-        self.max_active_blob_reads = 0
-        self.release = threading.Event()
-
-    def get_blob(self, token: str, sha: str) -> bytes:
-        with self._active:
-            self._active_blob_reads += 1
-            self.max_active_blob_reads = max(
-                self.max_active_blob_reads, self._active_blob_reads
-            )
-            self._active.notify_all()
-        try:
-            assert self.release.wait(timeout=5)
-            return super().get_blob(token, sha)
-        finally:
-            with self._active:
-                self._active_blob_reads -= 1
-
-    def wait_for_active(self, count: int) -> int:
-        with self._active:
-            self._active.wait_for(
-                lambda: self.max_active_blob_reads >= count, timeout=1
-            )
-            return self.max_active_blob_reads
-
-
 class _PausedBulkClient(FakeGitHubClient):
     """Pauses a bulk blob read while exposing later control-call progress."""
 
@@ -433,7 +339,7 @@ def test_cached_catalog_avoids_rescanning_over_capacity_images_for_open_and_imag
     ]
     assert opened.board_id == "charlie.board"
     assert image == files["Hangboards/charlie/assets/primary.png"]
-    assert len(client.calls_named("get_blob")) == 14
+    assert len(client.calls_named("get_blob")) == 9
 
 
 def test_cached_store_reloads_a_tree_evicted_at_its_configured_capacity() -> None:
@@ -472,7 +378,7 @@ def test_cached_store_skips_trees_larger_than_its_configured_entry_limit() -> No
     store.discover_packages(TOKEN, BRANCH)
 
     assert len(client.calls_named("get_tree")) == 2
-    assert len(client.calls_named("get_blob")) == 4
+    assert len(client.calls_named("get_blob")) == 2
 
 
 def test_control_calls_progress_while_a_bulk_catalog_read_is_paused() -> None:
@@ -530,7 +436,7 @@ def test_cached_store_reloads_a_catalog_evicted_at_its_capacity() -> None:
     store.discover_packages(TOKEN, "second")
     store.discover_packages(TOKEN, "first")
 
-    assert len(client.calls_named("get_blob")) == 6
+    assert len(client.calls_named("get_blob")) == 3
 
 
 def test_cached_store_skips_catalogs_larger_than_its_configured_byte_limit() -> None:
@@ -541,7 +447,7 @@ def test_cached_store_skips_catalogs_larger_than_its_configured_byte_limit() -> 
     store.discover_packages(TOKEN, BRANCH)
     store.discover_packages(TOKEN, BRANCH)
 
-    assert len(client.calls_named("get_blob")) == 4
+    assert len(client.calls_named("get_blob")) == 2
 
 
 def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
@@ -555,7 +461,7 @@ def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
     store.open_package(TOKEN, BRANCH, "fixture.board")
     store.primary_image_bytes(TOKEN, BRANCH, "fixture.board")
 
-    assert len(client.calls_named("get_blob")) == 6
+    assert len(client.calls_named("get_blob")) == 5
 
 
 def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
@@ -565,14 +471,12 @@ def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
     )
     store = github_board_store.GitHubBoardStore(client)
 
-    with pytest.raises(
-        board_package.BoardPackageError, match="primary image is missing"
-    ):
+    with pytest.raises(board_package.BoardPackageError, match="board.json is missing"):
         store.discover_packages(TOKEN, BRANCH)
     packages = store.discover_packages(TOKEN, BRANCH)
 
     assert [package.board_id for package in packages] == ["fixture.board"]
-    assert len(client.calls_named("get_blob")) == 3
+    assert len(client.calls_named("get_blob")) == 2
 
 
 def test_cached_store_partitions_immutable_reads_by_credential() -> None:
@@ -584,35 +488,114 @@ def test_cached_store_partitions_immutable_reads_by_credential() -> None:
     store.discover_packages("second-token", BRANCH)
 
     assert len(client.calls_named("get_tree")) == 2
-    assert len(client.calls_named("get_blob")) == 4
+    assert len(client.calls_named("get_blob")) == 2
 
 
-def test_discovery_submits_only_one_worker_window_after_an_early_failure() -> None:
-    """Fails if a failed source-ordered package starts later queued packages."""
-    files: dict[str, bytes] = {}
-    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
-        files.update(_complete_package(slug, board_document(f"{slug}.board")))
-        files[f"Hangboards/{slug}/assets/primary.png"] = _primary_image_with_text_chunk(
-            slug.encode("utf-8")
-        )
-    failing_sha = FakeGitHubClient._sha(files["Hangboards/alpha/assets/primary.png"])
-    client = _FirstPackageFailureClient(files, failing_sha)
+def test_cached_store_catalog_reads_board_json_without_primary_image_blobs() -> None:
+    """Fails if listing metadata still downloads every package primary image."""
+    packages = [
+        (f"board-{index:02d}", board_document(f"board-{index:02d}.id"))
+        for index in range(33)
+    ]
+    client = _client(*packages)
     store = github_board_store.GitHubBoardStore(client)
 
-    with pytest.raises(board_package.BoardPackageError, match="primary image is missing"):
-        store.discover_packages(TOKEN, BRANCH)
-    started_before_retry = client.wait_for_started(7)
-    packages = store.discover_packages(TOKEN, BRANCH)
+    listed = store.discover_packages(TOKEN, BRANCH)
 
-    assert [package.board_id for package in packages] == [
-        "alpha.board",
-        "bravo.board",
-        "charlie.board",
-        "delta.board",
-        "echo.board",
-        "foxtrot.board",
-    ]
-    assert len(started_before_retry) == 7
+    assert len(listed) == 33
+    image_shas = {
+        entry.sha
+        for entry in client.get_tree(TOKEN, BRANCH)
+        if entry.path.endswith("/assets/primary.png")
+    }
+    assert {
+        call.args[1] for call in client.calls_named("get_blob")
+    }.isdisjoint(image_shas)
+    assert len(client.calls_named("get_blob")) == 33
+
+
+def test_cached_opened_package_saves_with_only_conditional_put_across_commits() -> None:
+    """Fails if an opened board's saves re-read an immutable snapshot."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client)
+    opened = store.open_package(TOKEN, BRANCH, "fixture.board")
+    first_document = copy.deepcopy(board_package.editor_document(opened))
+    for region in first_document["regions"]:
+        region["type"] = "edge"
+    before_first_save = len(client.calls)
+
+    first_saved, _first_commit = store.save_editor_document(
+        TOKEN,
+        BRANCH,
+        "fixture-board",
+        first_document,
+        expected_board_id="fixture.board",
+    )
+    first_save_calls = client.calls[before_first_save:]
+    second_document = copy.deepcopy(board_package.editor_document(first_saved))
+    for region in second_document["regions"]:
+        region["type"] = "jug"
+    before_second_save = len(client.calls)
+
+    saved, _second_commit = store.save_editor_document(
+        TOKEN,
+        BRANCH,
+        "fixture-board",
+        second_document,
+        expected_board_id="fixture.board",
+    )
+
+    assert [call.method for call in first_save_calls] == ["put_file"]
+    assert [call.method for call in client.calls[before_second_save:]] == ["put_file"]
+    assert saved.board["holds"][0]["kind"] == "jug"
+
+
+def test_cached_store_direct_board_save_opens_the_live_package_before_writing() -> None:
+    """Fails if a direct board-ID save skips full package validation before its PUT."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client)
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    document = copy.deepcopy(document)
+    for region in document["regions"]:
+        region["type"] = "edge"
+    client.calls.clear()
+
+    saved, _commit = store.save_board_editor_document(
+        TOKEN,
+        BRANCH,
+        "fixture.board",
+        document,
+    )
+
+    assert saved.board["holds"][0]["kind"] == "edge"
+    assert len(client.calls_named("get_branch_head_sha")) == 1
+    assert len(client.calls_named("get_tree")) == 1
+    assert len(client.calls_named("get_blob")) == 2
+    assert len(client.calls_named("put_file")) == 1
+
+
+def test_cached_opened_package_save_rejects_a_concurrent_board_json_change() -> None:
+    """Fails if saving from an opened package loses GitHub's SHA conflict check."""
+    client = _ConcurrentSaveClient(
+        _complete_package("fixture-board", board_document("fixture.board"))
+    )
+    store = github_board_store.GitHubBoardStore(client)
+    document = copy.deepcopy(
+        board_package.editor_document(store.open_package(TOKEN, BRANCH, "fixture.board"))
+    )
+    for region in document["regions"]:
+        region["type"] = "edge"
+
+    with pytest.raises(board_package.BoardSaveConflictError, match="file changed"):
+        store.save_editor_document(
+            TOKEN,
+            BRANCH,
+            "fixture-board",
+            document,
+            expected_board_id="fixture.board",
+        )
 
 
 @pytest.mark.parametrize("max_concurrent_package_loads", [0, -1])
@@ -635,55 +618,6 @@ def test_discovery_rejects_nonpositive_package_load_limits(
             )
 
     assert not client.calls_named("get_tree")
-
-
-def test_cached_store_submits_its_configured_smaller_package_load_window() -> None:
-    """Fails if a lower configured worker limit still queues the default window."""
-    files: dict[str, bytes] = {}
-    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
-        files.update(_complete_package(slug, board_document(f"{slug}.board")))
-    store = github_board_store.GitHubBoardStore(
-        FakeGitHubClient({BRANCH: files}), max_concurrent_package_loads=2
-    )
-    store._executor.shutdown()
-    executor = _RejectingExecutor()
-    store._executor = executor
-
-    try:
-        with pytest.raises(board_package.BoardPackageError, match="catalog load stopped"):
-            store.discover_packages(TOKEN, BRANCH)
-    finally:
-        store.close()
-
-    assert executor.submitted_slugs == ["alpha", "bravo"]
-
-
-def test_cached_store_uses_its_configured_larger_package_load_window() -> None:
-    """Fails if a higher configured worker limit remains capped at the default."""
-    files: dict[str, bytes] = {}
-    for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
-        files.update(_complete_package(slug, board_document(f"{slug}.board")))
-        files[f"Hangboards/{slug}/assets/primary.png"] = _primary_image_with_text_chunk(
-            slug.encode("utf-8")
-        )
-    client = _PausedConfiguredWindowClient(files)
-    store = github_board_store.GitHubBoardStore(
-        client, max_concurrent_package_loads=6
-    )
-
-    with ThreadPoolExecutor(max_workers=1) as requests:
-        discovery = requests.submit(store.discover_packages, TOKEN, BRANCH)
-        try:
-            active_before_release = client.wait_for_active(6)
-        finally:
-            client.release.set()
-        try:
-            packages = discovery.result(timeout=5)
-        finally:
-            store.close()
-
-    assert len(packages) == 6
-    assert active_before_release == 6
 
 
 def test_snapshot_rejects_a_branch_other_than_its_pinned_branch() -> None:

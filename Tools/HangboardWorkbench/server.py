@@ -329,15 +329,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             if self.server.allow_remote:
                 session = self._github_session()
                 store = self._github_board_store()
-                package = store.open_package(
-                    session.token, session.branch, unquote(board_path)
-                )
-                saved, commit_sha = store.save_editor_document(
+                saved, commit_sha = store.save_board_editor_document(
                     session.token,
                     session.branch,
-                    package.slug,
+                    unquote(board_path),
                     document,
-                    expected_board_id=unquote(board_path),
                 )
                 self._send_json(
                     HTTPStatus.OK,
