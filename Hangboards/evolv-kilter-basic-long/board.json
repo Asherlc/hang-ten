@@ -24,11 +24,43 @@
             "height": 0.045
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "rectangle",
             "rotationDegrees": 0.0
           }
         }
@@ -48,11 +80,43 @@
             "height": 0.045
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "rectangle",
             "rotationDegrees": 0.0
           }
         }
@@ -72,11 +136,43 @@
             "height": 0.045
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.5
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "rectangle",
             "rotationDegrees": 0.0
           }
         }
@@ -101,66 +197,29 @@
               {
                 "command": "move",
                 "to": [
-                  0.017017729343,
+                  0.0,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.982982270657,
+                  1.0,
                   0.0
                 ]
               },
               {
-                "command": "quad",
-                "control": [
-                  1.0,
-                  0.0
-                ],
+                "command": "line",
                 "to": [
                   1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "quad",
-                "control": [
-                  1.0,
-                  1.0
-                ],
-                "to": [
-                  0.982982270657,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.017017729343,
-                  1.0
-                ]
-              },
-              {
-                "command": "quad",
-                "control": [
                   0.0,
                   1.0
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "quad",
-                "control": [
-                  0.0,
-                  0.0
-                ],
-                "to": [
-                  0.017017729343,
-                  0.0
                 ]
               },
               {
@@ -169,7 +228,7 @@
             ]
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "rectangle",
             "rotationDegrees": 0.0
           }
         }
