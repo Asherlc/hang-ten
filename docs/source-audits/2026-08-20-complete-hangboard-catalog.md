@@ -385,3 +385,162 @@ constraints plus 11 custom paths. The accepted illustration, each contact
 frame, and every saved path were inspected directly. Interactive Workbench
 canvas overlay review plus full in-app active-highlight and hit-test review
 remain for the plan's final catalog-wide visual-validation task.
+
+## The Hangboard
+
+Reviewed 2026-08-21.
+
+### Official evidence
+
+Only the manufacturer's current product pages and their current gallery/feature
+images were used as product evidence:
+
+- [Current store product page](https://thehangboard.com/products/hangboard)
+  establishes the product and manufacturer name, asymmetric incremental-depth
+  layout, absence of dedicated pockets, 40-degree sloper, and jugs.
+- [Current manufacturer product landing page](https://thehangboard.com/)
+  establishes the six labeled depths (`40`, `30`, `25`, `20`, `15`, and `10`
+  mm), deep jugs, 40-degree slopers, European beech, and dimensions of 23.5 ×
+  6.25 × 2 in. Its feature text expressly calls these six edge depths rather
+  than six total physical hand contacts.
+- [Official straight-on product image](https://cdn.shopify.com/s/files/1/0764/5210/2426/files/hangboard-straight-2.png)
+  establishes the complete front silhouette, four routed edge channels, three
+  separately bounded contact surfaces per channel, relative placement, and the
+  visible continuous center-top surface between two outer top contacts.
+- [Official asymmetric edge-layout guide](https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png)
+  maps the published labels directly to the 12 separated edge contacts: upper
+  left and upper right each contain `40`, `30`, and `25` mm surfaces; lower
+  left and lower right each contain `20`, `15`, and `10` mm surfaces. The guide
+  also confirms that equal-depth contacts are deliberately arranged
+  asymmetrically rather than as frame mirrors.
+- [Official right oblique gallery image](https://thehangboard.com/cdn/shop/files/half-right-hangboard.png?v=1747623739)
+  distinguishes the recessed edge contact floors, top relief, and the
+  separations between the `40`/`30`/`25` and `20`/`15`/`10` surfaces.
+- [Official left side gallery image](https://thehangboard.com/cdn/shop/files/hangboard-side-2.png?v=1747623739)
+  and [official right side gallery image](https://thehangboard.com/cdn/shop/files/hangboard-side-2-right.png?v=1747623739)
+  establish the rounded deep-jug overhang and the distinct sloped top surface.
+- [Official jug/sloper profile guide](https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png)
+  is the manufacturer's labelled visual support for the deep-jug and
+  40-degree-sloper classification. Together with the straight-on and oblique
+  gallery images, it shows two physically separated outer jug contacts and one
+  uninterrupted center sloper surface.
+- [Official top/bottom gallery image](https://thehangboard.com/cdn/shop/files/hangboard-top-bottom-2.png?v=1747623739)
+  confirms that the center top surface is continuous and that the outer top
+  contacts are physically separated by the center relief.
+
+No reseller page, review, search-result claim, generated artwork, or existing
+board package supplied a product fact or inventory decision.
+
+### Field-by-field and inventory mapping
+
+| `board.json` field | Exact source mapping |
+| --- | --- |
+| `id` | Repository-stable identifier for the exact product named `The Hangboard` on the current store page. |
+| `manufacturer` | `The Hangboard`, from the current product pages and manufacturer domain. |
+| `name` | `The Hangboard`, matching the store-page product title. |
+| `subtitle` | Conservative restatement of the pages' explicit asymmetric layout, six labeled edge depths, deep jugs, and 40-degree sloper. |
+| `productURL` | Canonical current store product page above. |
+| `dimensions` | `23.5 × 6.25 × 2 in`, copied from the current manufacturer landing page. |
+| `aspectRatio` and `presentations` | Presentation-art facts only: the accepted PNG is 1774 × 887 pixels, exactly `2.0`; every contact belongs to the single `front` presentation. |
+| `holds[].kind` | `edge` follows the page's “6 crimping edges”/edge-depth labels; `jug` follows “deep jugs”; `sloper` follows the labelled 40-degree sloper feature. |
+| `holds[].sizeMillimeters` | Present only on the 12 edge contacts and copied from the six printed manufacturer labels shown once per physical left/right contact: 40, 30, 25, 20, 15, and 10 mm. |
+| omitted optional fields | No finger capacity, grip posture, training cue, feature tags, weight, material field, or inferred measurement was encoded on a hold. |
+
+The layout guide and straight-on photograph show two physically separated
+contacts for every labelled edge depth. The two outer top contacts are also
+physically separated, so they are separate jugs. The manufacturer calls the
+top feature “40-degree slopers” in prose, but the front, top, and oblique gallery
+views show one uninterrupted center surface; following the package rule for a
+continuous physical contact, it is represented as one logical sloper rather
+than an invented left/right split. This freezes the complete inventory at 15
+contacts:
+
+| Manufacturer-evidenced position | `board.json` contact | Source-backed mapping |
+| --- | --- | --- |
+| Outer top left/right | `jug-left`, `jug-right` | Two physically separated deep jugs; the right path is the exact x-reverse of the left because the official top silhouette is symmetric. |
+| Continuous center top | `sloper-40-center` | One uninterrupted 40-degree sloper surface; no unsupported left/right split. |
+| Upper-left channel | `edge-40-left`, `edge-30-left`, `edge-25-left` | Three separately bounded edge surfaces in the official left-to-right label order. |
+| Upper-right channel | `edge-40-right`, `edge-30-right`, `edge-25-right` | Three separately bounded edge surfaces in the official left-to-right label order; this repeated order produces the manufacturer-described asymmetric layout. |
+| Lower-left channel | `edge-20-left`, `edge-15-left`, `edge-10-left` | Three separately bounded edge surfaces in the official left-to-right label order. |
+| Lower-right channel | `edge-20-right`, `edge-15-right`, `edge-10-right` | Three separately bounded edge surfaces in the official left-to-right label order. |
+
+### AI-simplified primary illustration
+
+`assets/primary.png` was generated with the built-in image-generation tool.
+The official straight-on image was reference Image 1, the official asymmetric
+layout guide was reference Image 2, the official jug/sloper profile guide was
+reference Image 3, and the official right-oblique gallery image was reference
+Image 4. These manufacturer images guided product appearance only. The
+generated illustration was never used to establish, propose, trace, or validate
+a physical fact or geometry path.
+
+Prompt:
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten app hangboard catalog primary illustration
+>
+> Primary request: Create a clean AI-simplified straight-on product illustration of the exact wooden climbing hangboard shown in the manufacturer references.
+>
+> Input images: Image 1 is the official straight-on front-view layout reference; Image 2 is the official asymmetrical edge-layout guide; Image 3 is the official jug/sloper side-profile guide; Image 4 is an official oblique construction reference.
+>
+> Scene/backdrop: plain warm-white seamless background.
+>
+> Subject: one complete light European-beech hangboard, centered and isolated. Preserve the manufacturer's distinctive low wide rounded rectangular body; two raised rounded top end sections; recessed center top surface; exactly four long routed horizontal recesses arranged as upper-left, upper-right, lower-left, lower-right; exactly three visibly separated edge contact sections inside each recess; and the manufacturer-evidenced top jug/sloper construction. Include only the mounting holes visible in the official front reference. Preserve the asymmetric edge depth layout and spacing from the references.
+>
+> Style/medium: polished simplified 3D catalog illustration matching the existing Hang Ten board assets; restrained wood grain; clean readable contact boundaries; realistic shallow shadows only.
+>
+> Composition/framing: exact orthographic front elevation, no perspective skew, whole board visible with generous even padding, landscape canvas exactly 2:1.
+>
+> Lighting/mood: soft neutral studio lighting, low contrast, no cast shadow that obscures contact edges.
+>
+> Color palette: pale natural beech on warm white.
+>
+> Text: no printed labels, no logo, no numbers, no captions.
+>
+> Constraints: prioritize correct count, placement, separation, and silhouette over decorative detail; keep left/right top features and four recesses unambiguous; do not invent pockets, pinches, extra edges, extra holes, or accessories.
+>
+> Avoid: people, hands, wall, hardware, watermark, text, dramatic perspective, dark background, cropped product, official-photo appearance.
+
+Human acceptance compared the generated illustration directly with the current
+official straight-on, layout, oblique, side, and top views. The accepted 1774 ×
+887 result retains the two outer top contacts, uninterrupted center top
+surface, four routed channels, three distinct surfaces within each channel,
+and the visible mounting holes. It adds no pocket, pinch, edge channel, or
+selectable contact. No crop, registration, detection, segmentation, mask,
+contour extraction, vectorization, automatic simplification, or other
+image-driven geometry operation was applied before or after generation.
+
+### Direct geometry mapping and review
+
+All 15 canonical normalized paths were deliberately authored against the
+accepted illustration and checked individually against the official product
+and gallery evidence. The right jug uses the exact frame mirror and x-reversed
+path of the left jug because the official top silhouette is symmetric. The
+asymmetric edge layout was authored contact by contact and was not mirrored by
+depth. The 12 visibly regular edge surfaces use operator-selected
+`roundedRectangle` constraints over saved canonical paths. The jugs and center
+sloper use custom paths. Every saved path remains the sole rendering,
+highlighting, and hit-test source of truth.
+
+| Contact group | Canonical frame mapping | Direct review decision |
+| --- | --- | --- |
+| Outer jugs | Left `x 0.030, y 0.209, w 0.185, h 0.127`; exact right frame mirror | Custom x-reversed paths follow only the two raised outer top contacts and exclude the center top surface. |
+| Center sloper | `x 0.210, y 0.242, w 0.580, h 0.091` | One custom path follows the uninterrupted center surface and its two sloped transitions. |
+| Upper-left `40`/`30`/`25` mm edges | `x 0.083/0.209/0.344, y 0.426, w 0.126/0.135/0.128, h 0.061` | Three rounded paths follow the separately bounded contact floors in published label order. |
+| Upper-right `40`/`30`/`25` mm edges | `x 0.514/0.641/0.776, y 0.426, w 0.127/0.135/0.127, h 0.061` | Three separately authored rounded paths retain the asymmetric repeated label order. |
+| Lower-left `20`/`15`/`10` mm edges | `x 0.083/0.208/0.343, y 0.600, w 0.125/0.135/0.129, h 0.071` | Three rounded paths follow only the lower-left contact floors. |
+| Lower-right `20`/`15`/`10` mm edges | `x 0.514/0.641/0.776, y 0.600, w 0.127/0.135/0.127, h 0.071` | Three rounded paths follow only the lower-right contact floors. |
+
+The accepted illustration, all 15 frames, and every saved path were inspected
+directly. Workbench discovery lists `The Hangboard The Hangboard` with one
+`front` presentation and 15 holds. Opening that presentation extracts 15
+regions with the exact source-backed hold IDs, retains all 12 operator-selected
+rounded-rectangle constraints and three custom paths, and reports the accepted
+1774 × 887 canvas. The Workbench image endpoint serves a byte-identical copy of
+the checked-in PNG (both SHA-256
+`81d1acd69995cffe8b413389ea27466882585b0709315f5abd089e30a0fc0789`).
+The temporary Workbench server was shut down and its localhost port was verified
+free. Interactive Workbench canvas review plus full in-app active-highlight and
+hit-test review remain for the plan's final catalog-wide visual-validation
+task.

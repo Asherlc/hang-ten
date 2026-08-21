@@ -157,6 +157,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("soill.split-palm", "soill-split-palm"),
         ("soill.training-tiles", "soill-training-tiles"),
         ("target10a.linebreaker-base", "target10a-linebreaker-base"),
+        ("the-hangboard.the-hangboard", "the-hangboard"),
         ("trango.rock-prodigy-forge", "trango-rock-prodigy-forge"),
         ("trango.rock-prodigy-natural", "trango-rock-prodigy-natural"),
         ("trango.rock-prodigy-pivot", "trango-rock-prodigy-pivot"),
