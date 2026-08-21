@@ -310,7 +310,7 @@ final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBacke
     ) -> [ScheduledBuffer]? {
         var result: [ScheduledBuffer] = []
 
-        for cue in schedule.cues {
+        for (cueIndex, cue) in schedule.cues.enumerated() {
             guard let buffers = buffersByPhrase[cue.phrase] else { return nil }
             var cueBufferOffset: TimeInterval = 0
 
@@ -326,7 +326,10 @@ final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBacke
                 cueBufferOffset += TimeInterval(buffer.frameLength) / buffer.format.sampleRate
             }
 
-            guard cueBufferOffset < 1 else { return nil }
+            let cueDeadline = cueIndex + 1 < schedule.cues.count
+                ? schedule.cues[cueIndex + 1].offset
+                : cue.offset + 1
+            guard cueBufferOffset < cueDeadline - cue.offset else { return nil }
         }
 
         return result
