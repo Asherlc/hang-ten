@@ -20,6 +20,10 @@ PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
 LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
 ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
+YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
+YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
+YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
+YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
 PRIME_RIB_HOLDS = (
     ("edge-38", "38 mm edge", "edge", 38),
     ("edge-23", "23 mm edge", "edge", 23),
@@ -178,6 +182,10 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("yy.verticalboard-first", "yy-verticalboard-first"),
         ("yy.verticalboard-light", "yy-verticalboard-light"),
         ("yy.verticalboard-one", "yy-verticalboard-one"),
+        ("yy.travelboard", "yy-travelboard"),
+        ("yy.baguette", "yy-baguette"),
+        ("yy.baguette-evo", "yy-baguette-evo"),
+        ("yy.penta-evo", "yy-penta-evo"),
         ("zlagboard.evo", "zlagboard-evo"),
         ("zlagboard.pro", "zlagboard-pro"),
     }
@@ -749,3 +757,132 @@ def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
 
     assert repaired.size == (1774, 457)
     assert hashlib.sha256(repaired_path.read_bytes()).hexdigest() == "7e39c41e0e3bfb3d61d2ba0c331281bc04c06e98817ecc0fa8e3180f7923216e"
+
+
+def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
+    board = json.loads((YY_TRAVELBOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.travelboard"
+    assert board["dimensions"] == "34 × 10 × 3 cm"
+    assert [(item["id"], item["assetPath"]) for item in board["presentations"]] == [
+        ("front-25-15", "assets/primary.png"),
+        ("reverse-10", "assets/reverse.png"),
+    ]
+    assert {
+        (
+            hold["id"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+            hold.get("fingerCapacity"),
+            hold["presentationID"],
+        )
+        for hold in board["holds"]
+    } == {
+        ("tray", "jug", None, None, "front-25-15"),
+        ("edge-25", "edge", 25, None, "front-25-15"),
+        ("edge-15", "edge", 15, None, "front-25-15"),
+        ("mono-left", "pocket", None, 1, "front-25-15"),
+        ("mono-right", "pocket", None, 1, "front-25-15"),
+        ("edge-10", "edge", 10, None, "reverse-10"),
+    }
+
+
+def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
+    board = json.loads((YY_BAGUETTE_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.baguette"
+    assert board["dimensions"] == "47 × 4 × 4 cm"
+    assert len(board["presentations"]) == 2
+    assert {
+        (hold["id"], hold["kind"], hold.get("sizeMillimeters"))
+        for hold in board["holds"]
+    } == {
+        ("tray", "jug", None),
+        ("edge-30", "edge", 30),
+        ("edge-25", "edge", 25),
+        ("edge-20", "edge", 20),
+        ("edge-15", "edge", 15),
+        ("edge-10", "edge", 10),
+    }
+
+
+def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> None:
+    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.baguette-evo"
+    assert board["dimensions"] == "52 × 5 × 5 cm"
+    assert len(board["presentations"]) == 5
+    assert len(board["holds"]) == 19
+    assert sorted(
+        hold["sizeMillimeters"]
+        for hold in board["holds"]
+        if not hold["id"].startswith("edge-central") and hold["kind"] == "edge"
+    ) == [6, 6, 8, 8, 10, 10, 12, 12, 15, 15, 20, 20, 25, 25]
+    assert {
+        (hold["id"], hold.get("sizeMillimeters"))
+        for hold in board["holds"]
+        if hold["id"].startswith("edge-central")
+    } == {
+        ("edge-central-30", 30),
+        ("edge-central-25", 25),
+        ("edge-central-20", 20),
+        ("edge-central-6", 6),
+    }
+    assert [(hold["id"], hold["kind"]) for hold in board["holds"] if hold["kind"] == "jug"] == [
+        ("rounded-tray", "jug")
+    ]
+
+
+def test_yy_baguette_evo_explicit_pairs_use_exact_horizontal_frame_mirrors() -> None:
+    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for size in (25, 20, 15, 12, 10, 8):
+        left = holds[f"edge-{size}-left"]["geometry"][0]["frame"]
+        right = holds[f"edge-{size}-right"]["geometry"][0]["frame"]
+        assert right["x"] == pytest.approx(1 - left["x"] - left["width"])
+        assert right["y"] == left["y"]
+        assert right["width"] == left["width"]
+        assert right["height"] == left["height"]
+
+
+def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.penta-evo"
+    assert board["dimensions"] == "Not published by YY Vertical"
+    assert len(board["presentations"]) == 1
+    assert len(board["holds"]) == 14
+    assert sorted(
+        (hold["kind"], hold.get("sizeMillimeters"), hold.get("fingerCapacity"))
+        for hold in board["holds"]
+    ) == sorted(
+        2
+        * [
+            ("edge", 25, None),
+            ("edge", 20, None),
+            ("edge", 15, None),
+            ("edge", 10, None),
+            ("pocket", None, 1),
+            ("pocket", None, 2),
+            ("jug", None, None),
+        ]
+    )
+    assert all(hold["presentationID"] == "front-pair" for hold in board["holds"])
+
+
+def test_yy_penta_evo_pair_uses_exact_horizontal_frame_mirrors() -> None:
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for prefix in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"):
+        left = holds[f"{prefix}-left"]["geometry"][0]["frame"]
+        right = holds[f"{prefix}-right"]["geometry"][0]["frame"]
+        assert right["x"] == pytest.approx(1 - left["x"] - left["width"])
+        assert right["y"] == left["y"]
+        assert right["width"] == left["width"]
+        assert right["height"] == left["height"]

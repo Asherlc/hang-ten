@@ -990,3 +990,320 @@ hold IDs, nonempty normalized paths, and explicit presentation ownership.
 Focused assertions freeze the exact `4 + 4` inventory, measurements,
 capacities, and perfect paired mirrors. Workbench extraction and final review
 results are recorded in the Task 10 report.
+
+## YY Vertical TravelBoard
+
+Reviewed 2026-08-21.
+
+### Official evidence and field mapping
+
+- [Current official product page](https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement)
+  establishes `YY Vertical`, `TravelBoard`, the six-grip inventory, three edge
+  depths (25, 15, and 10 mm), two isolated mono-finger openings, the wide
+  tray, two fixed inclinations, portable suspension, and dimensions of
+  `34 × 10 × 3 cm`.
+- Official face and oblique packshots:
+  [25/15 close view](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-1.webp),
+  [25/15 oblique view](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-2.webp),
+  [25/15 straight view](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-3.webp), and
+  [10 mm reverse view](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-travelboard-4.webp)
+  establish the two physical faces, the long upper 25 mm recess, shorter lower
+  15 mm recess, two through mono openings, the separate reverse 10 mm recess,
+  cord routing, silhouette, and spacing.
+
+The six source-advertised grips map one-to-one to `tray`, `edge-25`,
+`edge-15`, `mono-left`, `mono-right`, and `edge-10`. The two through openings
+are represented once on their clearer canonical `front-25-15` view rather
+than duplicated on the reverse. The reverse view exists only for the distinct
+10 mm contact. No weight, posture, feature tags, material, or training claims
+were encoded.
+
+### AI-simplified presentation art
+
+The built-in image-generation tool used the official straight 25/15 image for
+`assets/primary.png` and the official reverse packshot for
+`assets/reverse.png`. The generated files are app content and NON-evidence.
+They were copied directly with no crop, registration, segmentation,
+vectorization, contour extraction, or automatic geometry operation.
+
+Primary prompt (verbatim):
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog primary presentation image
+>
+> Input images: Image 1 is YY Vertical's official straight-on TravelBoard 25/15 mm face and is the authoritative reference for silhouette, openings, spacing, and proportions.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of the exact TravelBoard 25/15 mm face. Preserve the long rounded rectangular wood board, one long 25 mm upper edge recess, one shorter centered 15 mm lower edge recess, two circular mono-finger openings at the lower left and lower right, and two small cord loops emerging behind the top corners. The broad rounded top contact remains readable as the tray/jug surface.
+>
+> Scene/backdrop: plain neutral off-white.
+>
+> Style/medium: polished simplified 3D product illustration, pale natural wood with restrained grain and soft depth shading.
+>
+> Composition/framing: centered, level, landscape, full board visible with generous even padding, front face parallel to camera.
+>
+> Constraints: exact bilateral symmetry; exact opening count and layout; no added or missing recesses; remove all engraved labels, logo, numbers, hands, wall, watermark, masks, outlines, highlights, annotations, or geometry overlays.
+
+Reverse prompt (verbatim):
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog alternate presentation image
+>
+> Input images: Image 1 is YY Vertical's official TravelBoard 10 mm reverse-face packshot and is the authoritative reference for silhouette, openings, spacing, and proportions.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact reverse face. Preserve the long rounded rectangular pale-wood board, one single long centered 10 mm edge recess low on the face, the same two circular mono-finger through-openings at lower left and lower right, two small paired cord-routing holes above the recess near each side with cord visible behind, and no other grip recess.
+>
+> Scene/backdrop: plain neutral off-white.
+>
+> Style/medium: polished simplified 3D product illustration matching a clean catalog rendering, pale natural wood, restrained grain, soft depth shading.
+>
+> Composition/framing: centered, level, landscape, full board visible with generous even padding, face parallel to camera.
+>
+> Constraints: exact bilateral symmetry and exact opening count; no added or missing recesses; remove all engraved labels, logo, numbers, hands, wall, watermark, masks, outlines, highlights, annotations, or geometry overlays.
+
+Accepted assets: `primary.png` is 1536 × 1024 (ratio 1.5, SHA-256
+`18047e867d71a5113f9e828b60959e66b58723906f0b489f7ae1864484fa020a`);
+`reverse.png` is 1774 × 887 (ratio 2.0, SHA-256
+`bed470db4496b8cc8c2b1f69e918382850097dd7c6c6b68bae21ef952383e690`).
+
+### Direct geometry mapping
+
+| Contact | Presentation and canonical frame | Manual evidence decision |
+| --- | --- | --- |
+| Tray | `front-25-15`: `x .035, y .305, w .930, h .105` | Broad continuous rounded top surface; excludes cord and 25 mm recess. |
+| 25 mm edge | `front-25-15`: `x .076, y .390, w .848, h .095` | Long upper routed contact only. |
+| 15 mm edge | `front-25-15`: `x .190, y .573, w .600, h .075` | Shorter centered lower routed contact only. |
+| Mono openings | Left `x .083, y .568, w .064, h .094`; exact right mirror | Two physical through openings, each independently selectable. |
+| 10 mm edge | `reverse-10`: `x .222, y .506, w .556, h .102` | The only distinct reverse-face grip supported by the official inventory. |
+
+Every path was deliberately authored. Regular openings use operator-selected
+oval or rounded-rectangle constraints; the broad tray uses an
+operator-selected rounded rectangle. Saved paths remain the sole rendering,
+highlighting, and hit-test truth.
+
+## YY Vertical La Baguette
+
+Reviewed 2026-08-21.
+
+### Official evidence and field mapping
+
+- [Current official product page](https://www.yyvertical.com/en/products/la-baguette-poutre-escalade)
+  establishes `YY Vertical`, `La Baguette`, exactly six grips (10, 15, 20, 25,
+  and 30 mm plus a tray), two inclinations available by turning the device,
+  portable suspension, and dimensions of `47 × 4 × 4 cm`.
+- Official packshots:
+  [stepped-face oblique](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-la-baguette-1.webp),
+  [reverse oblique](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-la-baguette-2.webp), and
+  [stepped-face straight](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-la-baguette-3.webp)
+  establish the rounded bar, two physical faces, cord routing, stepped 30/tray
+  and 20/25 sections on the default face, and the engraved 15/10 contacts on
+  the reverse. Unlabelled reverse recess backs are visible but the official
+  six-grip inventory does not identify them as additional contacts, so no
+  extra holds were fabricated.
+
+### AI-simplified presentation art
+
+The built-in generator used the official straight and reverse packshots.
+Both accepted files are 1536 × 1024 (ratio 1.5). `primary.png` SHA-256 is
+`8fd05bf3dc6460bff7345c5e7f4a4c394e39e2bc171ea113d5d7911486746618`;
+`reverse.png` SHA-256 is
+`e1ab6cedad15eb577756fabff3f34b5c83baae33493ddb9a5eb223994d57f063`.
+They are NON-evidence and received no post-generation geometric operation.
+
+Primary prompt (verbatim):
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog primary presentation image
+>
+> Input images: Image 1 is YY Vertical's official straight-on La Baguette product packshot and is the authoritative reference for the selected face's long cylindrical silhouette, cord suspension, openings, stepped grip surfaces, spacing, and proportions.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact face of La Baguette. Preserve the slim rounded pale-wood bar, its two long horizontal recessed openings split into stepped grip sections exactly as shown, the left opening left of center and the right opening right of center, rounded bar ends, and the suspension cord emerging at both ends.
+>
+> Scene/backdrop: plain neutral off-white.
+>
+> Style/medium: polished simplified 3D product illustration, pale natural wood, restrained grain and soft shading that makes every stepped contact surface readable.
+>
+> Composition/framing: centered, level, wide landscape, full bar visible with modest cord loops and generous even padding, face parallel to camera.
+>
+> Constraints: preserve exact recess count, separation, internal stepped boundaries, symmetry and proportions; no added or missing holds; remove all engraving, logo, numbers, hands, wall, watermark, masks, outlines, highlights, annotations, or geometry overlays.
+
+Reverse prompt (verbatim):
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog alternate presentation image
+>
+> Input images: Image 1 is YY Vertical's official reverse-face La Baguette product packshot and is the authoritative reference for the selected face's long cylindrical silhouette, cord suspension, four separated recessed openings, spacing, and proportions.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact reverse face of La Baguette. Preserve the slim rounded pale-wood bar, exactly four horizontally arranged separated rounded recess openings across the face with their relative widths matching the reference, rounded ends, and suspension cord emerging at both ends.
+>
+> Scene/backdrop: plain neutral off-white.
+>
+> Style/medium: polished simplified 3D product illustration, pale natural wood, restrained grain and soft depth shading.
+>
+> Composition/framing: centered, level, wide landscape, full bar visible with modest cord loops and generous even padding, face parallel to camera.
+>
+> Constraints: exact four-opening count, separation, order and proportions; no added or missing holds; remove all engraving, logo, numbers, hands, wall, watermark, masks, outlines, highlights, annotations, or geometry overlays.
+
+### Direct geometry mapping
+
+The default `stepped-face` owns four manually separated contact regions:
+tray `x .120–.248`, 30 mm `x .248–.378`, 20 mm `x .486–.615`, and
+25 mm `x .615–.744`, all at `y .746, h .056`. The `reverse-face` owns the
+source-labelled 15 mm region (`x .436, y .765, w .148, h .066`) and 10 mm
+region (`x .602, y .765, w .153, h .066`). Each physical contact is encoded
+once. Unsupported unlabelled reverse surfaces were omitted.
+
+## YY Vertical Baguette Evo
+
+Reviewed 2026-08-21.
+
+### Official evidence and field mapping
+
+- [Current official product page](https://www.yyvertical.com/en/products/baguette-evo)
+  establishes `YY Vertical`, `Baguette Evo`, twelve grip types, the Turn &
+  Pull rotating system, dimensions of `52 × 5 × 5 cm`, seven doubled edge
+  types (25, 20, 15, 12, 10, 8, and 6 mm), four central edges (30, 25, 20,
+  and 6 mm), and rounded trays.
+- Official packshots and detail views:
+  [paired 25/20/15/10 face](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_02_FG.webp),
+  [central face](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_03_FG.webp),
+  [paired-edge detail](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_04_FG.webp),
+  [central 30/25 detail](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_05_FG.webp),
+  [paired-edge detail 2](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_06_FG.webp),
+  [shallow central oblique](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_07_FG.webp),
+  [shallow-edge oblique](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_08_FG.webp), and
+  [Turn & Pull end view](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_10_FG.webp)
+  establish the rotating cylindrical body, duplicated side contacts, central
+  opposing lips, rounded exterior tray, and cord routing.
+
+“Twelve grips” is the manufacturer's type count: seven doubled edge types,
+four central edges, and the rounded tray type. The physical inventory is 19
+selectable contacts: 14 duplicated edge contacts, four central contacts, and
+one continuous rounded tray surface. This preserves distinct left/right or
+upper/lower physical contacts without inflating the source-backed grip-type
+claim. No posture, finger capacity, feature tags, or coaching fields were
+added.
+
+### AI-simplified presentation art
+
+Five built-in-generated NON-evidence images represent the contacts without a
+fabricated single-front overlay. No image received crop, registration,
+segmentation, contour extraction, vectorization, or geometry generation.
+
+| Asset | Pixels / ratio | SHA-256 | Official reference role |
+| --- | --- | --- | --- |
+| `primary.png` | 1774 × 887 / 2.0 | `f50f5a5ef3f235b3a07a5d1df16eedc95cb4671cf5c39621bd3ea4711c570509` | 02/04/06 paired 25/20/15/10 evidence |
+| `shallow-pairs.png` | 1774 × 887 / 2.0 | `1c419b08dda5cfe4d12d27486f1a3ca4b6a967e1aa82d266919d6ad8b37fa38a` | 07/08 shallow paired-edge evidence |
+| `central-30-25.png` | 1536 × 1024 / 1.5 | `86f71b252af0c0e09bcb0b260b996a2bfbbeda02b3e9a3e53342cee6d661348f` | 03/05 central opposing-lip evidence |
+| `central-20-6.png` | 1774 × 887 / 2.0 | `d06a5f87e436a72621e30151011a314203cb1887d50c4934944a449f2a86dd24` | 07/08 central shallow evidence |
+| `tray.png` | 1536 × 1024 / 1.5 | `77237c4b6345c3b385592d159a2f5bd5ee96f43928c4387222413fcc62ad604a` | 10/02 rounded exterior evidence |
+
+Prompt set (verbatim primary requests; shared lines specified a neutral
+off-white backdrop, simplified pale natural wood, centered full-bar framing,
+no text/logo/hands/watermark/overlays, and exact source-preserving layout):
+
+> Create a clean AI-simplified straight-on catalog illustration of this exact paired-edge face of Baguette Evo. Preserve the long thick rounded pale-wood bar, two symmetric long horizontal recesses (one left and one right), each divided into four clearly distinct stepped edge contact sections corresponding physically to the official 20, 10, 25, and 15 mm edge layout; retain two orange suspension cords passing through paired holes near each end.
+
+> Create a clean AI-simplified straight-on catalog illustration of this exact shallow paired-edge surface. Preserve the long thick rounded pale-wood bar and its bilaterally symmetric shallow routed channels, with three clearly separated paired contact sections corresponding to the official 12 mm, 8 mm, and 6 mm double-edge surfaces; retain two orange suspension cords passing through paired holes near each end.
+
+> Create a clean AI-simplified straight-on catalog illustration of this exact surface. Preserve the long thick rounded pale-wood bar, one single centered rounded rectangular recess whose two opposing lips are visibly distinct contact surfaces corresponding to the official central 30 mm and 25 mm edges, and paired orange suspension cord holes near both ends.
+
+> Create a clean AI-simplified straight-on catalog illustration of this exact surface. Preserve the long thick rounded pale-wood bar, one single centered shallow rounded rectangular recess whose two opposing lips are visibly distinct contact surfaces corresponding to the official central 20 mm and 6 mm edges, and paired orange suspension cord holes near both ends.
+
+> Create a clean AI-simplified straight-on catalog illustration of the exact smooth rounded tray surface of Baguette Evo. Preserve the long thick rounded pale-wood cylindrical bar with one broad continuous gently rounded usable exterior surface across the center span, no routed grip recess visible on this orientation, and paired orange suspension cord holes near both ends.
+
+### Direct geometry mapping
+
+| Presentation | Contacts and manually authored frames |
+| --- | --- |
+| `paired-25-20-15-10` | Left sections: 20 mm `x .134–.209`, 10 mm `.209–.284`, 25 mm `.284–.359`, 15 mm `.359–.444`, all `y .552, h .078`; corresponding right sections are exact horizontal mirrors. |
+| `paired-12-8-6` | 12 mm left/right `x .121/.697, y .505, w .182, h .053`; 8 mm left/right at the same x values, `y .596, h .052`; two distinct 6 mm center contacts `x .409, w .184` at those y values. |
+| `central-30-25` | 30 mm upper lip `x .369, y .529, w .148, h .034`; 25 mm lower lip at `y .598, h .035`. |
+| `central-20-6` | 20 mm upper lip `x .385, y .431, w .230, h .045`; 6 mm lower lip at `y .544, h .045`. |
+| `rounded-tray` | Continuous tray `x .135, y .729, w .730, h .098`. |
+
+All regular regions use manually selected rectangle or rounded-rectangle
+constraints. The tray uses a rounded-rectangle constraint and `surface`
+treatment. Constraints do not participate in rendering or hit testing; the
+saved closed paths do.
+
+## YY Vertical Penta Evo
+
+Reviewed 2026-08-21.
+
+### Official evidence and field mapping
+
+- [Current official product page](https://www.yyvertical.com/en/products/penta-evo)
+  establishes `YY Vertical`, `Penta Evo`, a pair of independent units, seven
+  technical grips per unit (25, 20, 15, and 10 mm, mono, duo, and tray),
+  360-degree notched rotation, and paired suspension. The page title says
+  “8 grips,” but both the detailed feature list and technical-details list say
+  seven and enumerate exactly seven; the enumerated repeated detail controls
+  this audit. The page publishes unit weight and load claims but no physical
+  dimensions. The schema requires a nonempty dimensions string, so
+  `dimensions` is explicitly `Not published by YY Vertical`; no measurement
+  was inferred from the older, different Penta product.
+- Official packshots:
+  [paired front](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-3.webp),
+  [tray/mono detail](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-1.webp), and
+  [20 mm detail](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-11.webp)
+  establish the two units, mirrored layouts, stepped top edge cavity, opposing
+  side edge lips, mono and duo openings, broad lower inner tray, cord routing,
+  and laminated construction.
+
+The frozen physical inventory is 14: seven independent contacts on each of
+the two units. Finger capacities 1 and 2 come directly from the official
+`mono` and `duo` terminology. No unsupported capacity was added to edges or
+trays.
+
+### AI-simplified presentation art
+
+The built-in tool used all three official views. The initial output created an
+unsupported bottom pocket; two targeted correction edits first merged the top
+edge sections into the documented stepped cavity and then removed only the
+invented bottom recess. The accepted final `primary.png` is 1536 × 1024,
+ratio 1.5, SHA-256
+`dd5ced78e171293149ab2204c87d867d54b19f628fe57193f0596abcb0f77a68`.
+It is NON-evidence and was not geometrically processed after generation.
+
+Final generation and correction prompts (verbatim primary requests):
+
+> Create a clean AI-simplified straight-on catalog illustration of the exact Penta Evo pair. Show two separate matching pale plywood rounded pentagonal-ring units side by side, each fully visible and level. Each unit must show exactly seven usable contacts in the official arrangement: two rounded rectangular upper edge recesses (25 mm and 20 mm), two rounded rectangular side edge recesses (15 mm and 10 mm), one circular mono opening, one vertical pill-shaped duo opening, and one broad rounded tray contact along the lower inner opening. Each unit has an orange suspension cord at its top.
+
+> Correct only the routed grip layout on both units to match the official construction. On each unit, merge the two top edge openings into one long rounded cavity with a central step separating the 25 mm and 20 mm contact sections. Remove the invented separate bottom rounded-rectangle pocket. Preserve one side routed cavity whose opposing lips represent the 15 mm and 10 mm contacts, one circular mono opening, one pill-shaped duo opening, and the broad rounded tray contact along the lower inner boundary. Keep seven documented contact surfaces per unit, without creating a seventh recess.
+
+> Remove only the two invented horizontal rounded-rectangle recesses at the very bottom, one from each unit. Fill those areas seamlessly with matching pale laminated wood. Keep the broad curved lower inner edge of each pentagonal opening unobstructed and readable as the tray contact, exactly as in Image 2.
+
+### Direct geometry mapping
+
+The left unit was authored deliberately and each right frame is its exact
+horizontal mirror, consistent with the official paired front image. Left
+frames are: 25 mm `x .105, y .345, w .125, h .120`; 20 mm `x .230` with the
+same y/size; mono `x .071, y .535, w .055, h .072`; duo `x .076, y .638,
+w .057, h .132`; 15 mm `x .331, y .544, w .053, h .100`; 10 mm at `y .644,
+h .105`; and tray `x .150, y .707, w .182, h .076`. Regular contacts use
+operator-selected oval, pill, or rectangle constraints. The lower tray uses a
+rounded-rectangle constraint and surface treatment. Each saved path is the
+sole normal, active, and hit-test boundary.
+
+### YY Vertical package verification
+
+- Final-inventory validation and package status both accepted all four direct
+  packages with zero drafts.
+- The complete HangboardPackages test suite passed (91 tests), including the
+  focused YY inventory, presentation, physical-contact, and mirror assertions.
+- Direct Workbench extraction loaded every declared presentation and accounted
+  for every authored region: TravelBoard 6 holds over 2 presentations, La
+  Baguette 6 over 2, Baguette Evo 19 over 5, and Penta Evo 14 over 1.
+- The complete Workbench test suite passed (318 tests). Its localhost tests
+  were run outside the socket-restricted sandbox after the sandbox-only run
+  showed `PermissionError` on ephemeral port binding.
+- A real `scripts/stage-board-packages.py` invocation staged the four packages
+  into an isolated Xcode-style resource destination. Its EXIT trap removed the
+  workspace-owned staging tree and absence was verified.
+
+Catalog-wide iOS simulator normal/active/hit-test inspection remains assigned
+to Task 12; this audit makes no simulator-review claim.

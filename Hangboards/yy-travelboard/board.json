@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 2,
+  "id": "yy.travelboard",
+  "manufacturer": "YY Vertical",
+  "name": "TravelBoard",
+  "productURL": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+  "subtitle": "Portable board with three edges, two mono-finger openings, and a tray",
+  "dimensions": "34 × 10 × 3 cm",
+  "aspectRatio": 1.5,
+  "presentations": [
+    { "id": "front-25-15", "name": "25 / 15 mm face", "assetPath": "assets/primary.png", "aspectRatio": 1.5, "default": true },
+    { "id": "reverse-10", "name": "10 mm face", "assetPath": "assets/reverse.png", "aspectRatio": 2.0, "default": false }
+  ],
+  "holds": [
+    {
+      "id": "tray", "name": "Wide tray", "kind": "jug", "presentationID": "front-25-15",
+      "geometry": [{
+        "frame": { "x": 0.035, "y": 0.305, "width": 0.930, "height": 0.105 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.000, 0.000] },
+          { "command": "line", "to": [1.000, 0.000] },
+          { "command": "line", "to": [1.000, 1.000] },
+          { "command": "line", "to": [0.000, 1.000] },
+          { "command": "close" }
+        ] },
+        "treatment": { "type": "surface" },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "edge-25", "name": "25 mm edge", "kind": "edge", "sizeMillimeters": 25, "presentationID": "front-25-15",
+      "geometry": [{
+        "frame": { "x": 0.076, "y": 0.390, "width": 0.848, "height": 0.095 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.035, 0.000] }, { "command": "line", "to": [0.965, 0.000] },
+          { "command": "curve", "control1": [0.990, 0.000], "control2": [1.000, 0.220], "to": [1.000, 0.500] },
+          { "command": "curve", "control1": [1.000, 0.780], "control2": [0.990, 1.000], "to": [0.965, 1.000] },
+          { "command": "line", "to": [0.035, 1.000] },
+          { "command": "curve", "control1": [0.010, 1.000], "control2": [0.000, 0.780], "to": [0.000, 0.500] },
+          { "command": "curve", "control1": [0.000, 0.220], "control2": [0.010, 0.000], "to": [0.035, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "edge-15", "name": "15 mm edge", "kind": "edge", "sizeMillimeters": 15, "presentationID": "front-25-15",
+      "geometry": [{
+        "frame": { "x": 0.190, "y": 0.573, "width": 0.600, "height": 0.075 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.045, 0.000] }, { "command": "line", "to": [0.955, 0.000] },
+          { "command": "curve", "control1": [0.985, 0.000], "control2": [1.000, 0.220], "to": [1.000, 0.500] },
+          { "command": "curve", "control1": [1.000, 0.780], "control2": [0.985, 1.000], "to": [0.955, 1.000] },
+          { "command": "line", "to": [0.045, 1.000] },
+          { "command": "curve", "control1": [0.015, 1.000], "control2": [0.000, 0.780], "to": [0.000, 0.500] },
+          { "command": "curve", "control1": [0.000, 0.220], "control2": [0.015, 0.000], "to": [0.045, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "mono-left", "name": "Left mono-finger opening", "kind": "pocket", "fingerCapacity": 1, "presentationID": "front-25-15",
+      "geometry": [{
+        "frame": { "x": 0.083, "y": 0.568, "width": 0.064, "height": 0.094 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.500, 0.000] },
+          { "command": "curve", "control1": [0.810, 0.000], "control2": [1.000, 0.220], "to": [1.000, 0.500] },
+          { "command": "curve", "control1": [1.000, 0.780], "control2": [0.810, 1.000], "to": [0.500, 1.000] },
+          { "command": "curve", "control1": [0.190, 1.000], "control2": [0.000, 0.780], "to": [0.000, 0.500] },
+          { "command": "curve", "control1": [0.000, 0.220], "control2": [0.190, 0.000], "to": [0.500, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "mono-right", "name": "Right mono-finger opening", "kind": "pocket", "fingerCapacity": 1, "presentationID": "front-25-15",
+      "geometry": [{
+        "frame": { "x": 0.853, "y": 0.568, "width": 0.064, "height": 0.094 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.500, 0.000] },
+          { "command": "curve", "control1": [0.810, 0.000], "control2": [1.000, 0.220], "to": [1.000, 0.500] },
+          { "command": "curve", "control1": [1.000, 0.780], "control2": [0.810, 1.000], "to": [0.500, 1.000] },
+          { "command": "curve", "control1": [0.190, 1.000], "control2": [0.000, 0.780], "to": [0.000, 0.500] },
+          { "command": "curve", "control1": [0.000, 0.220], "control2": [0.190, 0.000], "to": [0.500, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "oval", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "edge-10", "name": "10 mm edge", "kind": "edge", "sizeMillimeters": 10, "presentationID": "reverse-10",
+      "geometry": [{
+        "frame": { "x": 0.222, "y": 0.506, "width": 0.556, "height": 0.102 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.045, 0.000] }, { "command": "line", "to": [0.955, 0.000] },
+          { "command": "curve", "control1": [0.985, 0.000], "control2": [1.000, 0.220], "to": [1.000, 0.500] },
+          { "command": "curve", "control1": [1.000, 0.780], "control2": [0.985, 1.000], "to": [0.955, 1.000] },
+          { "command": "line", "to": [0.045, 1.000] },
+          { "command": "curve", "control1": [0.015, 1.000], "control2": [0.000, 0.780], "to": [0.000, 0.500] },
+          { "command": "curve", "control1": [0.000, 0.220], "control2": [0.015, 0.000], "to": [0.045, 0.000] }, { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    }
+  ]
+}
