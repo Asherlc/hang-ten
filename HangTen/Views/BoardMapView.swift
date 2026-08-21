@@ -62,6 +62,24 @@ struct BoardMapPresentationSelection: Equatable {
         presentationID = activePresentationID
     }
 
+    mutating func updateRequestedPresentation(
+        id: String?,
+        activeHoldID: String?,
+        highlightedHoldIDs: Set<String>,
+        on board: TrainingBoard
+    ) {
+        if let requestedPresentation = board.presentation(id: id) {
+            presentationID = requestedPresentation.id
+            return
+        }
+        reset(
+            board: board,
+            requestedPresentationID: nil,
+            activeHoldID: activeHoldID,
+            highlightedHoldIDs: highlightedHoldIDs
+        )
+    }
+
     mutating func reset(
         board: TrainingBoard,
         requestedPresentationID: String?,
@@ -174,11 +192,11 @@ struct BoardMapView: View {
             presentationSelection.activateHold(id: holdID, on: board)
         }
         .onChange(of: requestedPresentationID) { _, presentationID in
-            presentationSelection.reset(
-                board: board,
-                requestedPresentationID: presentationID,
+            presentationSelection.updateRequestedPresentation(
+                id: presentationID,
                 activeHoldID: activeHoldID,
-                highlightedHoldIDs: highlightedHoldIDs
+                highlightedHoldIDs: highlightedHoldIDs,
+                on: board
             )
         }
         .onChange(of: board.id) { _, _ in

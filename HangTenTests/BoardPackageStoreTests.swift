@@ -435,6 +435,27 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(selection.presentationID, "back")
     }
 
+    func testBoardMapSelectionAppliesCallerPresentationChangeDespiteStaleActiveHold() throws {
+        let fixture = try makeSchemaV2FixtureBundle()
+        defer { fixture.remove() }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        var selection = BoardMapPresentationSelection(
+            board: board,
+            requestedPresentationID: nil,
+            activeHoldID: "hold-left",
+            highlightedHoldIDs: ["hold-left"]
+        )
+
+        selection.updateRequestedPresentation(
+            id: "back",
+            activeHoldID: "hold-left",
+            highlightedHoldIDs: ["hold-left"],
+            on: board
+        )
+
+        XCTAssertEqual(selection.presentationID, "back")
+    }
+
     func testStoreAcceptsShapeConstraintWithoutChangingRuntimeBoardShape() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
