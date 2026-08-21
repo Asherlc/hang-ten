@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { holdCentroid, holdSiblings, rotationHandlePosition } from "../editor-model.ts";
+import { holdCentroid, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
 import type {
   Board,
@@ -25,6 +25,20 @@ interface VertexMenuPosition {
   y: number;
 }
 
+export type GuideAxis = "horizontal" | "vertical";
+
+export interface Guide {
+  id: string;
+  axis: GuideAxis;
+  coordinate: number;
+}
+
+interface GuideDragState {
+  id: string;
+  axis: GuideAxis;
+  pointerId: number;
+}
+
 function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
   const flipped = anchor + size > viewportSize ? anchor - size : anchor;
   return Math.max(0, Math.min(flipped, Math.max(0, viewportSize - size)));
@@ -40,6 +54,8 @@ export interface HoldCanvasProps {
   editor: HoldEditorActions;
   zoomPercent: number;
   onZoomChange(direction: number): void;
+  guides: readonly Guide[];
+  onMoveGuide(id: string, coordinate: number): void;
 }
 
 export function HoldCanvas({
@@ -52,12 +68,15 @@ export function HoldCanvas({
   editor,
   zoomPercent,
   onZoomChange,
+  guides,
+  onMoveGuide,
 }: HoldCanvasProps) {
   const vertexMenuRef = useRef<HTMLDivElement>(null);
   const deleteVertexButtonRef = useRef<HTMLButtonElement>(null);
   const selectedVertexRef = useRef<SVGCircleElement>(null);
   const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const guideDragRef = useRef<GuideDragState | null>(null);
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -122,6 +141,42 @@ export function HoldCanvas({
     && vertexMenuPosition.anchorY === editor.vertexMenu.y
     ? vertexMenuPosition
     : editor.vertexMenu;
+  const onGuidePointerDown = (event: React.PointerEvent<SVGLineElement>, guide: Guide): void => {
+    if (busy) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const svg = event.currentTarget.ownerSVGElement;
+    if (!svg) return;
+    guideDragRef.current = { id: guide.id, axis: guide.axis, pointerId: event.pointerId };
+    try {
+      svg.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Pointer capture may be unavailable in older browsers and test environments.
+    }
+  };
+  const releaseGuidePointer = (svg: SVGSVGElement, pointerId: number): void => {
+    if (guideDragRef.current?.pointerId !== pointerId) return;
+    guideDragRef.current = null;
+    try {
+      svg.releasePointerCapture?.(pointerId);
+    } catch {
+      // Capture can already be released when a cancellation is reported.
+    }
+  };
+  const onGuidePointerMove = (event: React.PointerEvent<SVGSVGElement>): void => {
+    const drag = guideDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId || !document) return;
+    event.preventDefault();
+    const point = svgPoint(event.currentTarget, event.nativeEvent);
+    const documentCoordinate = Math.max(0, Math.min(
+      drag.axis === "horizontal" ? document.canvas.height : document.canvas.width,
+      drag.axis === "horizontal" ? point.y : point.x,
+    ));
+    onMoveGuide(drag.id, documentCoordinate);
+  };
+  const onGuidePointerEnd = (event: React.PointerEvent<SVGSVGElement>): void => {
+    releaseGuidePointer(event.currentTarget, event.pointerId);
+  };
   return (
     <div className="editor-views">
       <div
@@ -142,10 +197,22 @@ export function HoldCanvas({
             minHeight: `${3.6 * zoomPercent}px`,
           }}
           onPointerDown={editor.onPointerDown}
-          onPointerMove={editor.onPointerMove}
-          onPointerUp={editor.onPointerUp}
-          onPointerCancel={editor.onPointerCancel}
-          onLostPointerCapture={editor.onLostPointerCapture}
+          onPointerMove={(event) => {
+            onGuidePointerMove(event);
+            editor.onPointerMove(event);
+          }}
+          onPointerUp={(event) => {
+            onGuidePointerEnd(event);
+            editor.onPointerUp(event);
+          }}
+          onPointerCancel={(event) => {
+            onGuidePointerEnd(event);
+            editor.onPointerCancel(event);
+          }}
+          onLostPointerCapture={(event) => {
+            onGuidePointerEnd(event);
+            editor.onLostPointerCapture(event);
+          }}
           onDoubleClick={editor.onDoubleClick}
           onContextMenu={editor.onContextMenu}
         >
@@ -158,6 +225,43 @@ export function HoldCanvas({
             width={document?.canvas.width}
             height={document?.canvas.height}
           />
+          <g id="guide-overlay" aria-label="Alignment guides">
+            {guides.map((guide) => guide.axis === "horizontal" ? (
+              <line
+                key={guide.id}
+                className="editor-guide editor-guide-horizontal"
+                data-guide-id={guide.id}
+                data-guide-axis={guide.axis}
+                data-guide-coordinate={guide.coordinate}
+                x1="0"
+                y1={guide.coordinate}
+                x2={document?.canvas.width}
+                y2={guide.coordinate}
+                stroke="#72d4ff"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+                style={{ cursor: "ns-resize" }}
+                onPointerDown={(event) => onGuidePointerDown(event, guide)}
+              />
+            ) : (
+              <line
+                key={guide.id}
+                className="editor-guide editor-guide-vertical"
+                data-guide-id={guide.id}
+                data-guide-axis={guide.axis}
+                data-guide-coordinate={guide.coordinate}
+                x1={guide.coordinate}
+                y1="0"
+                x2={guide.coordinate}
+                y2={document?.canvas.height}
+                stroke="#72d4ff"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+                style={{ cursor: "ew-resize" }}
+                onPointerDown={(event) => onGuidePointerDown(event, guide)}
+              />
+            ))}
+          </g>
           <g id="hold-overlay">
             {document?.regions.map((hold) => (
               <path

@@ -49,6 +49,7 @@ interface DragState {
   lastAngle: number;
   totalAngle: number;
   pointerId: number | null;
+  pathCenter: Point | null;
 }
 
 interface VertexSelection {
@@ -82,7 +83,10 @@ const EMPTY_DRAG: DragState = {
   lastAngle: 0,
   totalAngle: 0,
   pointerId: null,
+  pathCenter: null,
 };
+
+const GUIDE_SNAP_TOLERANCE = 6;
 
 export interface UseHoldEditorOptions {
   document: EditorDocument | null;
@@ -95,6 +99,8 @@ export interface UseHoldEditorOptions {
   pathEditor: PathEditor;
   validateEditorDocument(document: unknown): EditorDocument;
   dialogs: Dialogs;
+  horizontalGuideYs: readonly number[];
+  verticalGuideXs: readonly number[];
 }
 
 export interface HoldEditorActions {
@@ -136,6 +142,15 @@ function translateCommands(commands: PathCommand[], deltaX: number, deltaY: numb
       point.y += deltaY;
     }
   }
+}
+
+function nearbyGuideCoordinate(coordinates: readonly number[], value: number): number | null {
+  let closest: number | null = null;
+  for (const coordinate of coordinates) {
+    if (!Number.isFinite(coordinate) || Math.abs(coordinate - value) > GUIDE_SNAP_TOLERANCE) continue;
+    if (closest === null || Math.abs(coordinate - value) < Math.abs(closest - value)) closest = coordinate;
+  }
+  return closest;
 }
 
 function closestPointOnLine(start: Point, end: Point, point: Point): Point {
@@ -270,6 +285,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     pathEditor,
     validateEditorDocument,
     dialogs,
+    horizontalGuideYs,
+    verticalGuideXs,
   } = options;
   const dragRef = useRef<DragState>({ ...EMPTY_DRAG });
   const previewDocumentRef = useRef<EditorDocument | null>(null);
@@ -620,6 +637,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
         originalDirty: dirty,
         pointerId: event.pointerId,
+        pathCenter: target.classList.contains("region-shape")
+          ? holdCentroid([selectedHold], pathEditor)
+          : null,
       };
     }
     if (!next) return;
@@ -694,8 +714,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       }
     } else if (drag.commands) {
       const commands = cloneCommands(drag.commands);
-      const deltaX = point.x - drag.startX;
-      const deltaY = point.y - drag.startY;
+      let deltaX = point.x - drag.startX;
+      let deltaY = point.y - drag.startY;
       if (drag.type === "vertex") {
         pathEditor.moveVertex(commands, drag.commandIndex, deltaX, deltaY);
       } else if (drag.type === "control") {
@@ -705,6 +725,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           control.y += deltaY;
         }
       } else if (drag.type === "path") {
+        if (!event.altKey && drag.pathCenter) {
+          const snappedX = nearbyGuideCoordinate(verticalGuideXs, drag.pathCenter.x + deltaX);
+          const snappedY = nearbyGuideCoordinate(horizontalGuideYs, drag.pathCenter.y + deltaY);
+          if (snappedX !== null) deltaX += snappedX - (drag.pathCenter.x + deltaX);
+          if (snappedY !== null) deltaY += snappedY - (drag.pathCenter.y + deltaY);
+        }
         translateCommands(commands, deltaX, deltaY);
       }
       hold.displayPath = pathEditor.serializePath(commands);
@@ -715,7 +741,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     pendingPreviewRef.current = actions.replaceDocument(candidate, {
       dirty: drag.originalDirty || drag.changed,
     });
-  }, [actions, document, pathEditor, releasePointer, restoreDrag]);
+  }, [actions, document, horizontalGuideYs, pathEditor, releasePointer, restoreDrag, verticalGuideXs]);
 
   const completeDrag = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;

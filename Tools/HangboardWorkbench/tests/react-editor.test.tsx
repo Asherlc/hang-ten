@@ -502,6 +502,98 @@ async function drag(
   await app.pointer("#editor-svg", end, { pointerId: 7, clientX: last.x, clientY: last.y });
 }
 
+test("guide controls create horizontal and vertical guides at the selected hold center", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    assert.equal(app.disabled("#add-horizontal-guide-button"), true);
+    assert.equal(app.disabled("#add-vertical-guide-button"), true);
+    await app.click('[data-hold-key="square"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+
+    const horizontal = app.document.querySelector<SVGLineElement>('[data-guide-axis="horizontal"]');
+    const vertical = app.document.querySelector<SVGLineElement>('[data-guide-axis="vertical"]');
+    assert.equal(horizontal?.getAttribute("y1"), "20");
+    assert.equal(horizontal?.getAttribute("y2"), "20");
+    assert.equal(vertical?.getAttribute("x1"), "20");
+    assert.equal(vertical?.getAttribute("x2"), "20");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("whole-path dragging snaps its center to nearby horizontal and vertical guides", async () => {
+  const document = documentFixture([
+    { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+    { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="guide-source"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+    await app.click('[data-hold-key="snap-target"]');
+    await drag(app, '[data-hold-key="snap-target"]', [{ x: 30, y: 30 }, { x: 14, y: 14 }]);
+
+    assert.equal(paths(app)[1], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[1], "M 30 30 L 50 30 L 50 50 L 30 50 Z");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("Alt bypasses guide snapping during a whole-path drag", async () => {
+  const document = documentFixture([
+    { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+    { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="guide-source"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+    await app.click('[data-hold-key="snap-target"]');
+    await app.pointer('[data-hold-key="snap-target"]', "pointerdown", { pointerId: 7, clientX: 30, clientY: 30 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 14, clientY: 14, altKey: true });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 7, clientX: 14, clientY: 14, altKey: true });
+
+    assert.equal(paths(app)[1], "M 14 14 L 34 14 L 34 34 L 14 34 Z");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("guides drag on their own axis and clear without changing the document", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="square"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+
+    await app.pointer('[data-guide-axis="horizontal"]', "pointerdown", { pointerId: 17, clientX: 50, clientY: 20 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 17, clientX: 5, clientY: 56 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 17, clientX: 5, clientY: 56 });
+    await app.pointer('[data-guide-axis="vertical"]', "pointerdown", { pointerId: 18, clientX: 20, clientY: 50 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 18, clientX: 27, clientY: 5 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 18, clientX: 27, clientY: 5 });
+
+    const horizontal = app.document.querySelector<SVGLineElement>('[data-guide-axis="horizontal"]');
+    const vertical = app.document.querySelector<SVGLineElement>('[data-guide-axis="vertical"]');
+    assert.equal(horizontal?.getAttribute("y1"), "31");
+    assert.equal(vertical?.getAttribute("x1"), "27");
+    await app.click("#clear-guides-button");
+    assert.equal(app.document.querySelectorAll("[data-guide-axis]").length, 0);
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(app.text("#save-state"), "Saved");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("vertex, control, and whole-path drags derive every move from pointer-down geometry", async () => {
   const curved = documentFixture([
     { id: 1, key: "curve", type: "jug", displayPath: "M 10 10 Q 15 5 20 10 L 20 20 Z" },
