@@ -26,6 +26,7 @@ export function cloneEditorDocument(document: EditorDocument): EditorDocument {
     regions: document.regions.map((region) => ({
       ...region,
       ...(region.metadata ? { metadata: { ...region.metadata } } : {}),
+      ...(region.depthRangeMillimeters ? { depthRangeMillimeters: { ...region.depthRangeMillimeters } } : {}),
       ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
     })),
   };

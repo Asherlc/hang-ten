@@ -18,6 +18,11 @@ export interface ShapeConstraint {
   rotationDegrees: number;
 }
 
+export interface MillimeterRange {
+  lowerBound: number;
+  upperBound: number;
+}
+
 export type OutlinePreset = Exclude<ShapeConstraintShape, "roundedRectangle"> | "rounded-rectangle";
 export type ConstrainedHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
@@ -50,6 +55,7 @@ export interface HoldRegion {
     pieceIndex: number;
   };
   fingerCapacity?: number;
+  depthRangeMillimeters?: MillimeterRange;
   shapeConstraint?: ShapeConstraint;
 }
 

@@ -257,6 +257,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           onRotationDegreesChange={actions.setRotationDegrees}
           onTypeChange={editor.changeHoldType}
           onFingerCapacityChange={editor.changeFingerCapacity}
+          onDepthRangeChange={editor.changeHoldDepthRange}
           onOutlineShapeChange={editor.changeOutlineShape}
           onRotate={(direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15))}
           onApplyRotation={editor.applyRotation}
