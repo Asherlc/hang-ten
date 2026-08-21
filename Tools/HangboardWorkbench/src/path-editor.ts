@@ -565,6 +565,16 @@ export function makeSegmentBendable(commands: PathCommand[], afterIndex: number)
   return true;
 }
 
+export function makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean {
+  const start = commands[afterIndex]?.points.at(-1);
+  const curve = commands[afterIndex + 1];
+  if (!start || (curve?.type !== "Q" && curve?.type !== "C")) return false;
+  const end = curve.points[0];
+  if (!end || pointsMatch(start, end)) return false;
+  commands[afterIndex + 1] = { type: "L", points: [{ ...end }], controls: [] };
+  return true;
+}
+
 export function roundVertex(commands: PathCommand[], index: number): boolean {
   if (index === 0) return roundStartVertex(commands);
   if (index === commands.length - 2) return roundLastVertex(commands);
