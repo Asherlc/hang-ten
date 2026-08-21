@@ -14,6 +14,8 @@ import {
   resizeConstrainedOutline,
   rotatePath,
   serializePath,
+  snapSegmentHorizontal,
+  snapSegmentVertical,
 } from "../src/path-editor.ts";
 import { validateEditorDocument } from "../src/workbench-controller.ts";
 import type {
@@ -113,6 +115,49 @@ test("makeSegmentStraight replaces a closing curve while retaining one final clo
   assert.equal(commands.filter((command) => command.type === "M").length, 1);
   assert.equal(commands.filter((command) => command.type === "Z").length, 1);
   assert.equal(commands.at(-1)?.type, "Z");
+});
+
+test("snapSegmentHorizontal preserves a straight segment start while aligning its endpoint", () => {
+  const commands = parsePath("M 0 0 L 10 5 L 20 10 Z");
+
+  assert.equal(snapSegmentHorizontal(commands, 0), true);
+  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 20 10 Z");
+});
+
+test("snapSegmentVertical preserves a straight segment start while aligning its endpoint", () => {
+  const commands = parsePath("M 0 0 L 10 5 L 20 10 Z");
+
+  assert.equal(snapSegmentVertical(commands, 0), true);
+  assert.equal(serializePath(commands), "M 0 0 L 0 5 L 20 10 Z");
+});
+
+test("axis snapping materializes an aligned closing edge while retaining one final close command", () => {
+  for (const [snap, expected] of [
+    [snapSegmentHorizontal, "M 0 0 L 10 0 L 10 10 L 2 8 L 0 8 Z"],
+    [snapSegmentVertical, "M 0 0 L 10 0 L 10 10 L 2 8 L 2 0 Z"],
+  ] as const) {
+    const commands = parsePath("M 0 0 L 10 0 L 10 10 L 2 8 Z");
+
+    assert.equal(snap(commands, 3), true, expected);
+    assert.equal(serializePath(commands), expected);
+    assert.equal(commands.filter((command) => command.type === "M").length, 1);
+    assert.equal(commands.filter((command) => command.type === "Z").length, 1);
+    assert.equal(commands.at(-1)?.type, "Z");
+  }
+});
+
+test("axis snapping leaves curves and already aligned straight segments unchanged", () => {
+  for (const [snap, path, afterIndex] of [
+    [snapSegmentHorizontal, "M 0 0 L 10 0 L 10 10 Z", 0],
+    [snapSegmentVertical, "M 0 0 L 0 10 L 10 10 Z", 0],
+    [snapSegmentHorizontal, "M 0 0 Q 5 10 10 0 L 10 10 Z", 0],
+    [snapSegmentVertical, "M 0 0 Q 5 10 10 0 L 10 10 Z", 0],
+  ] as const) {
+    const commands = parsePath(path);
+
+    assert.equal(snap(commands, afterIndex), false, path);
+    assert.equal(serializePath(commands), path);
+  }
 });
 
 test("roundVertex trims adjacent straight segments and retains the sharp point as the quadratic control", () => {

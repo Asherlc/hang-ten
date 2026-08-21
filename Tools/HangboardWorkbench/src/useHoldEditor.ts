@@ -115,6 +115,8 @@ export interface HoldEditorActions {
   canRoundSelectedVertex: boolean;
   canMakeSelectedSegmentBendable: boolean;
   canMakeSelectedSegmentStraight: boolean;
+  canMakeSelectedSegmentHorizontal: boolean;
+  canMakeSelectedSegmentVertical: boolean;
   addHold(): void;
   deleteHold(): void;
   selectVertex(index: number): void;
@@ -122,6 +124,8 @@ export interface HoldEditorActions {
   roundSelectedVertex(): void;
   makeSelectedSegmentBendable(): void;
   makeSelectedSegmentStraight(): void;
+  makeSelectedSegmentHorizontal(): void;
+  makeSelectedSegmentVertical(): void;
   dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
   changeOutlineShape(shape: string): void;
@@ -354,6 +358,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   let canRoundSelectedVertex = false;
   let canMakeSelectedSegmentBendable = false;
   let canMakeSelectedSegmentStraight = false;
+  let canMakeSelectedSegmentHorizontal = false;
+  let canMakeSelectedSegmentVertical = false;
   if (!busy && document && selectedHold && !selectedHold.shapeConstraint) {
     try {
       const commands = pathEditor.parsePath(selectedHold.displayPath);
@@ -379,6 +385,16 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           straightCandidate,
           vertexMenuState.segmentAfterIndex,
         );
+        const horizontalCandidate = cloneCommands(commands);
+        canMakeSelectedSegmentHorizontal = pathEditor.snapSegmentHorizontal(
+          horizontalCandidate,
+          vertexMenuState.segmentAfterIndex,
+        );
+        const verticalCandidate = cloneCommands(commands);
+        canMakeSelectedSegmentVertical = pathEditor.snapSegmentVertical(
+          verticalCandidate,
+          vertexMenuState.segmentAfterIndex,
+        );
       }
     } catch {
       selectionIsCurrent = false;
@@ -386,6 +402,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       canRoundSelectedVertex = false;
       canMakeSelectedSegmentBendable = false;
       canMakeSelectedSegmentStraight = false;
+      canMakeSelectedSegmentHorizontal = false;
+      canMakeSelectedSegmentVertical = false;
     }
   }
   const selectedVertexIndex = selectionIsCurrent ? vertexSelection!.commandIndex : null;
@@ -510,6 +528,49 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     selectedHold,
     vertexMenuState?.segmentAfterIndex,
   ]);
+
+  const snapSelectedSegment = useCallback((axis: "horizontal" | "vertical"): void => {
+    const afterIndex = vertexMenuState?.segmentAfterIndex;
+    const canSnap = axis === "horizontal"
+      ? canMakeSelectedSegmentHorizontal
+      : canMakeSelectedSegmentVertical;
+    if (!canSnap || !document || !selectedHold
+      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    try {
+      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const snapped = axis === "horizontal"
+        ? pathEditor.snapSegmentHorizontal(commands, afterIndex)
+        : pathEditor.snapSegmentVertical(commands, afterIndex);
+      if (!snapped) return;
+      const nextPath = pathEditor.serializePath(commands);
+      const edited = actions.editDocument((candidate) => {
+        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+      }, { status: `Line made ${axis}. Save when ready.` });
+      if (!edited) return;
+      setVertexSelection(null);
+      setVertexMenuState(null);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
+    }
+  }, [
+    actions,
+    canMakeSelectedSegmentHorizontal,
+    canMakeSelectedSegmentVertical,
+    document,
+    pathEditor,
+    reportInvalidPath,
+    selectedHold,
+    vertexMenuState?.segmentAfterIndex,
+  ]);
+
+  const makeSelectedSegmentHorizontal = useCallback((): void => {
+    snapSelectedSegment("horizontal");
+  }, [snapSelectedSegment]);
+
+  const makeSelectedSegmentVertical = useCallback((): void => {
+    snapSelectedSegment("vertical");
+  }, [snapSelectedSegment]);
 
   const dismissVertexMenu = useCallback((restoreFocus = false): void => {
     setVertexMenuState((current) => {
@@ -1043,8 +1104,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       if (afterIndex === null) return;
       const bendableCandidate = cloneCommands(commands);
       const straightCandidate = cloneCommands(commands);
+      const horizontalCandidate = cloneCommands(commands);
+      const verticalCandidate = cloneCommands(commands);
       if (!pathEditor.makeSegmentBendable(bendableCandidate, afterIndex)
-        && !pathEditor.makeSegmentStraight(straightCandidate, afterIndex)) return;
+        && !pathEditor.makeSegmentStraight(straightCandidate, afterIndex)
+        && !pathEditor.snapSegmentHorizontal(horizontalCandidate, afterIndex)
+        && !pathEditor.snapSegmentVertical(verticalCandidate, afterIndex)) return;
       event.preventDefault();
       setVertexSelection(null);
       setVertexMenuState({
@@ -1143,6 +1208,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     canRoundSelectedVertex,
     canMakeSelectedSegmentBendable,
     canMakeSelectedSegmentStraight,
+    canMakeSelectedSegmentHorizontal,
+    canMakeSelectedSegmentVertical,
     addHold,
     deleteHold,
     selectVertex,
@@ -1150,6 +1217,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     roundSelectedVertex,
     makeSelectedSegmentBendable,
     makeSelectedSegmentStraight,
+    makeSelectedSegmentHorizontal,
+    makeSelectedSegmentVertical,
     dismissVertexMenu,
     changeHoldType,
     changeOutlineShape,

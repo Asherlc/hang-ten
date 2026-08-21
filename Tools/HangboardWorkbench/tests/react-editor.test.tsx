@@ -843,6 +843,30 @@ test("straight-segment menu converts a segment to a bendable quadratic", async (
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("line menu snaps a diagonal custom-outline segment to the chosen axis", async () => {
+  for (const [action, expectedPath, expectedStatus] of [
+    ["#make-horizontal-action", "M 10 10 L 30 10 L 30 40 L 10 40 Z", "Line made horizontal. Save when ready."],
+    ["#make-vertical-action", "M 10 10 L 10 20 L 30 40 L 10 40 Z", "Line made vertical. Save when ready."],
+  ] as const) {
+    const diagonal = documentFixture([
+      { id: 1, key: "diagonal", type: "jug", displayPath: "M 10 10 L 30 20 L 30 40 L 10 40 Z" },
+    ]);
+    await withEditor(async (app) => {
+      app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+      await app.click('[data-hold-key="diagonal"]');
+      await app.mouse('[data-hold-key="diagonal"]', "contextmenu", { button: 2, clientX: 20, clientY: 15 });
+
+      assert.equal(app.document.querySelector('[role="menu"]')?.getAttribute("aria-label"), "Line actions");
+      assert.equal(app.document.querySelector(action)?.textContent, action === "#make-horizontal-action" ? "Make horizontal" : "Make vertical");
+      await app.click(action);
+      assert.equal(paths(app)[0], expectedPath);
+      assert.equal(app.text("#editor-status"), expectedStatus);
+      assert.equal(app.document.querySelector('[role="menu"]'), null);
+      assert.equal(app.document.querySelector(".path-editor-vertex.selected"), null);
+    }, dependenciesFixture(boardFixture(diagonal)));
+  }
+});
+
 test("curved-segment menu makes a quadratic segment straight and removes its control", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 Q 20 0 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {

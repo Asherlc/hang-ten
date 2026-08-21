@@ -189,6 +189,8 @@ export interface PathEditor {
   roundVertex(commands: PathCommand[], index: number): boolean;
   makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean;
   makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean;
+  snapSegmentHorizontal(commands: PathCommand[], afterIndex: number): boolean;
+  snapSegmentVertical(commands: PathCommand[], afterIndex: number): boolean;
   rotatePath(commands: PathCommand[], angleRadians: number, pivot: Point): void;
 }
 

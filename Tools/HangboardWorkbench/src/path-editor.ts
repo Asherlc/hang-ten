@@ -575,6 +575,38 @@ export function makeSegmentStraight(commands: PathCommand[], afterIndex: number)
   return true;
 }
 
+export function snapSegmentHorizontal(commands: PathCommand[], afterIndex: number): boolean {
+  return snapSegmentToAxis(commands, afterIndex, "horizontal");
+}
+
+export function snapSegmentVertical(commands: PathCommand[], afterIndex: number): boolean {
+  return snapSegmentToAxis(commands, afterIndex, "vertical");
+}
+
+function snapSegmentToAxis(
+  commands: PathCommand[],
+  afterIndex: number,
+  axis: "horizontal" | "vertical",
+): boolean {
+  const start = commands[afterIndex]?.points.at(-1);
+  const next = commands[afterIndex + 1];
+  const closingEdge = next?.type === "Z" && afterIndex + 1 === commands.length - 1;
+  const end = closingEdge
+    ? commands[0]?.type === "M" ? commands[0].points[0] : undefined
+    : next?.type === "L" ? next.points[0] : undefined;
+  if (!start || !end || (axis === "horizontal" ? start.y === end.y : start.x === end.x)) return false;
+
+  const snappedEnd = axis === "horizontal"
+    ? { x: end.x, y: start.y }
+    : { x: start.x, y: end.y };
+  if (closingEdge) {
+    commands.splice(afterIndex + 1, 0, { type: "L", points: [snappedEnd], controls: [] });
+  } else {
+    commands[afterIndex + 1] = { type: "L", points: [snappedEnd], controls: [] };
+  }
+  return true;
+}
+
 export function roundVertex(commands: PathCommand[], index: number): boolean {
   if (index === 0) return roundStartVertex(commands);
   if (index === commands.length - 2) return roundLastVertex(commands);
