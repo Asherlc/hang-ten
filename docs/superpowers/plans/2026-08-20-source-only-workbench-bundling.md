@@ -1,6 +1,6 @@
 # Source-only Hangboard Workbench Bundling Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development with a fresh subagent for every implementation task and review checkpoints after each task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Generate the Workbench browser bundle only in build workspaces, never commit it, while preserving server and macOS package behavior.
 

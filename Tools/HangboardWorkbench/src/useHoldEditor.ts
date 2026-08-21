@@ -249,7 +249,7 @@ function outlinePreset(shape: ShapeConstraintShape): "oval" | "circle" | "pill" 
 
 function canDeleteVertex(commands: readonly PathCommand[], index: number): boolean {
   const command = commands[index];
-  if (!command || command.type === "Z") return false;
+  if (!command || command.type === "Z" || (command.type === "M" && index !== 0)) return false;
   return commands.filter((candidate) => candidate.type !== "Z" && candidate.points.length > 0).length > 3;
 }
 
