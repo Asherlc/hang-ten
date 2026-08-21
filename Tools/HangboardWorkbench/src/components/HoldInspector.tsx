@@ -24,6 +24,8 @@ export interface HoldInspectorProps {
   onRotate(direction: -1 | 1, shiftKey: boolean): void;
   onApplyRotation(): void;
   onDelete(): void;
+  onMobileCollapse(): void;
+  className?: string;
 }
 
 export function HoldInspector({
@@ -38,15 +40,24 @@ export function HoldInspector({
   onRotate,
   onApplyRotation,
   onDelete,
+  onMobileCollapse,
+  className = "",
 }: HoldInspectorProps) {
   return (
-    <aside className="panel inspector-panel" aria-labelledby="hold-heading">
+    <aside className={`panel inspector-panel ${className}`.trim()} aria-labelledby="hold-heading">
       <div className="panel-heading">
         <div>
           <span className="eyebrow">Hold</span>
           <h2 id="hold-heading">{hold?.key ?? "No selection"}</h2>
           {selectedCount > 1 && <span id="selected-hold-count">{selectedCount} selected</span>}
         </div>
+        <button
+          className="tool-button mobile-sheet-collapse"
+          id="mobile-collapse-hold-sheet-button"
+          type="button"
+          aria-label="Collapse hold editor"
+          onClick={onMobileCollapse}
+        >Collapse</button>
       </div>
       <div className={`inspector-empty${hold ? " hidden" : ""}`} id="hold-empty">Select a hold to edit its closed contour.</div>
       <form className={`inspector-form${hold ? "" : " hidden"}`} id="hold-form">
