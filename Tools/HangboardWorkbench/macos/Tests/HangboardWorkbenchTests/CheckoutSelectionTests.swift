@@ -1,3 +1,4 @@
+import Darwin
 import Foundation
 import XCTest
 @testable import HangboardWorkbench
@@ -21,7 +22,7 @@ final class CheckoutSelectionTests: XCTestCase {
         super.tearDown()
     }
 
-    func testValidatedURLAcceptsTheDirectWorkbenchAndBoardLibraryMarkers() throws {
+    func testValidatedURLAcceptsLocalRepositoryWithoutWorkbenchSources() throws {
         let root = try makeCheckout()
 
         let result = try CheckoutSelection.validatedURL(root.appending(path: "."))
@@ -29,13 +30,19 @@ final class CheckoutSelectionTests: XCTestCase {
         XCTAssertEqual(result.path, root.resolvingSymlinksInPath().path)
     }
 
-    func testValidatedURLRejectsEachMissingCheckoutMarker() throws {
+    func testValidatedURLRejectsRepositoryRootSuppliedThroughASymlink() throws {
+        let root = try makeCheckout()
+        let symlink = root.deletingLastPathComponent().appending(path: "repository-link-\(UUID().uuidString)")
+        temporaryDirectories.append(symlink)
+        try FileManager.default.createSymbolicLink(at: symlink, withDestinationURL: root)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(symlink))
+    }
+
+    func testValidatedURLRejectsEachMissingRepositoryMarker() throws {
         for marker in [
             ".git",
             "Hangboards",
-            "Tools/HangboardWorkbench/server.py",
-            "Tools/HangboardWorkbench/board_package.py",
-            "Tools/HangboardWorkbench/board_geometry.py",
         ] {
             let root = try makeCheckout()
             try FileManager.default.removeItem(at: root.appending(path: marker))
@@ -44,7 +51,7 @@ final class CheckoutSelectionTests: XCTestCase {
         }
     }
 
-    func testValidatedURLRejectsCheckoutWithoutDirectWorkbenchSources() throws {
+    func testValidatedURLRejectsRepositoryWithoutBoardLibrary() throws {
         let root = try makeInvalidCheckout()
 
         XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
@@ -56,6 +63,37 @@ final class CheckoutSelectionTests: XCTestCase {
         try Data("gitdir: /tmp/example\n".utf8).write(to: root.appending(path: ".git"))
 
         XCTAssertEqual(try CheckoutSelection.validatedURL(root), root.resolvingSymlinksInPath())
+    }
+
+    func testValidatedURLRejectsASymlinkedGitMarker() throws {
+        let root = try makeCheckout()
+        let gitMarker = root.appending(path: ".git")
+        let target = root.appending(path: "git-metadata", directoryHint: .isDirectory)
+        try FileManager.default.removeItem(at: gitMarker)
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: gitMarker, withDestinationURL: target)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
+    }
+
+    func testValidatedURLRejectsANonFileOrDirectoryGitMarker() throws {
+        let root = try makeCheckout()
+        let gitMarker = root.appending(path: ".git")
+        try FileManager.default.removeItem(at: gitMarker)
+        XCTAssertEqual(gitMarker.path.withCString { mkfifo($0, 0o600) }, 0)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
+    }
+
+    func testValidatedURLRejectsASymlinkedBoardLibrary() throws {
+        let root = try makeCheckout()
+        let hangboards = root.appending(path: "Hangboards")
+        let target = root.appending(path: "linked-hangboards", directoryHint: .isDirectory)
+        try FileManager.default.removeItem(at: hangboards)
+        try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: hangboards, withDestinationURL: target)
+
+        XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
     }
 
     func testRememberStoresOnlyTheNormalizedCheckoutPath() throws {
@@ -100,13 +138,6 @@ final class CheckoutSelectionTests: XCTestCase {
             at: root.appending(path: "Hangboards"),
             withIntermediateDirectories: true
         )
-        try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardWorkbench"),
-            withIntermediateDirectories: true
-        )
-        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/server.py"))
-        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_package.py"))
-        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_geometry.py"))
         return root
     }
 

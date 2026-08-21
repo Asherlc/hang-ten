@@ -586,20 +586,15 @@ def test_server_imports_with_only_the_workbench_on_pythonpath(tmp_path: Path) ->
     assert completed.stdout.strip() == "server"
 
 
-def test_checkout_validation_requires_only_the_direct_workbench_layout(
+def test_checkout_validation_accepts_a_local_repository_without_workbench_sources(
     tmp_path: Path,
 ) -> None:
     checkout = tmp_path / "checkout"
     (checkout / ".git").mkdir(parents=True)
     (checkout / "Hangboards").mkdir()
-    workbench = checkout / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    (workbench / "server.py").touch()
-    (workbench / "board_package.py").touch()
-    (workbench / "board_geometry.py").touch()
 
     assert validate_hang_ten_checkout(checkout) == checkout.resolve()
-    (workbench / "board_geometry.py").unlink()
+    (checkout / "Hangboards").rmdir()
 
     with pytest.raises(EditorError, match="Hang Ten checkout"):
         validate_hang_ten_checkout(checkout)
@@ -630,12 +625,6 @@ def test_checkout_rejects_a_hangboards_symlink_that_escapes_the_checkout(
         outside_library,
         target_is_directory=True,
     )
-    workbench = checkout / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    (workbench / "server.py").touch()
-    (workbench / "board_package.py").touch()
-    (workbench / "board_geometry.py").touch()
-
     with pytest.raises(EditorError, match="Hang Ten checkout"):
         validate_hang_ten_checkout(checkout)
 

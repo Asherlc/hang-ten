@@ -283,9 +283,9 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
     private func chooseCheckout(_ sender: Any?) {
         guard !shutdownInProgress else { return }
         let panel = NSOpenPanel()
-        panel.title = "Choose Hang Ten Checkout"
-        panel.message = "Choose the root directory of a Hang Ten checkout."
-        panel.prompt = "Choose Checkout"
+        panel.title = "Choose Local Hang Ten Repository"
+        panel.message = "Choose the root directory of your local Hang Ten repository copy."
+        panel.prompt = "Choose Repository"
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
@@ -298,9 +298,9 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
             guard response == .OK, let url = panel.url else {
                 if self.selection.lastValidCheckout() == nil && self.webView.url == nil {
                     self.showMessage(
-                        title: "Choose a Hang Ten Checkout",
-                        detail: "Hangboard Workbench needs a checkout before it can start.",
-                        retryTitle: "Choose Checkout…"
+                        title: "Choose a Local Hang Ten Repository",
+                        detail: "Hangboard Workbench needs a local repository copy before it can start.",
+                        retryTitle: "Choose Repository…"
                     )
                 }
                 return
@@ -320,7 +320,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
                     }
                 )
             } catch {
-                self.showMessage(title: "That Folder Is Not a Hang Ten Checkout", detail: error.localizedDescription)
+                self.showMessage(title: "That Folder Is Not a Local Hang Ten Repository", detail: error.localizedDescription)
             }
         }
     }
@@ -391,7 +391,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
 
         let appMenu = NSMenu()
         let choose = appMenu.addItem(
-            withTitle: "Choose Hang Ten Checkout…",
+            withTitle: "Choose Local Repository…",
             action: #selector(chooseCheckout(_:)),
             keyEquivalent: "o"
         )
@@ -513,9 +513,9 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
     private func diagnosticDetail(_ detail: String, session: BackendController.Session) -> String {
         let mismatch = session.runtimeIdentity != "unknown" && session.checkoutIdentity != "unknown"
             && session.runtimeIdentity != session.checkoutIdentity
-            ? "\nBuild mismatch: the packaged runtime and selected checkout are from different commits."
+            ? "\nBuild mismatch: the packaged runtime and selected local repository are from different commits."
             : ""
-        return "\(detail)\n\nBackend: \(session.url.absoluteString)\nRuntime build: \(session.runtimeIdentity)\nCheckout build: \(session.checkoutIdentity)\(mismatch)\nCheckout: \(activeCheckout?.path ?? "unknown")"
+        return "\(detail)\n\nBackend: \(session.url.absoluteString)\nRuntime build: \(session.runtimeIdentity)\nLocal repository build: \(session.checkoutIdentity)\(mismatch)\nLocal repository: \(activeCheckout?.path ?? "unknown")"
     }
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -584,7 +584,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
         requestBackendRestart(session: session)
     }
 
-    private func showMessage(title: String, detail: String, retryTitle: String = "Choose Another Checkout…") {
+    private func showMessage(title: String, detail: String, retryTitle: String = "Choose Another Local Repository…") {
         let titleLabel = NSTextField(labelWithString: title)
         titleLabel.font = .systemFont(ofSize: 22, weight: .semibold)
         titleLabel.alignment = .center
