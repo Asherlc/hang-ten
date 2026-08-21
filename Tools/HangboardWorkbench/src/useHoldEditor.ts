@@ -39,7 +39,7 @@ interface DragState {
   startY: number;
   commands: PathCommand[] | null;
   originalPath: string | null;
-  originalPaths: Array<{ key: string; path: string; shapeConstraint?: ShapeConstraint }> | null;
+  originalPaths: Array<{ key: string; path: string; pivot?: Point; shapeConstraint?: ShapeConstraint }> | null;
   originalConstraint: ShapeConstraint | null;
   originalDocument: EditorDocument | null;
   resizeHandle: ConstrainedHandle | null;
@@ -715,16 +715,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (target.classList.contains("path-editor-rotation-handle")) {
       const siblings = holdSiblings(document, selectedHold);
       const pivot = holdCentroid(siblings, pathEditor);
+      const holds = selectedPhysicalHolds(document, selectedKeys);
       next = {
         ...EMPTY_DRAG,
         active: true,
         type: "rotation",
         holdKey: selectedHold.key,
-        originalPaths: siblings.map((region) => ({
-          key: region.key,
-          path: region.displayPath,
-          ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
-        })),
+        originalPaths: holds.flatMap((hold) => {
+          const holdPivot = holdCentroid(hold, pathEditor);
+          return hold.map((region) => ({
+            key: region.key,
+            path: region.displayPath,
+            pivot: holdPivot,
+            ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
+          }));
+        }),
         originalDirty: dirty,
         pivot,
         lastAngle: Math.atan2(point.y - pivot.y, point.x - pivot.x),
@@ -787,7 +792,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Tests and older browsers may not implement pointer capture.
     }
-  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectVertex, selectedHold]);
+  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectVertex, selectedHold, selectedKeys]);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -814,7 +819,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const region = candidate.regions.find((value) => value.key === original.key);
         if (!region) continue;
         const commands = pathEditor.parsePath(original.path);
-        pathEditor.rotatePath(commands, drag.totalAngle, drag.pivot);
+        pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
         region.displayPath = pathEditor.serializePath(commands);
         if (original.shapeConstraint) {
           region.shapeConstraint = {

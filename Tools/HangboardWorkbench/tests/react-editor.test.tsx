@@ -721,6 +721,35 @@ test("rotation drag rotates every sibling from pointer-down paths around the sha
   });
 });
 
+test("rotation drag rotates every Command-selected physical hold around its own centroid", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-hold-key="b-piece-0"]')?.getAttribute("aria-pressed"), "true");
+
+    const connector = app.document.querySelector<SVGLineElement>(".path-editor-rotation-connector")!;
+    const handle = app.document.querySelector<SVGCircleElement>(".path-editor-rotation-handle")!;
+    const primaryPivot = { x: Number(connector.getAttribute("x1")), y: Number(connector.getAttribute("y1")) };
+    const start = { x: Number(handle.getAttribute("cx")), y: Number(handle.getAttribute("cy")) };
+    const radius = Math.hypot(start.x - primaryPivot.x, start.y - primaryPivot.y);
+    const startAngle = Math.atan2(start.y - primaryPivot.y, start.x - primaryPivot.x);
+    const end = {
+      x: primaryPivot.x + radius * Math.cos(startAngle + Math.PI / 2),
+      y: primaryPivot.y + radius * Math.sin(startAngle + Math.PI / 2),
+    };
+
+    await drag(app, ".path-editor-rotation-handle", [start, end]);
+
+    const physicalAPivot = holdCentroid(documentFixture().regions.slice(0, 2), pathEditor);
+    const physicalBPivot = holdCentroid([documentFixture().regions[2]!], pathEditor);
+    assert.equal(paths(app)[0], rotate(FIRST_PATH, 90, physicalAPivot));
+    assert.equal(paths(app)[1], rotate(SECOND_PATH, 90, physicalAPivot));
+    assert.equal(paths(app)[2], rotate(OTHER_PATH, 90, physicalBPivot));
+  });
+});
+
 test("double-click inserts a vertex while right-click selects it and waits for an explicit Delete action", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
