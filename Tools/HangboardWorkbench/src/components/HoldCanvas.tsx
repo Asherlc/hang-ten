@@ -487,6 +487,18 @@ export function HoldCanvas({
               role="menuitem"
               onClick={() => editor.makeSelectedSegmentStraight()}
             >Make straight</button>}
+            {editor.canMakeSelectedSegmentHorizontal && <button
+              id="make-horizontal-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentHorizontal()}
+            >Make horizontal</button>}
+            {editor.canMakeSelectedSegmentVertical && <button
+              id="make-vertical-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentVertical()}
+            >Make vertical</button>}
           </div>
         )}
         <div className={`empty-state${document ? " hidden" : ""}`} id="empty-state">
