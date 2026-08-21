@@ -21,7 +21,7 @@ final class CheckoutSelectionTests: XCTestCase {
         super.tearDown()
     }
 
-    func testValidatedURLAcceptsTheDirectWorkbenchAndBoardLibraryMarkers() throws {
+    func testValidatedURLAcceptsLocalRepositoryWithoutWorkbenchSources() throws {
         let root = try makeCheckout()
 
         let result = try CheckoutSelection.validatedURL(root.appending(path: "."))
@@ -29,13 +29,10 @@ final class CheckoutSelectionTests: XCTestCase {
         XCTAssertEqual(result.path, root.resolvingSymlinksInPath().path)
     }
 
-    func testValidatedURLRejectsEachMissingCheckoutMarker() throws {
+    func testValidatedURLRejectsEachMissingRepositoryMarker() throws {
         for marker in [
             ".git",
             "Hangboards",
-            "Tools/HangboardWorkbench/server.py",
-            "Tools/HangboardWorkbench/board_package.py",
-            "Tools/HangboardWorkbench/board_geometry.py",
         ] {
             let root = try makeCheckout()
             try FileManager.default.removeItem(at: root.appending(path: marker))
@@ -44,7 +41,7 @@ final class CheckoutSelectionTests: XCTestCase {
         }
     }
 
-    func testValidatedURLRejectsCheckoutWithoutDirectWorkbenchSources() throws {
+    func testValidatedURLRejectsRepositoryWithoutBoardLibrary() throws {
         let root = try makeInvalidCheckout()
 
         XCTAssertThrowsError(try CheckoutSelection.validatedURL(root))
@@ -100,13 +97,6 @@ final class CheckoutSelectionTests: XCTestCase {
             at: root.appending(path: "Hangboards"),
             withIntermediateDirectories: true
         )
-        try FileManager.default.createDirectory(
-            at: root.appending(path: "Tools/HangboardWorkbench"),
-            withIntermediateDirectories: true
-        )
-        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/server.py"))
-        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_package.py"))
-        try Data().write(to: root.appending(path: "Tools/HangboardWorkbench/board_geometry.py"))
         return root
     }
 

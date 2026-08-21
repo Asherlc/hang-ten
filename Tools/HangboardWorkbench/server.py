@@ -1080,7 +1080,7 @@ def _loopback_origin(value: object, selected_port: int) -> tuple[str, int] | Non
 
 
 def validate_hang_ten_checkout(root: Path) -> Path:
-    """Accept a checkout containing the direct Workbench and board library."""
+    """Accept a local Git checkout or worktree containing the board library."""
     resolved_root = _resolved_lexical_directory(
         root,
         unavailable_message="repository root must be a Hang Ten checkout",
@@ -1088,17 +1088,9 @@ def validate_hang_ten_checkout(root: Path) -> Path:
     )
     git_marker = resolved_root / ".git"
     hangboards = resolved_root / "Hangboards"
-    workbench = resolved_root / "Tools" / "HangboardWorkbench"
-    source_files = (
-        workbench / "server.py",
-        workbench / "board_package.py",
-        workbench / "board_geometry.py",
-    )
     if (
         not _is_lexical_file_or_directory(git_marker)
         or not _is_lexical_directory(hangboards)
-        or not _is_lexical_directory(workbench)
-        or any(not _is_lexical_file(source_file) for source_file in source_files)
     ):
         raise EditorError("repository root must be a Hang Ten checkout")
     return resolved_root
@@ -1128,13 +1120,6 @@ def _resolved_lexical_directory(
 def _is_lexical_directory(path: Path) -> bool:
     try:
         return stat.S_ISDIR(path.lstat().st_mode)
-    except OSError:
-        return False
-
-
-def _is_lexical_file(path: Path) -> bool:
-    try:
-        return stat.S_ISREG(path.lstat().st_mode)
     except OSError:
         return False
 

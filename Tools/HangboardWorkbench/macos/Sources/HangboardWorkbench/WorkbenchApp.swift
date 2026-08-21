@@ -283,9 +283,9 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
     private func chooseCheckout(_ sender: Any?) {
         guard !shutdownInProgress else { return }
         let panel = NSOpenPanel()
-        panel.title = "Choose Hang Ten Checkout"
-        panel.message = "Choose the root directory of a Hang Ten checkout."
-        panel.prompt = "Choose Checkout"
+        panel.title = "Choose Local Hang Ten Repository"
+        panel.message = "Choose the root directory of your local Hang Ten repository copy."
+        panel.prompt = "Choose Repository"
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
@@ -298,9 +298,9 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
             guard response == .OK, let url = panel.url else {
                 if self.selection.lastValidCheckout() == nil && self.webView.url == nil {
                     self.showMessage(
-                        title: "Choose a Hang Ten Checkout",
-                        detail: "Hangboard Workbench needs a checkout before it can start.",
-                        retryTitle: "Choose Checkout…"
+                        title: "Choose a Local Hang Ten Repository",
+                        detail: "Hangboard Workbench needs a local repository copy before it can start.",
+                        retryTitle: "Choose Repository…"
                     )
                 }
                 return
@@ -320,7 +320,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
                     }
                 )
             } catch {
-                self.showMessage(title: "That Folder Is Not a Hang Ten Checkout", detail: error.localizedDescription)
+                self.showMessage(title: "That Folder Is Not a Local Hang Ten Repository", detail: error.localizedDescription)
             }
         }
     }
@@ -391,7 +391,7 @@ private final class WorkbenchAppDelegate: NSObject, NSApplicationDelegate, NSWin
 
         let appMenu = NSMenu()
         let choose = appMenu.addItem(
-            withTitle: "Choose Hang Ten Checkout…",
+            withTitle: "Choose Local Repository…",
             action: #selector(chooseCheckout(_:)),
             keyEquivalent: "o"
         )
