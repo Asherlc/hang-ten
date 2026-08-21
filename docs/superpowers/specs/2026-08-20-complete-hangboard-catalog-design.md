@@ -67,9 +67,9 @@ never creates, proposes, or validates geometry.
 and retain their exact `presentation.assetPath` and unscoped holds.
 
 Version 2 replaces the single presentation with a nonempty `presentations`
-array. Each entry has an identifier, a concise source-backed display name, and
-an asset path beneath `assets/` for its AI-created simplified illustration.
-One entry is marked `default: true`.
+array. Each entry has an identifier, a concise source-backed display name, a
+positive `aspectRatio`, and an asset path beneath `assets/` for its AI-created
+simplified illustration. One entry is marked `default: true`.
 Every hold has a required `presentationID`, which identifies the one surface
 on which its canonical normalized geometry is drawn.  A physical contact
 shared across multiple views is represented once, against one canonical
@@ -82,10 +82,10 @@ visible surface.  It also prevents a reversible rail or cylinder from having
 contacts overlaid on an unrelated photograph.
 
 Asset validation expands from exactly `assets/primary.png` to exactly the set
-declared by the package.  All declared presentation assets must be regular,
-non-symlink PNGs.  Each image's aspect ratio must agree with the selected
-surface canvas; package-level product dimensions remain product facts rather
-than inferred image measurements.
+declared by the package. All declared presentation assets must be regular,
+non-symlink PNGs. Each image's aspect ratio must agree with its declared
+presentation `aspectRatio`; package-level product dimensions remain product
+facts rather than inferred image measurements.
 
 ## App behavior
 

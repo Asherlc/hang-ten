@@ -40,11 +40,11 @@
 - Modify: `Tools/HangboardPackages/tests/{conftest.py,test_board_catalog.py,test_approved_board_packages.py,test_board_package_staging.py}`
 
 **Interfaces:**
-- Produces a `BoardPresentation(id, name, asset_path, is_default)` value and `BoardHold.presentation_id`.
+- Produces a `BoardPresentation(id, name, asset_path, aspect_ratio, is_default)` value and `BoardHold.presentation_id`.
 - Version 1 exposes exactly one implicit `primary` presentation and assigns every hold to it.
 - Version 2 requires a nonempty `presentations` array with unique identifiers, exactly one default, a declared asset for every image, and a valid presentation ID for every hold.
 
-- [ ] Write failing parser tests for v1 compatibility, valid multi-presentation v2 documents, duplicate/default/unknown IDs, undeclared assets, and asset-path escape.
+- [ ] Write failing parser tests for v1 compatibility, valid multi-presentation v2 documents, duplicate/default/unknown IDs, undeclared assets, asset-path escape, and a declared presentation ratio that does not match its PNG.
 - [ ] Implement the smallest fail-closed parser and artifact validator that passes those tests.
 - [ ] Update approved-package assertions to accept the declared v2 asset set while retaining the v1 primary-only invariant.
 - [ ] Run `rtk pytest Tools/HangboardPackages/tests -q`.
