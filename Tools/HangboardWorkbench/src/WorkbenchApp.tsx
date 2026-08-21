@@ -117,6 +117,18 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
           <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
+          <label className="tool-button" htmlFor="autosave-toggle">
+            <input
+              id="autosave-toggle"
+              type="checkbox"
+              checked={state.autosaveEnabled}
+              onChange={(event) => actions.setAutosaveEnabled(event.currentTarget.checked)}
+            />
+            Autosave
+          </label>
+          <span className="save-state" id="autosave-state" aria-live="polite">
+            {state.autosaveEnabled ? "Autosave on" : "Autosave off"}
+          </span>
         </div>
         <RepositoryToolbar state={state} actions={actions} />
       </header>

@@ -40,6 +40,22 @@ function deferred<T>(): {
   };
 }
 
+function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => { setTimeout(resolve, milliseconds); });
+}
+
+function storageFixture(initial: Record<string, string> = {}): Pick<Storage, "getItem" | "setItem"> {
+  const values = new Map(Object.entries(initial));
+  return {
+    getItem(key) {
+      return values.get(key) ?? null;
+    },
+    setItem(key, value) {
+      values.set(key, value);
+    },
+  };
+}
+
 function editorDocument(path = "M 1 1 L 20 1 L 20 20 Z"): EditorDocument {
   return {
     schemaVersion: 1,
@@ -229,6 +245,8 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
     assert.equal(app.text("#board-status"), "Choose a board to edit its holds.");
     assert.equal(app.text("#git-status"), "Repository status");
     assert.equal(app.text("#save-state"), "No board selected");
+    const autosave = app.document.querySelector<HTMLInputElement>("#autosave-toggle");
+    assert.equal(autosave?.checked, true);
     assert.equal(app.text("#board-name"), "No board selected");
     assert.equal(app.text("#empty-state"), "Select a boardIts image and holds load together.");
     assert.equal(app.text("#hold-heading"), "No selection");
@@ -247,6 +265,33 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
     const login = app.document.querySelector<HTMLAnchorElement>("#git-auth-status a");
     assert.equal(login?.textContent, "Log in with GitHub");
     assert.equal(login?.getAttribute("href"), "/auth/login");
+  });
+});
+
+test("autosave restores the saved browser preference", async () => {
+  const image = imageFixture();
+  const storage = storageFixture({ "hangboard-workbench:autosave-enabled": "false" });
+  const runtime = { ...image.runtime, storage } as BrowserRuntime;
+  await withApp(dependenciesFixture({ runtime }), async (app) => {
+    const autosave = app.document.querySelector<HTMLInputElement>("#autosave-toggle");
+    assert.equal(autosave?.checked, false);
+  });
+});
+
+test("changing autosave persists the preference for a future app mount", async () => {
+  const image = imageFixture();
+  const storage = storageFixture();
+  const runtime = { ...image.runtime, storage } as BrowserRuntime;
+  const dependencies = dependenciesFixture({ runtime });
+
+  await withApp(dependencies, async (app) => {
+    await app.click("#autosave-toggle");
+    assert.equal(storage.getItem("hangboard-workbench:autosave-enabled"), "false");
+  });
+
+  await withApp(dependencies, async (app) => {
+    const autosave = app.document.querySelector<HTMLInputElement>("#autosave-toggle");
+    assert.equal(autosave?.checked, false);
   });
 });
 
@@ -555,6 +600,138 @@ test("an old delayed save cannot overwrite a newer document identity", async () 
     });
     assert.equal(result().state.document?.regions[0]?.displayPath, "M 9 9 L 29 9 L 29 29 Z");
     assert.equal(result().state.dirty, true);
+  });
+});
+
+test("autosave waits for a quiet 750ms window and saves the latest valid document once", async () => {
+  const image = imageFixture();
+  const savedDocuments: EditorDocument[] = [];
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(_boardId, document) {
+        savedDocuments.push(document);
+        return boardFixture("board-a", document);
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await load;
+    });
+
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 2 2 L 22 2 L 22 22 Z"),
+      "First edit.",
+    ));
+    await harness.flush(() => wait(500));
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 8 8 L 28 8 L 28 28 Z"),
+      "Latest edit.",
+    ));
+    await harness.flush(() => wait(500));
+    assert.equal(savedDocuments.length, 0);
+
+    await harness.flush(() => wait(300));
+    assert.equal(savedDocuments.length, 1);
+    assert.equal(savedDocuments[0]?.regions[0]?.displayPath, "M 8 8 L 28 8 L 28 28 Z");
+    assert.equal(result().state.dirty, false);
+  });
+});
+
+test("a failed autosave waits for another document change before trying again", async () => {
+  const image = imageFixture();
+  const failedSave = deferred<Board>();
+  let saves = 0;
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard() {
+        saves += 1;
+        return failedSave.promise;
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await load;
+    });
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 7 7 L 27 7 L 27 27 Z"),
+      "Edited.",
+    ));
+
+    await harness.flush(() => wait(800));
+    assert.equal(saves, 1);
+    await harness.flush(() => failedSave.reject(new Error("storage unavailable")));
+    await harness.flush(() => wait(800));
+    assert.equal(saves, 1);
+  });
+});
+
+test("a failed manual save waits for another document change before autosaving", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard() {
+        saves += 1;
+        throw new Error("storage unavailable");
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await load;
+    });
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 7 7 L 27 7 L 27 27 Z"),
+      "Edited.",
+    ));
+
+    await harness.flush(() => result().actions.saveBoard());
+    assert.equal(saves, 1);
+    await harness.flush(() => wait(800));
+    assert.equal(saves, 1);
+    assert.equal(result().state.dirty, true);
+  });
+});
+
+test("turning autosave off cancels pending work and leaves later edits for manual save", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(_boardId, document) {
+        saves += 1;
+        return boardFixture("board-a", document);
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+    await app.change("#hold-type-select", "pinch");
+    await app.click("#autosave-toggle");
+    await app.flush(() => wait(800));
+    assert.equal(saves, 0);
+
+    await app.change("#hold-type-select", "sloper");
+    await app.flush(() => wait(800));
+    assert.equal(saves, 0);
+    assert.equal(app.text("#save-state"), "Unsaved changes");
   });
 });
 
