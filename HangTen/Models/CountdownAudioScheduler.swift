@@ -89,22 +89,172 @@ final class CountdownAudioScheduler: CountdownAudioScheduling {
     }
 }
 
-private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedulingBackend {
+protocol CountdownAudioBufferPlayback: AnyObject {
+    func prepare(format: AVAudioFormat)
+    func start() throws
+    func schedule(_ buffer: AVAudioPCMBuffer, atHostTime hostTime: UInt64)
+    func play()
+    func stop()
+}
+
+final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBackend {
     private struct ScheduledBuffer {
         let buffer: AVAudioPCMBuffer
         let hostTime: UInt64
     }
 
+    private let buffersForSchedule: (CountdownAudioSchedule) -> [String: [AVAudioPCMBuffer]]?
+    private let playback: any CountdownAudioBufferPlayback
+    private let currentHostTime: () -> UInt64
+    private var retainedPlaybackBuffers: [AVAudioPCMBuffer] = []
+
+    init(
+        buffersForSchedule: @escaping (CountdownAudioSchedule) -> [String: [AVAudioPCMBuffer]]?,
+        playback: any CountdownAudioBufferPlayback,
+        currentHostTime: @escaping () -> UInt64
+    ) {
+        self.buffersForSchedule = buffersForSchedule
+        self.playback = playback
+        self.currentHostTime = currentHostTime
+    }
+
+    @discardableResult
+    func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
+        guard let buffersByPhrase = buffersForSchedule(schedule),
+              let scheduledBuffers = scheduledBuffers(
+                for: schedule,
+                buffersByPhrase: buffersByPhrase,
+                startHostTime: startHostTime
+              ),
+              let format = scheduledBuffers.first?.buffer.format,
+              currentHostTime() < startHostTime else {
+            return false
+        }
+
+        playback.prepare(format: format)
+        do {
+            try playback.start()
+        } catch {
+            stop()
+            return false
+        }
+
+        guard currentHostTime() < startHostTime else {
+            stop()
+            return false
+        }
+
+        retainedPlaybackBuffers = scheduledBuffers.map(\.buffer)
+        for scheduledBuffer in scheduledBuffers {
+            playback.schedule(
+                scheduledBuffer.buffer,
+                atHostTime: scheduledBuffer.hostTime
+            )
+        }
+
+        guard currentHostTime() < startHostTime else {
+            stop()
+            return false
+        }
+
+        playback.play()
+        return true
+    }
+
+    func stop() {
+        playback.stop()
+        retainedPlaybackBuffers.removeAll()
+    }
+
+    private func scheduledBuffers(
+        for schedule: CountdownAudioSchedule,
+        buffersByPhrase: [String: [AVAudioPCMBuffer]],
+        startHostTime: UInt64
+    ) -> [ScheduledBuffer]? {
+        var result: [ScheduledBuffer] = []
+
+        for cue in schedule.cues {
+            guard let buffers = buffersByPhrase[cue.phrase] else { return nil }
+            var cueBufferOffset: TimeInterval = 0
+
+            for buffer in buffers {
+                guard buffer.format.sampleRate > 0 else { return nil }
+                let offsetHostTime = AVAudioTime.hostTime(
+                    forSeconds: cue.offset + cueBufferOffset
+                )
+                let (hostTime, overflowed) = startHostTime.addingReportingOverflow(offsetHostTime)
+                guard !overflowed else { return nil }
+
+                result.append(ScheduledBuffer(buffer: buffer, hostTime: hostTime))
+                cueBufferOffset += TimeInterval(buffer.frameLength) / buffer.format.sampleRate
+            }
+
+            guard cueBufferOffset < 1 else { return nil }
+        }
+
+        return result
+    }
+}
+
+private final class SystemCountdownAudioBufferPlayback: CountdownAudioBufferPlayback {
     private let engine = AVAudioEngine()
     private let playerNode = AVAudioPlayerNode()
+    private var connectedFormat: AVAudioFormat?
+
+    init() {
+        engine.attach(playerNode)
+    }
+
+    func prepare(format: AVAudioFormat) {
+        if connectedFormat == nil {
+            engine.connect(playerNode, to: engine.mainMixerNode, format: format)
+            connectedFormat = format
+        }
+        engine.prepare()
+    }
+
+    func start() throws {
+        if !engine.isRunning {
+            try engine.start()
+        }
+    }
+
+    func schedule(_ buffer: AVAudioPCMBuffer, atHostTime hostTime: UInt64) {
+        playerNode.scheduleBuffer(
+            buffer,
+            at: AVAudioTime(hostTime: hostTime),
+            options: [],
+            completionHandler: nil
+        )
+    }
+
+    func play() {
+        playerNode.play()
+    }
+
+    func stop() {
+        playerNode.stop()
+        engine.stop()
+    }
+}
+
+private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedulingBackend {
     private let synthesizer = AVSpeechSynthesizer()
+    private let playback = SystemCountdownAudioBufferPlayback()
     private let stateLock = NSLock()
     private let logger = Logger(subsystem: "com.hangten.training", category: "CountdownAudio")
     private var pendingBuffers: [String: [AVAudioPCMBuffer]] = [:]
     private var preparedBuffers: [String: [AVAudioPCMBuffer]] = [:]
     private var failedPhrases: Set<String> = []
-    private var retainedPlaybackBuffers: [AVAudioPCMBuffer] = []
-    private var connectedFormat: AVAudioFormat?
+    private lazy var bufferSchedulingBackend = CountdownAudioBufferSchedulingBackend(
+        buffersForSchedule: { [weak self] schedule in
+            self?.preparedSnapshot(for: schedule)
+        },
+        playback: playback,
+        currentHostTime: {
+            AVAudioTime.hostTime(forSeconds: ProcessInfo.processInfo.systemUptime)
+        }
+    )
 
     init(
         preferredLanguageCode: String,
@@ -112,8 +262,6 @@ private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedul
         pitchMultiplier: Float,
         volume: Float
     ) {
-        engine.attach(playerNode)
-
         for phrase in ["3", "2", "1"] {
             pendingBuffers[phrase] = []
         }
@@ -132,54 +280,13 @@ private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedul
 
     @discardableResult
     func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
-        guard let buffersByPhrase = preparedSnapshot(for: schedule) else {
-            logger.error("Countdown speech buffers were not ready before the start deadline")
+        guard bufferSchedulingBackend.schedule(
+            schedule,
+            startHostTime: startHostTime
+        ) else {
+            logger.error("Countdown speech buffers were unavailable, overlong, or past deadline")
             return false
         }
-
-        let nowHostTime = AVAudioTime.hostTime(forSeconds: ProcessInfo.processInfo.systemUptime)
-        guard nowHostTime < startHostTime,
-              let scheduledBuffers = scheduledBuffers(
-                for: schedule,
-                buffersByPhrase: buffersByPhrase,
-                startHostTime: startHostTime
-              ),
-              let format = scheduledBuffers.first?.buffer.format else {
-            logger.error("Countdown start deadline passed before audio could be scheduled")
-            return false
-        }
-
-        connectPlayerIfNeeded(format: format)
-        engine.prepare()
-
-        do {
-            if !engine.isRunning {
-                try engine.start()
-            }
-        } catch {
-            logger.error("Unable to start countdown audio engine: \(error.localizedDescription, privacy: .public)")
-            return false
-        }
-
-        let hostTimeAfterEngineStart = AVAudioTime.hostTime(
-            forSeconds: ProcessInfo.processInfo.systemUptime
-        )
-        guard hostTimeAfterEngineStart < startHostTime else {
-            engine.stop()
-            logger.error("Countdown audio engine missed the start deadline")
-            return false
-        }
-
-        retainedPlaybackBuffers = scheduledBuffers.map(\.buffer)
-        for scheduledBuffer in scheduledBuffers {
-            playerNode.scheduleBuffer(
-                scheduledBuffer.buffer,
-                at: AVAudioTime(hostTime: scheduledBuffer.hostTime),
-                options: [],
-                completionHandler: nil
-            )
-        }
-        playerNode.play()
         logger.notice(
             "Scheduled countdown cues: \(schedule.cues.map(\.phrase).joined(separator: ","), privacy: .public)"
         )
@@ -187,9 +294,7 @@ private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedul
     }
 
     func stop() {
-        playerNode.stop()
-        engine.stop()
-        retainedPlaybackBuffers.removeAll()
+        bufferSchedulingBackend.stop()
     }
 
     private func receive(_ buffer: AVAudioBuffer, for phrase: String) {
@@ -242,38 +347,6 @@ private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedul
             }
             return snapshot
         }
-    }
-
-    private func scheduledBuffers(
-        for schedule: CountdownAudioSchedule,
-        buffersByPhrase: [String: [AVAudioPCMBuffer]],
-        startHostTime: UInt64
-    ) -> [ScheduledBuffer]? {
-        var result: [ScheduledBuffer] = []
-
-        for cue in schedule.cues {
-            guard let buffers = buffersByPhrase[cue.phrase] else { return nil }
-            var cueBufferOffset: TimeInterval = 0
-
-            for buffer in buffers {
-                let offsetHostTime = AVAudioTime.hostTime(
-                    forSeconds: cue.offset + cueBufferOffset
-                )
-                let (hostTime, overflowed) = startHostTime.addingReportingOverflow(offsetHostTime)
-                guard !overflowed else { return nil }
-
-                result.append(ScheduledBuffer(buffer: buffer, hostTime: hostTime))
-                cueBufferOffset += TimeInterval(buffer.frameLength) / buffer.format.sampleRate
-            }
-        }
-
-        return result
-    }
-
-    private func connectPlayerIfNeeded(format: AVAudioFormat) {
-        guard connectedFormat == nil else { return }
-        engine.connect(playerNode, to: engine.mainMixerNode, format: format)
-        connectedFormat = format
     }
 
     private func retainedCopy(of source: AVAudioPCMBuffer) -> AVAudioPCMBuffer? {

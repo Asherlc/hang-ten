@@ -698,6 +698,118 @@ final class CountdownAudioSchedulerTests: XCTestCase {
     }
 }
 
+final class CountdownAudioBufferSchedulingBackendTests: XCTestCase {
+    // Catches a deadline crossing after buffers are queued but before playback starts.
+    func testDeadlineCrossingImmediatelyBeforePlayClearsScheduledBuffers() {
+        let playback = RecordingCountdownAudioBufferPlayback()
+        let startHostTime = AVAudioTime.hostTime(forSeconds: 100)
+        var observedHostTimes = [
+            startHostTime - 3,
+            startHostTime - 2,
+            startHostTime
+        ]
+        let backend = CountdownAudioBufferSchedulingBackend(
+            buffersForSchedule: { _ in ["1": [makeCountdownPCMBuffer(duration: 0.5)]] },
+            playback: playback,
+            currentHostTime: { observedHostTimes.removeFirst() }
+        )
+
+        XCTAssertFalse(
+            backend.schedule(CountdownAudioSchedule(remainingFrom: "1"), startHostTime: startHostTime)
+        )
+        XCTAssertEqual(playback.scheduledBufferCountBeforeLastStop, 1)
+        XCTAssertEqual(playback.scheduledBufferCount, 0)
+        XCTAssertEqual(playback.playCallCount, 0)
+        XCTAssertEqual(playback.stopCallCount, 1)
+    }
+
+    // Catches a rendered number that fills its slot and can delay or collide with the next cue.
+    func testCueThatDoesNotFitStrictlyWithinOneSecondRejectsAllPlayback() {
+        let playback = RecordingCountdownAudioBufferPlayback()
+        let backend = CountdownAudioBufferSchedulingBackend(
+            buffersForSchedule: { _ in
+                [
+                    "3": [makeCountdownPCMBuffer(duration: 1.0)],
+                    "2": [makeCountdownPCMBuffer(duration: 0.5)],
+                    "1": [makeCountdownPCMBuffer(duration: 0.5)]
+                ]
+            },
+            playback: playback,
+            currentHostTime: { 0 }
+        )
+
+        XCTAssertFalse(
+            backend.schedule(
+                CountdownAudioSchedule(remainingFrom: "3"),
+                startHostTime: AVAudioTime.hostTime(forSeconds: 100)
+            )
+        )
+        XCTAssertEqual(playback.prepareCallCount, 0)
+        XCTAssertEqual(playback.scheduledBufferCount, 0)
+        XCTAssertEqual(playback.playCallCount, 0)
+    }
+
+    // Catches stop leaving pre-scheduled buffers owned by the player node.
+    func testStopClearsScheduledPlayback() {
+        let playback = RecordingCountdownAudioBufferPlayback()
+        let backend = CountdownAudioBufferSchedulingBackend(
+            buffersForSchedule: { _ in ["1": [makeCountdownPCMBuffer(duration: 0.5)]] },
+            playback: playback,
+            currentHostTime: { 0 }
+        )
+
+        XCTAssertTrue(
+            backend.schedule(
+                CountdownAudioSchedule(remainingFrom: "1"),
+                startHostTime: AVAudioTime.hostTime(forSeconds: 100)
+            )
+        )
+        XCTAssertEqual(playback.scheduledBufferCount, 1)
+
+        backend.stop()
+
+        XCTAssertEqual(playback.scheduledBufferCount, 0)
+        XCTAssertEqual(playback.stopCallCount, 1)
+    }
+}
+
+private final class RecordingCountdownAudioBufferPlayback: CountdownAudioBufferPlayback {
+    private(set) var prepareCallCount = 0
+    private(set) var scheduledBufferCount = 0
+    private(set) var scheduledBufferCountBeforeLastStop = 0
+    private(set) var playCallCount = 0
+    private(set) var stopCallCount = 0
+
+    func prepare(format: AVAudioFormat) {
+        prepareCallCount += 1
+    }
+
+    func start() throws {}
+
+    func schedule(_ buffer: AVAudioPCMBuffer, atHostTime hostTime: UInt64) {
+        scheduledBufferCount += 1
+    }
+
+    func play() {
+        playCallCount += 1
+    }
+
+    func stop() {
+        stopCallCount += 1
+        scheduledBufferCountBeforeLastStop = scheduledBufferCount
+        scheduledBufferCount = 0
+    }
+}
+
+private func makeCountdownPCMBuffer(duration: TimeInterval) -> AVAudioPCMBuffer {
+    let sampleRate = 100.0
+    let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
+    let frameCount = AVAudioFrameCount(duration * sampleRate)
+    let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount)!
+    buffer.frameLength = frameCount
+    return buffer
+}
+
 private final class RecordingCountdownAudioSchedulingBackend: CountdownAudioSchedulingBackend {
     struct ScheduledSequence {
         let schedule: CountdownAudioSchedule
