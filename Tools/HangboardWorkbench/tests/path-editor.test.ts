@@ -470,12 +470,27 @@ test("addVertex subdivides a C segment after a non-M command, leaving the preced
   assert.deepEqual(commands[3]?.points, [{ x: 100, y: 0 }]);
 });
 
-test("deleteVertex removes a vertex and converts adjacent curves to lines", () => {
+test("deleteVertex removes a vertex from a four-vertex contour and converts adjacent curves to lines", () => {
   const commands = parsePath("M 0 0 L 25 50 L 50 0 L 75 50 Z");
   deleteVertex(commands, 2);
   assert.equal(commands.length, 4);
   assert.equal(commands[2]?.type, "L");
   assert.deepEqual(commands[2]?.points, [{ x: 75, y: 50 }]);
+});
+
+test("deleteVertex reduces an open four-vertex path to three vertices", () => {
+  const commands = parsePath("M 0 0 L 25 50 L 50 0 L 75 50");
+  deleteVertex(commands, 2);
+  assert.equal(serializePath(commands), "M 0 0 L 25 50 L 75 50");
+});
+
+test("deleteVertex refuses to delete a noninitial M command", () => {
+  const commands = parsePath("M 0 0 L 25 0 L 25 25 Z M 50 50 L 75 50 L 75 75 Z");
+  const originalPath = serializePath(commands);
+
+  deleteVertex(commands, 4);
+
+  assert.equal(serializePath(commands), originalPath);
 });
 
 test("deleteVertex on an L between Q segments leaves the preceding curve untouched", () => {
@@ -488,31 +503,50 @@ test("deleteVertex on an L between Q segments leaves the preceding curve untouch
   assert.deepEqual(commands[2]?.points, [{ x: 125, y: 0 }]);
 });
 
-test("deleteVertex refuses to delete the M vertex", () => {
+test("deleteVertex promotes the next vertex to M when deleting the start vertex", () => {
+  const commands = parsePath("M 0 0 L 50 0 L 100 50 L 0 50 Z");
+  deleteVertex(commands, 0);
+  assert.equal(serializePath(commands), "M 50 0 L 100 50 L 0 50 Z");
+  assert.deepEqual(commands.map((command) => command.type), ["M", "L", "L", "Z"]);
+});
+
+test("deleteVertex promotes a Q endpoint to M when deleting the start vertex", () => {
+  const commands = parsePath("M 0 0 Q 25 50 50 0 L 100 50 L 0 50 Z");
+  deleteVertex(commands, 0);
+  assert.equal(serializePath(commands), "M 50 0 L 100 50 L 0 50 Z");
+  assert.deepEqual(commands.map((command) => command.type), ["M", "L", "L", "Z"]);
+});
+
+test("deleteVertex promotes a C endpoint to M when deleting the start vertex", () => {
+  const commands = parsePath("M 0 0 C 10 50 40 50 50 0 L 100 50 L 0 50 Z");
+  deleteVertex(commands, 0);
+  assert.equal(serializePath(commands), "M 50 0 L 100 50 L 0 50 Z");
+  assert.deepEqual(commands.map((command) => command.type), ["M", "L", "L", "Z"]);
+});
+
+test("deleteVertex refuses to delete the start vertex when fewer than three vertices remain", () => {
   const commands = parsePath("M 0 0 L 50 0 Z");
   deleteVertex(commands, 0);
   assert.equal(commands.length, 3);
   assert.equal(commands[0]?.type, "M");
 });
 
-test("deleteVertex on the vertex before Z wraps correctly", () => {
+test("deleteVertex refuses to reduce a triangle below three vertices", () => {
   const commands = parsePath("M 0 0 L 50 0 L 100 50 Z");
   deleteVertex(commands, 2);
-  assert.equal(commands.length, 3);
-  assert.equal(commands[0]?.type, "M");
-  assert.equal(commands[1]?.type, "L");
-  assert.equal(commands[2]?.type, "Z");
+  assert.equal(commands.length, 4);
+  assert.equal(serializePath(commands), "M 0 0 L 50 0 L 100 50 Z");
 });
 
 test("deleteVertex on the vertex before Z leaves a curved prev segment untouched", () => {
-  const commands = parsePath("M 0 0 Q 40 80 80 0 L 120 40 Z");
-  deleteVertex(commands, 2);
-  assert.equal(commands.length, 3);
+  const commands = parsePath("M 0 0 L 20 20 Q 40 80 80 0 L 120 40 Z");
+  deleteVertex(commands, 3);
+  assert.equal(commands.length, 4);
   assert.equal(commands[0]?.type, "M");
-  assert.equal(commands[1]?.type, "Q");
-  assert.deepEqual(commands[1]?.points, [{ x: 80, y: 0 }]);
-  assert.deepEqual(commands[1]?.controls, [{ x: 40, y: 80 }]);
-  assert.equal(commands[2]?.type, "Z");
+  assert.equal(commands[2]?.type, "Q");
+  assert.deepEqual(commands[2]?.points, [{ x: 80, y: 0 }]);
+  assert.deepEqual(commands[2]?.controls, [{ x: 40, y: 80 }]);
+  assert.equal(commands[3]?.type, "Z");
 });
 
 test("rotatePath rotates every anchor point 90 degrees clockwise around the pivot", () => {

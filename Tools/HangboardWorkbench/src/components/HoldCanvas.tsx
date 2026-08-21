@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { holdCentroid, holdSiblings, rotationHandlePosition } from "../editor-model.ts";
+import { holdCentroid, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
 import type {
   Board,
@@ -18,6 +18,32 @@ const TYPE_COLORS: Readonly<Record<string, string>> = {
   pinch: "#f2c94c",
 };
 
+interface VertexMenuPosition {
+  anchorX: number;
+  anchorY: number;
+  x: number;
+  y: number;
+}
+
+export type GuideAxis = "horizontal" | "vertical";
+
+export interface Guide {
+  id: string;
+  axis: GuideAxis;
+  coordinate: number;
+}
+
+interface GuideDragState {
+  id: string;
+  axis: GuideAxis;
+  pointerId: number;
+}
+
+function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
+  const flipped = anchor + size > viewportSize ? anchor - size : anchor;
+  return Math.max(0, Math.min(flipped, Math.max(0, viewportSize - size)));
+}
+
 export interface HoldCanvasProps {
   board: Board | null;
   document: EditorDocument | null;
@@ -28,6 +54,8 @@ export interface HoldCanvasProps {
   editor: HoldEditorActions;
   zoomPercent: number;
   onZoomChange(direction: number): void;
+  guides: readonly Guide[];
+  onMoveGuide(id: string, coordinate: number): void;
 }
 
 export function HoldCanvas({
@@ -40,9 +68,16 @@ export function HoldCanvas({
   editor,
   zoomPercent,
   onZoomChange,
+  guides,
+  onMoveGuide,
 }: HoldCanvasProps) {
-  const viewportRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
+  const vertexMenuRef = useRef<HTMLDivElement>(null);
+  const deleteVertexButtonRef = useRef<HTMLButtonElement>(null);
+  const selectedVertexRef = useRef<SVGCircleElement>(null);
+  const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const guideDragRef = useRef<GuideDragState | null>(null);
+  useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const handleWheel = (event: WheelEvent): void => {
@@ -80,6 +115,68 @@ export function HoldCanvas({
       constrainedModel = null;
     }
   }
+  useLayoutEffect(() => {
+    const menu = vertexMenuRef.current;
+    if (!editor.vertexMenu || !menu) return;
+    const bounds = menu.getBoundingClientRect();
+    const nextPosition = {
+      anchorX: editor.vertexMenu.x,
+      anchorY: editor.vertexMenu.y,
+      x: fixedMenuCoordinate(editor.vertexMenu.x, bounds.width, window.innerWidth),
+      y: fixedMenuCoordinate(editor.vertexMenu.y, bounds.height, window.innerHeight),
+    };
+    setVertexMenuPosition((current) => (
+      current?.anchorX === nextPosition.anchorX
+        && current.anchorY === nextPosition.anchorY
+        && current.x === nextPosition.x
+        && current.y === nextPosition.y
+        ? current
+        : nextPosition
+    ));
+    if (editor.canDeleteSelectedVertex) deleteVertexButtonRef.current?.focus();
+    else menu.focus();
+  }, [editor.canDeleteSelectedVertex, editor.vertexMenu?.x, editor.vertexMenu?.y]);
+  const displayedVertexMenuPosition = editor.vertexMenu
+    && vertexMenuPosition?.anchorX === editor.vertexMenu.x
+    && vertexMenuPosition.anchorY === editor.vertexMenu.y
+    ? vertexMenuPosition
+    : editor.vertexMenu;
+  const onGuidePointerDown = (event: React.PointerEvent<SVGLineElement>, guide: Guide): void => {
+    if (busy) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const svg = event.currentTarget.ownerSVGElement;
+    if (!svg) return;
+    guideDragRef.current = { id: guide.id, axis: guide.axis, pointerId: event.pointerId };
+    try {
+      svg.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Pointer capture may be unavailable in older browsers and test environments.
+    }
+  };
+  const releaseGuidePointer = (svg: SVGSVGElement, pointerId: number): void => {
+    if (guideDragRef.current?.pointerId !== pointerId) return;
+    guideDragRef.current = null;
+    try {
+      svg.releasePointerCapture?.(pointerId);
+    } catch {
+      // Capture can already be released when a cancellation is reported.
+    }
+  };
+  const onGuidePointerMove = (event: React.PointerEvent<SVGSVGElement>): void => {
+    const drag = guideDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId || !document) return;
+    event.preventDefault();
+    const point = svgPoint(event.currentTarget, event.nativeEvent);
+    const documentCoordinate = Math.max(0, Math.min(
+      drag.axis === "horizontal" ? document.canvas.height : document.canvas.width,
+      drag.axis === "horizontal" ? point.y : point.x,
+    ));
+    onMoveGuide(drag.id, documentCoordinate);
+  };
+  const onGuidePointerEnd = (event: React.PointerEvent<SVGSVGElement>): void => {
+    releaseGuidePointer(event.currentTarget, event.pointerId);
+  };
   return (
     <div className="editor-views">
       <div
@@ -100,10 +197,22 @@ export function HoldCanvas({
             minHeight: `${3.6 * zoomPercent}px`,
           }}
           onPointerDown={editor.onPointerDown}
-          onPointerMove={editor.onPointerMove}
-          onPointerUp={editor.onPointerUp}
-          onPointerCancel={editor.onPointerCancel}
-          onLostPointerCapture={editor.onLostPointerCapture}
+          onPointerMove={(event) => {
+            onGuidePointerMove(event);
+            editor.onPointerMove(event);
+          }}
+          onPointerUp={(event) => {
+            onGuidePointerEnd(event);
+            editor.onPointerUp(event);
+          }}
+          onPointerCancel={(event) => {
+            onGuidePointerEnd(event);
+            editor.onPointerCancel(event);
+          }}
+          onLostPointerCapture={(event) => {
+            onGuidePointerEnd(event);
+            editor.onLostPointerCapture(event);
+          }}
           onDoubleClick={editor.onDoubleClick}
           onContextMenu={editor.onContextMenu}
         >
@@ -116,6 +225,43 @@ export function HoldCanvas({
             width={document?.canvas.width}
             height={document?.canvas.height}
           />
+          <g id="guide-overlay" aria-label="Alignment guides">
+            {guides.map((guide) => guide.axis === "horizontal" ? (
+              <line
+                key={guide.id}
+                className="editor-guide editor-guide-horizontal"
+                data-guide-id={guide.id}
+                data-guide-axis={guide.axis}
+                data-guide-coordinate={guide.coordinate}
+                x1="0"
+                y1={guide.coordinate}
+                x2={document?.canvas.width}
+                y2={guide.coordinate}
+                stroke="#72d4ff"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+                style={{ cursor: "ns-resize" }}
+                onPointerDown={(event) => onGuidePointerDown(event, guide)}
+              />
+            ) : (
+              <line
+                key={guide.id}
+                className="editor-guide editor-guide-vertical"
+                data-guide-id={guide.id}
+                data-guide-axis={guide.axis}
+                data-guide-coordinate={guide.coordinate}
+                x1={guide.coordinate}
+                y1="0"
+                x2={guide.coordinate}
+                y2={document?.canvas.height}
+                stroke="#72d4ff"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+                style={{ cursor: "ew-resize" }}
+                onPointerDown={(event) => onGuidePointerDown(event, guide)}
+              />
+            ))}
+          </g>
           <g id="hold-overlay">
             {document?.regions.map((hold) => (
               <path
@@ -193,7 +339,8 @@ export function HoldCanvas({
                 return (
                   <g key={`${selectedHold?.key ?? "selected"}-${commandIndex}`}>
                     <circle
-                      className="path-editor-vertex"
+                      ref={editor.selectedVertexIndex === commandIndex ? selectedVertexRef : undefined}
+                      className={`path-editor-vertex${editor.selectedVertexIndex === commandIndex ? " selected" : ""}`}
                       data-index={commandIndex}
                       cx={endpoint.x}
                       cy={endpoint.y}
@@ -201,6 +348,16 @@ export function HoldCanvas({
                       fill={selectedColor}
                       stroke="#fff7dc"
                       strokeWidth="1.5"
+                      role="button"
+                      tabIndex={busy ? -1 : 0}
+                      aria-label={commandIndex === 0 ? "Start vertex" : `Vertex ${commandIndex + 1}`}
+                      aria-pressed={editor.selectedVertexIndex === commandIndex}
+                      onFocus={() => editor.selectVertex(commandIndex)}
+                      onKeyDown={(event) => {
+                        if (busy || (event.key !== "Enter" && event.key !== " ")) return;
+                        if (event.key === " ") event.preventDefault();
+                        editor.selectVertex(commandIndex);
+                      }}
                     />
                     {command.controls.map((control, controlIndex) => {
                       const anchor = controlIndex === 0
@@ -238,6 +395,38 @@ export function HoldCanvas({
             </g>
           )}
         </svg>
+        {editor.vertexMenu && (
+          <div
+            ref={vertexMenuRef}
+            className="path-editor-vertex-menu"
+            role="menu"
+            aria-label="Vertex actions"
+            tabIndex={-1}
+            style={{ left: displayedVertexMenuPosition?.x, top: displayedVertexMenuPosition?.y }}
+            onContextMenu={(event) => event.preventDefault()}
+            onKeyDown={(event) => {
+              if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "[", "]"].includes(event.key)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+              }
+              if (event.key !== "Escape") return;
+              event.preventDefault();
+              event.stopPropagation();
+              editor.dismissVertexMenu();
+              selectedVertexRef.current?.focus();
+            }}
+          >
+            <button
+              ref={deleteVertexButtonRef}
+              type="button"
+              role="menuitem"
+              disabled={!editor.canDeleteSelectedVertex}
+              aria-disabled={!editor.canDeleteSelectedVertex}
+              onClick={() => editor.deleteSelectedVertex()}
+            >Delete</button>
+          </div>
+        )}
         <div className={`empty-state${document ? " hidden" : ""}`} id="empty-state">
           <strong>Select a board</strong>
           <span>Its image and holds load together.</span>

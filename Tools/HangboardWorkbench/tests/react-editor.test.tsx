@@ -316,6 +316,127 @@ test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavio
   });
 });
 
+test("command/control undo and redo reverse document edits and preserve native input behavior", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.keyDown("body", "ArrowRight");
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+    assert.equal(await app.keyDown("body", "z", { metaKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "z", { metaKey: true, shiftKey: true }), true);
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), false);
+
+    const input = app.document.createElement("input");
+    input.id = "native-history-input";
+    app.document.body.append(input);
+    assert.equal(await app.keyDown("#native-history-input", "z", { metaKey: true }), false);
+    assert.equal(await app.keyDown("#native-history-input", "z", { ctrlKey: true }), false);
+    assert.equal(await app.keyDown("#native-history-input", "y", { ctrlKey: true }), false);
+    assert.equal(paths(app)[0], "M 11 10 L 21 10 L 21 20 Z");
+  });
+});
+
+test("a new edit clears redo and a completed drag is a single undo step", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await drag(app, '[data-hold-key="a-piece-0"]', [{ x: 15, y: 15 }, { x: 20, y: 15 }, { x: 25, y: 15 }]);
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    await app.keyDown("body", "ArrowRight");
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), false);
+  });
+});
+
+test("undo during a drag restores the committed document before building redo history", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.keyDown("body", "ArrowRight");
+    const committedPath = paths(app)[0];
+    await app.pointer('[data-hold-key="a-piece-0"]', "pointerdown", { pointerId: 7, clientX: 16, clientY: 15 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 26, clientY: 15 });
+    const previewPath = paths(app)[0];
+    assert.notEqual(previewPath, committedPath);
+
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true, shiftKey: true }), true);
+    assert.equal(paths(app)[0], committedPath);
+    assert.notEqual(paths(app)[0], previewPath);
+  });
+});
+
+test("command/control undo and Ctrl redo consume browser shortcuts when cancelling an active drag without history", async () => {
+  for (const shortcut of [
+    { key: "z", options: { ctrlKey: true } },
+    { key: "z", options: { metaKey: true } },
+    { key: "y", options: { ctrlKey: true } },
+  ]) {
+    await withEditor(async (app) => {
+      app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+      await app.click('[data-hold-key="a-piece-0"]');
+      await app.pointer('[data-hold-key="a-piece-0"]', "pointerdown", { pointerId: 7, clientX: 15, clientY: 15 });
+      await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 25, clientY: 15 });
+      assert.notEqual(paths(app)[0], FIRST_PATH);
+
+      assert.equal(await app.keyDown("body", shortcut.key, shortcut.options), true);
+      assert.equal(paths(app)[0], FIRST_PATH);
+    });
+  }
+});
+
+test("no-op drags do not create an undo revision", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await drag(app, '[data-hold-key="a-piece-0"]', [{ x: 15, y: 15 }]);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), false);
+    assert.equal(paths(app)[0], FIRST_PATH);
+
+    await drag(app, '[data-hold-key="a-piece-0"]', [{ x: 15, y: 15 }, { x: 25, y: 15 }, { x: 15, y: 15 }]);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), false);
+  });
+});
+
+test("escape cancels a drag and command/control save saves only outside editable targets", async () => {
+  const board = boardFixture();
+  let saves = 0;
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(boardId: string, document: EditorDocument): Promise<Board> {
+      saves += 1;
+      return { ...board, boardId, document };
+    },
+  } satisfies WorkbenchClient;
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.pointer('[data-hold-key="a-piece-0"]', "pointerdown", { pointerId: 7, clientX: 15, clientY: 15 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 25, clientY: 15 });
+    assert.notEqual(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "Escape"), true);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(await app.keyDown("body", "s", { metaKey: true }), true);
+    await app.flush();
+    assert.equal(saves, 1);
+
+    const input = app.document.createElement("input");
+    input.id = "native-save-input";
+    app.document.body.append(input);
+    assert.equal(await app.keyDown("#native-save-input", "s", { ctrlKey: true }), false);
+    assert.equal(saves, 1);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("bracket keys and buttons rotate by 15 and 45 degrees", async () => {
   const pivot = { x: 80 / 3, y: 40 / 3 };
   await withEditor(async (app) => {
@@ -381,6 +502,98 @@ async function drag(
   await app.pointer("#editor-svg", end, { pointerId: 7, clientX: last.x, clientY: last.y });
 }
 
+test("guide controls create horizontal and vertical guides at the selected hold center", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    assert.equal(app.disabled("#add-horizontal-guide-button"), true);
+    assert.equal(app.disabled("#add-vertical-guide-button"), true);
+    await app.click('[data-hold-key="square"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+
+    const horizontal = app.document.querySelector<SVGLineElement>('[data-guide-axis="horizontal"]');
+    const vertical = app.document.querySelector<SVGLineElement>('[data-guide-axis="vertical"]');
+    assert.equal(horizontal?.getAttribute("y1"), "20");
+    assert.equal(horizontal?.getAttribute("y2"), "20");
+    assert.equal(vertical?.getAttribute("x1"), "20");
+    assert.equal(vertical?.getAttribute("x2"), "20");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("whole-path dragging snaps its center to nearby horizontal and vertical guides", async () => {
+  const document = documentFixture([
+    { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+    { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="guide-source"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+    await app.click('[data-hold-key="snap-target"]');
+    await drag(app, '[data-hold-key="snap-target"]', [{ x: 30, y: 30 }, { x: 14, y: 14 }]);
+
+    assert.equal(paths(app)[1], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[1], "M 30 30 L 50 30 L 50 50 L 30 50 Z");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("Alt bypasses guide snapping during a whole-path drag", async () => {
+  const document = documentFixture([
+    { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+    { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="guide-source"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+    await app.click('[data-hold-key="snap-target"]');
+    await app.pointer('[data-hold-key="snap-target"]', "pointerdown", { pointerId: 7, clientX: 30, clientY: 30 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 14, clientY: 14, altKey: true });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 7, clientX: 14, clientY: 14, altKey: true });
+
+    assert.equal(paths(app)[1], "M 14 14 L 34 14 L 34 34 L 14 34 Z");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("guides drag on their own axis and clear without changing the document", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="square"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+
+    await app.pointer('[data-guide-axis="horizontal"]', "pointerdown", { pointerId: 17, clientX: 50, clientY: 20 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 17, clientX: 5, clientY: 56 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 17, clientX: 5, clientY: 56 });
+    await app.pointer('[data-guide-axis="vertical"]', "pointerdown", { pointerId: 18, clientX: 20, clientY: 50 });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 18, clientX: 27, clientY: 5 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 18, clientX: 27, clientY: 5 });
+
+    const horizontal = app.document.querySelector<SVGLineElement>('[data-guide-axis="horizontal"]');
+    const vertical = app.document.querySelector<SVGLineElement>('[data-guide-axis="vertical"]');
+    assert.equal(horizontal?.getAttribute("y1"), "31");
+    assert.equal(vertical?.getAttribute("x1"), "27");
+    await app.click("#clear-guides-button");
+    assert.equal(app.document.querySelectorAll("[data-guide-axis]").length, 0);
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(app.text("#save-state"), "Saved");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("vertex, control, and whole-path drags derive every move from pointer-down geometry", async () => {
   const curved = documentFixture([
     { id: 1, key: "curve", type: "jug", displayPath: "M 10 10 Q 15 5 20 10 L 20 20 Z" },
@@ -418,17 +631,261 @@ test("rotation drag rotates every sibling from pointer-down paths around the sha
   });
 });
 
-test("double-click inserts a vertex and context menu deletes vertices except the protected M", async () => {
+test("double-click inserts a vertex while right-click selects it and waits for an explicit Delete action", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-hold-key="square"]');
     await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
     assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
-    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu");
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: 73, clientY: 41 });
+    assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    const selected = app.document.querySelector('.path-editor-vertex[data-index="1"]');
+    assert.equal(selected?.classList.contains("selected"), true);
+    assert.equal(selected?.getAttribute("aria-pressed"), "true");
+    const menu = app.document.querySelector<HTMLElement>('[role="menu"]');
+    assert.equal(menu?.style.left, "73px");
+    assert.equal(menu?.style.top, "41px");
+    assert.equal(app.text('[role="menuitem"]'), "Delete");
+    assert.equal(app.disabled('[role="menuitem"]'), false);
+    assert.equal(app.document.activeElement?.getAttribute("role"), "menuitem");
+    await app.click('[role="menuitem"]');
     assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
-    await app.mouse('.path-editor-vertex[data-index="0"]', "contextmenu");
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+    assert.equal(app.document.querySelector(".path-editor-vertex.selected"), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("vertex menu navigation keys stay in the menu without editing the selected hold", async () => {
+  const squarePath = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: squarePath }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+
+    const menuItem = app.document.querySelector<HTMLElement>('[role="menuitem"]');
+    assert.ok(menuItem);
+    assert.equal(app.document.activeElement, menuItem);
+    for (const key of ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "[", "]"]) {
+      assert.equal(await app.keyDown('[role="menuitem"]', key), true);
+      assert.equal(paths(app)[0], squarePath);
+      assert.equal(app.text("#save-state"), "Saved");
+      assert.ok(app.document.querySelector('[role="menu"]'));
+      assert.equal(app.document.activeElement, menuItem);
+    }
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("left pointer-down selects a vertex and secondary-button movement never starts a drag", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+
+    await app.pointer('.path-editor-vertex[data-index="2"]', "pointerdown", {
+      button: 0,
+      pointerId: 7,
+      clientX: 30,
+      clientY: 30,
+    });
+    assert.equal(app.document.querySelector('.path-editor-vertex[data-index="2"]')?.classList.contains("selected"), true);
+    assert.equal(app.document.querySelector('.path-editor-vertex[data-index="2"]')?.getAttribute("aria-pressed"), "true");
+    await app.pointer("#editor-svg", "pointercancel", { pointerId: 7, clientX: 30, clientY: 30 });
+
+    const beforeSecondaryDrag = paths(app)[0];
+    await app.pointer('.path-editor-vertex[data-index="1"]', "pointerdown", {
+      button: 2,
+      pointerId: 8,
+      clientX: 30,
+      clientY: 10,
+    });
+    await app.pointer("#editor-svg", "pointermove", { button: 2, pointerId: 8, clientX: 45, clientY: 20 });
+    await app.pointer("#editor-svg", "pointerup", { button: 2, pointerId: 8, clientX: 45, clientY: 20 });
+    assert.equal(paths(app)[0], beforeSecondaryDrag);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("left pointer-up preserves a valid vertex selection for keyboard deletion", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.pointer('.path-editor-vertex[data-index="2"]', "pointerdown", {
+      button: 0,
+      pointerId: 11,
+      clientX: 30,
+      clientY: 30,
+    });
+    await app.pointer("#editor-svg", "pointerup", { button: 0, pointerId: 11, clientX: 30, clientY: 30 });
+
+    assert.equal(app.document.querySelector('.path-editor-vertex[data-index="2"]')?.classList.contains("selected"), true);
+    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(await app.keyDown("body", "Delete"), true);
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("focusing another vertex selects it before keyboard deletion", async () => {
+  const polygon = documentFixture([{
+    id: 1,
+    key: "polygon",
+    type: "jug",
+    displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="polygon"]');
+    await app.pointer('.path-editor-vertex[data-index="1"]', "pointerdown", {
+      button: 0,
+      pointerId: 12,
+      clientX: 20,
+      clientY: 10,
+    });
+    await app.pointer("#editor-svg", "pointerup", { button: 0, pointerId: 12, clientX: 20, clientY: 10 });
+
+    const focused = app.document.querySelector<SVGCircleElement>('.path-editor-vertex[data-index="3"]');
+    assert.ok(focused);
+    await app.flush(() => focused.focus());
+    assert.equal(app.document.activeElement, focused);
+    assert.equal(focused.getAttribute("aria-pressed"), "true");
+
+    assert.equal(await app.keyDown("body", "Delete"), true);
+    assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(polygon)));
+});
+
+test("vertex button Enter and Space activation select the targeted point", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="square"]');
+
+    assert.equal(await app.keyDown('.path-editor-vertex[data-index="1"]', "Enter"), false);
+    assert.equal(app.document.querySelector('.path-editor-vertex[data-index="1"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(await app.keyDown('.path-editor-vertex[data-index="2"]', " "), true);
+    assert.equal(app.document.querySelector('.path-editor-vertex[data-index="2"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('.path-editor-vertex[data-index="1"]')?.getAttribute("aria-pressed"), "false");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("four-vertex start vertices expose an enabled Delete action and are removed", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('.path-editor-vertex[data-index="0"]', "contextmenu", { button: 2 });
+    assert.equal(app.disabled('[role="menuitem"]'), false);
+    await app.click('[role="menuitem"]');
+    assert.equal(paths(app)[0], "M 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("minimum-contour vertices expose a disabled Delete action without dirtying", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+    assert.equal(app.disabled('[role="menuitem"]'), true);
+    assert.equal(await app.keyDown("body", "Backspace"), false);
+    assert.equal(paths(app)[0], FIRST_PATH);
+    assert.equal(app.text("#save-state"), "Saved");
+  });
+});
+
+test("Delete and Backspace remove only the selected eligible vertex and ignore form targets", async () => {
+  const polygon = documentFixture([{
+    id: 1,
+    key: "polygon",
+    type: "jug",
+    displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="polygon"]');
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+
+    for (const selector of ["#rotate-by-input", "#hold-type-select"]) {
+      const target = app.document.querySelector<HTMLElement>(selector);
+      assert.ok(target);
+      await app.flush(() => target.focus());
+      assert.equal(await app.keyDown(selector, "Delete"), false);
+      assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    }
+    const editable = app.document.querySelector<HTMLElement>("#hold-heading");
+    assert.ok(editable);
+    editable.setAttribute("contenteditable", "true");
+    await app.flush(() => editable.focus());
+    assert.equal(await app.keyDown("#hold-heading", "Delete"), false);
+    assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    editable.removeAttribute("contenteditable");
+
+    assert.equal(await app.keyDown("body", "Delete"), true);
     assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(app.document.querySelector(".path-editor-vertex.selected"), null);
+
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+    assert.equal(await app.keyDown("body", "Backspace"), true);
+    assert.equal(paths(app)[0], "M 10 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(polygon)));
+});
+
+test("Escape returns focus to the selected vertex and outside pointer-down preserves target focus", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+    const selectedVertex = app.document.querySelector<SVGCircleElement>('.path-editor-vertex[data-index="1"]');
+    assert.ok(selectedVertex);
+    assert.ok(app.document.querySelector('[role="menu"]'));
+    assert.equal(await app.keyDown('[role="menuitem"]', "Escape"), true);
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+    assert.ok(app.document.querySelector(".path-editor-vertex.selected"));
+    assert.equal(app.document.activeElement, selectedVertex);
+
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+    const outsideTarget = app.document.querySelector<HTMLButtonElement>("#zoom-in-button");
+    assert.ok(outsideTarget);
+    outsideTarget.addEventListener("pointerdown", () => outsideTarget.focus(), { once: true });
+    await app.pointer("#zoom-in-button", "pointerdown", { pointerId: 22 });
+    assert.equal(app.document.querySelector('[role="menu"]'), null);
+    assert.ok(app.document.querySelector(".path-editor-vertex.selected"));
+    assert.equal(app.document.activeElement, outsideTarget);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("the vertex menu measures and flips within the viewport edges", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    const windowValue = app.document.defaultView!;
+    Object.defineProperty(windowValue, "innerWidth", { configurable: true, value: 200 });
+    Object.defineProperty(windowValue, "innerHeight", { configurable: true, value: 100 });
+    const originalGetBoundingClientRect = windowValue.HTMLElement.prototype.getBoundingClientRect;
+    Object.defineProperty(windowValue.HTMLElement.prototype, "getBoundingClientRect", {
+      configurable: true,
+      value(this: HTMLElement): DOMRect {
+        if (!this.classList.contains("path-editor-vertex-menu")) {
+          return originalGetBoundingClientRect.call(this);
+        }
+        return {
+          x: 190,
+          y: 95,
+          left: 190,
+          top: 95,
+          right: 270,
+          bottom: 125,
+          width: 80,
+          height: 30,
+          toJSON: () => ({}),
+        } as DOMRect;
+      },
+    });
+
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", {
+      button: 2,
+      clientX: 190,
+      clientY: 95,
+    });
+
+    const menu = app.document.querySelector<HTMLElement>('[role="menu"]');
+    assert.equal(menu?.style.left, "110px");
+    assert.equal(menu?.style.top, "65px");
   }, dependenciesFixture(boardFixture(square)));
 });
 
@@ -452,7 +909,7 @@ test("double-click insertion preserves prior status while clearing validation an
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("context-menu deletion preserves prior status while clearing validation and marking dirty", async () => {
+test("menu deletion preserves prior status while clearing validation and marking dirty", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
     await app.click('[data-hold-key="square"]');
@@ -462,13 +919,43 @@ test("context-menu deletion preserves prior status while clearing validation and
     assert.match(priorStatus, /finite, non-zero rotation/i);
     assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), false);
 
-    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu");
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+    assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    await app.click('[role="menuitem"]');
 
     assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
     assert.equal(app.text("#editor-status"), priorStatus);
     assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
     assert.equal(app.text("#save-state"), "Unsaved changes");
   }, dependenciesFixture(boardFixture(square)));
+});
+
+test("failed menu deletion preserves the selected vertex and menu while exposing validation", async () => {
+  const polygon = documentFixture([{
+    id: 1,
+    key: "polygon",
+    type: "jug",
+    displayPath: "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="polygon"]');
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
+    await app.click('[role="menuitem"]');
+
+    assert.equal(paths(app)[0], "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.ok(app.document.querySelector(".path-editor-vertex.selected"));
+    assert.ok(app.document.querySelector('[role="menu"]'));
+    assert.match(app.text("#validation-list"), /forced deletion rejection/i);
+    assert.equal(app.text("#save-state"), "Saved");
+  }, dependenciesFixture(boardFixture(polygon), {
+    validate(document) {
+      const validated = controller.validateEditorDocument(document);
+      const vertexCount = pathEditor.parsePath(validated.regions[0]!.displayPath)
+        .filter((command) => command.type !== "Z").length;
+      if (vertexCount < 5) throw new Error("Forced deletion rejection");
+      return validated;
+    },
+  }));
 });
 
 test("replacing the document cancels an active gesture without letting later pointer events clobber it", async () => {

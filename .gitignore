@@ -17,6 +17,7 @@ xcuserdata/
 /Tools/HangboardWorkbench/packaging/dist/
 /Tools/HangboardWorkbench/packaging/*.spec
 /Tools/HangboardWorkbench/node_modules/
+/Tools/HangboardWorkbench/app.js
 
 # Conductor workspace-local state
 .context/

@@ -1,10 +1,11 @@
 import React from "react";
 
+import { holdCentroid } from "./editor-model.ts";
 import type { HoldRegion, WorkbenchDependencies } from "./types.ts";
 import { useWorkbench } from "./useWorkbench.ts";
 import { useHoldEditor } from "./useHoldEditor.ts";
 import { BoardLibrary } from "./components/BoardLibrary.tsx";
-import { HoldCanvas } from "./components/HoldCanvas.tsx";
+import { HoldCanvas, type Guide, type GuideAxis } from "./components/HoldCanvas.tsx";
 import { HoldInspector } from "./components/HoldInspector.tsx";
 import { RepositoryToolbar } from "./components/RepositoryToolbar.tsx";
 import { ValidationPanel } from "./components/ValidationPanel.tsx";
@@ -20,6 +21,8 @@ const CANVAS_ZOOM_STEP = 25;
 export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const { state, actions } = useWorkbench(dependencies);
   const [canvasZoom, setCanvasZoom] = React.useState(100);
+  const [guides, setGuides] = React.useState<Guide[]>([]);
+  const nextGuideId = React.useRef(1);
   const changeCanvasZoom = React.useCallback((direction: number) => {
     setCanvasZoom((zoom) => Math.min(
       MAX_CANVAS_ZOOM,
@@ -30,6 +33,25 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
+  const selectedHoldCenter = state.document && selectedHold
+    ? holdCentroid([selectedHold], dependencies.pathEditor)
+    : null;
+  React.useEffect(() => {
+    setGuides([]);
+  }, [state.board?.boardId]);
+  const addGuide = React.useCallback((axis: GuideAxis): void => {
+    if (!selectedHoldCenter) return;
+    setGuides((current) => [...current, {
+      id: `guide-${nextGuideId.current++}`,
+      axis,
+      coordinate: axis === "horizontal" ? selectedHoldCenter.y : selectedHoldCenter.x,
+    }]);
+  }, [selectedHoldCenter]);
+  const moveGuide = React.useCallback((id: string, coordinate: number): void => {
+    setGuides((current) => current.map((guide) => (
+      guide.id === id ? { ...guide, coordinate } : guide
+    )));
+  }, []);
   const editor = useHoldEditor({
     document: state.document,
     selectedHold,
@@ -41,7 +63,29 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     pathEditor: dependencies.pathEditor,
     validateEditorDocument: dependencies.controller.validateEditorDocument,
     dialogs: dependencies.dialogs,
+    horizontalGuideYs: guides.filter((guide) => guide.axis === "horizontal").map((guide) => guide.coordinate),
+    verticalGuideXs: guides.filter((guide) => guide.axis === "vertical").map((guide) => guide.coordinate),
   });
+  const saveFromShortcut = React.useCallback(() => {
+    if (busy || !state.board) return;
+    editor.cancelActiveEdit();
+    void actions.saveBoard();
+  }, [actions, busy, editor, state.board]);
+  React.useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent): void => {
+      const target = event.target instanceof Element ? event.target : null;
+      const tag = target?.tagName.toLowerCase();
+      const editable = (target instanceof HTMLElement && target.isContentEditable)
+        || target?.getAttribute("contenteditable") === "true"
+        || tag === "input" || tag === "select" || tag === "textarea";
+      if (editable || !(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
+      if (busy || !state.board) return;
+      event.preventDefault();
+      saveFromShortcut();
+    };
+    window.document.addEventListener("keydown", onKeyDown);
+    return () => window.document.removeEventListener("keydown", onKeyDown);
+  }, [busy, saveFromShortcut, state.board]);
   const branchStatus = !state.initialized && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
@@ -70,10 +114,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         <div className="toolbar" aria-label="Board tools">
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
-          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={() => void (async () => {
-            editor.cancelActiveEdit();
-            await actions.saveBoard();
-          })()}>Save</button>
+          <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
         </div>
         <RepositoryToolbar state={state} actions={actions} />
       </header>
@@ -112,6 +153,9 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                 onClick={() => changeCanvasZoom(1)}
               >+</button>
               <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || busy} onClick={editor.addHold}>Add hold</button>
+              <button className="tool-button" id="add-horizontal-guide-button" type="button" disabled={!selectedHold || busy} onClick={() => addGuide("horizontal")}>Horizontal guide</button>
+              <button className="tool-button" id="add-vertical-guide-button" type="button" disabled={!selectedHold || busy} onClick={() => addGuide("vertical")}>Vertical guide</button>
+              <button className="tool-button" id="clear-guides-button" type="button" disabled={guides.length === 0 || busy} onClick={() => setGuides([])}>Clear guides</button>
             </div>
           </div>
           <HoldCanvas
@@ -124,6 +168,8 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             editor={editor}
             zoomPercent={canvasZoom}
             onZoomChange={changeCanvasZoom}
+            guides={guides}
+            onMoveGuide={moveGuide}
           />
           <ValidationPanel validation={state.validation} />
           <footer className="statusbar">
