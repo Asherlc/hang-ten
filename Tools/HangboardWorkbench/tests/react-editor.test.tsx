@@ -871,7 +871,7 @@ test("guide controls create horizontal and vertical guides at the selected hold 
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("whole-path dragging snaps its center to nearby horizontal and vertical guides", async () => {
+test("whole-path dragging snaps its horizontal and vertical bounds edges to nearby guides", async () => {
   const document = documentFixture([
     { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
     { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
@@ -884,9 +884,26 @@ test("whole-path dragging snaps its center to nearby horizontal and vertical gui
     await app.click('[data-hold-key="snap-target"]');
     await drag(app, '[data-hold-key="snap-target"]', [{ x: 30, y: 30 }, { x: 14, y: 14 }]);
 
-    assert.equal(paths(app)[1], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(paths(app)[1], "M 20 20 L 40 20 L 40 40 L 20 40 Z");
     assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
     assert.equal(paths(app)[1], "M 30 30 L 50 30 L 50 50 L 30 50 Z");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("whole-path dragging does not snap when only its center is near a guide", async () => {
+  const document = documentFixture([
+    { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+    { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="guide-source"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+    await app.click('[data-hold-key="snap-target"]');
+    await drag(app, '[data-hold-key="snap-target"]', [{ x: 30, y: 30 }, { x: 13, y: 13 }]);
+
+    assert.equal(paths(app)[1], "M 13 13 L 33 13 L 33 33 L 13 33 Z");
   }, dependenciesFixture(boardFixture(document)));
 });
 

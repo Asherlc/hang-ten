@@ -175,6 +175,7 @@ export interface WorkbenchController {
 export interface PathEditor {
   parsePath(pathString: string): PathCommand[];
   serializePath(commands: readonly PathCommand[]): string;
+  pathBounds(commands: readonly PathCommand[]): Bounds;
   createOutlineShapePath(pathString: string, preset: OutlinePreset): string;
   constrainedOutlineModel(pathString: string, constraint: unknown): ConstrainedOutlineModel;
   resizeConstrainedOutline(
