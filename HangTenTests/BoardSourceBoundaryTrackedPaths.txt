@@ -7,6 +7,7 @@ HangTen/Models/AppStore.swift
 HangTen/Models/BoardPackageStore.swift
 HangTen/Models/BoardStorage.swift
 HangTen/Models/ClimbroProtocol.swift
+HangTen/Models/CountdownAudioScheduler.swift
 HangTen/Models/CustomRoutineDraft.swift
 HangTen/Models/CustomRoutineStore.swift
 HangTen/Models/EntralpiProtocol.swift
