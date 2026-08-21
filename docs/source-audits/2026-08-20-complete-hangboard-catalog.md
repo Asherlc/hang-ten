@@ -134,3 +134,115 @@ tests check the 18-item numbered inventory, schema-v2 presentation ownership,
 and exact mirrored frames. Interactive Workbench canvas review plus full in-app
 active-highlight and hit-test review remain for the plan's final catalog-wide
 visual-validation task.
+
+## Metolius Prime Rib
+
+Reviewed 2026-08-21.
+
+### Official evidence
+
+- [Current product page](https://www.metoliusclimbing.com/products/prime-rib)
+  establishes the manufacturer, product name, three-edge inventory, the edge
+  depths and their published imperial conversions, compact-design description,
+  four-screw mounting, dimensions, and FSC certification.
+- [Official straight-on product photograph](https://www.metoliusclimbing.com/cdn/shop/files/Prime-Rib-board.jpg?v=1759459292)
+  establishes the long symmetric board silhouette, top-to-bottom edge order,
+  continuous full-width contact layout, relative spacing, four mounting-hole
+  positions, and visible surface relief. The current gallery publishes only
+  this straight-on product view; it does not provide a separate oblique or side
+  photograph. No depth or contact count was inferred from the image because the
+  product page explicitly supplies both.
+- [Official Training Board instructions](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826)
+  establishes that this is a fixed training board and documents installation
+  and general use. It does not add Prime Rib-specific contacts or measurements.
+
+### Field and inventory mapping
+
+The product page maps directly to `manufacturer: Metolius`, `name: Prime Rib`,
+the canonical `productURL`, and `dimensions: 20 × 4.2 × 1.5 in`. The subtitle
+is a conservative summary of the page's compact-design statement and explicit
+three-edge inventory. FSC certification and the four mounting screws are not
+hold facts and were therefore not encoded as hold metadata or selectable
+regions. No finger capacity, grip posture, training, feature-tag, or material
+field was added.
+
+The page's sentence "Three edges" freezes the complete physical inventory at
+three contacts. Its edge-depth list is presented in the same top-to-bottom order
+printed on the official photograph, mapping one-to-one to the three continuous
+rails:
+
+| Official position | `board.json` contact | Source-backed mapping |
+| --- | --- | --- |
+| Top rail | `edge-38` | One continuous full-width edge, depth 38 mm (official page also publishes 1.49 in). |
+| Middle rail | `edge-23` | One continuous full-width edge, depth 23 mm (official page also publishes 0.90 in). |
+| Bottom rail | `edge-15` | One continuous full-width edge, depth 15 mm (official page also publishes 0.59 in). |
+
+Every contact belongs to the schema-v2 `front` presentation. The generated PNG
+is 1704 × 923 pixels, so both the presentation and package aspect-ratio metadata
+are exactly `1704 / 923` (`1.8461538461538463`).
+
+### AI-simplified primary illustration
+
+`assets/primary.png` was generated with the built-in image-generation tool.
+The official straight-on product photograph was supplied as reference Image 1
+for the physical silhouette, three-rail layout, mounting-hole positions,
+symmetry, spacing, and proportions. The generated image was not used to
+establish any physical fact.
+
+Prompt:
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog primary presentation image
+>
+> Input images: Image 1 is the official Metolius Prime Rib straight-on product photograph and is the authoritative reference for the exact board silhouette, three full-width horizontal edge surfaces, four mounting-hole positions, symmetry, spacing, and proportions.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact Prime Rib hangboard. Preserve exactly three distinct continuous full-width horizontal edges in the documented top-to-bottom order: 38 mm, 23 mm, and 15 mm. Each edge must be visibly separate and span the usable board width.
+>
+> Scene/backdrop: plain neutral off-white background.
+>
+> Style/medium: polished simplified 3D product illustration, smooth pale natural wood with subtle soft shading; remove all printed depth labels and the Metolius logo.
+>
+> Composition/framing: straight-on, centered, wide landscape composition with generous even padding; board fully visible, level, and occupying most of the canvas width.
+>
+> Lighting/mood: soft neutral studio light that makes the upper contact surface of each of the three long edges clearly readable without dramatic shadows.
+>
+> Constraints: preserve the product's symmetric long rectangular outline, exactly three edge rails, four mounting holes, spacing, and proportions from the reference; no added or missing edges; no text; no logo; no numbers; no hands; no mounting wall; no watermark. Do not create geometry masks, contours, overlays, outlines, highlights, or annotations.
+>
+> Avoid: extra grooves, pockets, jugs, pinches, slopers, screws, labels, brand marks, or decorative elements.
+
+Human acceptance compared the generated illustration directly with the official
+product photograph and product-page inventory. The accepted result retains the
+three separate full-width rails in their documented order and all four mounting
+holes, while removing the printed depths and logo. It contains no extra groove,
+rail, recess, screw, label, or selectable contact. No crop, registration,
+segmentation, vectorization, contour extraction, or automatic geometry
+operation was applied after generation.
+
+### Direct geometry mapping and review
+
+All three closed paths were deliberately authored in normalized canvas
+coordinates against the accepted illustration and checked against the official
+photograph. Each path represents one continuous physical rail. The three
+visually regular horizontal rails use operator-selected `roundedRectangle`
+constraints; each saved path remains the sole rendering, highlighting, and
+hit-test source of truth. The constraints were selected from the observed
+regular product form, not inferred by image analysis.
+
+| Contact | Canonical frame mapping | Evidence/review decision |
+| --- | --- | --- |
+| `edge-38` | `x 0.037, y 0.337, w 0.926, h 0.078` | Direct path follows the complete top rail from rounded end to rounded end and excludes the background, mounting channel, and holes below it. |
+| `edge-23` | `x 0.037, y 0.483, w 0.926, h 0.065` | Separate direct path follows only the middle rail and excludes both adjacent recessed mounting channels. |
+| `edge-15` | `x 0.037, y 0.609, w 0.926, h 0.068` | Separate direct path follows only the bottom rail and excludes the channel and mounting holes above it. |
+
+The accepted illustration and every authored frame/path were inspected
+directly. Workbench discovery lists `Metolius Prime Rib` with three holds;
+loading `presentationID=front` returns the exact IDs `edge-38`, `edge-23`, and
+`edge-15`, three regions, and three operator-selected rounded-rectangle
+constraints. The Workbench image endpoint serves a byte-identical copy of the
+checked-in PNG. Focused package tests lock the exact three-item source
+inventory, schema-v2 presentation ownership, official dimensions, image aspect
+ratio, and nonempty path geometry. The server was shut down after review and
+port 4173 was verified free. Interactive Workbench canvas review plus full
+in-app active-highlight and hit-test review remain for the plan's final
+catalog-wide visual-validation task.

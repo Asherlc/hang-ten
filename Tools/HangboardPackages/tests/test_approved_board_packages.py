@@ -15,6 +15,12 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
+PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
+PRIME_RIB_HOLDS = (
+    ("edge-38", "38 mm edge", "edge", 38),
+    ("edge-23", "23 mm edge", "edge", 23),
+    ("edge-15", "15 mm edge", "edge", 15),
+)
 FOUNDRY_HOLDS = (
     ("pinch-1-left", "Left #1 variable pinch", "pinch", None, None),
     ("jug-2-left", "Left #2 outer jug", "jug", None, None),
@@ -140,6 +146,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("metolius.climbers-edge", "metolius-climbers-edge"),
         ("metolius.contact", "metolius-contact"),
         ("metolius.foundry", "metolius-foundry"),
+        ("metolius.prime-rib", "metolius-prime-rib"),
         ("metolius.project", "metolius-project"),
         ("metolius.simulator-3d", "metolius-simulator-3d"),
         ("moon.armstrong", "moon-armstrong"),
@@ -272,6 +279,38 @@ def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
                     1 - left_command[point_key][0]
                 )
                 assert right_command[point_key][1] == left_command[point_key][1]
+
+
+def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
+    board = json.loads((PRIME_RIB_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.prime-rib"
+    assert board["dimensions"] == "20 × 4.2 × 1.5 in"
+    assert board["presentations"] == [
+        {
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1704 / 923,
+            "default": True,
+        }
+    ]
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+        )
+        for hold in board["holds"]
+    ) == PRIME_RIB_HOLDS
+    assert all(hold["presentationID"] == "front" for hold in board["holds"])
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(
+        hold["geometry"][0]["shape"]["type"] == "path"
+        for hold in board["holds"]
+    )
 
 
 def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry() -> None:
