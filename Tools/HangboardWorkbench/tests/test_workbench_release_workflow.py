@@ -362,6 +362,89 @@ def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
             assert result.returncode == 0, result.stderr
 
 
+def test_generated_bundle_is_built_before_every_python_suite():
+    workflows = (
+        _workflow(PR_WORKFLOW_PATH),
+        _workflow(),
+    )
+
+    for workflow in workflows:
+        job = workflow["jobs"]["test-python"]
+        setup = _step(job, "Set up Node")
+        assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+        assert setup["with"]["node-version"] == "22.14.0"
+        assert setup["with"]["cache"] == "npm"
+        assert (
+            setup["with"]["cache-dependency-path"]
+            == "Tools/HangboardWorkbench/package-lock.json"
+        )
+
+        bundle = _step(job, "Build generated Workbench bundle")
+        assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+        assert "npm ci" in bundle["run"]
+        assert "npm run check:bundle" in bundle["run"]
+
+        steps = job["steps"]
+        assert steps.index(setup) < steps.index(bundle)
+        assert steps.index(bundle) < steps.index(_step(job, "Set up Python"))
+        assert steps.index(bundle) < steps.index(_step(job, "Run Python suite"))
+
+
+def test_generated_bundle_is_built_before_signed_release_packaging():
+    release = _workflow()["jobs"]["release"]
+    setup = _step(release, "Set up Node")
+    assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+    assert setup["with"]["node-version"] == "22.14.0"
+    assert setup["with"]["cache"] == "npm"
+    assert (
+        setup["with"]["cache-dependency-path"]
+        == "Tools/HangboardWorkbench/package-lock.json"
+    )
+
+    bundle = _step(release, "Build generated Workbench bundle")
+    assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+    assert "npm ci" in bundle["run"]
+    assert "npm run check:bundle" in bundle["run"]
+
+    steps = release["steps"]
+    assert steps.index(setup) < steps.index(bundle)
+    assert steps.index(bundle) < steps.index(_step(release, "Set up Python"))
+    assert steps.index(bundle) < steps.index(
+        _step(release, "Build, sign, and archive workbench app")
+    )
+
+
+def test_native_bundle_is_built_before_native_packaging():
+    steps = _build_action()["steps"]
+
+    setup = _step(_build_action(), "Set up Node")
+    assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+    assert setup["with"]["node-version"] == "22.14.0"
+    assert setup["with"]["cache"] == "npm"
+    assert (
+        setup["with"]["cache-dependency-path"]
+        == "Tools/HangboardWorkbench/package-lock.json"
+    )
+
+    bundle_index = next(
+        index
+        for index, step in enumerate(steps)
+        if step["name"] == "Build generated Workbench bundle"
+    )
+    native_index = next(
+        index
+        for index, step in enumerate(steps)
+        if step["name"] == "Build unsigned native app"
+    )
+    bundle = steps[bundle_index]
+    setup_index = steps.index(setup)
+    assert setup_index < bundle_index
+    assert bundle_index < native_index
+    assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+    assert "npm ci" in bundle["run"]
+    assert "npm run check:bundle" in bundle["run"]
+
+
 def test_signed_workbench_preserves_and_uploads_debug_symbols_to_sentry():
     release = _workflow()["jobs"]["release"]
     install = _step(release, "Install pinned Sentry CLI")

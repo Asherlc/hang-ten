@@ -32,6 +32,22 @@ runs:
         "$python_bin" -m pip install --upgrade pip
         "$python_bin" -m pip install -e 'Tools/HangboardWorkbench[dev]'
 
+    # actions/setup-node v4.4.0
+    - name: Set up Node
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      with:
+        node-version: '22.14.0'
+        cache: npm
+        cache-dependency-path: Tools/HangboardWorkbench/package-lock.json
+
+    - name: Build generated Workbench bundle
+      shell: bash
+      working-directory: Tools/HangboardWorkbench
+      run: |
+        set -euo pipefail
+        npm ci
+        npm run check:bundle
+
     - name: Run native shell tests
       shell: bash
       run: swift test --package-path Tools/HangboardWorkbench/macos

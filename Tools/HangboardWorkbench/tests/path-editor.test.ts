@@ -478,6 +478,21 @@ test("deleteVertex removes a vertex from a four-vertex contour and converts adja
   assert.deepEqual(commands[2]?.points, [{ x: 75, y: 50 }]);
 });
 
+test("deleteVertex reduces an open four-vertex path to three vertices", () => {
+  const commands = parsePath("M 0 0 L 25 50 L 50 0 L 75 50");
+  deleteVertex(commands, 2);
+  assert.equal(serializePath(commands), "M 0 0 L 25 50 L 75 50");
+});
+
+test("deleteVertex refuses to delete a noninitial M command", () => {
+  const commands = parsePath("M 0 0 L 25 0 L 25 25 Z M 50 50 L 75 50 L 75 75 Z");
+  const originalPath = serializePath(commands);
+
+  deleteVertex(commands, 4);
+
+  assert.equal(serializePath(commands), originalPath);
+});
+
 test("deleteVertex on an L between Q segments leaves the preceding curve untouched", () => {
   const commands = parsePath("M 0 0 Q 25 50 50 0 L 75 50 Q 100 100 125 0 Z");
   deleteVertex(commands, 2);
@@ -488,7 +503,28 @@ test("deleteVertex on an L between Q segments leaves the preceding curve untouch
   assert.deepEqual(commands[2]?.points, [{ x: 125, y: 0 }]);
 });
 
-test("deleteVertex refuses to delete the M vertex", () => {
+test("deleteVertex promotes the next vertex to M when deleting the start vertex", () => {
+  const commands = parsePath("M 0 0 L 50 0 L 100 50 L 0 50 Z");
+  deleteVertex(commands, 0);
+  assert.equal(serializePath(commands), "M 50 0 L 100 50 L 0 50 Z");
+  assert.deepEqual(commands.map((command) => command.type), ["M", "L", "L", "Z"]);
+});
+
+test("deleteVertex promotes a Q endpoint to M when deleting the start vertex", () => {
+  const commands = parsePath("M 0 0 Q 25 50 50 0 L 100 50 L 0 50 Z");
+  deleteVertex(commands, 0);
+  assert.equal(serializePath(commands), "M 50 0 L 100 50 L 0 50 Z");
+  assert.deepEqual(commands.map((command) => command.type), ["M", "L", "L", "Z"]);
+});
+
+test("deleteVertex promotes a C endpoint to M when deleting the start vertex", () => {
+  const commands = parsePath("M 0 0 C 10 50 40 50 50 0 L 100 50 L 0 50 Z");
+  deleteVertex(commands, 0);
+  assert.equal(serializePath(commands), "M 50 0 L 100 50 L 0 50 Z");
+  assert.deepEqual(commands.map((command) => command.type), ["M", "L", "L", "Z"]);
+});
+
+test("deleteVertex refuses to delete the start vertex when fewer than three vertices remain", () => {
   const commands = parsePath("M 0 0 L 50 0 Z");
   deleteVertex(commands, 0);
   assert.equal(commands.length, 3);

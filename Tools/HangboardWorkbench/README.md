@@ -9,8 +9,14 @@ edits hold contours, validates the package, and saves the result atomically.
 From the repository root:
 
 ```sh
+cd Tools/HangboardWorkbench && npm ci && npm run check:bundle
+cd ../..
 rtk python3 Tools/HangboardWorkbench/server.py
 ```
+
+The local server and package operations require the generated UI bundle. Run
+`npm ci && npm run check:bundle` in `Tools/HangboardWorkbench` before those
+operations.
 
 Open `http://127.0.0.1:4173`. The **Boards** button lists the completed
 packages in `Hangboards/`. Selecting a board loads its image and all of its
@@ -170,7 +176,13 @@ an opt-in server mode (`--allow-remote`) of the same Workbench codebase.
 ## Verification
 
 ```sh
-cd Tools/HangboardWorkbench && npm ci && npm run typecheck && npm test && npm run check:bundle
+(
+  cd Tools/HangboardWorkbench
+  npm ci
+  npm run check:bundle
+  npm run typecheck
+  npm test
+)
 uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests
 swift test --package-path Tools/HangboardWorkbench/macos
 ```

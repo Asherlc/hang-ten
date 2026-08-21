@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -11,6 +13,10 @@ import pytest
 EDITOR_ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = EDITOR_ROOT.parents[1]
 BUILD_PATH = EDITOR_ROOT / "packaging" / "build.py"
+GIT_PATH = shutil.which("git")
+if GIT_PATH is None:
+    raise RuntimeError("Git is required to run the Workbench packaging tests")
+GIT_EXECUTABLE = str(Path(GIT_PATH).resolve(strict=True))
 sys.path.insert(0, str(EDITOR_ROOT))
 
 import workbench_assets  # noqa: E402
@@ -26,6 +32,20 @@ def _load_build_module():
 
 
 build = _load_build_module()
+
+
+def test_browser_bundle_is_an_ignored_build_artifact() -> None:
+    tracked = subprocess.run(
+        [GIT_EXECUTABLE, "ls-files", "--error-unmatch", "Tools/HangboardWorkbench/app.js"],
+        cwd=REPOSITORY_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert tracked.returncode != 0
+    assert "/Tools/HangboardWorkbench/app.js" in (
+        REPOSITORY_ROOT / ".gitignore"
+    ).read_text(encoding="utf-8")
 
 
 def test_static_asset_routes_expose_only_the_packaged_bundle() -> None:

@@ -675,18 +675,18 @@ test("vertex button Enter and Space activation select the targeted point", async
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("protected and minimum-contour vertices expose a disabled Delete action without dirtying", async () => {
+test("four-vertex start vertices expose an enabled Delete action and are removed", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
     await app.click('[data-hold-key="square"]');
     await app.mouse('.path-editor-vertex[data-index="0"]', "contextmenu", { button: 2 });
-    assert.equal(app.disabled('[role="menuitem"]'), true);
-    assert.equal(app.document.activeElement?.getAttribute("role"), "menu");
-    assert.equal(await app.keyDown("body", "Delete"), false);
-    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
-    assert.equal(app.text("#save-state"), "Saved");
+    assert.equal(app.disabled('[role="menuitem"]'), false);
+    await app.click('[role="menuitem"]');
+    assert.equal(paths(app)[0], "M 30 10 L 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
+});
 
+test("minimum-contour vertices expose a disabled Delete action without dirtying", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
     await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2 });
