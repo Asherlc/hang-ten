@@ -307,11 +307,37 @@ test("Ctrl-wheel pinch zoom accumulates small deltas without changing Alt-wheel 
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -30, ctrlKey: true }), true);
     assert.equal(app.text("#canvas-zoom-level"), "100%");
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -60, ctrlKey: true }), true);
-    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(app.text("#canvas-zoom-level"), "110%");
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
-    assert.equal(app.text("#canvas-zoom-level"), "150%");
+    assert.equal(app.text("#canvas-zoom-level"), "135%");
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -40, ctrlKey: true }), true);
-    assert.equal(app.text("#canvas-zoom-level"), "150%");
+    assert.equal(app.text("#canvas-zoom-level"), "135%");
+  });
+});
+
+test("Ctrl-wheel pinch uses 10 percent steps and preserves excess delta for later steps", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -350, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "130%");
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -50, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "140%");
+  });
+});
+
+test("standard zoom controls reach bounds from pinch-created zoom levels", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1900, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "290%");
+    await app.click("#zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+    assert.equal(app.disabled("#zoom-in-button"), true);
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: 2400, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "60%");
+    await app.click("#zoom-out-button");
+    assert.equal(app.text("#canvas-zoom-level"), "50%");
+    assert.equal(app.disabled("#zoom-out-button"), true);
   });
 });
 
@@ -356,8 +382,9 @@ test("rapid Ctrl-pinch events consume browser zoom while advancing canvas zoom o
       }
     });
     assert.equal(app.text("#canvas-zoom-level"), "300%");
-    assert.ok(events.slice(0, 8).every((event) => event.defaultPrevented));
-    assert.ok(events.slice(8).every((event) => !event.defaultPrevented));
+    assert.ok(events.every((event) => event.defaultPrevented));
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, ctrlKey: true }), false);
 
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, altKey: true }), false);
     assert.equal(app.text("#canvas-zoom-level"), "300%");
@@ -387,6 +414,13 @@ test("wheel zoom uses callbacks from the latest render", async () => {
       }
       : () => false;
     const canZoomChange = useCurrentCallbacks ? () => true : () => false;
+    const onPinchZoomChange = useCurrentCallbacks
+      ? (direction: number) => {
+        setZoom((current) => current + direction * 10);
+        return true;
+      }
+      : () => false;
+    const canPinchZoomChange = useCurrentCallbacks ? () => true : () => false;
     return <>
       <button id="use-current-wheel-callbacks" type="button" onClick={() => setUseCurrentCallbacks(true)}>Use current callbacks</button>
       <output id="wheel-harness-zoom">{zoom}%</output>
@@ -402,6 +436,8 @@ test("wheel zoom uses callbacks from the latest render", async () => {
         zoomPercent={100}
         onZoomChange={onZoomChange}
         canZoomChange={canZoomChange}
+        onPinchZoomChange={onPinchZoomChange}
+        canPinchZoomChange={canPinchZoomChange}
         guides={[]}
         onMoveGuide={() => {}}
       />
@@ -414,7 +450,7 @@ test("wheel zoom uses callbacks from the latest render", async () => {
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
     assert.equal(app.text("#wheel-harness-zoom"), "125%");
     assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, ctrlKey: true }), true);
-    assert.equal(app.text("#wheel-harness-zoom"), "150%");
+    assert.equal(app.text("#wheel-harness-zoom"), "135%");
   } finally {
     await app.cleanup();
   }
@@ -434,13 +470,27 @@ test("two-finger touch pinch continues zooming across rerenders without intercep
       { clientX: 10, clientY: 20 },
       { clientX: 90, clientY: 20 },
     ]), true);
-    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(app.text("#canvas-zoom-level"), "130%");
     assert.equal(await touchCanvas(app, "touchmove", [
       { clientX: 0, clientY: 20 },
       { clientX: 100, clientY: 20 },
     ]), true);
     assert.equal(app.text("#canvas-zoom-level"), "150%");
     assert.equal(await touchCanvas(app, "touchend", []), false);
+  });
+});
+
+test("two-finger touch pinch advances through every 10 percent threshold crossed in one move", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await touchCanvas(app, "touchstart", [
+      { clientX: 0, clientY: 20 },
+      { clientX: 100, clientY: 20 },
+    ]), true);
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 0, clientY: 20 },
+      { clientX: 150, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "140%");
   });
 });
 

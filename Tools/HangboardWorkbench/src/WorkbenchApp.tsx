@@ -17,6 +17,7 @@ export interface WorkbenchAppProps {
 const MIN_CANVAS_ZOOM = 50;
 const MAX_CANVAS_ZOOM = 300;
 const CANVAS_ZOOM_STEP = 25;
+const CANVAS_PINCH_ZOOM_STEP = 10;
 
 export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const { state, actions } = useWorkbench(dependencies);
@@ -27,19 +28,32 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [mobileHoldSheetOpen, setMobileHoldSheetOpen] = React.useState(false);
   const nextGuideId = React.useRef(1);
-  const canZoomChange = React.useCallback((direction: number): boolean => {
-    const step = Math.sign(direction) * CANVAS_ZOOM_STEP;
-    const nextZoom = canvasZoomRef.current + step;
-    return nextZoom >= MIN_CANVAS_ZOOM && nextZoom <= MAX_CANVAS_ZOOM;
+  const nextCanvasZoom = React.useCallback((direction: number, stepSize: number): number => {
+    const step = Math.sign(direction) * stepSize;
+    return Math.max(MIN_CANVAS_ZOOM, Math.min(MAX_CANVAS_ZOOM, canvasZoomRef.current + step));
   }, []);
-  const changeCanvasZoom = React.useCallback((direction: number): boolean => {
-    const step = Math.sign(direction) * CANVAS_ZOOM_STEP;
-    const nextZoom = canvasZoomRef.current + step;
-    if (!canZoomChange(direction)) return false;
+  const canCanvasZoomChange = React.useCallback((direction: number, stepSize: number): boolean => {
+    return nextCanvasZoom(direction, stepSize) !== canvasZoomRef.current;
+  }, [nextCanvasZoom]);
+  const changeCanvasZoomBy = React.useCallback((direction: number, stepSize: number): boolean => {
+    const nextZoom = nextCanvasZoom(direction, stepSize);
+    if (!canCanvasZoomChange(direction, stepSize)) return false;
     canvasZoomRef.current = nextZoom;
     setCanvasZoom(nextZoom);
     return true;
-  }, [canZoomChange]);
+  }, [canCanvasZoomChange, nextCanvasZoom]);
+  const canZoomChange = React.useCallback((direction: number): boolean => (
+    canCanvasZoomChange(direction, CANVAS_ZOOM_STEP)
+  ), [canCanvasZoomChange]);
+  const changeCanvasZoom = React.useCallback((direction: number): boolean => (
+    changeCanvasZoomBy(direction, CANVAS_ZOOM_STEP)
+  ), [changeCanvasZoomBy]);
+  const canPinchZoomChange = React.useCallback((direction: number): boolean => (
+    canCanvasZoomChange(direction, CANVAS_PINCH_ZOOM_STEP)
+  ), [canCanvasZoomChange]);
+  const changeCanvasPinchZoom = React.useCallback((direction: number): boolean => (
+    changeCanvasZoomBy(direction, CANVAS_PINCH_ZOOM_STEP)
+  ), [changeCanvasZoomBy]);
   const busy = state.busyBoard || state.busyGit;
   const editorBusy = state.busyGit || (state.busyBoard && !state.savingBoard);
   const selectedHold: HoldRegion | null = state.document?.regions.find(
@@ -214,6 +228,8 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             zoomPercent={canvasZoom}
             onZoomChange={changeCanvasZoom}
             canZoomChange={canZoomChange}
+            onPinchZoomChange={changeCanvasPinchZoom}
+            canPinchZoomChange={canPinchZoomChange}
             guides={guides}
             onMoveGuide={moveGuide}
           />
