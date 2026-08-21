@@ -137,14 +137,14 @@ export function HoldCanvas({
       if (!previousDistance || distance === 0) return;
       let thresholdDistance = previousDistance;
       while (distance / thresholdDistance >= TOUCH_PINCH_ZOOM_THRESHOLD) {
-        if (!canPinchZoomChangeRef.current(1) || onPinchZoomChangeRef.current(1) !== true) {
+        if (!canPinchZoomChangeRef.current(1) || onPinchZoomChangeRef.current(1) === false) {
           thresholdDistance = distance;
           break;
         }
         thresholdDistance *= TOUCH_PINCH_ZOOM_THRESHOLD;
       }
       while (distance / thresholdDistance <= 1 / TOUCH_PINCH_ZOOM_THRESHOLD) {
-        if (!canPinchZoomChangeRef.current(-1) || onPinchZoomChangeRef.current(-1) !== true) {
+        if (!canPinchZoomChangeRef.current(-1) || onPinchZoomChangeRef.current(-1) === false) {
           thresholdDistance = distance;
           break;
         }
@@ -172,7 +172,7 @@ export function HoldCanvas({
         let zoomChanged = false;
         while (Math.abs(pinchZoomDeltaRef.current) >= PINCH_ZOOM_DELTA_THRESHOLD) {
           const direction = pinchZoomDeltaRef.current < 0 ? 1 : -1;
-          if (!canPinchZoomChangeRef.current(direction) || onPinchZoomChangeRef.current(direction) !== true) {
+          if (!canPinchZoomChangeRef.current(direction) || onPinchZoomChangeRef.current(direction) === false) {
             pinchZoomDeltaRef.current = 0;
             break;
           }

@@ -456,6 +456,42 @@ test("wheel zoom uses callbacks from the latest render", async () => {
   }
 });
 
+test("Ctrl-pinch retains multiple thresholds when a pinch callback updates zoom without returning a value", async () => {
+  const inertEditor = { cancelActiveEdit: () => false } as HoldEditorActions;
+  function VoidPinchZoomHarness() {
+    const [zoom, setZoom] = React.useState(100);
+    const canvasDocument = React.useMemo(() => documentFixture(), []);
+    return <>
+      <output id="void-pinch-harness-zoom">{zoom}%</output>
+      <HoldCanvas
+        board={null}
+        document={canvasDocument}
+        selectedKey={null}
+        selectedKeys={[]}
+        busy={false}
+        onSelectHold={() => {}}
+        pathEditor={pathEditor}
+        editor={inertEditor}
+        zoomPercent={100}
+        onZoomChange={() => {}}
+        canZoomChange={() => false}
+        onPinchZoomChange={(direction) => { setZoom((current) => current + direction * 10); }}
+        canPinchZoomChange={() => true}
+        guides={[]}
+        onMoveGuide={() => {}}
+      />
+    </>;
+  }
+
+  const app = await renderReact(<VoidPinchZoomHarness />);
+  try {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -200, ctrlKey: true }), true);
+    assert.equal(app.text("#void-pinch-harness-zoom"), "120%");
+  } finally {
+    await app.cleanup();
+  }
+});
+
 test("two-finger touch pinch continues zooming across rerenders without intercepting one-finger touches", async () => {
   await withEditor(async (app) => {
     assert.equal(await touchCanvas(app, "touchstart", [{ clientX: 20, clientY: 20 }]), false);
