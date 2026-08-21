@@ -295,6 +295,7 @@ test("mobile canvas controls open the board drawer, repository sheet, and hold i
     await app.click("#board-list button");
     await app.flush(() => image.images.succeed());
     assert.equal(app.document.querySelector(".workspace-grid")?.classList.contains("mobile-boards-open"), false);
+    assert.equal(app.disabled("#mobile-open-hold-sheet-button"), true);
     await app.click("#hold-overlay path");
     assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
     assert.equal(app.disabled("#mobile-open-hold-sheet-button"), false);

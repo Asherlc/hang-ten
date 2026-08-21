@@ -106,6 +106,7 @@ export function HoldCanvas({
       if (distance === 0) return;
       touchPinchActiveRef.current = true;
       touchPinchDistanceRef.current = distance;
+      guideDragRef.current = null;
       editorRef.current.cancelActiveEdit();
       event.preventDefault();
     };
@@ -138,7 +139,7 @@ export function HoldCanvas({
       if (delta === 0) return;
       if (event.ctrlKey && !event.altKey) {
         const direction = delta < 0 ? 1 : -1;
-        if (!canZoomChange(direction)) {
+        if (!canZoomChangeRef.current(direction)) {
           pinchZoomDeltaRef.current = 0;
           return;
         }
@@ -149,7 +150,7 @@ export function HoldCanvas({
         }
         pinchZoomDeltaRef.current = 0;
       }
-      if (onZoomChange(delta < 0 ? 1 : -1) === true) event.preventDefault();
+      if (onZoomChangeRef.current(delta < 0 ? 1 : -1) === true) event.preventDefault();
     };
     viewport.addEventListener("touchstart", handleTouchStart, { passive: false });
     viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
