@@ -11,27 +11,2776 @@
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "jug-left", "name": "Jug Left", "kind": "jug", "geometry": [{ "frame": {"x": 0.03075, "y": 0.007722007722007722, "width": 0.16375, "height": 0.20463320463320464}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.9992366412213741, 0.37028301886792453]}, {"command": "line", "to": [0.9770992366412214, 0.09198113207547169]}, {"command": "line", "to": [0.9633587786259543, 0.025943396226415096]}, {"command": "line", "to": [0.9465648854961832, 0.0]}, {"command": "line", "to": [0.5137404580152672, 0.0]}, {"command": "line", "to": [0.4618320610687023, 0.014150943396226415]}, {"command": "line", "to": [0.416793893129771, 0.03773584905660377]}, {"command": "line", "to": [0.34961832061068704, 0.09198113207547169]}, {"command": "line", "to": [0.30305343511450383, 0.14150943396226415]}, {"command": "line", "to": [0.20763358778625957, 0.2759433962264151]}, {"command": "line", "to": [0.13129770992366413, 0.41273584905660377]}, {"command": "line", "to": [0.07480916030534351, 0.5283018867924528]}, {"command": "line", "to": [0.035114503816793895, 0.6202830188679245]}, {"command": "line", "to": [0.0, 0.7382075471698113]}, {"command": "line", "to": [0.03206106870229007, 0.8514150943396226]}, {"command": "line", "to": [0.059541984732824425, 0.9150943396226415]}, {"command": "line", "to": [0.09618320610687024, 0.9693396226415094]}, {"command": "line", "to": [0.13740458015267176, 0.9976415094339622]}, {"command": "line", "to": [0.7412213740458016, 1.0]}, {"command": "line", "to": [0.801526717557252, 0.9834905660377359]}, {"command": "line", "to": [0.8564885496183207, 0.9433962264150944]}, {"command": "line", "to": [0.8916030534351145, 0.9009433962264151]}, {"command": "line", "to": [0.9251908396946565, 0.8419811320754716]}, {"command": "line", "to": [0.9625954198473282, 0.7382075471698113]}, {"command": "line", "to": [0.9809160305343512, 0.660377358490566]}, {"command": "line", "to": [0.9938931297709924, 0.5707547169811321]}, {"command": "line", "to": [1.0, 0.47877358490566035]}, {"command": "curve", "to": [0.9992366412213741, 0.37028301886792453], "control1": [1.0, 0.47876438679245287], "control2": [0.999238854961832, 0.3703108490566038]}, {"command": "close"}]} }], "gripType": "openHand", "fingerCapacity": 4, "features": ["jug"] },
-    { "id": "jug-right", "name": "Jug Right", "kind": "jug", "geometry": [{ "frame": {"x": 0.8055, "y": 0.007722007722007722, "width": 0.16375, "height": 0.20463320463320464}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.0007633587786259542, 0.37028301886792453]}, {"command": "line", "to": [0.022900763358778626, 0.09198113207547169]}, {"command": "line", "to": [0.036641221374045796, 0.025943396226415096]}, {"command": "line", "to": [0.053435114503816786, 0.0]}, {"command": "line", "to": [0.4862595419847328, 0.0]}, {"command": "line", "to": [0.5381679389312977, 0.014150943396226415]}, {"command": "line", "to": [0.583206106870229, 0.03773584905660377]}, {"command": "line", "to": [0.650381679389313, 0.09198113207547169]}, {"command": "line", "to": [0.6969465648854962, 0.14150943396226415]}, {"command": "line", "to": [0.7923664122137404, 0.2759433962264151]}, {"command": "line", "to": [0.8687022900763359, 0.41273584905660377]}, {"command": "line", "to": [0.9251908396946564, 0.5283018867924528]}, {"command": "line", "to": [0.9648854961832061, 0.6202830188679245]}, {"command": "line", "to": [1.0, 0.7382075471698113]}, {"command": "line", "to": [0.9679389312977099, 0.8514150943396226]}, {"command": "line", "to": [0.9404580152671757, 0.9150943396226415]}, {"command": "line", "to": [0.9038167938931297, 0.9693396226415094]}, {"command": "line", "to": [0.8625954198473282, 0.9976415094339622]}, {"command": "line", "to": [0.2587786259541985, 1.0]}, {"command": "line", "to": [0.1984732824427481, 0.9834905660377359]}, {"command": "line", "to": [0.1435114503816794, 0.9433962264150944]}, {"command": "line", "to": [0.1083969465648855, 0.9009433962264151]}, {"command": "line", "to": [0.07480916030534351, 0.8419811320754716]}, {"command": "line", "to": [0.03740458015267176, 0.7382075471698113]}, {"command": "line", "to": [0.019083969465648856, 0.660377358490566]}, {"command": "line", "to": [0.0061068702290076335, 0.5707547169811321]}, {"command": "line", "to": [0.0, 0.47877358490566035]}, {"command": "curve", "to": [0.0007633587786259542, 0.37028301886792453], "control1": [0.0, 0.47876438679245287], "control2": [0.0007611450381676268, 0.3703108490566038]}, {"command": "close"}]} }], "gripType": "openHand", "fingerCapacity": 4, "features": ["jug"] },
-    { "id": "sloper-35-left", "name": "Sloper 35 Left", "kind": "sloper", "geometry": [{ "frame": { "x": 0.198, "y": 0.0, "width": 0.171, "height": 0.2471042471042471 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.029239766081871343, 0.0] }, { "command": "line", "to": [0.011695906432748537, 0.244140625] }, { "command": "line", "to": [0.0, 0.435546875] }, { "command": "line", "to": [0.003654970760233918, 0.607421875] }, { "command": "line", "to": [0.021198830409356724, 0.91796875] }, { "command": "line", "to": [0.031432748538011694, 0.96484375] }, { "command": "line", "to": [0.049707602339181284, 0.9921875] }, { "command": "line", "to": [0.06652046783625731, 1.0] }, { "command": "line", "to": [0.9554093567251462, 1.0] }, { "command": "line", "to": [0.9692982456140351, 0.994140625] }, { "command": "line", "to": [0.9809941520467836, 0.978515625] }, { "command": "line", "to": [0.9919590643274854, 0.94921875] }, { "command": "line", "to": [0.9978070175438597, 0.916015625] }, { "command": "line", "to": [1.0, 0.87890625] }, { "command": "line", "to": [1.0, 0.12109375] }, { "command": "line", "to": [0.9970760233918129, 0.078125] }, { "command": "line", "to": [0.9853801169590644, 0.03125] }, { "command": "line", "to": [0.2807017543859649, 0.03609375] }, { "command": "line", "to": [0.2185672514619883, 0.06578125] }, { "command": "line", "to": [0.1615497076023392, 0.12203125] }, { "command": "line", "to": [0.09941520467836257, 0.2159375] }, { "command": "line", "to": [0.029239766081871343, 0.359375] }, { "command": "curve", "control1": [0.029232748538011628, 0.35938934375], "control2": [0.029239766081871343, 3.125e-06], "to": [0.029239766081871343, 1.5625e-06] }, { "command": "close" }] } }] },
-    { "id": "sloper-35-right", "name": "Sloper 35 Right", "kind": "sloper", "geometry": [{ "frame": { "x": 0.631, "y": 0.0, "width": 0.171, "height": 0.2471042471042471 }, "shape": { "type": "path", "commands": [{ "command": "move", "to": [0.9707602339181286, 0.0] }, { "command": "line", "to": [0.9883040935672515, 0.244140625] }, { "command": "line", "to": [1.0, 0.435546875] }, { "command": "line", "to": [0.9963450292397661, 0.607421875] }, { "command": "line", "to": [0.9788011695906432, 0.91796875] }, { "command": "line", "to": [0.9685672514619883, 0.96484375] }, { "command": "line", "to": [0.9502923976608187, 0.9921875] }, { "command": "line", "to": [0.9334795321637427, 1.0] }, { "command": "line", "to": [0.0445906432748538, 1.0] }, { "command": "line", "to": [0.03070175438596491, 0.994140625] }, { "command": "line", "to": [0.019005847953216373, 0.978515625] }, { "command": "line", "to": [0.00804093567251462, 0.94921875] }, { "command": "line", "to": [0.0021929824561403508, 0.916015625] }, { "command": "line", "to": [0.0, 0.87890625] }, { "command": "line", "to": [0.0, 0.12109375] }, { "command": "line", "to": [0.0029239766081871343, 0.078125] }, { "command": "line", "to": [0.014619883040935672, 0.03125] }, { "command": "line", "to": [0.7192982456140351, 0.03609375] }, { "command": "line", "to": [0.7814327485380117, 0.06578125] }, { "command": "line", "to": [0.8384502923976608, 0.12203125] }, { "command": "line", "to": [0.9005847953216374, 0.2159375] }, { "command": "line", "to": [0.9707602339181286, 0.359375] }, { "command": "curve", "control1": [0.9707672514619885, 0.35938934375], "control2": [0.9707602339181286, 3.125e-06], "to": [0.9707602339181286, 1.5625e-06] }, { "command": "close" }] } }] },
-    { "id": "sloper-center", "name": "Sloper Center", "kind": "sloper", "geometry": [{ "frame": { "x": 0.369, "y": 0.0, "width": 0.262, "height": 0.21621621621621623 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.160714285714 } }] },
-    { "id": "pocket-top-outer-left", "name": "Pocket Top Outer Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.042, "y": 0.21379406755945946, "width": 0.13, "height": 0.15444015444015446 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.34375 } }], "sizeMillimeters": 15, "features": ["pocket"] },
-    { "id": "pocket-top-outer-right", "name": "Pocket Top Outer Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.828, "y": 0.21379406755945946, "width": 0.13, "height": 0.15444015444015446 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.34375 } }], "sizeMillimeters": 15, "features": ["pocket"] },
-    { "id": "pocket-top-left", "name": "Pocket Top Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.379482009888, "y": 0.2308556472011583, "width": 0.10358599853499999, "height": 0.13962201446216216 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.345665749405 } }], "sizeMillimeters": 30, "features": ["pocket"] },
-    { "id": "pocket-top-right", "name": "Pocket Top Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.516931991577, "y": 0.2308556472011583, "width": 0.10358599853500004, "height": 0.13962201446216216 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.345665749405 } }], "sizeMillimeters": 30, "features": ["pocket"] },
-    { "id": "pocket-middle-outer-left", "name": "Pocket Middle Outer Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.026, "y": 0.4749034749034749, "width": 0.146, "height": 0.138996138996139 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.347222222222 } }], "sizeMillimeters": 45, "features": ["pocket"] },
-    { "id": "pocket-middle-mid-left", "name": "Pocket Middle Mid Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.196, "y": 0.4749034749034749, "width": 0.075, "height": 0.138996138996139 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.347222222222 } }], "sizeMillimeters": 50, "features": ["pocket"] },
-    { "id": "pocket-middle-inner-left", "name": "Pocket Middle Inner Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.294, "y": 0.4749034749034749, "width": 0.102, "height": 0.138996138996139 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.347222222222 } }], "sizeMillimeters": 45, "features": ["pocket"] },
-    { "id": "pocket-middle-center", "name": "Pocket Middle Center", "kind": "pocket", "geometry": [{ "frame": { "x": 0.42231100463899995, "y": 0.4745905518996139, "width": 0.15338601684499997, "height": 0.13962198500386097 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.345665822336 } }], "sizeMillimeters": 53, "features": ["pocket"] },
-    { "id": "pocket-middle-inner-right", "name": "Pocket Middle Inner Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.604, "y": 0.4749034749034749, "width": 0.102, "height": 0.138996138996139 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.347222222222 } }], "sizeMillimeters": 45, "features": ["pocket"] },
-    { "id": "pocket-middle-mid-right", "name": "Pocket Middle Mid Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.729, "y": 0.4749034749034749, "width": 0.075, "height": 0.138996138996139 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.347222222222 } }], "sizeMillimeters": 50, "features": ["pocket"] },
-    { "id": "pocket-middle-outer-right", "name": "Pocket Middle Outer Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.828, "y": 0.4749034749034749, "width": 0.146, "height": 0.138996138996139 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.347222222222 } }], "sizeMillimeters": 45, "features": ["pocket"] },
-    { "id": "pocket-bottom-outer-left", "name": "Pocket Bottom Outer Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.107107142857, "y": 0.7313154991737452, "width": 0.15678571428600002, "height": 0.18132928847104246 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.346007604565 } }], "sizeMillimeters": 20, "features": ["pocket"] },
-    { "id": "pocket-bottom-mid-left", "name": "Pocket Bottom Mid Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.283212509155, "y": 0.7316602316602316, "width": 0.0775, "height": 0.1806398234980695 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.384732824425 } }], "sizeMillimeters": 25, "features": ["pocket"] },
-    { "id": "pocket-bottom-inner-left", "name": "Pocket Bottom Inner Left", "kind": "pocket", "geometry": [{ "frame": { "x": 0.38696428571400004, "y": 0.7454495311621622, "width": 0.10607142857199994, "height": 0.15306122449034743 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.346846846846 } }], "sizeMillimeters": 20, "features": ["pocket"] },
-    { "id": "pocket-bottom-inner-right", "name": "Pocket Bottom Inner Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.506964285714, "y": 0.7454495311621622, "width": 0.106071428572, "height": 0.15306122449034743 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.346846846846 } }], "sizeMillimeters": 20, "features": ["pocket"] },
-    { "id": "pocket-bottom-mid-right", "name": "Pocket Bottom Mid Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.639287490845, "y": 0.7316602316602316, "width": 0.0775, "height": 0.1806398234980695 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.384732824425 } }], "sizeMillimeters": 25, "features": ["pocket"] },
-    { "id": "pocket-bottom-outer-right", "name": "Pocket Bottom Outer Right", "kind": "pocket", "geometry": [{ "frame": { "x": 0.736107142857, "y": 0.7313154991737452, "width": 0.15678571428600002, "height": 0.18132928847104246 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.346007604565 } }], "sizeMillimeters": 20, "features": ["pocket"] }
+    {
+      "id": "jug-left",
+      "name": "Jug Left",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.03075,
+            "y": 0.007722007722007722,
+            "width": 0.16375,
+            "height": 0.20463320463320464
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.9992366412213741,
+                  0.37028301886792453
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9770992366412214,
+                  0.09198113207547169
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9633587786259543,
+                  0.025943396226415096
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9465648854961832,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.5137404580152672,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.4618320610687023,
+                  0.014150943396226415
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.416793893129771,
+                  0.03773584905660377
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.34961832061068704,
+                  0.09198113207547169
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.30305343511450383,
+                  0.14150943396226415
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.20763358778625957,
+                  0.2759433962264151
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.13129770992366413,
+                  0.41273584905660377
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.07480916030534351,
+                  0.5283018867924528
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.035114503816793895,
+                  0.6202830188679245
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.7382075471698113
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.03206106870229007,
+                  0.8514150943396226
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.059541984732824425,
+                  0.9150943396226415
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.09618320610687024,
+                  0.9693396226415094
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.13740458015267176,
+                  0.9976415094339622
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7412213740458016,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.801526717557252,
+                  0.9834905660377359
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.8564885496183207,
+                  0.9433962264150944
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.8916030534351145,
+                  0.9009433962264151
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9251908396946565,
+                  0.8419811320754716
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9625954198473282,
+                  0.7382075471698113
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9809160305343512,
+                  0.660377358490566
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9938931297709924,
+                  0.5707547169811321
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.47877358490566035
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.9992366412213741,
+                  0.37028301886792453
+                ],
+                "control1": [
+                  1.0,
+                  0.47876438679245287
+                ],
+                "control2": [
+                  0.999238854961832,
+                  0.3703108490566038
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "jug"
+      ]
+    },
+    {
+      "id": "jug-right",
+      "name": "Jug Right",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.8055,
+            "y": 0.007722007722007722,
+            "width": 0.16375,
+            "height": 0.20463320463320464
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0007633587786259542,
+                  0.37028301886792453
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.022900763358778626,
+                  0.09198113207547169
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.036641221374045796,
+                  0.025943396226415096
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.053435114503816786,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.4862595419847328,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.5381679389312977,
+                  0.014150943396226415
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.583206106870229,
+                  0.03773584905660377
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.650381679389313,
+                  0.09198113207547169
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.6969465648854962,
+                  0.14150943396226415
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7923664122137404,
+                  0.2759433962264151
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.8687022900763359,
+                  0.41273584905660377
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9251908396946564,
+                  0.5283018867924528
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9648854961832061,
+                  0.6202830188679245
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.7382075471698113
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9679389312977099,
+                  0.8514150943396226
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9404580152671757,
+                  0.9150943396226415
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9038167938931297,
+                  0.9693396226415094
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.8625954198473282,
+                  0.9976415094339622
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.2587786259541985,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1984732824427481,
+                  0.9834905660377359
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1435114503816794,
+                  0.9433962264150944
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1083969465648855,
+                  0.9009433962264151
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.07480916030534351,
+                  0.8419811320754716
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.03740458015267176,
+                  0.7382075471698113
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.019083969465648856,
+                  0.660377358490566
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0061068702290076335,
+                  0.5707547169811321
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.47877358490566035
+                ]
+              },
+              {
+                "command": "curve",
+                "to": [
+                  0.0007633587786259542,
+                  0.37028301886792453
+                ],
+                "control1": [
+                  0.0,
+                  0.47876438679245287
+                ],
+                "control2": [
+                  0.0007611450381676268,
+                  0.3703108490566038
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "gripType": "openHand",
+      "fingerCapacity": 4,
+      "features": [
+        "jug"
+      ]
+    },
+    {
+      "id": "sloper-35-left",
+      "name": "Sloper 35 Left",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.198,
+            "y": 0.0,
+            "width": 0.171,
+            "height": 0.2471042471042471
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.029239766081871343,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.011695906432748537,
+                  0.244140625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.435546875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.003654970760233918,
+                  0.607421875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.021198830409356724,
+                  0.91796875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.031432748538011694,
+                  0.96484375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.049707602339181284,
+                  0.9921875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.06652046783625731,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9554093567251462,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9692982456140351,
+                  0.994140625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9809941520467836,
+                  0.978515625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9919590643274854,
+                  0.94921875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9978070175438597,
+                  0.916015625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.87890625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.12109375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9970760233918129,
+                  0.078125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9853801169590644,
+                  0.03125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.2807017543859649,
+                  0.03609375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.2185672514619883,
+                  0.06578125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1615497076023392,
+                  0.12203125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.09941520467836257,
+                  0.2159375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.029239766081871343,
+                  0.359375
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.029232748538011628,
+                  0.35938934375
+                ],
+                "control2": [
+                  0.029239766081871343,
+                  3.125e-06
+                ],
+                "to": [
+                  0.029239766081871343,
+                  1.5625e-06
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sloper-35-right",
+      "name": "Sloper 35 Right",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.631,
+            "y": 0.0,
+            "width": 0.171,
+            "height": 0.2471042471042471
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.9707602339181286,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9883040935672515,
+                  0.244140625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.435546875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9963450292397661,
+                  0.607421875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9788011695906432,
+                  0.91796875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9685672514619883,
+                  0.96484375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9502923976608187,
+                  0.9921875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9334795321637427,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0445906432748538,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.03070175438596491,
+                  0.994140625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.019005847953216373,
+                  0.978515625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.00804093567251462,
+                  0.94921875
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0021929824561403508,
+                  0.916015625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.87890625
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.12109375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0029239766081871343,
+                  0.078125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.014619883040935672,
+                  0.03125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7192982456140351,
+                  0.03609375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.7814327485380117,
+                  0.06578125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.8384502923976608,
+                  0.12203125
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9005847953216374,
+                  0.2159375
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9707602339181286,
+                  0.359375
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.9707672514619885,
+                  0.35938934375
+                ],
+                "control2": [
+                  0.9707602339181286,
+                  3.125e-06
+                ],
+                "to": [
+                  0.9707602339181286,
+                  1.5625e-06
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sloper-center",
+      "name": "Sloper Center",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.369,
+            "y": 0.0,
+            "width": 0.262,
+            "height": 0.21621621621621623
+          },
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.160714285714
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-top-outer-left",
+      "name": "Pocket Top Outer Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.042,
+            "y": 0.213794065637,
+            "width": 0.13,
+            "height": 0.15444015444
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.153846153846,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.846153846154,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.931120730769,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22385765
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142375
+                ],
+                "control2": [
+                  0.931120730769,
+                  1.0
+                ],
+                "to": [
+                  0.846153846154,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.153846153846,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.068879269231,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142375
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22385765
+                ],
+                "control2": [
+                  0.068879269231,
+                  0.0
+                ],
+                "to": [
+                  0.153846153846,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 15,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-top-outer-right",
+      "name": "Pocket Top Outer Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.828,
+            "y": 0.213794065637,
+            "width": 0.13,
+            "height": 0.15444015444
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.153846153846,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.846153846154,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.931120730769,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22385765
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142375
+                ],
+                "control2": [
+                  0.931120730769,
+                  1.0
+                ],
+                "to": [
+                  0.846153846154,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.153846153846,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.068879269231,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142375
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22385765
+                ],
+                "control2": [
+                  0.068879269231,
+                  0.0
+                ],
+                "to": [
+                  0.153846153846,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 15,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-top-left",
+      "name": "Pocket Top Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.37948201,
+            "y": 0.230855648649,
+            "width": 0.103585998,
+            "height": 0.139622011583
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.174551110663,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.825448898991,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.921850808446,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857623759
+                ],
+                "to": [
+                  1.0,
+                  0.499999986173
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142376241
+                ],
+                "control2": [
+                  0.921850808446,
+                  1.0
+                ],
+                "to": [
+                  0.825448898991,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.174551110663,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.078149191554,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142376241
+                ],
+                "to": [
+                  0.0,
+                  0.499999986173
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857623759
+                ],
+                "control2": [
+                  0.078149191554,
+                  0.0
+                ],
+                "to": [
+                  0.174551110663,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 30,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-top-right",
+      "name": "Pocket Top Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.516931992,
+            "y": 0.230855648649,
+            "width": 0.103585998,
+            "height": 0.139622011583
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.174551101009,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.825448889337,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.921850808446,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857623759
+                ],
+                "to": [
+                  1.0,
+                  0.499999986173
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142376241
+                ],
+                "control2": [
+                  0.921850808446,
+                  1.0
+                ],
+                "to": [
+                  0.825448889337,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.174551101009,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.078149191554,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142376241
+                ],
+                "to": [
+                  0.0,
+                  0.499999986173
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857623759
+                ],
+                "control2": [
+                  0.078149191554,
+                  0.0
+                ],
+                "to": [
+                  0.174551101009,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 30,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-middle-outer-left",
+      "name": "Pocket Middle Outer Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.026,
+            "y": 0.474903474903,
+            "width": 0.146,
+            "height": 0.138996138996
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.123287671233,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.876712328767,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.944802226027,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857638889
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142361111
+                ],
+                "control2": [
+                  0.944802226027,
+                  1.0
+                ],
+                "to": [
+                  0.876712328767,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.123287671233,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.055197773973,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142361111
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857638889
+                ],
+                "control2": [
+                  0.055197773973,
+                  0.0
+                ],
+                "to": [
+                  0.123287671233,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 45,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-middle-mid-left",
+      "name": "Pocket Middle Mid Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.196,
+            "y": 0.474903474903,
+            "width": 0.075,
+            "height": 0.138996138996
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.24,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.76,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.892548333333,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857638889
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142361111
+                ],
+                "control2": [
+                  0.892548333333,
+                  1.0
+                ],
+                "to": [
+                  0.76,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.24,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.107451666667,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142361111
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857638889
+                ],
+                "control2": [
+                  0.107451666667,
+                  0.0
+                ],
+                "to": [
+                  0.24,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 50,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-middle-inner-left",
+      "name": "Pocket Middle Inner Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.294,
+            "y": 0.474903474903,
+            "width": 0.102,
+            "height": 0.138996138996
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.176470588235,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.823529411765,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.920991421569,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857638889
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142361111
+                ],
+                "control2": [
+                  0.920991421569,
+                  1.0
+                ],
+                "to": [
+                  0.823529411765,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.176470588235,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.079008578431,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142361111
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857638889
+                ],
+                "control2": [
+                  0.079008578431,
+                  0.0
+                ],
+                "to": [
+                  0.176470588235,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 45,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-middle-center",
+      "name": "Pocket Middle Center",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.422311005,
+            "y": 0.474590552124,
+            "width": 0.153386016,
+            "height": 0.139621984556
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.117879370438,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.882120629562,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.94722361131,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857611785
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142388215
+                ],
+                "control2": [
+                  0.94722361131,
+                  1.0
+                ],
+                "to": [
+                  0.882120629562,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.117879370438,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.05277638869,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142388215
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857611785
+                ],
+                "control2": [
+                  0.05277638869,
+                  0.0
+                ],
+                "to": [
+                  0.117879370438,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 53,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-middle-inner-right",
+      "name": "Pocket Middle Inner Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.604,
+            "y": 0.474903474903,
+            "width": 0.102,
+            "height": 0.138996138996
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.176470588235,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.823529411765,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.920991421569,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857638889
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142361111
+                ],
+                "control2": [
+                  0.920991421569,
+                  1.0
+                ],
+                "to": [
+                  0.823529411765,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.176470588235,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.079008578431,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142361111
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857638889
+                ],
+                "control2": [
+                  0.079008578431,
+                  0.0
+                ],
+                "to": [
+                  0.176470588235,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 45,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-middle-mid-right",
+      "name": "Pocket Middle Mid Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.729,
+            "y": 0.474903474903,
+            "width": 0.075,
+            "height": 0.138996138996
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.24,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.76,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.892548333333,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857638889
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142361111
+                ],
+                "control2": [
+                  0.892548333333,
+                  1.0
+                ],
+                "to": [
+                  0.76,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.24,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.107451666667,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142361111
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857638889
+                ],
+                "control2": [
+                  0.107451666667,
+                  0.0
+                ],
+                "to": [
+                  0.24,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 50,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-middle-outer-right",
+      "name": "Pocket Middle Outer Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.828,
+            "y": 0.474903474903,
+            "width": 0.146,
+            "height": 0.138996138996
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.123287671233,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.876712328767,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.944802226027,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857638889
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142361111
+                ],
+                "control2": [
+                  0.944802226027,
+                  1.0
+                ],
+                "to": [
+                  0.876712328767,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.123287671233,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.055197773973,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142361111
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857638889
+                ],
+                "control2": [
+                  0.055197773973,
+                  0.0
+                ],
+                "to": [
+                  0.123287671233,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 45,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-bottom-outer-left",
+      "name": "Pocket Bottom Outer Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.107107143,
+            "y": 0.731315498069,
+            "width": 0.156785714,
+            "height": 0.181329289575
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.149772210751,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.850227789249,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.932944700561,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22385763514
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142386153
+                ],
+                "control2": [
+                  0.932944700561,
+                  1.0
+                ],
+                "to": [
+                  0.850227789249,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.149772210751,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.067055299439,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142386153
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22385763514
+                ],
+                "control2": [
+                  0.067055299439,
+                  0.0
+                ],
+                "to": [
+                  0.149772210751,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 20,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-bottom-mid-left",
+      "name": "Pocket Bottom Mid Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.283212509,
+            "y": 0.73166023166,
+            "width": 0.0775,
+            "height": 0.180639822394
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.301843316129,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.698156683871,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.864860141935,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857628848
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142371152
+                ],
+                "control2": [
+                  0.864860141935,
+                  1.0
+                ],
+                "to": [
+                  0.698156683871,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.301843316129,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.135139858065,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142371152
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857628848
+                ],
+                "control2": [
+                  0.135139858065,
+                  0.0
+                ],
+                "to": [
+                  0.301843316129,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 25,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-bottom-inner-left",
+      "name": "Pocket Bottom Inner Left",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.386964286,
+            "y": 0.745449532819,
+            "width": 0.106071428,
+            "height": 0.153061223938
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.186868682488,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.813131317512,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.91633603726,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22385760441
+                ],
+                "to": [
+                  1.0,
+                  0.499999987387
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142370364
+                ],
+                "control2": [
+                  0.91633603726,
+                  1.0
+                ],
+                "to": [
+                  0.813131317512,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.186868682488,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.08366396274,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142370364
+                ],
+                "to": [
+                  0.0,
+                  0.499999987387
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22385760441
+                ],
+                "control2": [
+                  0.08366396274,
+                  0.0
+                ],
+                "to": [
+                  0.186868682488,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 20,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-bottom-inner-right",
+      "name": "Pocket Bottom Inner Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.506964286,
+            "y": 0.745449532819,
+            "width": 0.106071428,
+            "height": 0.153061223938
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.186868682488,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.813131317512,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.91633603726,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22385760441
+                ],
+                "to": [
+                  1.0,
+                  0.499999987387
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142370364
+                ],
+                "control2": [
+                  0.91633603726,
+                  1.0
+                ],
+                "to": [
+                  0.813131317512,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.186868682488,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.08366396274,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142370364
+                ],
+                "to": [
+                  0.0,
+                  0.499999987387
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22385760441
+                ],
+                "control2": [
+                  0.08366396274,
+                  0.0
+                ],
+                "to": [
+                  0.186868682488,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 20,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-bottom-mid-right",
+      "name": "Pocket Bottom Mid Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.639287491,
+            "y": 0.73166023166,
+            "width": 0.0775,
+            "height": 0.180639822394
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.301843316129,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.698156683871,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.864860141935,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857628848
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142371152
+                ],
+                "control2": [
+                  0.864860141935,
+                  1.0
+                ],
+                "to": [
+                  0.698156683871,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.301843316129,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.135139858065,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142371152
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857628848
+                ],
+                "control2": [
+                  0.135139858065,
+                  0.0
+                ],
+                "to": [
+                  0.301843316129,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 25,
+      "features": [
+        "pocket"
+      ]
+    },
+    {
+      "id": "pocket-bottom-outer-right",
+      "name": "Pocket Bottom Outer Right",
+      "kind": "pocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.736107143,
+            "y": 0.731315498069,
+            "width": 0.156785714,
+            "height": 0.181329289575
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.149772210751,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.850227789249,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.932944700561,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22385763514
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142386153
+                ],
+                "control2": [
+                  0.932944700561,
+                  1.0
+                ],
+                "to": [
+                  0.850227789249,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.149772210751,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.067055299439,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142386153
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22385763514
+                ],
+                "control2": [
+                  0.067055299439,
+                  0.0
+                ],
+                "to": [
+                  0.149772210751,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "sizeMillimeters": 20,
+      "features": [
+        "pocket"
+      ]
+    }
   ]
 }
