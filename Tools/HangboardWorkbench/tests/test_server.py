@@ -349,6 +349,7 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }
@@ -1103,6 +1104,7 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }

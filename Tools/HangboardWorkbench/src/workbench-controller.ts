@@ -94,16 +94,31 @@ export async function loadBoardAtomically<ImageType>(options: {
   boardId: string;
   getBoard(boardId: string): Promise<import("./types.ts").Board>;
   loadImage(href: string): Promise<ImageType>;
+  preloadedImage?: {
+    href: string;
+    promise: Promise<ImageType>;
+  };
   commit(value: LoadedBoard<ImageType>): void;
 }): Promise<LoadedBoard<ImageType>> {
-  const { boardId, getBoard, loadImage, commit } = options;
+  const { boardId, getBoard, loadImage, preloadedImage, commit } = options;
   if (!boardId) throw new TypeError("Board ID is required");
+  const preparedPreloadedImage = preloadedImage && Promise.resolve(preloadedImage.promise).then(
+    (image) => ({ image }),
+    (error: unknown) => ({ error }),
+  );
   const board = await getBoard(boardId);
   if (!board || board.boardId !== boardId || !board.imageUrl) {
     throw new Error("Workbench returned an invalid board");
   }
   validateEditorDocument(board.document);
-  const image = await loadImage(board.imageUrl);
+  let image: ImageType;
+  if (preloadedImage?.href === board.imageUrl && preparedPreloadedImage !== undefined) {
+    const preparedImage = await preparedPreloadedImage;
+    if ("error" in preparedImage) throw preparedImage.error;
+    image = preparedImage.image;
+  } else {
+    image = await loadImage(board.imageUrl);
+  }
   if (!image) throw new Error("Board image is unavailable");
   const loaded = Object.freeze({ board, image, document: board.document });
   commit(loaded);

@@ -137,7 +137,12 @@ function clientFixture(overrides: Partial<WorkbenchClient> = {}): WorkbenchClien
   const board = boardFixture();
   return {
     async listBoards(): Promise<BoardSummary[]> {
-      return [{ boardId: board.boardId, displayName: board.displayName, holdCount: board.holdCount }];
+      return [{
+        boardId: board.boardId,
+        displayName: board.displayName,
+        holdCount: board.holdCount,
+        imageUrl: board.imageUrl,
+      }];
     },
     async getBoard(): Promise<Board> { return board; },
     async saveBoard(_boardId, document): Promise<Board> { return { ...board, document }; },
@@ -339,8 +344,8 @@ test("selecting a hold on another board does not reopen an explicitly opened mob
     client: {
       async listBoards() {
         return [
-          { boardId: "board-a", displayName: "Board A", holdCount: 1 },
-          { boardId: "board-b", displayName: "Board B", holdCount: 1 },
+          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image" },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image" },
         ];
       },
       async getBoard(boardId) { return boardFixture(boardId); },
@@ -469,8 +474,8 @@ test("board selection locks board and Git actions and commits image plus documen
     client: {
       async listBoards() {
         return [
-          { boardId: "board-a", displayName: "Board A", holdCount: 1 },
-          { boardId: "board-b", displayName: "Board B", holdCount: 1 },
+          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image" },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image" },
         ];
       },
       async getBoard() { return board; },
@@ -488,6 +493,38 @@ test("board selection locks board and Git actions and commits image plus documen
     await app.flush(() => image.images.succeed());
     assert.equal(app.text("#board-name"), "Board A");
     assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+  });
+});
+
+test("selecting a listed board starts its image request before board details settle", async () => {
+  const image = imageFixture();
+  const board = deferred<Board>();
+  const listedBoards = [{
+    boardId: "board-a",
+    displayName: "Board A",
+    holdCount: 1,
+    imageUrl: "/api/boards/board-a/image",
+  }];
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async listBoards(): Promise<BoardSummary[]> { return listedBoards; },
+      getBoard() { return board.promise; },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+
+    assert.equal(image.images.pending.length, 1);
+    assert.equal(result().state.board, null);
+
+    await harness.flush(async () => {
+      board.resolve(boardFixture());
+      image.images.succeed();
+      await load;
+    });
+    assert.equal(result().state.board?.boardId, "board-a");
   });
 });
 

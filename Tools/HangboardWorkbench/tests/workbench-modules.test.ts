@@ -81,7 +81,12 @@ test("the browser client lists and opens direct boards", async () => {
     if (request === "/api/boards") {
       return response({
         ok: true,
-        boards: [{ boardId: "compact", displayName: "Compact", holdCount: 10 }],
+        boards: [{
+          boardId: "compact",
+          displayName: "Compact",
+          holdCount: 10,
+          imageUrl: "/api/boards/compact/image",
+        }],
       });
     }
     return response({ ok: true, board: boardFixture({ holdCount: 10 }) });
@@ -89,7 +94,12 @@ test("the browser client lists and opens direct boards", async () => {
   const client: WorkbenchClient = createWorkbenchClient(runtime);
 
   assert.deepEqual(await client.listBoards(), [
-    { boardId: "compact", displayName: "Compact", holdCount: 10 },
+    {
+      boardId: "compact",
+      displayName: "Compact",
+      holdCount: 10,
+      imageUrl: "/api/boards/compact/image",
+    },
   ]);
   assert.equal((await client.getBoard("compact")).boardId, "compact");
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
@@ -413,6 +423,47 @@ test("direct board loading commits image and holds together and preserves the pr
     /Image unavailable/,
   );
   assert.deepEqual(committed, [success]);
+});
+
+test("direct board loading uses a matching preloaded image promise", async () => {
+  const candidate = boardFixture({
+    document: editorDocument([
+      { key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    ]),
+  });
+  const image = { href: candidate.imageUrl, naturalWidth: 100, naturalHeight: 50 };
+
+  const loaded = await loadBoardAtomically({
+    boardId: candidate.boardId,
+    getBoard: async () => candidate,
+    loadImage: async () => { throw new Error("Image loader should not run"); },
+    preloadedImage: { href: candidate.imageUrl, promise: Promise.resolve(image) },
+    commit() {},
+  });
+
+  assert.equal(loaded.image, image);
+});
+
+test("direct board loading ignores a preloaded image from a different URL", async () => {
+  const candidate = boardFixture({
+    document: editorDocument([
+      { key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    ]),
+  });
+  const expectedImage = { href: candidate.imageUrl, naturalWidth: 100, naturalHeight: 50 };
+
+  const loaded = await loadBoardAtomically({
+    boardId: candidate.boardId,
+    getBoard: async () => candidate,
+    loadImage: async () => expectedImage,
+    preloadedImage: {
+      href: "/api/boards/previous/image",
+      promise: Promise.resolve({ href: "/api/boards/previous/image" }),
+    },
+    commit() {},
+  });
+
+  assert.equal(loaded.image, expectedImage);
 });
 
 test("direct board loading rejects malformed shape constraints before image loading or commit", async () => {

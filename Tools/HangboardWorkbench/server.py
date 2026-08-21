@@ -165,10 +165,10 @@ def _board_payload(package: BoardPackage, *, include_document: bool) -> dict[str
         "displayName": _display_name(package),
         "holdCount": len(package.hold_ids),
         "href": f"/api/boards/{board_id}",
+        "imageUrl": f"/api/boards/{board_id}/image",
     }
     if include_document:
         payload.update(
-            imageUrl=f"/api/boards/{board_id}/image",
             saveUrl=f"/api/boards/{board_id}",
             document=editor_document(package),
         )
