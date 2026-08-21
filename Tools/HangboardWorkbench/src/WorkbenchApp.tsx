@@ -23,6 +23,9 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const [canvasZoom, setCanvasZoom] = React.useState(100);
   const canvasZoomRef = React.useRef(canvasZoom);
   const [guides, setGuides] = React.useState<Guide[]>([]);
+  const [mobileBoardsOpen, setMobileBoardsOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileHoldSheetOpen, setMobileHoldSheetOpen] = React.useState(false);
   const nextGuideId = React.useRef(1);
   const canZoomChange = React.useCallback((direction: number): boolean => {
     const step = Math.sign(direction) * CANVAS_ZOOM_STEP;
@@ -119,7 +122,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
 
   return (
     <main className="app-shell direct-workbench">
-      <header className="topbar">
+      <header className={`topbar${mobileMenuOpen ? " mobile-menu-open" : ""}`}>
         <div className="brand-block">
           <div className="brand-mark">H</div>
           <div>
@@ -144,16 +147,24 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             {state.autosaveEnabled ? "Autosave on" : "Autosave off"}
           </span>
         </div>
+        <div className="mobile-toolbar" aria-label="Mobile board tools">
+          <button className="tool-button" id="mobile-boards-button" type="button" aria-expanded={mobileBoardsOpen} onClick={() => setMobileBoardsOpen((open) => !open)}>Boards</button>
+          <button className="tool-button" id="mobile-menu-button" type="button" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((open) => !open)}>Menu</button>
+          <button className="tool-button accent" id="mobile-save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
+        </div>
         <RepositoryToolbar state={state} actions={actions} />
       </header>
 
-      <section className="workspace-grid">
+      <section className={`workspace-grid${mobileBoardsOpen ? " mobile-boards-open" : ""}`}>
         <BoardLibrary
           boards={state.boards}
           selectedBoardId={state.board?.boardId ?? null}
           busy={busy}
           error={state.boardsError}
-          onSelectBoard={(boardId) => void actions.selectBoard(boardId)}
+          onSelectBoard={(boardId) => {
+            setMobileBoardsOpen(false);
+            void actions.selectBoard(boardId);
+          }}
         />
 
         <section className="canvas-column" aria-label="Hold editor">
@@ -192,7 +203,10 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             selectedKey={state.selectedKey}
             selectedKeys={state.selectedKeys}
             busy={editorBusy}
-            onSelectHold={actions.selectHold}
+            onSelectHold={(key, toggle) => {
+              setMobileHoldSheetOpen(true);
+              actions.selectHold(key, toggle);
+            }}
             pathEditor={dependencies.pathEditor}
             editor={editor}
             zoomPercent={canvasZoom}
@@ -208,9 +222,15 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
               {state.saveLoginUrl && <>{" "}<a href={state.saveLoginUrl} target="_blank" rel="noopener noreferrer">Reauthenticate</a></>}
             </span>
           </footer>
+          <div className="mobile-canvas-controls" aria-label="Mobile canvas controls">
+            <button className="tool-button" id="mobile-zoom-out-button" type="button" aria-label="Zoom out" disabled={!state.document || canvasZoom <= MIN_CANVAS_ZOOM} onClick={() => changeCanvasZoom(-1)}>−</button>
+            <button className="tool-button" id="mobile-zoom-in-button" type="button" aria-label="Zoom in" disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM} onClick={() => changeCanvasZoom(1)}>+</button>
+            <button className="tool-button accent" id="mobile-add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
+          </div>
         </section>
 
         <HoldInspector
+          className={selectedHold && mobileHoldSheetOpen ? "mobile-sheet-open" : ""}
           hold={selectedHold}
           selectedCount={state.selectedKeys.length}
           busy={editorBusy}
@@ -222,6 +242,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           onRotate={(direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15))}
           onApplyRotation={editor.applyRotation}
           onDelete={editor.deleteHold}
+          onMobileCollapse={() => setMobileHoldSheetOpen(false)}
         />
       </section>
     </main>

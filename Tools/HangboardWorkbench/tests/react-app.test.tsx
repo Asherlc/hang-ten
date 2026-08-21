@@ -268,6 +268,63 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
   });
 });
 
+test("mobile canvas controls open the board drawer, repository sheet, and selected-hold sheet", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(boardId, document) {
+        saves += 1;
+        return boardFixture(boardId, document);
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+
+    for (const id of [
+      "mobile-boards-button", "mobile-menu-button", "mobile-save-button",
+      "mobile-zoom-out-button", "mobile-zoom-in-button", "mobile-add-hold-button",
+    ]) assert.ok(app.document.getElementById(id), `missing #${id}`);
+
+    await app.click("#mobile-boards-button");
+    assert.equal(app.document.querySelector(".workspace-grid")?.classList.contains("mobile-boards-open"), true);
+    await app.click("#mobile-menu-button");
+    assert.equal(app.document.querySelector(".topbar")?.classList.contains("mobile-menu-open"), true);
+
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    assert.equal(app.document.querySelector(".workspace-grid")?.classList.contains("mobile-boards-open"), false);
+    await app.click("#hold-overlay path");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+
+    await app.click("#mobile-zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    await app.click("#mobile-add-hold-button");
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 2);
+    await app.click("#mobile-save-button");
+    assert.equal(saves, 1);
+  });
+});
+
+test("collapsing the mobile hold sheet retains the selected hold", async () => {
+  const image = imageFixture();
+  await withApp(dependenciesFixture({ runtime: image.runtime }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+    assert.equal(app.text("#hold-heading"), "hold-1");
+
+    await app.click("#mobile-collapse-hold-sheet-button");
+
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
+    assert.equal(app.text("#hold-heading"), "hold-1");
+  });
+});
+
 test("autosave restores the saved browser preference", async () => {
   const image = imageFixture();
   const storage = storageFixture({ "hangboard-workbench:autosave-enabled": "false" });
