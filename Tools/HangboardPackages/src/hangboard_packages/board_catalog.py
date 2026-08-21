@@ -528,9 +528,19 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "aspectRatio",
         "holds",
     }
-    schema_version = value["schemaVersion"]
+    schema_version = value.get("schemaVersion")
     if isinstance(schema_version, bool) or schema_version not in {1, 2}:
+        _closed(
+            value,
+            required,
+            "board.json",
+            optional={"presentation", "presentations"},
+        )
         raise ValueError("board.json.schemaVersion must be 1 or 2")
+    if schema_version == 1:
+        _closed(value, required, "board.json", optional={"presentation"})
+    else:
+        _closed(value, required | {"presentations"}, "board.json")
     facts: dict[str, Any] = {}
     for key in ("manufacturer", "name", "subtitle", "productURL", "dimensions"):
         facts[key] = _string(value[key], f"board.json.{key}")
@@ -538,7 +548,6 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")
     if schema_version == 1:
-        _closed(value, required, "board.json", optional={"presentation"})
         presentation_asset_path = "assets/primary.png"
         if "presentation" in value:
             presentation = _mapping(value["presentation"], "board.json.presentation")
@@ -560,7 +569,6 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
             ),
         )
     else:
-        _closed(value, required | {"presentations"}, "board.json")
         presentations = _load_presentations(value["presentations"], "board.json.presentations")
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:

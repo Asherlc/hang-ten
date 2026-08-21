@@ -246,6 +246,24 @@ def test_schema_v2_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
 
 
 @pytest.mark.parametrize(
+    "write_package",
+    [write_board_package, write_multi_presentation_board_package],
+    ids=["schema-v1", "schema-v2"],
+)
+def test_package_loader_reports_missing_required_top_level_fields_as_value_errors(
+    tmp_path: Path, write_package
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document.pop("manufacturer")
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=r"board\.json is missing keys: \['manufacturer'\]"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
     ("mutation", "message"),
     [
         (
