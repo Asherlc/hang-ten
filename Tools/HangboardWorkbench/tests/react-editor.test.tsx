@@ -719,7 +719,7 @@ test("constrained selections render an oriented box and eight handles instead of
   }, dependenciesFixture(board));
 });
 
-test("constrained resize keeps circles circular, isolates siblings, and rolls invalid endpoints back", async () => {
+test("constrained resize keeps circles circular, isolates siblings, and allows finite off-canvas endpoints", async () => {
   const board = constrainedBoardFixture();
   board.document.regions[0]!.displayPath = "M 30 10 C 35.522847 10 40 14.477153 40 20 C 40 25.522847 35.522847 30 30 30 C 24.477153 30 20 25.522847 20 20 C 20 14.477153 24.477153 10 30 10 Z";
   board.document.regions[0]!.shapeConstraint = { shape: "circle", rotationDegrees: 0 };
@@ -731,12 +731,11 @@ test("constrained resize keeps circles circular, isolates siblings, and rolls in
     assert.equal(paths(app)[0], "M 35 5 C 43.284271 5 50 11.715729 50 20 C 50 28.284271 43.284271 35 35 35 C 26.715729 35 20 28.284271 20 20 C 20 11.715729 26.715729 5 35 5 Z");
     assert.equal(paths(app)[1], siblingPath);
 
-    const validPath = paths(app)[0];
     await app.pointer('.path-editor-resize-handle[data-handle="e"]', "pointerdown", { pointerId: 7, clientX: 50, clientY: 20 });
     await app.pointer("#editor-svg", "pointermove", { pointerId: 7, clientX: 130, clientY: 20 });
     await app.pointer("#editor-svg", "pointerup", { pointerId: 7, clientX: 130, clientY: 20 });
-    assert.equal(paths(app)[0], validPath);
-    assert.match(app.text("#editor-status"), /reverted/i);
+    assert.equal(paths(app)[0], "M 75 -35 C 105.375661 -35 130 -10.375661 130 20 C 130 50.375661 105.375661 75 75 75 C 44.624339 75 20 50.375661 20 20 C 20 -10.375661 44.624339 -35 75 -35 Z");
+    assert.doesNotMatch(app.text("#editor-status"), /reverted/i);
   }, dependenciesFixture(board));
 });
 

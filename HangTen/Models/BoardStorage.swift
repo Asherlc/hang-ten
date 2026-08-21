@@ -78,16 +78,16 @@ enum BoardHoldGeometryValidator {
             pieces: geometry.enumerated().map { index, piece in
                 var invalidFrameComponents = Set<BoardHoldFrameComponent>()
                 let frame = piece.frame
-                if !frame.x.isFinite || !(0...1).contains(frame.x) {
+                if !frame.x.isFinite {
                     invalidFrameComponents.insert(.x)
                 }
-                if !frame.y.isFinite || !(0...1).contains(frame.y) {
+                if !frame.y.isFinite {
                     invalidFrameComponents.insert(.y)
                 }
-                if !frame.width.isFinite || frame.width <= 0 || frame.x + frame.width > 1 {
+                if !frame.width.isFinite || frame.width <= 0 {
                     invalidFrameComponents.insert(.width)
                 }
-                if !frame.height.isFinite || frame.height <= 0 || frame.y + frame.height > 1 {
+                if !frame.height.isFinite || frame.height <= 0 {
                     invalidFrameComponents.insert(.height)
                 }
 
@@ -472,16 +472,16 @@ enum BoardLibraryValidator {
         for (pieceIndex, pieceValidation) in geometryValidation.pieces.enumerated() {
             let piecePath = "\(path).geometry[\(pieceIndex)]"
             if pieceValidation.invalidFrameComponents.contains(.x) {
-                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.x", message: "Frame x must be between 0 and 1."))
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.x", message: "Frame x must be finite."))
             }
             if pieceValidation.invalidFrameComponents.contains(.y) {
-                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.y", message: "Frame y must be between 0 and 1."))
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.y", message: "Frame y must be finite."))
             }
             if pieceValidation.invalidFrameComponents.contains(.width) {
-                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.width", message: "Frame width must fit within normalized bounds."))
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.width", message: "Frame width must be finite and positive."))
             }
             if pieceValidation.invalidFrameComponents.contains(.height) {
-                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.height", message: "Frame height must fit within normalized bounds."))
+                issues.append(BoardLibraryValidationIssue(path: "\(piecePath).frame.height", message: "Frame height must be finite and positive."))
             }
             if let conversionFailureReason = pieceValidation.conversionFailureReason {
                 issues.append(

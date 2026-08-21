@@ -405,59 +405,42 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreRejectsEmptyAndOutOfRangeGeometry() throws {
-        for mutation in [
-            { (holds: inout [[String: Any]]) in holds[0]["geometry"] = [] },
-            { (holds: inout [[String: Any]]) in
+    func testStoreRejectsEmptyGeometry() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(at: hangboardsURL.appendingPathComponent("fixture-model/board.json")) {
+                var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
+                holds[0]["geometry"] = []
+                $0["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
+    func testStoreAcceptsOffCanvasFiniteHoldGeometry() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(at: hangboardsURL.appendingPathComponent("fixture-model/board.json")) {
+                var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
                 var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
                 var frame = try XCTUnwrap(geometry[0]["frame"] as? [String: Any])
                 frame["x"] = -0.1
+                frame["y"] = 0.9
+                frame["width"] = 1.2
+                frame["height"] = 0.3
                 geometry[0]["frame"] = frame
                 holds[0]["geometry"] = geometry
-            }
-        ] {
-            let fixture = try makeFixtureBundle { hangboardsURL in
-                try self.mutateBoard(at: hangboardsURL.appendingPathComponent("fixture-model/board.json")) {
-                    var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
-                    try mutation(&holds)
-                    $0["holds"] = holds
-                }
-            }
-            defer { fixture.remove() }
-
-            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-                guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
-                    return XCTFail("Expected invalidPackage, got \(error)")
-                }
-                XCTAssertEqual(boardID, "fixture.board")
-                XCTAssertTrue(reason.contains("geometry"))
+                $0["holds"] = holds
             }
         }
-    }
+        defer { fixture.remove() }
 
-    func testStoreRejectsSharedOutOfBoundsNormalizedFrames() throws {
-        let validationFixtures = try validationFixtures()
-        let frames = try XCTUnwrap(
-            validationFixtures["outOfBoundsFrames"] as? [[String: Any]]
-        )
-        for frameFixture in frames {
-            let name = try XCTUnwrap(frameFixture["name"] as? String)
-            let frame = try XCTUnwrap(frameFixture["frame"] as? [String: Any])
-            let fixture = try makeFixtureBundle { hangboardsURL in
-                try self.mutateBoard(
-                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
-                ) { board in
-                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
-                    var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
-                    geometry[0]["frame"] = frame
-                    holds[0]["geometry"] = geometry
-                    board["holds"] = holds
-                }
-            }
-            defer { fixture.remove() }
-
-            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name)
-        }
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let frame = try XCTUnwrap(board.holds.first?.geometry.first?.frame)
+        XCTAssertEqual(frame.origin.x, -0.1, accuracy: 1e-12)
+        XCTAssertEqual(frame.origin.y, 0.9, accuracy: 1e-12)
+        XCTAssertEqual(frame.width, 1.2, accuracy: 1e-12)
+        XCTAssertEqual(frame.height, 0.3, accuracy: 1e-12)
     }
 
     func testStoreAcceptsExactlySupportedPhysicalHoldKinds() throws {

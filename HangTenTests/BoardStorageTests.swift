@@ -122,8 +122,8 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertTrue(issues.contains { $0.path == "boards[0].holds[1].id" && $0.message.contains("Duplicate hold ID") })
     }
 
-    func testBoardLibraryRejectsOutOfRangeHoldGeometry() throws {
-        let issues = validationIssues(for: try fixtureData { document in
+    func testBoardLibraryAcceptsOffCanvasFiniteHoldGeometry() throws {
+        let data = try fixtureData { document in
             var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
             var board = try XCTUnwrap(boards.first)
             var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
@@ -132,6 +132,7 @@ final class BoardStorageTests: XCTestCase {
             var piece = try XCTUnwrap(geometry.first)
             var frame = try XCTUnwrap(piece["frame"] as? [String: Any])
             frame["x"] = -0.1
+            frame["width"] = 1.2
             piece["frame"] = frame
             geometry[0] = piece
             hold["geometry"] = geometry
@@ -139,12 +140,12 @@ final class BoardStorageTests: XCTestCase {
             board["holds"] = holds
             boards[0] = board
             document["boards"] = boards
-        })
+        }
+        let board = try XCTUnwrap(BoardLibraryStore(data: data).boards.first)
+        let frame = try XCTUnwrap(board.holds.first?.geometry.first?.frame)
 
-        XCTAssertTrue(issues.contains {
-            $0.path == "boards[0].holds[0].geometry[0].frame.x" &&
-                $0.message.contains("between 0 and 1")
-        })
+        XCTAssertEqual(frame.origin.x, -0.1, accuracy: 1e-12)
+        XCTAssertEqual(frame.width, 1.2, accuracy: 1e-12)
     }
 
     func testBoardLibraryRejectsEmptyHoldGeometry() throws {

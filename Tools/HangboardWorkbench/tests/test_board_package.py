@@ -29,9 +29,6 @@ VALIDATION_FIXTURES = json.loads(
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
 )
-assert VALIDATION_FIXTURES["outOfBoundsFrames"], (
-    "outOfBoundsFrames must contain at least one fixture"
-)
 SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
@@ -646,10 +643,6 @@ def test_requires_physical_kind_and_nonempty_geometry(
     ("mutation", "message"),
     [
         (
-            lambda piece: piece["frame"].__setitem__("x", -0.1),
-            "normalized canvas",
-        ),
-        (
             lambda piece: piece.__setitem__(
                 "shape",
                 {
@@ -666,7 +659,7 @@ def test_requires_physical_kind_and_nonempty_geometry(
         ),
     ],
 )
-def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
+def test_rejects_malformed_geometry_and_mismatched_bounds(
     mutation, message: str, tmp_path: Path
 ) -> None:
     library = _library(tmp_path)
@@ -756,19 +749,13 @@ def test_header_only_discovery_wraps_malformed_path_commands_as_board_package_er
         board_package.discover_packages(library)
 
 
-@pytest.mark.parametrize(
-    "fixture",
-    VALIDATION_FIXTURES["outOfBoundsFrames"],
-    ids=lambda fixture: fixture["name"],
-)
-def test_rejects_shared_out_of_bounds_normalized_frames(
-    fixture: dict[str, object],
-) -> None:
-    with pytest.raises(board_package.GeometryError, match="normalized canvas"):
-        board_package.NormalizedFrame.from_json(
-            fixture["frame"],
-            fixture["name"],
-        )
+def test_accepts_off_canvas_finite_frame_with_positive_dimensions() -> None:
+    frame = board_package.NormalizedFrame.from_json(
+        {"x": -0.1, "y": 0.9, "width": 1.2, "height": 0.3},
+        "off-canvas",
+    )
+
+    assert frame.to_json() == {"x": -0.1, "y": 0.9, "width": 1.2, "height": 0.3}
 
 
 def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
@@ -1012,6 +999,29 @@ def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
         "height": 0.2,
     }
     assert not (library / "catalog.json").exists()
+
+
+def test_save_and_reopen_preserves_off_canvas_hold_geometry(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][0]["displayPath"] = (
+        "M -88.7 45.7 L 177.4 45.7 L 177.4 137.1 L -88.7 137.1 Z"
+    )
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    reopened = board_package.open_package(library, saved.board_id)
+
+    assert _read_board(package_root)["holds"][0]["geometry"][0]["frame"] == {
+        "x": -0.05,
+        "y": 0.1,
+        "width": 0.15,
+        "height": 0.2,
+    }
+    assert board_package.editor_document(reopened)["regions"][0]["displayPath"] == (
+        "M -88.7 45.7 L 177.4 45.7 L 177.4 137.1 L -88.7 137.1 Z"
+    )
 
 
 def test_changed_save_derives_current_display_paths_once_per_piece(
