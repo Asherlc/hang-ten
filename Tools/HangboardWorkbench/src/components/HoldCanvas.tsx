@@ -17,6 +17,7 @@ const TYPE_COLORS: Readonly<Record<string, string>> = {
   pocket: "#ee4d97",
   pinch: "#f2c94c",
 };
+const PINCH_ZOOM_DELTA_THRESHOLD = 100;
 
 interface VertexMenuPosition {
   anchorX: number;
@@ -54,7 +55,8 @@ export interface HoldCanvasProps {
   pathEditor: PathEditor;
   editor: HoldEditorActions;
   zoomPercent: number;
-  onZoomChange(direction: number): void;
+  onZoomChange(direction: number): boolean | void;
+  canZoomChange(direction: number): boolean;
   guides: readonly Guide[];
   onMoveGuide(id: string, coordinate: number): void;
 }
@@ -70,6 +72,7 @@ export function HoldCanvas({
   editor,
   zoomPercent,
   onZoomChange,
+  canZoomChange,
   guides,
   onMoveGuide,
 }: HoldCanvasProps) {
@@ -78,19 +81,40 @@ export function HoldCanvas({
   const viewportRef = useRef<HTMLDivElement>(null);
   const guideDragRef = useRef<GuideDragState | null>(null);
   const modifierSelectionRef = useRef<string | null>(null);
+  const pinchZoomDeltaRef = useRef(0);
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const handleWheel = (event: WheelEvent): void => {
-      if ((!event.altKey && !event.ctrlKey) || !document) return;
+      if (!event.altKey && !event.ctrlKey) {
+        pinchZoomDeltaRef.current = 0;
+        return;
+      }
+      if (!document) return;
+      if (event.altKey) pinchZoomDeltaRef.current = 0;
       const delta = event.deltaY === 0 ? event.deltaX : event.deltaY;
       if (delta === 0) return;
-      event.preventDefault();
-      onZoomChange(delta < 0 ? 1 : -1);
+      if (event.ctrlKey && !event.altKey) {
+        const direction = delta < 0 ? 1 : -1;
+        if (!canZoomChange(direction)) {
+          pinchZoomDeltaRef.current = 0;
+          return;
+        }
+        pinchZoomDeltaRef.current += delta;
+        if (Math.abs(pinchZoomDeltaRef.current) < PINCH_ZOOM_DELTA_THRESHOLD) {
+          event.preventDefault();
+          return;
+        }
+        pinchZoomDeltaRef.current = 0;
+      }
+      if (onZoomChange(delta < 0 ? 1 : -1) === true) event.preventDefault();
     };
     viewport.addEventListener("wheel", handleWheel, { passive: false });
-    return () => viewport.removeEventListener("wheel", handleWheel);
-  }, [document, onZoomChange]);
+    return () => {
+      pinchZoomDeltaRef.current = 0;
+      viewport.removeEventListener("wheel", handleWheel);
+    };
+  }, [canZoomChange, document, onZoomChange]);
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
   let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {
