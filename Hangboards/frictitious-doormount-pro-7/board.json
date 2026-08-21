@@ -683,12 +683,12 @@
     {
       "id": "hold-7",
       "name": "Hold 7",
-      "kind": "edge",
+      "kind": "pocket",
       "geometry": [
         {
           "frame": {
-            "x": 0.47,
-            "y": 0.44,
+            "x": 0.223932476888,
+            "y": 0.39150786584,
             "width": 0.06,
             "height": 0.12
           },
