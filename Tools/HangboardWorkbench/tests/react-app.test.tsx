@@ -560,14 +560,16 @@ test("an old delayed save cannot overwrite a newer document identity", async () 
 
 test("hold editing remains available during a save and survives its stale response", async () => {
   const image = imageFixture();
-  const save = deferred<Board>();
+  const firstSave = deferred<Board>();
+  const secondSave = deferred<Board>();
+  const saves = [firstSave, secondSave];
   const savedDocuments: EditorDocument[] = [];
   await withApp(dependenciesFixture({
     runtime: image.runtime,
     client: {
       saveBoard(boardId, document) {
         savedDocuments.push(document);
-        return save.promise;
+        return saves[savedDocuments.length - 1]!.promise;
       },
     },
   }), async (app) => {
@@ -581,16 +583,28 @@ test("hold editing remains available during a save and survives its stale respon
 
     assert.equal(savedDocuments.length, 1);
     assert.equal(savedDocuments[0]?.regions[0]?.type, "sloper");
+    const inFlightSnapshot = structuredClone(savedDocuments[0]!);
     assert.equal(app.disabled("#save-button"), true);
     assert.equal(app.disabled("#board-list button"), true);
+    assert.equal(app.disabled("#refresh-boards-button"), true);
+    assert.equal(app.disabled("#git-refresh-button"), true);
+    assert.equal(app.disabled("#git-branch-select"), true);
     assert.equal(app.disabled("#hold-type-select"), false);
     assert.equal(app.disabled("#add-hold-button"), false);
 
     await app.change("#hold-type-select", "pinch");
-    await app.flush(() => save.resolve(boardFixture("board-a", savedDocuments[0]!)));
+    assert.deepEqual(savedDocuments[0], inFlightSnapshot);
+    await app.click("#save-button");
+    assert.equal(savedDocuments.length, 1);
+    await app.flush(() => firstSave.resolve(boardFixture("board-a", savedDocuments[0]!)));
 
     assert.equal(app.documentValue("#hold-type-select"), "pinch");
     assert.equal(app.text("#save-state"), "Unsaved changes");
+    await app.click("#save-button");
+    assert.equal(savedDocuments.length, 2);
+    assert.equal(savedDocuments[1]?.regions[0]?.type, "pinch");
+    await app.flush(() => secondSave.resolve(boardFixture("board-a", savedDocuments[1]!)));
+    assert.equal(app.text("#save-state"), "Saved");
   });
 });
 

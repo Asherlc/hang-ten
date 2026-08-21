@@ -1358,13 +1358,19 @@ test("invalid outline actions preserve geometry while save-in-progress edits rem
     assert.equal(app.disabled("#rotate-cw-button"), false);
     assert.equal(app.disabled("#delete-hold-button"), false);
     await app.change("#outline-shape-select", "oval");
+    const convertedPath = paths(app)[0]!;
+    assert.notEqual(convertedPath, originalPath);
     await app.pointer('.path-editor-resize-handle[data-handle="e"]', "pointerdown", { pointerId: 19, clientX: 50, clientY: 20 });
     await app.pointer("#editor-svg", "pointermove", { pointerId: 19, clientX: 60, clientY: 20 });
-    assert.notEqual(paths(app)[0], originalPath);
+    const resizedPath = paths(app)[0]!;
+    assert.notEqual(resizedPath, convertedPath);
     assert.equal(app.capturedPointerId("#editor-svg"), 19);
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 19, clientX: 60, clientY: 20 });
+    assert.equal(app.capturedPointerId("#editor-svg"), null);
+    assert.equal(paths(app)[0], resizedPath);
     assert.equal(app.text("#save-state"), "Working…");
     await app.flush(() => { resolveSave?.(board); });
-    assert.notEqual(paths(app)[0], originalPath);
+    assert.equal(paths(app)[0], resizedPath);
     assert.equal(app.text("#save-state"), "Unsaved changes");
   }, dependenciesFixture(board, { client }));
 
