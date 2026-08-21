@@ -1060,12 +1060,42 @@ private struct StepRow: View {
 struct WorkoutAudioMoment: Hashable {
 	let key: String
 	let phrase: String
+	let countdownSchedule: CountdownAudioSchedule?
+
+	init(
+		key: String,
+		phrase: String,
+		countdownSchedule: CountdownAudioSchedule? = nil
+	) {
+		self.key = key
+		self.phrase = phrase
+		self.countdownSchedule = countdownSchedule
+	}
 }
 
 enum WorkoutAudioCueAction: Equatable {
 	case none
 	case speak(WorkoutAudioMoment)
-	case startCountdown(remainingFrom: String, startUptime: TimeInterval)
+	case startCountdown(schedule: CountdownAudioSchedule, startUptime: TimeInterval)
+}
+
+@MainActor
+enum WorkoutAudioCueRouter {
+	@discardableResult
+	static func route(
+		_ action: WorkoutAudioCueAction,
+		to audioCoach: WorkoutAudioCoach
+	) -> Bool {
+		switch action {
+		case .none:
+			return false
+		case .speak(let moment):
+			audioCoach.speak(moment.phrase)
+			return true
+		case .startCountdown(let schedule, let startUptime):
+			return audioCoach.startCountdown(schedule, startUptime: startUptime)
+		}
+	}
 }
 
 enum WorkoutCountdownKind: Equatable {
@@ -1113,13 +1143,26 @@ enum WorkoutAudioCuePolicy {
 		segmentName: String,
 		initialCountdown: Int,
 		intervalSecondsRemaining: Int,
+		intervalDuration: TimeInterval? = nil,
+		followingShortSegmentDurations: [TimeInterval] = [],
 		isComplete: Bool,
 		countdownKind: WorkoutCountdownKind? = nil
 	) -> WorkoutAudioMoment? {
+		if initialCountdown == 0,
+		   let intervalDuration,
+		   intervalDuration <= 3 {
+			return nil
+		}
 		if initialCountdown == 0, intervalSecondsRemaining == 4, !isComplete {
+			let schedule = CountdownAudioSchedule(remainingFrom: "3")
+				.appendingShortIntervals(
+					followingShortSegmentDurations,
+					startingAt: 3
+				)
 			return WorkoutAudioMoment(
 				key: "\(stepID)-\(segmentName)-3",
-				phrase: "3"
+				phrase: "3",
+				countdownSchedule: schedule
 			)
 		}
 		return moment(
@@ -1174,7 +1217,8 @@ enum WorkoutAudioCuePolicy {
 		}
 		guard let countdownStartUptime else { return .none }
 		return .startCountdown(
-			remainingFrom: moment.phrase,
+			schedule: moment.countdownSchedule
+				?? CountdownAudioSchedule(remainingFrom: moment.phrase),
 			startUptime: countdownStartUptime
 		)
 	}
@@ -1184,6 +1228,51 @@ enum WorkoutAudioCuePolicy {
 		let suffix = "-\(moment.phrase)"
 		guard moment.key.hasSuffix(suffix) else { return nil }
 		return String(moment.key.dropLast(suffix.count))
+	}
+}
+
+enum WorkoutCountdownIntervalPolicy {
+	static func duration(
+		for step: WorkoutStep,
+		isTimedResting: Bool
+	) -> TimeInterval {
+		if step.phase == .rest {
+			return step.duration
+		}
+		return isTimedResting
+			? step.duration - step.activeDuration
+			: step.activeDuration
+	}
+
+	static func shortDurations(
+		in steps: [WorkoutStep],
+		startingAt startElapsed: TimeInterval
+	) -> [TimeInterval] {
+		var cursor: TimeInterval = 0
+		var result: [TimeInterval] = []
+		var reachedStart = false
+
+		for step in steps {
+			let durations: [TimeInterval]
+			if step.phase == .rest || !step.hasRestInterval {
+				durations = [step.duration]
+			} else {
+				durations = [step.activeDuration, step.duration - step.activeDuration]
+			}
+
+			for duration in durations where duration > 0 {
+				if !reachedStart {
+					reachedStart = abs(cursor - startElapsed) < 0.001
+				}
+				if reachedStart {
+					guard duration <= 3 else { return result }
+					result.append(duration)
+				}
+				cursor += duration
+			}
+		}
+
+		return result
 	}
 }
 
@@ -1527,6 +1616,7 @@ struct WorkoutView: View {
 				let audioMoment = audioMoment(
 					step: step,
 					stepElapsed: stepElapsed,
+					elapsed: elapsed,
 					countdown: countdown,
 					isTimedResting: isTimedResting,
 					isComplete: isComplete
@@ -1593,21 +1683,14 @@ struct WorkoutView: View {
 						return
 					}
 
-				switch WorkoutAudioCuePolicy.action(
-					previous: previousMoment,
-					current: moment,
-					countdownStartUptime: audioCountdownStartUptime
-				) {
-				case .none:
-					break
-				case .speak(let moment):
-					audioCoach.speak(moment.phrase)
-				case .startCountdown(let phrase, let startUptime):
-					audioCoach.startCountdown(
-						remainingFrom: phrase,
-						startUptime: startUptime
-					)
-				}
+				_ = WorkoutAudioCueRouter.route(
+					WorkoutAudioCuePolicy.action(
+						previous: previousMoment,
+						current: moment,
+						countdownStartUptime: audioCountdownStartUptime
+					),
+					to: audioCoach
+				)
 				}
 				.onChange(of: countdown, initial: true) { _, countdown in
 					guard countdown == 0 else { return }
@@ -2282,7 +2365,22 @@ struct WorkoutView: View {
 		let armUptime = now + WorkoutSessionPolicy.countdownAudioArmLead(
 			environment: ProcessInfo.processInfo.environment
 		)
-		_ = audioCoach.startCountdown(remainingFrom: "3", startUptime: armUptime)
+		let targetElapsed: TimeInterval
+		switch countdown {
+		case .initial:
+			targetElapsed = 0
+		case .skip(let elapsed):
+			targetElapsed = elapsed
+		}
+		let schedule = CountdownAudioSchedule(remainingFrom: "3")
+			.appendingShortIntervals(
+				WorkoutCountdownIntervalPolicy.shortDurations(
+					in: plan.steps,
+					startingAt: targetElapsed
+				),
+				startingAt: 3
+			)
+		_ = audioCoach.startCountdown(schedule, startUptime: armUptime)
 		countdownArmTask?.cancel()
 		countdownArmTask = Task { @MainActor in
 			do {
@@ -2676,6 +2774,7 @@ struct WorkoutView: View {
 	private func audioMoment(
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
+		elapsed: TimeInterval,
 		countdown: Int,
 		isTimedResting: Bool,
 		isComplete: Bool
@@ -2696,12 +2795,23 @@ struct WorkoutView: View {
 		let secondsRemaining = Int(
 			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
 		)
+		let intervalDuration = WorkoutCountdownIntervalPolicy.duration(
+			for: step,
+			isTimedResting: isTimedResting
+		)
+		let intervalEndElapsed = stepStartElapsed(at: elapsed)
+			+ (isTimedResting ? step.duration : step.activeDuration)
 
 		return WorkoutAudioCuePolicy.scheduledMoment(
 			stepID: step.id,
 			segmentName: segmentName,
 			initialCountdown: countdown,
 			intervalSecondsRemaining: secondsRemaining,
+			intervalDuration: intervalDuration,
+			followingShortSegmentDurations: WorkoutCountdownIntervalPolicy.shortDurations(
+				in: plan.steps,
+				startingAt: intervalEndElapsed
+			),
 			isComplete: isComplete
 		)
 	}

@@ -2,13 +2,19 @@ import AVFoundation
 import Foundation
 import OSLog
 
-struct CountdownAudioSchedule: Equatable {
-    struct Cue: Equatable {
+struct CountdownAudioSchedule: Hashable {
+    struct Cue: Hashable {
         let phrase: String
         let offset: TimeInterval
     }
 
     let cues: [Cue]
+    let endOffset: TimeInterval
+
+    private init(cues: [Cue], endOffset: TimeInterval) {
+        self.cues = cues
+        self.endOffset = endOffset
+    }
 
     init(remainingFrom phrase: String) {
         switch phrase {
@@ -18,16 +24,45 @@ struct CountdownAudioSchedule: Equatable {
                 Cue(phrase: "2", offset: 1),
                 Cue(phrase: "1", offset: 2)
             ]
+            endOffset = 3
         case "2":
             cues = [
                 Cue(phrase: "2", offset: 0),
                 Cue(phrase: "1", offset: 1)
             ]
+            endOffset = 2
         case "1":
             cues = [Cue(phrase: "1", offset: 0)]
+            endOffset = 1
         default:
             cues = []
+            endOffset = 0
         }
+    }
+
+    func appendingShortIntervals(
+        _ durations: [TimeInterval],
+        startingAt initialOffset: TimeInterval
+    ) -> CountdownAudioSchedule {
+        var result = cues
+        var intervalStart = initialOffset
+
+        for duration in durations {
+            guard duration > 0 && duration <= 3 else { break }
+            let firstNumber = min(3, max(1, Int(ceil(duration))))
+            for number in stride(from: firstNumber, through: 1, by: -1) {
+                let offset = number == firstNumber
+                    ? intervalStart
+                    : intervalStart + duration - TimeInterval(number)
+                result.append(Cue(phrase: String(number), offset: offset))
+            }
+            intervalStart += duration
+        }
+
+        return CountdownAudioSchedule(
+            cues: result,
+            endOffset: max(endOffset, intervalStart)
+        )
     }
 }
 
@@ -50,9 +85,16 @@ protocol CountdownAudioScheduling: AnyObject {
     func prewarm(completion: @escaping (Bool) -> Void)
 
     @discardableResult
-    func schedule(remainingFrom: String, startHostTime: UInt64) -> Bool
+    func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool
 
     func stop()
+}
+
+extension CountdownAudioScheduling {
+    @discardableResult
+    func schedule(remainingFrom phrase: String, startHostTime: UInt64) -> Bool {
+        schedule(CountdownAudioSchedule(remainingFrom: phrase), startHostTime: startHostTime)
+    }
 }
 
 protocol CountdownAudioSchedulingBackend: AnyObject {
@@ -139,8 +181,7 @@ final class CountdownAudioScheduler: CountdownAudioScheduling {
     }
 
     @discardableResult
-    func schedule(remainingFrom phrase: String, startHostTime: UInt64) -> Bool {
-        let schedule = CountdownAudioSchedule(remainingFrom: phrase)
+    func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
         guard !hasActiveSchedule else {
             lifecycleLogger.scheduleRejected(schedule, startHostTime: startHostTime)
             return false

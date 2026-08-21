@@ -107,10 +107,13 @@ scheduled together as one sequence. Cold, empty voice renders are retried only
 during prewarm; exhaustion leaves numeric audio silent and never starts a late
 live-speech fallback. Initial and skip countdowns wait for prewarm, then audio
 and the visual `3` share one monotonic boundary. Fixed segments arm the sequence
-at the preceding `4` tick for the future `3` boundary. The visible countdown
-remains exactly three seconds. One audio session is retained through
-the final one-second slot, and later timeline updates do not enqueue `2` or `1`
-again. Nonnumeric cues
+at the preceding `4` tick for the future `3` boundary. When the following fixed
+segment is three seconds or shorter, its complete remaining numeric sequence is
+appended to that same host-time schedule before the segment starts. The visible
+countdown remains exact; the already-current `3` tick never starts a late or
+competing player schedule. One audio session is retained through the final
+scheduled slot, and later timeline updates do not enqueue numeric cues again.
+Nonnumeric cues
 continue through normal speech synthesis and deactivate the session when
 speech finishes. Pausing, disabling cues, or exiting cancels scheduled
 countdown playback immediately. Cancellation waits for the speech delegate
@@ -137,9 +140,9 @@ not announce a fabricated rest boundary after the first numeric hang.
 When adding audio, make the audio moment `Hashable` and stable for its whole
 window so SwiftUI's `onChange` speaks once rather than on every timeline tick.
 Stop speech on view dismissal and when the user disables cues.
-For a three-second segment, speak the short start command and the complete
-3-2-1 as one utterance; do not let periodic view updates interrupt or skip a
-count in such a short interval.
+For a three-second segment, pre-arm the complete `3`, `2`, `1` PCM sequence as
+part of the preceding schedule; do not let periodic view updates interrupt,
+duplicate, or start a count after its visible boundary.
 
 ## Workout step navigation
 

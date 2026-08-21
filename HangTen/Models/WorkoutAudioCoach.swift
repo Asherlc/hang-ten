@@ -219,6 +219,17 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     @discardableResult
     func startCountdown(remainingFrom phrase: String, startUptime: TimeInterval) -> Bool {
+        startCountdown(
+            CountdownAudioSchedule(remainingFrom: phrase),
+            startUptime: startUptime
+        )
+    }
+
+    @discardableResult
+    func startCountdown(
+        _ schedule: CountdownAudioSchedule,
+        startUptime: TimeInterval
+    ) -> Bool {
         guard !ownsCountdownSchedule, countdownPreparationState == .ready else { return false }
 
         deactivationRetryTask?.cancel()
@@ -226,18 +237,15 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         guard configureAudioSessionIfNeeded() else { return false }
 
         let startHostTime = AVAudioTime.hostTime(forSeconds: startUptime)
-        guard countdownScheduler.schedule(
-            remainingFrom: phrase,
-            startHostTime: startHostTime
-        ) else {
-            logger.error("Unable to pre-schedule numeric countdown from \(phrase, privacy: .public)")
+        guard countdownScheduler.schedule(schedule, startHostTime: startHostTime) else {
+            let phrases = schedule.cues.map(\.phrase).joined(separator: ",")
+            logger.error("Unable to pre-schedule numeric countdown \(phrases, privacy: .public)")
             deactivateAudioSessionIfSpeechStopped()
             return false
         }
 
         ownsCountdownSchedule = true
-        let sequenceEndUptime = startUptime
-            + TimeInterval(CountdownAudioSchedule(remainingFrom: phrase).cues.count)
+        let sequenceEndUptime = startUptime + schedule.endOffset
         countdownCompletionScheduler.schedule(atUptime: sequenceEndUptime) { [weak self] in
             self?.finishOwnedCountdownSchedule()
         }

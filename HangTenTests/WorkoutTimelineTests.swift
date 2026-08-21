@@ -1483,6 +1483,12 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
         }
     }
 
+    var startedOffsets: [[TimeInterval]] {
+        backend.schedules.map { sequence in
+            sequence.schedule.cues.map(\.offset)
+        }
+    }
+
     init(
         onStop: @escaping () -> Void = {},
         scheduleResult: Bool = true,
@@ -1507,9 +1513,9 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
         completion?(succeeded)
     }
 
-    func schedule(remainingFrom: String, startHostTime: UInt64) -> Bool {
+    func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
         guard scheduleResult else { return false }
-        return scheduler.schedule(remainingFrom: remainingFrom, startHostTime: startHostTime)
+        return scheduler.schedule(schedule, startHostTime: startHostTime)
     }
 
     func stop() {
@@ -2070,6 +2076,99 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 final class WorkoutAudioCuePolicyTests: XCTestCase {
     private let stepID = "f80-set-2-rep-3"
 
+    @MainActor
+    func testRoutePrearmsThreeSecondSegmentWithoutInterruptingOrDuplicatingPrecedingCountdown() {
+        let scheduler = RecordingCountdownAudioScheduler()
+        let completionScheduler = RecordingWorkoutCountdownCompletionScheduler()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: RecordingWorkoutAudioSession(),
+            countdownScheduler: scheduler,
+            countdownCompletionScheduler: completionScheduler
+        )
+        let startUptime = ProcessInfo.processInfo.systemUptime + 10
+        let routeSteps = [
+            WorkoutStep(
+                id: "preceding",
+                number: 1,
+                title: "Preceding",
+                instruction: "",
+                accessory: "",
+                duration: 10,
+                phase: .hang,
+                targets: []
+            ),
+            WorkoutStep(
+                id: "short",
+                number: 2,
+                title: "Short",
+                instruction: "",
+                accessory: "",
+                duration: 3,
+                phase: .hang,
+                targets: []
+            ),
+            WorkoutStep(
+                id: "following",
+                number: 3,
+                title: "Following",
+                instruction: "",
+                accessory: "",
+                duration: 10,
+                phase: .rest,
+                targets: []
+            )
+        ]
+        let followingShortDurations = WorkoutCountdownIntervalPolicy.shortDurations(
+            in: routeSteps,
+            startingAt: 10
+        )
+        XCTAssertEqual(followingShortDurations, [3])
+        let precedingMoment = WorkoutAudioCuePolicy.scheduledMoment(
+            stepID: "preceding",
+            segmentName: "active",
+            initialCountdown: 0,
+            intervalSecondsRemaining: 4,
+            intervalDuration: 10,
+            followingShortSegmentDurations: followingShortDurations,
+            isComplete: false
+        )
+        let action = WorkoutAudioCuePolicy.action(
+            previous: nil,
+            current: precedingMoment,
+            countdownStartUptime: startUptime
+        )
+
+        XCTAssertTrue(WorkoutAudioCueRouter.route(action, to: coach))
+        XCTAssertEqual(scheduler.startedSequences, [["3", "2", "1", "3", "2", "1"]])
+        XCTAssertEqual(scheduler.startedOffsets, [[0, 1, 2, 3, 4, 5]])
+        XCTAssertEqual(scheduler.stopCallCount, 0)
+        XCTAssertEqual(completionScheduler.scheduledUptime, startUptime + 6)
+
+        let shortSegmentMoment = WorkoutAudioCuePolicy.scheduledMoment(
+            stepID: "short",
+            segmentName: "active",
+            initialCountdown: 0,
+            intervalSecondsRemaining: 3,
+            intervalDuration: 3,
+            followingShortSegmentDurations: [],
+            isComplete: false
+        )
+        XCTAssertNil(shortSegmentMoment)
+        XCTAssertFalse(
+            WorkoutAudioCueRouter.route(
+                WorkoutAudioCuePolicy.action(
+                    previous: precedingMoment,
+                    current: shortSegmentMoment,
+                    countdownStartUptime: startUptime + 3
+                ),
+                to: coach
+            )
+        )
+        XCTAssertEqual(scheduler.startedSequences.count, 1)
+        XCTAssertEqual(scheduler.stopCallCount, 0)
+    }
+
     func testMissingAudioMomentLeavesInFlightCueUntouched() {
         XCTAssertEqual(
             WorkoutAudioCuePolicy.action(
@@ -2104,7 +2203,10 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 current: three,
                 countdownStartUptime: 100
             ),
-            .startCountdown(remainingFrom: "3", startUptime: 100)
+            .startCountdown(
+                schedule: CountdownAudioSchedule(remainingFrom: "3"),
+                startUptime: 100
+            )
         )
         assertLaterCountdownTicksHaveNoIndependentAction(
             three: three,
@@ -2123,7 +2225,10 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 current: three,
                 countdownStartUptime: 200
             ),
-            .startCountdown(remainingFrom: "3", startUptime: 200)
+            .startCountdown(
+                schedule: CountdownAudioSchedule(remainingFrom: "3"),
+                startUptime: 200
+            )
         )
         assertLaterCountdownTicksHaveNoIndependentAction(
             three: three,
@@ -2142,7 +2247,10 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 current: three,
                 countdownStartUptime: 300
             ),
-            .startCountdown(remainingFrom: "3", startUptime: 300)
+            .startCountdown(
+                schedule: CountdownAudioSchedule(remainingFrom: "3"),
+                startUptime: 300
+            )
         )
         assertLaterCountdownTicksHaveNoIndependentAction(
             three: three,
@@ -2159,7 +2267,10 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 current: WorkoutAudioMoment(key: "initial-2", phrase: "2"),
                 countdownStartUptime: 101
             ),
-            .startCountdown(remainingFrom: "2", startUptime: 101)
+            .startCountdown(
+                schedule: CountdownAudioSchedule(remainingFrom: "2"),
+                startUptime: 101
+            )
         )
     }
 
@@ -2226,7 +2337,11 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 intervalSecondsRemaining: 4,
                 isComplete: false
             ),
-            WorkoutAudioMoment(key: "\(stepID)-active-3", phrase: "3")
+            WorkoutAudioMoment(
+                key: "\(stepID)-active-3",
+                phrase: "3",
+                countdownSchedule: CountdownAudioSchedule(remainingFrom: "3")
+            )
         )
     }
 
