@@ -21,14 +21,22 @@ const CANVAS_ZOOM_STEP = 25;
 export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const { state, actions } = useWorkbench(dependencies);
   const [canvasZoom, setCanvasZoom] = React.useState(100);
+  const canvasZoomRef = React.useRef(canvasZoom);
   const [guides, setGuides] = React.useState<Guide[]>([]);
   const nextGuideId = React.useRef(1);
-  const changeCanvasZoom = React.useCallback((direction: number) => {
-    setCanvasZoom((zoom) => Math.min(
-      MAX_CANVAS_ZOOM,
-      Math.max(MIN_CANVAS_ZOOM, zoom + Math.sign(direction) * CANVAS_ZOOM_STEP),
-    ));
+  const canZoomChange = React.useCallback((direction: number): boolean => {
+    const step = Math.sign(direction) * CANVAS_ZOOM_STEP;
+    const nextZoom = canvasZoomRef.current + step;
+    return nextZoom >= MIN_CANVAS_ZOOM && nextZoom <= MAX_CANVAS_ZOOM;
   }, []);
+  const changeCanvasZoom = React.useCallback((direction: number): boolean => {
+    const step = Math.sign(direction) * CANVAS_ZOOM_STEP;
+    const nextZoom = canvasZoomRef.current + step;
+    if (!canZoomChange(direction)) return false;
+    canvasZoomRef.current = nextZoom;
+    setCanvasZoom(nextZoom);
+    return true;
+  }, [canZoomChange]);
   const busy = state.busyBoard || state.busyGit;
   const editorBusy = state.busyGit || (state.busyBoard && !state.savingBoard);
   const selectedHold: HoldRegion | null = state.document?.regions.find(
@@ -80,14 +88,20 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
       const editable = (target instanceof HTMLElement && target.isContentEditable)
         || target?.getAttribute("contenteditable") === "true"
         || tag === "input" || tag === "select" || tag === "textarea";
-      if (editable || !(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
+      if (editable) return;
+      if (event.metaKey && (event.key === "+" || event.key === "-")) {
+        if (!state.document || busy) return;
+        if (changeCanvasZoom(event.key === "+" ? 1 : -1)) event.preventDefault();
+        return;
+      }
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
       if (busy || !state.board) return;
       event.preventDefault();
       saveFromShortcut();
     };
     window.document.addEventListener("keydown", onKeyDown);
     return () => window.document.removeEventListener("keydown", onKeyDown);
-  }, [busy, saveFromShortcut, state.board]);
+  }, [busy, changeCanvasZoom, saveFromShortcut, state.board, state.document]);
   const branchStatus = !state.initialized && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
@@ -171,6 +185,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             editor={editor}
             zoomPercent={canvasZoom}
             onZoomChange={changeCanvasZoom}
+            canZoomChange={canZoomChange}
             guides={guides}
             onMoveGuide={moveGuide}
           />

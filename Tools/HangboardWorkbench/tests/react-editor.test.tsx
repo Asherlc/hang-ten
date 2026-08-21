@@ -234,6 +234,45 @@ test("canvas zoom controls and Alt-wheel adjust a bounded zoom while preserving 
   });
 });
 
+test("Command plus and minus shortcuts zoom only an open board outside editable targets", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.keyDown("body", "+", { metaKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await app.keyDown("body", "-", { metaKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    assert.equal(await app.keyDown("body", "+", { ctrlKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    const input = app.document.createElement("input");
+    input.id = "native-zoom-input";
+    app.document.body.append(input);
+    assert.equal(await app.keyDown("#native-zoom-input", "+", { metaKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    for (let index = 0; index < 8; index += 1) {
+      assert.equal(await app.keyDown("body", "+", { metaKey: true }), true);
+    }
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+    assert.equal(await app.keyDown("body", "+", { metaKey: true }), false);
+
+    for (let index = 0; index < 10; index += 1) {
+      assert.equal(await app.keyDown("body", "-", { metaKey: true }), true);
+    }
+    assert.equal(app.text("#canvas-zoom-level"), "50%");
+    assert.equal(await app.keyDown("body", "-", { metaKey: true }), false);
+  });
+
+  const app = await renderReact(<WorkbenchApp dependencies={dependenciesFixture()} />);
+  try {
+    await app.flush();
+    assert.equal(await app.keyDown("body", "+", { metaKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+  } finally {
+    await app.cleanup();
+  }
+});
+
 test("Alt-wheel zoom accepts a horizontal-only wheel delta", async () => {
   await withEditor(async (app) => {
     assert.equal(await app.wheel("#canvas-viewport", { deltaX: -1, deltaY: 0, altKey: true }), true);
@@ -241,10 +280,77 @@ test("Alt-wheel zoom accepts a horizontal-only wheel delta", async () => {
   });
 });
 
-test("Ctrl-wheel pinch zoom adjusts the canvas zoom", async () => {
+test("Ctrl-wheel pinch zoom accumulates small deltas without changing Alt-wheel sensitivity", async () => {
   await withEditor(async (app) => {
-    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, ctrlKey: true }), true);
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -20, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -30, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -60, ctrlKey: true }), true);
     assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "150%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -40, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "150%");
+  });
+});
+
+test("Alt-wheel resets pending Ctrl-pinch deltas before its immediate zoom", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -40, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -60, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+  });
+});
+
+test("ordinary wheel resets pending Ctrl-pinch deltas before the next pinch", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -40, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1 }), false);
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -60, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+  });
+});
+
+test("rapid Ctrl-pinch events consume browser zoom while advancing canvas zoom only within bounds", async () => {
+  await withEditor(async (app) => {
+    const events: WheelEvent[] = [];
+    await app.flush(() => {
+      const viewport = app.document.querySelector<HTMLElement>("#canvas-viewport");
+      if (!viewport) throw new Error("Missing canvas viewport");
+      const windowValue = app.document.defaultView;
+      if (!windowValue) throw new Error("Missing test document window");
+      for (let index = 0; index < 20; index += 1) {
+        const event = new windowValue.WheelEvent("wheel", {
+          bubbles: true,
+          cancelable: true,
+          deltaY: -100,
+          ctrlKey: true,
+        });
+        viewport.dispatchEvent(event);
+        events.push(event);
+      }
+    });
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+    assert.ok(events.slice(0, 8).every((event) => event.defaultPrevented));
+    assert.ok(events.slice(8).every((event) => !event.defaultPrevented));
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, altKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+  });
+});
+
+test("Ctrl-pinch does not consume a sub-threshold event when canvas zoom is at its bound", async () => {
+  await withEditor(async (app) => {
+    for (let index = 0; index < 8; index += 1) await app.click("#zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -20, ctrlKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
   });
 });
 
