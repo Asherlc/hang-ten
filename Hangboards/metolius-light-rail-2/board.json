@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 2,
+  "id": "metolius.light-rail-2",
+  "manufacturer": "Metolius",
+  "name": "Light Rail 2.0",
+  "subtitle": "Portable reversible training rail with four holds.",
+  "productURL": "https://www.metoliusclimbing.com/products/light-rail",
+  "dimensions": "18 × 3 × 1.5 in",
+  "aspectRatio": 1.5,
+  "presentations": [
+    {
+      "id": "20mm-side",
+      "name": "40 mm jug and 20 mm edge",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    },
+    {
+      "id": "15mm-side",
+      "name": "40 mm jug and 15 mm edge",
+      "assetPath": "assets/15mm-surface.png",
+      "aspectRatio": 1.7768331562167907,
+      "default": false
+    }
+  ],
+  "holds": [
+    {
+      "id": "jug-40-20mm-side",
+      "name": "40 mm rounded jug on 20 mm side",
+      "kind": "jug",
+      "sizeMillimeters": 40,
+      "presentationID": "20mm-side",
+      "geometry": [{
+        "frame": { "x": 0.025, "y": 0.436, "width": 0.950, "height": 0.101 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.018, 0.000] },
+          { "command": "line", "to": [0.982, 0.000] },
+          { "command": "curve", "control1": [0.992, 0.000], "control2": [1.000, 0.160], "to": [1.000, 0.360] },
+          { "command": "line", "to": [1.000, 0.640] },
+          { "command": "curve", "control1": [1.000, 0.840], "control2": [0.992, 1.000], "to": [0.982, 1.000] },
+          { "command": "line", "to": [0.018, 1.000] },
+          { "command": "curve", "control1": [0.008, 1.000], "control2": [0.000, 0.840], "to": [0.000, 0.640] },
+          { "command": "line", "to": [0.000, 0.360] },
+          { "command": "curve", "control1": [0.000, 0.160], "control2": [0.008, 0.000], "to": [0.018, 0.000] },
+          { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 },
+        "treatment": { "type": "surface" }
+      }]
+    },
+    {
+      "id": "edge-20",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "presentationID": "20mm-side",
+      "geometry": [{
+        "frame": { "x": 0.099, "y": 0.558, "width": 0.802, "height": 0.053 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.013, 0.000] },
+          { "command": "line", "to": [0.987, 0.000] },
+          { "command": "curve", "control1": [0.995, 0.000], "control2": [1.000, 0.170], "to": [1.000, 0.390] },
+          { "command": "line", "to": [1.000, 0.610] },
+          { "command": "curve", "control1": [1.000, 0.830], "control2": [0.995, 1.000], "to": [0.987, 1.000] },
+          { "command": "line", "to": [0.013, 1.000] },
+          { "command": "curve", "control1": [0.005, 1.000], "control2": [0.000, 0.830], "to": [0.000, 0.610] },
+          { "command": "line", "to": [0.000, 0.390] },
+          { "command": "curve", "control1": [0.000, 0.170], "control2": [0.005, 0.000], "to": [0.013, 0.000] },
+          { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    },
+    {
+      "id": "jug-40-15mm-side",
+      "name": "40 mm rounded jug on 15 mm side",
+      "kind": "jug",
+      "sizeMillimeters": 40,
+      "presentationID": "15mm-side",
+      "geometry": [{
+        "frame": { "x": 0.034, "y": 0.406, "width": 0.932, "height": 0.103 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.019, 0.000] },
+          { "command": "line", "to": [0.981, 0.000] },
+          { "command": "curve", "control1": [0.992, 0.000], "control2": [1.000, 0.160], "to": [1.000, 0.360] },
+          { "command": "line", "to": [1.000, 0.640] },
+          { "command": "curve", "control1": [1.000, 0.840], "control2": [0.992, 1.000], "to": [0.981, 1.000] },
+          { "command": "line", "to": [0.019, 1.000] },
+          { "command": "curve", "control1": [0.008, 1.000], "control2": [0.000, 0.840], "to": [0.000, 0.640] },
+          { "command": "line", "to": [0.000, 0.360] },
+          { "command": "curve", "control1": [0.000, 0.160], "control2": [0.008, 0.000], "to": [0.019, 0.000] },
+          { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 },
+        "treatment": { "type": "surface" }
+      }]
+    },
+    {
+      "id": "edge-15",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "presentationID": "15mm-side",
+      "geometry": [{
+        "frame": { "x": 0.083, "y": 0.551, "width": 0.834, "height": 0.047 },
+        "shape": { "type": "path", "commands": [
+          { "command": "move", "to": [0.013, 0.000] },
+          { "command": "line", "to": [0.987, 0.000] },
+          { "command": "curve", "control1": [0.995, 0.000], "control2": [1.000, 0.170], "to": [1.000, 0.390] },
+          { "command": "line", "to": [1.000, 0.610] },
+          { "command": "curve", "control1": [1.000, 0.830], "control2": [0.995, 1.000], "to": [0.987, 1.000] },
+          { "command": "line", "to": [0.013, 1.000] },
+          { "command": "curve", "control1": [0.005, 1.000], "control2": [0.000, 0.830], "to": [0.000, 0.610] },
+          { "command": "line", "to": [0.000, 0.390] },
+          { "command": "curve", "control1": [0.000, 0.170], "control2": [0.005, 0.000], "to": [0.013, 0.000] },
+          { "command": "close" }
+        ] },
+        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
+      }]
+    }
+  ]
+}

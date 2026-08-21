@@ -711,3 +711,147 @@ four alternate-surface IDs when switched to `two-edge`. Focused Workbench v2
 tests also pass for per-presentation filtering and preservation on save.
 Interactive canvas overlay review and full in-app active-highlight/hit-test
 review remain for the plan's final catalog-wide visual-validation task.
+
+## Metolius Light Rail 2.0
+
+Reviewed 2026-08-21.
+
+### Official evidence
+
+- [Current product page](https://www.metoliusclimbing.com/products/light-rail)
+  establishes the manufacturer and model name, portable training-rail identity,
+  reversible design, exactly four different holds, published edge depths of
+  15, 20, and 40 mm, weight, body-weight-only limit, FSC certification, and
+  dimensions of 18 × 3 × 1.5 in (45.7 × 7.6 × 3.8 cm).
+- [Official straight-on suspended product photograph](https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616)
+  establishes the long rounded rail silhouette, the single routed channel,
+  end suspension-cord routing, and the two reversible orientation pairs. Its
+  upright left-side engravings map one orientation to `40 mm` and `20 mm`; its
+  inverted right-side engravings map the reversed orientation to `15 mm` and a
+  second `40 mm` contact. This is the only still photograph in the current
+  official gallery; no reseller imagery was used.
+- [Official Metolius Light Rail usage video](https://www.youtube.com/watch?v=t208TAIW1LM),
+  embedded on the current product page, identifies the demonstrated product as
+  the newer Light Rail and Light Rail 2.0. The manufacturer presentation
+  expressly distinguishes a 20 mm edge on one side, a 15 mm edge on the other
+  side, and a rounded jug on top. Its close-up and hanging demonstrations were
+  reviewed as oblique/use evidence for the channel edges and rounded outer
+  contact; the video supplied no geometry.
+- [Official Training Board instructions](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826)
+  expressly classify Light Rails as suspended devices and describe hanging
+  them from a solid anchor point. The instructions are generic and do not add
+  Light Rail-specific contacts, measurements, finger capacities, or posture
+  prescriptions.
+
+### Field and reversible-inventory mapping
+
+| `board.json` field | Exact official-source mapping |
+| --- | --- |
+| `id`, `manufacturer`, `name`, `productURL` | Repository-stable identifier plus the exact current manufacturer/model identity and canonical product URL. |
+| `subtitle` | Conservative restatement of the product page's portable, reversible rail and exact four-hold claim. |
+| `dimensions` | Product-page size `18 × 3 × 1.5 in`; no dimension was inferred from the PNG. |
+| `presentations` | The product page's reversible design, photograph's paired upright/inverted engravings, video side distinction, and manual's suspended-device classification map to `20mm-side` and `15mm-side`. |
+| `holds[].kind` | The official video calls 20 and 15 mm contacts edges and the outer contact a rounded jug. |
+| `holds[].sizeMillimeters` | The product page publishes 15, 20, and 40 mm; the photograph maps one 40 mm contact to each reversible orientation. |
+| omitted optional fields | No finger capacity, grip posture, feature tags, training semantics, or additional physical measurement was added. Weight, body-weight limit, and FSC certification are product facts but are not board hold fields. |
+
+The four-hold claim is reconciled without duplication or inference as two
+distinct contacts on each usable orientation:
+
+| Presentation | `board.json` contacts | Source-backed physical mapping |
+| --- | --- | --- |
+| `20mm-side` (default) | `jug-40-20mm-side`, `edge-20` | Upright `40 mm`/`20 mm` photograph engravings plus the video's rounded top jug and 20 mm side. |
+| `15mm-side` | `jug-40-15mm-side`, `edge-15` | Inverted `15 mm`/`40 mm` photograph engravings plus the video's 15 mm other side and rounded top jug after reversal. |
+
+The flat back/cord-routing area was not represented as a usable presentation:
+none of the official sources calls it a hold. Each physical contact appears
+once, on the orientation in which it is usable.
+
+### AI-simplified presentation illustrations
+
+Both PNGs were generated with the built-in image-generation tool using the
+official Metolius photograph as reference Image 1. They are app presentation
+content and were never treated as evidence for contact identity, count, kind,
+depth, or geometry.
+
+`assets/primary.png` is the default `20mm-side` illustration, 1536 × 1024
+(aspect `1.5`, SHA-256
+`ec94a25e2f653d7972eea4c755df5413aa70a81c393764365b0cdbaa8232fc12`).
+Prompt:
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog default presentation image
+>
+> Input images: Image 1 is the official Metolius Light Rail 2.0 product photograph and is the authoritative reference for the exact long rounded-rectangle wood rail silhouette, routed central channel, end shape, suspension-cord routing, proportions, and the 40 mm / 20 mm orientation.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact Light Rail 2.0 in the 40 mm rounded-jug plus 20 mm edge orientation. Preserve the physical rail as one long pale wooden bar with the same single long recessed channel. Make the currently usable upper outer rounded 40 mm jug surface and the 20 mm channel edge visually distinct through subtle relief and neutral shading.
+>
+> Scene/backdrop: plain neutral off-white background.
+>
+> Style/medium: polished simplified 3D product illustration, pale natural wood with restrained grain and soft studio shading.
+>
+> Composition/framing: straight-on, centered, wide landscape composition; rail fully visible, level, occupying most of the canvas width with even padding. Show the blue-and-pink suspension cord only where it exits both ends and rises out of frame; do not let it overlap the board.
+>
+> Lighting/mood: soft neutral studio light that makes the two usable contact surfaces readable without dramatic shadows.
+>
+> Constraints: preserve the exact product silhouette, one recessed channel, end rounding, proportions, and asymmetric channel lips from the reference; depict exactly the 40 mm outer rounded jug and 20 mm inner edge for this orientation; no added or missing grooves or holds; no hands; no mounting wall; no text; no logo; no numbers; no watermark. Do not create geometry masks, contours, overlays, outlines, highlights, or annotations.
+>
+> Avoid: a second channel, pockets, pinches, slopers, screws, labels, decorative elements, or a generic fingerboard.
+
+`assets/15mm-surface.png` is the reversed `15mm-side` illustration, 1672 ×
+941 (aspect `1672 / 941`, SHA-256
+`7b365965bb7d3c7b6f1fcd8c2503c5a77ddba8cc75084294c5a7766a90ef3705`).
+Prompt:
+
+> Use case: product-mockup
+>
+> Asset type: Hang Ten hangboard catalog secondary presentation image
+>
+> Input images: Image 1 is the official Metolius Light Rail 2.0 product photograph and is the authoritative reference for the exact long rounded-rectangle wood rail silhouette, routed central channel, end shape, suspension-cord routing, proportions, and the inverted 15 mm / 40 mm orientation.
+>
+> Primary request: Create a clean AI-simplified straight-on catalog illustration of this exact Light Rail 2.0 after it has been reversed into the 15 mm edge plus 40 mm rounded-jug orientation. Preserve the physical rail as one long pale wooden bar with the same single long recessed channel, visibly reversed top-to-bottom from the reference orientation. Make the currently usable 15 mm channel edge and the opposite outer rounded 40 mm jug surface visually distinct through subtle relief and neutral shading.
+>
+> Scene/backdrop: plain neutral off-white background.
+>
+> Style/medium: polished simplified 3D product illustration, pale natural wood with restrained grain and soft studio shading.
+>
+> Composition/framing: straight-on, centered, wide landscape composition; rail fully visible, level, occupying most of the canvas width with even padding. Show the blue-and-pink suspension cord only where it exits both ends and rises out of frame; do not let it overlap the board.
+>
+> Lighting/mood: soft neutral studio light that makes the two usable contact surfaces readable without dramatic shadows.
+>
+> Constraints: preserve the exact product silhouette, one recessed channel, end rounding, proportions, and reversed asymmetric channel lips from the reference; depict exactly the 15 mm inner edge and opposite 40 mm outer rounded jug for this orientation; no added or missing grooves or holds; no hands; no mounting wall; no text; no logo; no numbers; no watermark. Do not create geometry masks, contours, overlays, outlines, highlights, or annotations.
+>
+> Avoid: a second channel, pockets, pinches, slopers, screws, labels, decorative elements, or a generic fingerboard.
+
+Human acceptance compared each generated view directly with the official
+photograph, product-page inventory, video close-up/use evidence, and manual's
+suspended-device classification. Both results retain one rail, one routed
+channel, and exactly two source-supported contact surfaces for the shown
+orientation. They add no recess, pocket, screw, label, or selectable contact.
+The generated PNGs were only copied into the package: no crop, registration,
+segmentation, mask, contour extraction, vectorization, or automatic geometry
+operation was applied.
+
+### Direct geometry mapping and review
+
+Every closed path was deliberately authored in normalized canvas coordinates
+after direct inspection of the accepted illustration and the corresponding
+official orientation evidence. The four physically long, regular contacts use
+operator-selected `roundedRectangle` constraints. Those constraints are
+editing metadata only; each saved path remains the sole normal rendering,
+highlight, and hit-test source.
+
+| Contact | Canonical frame | Direct review decision |
+| --- | --- | --- |
+| `jug-40-20mm-side` | `x 0.025, y 0.436, w 0.950, h 0.101` | Follows only the default image's upper rounded outer rail surface, excluding cord, background, and channel. |
+| `edge-20` | `x 0.099, y 0.558, w 0.802, h 0.053` | Follows only the default image's long lower channel shelf for the 20 mm contact. |
+| `jug-40-15mm-side` | `x 0.034, y 0.406, w 0.932, h 0.103` | Follows only the reversed image's upper rounded outer rail surface. |
+| `edge-15` | `x 0.083, y 0.551, w 0.834, h 0.047` | Follows only the reversed image's long lower channel shelf for the 15 mm contact. |
+
+The package parser validates both declared PNGs, aspect ratios, four unique
+hold IDs, nonempty normalized paths, and explicit presentation ownership.
+Focused package assertions freeze the exact `2 + 2` reversible inventory,
+published sizes and kinds, declared asset dimensions, and operator-selected
+constraints. Workbench extraction/surface-switching and final visual-review
+results are recorded in the Task 9 report.

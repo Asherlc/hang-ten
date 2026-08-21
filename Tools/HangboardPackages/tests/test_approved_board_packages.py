@@ -18,6 +18,7 @@ DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
 FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
 PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
 FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
+LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
 PRIME_RIB_HOLDS = (
     ("edge-38", "38 mm edge", "edge", 38),
     ("edge-23", "23 mm edge", "edge", 23),
@@ -149,6 +150,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("metolius.climbers-edge", "metolius-climbers-edge"),
         ("metolius.contact", "metolius-contact"),
         ("metolius.foundry", "metolius-foundry"),
+        ("metolius.light-rail-2", "metolius-light-rail-2"),
         ("metolius.prime-rib", "metolius-prime-rib"),
         ("metolius.project", "metolius-project"),
         ("metolius.simulator-3d", "metolius-simulator-3d"),
@@ -373,6 +375,74 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     }
     for asset_path, expected_size in expected_sizes.items():
         with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
+            assert image.format == "PNG"
+            assert image.size == expected_size
+
+
+def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.light-rail-2"
+    assert board["dimensions"] == "18 × 3 × 1.5 in"
+    assert board["presentations"] == [
+        {
+            "id": "20mm-side",
+            "name": "40 mm jug and 20 mm edge",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        },
+        {
+            "id": "15mm-side",
+            "name": "40 mm jug and 15 mm edge",
+            "assetPath": "assets/15mm-surface.png",
+            "aspectRatio": 1672 / 941,
+            "default": False,
+        },
+    ]
+
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold["sizeMillimeters"],
+            hold["presentationID"],
+        )
+        for hold in board["holds"]
+    ) == (
+        (
+            "jug-40-20mm-side",
+            "40 mm rounded jug on 20 mm side",
+            "jug",
+            40,
+            "20mm-side",
+        ),
+        ("edge-20", "20 mm edge", "edge", 20, "20mm-side"),
+        (
+            "jug-40-15mm-side",
+            "40 mm rounded jug on 15 mm side",
+            "jug",
+            40,
+            "15mm-side",
+        ),
+        ("edge-15", "15 mm edge", "edge", 15, "15mm-side"),
+    )
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(
+        hold["geometry"][0]["shapeConstraint"] == {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0,
+        }
+        for hold in board["holds"]
+    )
+
+    for asset_path, expected_size in {
+        "assets/primary.png": (1536, 1024),
+        "assets/15mm-surface.png": (1672, 941),
+    }.items():
+        with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
             assert image.format == "PNG"
             assert image.size == expected_size
 
