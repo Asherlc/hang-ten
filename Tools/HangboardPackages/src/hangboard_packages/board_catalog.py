@@ -69,6 +69,7 @@ _DEPTHS = frozenset({"deep", "shallow"})
 _SHAPE_CONSTRAINTS = frozenset(
     {"oval", "circle", "pill", "roundedRectangle", "rectangle"}
 )
+_ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
 _FRAME_EDGE_TOLERANCE = 0.0000005
 
 
@@ -340,16 +341,23 @@ class BoardPresentation:
     id: str
     name: str
     asset_path: str
+    aspect_ratio: float
     is_default: bool
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPresentation":
         payload = _mapping(value, source)
-        _closed(payload, {"id", "name", "assetPath", "default"}, source)
+        _closed(
+            payload, {"id", "name", "assetPath", "aspectRatio", "default"}, source
+        )
+        aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
+        if aspect_ratio <= 0:
+            raise ValueError(f"{source}.aspectRatio must be positive")
         return cls(
             _identifier(payload["id"], f"{source}.id"),
             _string(payload["name"], f"{source}.name"),
             _asset_path(payload["assetPath"], f"{source}.assetPath"),
+            aspect_ratio,
             _boolean(payload["default"], f"{source}.default"),
         )
 
@@ -378,6 +386,7 @@ class BoardHold:
 
 @dataclass(frozen=True)
 class BoardDocument:
+    schema_version: int
     id: str
     facts: Mapping[str, Any]
     holds: tuple[BoardHold, ...]
@@ -522,6 +531,12 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     schema_version = value["schemaVersion"]
     if isinstance(schema_version, bool) or schema_version not in {1, 2}:
         raise ValueError("board.json.schemaVersion must be 1 or 2")
+    facts: dict[str, Any] = {}
+    for key in ("manufacturer", "name", "subtitle", "productURL", "dimensions"):
+        facts[key] = _string(value[key], f"board.json.{key}")
+    facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
+    if facts["aspectRatio"] <= 0:
+        raise ValueError("board.json.aspectRatio must be positive")
     if schema_version == 1:
         _closed(value, required, "board.json", optional={"presentation"})
         presentation_asset_path = "assets/primary.png"
@@ -536,17 +551,17 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
                     "board.json.presentation.assetPath must be assets/primary.png"
                 )
         presentations = (
-            BoardPresentation("primary", "Primary", presentation_asset_path, True),
+            BoardPresentation(
+                "primary",
+                "Primary",
+                presentation_asset_path,
+                facts["aspectRatio"],
+                True,
+            ),
         )
     else:
         _closed(value, required | {"presentations"}, "board.json")
         presentations = _load_presentations(value["presentations"], "board.json.presentations")
-    facts: dict[str, Any] = {}
-    for key in ("manufacturer", "name", "subtitle", "productURL", "dimensions"):
-        facts[key] = _string(value[key], f"board.json.{key}")
-    facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
-    if facts["aspectRatio"] <= 0:
-        raise ValueError("board.json.aspectRatio must be positive")
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
         raise ValueError("board.json.holds must be a non-empty array")
@@ -574,6 +589,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
     return BoardDocument(
+        schema_version,
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),
         holds_tuple,
@@ -608,17 +624,30 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
         raise ValueError(
             f"missing declared presentation asset: {sorted(missing_assets)[0]}"
         )
+    image_dimensions: dict[str, tuple[int, int]] = {}
     for asset_path in sorted(expected_assets):
         asset = root / asset_path
         if asset.is_symlink() or not asset.is_file():
             raise ValueError(f"{asset_path} must be a regular non-symlink file")
-        _validate_png_structure(asset, asset_path)
+        image_dimensions[asset_path] = _validate_png_structure(asset, asset_path)
+    if board.schema_version == 2:
+        for presentation in board.presentations:
+            width, height = image_dimensions[presentation.asset_path]
+            image_aspect_ratio = width / height
+            relative_error = (
+                abs(presentation.aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+            )
+            if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
+                raise ValueError(
+                    f"board.json.presentations[{presentation.id}].aspectRatio must match "
+                    "its image width/height within 0.1%"
+                )
 
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
-def _validate_png_structure(path: Path, asset_path: str) -> None:
+def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
     """Validate PNG framing without depending on a third-party image library.
 
     This module is loaded by a bare system interpreter during Xcode's board
@@ -670,7 +699,7 @@ def _validate_png_structure(path: Path, asset_path: str) -> None:
                     raise ValueError(f"{asset_path} has trailing data after IEND")
                 if width is None or height is None or width <= 0 or height <= 0:
                     raise ValueError(f"{asset_path} must declare positive dimensions")
-                return
+                return width, height
             offset = crc_end
     except struct.error as error:
         raise ValueError(f"{asset_path} must be a decodable PNG image") from error

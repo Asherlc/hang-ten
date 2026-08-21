@@ -84,12 +84,14 @@ def multi_presentation_board_document(
             "id": "front",
             "name": "Front",
             "assetPath": "assets/primary.png",
+            "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
             "default": True,
         },
         {
             "id": "back",
             "name": "Back",
             "assetPath": "assets/back.png",
+            "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
             "default": False,
         },
     ]

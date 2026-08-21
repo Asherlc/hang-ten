@@ -163,6 +163,12 @@ def test_approved_packages_declare_their_complete_presentation_asset_set() -> No
             assert actual_assets == {"assets/primary.png"}
         elif document["schemaVersion"] == 2:
             assert "presentation" not in document
+            assert all(
+                isinstance(presentation["aspectRatio"], (int, float))
+                and not isinstance(presentation["aspectRatio"], bool)
+                and presentation["aspectRatio"] > 0
+                for presentation in document["presentations"]
+            )
             assert actual_assets == {
                 presentation["assetPath"] for presentation in document["presentations"]
             }

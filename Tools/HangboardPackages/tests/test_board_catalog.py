@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from conftest import (
+    ALTERNATE_PRIMARY_PNG_BYTES,
     PRIMARY_PNG_BYTES,
     board_document,
     load_board_catalog_module,
@@ -207,6 +208,7 @@ def test_schema_v1_exposes_an_implicit_primary_presentation(tmp_path: Path) -> N
             id="primary",
             name="Primary",
             asset_path="assets/primary.png",
+            aspect_ratio=2,
             is_default=True,
         ),
     )
@@ -222,14 +224,25 @@ def test_schema_v2_loads_declared_presentations_and_scoped_holds(
     )
 
     assert package.board.presentations == (
-        module.BoardPresentation("front", "Front", "assets/primary.png", True),
-        module.BoardPresentation("back", "Back", "assets/back.png", False),
+        module.BoardPresentation("front", "Front", "assets/primary.png", 2, True),
+        module.BoardPresentation("back", "Back", "assets/back.png", 2, False),
     )
     assert [(hold.id, hold.presentation_id) for hold in package.board.holds] == [
         ("hold-left", "front"),
         ("hold-right", "back"),
     ]
     assert package.board.presentation_asset_path == "assets/primary.png"
+
+
+def test_schema_v2_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    (package_root / "assets" / "back.png").write_bytes(ALTERNATE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="aspectRatio.*within 0.1%"):
+        module.load_board_package(package_root)
 
 
 @pytest.mark.parametrize(
