@@ -204,11 +204,17 @@ export interface Dialogs {
   prompt(message: string, defaultValue?: string): string | null;
 }
 
+export interface BrowserStorage {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
 export interface BrowserRuntime extends Dialogs {
   fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
   location: {
     assign(url: string): void;
   };
+  storage?: BrowserStorage;
   postDiagnostic?(diagnostic: RequestDiagnostic): void;
   createImage(): HTMLImageElement;
 }
@@ -234,6 +240,7 @@ export interface WorkbenchState {
   gitStatusKnown: boolean;
   hasUncommittedChanges: boolean;
   dirty: boolean;
+  autosaveEnabled: boolean;
   busyBoard: boolean;
   savingBoard: boolean;
   busyGit: boolean;
@@ -264,6 +271,7 @@ export interface WorkbenchActions {
   refreshBoards(): Promise<void>;
   selectBoard(boardId: string): Promise<void>;
   saveBoard(): Promise<void>;
+  setAutosaveEnabled(enabled: boolean): void;
   refreshGit(): Promise<void>;
   setSelectedBranch(branchName: string): void;
   switchBranch(branchName?: string): Promise<void>;
