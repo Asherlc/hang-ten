@@ -39,6 +39,7 @@ interface GuideDragState {
   id: string;
   axis: GuideAxis;
   pointerId: number;
+  svg: SVGSVGElement;
 }
 
 function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
@@ -91,6 +92,16 @@ export function HoldCanvas({
   editorRef.current = editor;
   onZoomChangeRef.current = onZoomChange;
   canZoomChangeRef.current = canZoomChange;
+  const releaseGuidePointer = (pointerId: number): void => {
+    const drag = guideDragRef.current;
+    if (!drag || drag.pointerId !== pointerId) return;
+    guideDragRef.current = null;
+    try {
+      drag.svg.releasePointerCapture?.(pointerId);
+    } catch {
+      // Capture can already be released when a cancellation is reported.
+    }
+  };
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -106,7 +117,8 @@ export function HoldCanvas({
       if (distance === 0) return;
       touchPinchActiveRef.current = true;
       touchPinchDistanceRef.current = distance;
-      guideDragRef.current = null;
+      const guidePointerId = guideDragRef.current?.pointerId;
+      if (guidePointerId !== undefined) releaseGuidePointer(guidePointerId);
       editorRef.current.cancelActiveEdit();
       event.preventDefault();
     };
@@ -234,20 +246,11 @@ export function HoldCanvas({
     event.stopPropagation();
     const svg = event.currentTarget.ownerSVGElement;
     if (!svg) return;
-    guideDragRef.current = { id: guide.id, axis: guide.axis, pointerId: event.pointerId };
+    guideDragRef.current = { id: guide.id, axis: guide.axis, pointerId: event.pointerId, svg };
     try {
       svg.setPointerCapture?.(event.pointerId);
     } catch {
       // Pointer capture may be unavailable in older browsers and test environments.
-    }
-  };
-  const releaseGuidePointer = (svg: SVGSVGElement, pointerId: number): void => {
-    if (guideDragRef.current?.pointerId !== pointerId) return;
-    guideDragRef.current = null;
-    try {
-      svg.releasePointerCapture?.(pointerId);
-    } catch {
-      // Capture can already be released when a cancellation is reported.
     }
   };
   const onGuidePointerMove = (event: React.PointerEvent<SVGSVGElement>): void => {
@@ -262,7 +265,7 @@ export function HoldCanvas({
     onMoveGuide(drag.id, documentCoordinate);
   };
   const onGuidePointerEnd = (event: React.PointerEvent<SVGSVGElement>): void => {
-    releaseGuidePointer(event.currentTarget, event.pointerId);
+    releaseGuidePointer(event.pointerId);
   };
   const clearModifierSelection = (key: string): void => {
     if (modifierSelectionRef.current === key) modifierSelectionRef.current = null;

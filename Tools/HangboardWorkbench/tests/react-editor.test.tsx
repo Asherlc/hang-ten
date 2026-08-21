@@ -952,10 +952,12 @@ test("starting a touch pinch stops an active guide drag", async () => {
     await app.click('[data-hold-key="square"]');
     await app.click("#add-horizontal-guide-button");
     await app.pointer('[data-guide-axis="horizontal"]', "pointerdown", { pointerId: 17, clientX: 50, clientY: 20 });
+    assert.equal(app.capturedPointerId("#editor-svg"), 17);
     assert.equal(await touchCanvas(app, "touchstart", [
       { clientX: 20, clientY: 20 },
       { clientX: 80, clientY: 20 },
     ]), true);
+    assert.equal(app.capturedPointerId("#editor-svg"), null);
     await app.pointer("#editor-svg", "pointermove", { pointerId: 17, clientX: 50, clientY: 56 });
 
     assert.equal(app.document.querySelector('[data-guide-axis="horizontal"]')?.getAttribute("y1"), "20");
