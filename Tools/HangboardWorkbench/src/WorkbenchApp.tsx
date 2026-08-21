@@ -260,6 +260,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           onOutlineShapeChange={editor.changeOutlineShape}
           onRotate={(direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15))}
           onApplyRotation={editor.applyRotation}
+          onDuplicateAndMirror={editor.duplicateAndMirrorHold}
           onDelete={editor.deleteHold}
           onMobileCollapse={() => setMobileHoldSheetOpen(false)}
         />

@@ -23,6 +23,7 @@ export interface HoldInspectorProps {
   onOutlineShapeChange(shape: string): void;
   onRotate(direction: -1 | 1, shiftKey: boolean): void;
   onApplyRotation(): void;
+  onDuplicateAndMirror(): void;
   onDelete(): void;
   onMobileCollapse(): void;
   className?: string;
@@ -39,6 +40,7 @@ export function HoldInspector({
   onOutlineShapeChange,
   onRotate,
   onApplyRotation,
+  onDuplicateAndMirror,
   onDelete,
   onMobileCollapse,
   className = "",
@@ -106,6 +108,7 @@ export function HoldInspector({
             <button type="button" id="rotate-by-apply-button" className="tool-button" disabled={busy} onClick={onApplyRotation}>Apply</button>
           </span>
         </div>
+        <button type="button" id="duplicate-mirror-hold-button" className="tool-button" disabled={busy} onClick={onDuplicateAndMirror}>Duplicate & mirror</button>
         <button type="button" id="delete-hold-button" className="tool-button danger" disabled={busy} onClick={onDelete}>Delete hold</button>
       </form>
     </aside>
