@@ -25,6 +25,7 @@ const INITIAL_STATE: WorkbenchState = {
   hasUncommittedChanges: false,
   dirty: false,
   busyBoard: false,
+  savingBoard: false,
   busyGit: false,
   authenticated: false,
   username: null,
@@ -105,6 +106,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const historyRef = useRef<DocumentHistory>({ undo: [], redo: [] });
   const boardIdleWaitersRef = useRef(new Set<() => void>());
   const gitIdleWaitersRef = useRef(new Set<() => void>());
+  const saveGenerationRef = useRef<number | null>(null);
 
   const updateState = useCallback((update: StateUpdate): void => {
     if (!mountedRef.current) return;
@@ -118,6 +120,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const operationsRef = useRef<OperationCoordinators | null>(null);
   if (operationsRef.current?.dependencies !== dependencies) {
     const generation = (operationsRef.current?.generation ?? 0) + 1;
+    saveGenerationRef.current = null;
     const board = controller.createBoardOperationCoordinator({
       onBusyChange: (busy) => {
         if (operationsRef.current?.generation !== generation) return;
@@ -140,7 +143,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     });
     operationsRef.current = { dependencies, generation, board, git };
   }
-  const { board: boardOperations, git: gitOperations } = operationsRef.current;
+  const { generation: operationGeneration, board: boardOperations, git: gitOperations } = operationsRef.current;
 
   const isBusy = useCallback((): boolean => (
     boardOperations.isBusy || gitOperations.isBusy
@@ -316,7 +319,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   }, [boardOperations, client, controller, isBusy, loadImage, updateState]);
 
   const saveBoard = useCallback(async (): Promise<void> => {
-    if (isBusy()) return;
+    if (isBusy() || stateRef.current.savingBoard) return;
     const current = stateRef.current;
     if (!current.board || !current.document) return;
     try {
@@ -331,51 +334,60 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }
     const boardId = current.board.boardId;
     const documentIdentity = current.document;
-    updateState((value) => ({ ...value, saveLoginUrl: null }));
-    await boardOperations.perform(async ({ isCurrent }) => {
-      try {
-        await controller.saveBoardAtomically({
-          boardId,
-          document: cloneEditorDocument(documentIdentity),
-          save: client.saveBoard,
-          commit: ({ board, document }) => {
-            if (!isCurrent()
-              || stateRef.current.board?.boardId !== boardId
-              || stateRef.current.document !== documentIdentity) return;
-            updateState((latest) => {
-              if (latest.board?.boardId !== boardId || latest.document !== documentIdentity) {
-                return latest;
-              }
-              resetHistory(historyRef.current);
-              const selection = validSelection(document, latest.selectedKeys, latest.selectedKey);
-              return {
-                ...latest,
-                board,
-                document: cloneEditorDocument(document),
-                ...selection,
-                dirty: false,
-                validation: "",
-                status: "Board saved.",
-              };
-            });
-          },
-        });
-      } catch (error: unknown) {
-        if (!isCurrent()) return;
-        const loginUrl = saveLoginUrl(error);
-        updateState((latest) => loginUrl ? {
-          ...latest,
-          validation: "",
-          status: "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
-          saveLoginUrl: loginUrl,
-        } : {
-          ...latest,
-          validation: errorMessage(error, "Could not save board."),
-          status: "Could not save board. Your editor changes were kept.",
-        });
-      }
-    });
-  }, [boardOperations, client, controller, isBusy, updateState]);
+    const saveGeneration = operationGeneration;
+    saveGenerationRef.current = saveGeneration;
+    updateState((value) => ({ ...value, saveLoginUrl: null, savingBoard: true }));
+    try {
+      await boardOperations.perform(async ({ isCurrent }) => {
+        try {
+          await controller.saveBoardAtomically({
+            boardId,
+            document: cloneEditorDocument(documentIdentity),
+            save: client.saveBoard,
+            commit: ({ board, document }) => {
+              if (!isCurrent()
+                || stateRef.current.board?.boardId !== boardId
+                || stateRef.current.document !== documentIdentity) return;
+              updateState((latest) => {
+                if (latest.board?.boardId !== boardId || latest.document !== documentIdentity) {
+                  return latest;
+                }
+                resetHistory(historyRef.current);
+                const selection = validSelection(document, latest.selectedKeys, latest.selectedKey);
+                return {
+                  ...latest,
+                  board,
+                  document: cloneEditorDocument(document),
+                  ...selection,
+                  dirty: false,
+                  validation: "",
+                  status: "Board saved.",
+                };
+              });
+            },
+          });
+        } catch (error: unknown) {
+          if (!isCurrent()) return;
+          const loginUrl = saveLoginUrl(error);
+          updateState((latest) => loginUrl ? {
+            ...latest,
+            validation: "",
+            status: "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
+            saveLoginUrl: loginUrl,
+          } : {
+            ...latest,
+            validation: errorMessage(error, "Could not save board."),
+            status: "Could not save board. Your editor changes were kept.",
+          });
+        }
+      });
+    } finally {
+      if (operationsRef.current?.generation !== saveGeneration
+        || saveGenerationRef.current !== saveGeneration) return;
+      saveGenerationRef.current = null;
+      updateState((value) => ({ ...value, savingBoard: false }));
+    }
+  }, [boardOperations, client, controller, isBusy, operationGeneration, updateState]);
 
   const clearEditor = useCallback((): void => {
     resetHistory(historyRef.current);
@@ -636,6 +648,15 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }));
     return true;
   }, [updateState]);
+
+  useEffect(() => {
+    if (boardOperations.isBusy || saveGenerationRef.current === operationGeneration) return;
+    updateState((current) => (
+      current.busyBoard || current.savingBoard
+        ? { ...current, busyBoard: false, savingBoard: false }
+        : current
+    ));
+  }, [boardOperations, operationGeneration, updateState]);
 
   useEffect(() => {
     mountedRef.current = true;

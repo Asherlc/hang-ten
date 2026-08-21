@@ -234,6 +234,7 @@ export interface WorkbenchState {
   hasUncommittedChanges: boolean;
   dirty: boolean;
   busyBoard: boolean;
+  savingBoard: boolean;
   busyGit: boolean;
   authenticated: boolean;
   username: string | null;

@@ -558,6 +558,74 @@ test("an old delayed save cannot overwrite a newer document identity", async () 
   });
 });
 
+test("hold editing remains available during a save and survives its stale response", async () => {
+  const image = imageFixture();
+  const firstSave = deferred<Board>();
+  const secondSave = deferred<Board>();
+  const saves = [firstSave, secondSave];
+  const savedDocuments: EditorDocument[] = [];
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      saveBoard(boardId, document) {
+        savedDocuments.push(document);
+        return saves[savedDocuments.length - 1]!.promise;
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click("#hold-overlay path");
+    await app.change("#hold-type-select", "sloper");
+
+    await app.click("#save-button");
+
+    assert.equal(savedDocuments.length, 1);
+    assert.equal(savedDocuments[0]?.regions[0]?.type, "sloper");
+    const inFlightSnapshot = structuredClone(savedDocuments[0]!);
+    assert.equal(app.disabled("#save-button"), true);
+    assert.equal(app.disabled("#board-list button"), true);
+    assert.equal(app.disabled("#refresh-boards-button"), true);
+    assert.equal(app.disabled("#git-refresh-button"), true);
+    assert.equal(app.disabled("#git-branch-select"), true);
+    assert.equal(app.disabled("#hold-type-select"), false);
+    assert.equal(app.disabled("#add-hold-button"), false);
+
+    await app.click("#add-hold-button");
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 2);
+    await app.click("#delete-hold-button");
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+    await app.click("#hold-overlay path");
+    await app.click("#add-horizontal-guide-button");
+    assert.equal(app.document.querySelectorAll("#guide-overlay .editor-guide-horizontal").length, 1);
+    await app.pointer("#guide-overlay .editor-guide-horizontal", "pointerdown", {
+      pointerId: 12,
+      clientX: 10,
+      clientY: 10,
+    });
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 12, clientX: 10, clientY: 25 });
+    await app.pointer("#editor-svg", "pointerup", { pointerId: 12, clientX: 10, clientY: 25 });
+    assert.equal(app.document.querySelector("#guide-overlay .editor-guide-horizontal")?.getAttribute("y1"), "25");
+    await app.click("#clear-guides-button");
+    assert.equal(app.document.querySelectorAll("#guide-overlay .editor-guide-horizontal").length, 0);
+    await app.change("#hold-type-select", "pinch");
+    assert.deepEqual(savedDocuments[0], inFlightSnapshot);
+    await app.click("#save-button");
+    assert.equal(savedDocuments.length, 1);
+    await app.flush(() => firstSave.resolve(boardFixture("board-a", savedDocuments[0]!)));
+
+    assert.equal(app.documentValue("#hold-type-select"), "pinch");
+    assert.equal(app.text("#save-state"), "Unsaved changes");
+    await app.click("#save-button");
+    assert.equal(savedDocuments.length, 2);
+    assert.equal(savedDocuments[1]?.regions[0]?.type, "pinch");
+    await app.flush(() => secondSave.resolve(boardFixture("board-a", savedDocuments[1]!)));
+    assert.equal(app.text("#save-state"), "Saved");
+  });
+});
+
 test("a successful save always reports Board saved after committing the saved document", async () => {
   const image = imageFixture();
   let saves = 0;
@@ -626,6 +694,48 @@ test("replacing dependencies starts current Git initialization when obsolete wor
     assert.equal(freshGitCalls, 1);
     assert.equal(freshBoards, 1);
     assert.equal(app.disabled("#git-refresh-button"), false);
+  } finally {
+    await app.cleanup();
+  }
+});
+
+test("replacing dependencies releases a save abandoned by the old coordinator", async () => {
+  const oldImage = imageFixture();
+  const oldDependencies = dependenciesFixture({
+    runtime: oldImage.runtime,
+    client: { saveBoard() { return new Promise<Board>(() => {}); } },
+  });
+  let freshSaves = 0;
+  const freshDependencies = dependenciesFixture({
+    client: {
+      async saveBoard(boardId, document) {
+        freshSaves += 1;
+        return boardFixture(boardId, document);
+      },
+    },
+  });
+  let replaceDependencies: ((dependencies: WorkbenchDependencies) => void) | undefined;
+
+  function ReplacingApp(): ReactElement {
+    const [dependencies, setDependencies] = useState(oldDependencies);
+    replaceDependencies = (nextDependencies) => setDependencies(nextDependencies);
+    return <WorkbenchApp dependencies={dependencies} />;
+  }
+
+  const app = await renderReact(<ReplacingApp />);
+  try {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => oldImage.images.succeed());
+    await app.click("#save-button");
+    assert.equal(app.disabled("#save-button"), true);
+
+    await app.flush(() => replaceDependencies?.(freshDependencies));
+    await app.flush();
+
+    assert.equal(app.disabled("#save-button"), false);
+    await app.click("#save-button");
+    assert.equal(freshSaves, 1);
   } finally {
     await app.cleanup();
   }

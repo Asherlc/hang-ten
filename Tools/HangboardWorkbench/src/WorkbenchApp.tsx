@@ -30,6 +30,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     ));
   }, []);
   const busy = state.busyBoard || state.busyGit;
+  const editorBusy = state.busyGit || (state.busyBoard && !state.savingBoard);
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
@@ -58,7 +59,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     selectedKeys: state.selectedKeys,
     dirty: state.dirty,
     status: state.status,
-    busy,
+    busy: editorBusy,
     rotationDegrees: state.rotationDegrees,
     actions,
     pathEditor: dependencies.pathEditor,
@@ -153,10 +154,10 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
                 disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM}
                 onClick={() => changeCanvasZoom(1)}
               >+</button>
-              <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || busy} onClick={editor.addHold}>Add hold</button>
-              <button className="tool-button" id="add-horizontal-guide-button" type="button" disabled={!selectedHold || busy} onClick={() => addGuide("horizontal")}>Horizontal guide</button>
-              <button className="tool-button" id="add-vertical-guide-button" type="button" disabled={!selectedHold || busy} onClick={() => addGuide("vertical")}>Vertical guide</button>
-              <button className="tool-button" id="clear-guides-button" type="button" disabled={guides.length === 0 || busy} onClick={() => setGuides([])}>Clear guides</button>
+              <button className="tool-button accent" id="add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
+              <button className="tool-button" id="add-horizontal-guide-button" type="button" disabled={!selectedHold || editorBusy} onClick={() => addGuide("horizontal")}>Horizontal guide</button>
+              <button className="tool-button" id="add-vertical-guide-button" type="button" disabled={!selectedHold || editorBusy} onClick={() => addGuide("vertical")}>Vertical guide</button>
+              <button className="tool-button" id="clear-guides-button" type="button" disabled={guides.length === 0 || editorBusy} onClick={() => setGuides([])}>Clear guides</button>
             </div>
           </div>
           <HoldCanvas
@@ -164,7 +165,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             document={state.document}
             selectedKey={state.selectedKey}
             selectedKeys={state.selectedKeys}
-            busy={busy}
+            busy={editorBusy}
             onSelectHold={actions.selectHold}
             pathEditor={dependencies.pathEditor}
             editor={editor}
@@ -185,7 +186,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
         <HoldInspector
           hold={selectedHold}
           selectedCount={state.selectedKeys.length}
-          busy={busy}
+          busy={editorBusy}
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}
           onTypeChange={editor.changeHoldType}
