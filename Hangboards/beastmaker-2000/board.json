@@ -18,10 +18,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.015230731467844866,
-            "y": 0.04078052482269505,
-            "width": 0.16003918703976436,
-            "height": 0.2836873333333333
+            "x": 0.015230731468,
+            "y": 0.040780524823,
+            "width": 0.16003918704,
+            "height": 0.283687333333
           },
           "shape": {
             "type": "path",
@@ -29,81 +29,96 @@
               {
                 "command": "move",
                 "to": [
-                  0.12,
+                  0.120000000368,
                   0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.05,
-                  0.0
+                  0.103781095906,
+                  0.007653310205
                 ],
                 "control2": [
-                  0.01,
-                  0.11
+                  0.085671641344,
+                  0.038979958807
                 ],
                 "to": [
-                  0.0,
-                  0.31
+                  0.07036691529,
+                  0.093393288296
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.055062189236,
+                  0.147806617784
+                ],
+                "control2": [
+                  0.042562188623,
+                  0.225306615659
+                ],
+                "to": [
+                  0.037562185923,
+                  0.325306618159
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.0,
-                  0.88
+                  0.87999999825
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   0.0,
-                  0.96
+                  0.9600000015
                 ],
                 "control2": [
-                  0.06,
+                  0.05999999865,
                   1.0
                 ],
                 "to": [
-                  0.15,
+                  0.150000001227,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.95,
-                  0.93
+                  0.950000000613,
+                  0.9299999995
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.98,
-                  0.72
+                  0.980000001472,
+                  0.719999998
                 ],
                 "control2": [
-                  0.99,
-                  0.34
+                  0.990000000736,
+                  0.33999999975
                 ],
                 "to": [
                   1.0,
-                  0.05
+                  0.05000000125
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.78,
-                  0.01
+                  0.780000000859,
+                  0.01000000275
                 ],
                 "control2": [
-                  0.34,
+                  0.339999999509,
                   0.0
                 ],
                 "to": [
-                  0.12,
+                  0.120000000368,
                   0.0
                 ]
               },
@@ -209,7 +224,10 @@
             "width": 0.3242813441771613,
             "height": 0.13085170674307237
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.0}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.0
+          }
         }
       ]
     },
@@ -411,7 +429,10 @@
             "width": 0.10211065684830634,
             "height": 0.1524828723404255
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.485463197006}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.485463197006
+          }
         }
       ]
     },
@@ -427,7 +448,10 @@
             "width": 0.10211065684830634,
             "height": 0.1524828723404255
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.485463197006}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.485463197006
+          }
         }
       ]
     },
@@ -443,7 +467,10 @@
             "width": 0.13622929013254786,
             "height": 0.14007089361702127
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496835543663}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.496835543663
+          }
         }
       ]
     },
@@ -549,7 +576,10 @@
             "width": 0.08026483652430044,
             "height": 0.14184366666666665
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.450000967502}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.450000967502
+          }
         }
       ]
     },
@@ -565,7 +595,10 @@
             "width": 0.07658299263622974,
             "height": 0.14184366666666665
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.434375933908}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.434375933908
+          }
         }
       ]
     },
@@ -581,7 +614,10 @@
             "width": 0.14432977319587628,
             "height": 0.14007089361702127
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496835543663}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.496835543663
+          }
         }
       ]
     },
@@ -597,7 +633,10 @@
             "width": 0.07658299263622974,
             "height": 0.14184366666666665
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.434375933908}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.434375933908
+          }
         }
       ]
     },
@@ -613,7 +652,10 @@
             "width": 0.08026483652430044,
             "height": 0.14184366666666665
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.450000967502}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.450000967502
+          }
         }
       ]
     },
@@ -719,7 +761,10 @@
             "width": 0.13622929013254786,
             "height": 0.14007089361702127
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496835543663}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.496835543663
+          }
         }
       ]
     },
@@ -735,7 +780,10 @@
             "width": 0.13770288070692194,
             "height": 0.13297851773049646
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496667434846}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.496667434846
+          }
         }
       ]
     },
@@ -841,7 +889,10 @@
             "width": 0.07854706921944034,
             "height": 0.13652534751773052
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.454543707209}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.454543707209
+          }
         }
       ]
     },
@@ -857,7 +908,10 @@
             "width": 0.07584726362297496,
             "height": 0.13120574468085106
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.456080834551}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.456080834551
+          }
         }
       ]
     },
@@ -873,7 +927,10 @@
             "width": 0.17083947569955818,
             "height": 0.14893604255319148
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
       ],
       "sizeMillimeters": 22
@@ -890,7 +947,10 @@
             "width": 0.07584726362297496,
             "height": 0.13120574468085106
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.456080834551}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.456080834551
+          }
         }
       ]
     },
@@ -906,7 +966,10 @@
             "width": 0.07854706921944034,
             "height": 0.13652534751773052
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.454543707209}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.454543707209
+          }
         }
       ]
     },
@@ -1012,7 +1075,10 @@
             "width": 0.13770288070692194,
             "height": 0.13297851773049646
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.496667434846}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.496667434846
+          }
         }
       ]
     }
