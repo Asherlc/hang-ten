@@ -17,6 +17,7 @@ const INITIAL_STATE: WorkbenchState = {
   board: null,
   document: null,
   selectedKey: null,
+  selectedKeys: [],
   branches: [],
   currentBranch: null,
   selectedBranch: "",
@@ -81,6 +82,18 @@ function selectedBranch(status: GitStatus): string {
     return status.currentBranch;
   }
   return [...status.branches].sort()[0] ?? "";
+}
+
+function validSelection(document: EditorDocument, keys: readonly string[], primary: string | null): {
+  selectedKeys: string[];
+  selectedKey: string | null;
+} {
+  const available = new Set(document.regions.map((region) => region.key));
+  const selectedKeys = [...new Set(keys)].filter((key) => available.has(key));
+  return {
+    selectedKeys,
+    selectedKey: primary && selectedKeys.includes(primary) ? primary : selectedKeys.at(-1) ?? null,
+  };
 }
 
 export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchResult {
@@ -282,6 +295,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
               board,
               document: cloneEditorDocument(document),
               selectedKey: null,
+              selectedKeys: [],
               dirty: false,
             }));
             committed = true;
@@ -333,10 +347,12 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
                 return latest;
               }
               resetHistory(historyRef.current);
+              const selection = validSelection(document, latest.selectedKeys, latest.selectedKey);
               return {
                 ...latest,
                 board,
                 document: cloneEditorDocument(document),
+                ...selection,
                 dirty: false,
                 validation: "",
                 status: "Board saved.",
@@ -368,6 +384,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       board: null,
       document: null,
       selectedKey: null,
+      selectedKeys: [],
       dirty: false,
       saveLoginUrl: null,
     }));
@@ -537,11 +554,17 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
   const replaceDocument = useCallback<WorkbenchActions["replaceDocument"]>((document, options = {}) => {
     const nextDocument = cloneEditorDocument(document);
     if (options.historySnapshot) recordHistory(historyRef.current, options.historySnapshot);
+    const current = stateRef.current;
+    const selection = validSelection(
+      nextDocument,
+      Object.hasOwn(options, "selectedKeys") ? options.selectedKeys ?? [] : current.selectedKeys,
+      Object.hasOwn(options, "selectedKey") ? options.selectedKey ?? null : current.selectedKey,
+    );
     updateState((current) => ({
       ...current,
       document: nextDocument,
       dirty: options.dirty ?? true,
-      ...(Object.hasOwn(options, "selectedKey") ? { selectedKey: options.selectedKey ?? null } : {}),
+      ...selection,
       validation: options.validation ?? "",
       status: options.status ?? current.status,
     }));
@@ -581,12 +604,11 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }
     historyRef.current.redo.push(cloneEditorDocument(current.document));
     const document = cloneEditorDocument(snapshot);
+    const selection = validSelection(document, current.selectedKeys, current.selectedKey);
     updateState((latest) => ({
       ...latest,
       document,
-      selectedKey: document.regions.some((region) => region.key === current.selectedKey)
-        ? current.selectedKey
-        : null,
+      ...selection,
       dirty: true,
       validation: "",
       status: "Undo. Save when ready.",
@@ -603,12 +625,11 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     }
     historyRef.current.undo.push(cloneEditorDocument(current.document));
     const document = cloneEditorDocument(snapshot);
+    const selection = validSelection(document, current.selectedKeys, current.selectedKey);
     updateState((latest) => ({
       ...latest,
       document,
-      selectedKey: document.regions.some((region) => region.key === current.selectedKey)
-        ? current.selectedKey
-        : null,
+      ...selection,
       dirty: true,
       validation: "",
       status: "Redo. Save when ready.",
@@ -670,8 +691,21 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     commitChanges,
     pushBranch,
     openPullRequest,
-    selectHold(key) {
-      updateState((current) => ({ ...current, selectedKey: key }));
+    selectHold(key, toggle = false) {
+      updateState((current) => {
+        if (!key || !current.document?.regions.some((region) => region.key === key)) {
+          return { ...current, selectedKey: null, selectedKeys: [] };
+        }
+        if (!toggle) return { ...current, selectedKey: key, selectedKeys: [key] };
+        const selectedKeys = current.selectedKeys.includes(key)
+          ? current.selectedKeys.filter((selected) => selected !== key)
+          : [...current.selectedKeys, key];
+        return {
+          ...current,
+          selectedKeys,
+          selectedKey: selectedKeys.includes(key) ? key : selectedKeys.at(-1) ?? null,
+        };
+      });
     },
     setRotationDegrees(value) {
       updateState((current) => ({ ...current, rotationDegrees: value }));

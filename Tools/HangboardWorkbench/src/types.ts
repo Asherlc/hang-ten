@@ -226,6 +226,7 @@ export interface WorkbenchState {
   board: Board | null;
   document: EditorDocument | null;
   selectedKey: string | null;
+  selectedKeys: string[];
   branches: string[];
   currentBranch: string | null;
   selectedBranch: string;
@@ -250,6 +251,7 @@ export interface DocumentUpdateOptions {
   dirty?: boolean;
   historySnapshot?: EditorDocument;
   selectedKey?: string | null;
+  selectedKeys?: string[];
   validation?: string;
   status?: string;
   failureStatus?: string;
@@ -269,7 +271,7 @@ export interface WorkbenchActions {
   commitChanges(): Promise<void>;
   pushBranch(): Promise<void>;
   openPullRequest(): Promise<void>;
-  selectHold(key: string | null): void;
+  selectHold(key: string | null, toggle?: boolean): void;
   setRotationDegrees(value: string): void;
   replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;
