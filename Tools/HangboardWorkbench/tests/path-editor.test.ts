@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  addInflectionPoint,
   addVertex,
   constrainedOutlineModel,
   createOutlineShapePath,
   deleteVertex,
+  isInflectionVertex,
   makeSegmentBendable,
   makeSegmentStraight,
   moveVertex,
@@ -561,6 +563,108 @@ test("addVertex on a C segment subdivides the cubic bezier", () => {
   assert.equal(commands.length, 4);
   assert.equal(commands[1]?.type, "C");
   assert.equal(commands[2]?.type, "C");
+});
+
+test("addInflectionPoint subdivides a quadratic at the selected non-midpoint location and delete restores it", () => {
+  const originalPath = "M 0 0 Q 100 100 100 0 L 0 100 Z";
+  const commands = parsePath(originalPath);
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 43.75, y: 37.5 }), true);
+  assert.equal(commands[1]?.type, "Q");
+  assert.equal(commands[2]?.type, "Q");
+  assertPoint(commands[1]?.points[0]!, { x: 43.75, y: 37.5 });
+  assertPoint(commands[1]?.controls[0]!, { x: 25, y: 25 });
+  assertPoint(commands[2]?.controls[0]!, { x: 100, y: 75 });
+  assert.equal(isInflectionVertex(commands, 1), true);
+
+  deleteVertex(commands, 1);
+  assert.equal(serializePath(commands), originalPath);
+});
+
+test("addInflectionPoint subdivides a cubic at the selected location without changing its curve", () => {
+  const commands = parsePath("M 0 0 C 0 100 100 100 100 0 L 0 100 Z");
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 15.625, y: 56.25 }), true);
+  assert.equal(commands[1]?.type, "C");
+  assert.equal(commands[2]?.type, "C");
+  assertPoint(commands[1]?.points[0]!, { x: 15.625, y: 56.25 });
+  assertPoint(commands[1]?.controls[0]!, { x: 0, y: 25 });
+  assertPoint(commands[1]?.controls[1]!, { x: 6.25, y: 43.75 });
+  assertPoint(commands[2]?.controls[0]!, { x: 43.75, y: 93.75 });
+  assertPoint(commands[2]?.controls[1]!, { x: 100, y: 75 });
+  assert.equal(isInflectionVertex(commands, 1), true);
+});
+
+test("serialized inflection points remain removable curve vertices", () => {
+  const cases = [
+    ["M 0 0 Q 37.1234567 98.7654321 123.4567891 4.5678912 L 0 100 Z", "Q"],
+    ["M 0 0 C 19.8765432 123.4567891 99.1234567 87.654321 123.4567891 4.5678912 L 0 100 Z", "C"],
+  ] as const;
+
+  for (const [path, type] of cases) {
+    const commands = parsePath(path);
+    assert.equal(addInflectionPoint(commands, 0, { x: 6.456789, y: 17.654321 }), true);
+    const roundTripped = parsePath(serializePath(commands));
+
+    assert.equal(isInflectionVertex(roundTripped, 1), true, `${type} inflection point is removable after serialization`);
+    deleteVertex(roundTripped, 1);
+    assert.equal(roundTripped[1]?.type, type, `${type} deletion keeps the segment bendable`);
+  }
+});
+
+test("dragged inflection points remain removable curve vertices", () => {
+  const cases = [
+    ["M 0 0 Q 100 100 100 0 L 0 100 Z", "Q"],
+    ["M 0 0 C 0 100 100 100 100 0 L 0 100 Z", "C"],
+  ] as const;
+
+  for (const [path, type] of cases) {
+    const commands = parsePath(path);
+    assert.equal(addInflectionPoint(commands, 0, { x: 43.75, y: 37.5 }), true);
+    moveVertex(commands, 1, 8, -5);
+
+    assert.equal(isInflectionVertex(commands, 1), true, `${type} inflection point is removable after dragging`);
+    deleteVertex(commands, 1);
+    assert.equal(commands[1]?.type, type, `${type} deletion keeps the segment bendable`);
+  }
+});
+
+test("removing a quadratic inflection point remains finite when its drag reaches the outgoing control", () => {
+  const commands = parsePath("M 0 0 Q 100 100 100 0 L 0 100 Z");
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 75, y: 50 }), true);
+  moveVertex(commands, 1, 25, 0);
+  assert.equal(isInflectionVertex(commands, 1), true);
+  deleteVertex(commands, 1);
+
+  assert.equal(commands[1]?.type, "Q");
+  assert.ok(commands[1]?.controls.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y)));
+  assert.doesNotThrow(() => validateEditorDocument({
+    schemaVersion: 1,
+    canvas: { width: 100, height: 100 },
+    regions: [{ key: "hold-1", displayPath: serializePath(commands) }],
+  }));
+});
+
+test("removing a cubic inflection point remains finite when its drag nearly reaches the outgoing control", () => {
+  const commands = parsePath("M 0 0 C 0 100 100 100 100 0 L 0 100 Z");
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 50, y: 75 }), true);
+  moveVertex(commands, 1, 24.999999999, 0);
+  assert.equal(isInflectionVertex(commands, 1), true);
+  deleteVertex(commands, 1);
+
+  assert.equal(commands[1]?.type, "C");
+  assert.ok(commands[1]?.controls.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y)));
+  assert.ok(
+    commands[1]?.controls.every((point) => Math.max(Math.abs(point.x), Math.abs(point.y)) <= 1_000),
+    "near-overlap removal must not amplify controls far beyond the surrounding geometry",
+  );
+  assert.doesNotThrow(() => validateEditorDocument({
+    schemaVersion: 1,
+    canvas: { width: 100, height: 100 },
+    regions: [{ key: "hold-1", displayPath: serializePath(commands) }],
+  }));
 });
 
 test("addVertex inserts on the segment after afterIndex, not before it", () => {

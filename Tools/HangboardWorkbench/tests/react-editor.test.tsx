@@ -1017,6 +1017,52 @@ test("curved-segment menu makes a quadratic segment straight and removes its con
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("curved-segment menu adds an inflection point at the right-click location and labels its reversible removal", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 Q 10 50 50 50 L 50 10 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 12.5, clientY: 27.5 });
+
+    assert.equal(app.text("#add-inflection-point-action"), "Add inflection point");
+    await app.click("#add-inflection-point-action");
+    assert.match(paths(app)[0]!, /^M 10 10 Q 10 20(?:\.\d+)? 12\.5 27\.5/);
+
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: 12.5, clientY: 27.5 });
+    assert.equal(app.text('[role="menuitem"]'), "Remove inflection point");
+    await app.click('[role="menuitem"]');
+    assert.equal(paths(app)[0], "M 10 10 Q 10 50 50 50 L 50 10 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("a serialized and dragged quadratic inflection point remains removable", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 0 0 Q 37.1234567 98.7654321 123.4567891 4.5678912 L 0 100 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 200, height: 150 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 6.456789, clientY: 17.654321 });
+    await app.click("#add-inflection-point-action");
+
+    const vertex = app.document.querySelector<SVGCircleElement>('.path-editor-vertex[data-index="1"]');
+    const x = Number(vertex?.getAttribute("cx"));
+    const y = Number(vertex?.getAttribute("cy"));
+    assert.ok(Number.isFinite(x) && Number.isFinite(y));
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: x, clientY: y });
+    assert.equal(app.text('[role="menuitem"]'), "Remove inflection point");
+    await app.keyDown('[role="menuitem"]', "Escape");
+
+    await drag(app, '.path-editor-vertex[data-index="1"]', [{ x, y }, { x: x + 8, y: y - 5 }]);
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: x + 8, clientY: y - 5 });
+    assert.equal(app.text('[role="menuitem"]'), "Remove inflection point");
+    await app.click('[role="menuitem"]');
+    assert.equal(pathEditor.parsePath(paths(app)[0]!)[1]?.type, "Q");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("straight-segment context menu chooses the closest eligible edge", async () => {
   const path = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: path }]);
