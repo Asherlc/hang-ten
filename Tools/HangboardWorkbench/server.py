@@ -1233,9 +1233,22 @@ def _argument_parser() -> ArgumentParser:
     return parser
 
 
-def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = EDITOR_ROOT) -> tuple[WorkbenchHTTPServer, None]:
+def _server_from_cli(
+    arguments: list[str] | None = None,
+    *,
+    editor_root: Path = EDITOR_ROOT,
+    local_checkout: bool = False,
+) -> tuple[WorkbenchHTTPServer, None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
+    if local_checkout:
+        if parsed.allow_remote:
+            parser.error("local checkout mode does not support --allow-remote")
+    elif not parsed.allow_remote:
+        parser.error(
+            "browser-hosted Workbench requires --allow-remote; "
+            "local checkout mode is available only in the packaged macOS app"
+        )
     if parsed.allow_remote and (
         not parsed.github_client_id
         or not parsed.github_client_secret

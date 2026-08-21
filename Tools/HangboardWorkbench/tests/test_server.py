@@ -895,6 +895,61 @@ def test_remote_cli_requires_a_session_secret(
     assert "--session-secret" in capsys.readouterr().err
 
 
+def test_browser_server_cli_rejects_local_checkout_mode(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Fails if a browser-hosted server can silently use local Git storage."""
+    monkeypatch.setattr(
+        server_module,
+        "create_server",
+        lambda *_args, **_kwargs: pytest.fail("local browser server must not start"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            ["--repository-root", str(REPOSITORY_ROOT), "--port", "0"]
+        )
+
+    assert error.value.code == 2
+    assert "--allow-remote" in capsys.readouterr().err
+
+
+def test_packaged_cli_rejects_hosted_storage_mode(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Fails if the packaged local app can be redirected to hosted storage."""
+    monkeypatch.setattr(
+        server_module,
+        "create_server",
+        lambda *_args, **_kwargs: pytest.fail("packaged server must stay local"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            [
+                "--repository-root",
+                str(REPOSITORY_ROOT),
+                "--port",
+                "0",
+                "--allow-remote",
+                "--github-client-id",
+                "test-client-id",
+                "--github-client-secret",
+                "test-client-secret",
+                "--session-secret",
+                "test-session-secret",
+                "--github-owner",
+                "fixture-owner",
+                "--github-repo",
+                "fixture-repo",
+            ],
+            local_checkout=True,
+        )
+
+    assert error.value.code == 2
+    assert "local checkout" in capsys.readouterr().err
+
+
 def test_root_without_session_redirects_to_login(tmp_path: Path) -> None:
     checkout = _git_checkout(tmp_path)
 
