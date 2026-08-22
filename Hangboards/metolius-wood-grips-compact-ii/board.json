@@ -492,13 +492,102 @@
             "height": 0.147
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.44
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.245900379215,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.754099620785,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.889906653099,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857619196
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142380804
+                ],
+                "control2": [
+                  0.889906653099,
+                  1.0
+                ],
+                "to": [
+                  0.754099620785,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.245900379215,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.110093346901,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142380804
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857619196
+                ],
+                "control2": [
+                  0.110093346901,
+                  0.0
+                ],
+                "to": [
+                  0.245900379215,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "deep"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
