@@ -5,7 +5,7 @@
   "name": "VerticalBoard One",
   "subtitle": "Versatile poplar hangboard with jugs, slopers, edges, two-finger pockets, and a central handle.",
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-one",
-  "dimensions": "62 × 13 × 5.5 cm",
+  "dimensions": "62 \u00d7 13 \u00d7 5.5 cm",
   "aspectRatio": 2.0,
   "presentation": {
     "assetPath": "assets/primary.png"
@@ -18,8 +18,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.112,
-            "y": 0.406,
+            "x": 0.066394693348,
+            "y": 0.286597014656,
             "width": 0.13,
             "height": 0.031
           },
@@ -29,7 +29,7 @@
               {
                 "command": "move",
                 "to": [
-                  0,
+                  0.0,
                   0.2
                 ]
               },
@@ -41,32 +41,32 @@
                 ],
                 "control2": [
                   0.18,
-                  0
+                  0.0
                 ],
                 "to": [
                   0.36,
-                  0
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  1,
-                  0
+                  1.0,
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.9,
-                  1
+                  1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.08,
-                  1
+                  1.0
                 ]
               },
               {
@@ -76,11 +76,11 @@
                   0.82
                 ],
                 "control2": [
-                  0,
+                  0.0,
                   0.52
                 ],
                 "to": [
-                  0,
+                  0.0,
                   0.2
                 ]
               },
@@ -376,8 +376,20 @@
                   0
                 ]
               },
-              { "command": "line", "to": [1, 0.5] },
-              { "command": "line", "to": [0.96, 1] },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.5
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.96,
+                  1
+                ]
+              },
               {
                 "command": "line",
                 "to": [
@@ -385,8 +397,20 @@
                   1
                 ]
               },
-              { "command": "line", "to": [0, 0.5] },
-              { "command": "line", "to": [0.04, 0] },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.04,
+                  0
+                ]
+              },
               {
                 "command": "close"
               }
@@ -516,7 +540,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -639,7 +663,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -762,7 +786,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -885,7 +909,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1009,7 +1033,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1133,7 +1157,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1256,7 +1280,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1379,7 +1403,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1503,7 +1527,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1627,7 +1651,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1735,7 +1759,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1858,7 +1882,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1981,7 +2005,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2104,7 +2128,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2227,7 +2251,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
