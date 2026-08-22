@@ -349,6 +349,7 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }
@@ -1103,6 +1104,7 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }
@@ -1164,7 +1166,7 @@ def test_hosted_board_catalog_reads_metadata_without_primary_image_blobs() -> No
 
 
 def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
-    """Fails if list, open, and image repeatedly fetch the same GitHub tree/blobs."""
+    """Fails if opening a listed board re-downloads immutable board metadata."""
     with running_server_with_github_backend(_github_files()) as (
         base,
         client,
@@ -1186,7 +1188,7 @@ def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     assert image == PRIMARY_IMAGE.read_bytes()
     assert len(client.calls_named("get_branch_head_sha")) == 3
     assert len(client.calls_named("get_tree")) == 1
-    assert len(client.calls_named("get_blob")) == 3
+    assert len(client.calls_named("get_blob")) == 2
 
 
 def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:

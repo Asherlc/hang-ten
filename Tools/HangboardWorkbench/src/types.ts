@@ -74,6 +74,7 @@ export interface BoardSummary {
   displayName: string;
   holdCount: number;
   href?: string;
+  imageUrl: string;
 }
 
 export interface Board extends BoardSummary {
@@ -166,6 +167,10 @@ export interface WorkbenchController {
     boardId: string;
     getBoard(boardId: string): Promise<Board>;
     loadImage(href: string): Promise<ImageType>;
+    preloadedImage?: {
+      href: string;
+      promise: Promise<ImageType>;
+    };
     commit(value: LoadedBoard<ImageType>): void;
   }): Promise<LoadedBoard<ImageType>>;
   saveBoardAtomically(options: {

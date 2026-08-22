@@ -319,10 +319,15 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     await boardOperations.perform(async ({ isCurrent }) => {
       let committed = false;
       try {
+        const listedBoard = stateRef.current.boards.find((board) => board.boardId === boardId);
+        const preloadedImage = listedBoard?.imageUrl
+          ? { href: listedBoard.imageUrl, promise: loadImage(listedBoard.imageUrl) }
+          : undefined;
         await controller.loadBoardAtomically({
           boardId,
           getBoard: client.getBoard,
           loadImage,
+          preloadedImage,
           commit: ({ board, document }) => {
             if (!isCurrent()) return;
             resetHistory(historyRef.current);
