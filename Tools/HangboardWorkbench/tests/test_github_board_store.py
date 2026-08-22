@@ -287,6 +287,21 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
     }
 
 
+def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
+    """Fails if opening a listed board re-downloads its immutable board.json."""
+    client = _client(("fixture-board", board_document("fixture.board")))
+    store = github_board_store.GitHubBoardStore(client)
+
+    listed = store.discover_packages(TOKEN, BRANCH)
+    opened = store.open_package(TOKEN, BRANCH, "fixture.board")
+    image = store.primary_image_bytes(TOKEN, BRANCH, "fixture.board")
+
+    assert [package.board_id for package in listed] == ["fixture.board"]
+    assert opened.board_id == "fixture.board"
+    assert image == PRIMARY_IMAGE.read_bytes()
+    assert len(client.calls_named("get_blob")) == 2
+
+
 def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() -> None:
     """Fails if catalog loading serializes independent package blob reads."""
     client = _OverlappingBlobClient(
@@ -427,10 +442,14 @@ def test_cached_store_rejects_nonpositive_request_limits(limit: str) -> None:
 
 def test_cached_store_reloads_a_catalog_evicted_at_its_capacity() -> None:
     """Fails if catalog capacity does not evict the least-recent commit metadata."""
-    files = _complete_package("fixture-board", board_document("fixture.board"))
-    branches = {"first": files, "second": files}
+    branches = {
+        "first": _complete_package("fixture-board", board_document("first.board")),
+        "second": _complete_package("fixture-board", board_document("second.board")),
+    }
     client = FakeGitHubClient(branches)
-    store = github_board_store.GitHubBoardStore(client, max_cached_catalogs=1)
+    store = github_board_store.GitHubBoardStore(
+        client, max_cached_catalogs=1, max_cached_blobs=1
+    )
 
     store.discover_packages(TOKEN, "first")
     store.discover_packages(TOKEN, "second")
@@ -442,7 +461,9 @@ def test_cached_store_reloads_a_catalog_evicted_at_its_capacity() -> None:
 def test_cached_store_skips_catalogs_larger_than_its_configured_byte_limit() -> None:
     """Fails if max_cached_catalog_bytes retains oversized board metadata."""
     client = _client(("fixture-board", board_document("fixture.board")))
-    store = github_board_store.GitHubBoardStore(client, max_cached_catalog_bytes=1)
+    store = github_board_store.GitHubBoardStore(
+        client, max_cached_catalog_bytes=1, max_cached_blob_bytes=1
+    )
 
     store.discover_packages(TOKEN, BRANCH)
     store.discover_packages(TOKEN, BRANCH)

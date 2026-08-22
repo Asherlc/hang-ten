@@ -146,7 +146,7 @@ class GitHubBoardStore:
         self, token: str, branch: str
     ) -> tuple[GitHubBoardListing, ...]:
         with self._operation():
-            snapshot = self._snapshot(token, branch, cache_blobs=False)
+            snapshot = self._snapshot(token, branch, cache_blobs=True)
             return _copy_listings(self._catalog(snapshot, token, branch))
 
     def open_package(
