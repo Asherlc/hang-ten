@@ -1296,7 +1296,7 @@ test("vertex menu rounds a corner as a persisted quadratic", async () => {
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("straight-segment menu converts a segment to a bendable quadratic", async () => {
+test("straight-segment menu converts a segment to a bendable curve with controls at both endpoints", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
@@ -1312,9 +1312,34 @@ test("straight-segment menu converts a segment to a bendable quadratic", async (
 
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
     await app.click("#make-bendable-action");
-    assert.equal(paths(app)[0], "M 10 10 Q 20 10 30 10 L 30 30 L 10 30 Z");
+    assert.equal(paths(app)[0], "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z");
     assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="0"]'));
+    assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="1"]'));
     assert.equal(app.document.querySelector('[role="menu"]'), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("the second cubic control stays independently draggable after Make bendable", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    const secondControl = app.document.querySelector<SVGCircleElement>(
+      '.path-editor-control[data-index="1"][data-control="1"]',
+    );
+    const startX = Number(secondControl?.getAttribute("cx"));
+    const startY = Number(secondControl?.getAttribute("cy"));
+    assert.ok(Number.isFinite(startX) && Number.isFinite(startY));
+
+    await drag(app, '.path-editor-control[data-index="1"][data-control="1"]', [
+      { x: startX, y: startY },
+      { x: startX + 20 / 3, y: startY + 5 },
+    ]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 16.666667 10 30 15 30 10 L 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
 });
 
@@ -1414,7 +1439,7 @@ test("straight-segment context menu chooses the closest eligible edge", async ()
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 28, clientY: 15 });
     await app.click("#make-bendable-action");
 
-    assert.equal(paths(app)[0], "M 10 10 L 30 10 Q 30 20 30 30 L 10 30 Z");
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 C 30 16.666667 30 23.333333 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
 });
 

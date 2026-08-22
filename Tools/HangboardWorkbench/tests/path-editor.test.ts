@@ -78,11 +78,11 @@ test("serializePath handles integer coordinates cleanly", () => {
   assert.equal(serializePath(commands), "M 0 0 L 100 0 L 50 80 Z");
 });
 
-test("makeSegmentBendable replaces a straight segment with a geometrically identical quadratic", () => {
+test("makeSegmentBendable replaces a straight segment with a geometrically identical cubic", () => {
   const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
 
   assert.equal(makeSegmentBendable(commands, 0), true);
-  assert.equal(serializePath(commands), "M 0 0 Q 5 0 10 0 L 10 10 Z");
+  assert.equal(serializePath(commands), "M 0 0 C 3.333333 0 6.666667 0 10 0 L 10 10 Z");
   assert.equal(makeSegmentBendable(commands, 0), false, "curves cannot be converted twice");
 });
 
@@ -90,7 +90,7 @@ test("makeSegmentBendable converts a closing edge while retaining one final clos
   const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
 
   assert.equal(makeSegmentBendable(commands, 2), true);
-  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 Q 5 5 0 0 Z");
+  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 C 6.666667 6.666667 3.333333 3.333333 0 0 Z");
   assert.equal(commands.filter((command) => command.type === "M").length, 1);
   assert.equal(commands.filter((command) => command.type === "Z").length, 1);
   assert.equal(commands.at(-1)?.type, "Z");

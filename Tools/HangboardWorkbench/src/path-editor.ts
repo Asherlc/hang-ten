@@ -582,9 +582,9 @@ export function makeSegmentBendable(commands: PathCommand[], afterIndex: number)
     : next?.type === "L" ? next.points[0] : undefined;
   if (!end || pointsMatch(start, end)) return false;
   const curve: PathCommand = {
-    type: "Q",
+    type: "C",
     points: [{ ...end }],
-    controls: [interpolate(start, end, 0.5)],
+    controls: [interpolate(start, end, 1 / 3), interpolate(start, end, 2 / 3)],
   };
   if (closingEdge) {
     commands.splice(afterIndex + 1, 1, curve, { type: "Z", points: [], controls: [] });
