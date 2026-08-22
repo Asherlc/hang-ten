@@ -413,14 +413,17 @@ def test_invalid_save_leaves_board_json_and_inventory_unchanged(tmp_path: Path) 
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 10 10 L 90 90 L 10 90 L 90 10 Z"
+            "M 10 10 L 90 90 L 10 90 L 90 10"
         )
         status, result = request_json(
             base, "PUT", "/api/boards/fixture.board", document
         )
 
     assert status == 400
-    assert result == {"ok": False, "error": "hold hold-left-piece-0 must not self-intersect"}
+    assert result == {
+        "ok": False,
+        "error": "hold hold-left-piece-0 must be exactly one closed contour",
+    }
     after = {
         path.relative_to(package).as_posix(): path.read_bytes()
         for path in package.rglob("*")

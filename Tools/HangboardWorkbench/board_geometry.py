@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from bisect import bisect_left, bisect_right
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 import math
@@ -12,6 +13,7 @@ from typing import Any
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
 _TOKEN = re.compile(r"[MLQCZ]|[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?")
 _EPSILON = 1e-9
+_MAX_FLATTENED_SEGMENTS = 1_024
 
 # The app quantizes flattened contour coordinates into an Int64 by scaling
 # by 1e12 (see BoardPackageStore.swift's QuantizedBoardPoint), which traps
@@ -23,7 +25,7 @@ _MAX_CONTROL_COORDINATE = 1_000_000.0
 
 
 class GeometryError(ValueError):
-    """Raised when hold geometry is not one safe contiguous outline."""
+    """Raised when hold geometry is not one safe contiguous contour."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -74,7 +76,7 @@ class ClosedPath:
 
 
 def parse_closed_path(value: object, width: int, height: int, *, label: str = "hold path") -> ClosedPath:
-    """Parse one absolute SVG-like closed path and enforce a simple outline."""
+    """Parse one absolute SVG-like closed path and enforce valid contour geometry."""
     if isinstance(width, bool) or not isinstance(width, int) or width <= 0:
         raise GeometryError("canvas width must be a positive integer")
     if isinstance(height, bool) or not isinstance(height, int) or height <= 0:
@@ -85,6 +87,9 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
     raw = value.strip()
     tokens = _tokenize(raw, label)
     parsed: list[tuple[str, tuple[float, ...]]] = []
+    projected_segments = 0
+    start: tuple[float, float] | None = None
+    current: tuple[float, float] | None = None
     index = 0
     while index < len(tokens):
         command = tokens[index]
@@ -100,6 +105,27 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
             if not math.isfinite(number):
                 raise GeometryError(f"{label} coordinates must be finite")
             values.append(number)
+
+        if command == "M":
+            current = (values[0], values[1])
+            if start is None:
+                start = current
+        elif command == "L":
+            projected_segments += 1
+            current = (values[0], values[1])
+        elif command == "Q":
+            projected_segments += 32
+            current = (values[2], values[3])
+        elif command == "C":
+            projected_segments += 32
+            current = (values[4], values[5])
+        elif command == "Z" and start is not None and current is not None:
+            projected_segments += not _same_point(current, start)
+            current = start
+        if projected_segments > _MAX_FLATTENED_SEGMENTS:
+            raise GeometryError(
+                f"{label} must contain no more than {_MAX_FLATTENED_SEGMENTS} flattened segments"
+            )
         parsed.append((command, tuple(values)))
         index += arity
 
@@ -111,7 +137,7 @@ def parse_closed_path(value: object, width: int, height: int, *, label: str = "h
         raise GeometryError(f"{label} must be exactly one closed contour")
 
     contour = _flatten(parsed, label)
-    _validate_simple_contour(contour, label)
+    _validate_contour(contour, label)
     return ClosedPath(
         " ".join(_render(command, values) for command, values in parsed),
         tuple(parsed),
@@ -289,9 +315,11 @@ def _flatten(commands: list[tuple[str, tuple[float, ...]]], label: str) -> list[
     points = [start]
     for command, values in commands[1:]:
         if command == "L":
+            _ensure_flattened_budget(points, 1, label)
             current = (values[0], values[1])
             points.append(current)
         elif command == "Q":
+            _ensure_flattened_budget(points, 32, label)
             control, end = (values[0], values[1]), (values[2], values[3])
             previous = current
             for step in range(1, 33):
@@ -303,6 +331,7 @@ def _flatten(commands: list[tuple[str, tuple[float, ...]]], label: str) -> list[
                 points.append(point)
             current = end
         elif command == "C":
+            _ensure_flattened_budget(points, 32, label)
             control1, control2, end = (values[0], values[1]), (values[2], values[3]), (values[4], values[5])
             previous = current
             for step in range(1, 33):
@@ -315,60 +344,171 @@ def _flatten(commands: list[tuple[str, tuple[float, ...]]], label: str) -> list[
             current = end
         elif command == "Z":
             if not _same_point(current, start):
+                _ensure_flattened_budget(points, 1, label)
                 points.append(start)
         else:  # The parser only leaves M, L, Q, C, Z here.
             raise GeometryError(f"{label} contains an unsupported command")
     return points
 
 
-def _validate_simple_contour(points: list[tuple[float, float]], label: str) -> None:
+def _ensure_flattened_budget(
+    points: list[tuple[float, float]], additional_segments: int, label: str
+) -> None:
+    if len(points) - 1 + additional_segments > _MAX_FLATTENED_SEGMENTS:
+        raise GeometryError(
+            f"{label} must contain no more than {_MAX_FLATTENED_SEGMENTS} flattened segments"
+        )
+
+
+def _validate_contour(points: list[tuple[float, float]], label: str) -> None:
     if len(points) < 4 or points[0] != points[-1]:
         raise GeometryError(f"{label} must be a closed contour")
-    if len({(round(x, 12), round(y, 12)) for x, y in points[:-1]}) < 3:
+    if len(points) - 1 > _MAX_FLATTENED_SEGMENTS:
+        raise GeometryError(
+            f"{label} must contain no more than {_MAX_FLATTENED_SEGMENTS} flattened segments"
+        )
+    canonical_points = _canonical_contour(points, label)
+    if len({_quantized_point(point) for point in canonical_points[:-1]}) < 3:
         raise GeometryError(f"{label} must contain at least three unique points")
-    segment_count = len(points) - 1
+    segment_count = len(canonical_points) - 1
     for first in range(segment_count):
-        if _same_point(points[first], points[first + 1]):
+        if _same_point(canonical_points[first], canonical_points[first + 1]):
             raise GeometryError(f"{label} contains a zero-length segment")
-        for second in range(first + 1, segment_count):
-            if second == first + 1 or (first == 0 and second == segment_count - 1):
-                continue
-            if _segments_intersect(points[first], points[first + 1], points[second], points[second + 1]):
-                raise GeometryError(f"{label} must not self-intersect")
-    if abs(_signed_area(points)) <= _EPSILON:
+    if not _has_filled_span(canonical_points):
         raise GeometryError(f"{label} must enclose area")
 
 
-def _signed_area(points: list[tuple[float, float]]) -> float:
-    return sum(
-        points[index][0] * points[index + 1][1] - points[index + 1][0] * points[index][1]
-        for index in range(len(points) - 1)
-    ) / 2
-
-
-def _segments_intersect(first: tuple[float, float], second: tuple[float, float], third: tuple[float, float], fourth: tuple[float, float]) -> bool:
-    def orientation(a: tuple[float, float], b: tuple[float, float], c: tuple[float, float]) -> float:
-        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
-
-    first_third = orientation(first, second, third)
-    first_fourth = orientation(first, second, fourth)
-    third_first = orientation(third, fourth, first)
-    third_second = orientation(third, fourth, second)
-    if ((first_third > _EPSILON and first_fourth < -_EPSILON) or (first_third < -_EPSILON and first_fourth > _EPSILON)) and ((third_first > _EPSILON and third_second < -_EPSILON) or (third_first < -_EPSILON and third_second > _EPSILON)):
-        return True
-    return any(
-        abs(value) <= _EPSILON and _on_segment(a, b, point)
-        for value, a, b, point in (
-            (first_third, first, second, third),
-            (first_fourth, first, second, fourth),
-            (third_first, third, fourth, first),
-            (third_second, third, fourth, second),
+def _canonical_contour(
+    points: list[tuple[float, float]],
+    label: str,
+) -> list[tuple[float, float]]:
+    """Remove translation and independent axis scale from contour validation."""
+    minimum_x = min(point[0] for point in points)
+    maximum_x = max(point[0] for point in points)
+    minimum_y = min(point[1] for point in points)
+    maximum_y = max(point[1] for point in points)
+    width = maximum_x - minimum_x
+    height = maximum_y - minimum_y
+    if not math.isfinite(width) or not math.isfinite(height):
+        raise GeometryError(f"{label} coordinates are too large to represent")
+    canonical = [
+        (
+            (point[0] - minimum_x) / width if width > 0 else 0.0,
+            (point[1] - minimum_y) / height if height > 0 else 0.0,
         )
+        for point in points
+    ]
+    if not all(math.isfinite(value) for point in canonical for value in point):
+        raise GeometryError(f"{label} coordinates are too large to represent")
+    return canonical
+
+
+def _quantized_point(point: tuple[float, float]) -> tuple[int, int]:
+    scale = 1_000_000_000_000
+    return (
+        math.floor(point[0] * scale + 0.5),
+        math.floor(point[1] * scale + 0.5),
     )
 
 
-def _on_segment(first: tuple[float, float], second: tuple[float, float], point: tuple[float, float]) -> bool:
-    return min(first[0], second[0]) - _EPSILON <= point[0] <= max(first[0], second[0]) + _EPSILON and min(first[1], second[1]) - _EPSILON <= point[1] <= max(first[1], second[1]) + _EPSILON
+def _has_filled_span(points: list[tuple[float, float]]) -> bool:
+    """Return whether the contour has a non-zero-winding filled region.
+
+    Shoelace area is the net signed area, which cancels for a symmetric
+    bow-tie even though its two lobes visibly enclose area. Sweep between
+    every vertex and segment-intersection height instead, where crossings
+    have a stable order, and look for a span with non-zero winding.
+    """
+    segments = list(zip(points, points[1:]))
+    if _segments_cancel_in_reverse_pairs(segments):
+        return False
+
+    vertex_heights = sorted({point[1] for point in points})
+    intersection_heights: set[float] = set()
+    for first_index, (first, second) in enumerate(segments):
+        for third, fourth in segments[first_index + 1 :]:
+            intersection_y = _segment_intersection_y(first, second, third, fourth)
+            if intersection_y is not None:
+                intersection_heights.add(intersection_y)
+
+    sorted_intersections = sorted(intersection_heights)
+    for lower, upper in zip(vertex_heights, vertex_heights[1:]):
+        if upper - lower <= _EPSILON:
+            continue
+        first_event = bisect_right(sorted_intersections, lower)
+        last_event = bisect_left(sorted_intersections, upper)
+        previous = lower
+        widest_gap = (lower, lower)
+        for event in sorted_intersections[first_event:last_event]:
+            if event - previous > widest_gap[1] - widest_gap[0]:
+                widest_gap = (previous, event)
+            previous = event
+        if upper - previous > widest_gap[1] - widest_gap[0]:
+            widest_gap = (previous, upper)
+        if widest_gap[1] - widest_gap[0] <= _EPSILON:
+            continue
+        if _has_filled_span_at_height(segments, sum(widest_gap) / 2):
+            return True
+    return False
+
+
+def _segments_cancel_in_reverse_pairs(
+    segments: list[tuple[tuple[float, float], tuple[float, float]]],
+) -> bool:
+    balances: dict[tuple[tuple[int, int], tuple[int, int]], int] = {}
+    for first, second in segments:
+        quantized_first = _quantized_point(first)
+        quantized_second = _quantized_point(second)
+        if quantized_first < quantized_second:
+            key = (quantized_first, quantized_second)
+            direction = 1
+        else:
+            key = (quantized_second, quantized_first)
+            direction = -1
+        balances[key] = balances.get(key, 0) + direction
+    return all(balance == 0 for balance in balances.values())
+
+
+def _has_filled_span_at_height(
+    segments: list[tuple[tuple[float, float], tuple[float, float]]],
+    scan_y: float,
+) -> bool:
+    crossings: list[tuple[float, int]] = []
+    for first, second in segments:
+        if (first[1] <= scan_y < second[1]) or (second[1] <= scan_y < first[1]):
+            x = first[0] + (scan_y - first[1]) * (second[0] - first[0]) / (second[1] - first[1])
+            crossings.append((x, 1 if second[1] > first[1] else -1))
+    crossings.sort()
+
+    index = 0
+    winding = 0
+    while index < len(crossings):
+        x = crossings[index][0]
+        while index < len(crossings) and abs(crossings[index][0] - x) <= _EPSILON:
+            winding += crossings[index][1]
+            index += 1
+        if index < len(crossings) and winding and crossings[index][0] - x > _EPSILON:
+            return True
+    return False
+
+
+def _segment_intersection_y(
+    first: tuple[float, float],
+    second: tuple[float, float],
+    third: tuple[float, float],
+    fourth: tuple[float, float],
+) -> float | None:
+    first_delta = (second[0] - first[0], second[1] - first[1])
+    second_delta = (fourth[0] - third[0], fourth[1] - third[1])
+    denominator = first_delta[0] * second_delta[1] - first_delta[1] * second_delta[0]
+    if abs(denominator) <= _EPSILON:
+        return None
+    origin_delta = (third[0] - first[0], third[1] - first[1])
+    first_parameter = (origin_delta[0] * second_delta[1] - origin_delta[1] * second_delta[0]) / denominator
+    second_parameter = (origin_delta[0] * first_delta[1] - origin_delta[1] * first_delta[0]) / denominator
+    if not (-_EPSILON <= first_parameter <= 1 + _EPSILON and -_EPSILON <= second_parameter <= 1 + _EPSILON):
+        return None
+    return first[1] + first_parameter * first_delta[1]
 
 
 def _same_point(first: tuple[float, float], second: tuple[float, float]) -> bool:

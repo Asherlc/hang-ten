@@ -553,6 +553,156 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreAcceptsSharedSelfCrossingPathShapes() throws {
+        let validationFixtures = try validationFixtures()
+        let shapes = try XCTUnwrap(
+            validationFixtures["selfCrossingPathShapes"] as? [[String: Any]]
+        )
+        for shape in shapes {
+            let name = try XCTUnwrap(shape["name"] as? String)
+            let commands = try XCTUnwrap(shape["commands"] as? [[String: Any]])
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) {
+                    var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
+                    var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                    geometry[0]["shape"] = ["type": "path", "commands": commands]
+                    holds[0]["geometry"] = geometry
+                    $0["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle), name)
+        }
+    }
+
+    func testStoreRejectsContourWithMoreThan1024FlattenedSegments() throws {
+        var commands: [[String: Any]] = [
+            ["command": "move", "to": [0, 0]]
+        ]
+        for index in 1...1025 {
+            commands.append([
+                "command": "line",
+                "to": index.isMultiple(of: 2) ? [0, 0] : [1, 0]
+            ])
+        }
+        commands.append(["command": "close"])
+
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) {
+                var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = ["type": "path", "commands": commands]
+                holds[0]["geometry"] = geometry
+                $0["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(
+                reason.contains("must contain no more than 1024 flattened segments"),
+                reason
+            )
+        }
+    }
+
+    func testStoreRejectsExcessiveCurvesBeforeAWorkIntensiveSuffix() throws {
+        var commands: [[String: Any]] = [
+            ["command": "move", "to": [0, 0]]
+        ]
+        commands.append(contentsOf: Array(
+            repeating: [
+                "command": "curve",
+                "control1": [0, 0],
+                "control2": [1, 1],
+                "to": [0, 0]
+            ],
+            count: 33
+        ))
+        commands.append(["command": "line", "to": [0]])
+        commands.append(["command": "close"])
+
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) {
+                var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = ["type": "path", "commands": commands]
+                holds[0]["geometry"] = geometry
+                $0["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(
+                reason.contains("must contain no more than 1024 flattened segments"),
+                reason
+            )
+        }
+    }
+
+    func testStoreRejectsMaximumSizeExactlyRetracedContourQuickly() throws {
+        let vertexCount = 256
+        let step = vertexCount / 2 - 1
+        var order: [Int] = []
+        var visited: Set<Int> = []
+        var index = 0
+        while !visited.contains(index) {
+            visited.insert(index)
+            order.append(index)
+            index = (index + step) % vertexCount
+        }
+        let vertices = order.map { index in
+            let angle = 2 * Double.pi * Double(index) / Double(vertexCount)
+            return [0.5 + 0.4 * cos(angle), 0.5 + 0.4 * sin(angle)]
+        }
+        var commands: [[String: Any]] = [
+            ["command": "move", "to": vertices[0]]
+        ]
+        commands.append(contentsOf: vertices.dropFirst().map {
+            ["command": "line", "to": $0]
+        })
+        commands.append(contentsOf: vertices.dropLast().reversed().map {
+            ["command": "line", "to": $0]
+        })
+        commands.append(["command": "close"])
+
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) {
+                var holds = try XCTUnwrap($0["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = ["type": "path", "commands": commands]
+                holds[0]["geometry"] = geometry
+                $0["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let started = ContinuousClock.now
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(reason.contains("must enclose area"), reason)
+        }
+        XCTAssertLessThan(started.duration(to: .now), .seconds(1))
+    }
+
     /// A Bezier control point only needs to be finite, but flattening it
     /// still quantizes into an Int64 (`QuantizedBoardPoint`) by scaling by
     /// 1e12, which traps for values outside Int64's range. An oversized

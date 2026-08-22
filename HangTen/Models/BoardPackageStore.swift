@@ -1048,8 +1048,8 @@ private extension BoardGeometryShapeDocument {
                     "path must contain exactly one closed contour"
                 )
             }
-            let pathCommands = try commands.map { try $0.boardPathCommand() }
-            try pathCommands.validateSimpleContour()
+            let pathCommands = try commands.boardPathCommands()
+            try pathCommands.validateContour()
             return .path(
                 BoardNormalizedPath(commands: pathCommands)
             )
@@ -1113,6 +1113,11 @@ private extension BoardGeometryPathCommandDocument {
               coordinates.allSatisfy({ $0.isFinite }) else {
             throw invalidCommand()
         }
+        guard coordinates.allSatisfy({ abs($0) <= maximumBoardControlCoordinate }) else {
+            throw BoardGeometryAdaptationError.invalid(
+                "path coordinates are too large to represent"
+            )
+        }
         return CGPoint(x: coordinates[0], y: coordinates[1])
     }
 
@@ -1121,56 +1126,89 @@ private extension BoardGeometryPathCommandDocument {
     }
 }
 
+private let maximumBoardFlattenedSegments = 1_024
+private let maximumBoardControlCoordinate = 1_000_000.0
+private let boardContourEpsilon = CGFloat(1e-9)
+
+private func sameBoardContourPoint(_ lhs: CGPoint, _ rhs: CGPoint) -> Bool {
+    abs(lhs.x - rhs.x) <= boardContourEpsilon &&
+        abs(lhs.y - rhs.y) <= boardContourEpsilon
+}
+
+private extension Array where Element == BoardGeometryPathCommandDocument {
+    /// Convert commands incrementally so an excessive contour is rejected
+    /// before later malformed commands are decoded into path geometry or a
+    /// flattened point array is allocated.
+    func boardPathCommands() throws -> [BoardPathCommand] {
+        var result: [BoardPathCommand] = []
+        result.reserveCapacity(Swift.min(count, maximumBoardFlattenedSegments + 1))
+        var flattenedSegmentCount = 0
+        var start: CGPoint?
+        var current: CGPoint?
+
+        for document in self {
+            let command = try document.boardPathCommand()
+            var additionalSegments = 0
+            switch command {
+            case .move(let destination):
+                if start == nil { start = destination }
+                current = destination
+            case .line(let destination):
+                additionalSegments = 1
+                current = destination
+            case .quad(let destination, _):
+                additionalSegments = 32
+                current = destination
+            case .curve(let destination, _, _):
+                additionalSegments = 32
+                current = destination
+            case .close:
+                if let start, let current, !sameBoardContourPoint(current, start) {
+                    additionalSegments = 1
+                }
+                current = start
+            }
+            guard flattenedSegmentCount <= maximumBoardFlattenedSegments - additionalSegments else {
+                throw BoardGeometryAdaptationError.invalid(
+                    "path must contain no more than \(maximumBoardFlattenedSegments) flattened segments"
+                )
+            }
+            flattenedSegmentCount += additionalSegments
+            result.append(command)
+        }
+        return result
+    }
+}
+
 extension Array where Element == BoardPathCommand {
-    func validateSimpleContour() throws {
+    func validateContour() throws {
         let points = try flattenedContour()
         guard points.count >= 4, points.first == points.last else {
             throw BoardGeometryAdaptationError.invalid("path must be a closed contour")
         }
-        let quantizedPoints = try points.dropLast().map { point -> QuantizedBoardPoint in
-            guard let quantized = QuantizedBoardPoint(point) else {
-                throw BoardGeometryAdaptationError.invalid(
-                    "path coordinates are too large to represent"
-                )
-            }
-            return quantized
+        guard points.count - 1 <= maximumBoardFlattenedSegments else {
+            throw BoardGeometryAdaptationError.invalid(
+                "path must contain no more than \(maximumBoardFlattenedSegments) flattened segments"
+            )
         }
-        let uniquePoints = Set(quantizedPoints)
+        let canonicalPoints = try Self.canonicalContour(points)
+        let uniquePoints = Set(canonicalPoints.dropLast().compactMap(QuantizedBoardPoint.init))
         guard uniquePoints.count >= 3 else {
             throw BoardGeometryAdaptationError.invalid(
                 "path must contain at least three unique points"
             )
         }
-        let segmentCount = points.count - 1
+        let segmentCount = canonicalPoints.count - 1
         for firstIndex in 0..<segmentCount {
-            let first = points[firstIndex]
-            let second = points[firstIndex + 1]
+            let first = canonicalPoints[firstIndex]
+            let second = canonicalPoints[firstIndex + 1]
             guard !Self.samePoint(first, second) else {
                 throw BoardGeometryAdaptationError.invalid(
                     "path contains a zero-length segment"
                 )
             }
-            for otherIndex in (firstIndex + 1)..<segmentCount {
-                if otherIndex == firstIndex + 1 ||
-                    (firstIndex == 0 && otherIndex == segmentCount - 1) {
-                    continue
-                }
-                if Self.segmentsIntersect(
-                    first,
-                    second,
-                    points[otherIndex],
-                    points[otherIndex + 1]
-                ) {
-                    throw BoardGeometryAdaptationError.invalid(
-                        "path must not self-intersect"
-                    )
-                }
-            }
         }
-        let signedArea = zip(points, points.dropFirst()).reduce(CGFloat.zero) {
-            $0 + $1.0.x * $1.1.y - $1.1.x * $1.0.y
-        } / 2
-        guard abs(signedArea) > Self.contourEpsilon else {
+        guard Self.hasFilledSpan(canonicalPoints) else {
             throw BoardGeometryAdaptationError.invalid("path must enclose area")
         }
     }
@@ -1188,9 +1226,11 @@ extension Array where Element == BoardPathCommand {
                     "path must contain exactly one closed contour"
                 )
             case .line(let destination):
+                try Self.ensureFlattenedBudget(points, adding: 1)
                 current = destination
                 points.append(destination)
             case .quad(let destination, let control):
+                try Self.ensureFlattenedBudget(points, adding: 32)
                 let previous = current
                 for step in 1...32 {
                     let t = CGFloat(step) / 32
@@ -1208,6 +1248,7 @@ extension Array where Element == BoardPathCommand {
                 }
                 current = destination
             case .curve(let destination, let control1, let control2):
+                try Self.ensureFlattenedBudget(points, adding: 32)
                 let previous = current
                 for step in 1...32 {
                     let t = CGFloat(step) / 32
@@ -1227,7 +1268,8 @@ extension Array where Element == BoardPathCommand {
                 }
                 current = destination
             case .close:
-                if current != start {
+                if !sameBoardContourPoint(current, start) {
+                    try Self.ensureFlattenedBudget(points, adding: 1)
                     points.append(start)
                 }
                 current = start
@@ -1236,53 +1278,192 @@ extension Array where Element == BoardPathCommand {
         return points
     }
 
-    private static let contourEpsilon = CGFloat(1e-9)
-
-    private static func samePoint(_ lhs: CGPoint, _ rhs: CGPoint) -> Bool {
-        abs(lhs.x - rhs.x) <= contourEpsilon &&
-            abs(lhs.y - rhs.y) <= contourEpsilon
+    private static func ensureFlattenedBudget(
+        _ points: [CGPoint],
+        adding additionalSegments: Int
+    ) throws {
+        guard points.count - 1 <= maximumBoardFlattenedSegments - additionalSegments else {
+            throw BoardGeometryAdaptationError.invalid(
+                "path must contain no more than \(maximumBoardFlattenedSegments) flattened segments"
+            )
+        }
     }
 
-    private static func segmentsIntersect(
+    private static func samePoint(_ lhs: CGPoint, _ rhs: CGPoint) -> Bool {
+        sameBoardContourPoint(lhs, rhs)
+    }
+
+    /// Validation depends on topology, not the coordinate system used to
+    /// express it. Canonicalizing both axes keeps the epsilon meaningful and
+    /// gives editor-pixel and normalized package contours identical semantics.
+    private static func canonicalContour(_ points: [CGPoint]) throws -> [CGPoint] {
+        let minimumX = points.map(\.x).min() ?? 0
+        let maximumX = points.map(\.x).max() ?? 0
+        let minimumY = points.map(\.y).min() ?? 0
+        let maximumY = points.map(\.y).max() ?? 0
+        let width = maximumX - minimumX
+        let height = maximumY - minimumY
+        guard width.isFinite, height.isFinite else {
+            throw BoardGeometryAdaptationError.invalid(
+                "path coordinates are too large to represent"
+            )
+        }
+        let canonical = points.map { point in
+            CGPoint(
+                x: width > 0 ? (point.x - minimumX) / width : 0,
+                y: height > 0 ? (point.y - minimumY) / height : 0
+            )
+        }
+        guard canonical.allSatisfy({ $0.x.isFinite && $0.y.isFinite }) else {
+            throw BoardGeometryAdaptationError.invalid(
+                "path coordinates are too large to represent"
+            )
+        }
+        return canonical
+    }
+
+    /// A self-crossing contour can have zero algebraic shoelace area even
+    /// when its lobes visibly enclose a filled region. Scan between every
+    /// vertex and segment-intersection height, where crossing order is
+    /// stable, and accept any horizontal span with non-zero winding.
+    private static func hasFilledSpan(_ points: [CGPoint]) -> Bool {
+        let segments = Swift.Array(zip(points, points.dropFirst()))
+        if segmentsCancelInReversePairs(segments) { return false }
+
+        let vertexHeights = Set(points.map(\.y)).sorted()
+        var intersectionHeights: Set<CGFloat> = []
+        for firstIndex in segments.indices {
+            for secondIndex in segments.indices.dropFirst(firstIndex + 1) {
+                if let intersectionY = segmentIntersectionY(
+                    segments[firstIndex].0,
+                    segments[firstIndex].1,
+                    segments[secondIndex].0,
+                    segments[secondIndex].1
+                ) {
+                    intersectionHeights.insert(intersectionY)
+                }
+            }
+        }
+
+        let sortedIntersections = intersectionHeights.sorted()
+        var firstPossibleIntersection = 0
+        for (lower, upper) in zip(vertexHeights, vertexHeights.dropFirst()) {
+            guard upper - lower > boardContourEpsilon else { continue }
+            while firstPossibleIntersection < sortedIntersections.count,
+                  sortedIntersections[firstPossibleIntersection] <= lower {
+                firstPossibleIntersection += 1
+            }
+
+            var eventIndex = firstPossibleIntersection
+            var previous = lower
+            var widestGap = (lower: lower, upper: lower)
+            while eventIndex < sortedIntersections.count,
+                  sortedIntersections[eventIndex] < upper {
+                let event = sortedIntersections[eventIndex]
+                if event - previous > widestGap.upper - widestGap.lower {
+                    widestGap = (previous, event)
+                }
+                previous = event
+                eventIndex += 1
+            }
+            if upper - previous > widestGap.upper - widestGap.lower {
+                widestGap = (previous, upper)
+            }
+            firstPossibleIntersection = eventIndex
+            guard widestGap.upper - widestGap.lower > boardContourEpsilon else { continue }
+            if hasFilledSpan(at: (widestGap.lower + widestGap.upper) / 2, segments: segments) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private static func segmentsCancelInReversePairs(
+        _ segments: [(CGPoint, CGPoint)]
+    ) -> Bool {
+        var balances: [QuantizedBoardSegment: Int] = [:]
+        for (first, second) in segments {
+            guard let quantizedFirst = QuantizedBoardPoint(first),
+                  let quantizedSecond = QuantizedBoardPoint(second) else {
+                return false
+            }
+            let key: QuantizedBoardSegment
+            let direction: Int
+            if quantizedFirst < quantizedSecond {
+                key = QuantizedBoardSegment(first: quantizedFirst, second: quantizedSecond)
+                direction = 1
+            } else {
+                key = QuantizedBoardSegment(first: quantizedSecond, second: quantizedFirst)
+                direction = -1
+            }
+            balances[key, default: 0] += direction
+        }
+        return balances.values.allSatisfy { $0 == 0 }
+    }
+
+    private static func hasFilledSpan(
+        at scanY: CGFloat,
+        segments: [(CGPoint, CGPoint)]
+    ) -> Bool {
+        var crossings = [(x: CGFloat, winding: Int)]()
+        for (first, second) in segments where
+            (first.y <= scanY && scanY < second.y) ||
+            (second.y <= scanY && scanY < first.y) {
+            let verticalOffset = scanY - first.y
+            let horizontalDelta = second.x - first.x
+            let verticalDelta = second.y - first.y
+            let x = first.x + verticalOffset * horizontalDelta / verticalDelta
+            crossings.append((x, second.y > first.y ? 1 : -1))
+        }
+        crossings.sort { $0.x < $1.x }
+
+        var index = 0
+        var winding = 0
+        while index < crossings.count {
+            let x = crossings[index].x
+            while index < crossings.count,
+                  abs(crossings[index].x - x) <= boardContourEpsilon {
+                winding += crossings[index].winding
+                index += 1
+            }
+            if index < crossings.count,
+               winding != 0,
+               crossings[index].x - x > boardContourEpsilon {
+                return true
+            }
+        }
+        return false
+    }
+
+    private static func segmentIntersectionY(
         _ first: CGPoint,
         _ second: CGPoint,
         _ third: CGPoint,
         _ fourth: CGPoint
-    ) -> Bool {
-        let firstThird = orientation(first, second, third)
-        let firstFourth = orientation(first, second, fourth)
-        let thirdFirst = orientation(third, fourth, first)
-        let thirdSecond = orientation(third, fourth, second)
-        let crosses = ((firstThird > contourEpsilon && firstFourth < -contourEpsilon) ||
-            (firstThird < -contourEpsilon && firstFourth > contourEpsilon)) &&
-            ((thirdFirst > contourEpsilon && thirdSecond < -contourEpsilon) ||
-                (thirdFirst < -contourEpsilon && thirdSecond > contourEpsilon))
-        if crosses { return true }
-        return [
-            (firstThird, first, second, third),
-            (firstFourth, first, second, fourth),
-            (thirdFirst, third, fourth, first),
-            (thirdSecond, third, fourth, second)
-        ].contains { value, segmentStart, segmentEnd, point in
-            abs(value) <= contourEpsilon &&
-                onSegment(segmentStart, segmentEnd, point)
+    ) -> CGFloat? {
+        let firstDelta = CGPoint(x: second.x - first.x, y: second.y - first.y)
+        let secondDelta = CGPoint(x: fourth.x - third.x, y: fourth.y - third.y)
+        let denominator = firstDelta.x * secondDelta.y - firstDelta.y * secondDelta.x
+        guard abs(denominator) > boardContourEpsilon else { return nil }
+        let originDelta = CGPoint(x: third.x - first.x, y: third.y - first.y)
+        let firstParameter =
+            (originDelta.x * secondDelta.y - originDelta.y * secondDelta.x) / denominator
+        let secondParameter =
+            (originDelta.x * firstDelta.y - originDelta.y * firstDelta.x) / denominator
+        guard (-boardContourEpsilon...1 + boardContourEpsilon).contains(firstParameter),
+              (-boardContourEpsilon...1 + boardContourEpsilon).contains(secondParameter) else {
+            return nil
         }
-    }
-
-    private static func orientation(_ first: CGPoint, _ second: CGPoint, _ third: CGPoint) -> CGFloat {
-        (second.x - first.x) * (third.y - first.y) -
-            (second.y - first.y) * (third.x - first.x)
-    }
-
-    private static func onSegment(_ first: CGPoint, _ second: CGPoint, _ point: CGPoint) -> Bool {
-        point.x >= Swift.min(first.x, second.x) - contourEpsilon &&
-            point.x <= Swift.max(first.x, second.x) + contourEpsilon &&
-            point.y >= Swift.min(first.y, second.y) - contourEpsilon &&
-            point.y <= Swift.max(first.y, second.y) + contourEpsilon
+        return first.y + firstParameter * firstDelta.y
     }
 }
 
-private struct QuantizedBoardPoint: Hashable {
+private struct QuantizedBoardSegment: Hashable {
+    let first: QuantizedBoardPoint
+    let second: QuantizedBoardPoint
+}
+
+private struct QuantizedBoardPoint: Hashable, Comparable {
     let x: Int64
     let y: Int64
 
@@ -1292,6 +1473,10 @@ private struct QuantizedBoardPoint: Hashable {
         }
         self.x = x
         self.y = y
+    }
+
+    static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.x < rhs.x || (lhs.x == rhs.x && lhs.y < rhs.y)
     }
 
     /// `Int64(Double)` traps for values outside its representable range, and a

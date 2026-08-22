@@ -1082,7 +1082,7 @@ def test_changed_save_derives_current_display_paths_once_per_piece(
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
     document["regions"][0]["displayPath"] = (
-        "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+        "M 177.4 45.7 L 354.8 137.1 L 200 150 L 330 60 Z"
     )
     original_display_path_for_shape = board_package.display_path_for_shape
     calls = 0
@@ -1112,11 +1112,11 @@ def test_invalid_save_leaves_the_live_single_file_package_unchanged(
         board_package.load_board_package(package_root)
     )
     document["regions"][0]["displayPath"] = (
-        "M 10 10 L 90 90 L 10 90 L 90 10 Z"
+        "M 10 10 L 90 90 L 10 90 L 90 10"
     )
     before = _package_snapshot(package_root)
 
-    with pytest.raises(BoardPackageError, match="self-intersect"):
+    with pytest.raises(BoardPackageError, match="exactly one closed contour"):
         board_package.save_editor_document(library, "fixture-board", document)
 
     assert _package_snapshot(package_root) == before
