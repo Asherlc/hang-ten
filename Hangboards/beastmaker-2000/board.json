@@ -2584,6 +2584,57 @@
           }
         }
       ]
+    },
+    {
+      "id": "hold-28",
+      "name": "Hold 28",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.483387334315,
+            "y": 0.44,
+            "width": 0.03322533137,
+            "height": 0.12
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
