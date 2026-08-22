@@ -548,17 +548,106 @@
           "frame": {
             "x": 0.595,
             "y": 0.37,
-            "width": 0.077,
+            "width": 0.064513096392,
             "height": 0.147
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.44
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.293495898637,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.706504101363,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.868597405036,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857619196
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142380804
+                ],
+                "control2": [
+                  0.868597405036,
+                  1.0
+                ],
+                "to": [
+                  0.706504101363,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.293495898637,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.131402586226,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142380804
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857619196
+                ],
+                "control2": [
+                  0.131402586226,
+                  0.0
+                ],
+                "to": [
+                  0.293495898637,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "deep"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
