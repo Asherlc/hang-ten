@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from hangboard_packages.board_geometry_schema import BoardShapeDocument, PathCommand
+from hangboard_packages.board_geometry_schema import BoardShapeDocument, NormalizedFrame, PathCommand
 
 
 def _move(x: float, y: float) -> dict:
@@ -22,6 +22,20 @@ def test_path_command_rejects_coordinates_outside_the_normalized_canvas() -> Non
         PathCommand.from_json(_line(1.5, 0.5), "commands[0]")
     with pytest.raises(ValueError, match=r"must be at most 1|must be at least 0"):
         PathCommand.from_json(_line(0.5, -0.1), "commands[0]")
+
+
+def test_normalized_frame_allows_manual_off_canvas_bounds() -> None:
+    frame = NormalizedFrame.from_json(
+        {"x": -0.003741228478, "y": -0.004892401544, "width": 0.165800496, "height": 0.243309389961},
+        "frame",
+    )
+
+    assert frame == NormalizedFrame(
+        x=-0.003741228478,
+        y=-0.004892401544,
+        width=0.165800496,
+        height=0.243309389961,
+    )
 
 
 def _curve(control1: tuple[float, float], control2: tuple[float, float], x: float, y: float) -> dict:
