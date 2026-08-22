@@ -886,63 +886,6 @@
       ]
     },
     {
-      "id": "pocket-37-left",
-      "name": "Left 37 mm four-finger pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 37,
-      "fingerCapacity": 4,
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.075,
-            "y": 0.4945,
-            "width": 0.14,
-            "height": 0.0165
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "shapeConstraint": {
-            "shape": "rectangle",
-            "rotationDegrees": 0.0
-          }
-        }
-      ]
-    },
-    {
       "id": "pocket-37-right",
       "name": "Right 37 mm four-finger pocket",
       "kind": "pocket",
