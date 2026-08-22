@@ -18,8 +18,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.023120742798,
-            "y": 0.387121279297,
+            "x": 0.012815447878,
+            "y": 0.314619567502,
             "width": 0.142462142944,
             "height": 0.081759609375
           },
@@ -29,68 +29,68 @@
               {
                 "command": "move",
                 "to": [
-                  0.05530772624440223,
-                  0.3752307641590299
+                  0.055307726244,
+                  0.375230764159
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.15006974316310906,
-                  -0.007354233972879458
+                  0.150069743163,
+                  -0.007354233973
                 ],
                 "control2": [
-                  0.6028216017756239,
-                  -0.07486923364321596
+                  0.602821601776,
+                  -0.074869233643
                 ],
                 "to": [
-                  0.9608114434697617,
-                  0.07141326564251427
+                  0.96081144347,
+                  0.071413265643
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  1.0450443473977942,
-                  0.27395826465352446
+                  1.045044347398,
+                  0.273958264654
                 ],
                 "control2": [
-                  0.9923987824427738,
-                  0.7690682622359951
+                  0.992398782443,
+                  0.769068262236
                 ],
                 "to": [
-                  0.8134038615957048,
-                  0.9828657611920618
+                  0.813403861596,
+                  0.982865761192
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.49753047186558347,
-                  1.050380760862399
+                  0.497530471866,
+                  1.050380760862
                 ],
                 "control2": [
-                  0.129011517181101,
-                  0.9153507615217247
+                  0.129011517181,
+                  0.915350761522
                 ],
                 "to": [
-                  0.002662161289381976,
-                  0.6565432627854338
+                  0.002662161289,
+                  0.656543262785
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  -0.00786695170162208,
-                  0.532765763389816
+                  -0.007866951702,
+                  0.53276576339
                 ],
                 "control2": [
-                  0.013191274280386007,
-                  0.4427457638293671
+                  0.01319127428,
+                  0.442745763829
                 ],
                 "to": [
-                  0.05530772624440223,
-                  0.3752307641590299
+                  0.055307726244,
+                  0.375230764159
                 ]
               },
               {
@@ -779,7 +779,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -902,7 +902,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1025,7 +1025,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1148,7 +1148,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1258,7 +1258,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1368,7 +1368,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1478,7 +1478,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1601,7 +1601,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1725,7 +1725,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1849,7 +1849,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1973,7 +1973,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2083,7 +2083,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2193,7 +2193,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2317,7 +2317,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2441,7 +2441,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2565,7 +2565,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2688,7 +2688,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2798,7 +2798,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -2908,7 +2908,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -3018,7 +3018,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -3141,7 +3141,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -3264,7 +3264,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -3387,7 +3387,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -3497,7 +3497,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
