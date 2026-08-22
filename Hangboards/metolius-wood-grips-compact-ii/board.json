@@ -462,13 +462,102 @@
             "height": 0.148
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.4
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.174891139083,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.825108860917,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.921698571621,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857620202
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142379798
+                ],
+                "control2": [
+                  0.921698571621,
+                  1.0
+                ],
+                "to": [
+                  0.825108860917,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.174891139083,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.078301428379,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142379798
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857620202
+                ],
+                "control2": [
+                  0.078301428379,
+                  0.0
+                ],
+                "to": [
+                  0.174891139083,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "deep"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1148,13 +1237,102 @@
             "height": 0.14
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.4
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.173391293036,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.826608706964,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.922370073064,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857627384
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142372616
+                ],
+                "control2": [
+                  0.922370073064,
+                  1.0
+                ],
+                "to": [
+                  0.826608706964,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.173391293036,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.077629926936,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142372616
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857627384
+                ],
+                "control2": [
+                  0.077629926936,
+                  0.0
+                ],
+                "to": [
+                  0.173391293036,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "shallow"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1178,13 +1356,102 @@
             "height": 0.14
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.4
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.173391293036,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.826608706964,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.922370073064,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857627384
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142372616
+                ],
+                "control2": [
+                  0.922370073064,
+                  1.0
+                ],
+                "to": [
+                  0.826608706964,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.173391293036,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.077629926936,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142372616
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857627384
+                ],
+                "control2": [
+                  0.077629926936,
+                  0.0
+                ],
+                "to": [
+                  0.173391293036,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "shallow"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1208,13 +1475,102 @@
             "height": 0.14
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.44
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.247023211997,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.752976788003,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.889403939707,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857627384
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142372616
+                ],
+                "control2": [
+                  0.889403939707,
+                  1.0
+                ],
+                "to": [
+                  0.752976788003,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.247023211997,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.110596060293,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142372616
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857627384
+                ],
+                "control2": [
+                  0.110596060293,
+                  0.0
+                ],
+                "to": [
+                  0.247023211997,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "shallow"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1238,13 +1594,102 @@
             "height": 0.14
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.44
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.247023211997,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.752976788003,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.889403939707,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857627384
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142372616
+                ],
+                "control2": [
+                  0.889403939707,
+                  1.0
+                ],
+                "to": [
+                  0.752976788003,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.247023211997,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.110596060293,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142372616
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857627384
+                ],
+                "control2": [
+                  0.110596060293,
+                  0.0
+                ],
+                "to": [
+                  0.247023211997,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "shallow"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1268,13 +1713,102 @@
             "height": 0.14
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.35
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.120217963172,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.879782036828,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.946176583991,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857627384
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142372616
+                ],
+                "control2": [
+                  0.946176583991,
+                  1.0
+                ],
+                "to": [
+                  0.879782036828,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.120217963172,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.053823416009,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142372616
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857627384
+                ],
+                "control2": [
+                  0.053823416009,
+                  0.0
+                ],
+                "to": [
+                  0.120217963172,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "recess",
             "rimInsetFraction": 0.09,
             "depth": "shallow"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
           }
         }
       ],
