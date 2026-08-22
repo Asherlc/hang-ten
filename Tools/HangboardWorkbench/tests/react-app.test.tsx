@@ -428,7 +428,7 @@ test("state-dependent actions observe updates dispatched earlier in the same tas
   });
 });
 
-test("validation renders angle-bracket error text without interpreting an image node", async () => {
+test("API errors render angle-bracket text without interpreting an image node", async () => {
   const malicious = '<img src=x onerror="globalThis.pwned=true">';
   await withApp(dependenciesFixture({
     client: {
@@ -437,8 +437,53 @@ test("validation renders angle-bracket error text without interpreting an image 
     },
   }), async (app) => {
     await app.flush();
-    assert.equal(app.text("#validation-list"), malicious);
-    assert.equal(app.document.querySelector("#validation-list img"), null);
+    assert.equal(app.text("#api-error-alert"), malicious);
+    assert.equal(app.document.querySelector("#api-error-alert img"), null);
+  });
+});
+
+test("startup API failures appear in the dedicated editor error alert", async () => {
+  await withApp(dependenciesFixture({
+    client: {
+      async getAuthStatus() { throw new Error("Authentication service is unavailable"); },
+      async listBoards() { return []; },
+    },
+  }), async (app) => {
+    await app.flush();
+
+    const alert = app.document.querySelector<HTMLElement>("#api-error-alert");
+    assert.equal(alert?.getAttribute("role"), "alert");
+    assert.equal(alert?.textContent, "Authentication service is unavailable");
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
+  });
+});
+
+test("a failed save preserves its API message in the editor error alert", async () => {
+  const image = imageFixture();
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard() { throw new Error("Remote save rejected this board"); },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    await app.click("#save-button");
+
+    assert.equal(app.text("#api-error-alert"), "Remote save rejected this board");
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
+  });
+});
+
+test("successful API startup does not show an editor API error", async () => {
+  await withApp(dependenciesFixture({
+    client: { async listBoards() { return []; } },
+  }), async (app) => {
+    await app.flush();
+
+    assert.equal(app.document.querySelector("#api-error-alert")?.classList.contains("hidden"), true);
   });
 });
 
@@ -1146,7 +1191,7 @@ test("successful switch and create retain success when status refresh fails and 
     await app.change("#git-branch-select", "feature");
     await app.click("#git-switch-button");
     assert.equal(app.text("#editor-status"), "Switched to feature. Repository status unavailable.");
-    assert.match(app.text("#validation-list"), /status backend unavailable/);
+    assert.match(app.text("#api-error-alert"), /status backend unavailable/);
   });
 
   let createStatusCalls = 0;
@@ -1165,7 +1210,7 @@ test("successful switch and create retain success when status refresh fails and 
     await app.click("#git-new-branch-button");
     assert.equal(app.documentValue("#git-new-branch-name"), "");
     assert.equal(app.text("#editor-status"), "Created new-work. Repository status unavailable.");
-    assert.match(app.text("#validation-list"), /create status backend unavailable/);
+    assert.match(app.text("#api-error-alert"), /create status backend unavailable/);
   });
 });
 

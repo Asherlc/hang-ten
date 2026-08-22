@@ -290,11 +290,7 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
   }
 
   async function getAuthStatus(): Promise<AuthStatus> {
-    try {
-      return await request("/api/auth/status", parseAuthStatus);
-    } catch {
-      return { ok: true, authenticated: false };
-    }
+    return request("/api/auth/status", parseAuthStatus);
   }
 
   async function listBranches(): Promise<GitStatus> {
