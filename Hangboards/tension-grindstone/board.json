@@ -5,145 +5,1049 @@
   "name": "Grindstone",
   "subtitle": "Edge-focused wooden hangboard with a full-width bar-style top jug.",
   "productURL": "https://tensionclimbing.com/products/grindstone",
-  "dimensions": "22 × 6 × 2.75 in",
+  "dimensions": "22 \u00d7 6 \u00d7 2.75 in",
   "aspectRatio": 1.7768331562167907,
-  "presentation": { "assetPath": "assets/primary.png" },
+  "presentation": {
+    "assetPath": "assets/primary.png"
+  },
   "holds": [
     {
       "id": "top-jug",
       "name": "Full-width top jug",
       "kind": "jug",
-      "geometry": [{
-        "frame": { "x": 0.018, "y": 0.359, "width": 0.964, "height": 0.035 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.000, 0.520] },
-          { "command": "curve", "control1": [0.000, 0.210], "control2": [0.027, 0.090], "to": [0.060, 0.075] },
-          { "command": "curve", "control1": [0.260, 0.000], "control2": [0.390, 0.000], "to": [0.470, 0.000] },
-          { "command": "curve", "control1": [0.610, 0.035], "control2": [0.790, 0.020], "to": [0.940, 0.075] },
-          { "command": "curve", "control1": [0.973, 0.090], "control2": [1.000, 0.210], "to": [1.000, 0.520] },
-          { "command": "curve", "control1": [1.000, 0.760], "control2": [0.977, 0.900], "to": [0.944, 0.930] },
-          { "command": "curve", "control1": [0.770, 0.850], "control2": [0.640, 0.880], "to": [0.568, 0.900] },
-          { "command": "curve", "control1": [0.540, 0.910], "control2": [0.525, 0.985], "to": [0.500, 1.000] },
-          { "command": "curve", "control1": [0.475, 0.985], "control2": [0.460, 0.910], "to": [0.432, 0.900] },
-          { "command": "curve", "control1": [0.360, 0.880], "control2": [0.230, 0.850], "to": [0.056, 0.930] },
-          { "command": "curve", "control1": [0.023, 0.900], "control2": [0.000, 0.760], "to": [0.000, 0.520] },
-          { "command": "close" }
-        ] },
-        "treatment": { "type": "surface" }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.018,
+            "y": 0.359,
+            "width": 0.964,
+            "height": 0.035
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.52
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.21
+                ],
+                "control2": [
+                  0.027,
+                  0.09
+                ],
+                "to": [
+                  0.06,
+                  0.075
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.26,
+                  0.0
+                ],
+                "control2": [
+                  0.39,
+                  0.0
+                ],
+                "to": [
+                  0.47,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.61,
+                  0.035
+                ],
+                "control2": [
+                  0.79,
+                  0.02
+                ],
+                "to": [
+                  0.94,
+                  0.075
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.973,
+                  0.09
+                ],
+                "control2": [
+                  1.0,
+                  0.21
+                ],
+                "to": [
+                  1.0,
+                  0.52
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.76
+                ],
+                "control2": [
+                  0.977,
+                  0.9
+                ],
+                "to": [
+                  0.944,
+                  0.93
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.77,
+                  0.85
+                ],
+                "control2": [
+                  0.64,
+                  0.88
+                ],
+                "to": [
+                  0.568,
+                  0.9
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.54,
+                  0.91
+                ],
+                "control2": [
+                  0.525,
+                  0.985
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.475,
+                  0.985
+                ],
+                "control2": [
+                  0.46,
+                  0.91
+                ],
+                "to": [
+                  0.432,
+                  0.9
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.36,
+                  0.88
+                ],
+                "control2": [
+                  0.23,
+                  0.85
+                ],
+                "to": [
+                  0.056,
+                  0.93
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.023,
+                  0.9
+                ],
+                "control2": [
+                  0.0,
+                  0.76
+                ],
+                "to": [
+                  0.0,
+                  0.52
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
     },
     {
       "id": "edge-10-8-left",
       "name": "Left 10/8 mm stepped edge",
       "kind": "edge",
-      "geometry": [{
-        "frame": { "x": 0.040, "y": 0.389, "width": 0.336, "height": 0.049 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.029166666667, 0] }, { "command": "line", "to": [0.970833333333, 0] },
-          { "command": "curve", "control1": [0.986941638765, 0], "control2": [1, 0.089543048469], "to": [1, 0.2] }, { "command": "line", "to": [1, 0.8] },
-          { "command": "curve", "control1": [1, 0.910456951531], "control2": [0.986941638765, 1], "to": [0.970833333333, 1] }, { "command": "line", "to": [0.029166666667, 1] },
-          { "command": "curve", "control1": [0.013058361235, 1], "control2": [0, 0.910456951531], "to": [0, 0.8] }, { "command": "line", "to": [0, 0.2] },
-          { "command": "curve", "control1": [0, 0.089543048469], "control2": [0.013058361235, 0], "to": [0.029166666667, 0] }, { "command": "close" }
-        ] },
-        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.04,
+            "y": 0.389,
+            "width": 0.336,
+            "height": 0.049
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.029166666667,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.970833333333,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.986941638765,
+                  0
+                ],
+                "control2": [
+                  1,
+                  0.089543048469
+                ],
+                "to": [
+                  1,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1,
+                  0.910456951531
+                ],
+                "control2": [
+                  0.986941638765,
+                  1
+                ],
+                "to": [
+                  0.970833333333,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.029166666667,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.013058361235,
+                  1
+                ],
+                "control2": [
+                  0,
+                  0.910456951531
+                ],
+                "to": [
+                  0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0,
+                  0.089543048469
+                ],
+                "control2": [
+                  0.013058361235,
+                  0
+                ],
+                "to": [
+                  0.029166666667,
+                  0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
     },
     {
       "id": "edge-10-8-right",
       "name": "Right 10/8 mm stepped edge",
       "kind": "edge",
-      "geometry": [{
-        "frame": { "x": 0.624, "y": 0.389, "width": 0.336, "height": 0.049 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.029166666667, 0] }, { "command": "line", "to": [0.970833333333, 0] },
-          { "command": "curve", "control1": [0.986941638765, 0], "control2": [1, 0.089543048469], "to": [1, 0.2] }, { "command": "line", "to": [1, 0.8] },
-          { "command": "curve", "control1": [1, 0.910456951531], "control2": [0.986941638765, 1], "to": [0.970833333333, 1] }, { "command": "line", "to": [0.029166666667, 1] },
-          { "command": "curve", "control1": [0.013058361235, 1], "control2": [0, 0.910456951531], "to": [0, 0.8] }, { "command": "line", "to": [0, 0.2] },
-          { "command": "curve", "control1": [0, 0.089543048469], "control2": [0.013058361235, 0], "to": [0.029166666667, 0] }, { "command": "close" }
-        ] },
-        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.624,
+            "y": 0.389,
+            "width": 0.336,
+            "height": 0.049
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.029166666667,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.970833333333,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.986941638765,
+                  0
+                ],
+                "control2": [
+                  1,
+                  0.089543048469
+                ],
+                "to": [
+                  1,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1,
+                  0.910456951531
+                ],
+                "control2": [
+                  0.986941638765,
+                  1
+                ],
+                "to": [
+                  0.970833333333,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.029166666667,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.013058361235,
+                  1
+                ],
+                "control2": [
+                  0,
+                  0.910456951531
+                ],
+                "to": [
+                  0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0,
+                  0.089543048469
+                ],
+                "control2": [
+                  0.013058361235,
+                  0
+                ],
+                "to": [
+                  0.029166666667,
+                  0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
     },
     {
       "id": "edge-30-25-left",
       "name": "Left 30/25 mm stepped edge",
       "kind": "edge",
-      "geometry": [{
-        "frame": { "x": 0.042, "y": 0.472, "width": 0.341, "height": 0.059 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.034604105572, 0] }, { "command": "line", "to": [0.965395894428, 0] },
-          { "command": "curve", "control1": [0.984507213962, 0], "control2": [1, 0.08954305151], "to": [1, 0.2] }, { "command": "line", "to": [1, 0.8] },
-          { "command": "curve", "control1": [1, 0.91045694849], "control2": [0.984507213962, 1], "to": [0.965395894428, 1] }, { "command": "line", "to": [0.034604105572, 1] },
-          { "command": "curve", "control1": [0.015492786038, 1], "control2": [0, 0.91045694849], "to": [0, 0.8] }, { "command": "line", "to": [0, 0.2] },
-          { "command": "curve", "control1": [0, 0.08954305151], "control2": [0.015492786038, 0], "to": [0.034604105572, 0] }, { "command": "close" }
-        ] },
-        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.042,
+            "y": 0.472,
+            "width": 0.341,
+            "height": 0.059
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.034604105572,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.965395894428,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.984507213962,
+                  0
+                ],
+                "control2": [
+                  1,
+                  0.08954305151
+                ],
+                "to": [
+                  1,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1,
+                  0.91045694849
+                ],
+                "control2": [
+                  0.984507213962,
+                  1
+                ],
+                "to": [
+                  0.965395894428,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.034604105572,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.015492786038,
+                  1
+                ],
+                "control2": [
+                  0,
+                  0.91045694849
+                ],
+                "to": [
+                  0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0,
+                  0.08954305151
+                ],
+                "control2": [
+                  0.015492786038,
+                  0
+                ],
+                "to": [
+                  0.034604105572,
+                  0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
     },
     {
       "id": "edge-30-25-right",
       "name": "Right 30/25 mm stepped edge",
       "kind": "edge",
-      "geometry": [{
-        "frame": { "x": 0.617, "y": 0.472, "width": 0.341, "height": 0.059 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.034604105572, 0] }, { "command": "line", "to": [0.965395894428, 0] },
-          { "command": "curve", "control1": [0.984507213962, 0], "control2": [1, 0.08954305151], "to": [1, 0.2] }, { "command": "line", "to": [1, 0.8] },
-          { "command": "curve", "control1": [1, 0.91045694849], "control2": [0.984507213962, 1], "to": [0.965395894428, 1] }, { "command": "line", "to": [0.034604105572, 1] },
-          { "command": "curve", "control1": [0.015492786038, 1], "control2": [0, 0.91045694849], "to": [0, 0.8] }, { "command": "line", "to": [0, 0.2] },
-          { "command": "curve", "control1": [0, 0.08954305151], "control2": [0.015492786038, 0], "to": [0.034604105572, 0] }, { "command": "close" }
-        ] },
-        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.617,
+            "y": 0.472,
+            "width": 0.341,
+            "height": 0.059
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.034604105572,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.965395894428,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.984507213962,
+                  0
+                ],
+                "control2": [
+                  1,
+                  0.08954305151
+                ],
+                "to": [
+                  1,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1,
+                  0.91045694849
+                ],
+                "control2": [
+                  0.984507213962,
+                  1
+                ],
+                "to": [
+                  0.965395894428,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.034604105572,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.015492786038,
+                  1
+                ],
+                "control2": [
+                  0,
+                  0.91045694849
+                ],
+                "to": [
+                  0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0,
+                  0.08954305151
+                ],
+                "control2": [
+                  0.015492786038,
+                  0
+                ],
+                "to": [
+                  0.034604105572,
+                  0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
     },
     {
       "id": "edge-50-center",
       "name": "50 mm center one-arm edge",
       "kind": "edge",
       "sizeMillimeters": 50,
-      "geometry": [{
-        "frame": { "x": 0.414, "y": 0.463, "width": 0.172, "height": 0.068 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.079069767442, 0] }, { "command": "line", "to": [0.920930232558, 0] },
-          { "command": "curve", "control1": [0.964599260197, 0], "control2": [1, 0.089543047737], "to": [1, 0.2] }, { "command": "line", "to": [1, 0.8] },
-          { "command": "curve", "control1": [1, 0.910456952263], "control2": [0.964599260197, 1], "to": [0.920930232558, 1] }, { "command": "line", "to": [0.079069767442, 1] },
-          { "command": "curve", "control1": [0.035400739803, 1], "control2": [0, 0.910456952263], "to": [0, 0.8] }, { "command": "line", "to": [0, 0.2] },
-          { "command": "curve", "control1": [0, 0.089543047737], "control2": [0.035400739803, 0], "to": [0.079069767442, 0] }, { "command": "close" }
-        ] },
-        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.414,
+            "y": 0.463,
+            "width": 0.172,
+            "height": 0.068
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.079069767442,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.920930232558,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.964599260197,
+                  0
+                ],
+                "control2": [
+                  1,
+                  0.089543047737
+                ],
+                "to": [
+                  1,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1,
+                  0.910456952263
+                ],
+                "control2": [
+                  0.964599260197,
+                  1
+                ],
+                "to": [
+                  0.920930232558,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.079069767442,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.035400739803,
+                  1
+                ],
+                "control2": [
+                  0,
+                  0.910456952263
+                ],
+                "to": [
+                  0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0,
+                  0.089543047737
+                ],
+                "control2": [
+                  0.035400739803,
+                  0
+                ],
+                "to": [
+                  0.079069767442,
+                  0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
     },
     {
       "id": "edge-20-15-left",
       "name": "Left 20/15 mm stepped edge",
       "kind": "edge",
-      "geometry": [{
-        "frame": { "x": 0.043, "y": 0.555, "width": 0.341, "height": 0.057 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.033431085044, 0] }, { "command": "line", "to": [0.966568914956, 0] },
-          { "command": "curve", "control1": [0.985032394096, 0], "control2": [1, 0.089543045847], "to": [1, 0.2] }, { "command": "line", "to": [1, 0.8] },
-          { "command": "curve", "control1": [1, 0.910456954153], "control2": [0.985032394096, 1], "to": [0.966568914956, 1] }, { "command": "line", "to": [0.033431085044, 1] },
-          { "command": "curve", "control1": [0.014967605904, 1], "control2": [0, 0.910456954153], "to": [0, 0.8] }, { "command": "line", "to": [0, 0.2] },
-          { "command": "curve", "control1": [0, 0.089543045847], "control2": [0.014967605904, 0], "to": [0.033431085044, 0] }, { "command": "close" }
-        ] },
-        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.07432512799,
+            "y": 0.627029974495,
+            "width": 0.341,
+            "height": 0.057
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.033431085044,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.966568914956,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.985032393116,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.08954303932
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91045696068
+                ],
+                "control2": [
+                  0.985032393116,
+                  1.0
+                ],
+                "to": [
+                  0.966568914956,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.033431085044,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01496760513,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91045696068
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.08954303932
+                ],
+                "control2": [
+                  0.01496760513,
+                  0.0
+                ],
+                "to": [
+                  0.033431085044,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
     },
     {
       "id": "edge-20-15-right",
       "name": "Right 20/15 mm stepped edge",
       "kind": "edge",
-      "geometry": [{
-        "frame": { "x": 0.616, "y": 0.555, "width": 0.341, "height": 0.057 },
-        "shape": { "type": "path", "commands": [
-          { "command": "move", "to": [0.033431085044, 0] }, { "command": "line", "to": [0.966568914956, 0] },
-          { "command": "curve", "control1": [0.985032394096, 0], "control2": [1, 0.089543045847], "to": [1, 0.2] }, { "command": "line", "to": [1, 0.8] },
-          { "command": "curve", "control1": [1, 0.910456954153], "control2": [0.985032394096, 1], "to": [0.966568914956, 1] }, { "command": "line", "to": [0.033431085044, 1] },
-          { "command": "curve", "control1": [0.014967605904, 1], "control2": [0, 0.910456954153], "to": [0, 0.8] }, { "command": "line", "to": [0, 0.2] },
-          { "command": "curve", "control1": [0, 0.089543045847], "control2": [0.014967605904, 0], "to": [0.033431085044, 0] }, { "command": "close" }
-        ] },
-        "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0 }
-      }]
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.616,
+            "y": 0.555,
+            "width": 0.341,
+            "height": 0.057
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.033431085044,
+                  0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.966568914956,
+                  0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.985032394096,
+                  0
+                ],
+                "control2": [
+                  1,
+                  0.089543045847
+                ],
+                "to": [
+                  1,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1,
+                  0.910456954153
+                ],
+                "control2": [
+                  0.985032394096,
+                  1
+                ],
+                "to": [
+                  0.966568914956,
+                  1
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.033431085044,
+                  1
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.014967605904,
+                  1
+                ],
+                "control2": [
+                  0,
+                  0.910456954153
+                ],
+                "to": [
+                  0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0,
+                  0.089543045847
+                ],
+                "control2": [
+                  0.014967605904,
+                  0
+                ],
+                "to": [
+                  0.033431085044,
+                  0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
     }
   ]
 }
