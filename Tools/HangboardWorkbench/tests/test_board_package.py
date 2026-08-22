@@ -214,7 +214,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
     )
     pieces_by_hold: dict[
         str,
-        list[tuple[int, str, object, object, int | None, dict[str, int] | None]],
+        list[tuple[int, str, object, object, int | None, dict[str, int] | None, int | None]],
     ] = {}
     for (
         hold_id,
@@ -224,9 +224,10 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         shape_constraint,
         finger_capacity,
         depth_range,
+        hand_capacity,
     ) in parsed.values():
         pieces_by_hold.setdefault(hold_id, []).append(
-            (piece_index, kind, path, shape_constraint, finger_capacity, depth_range)
+            (piece_index, kind, path, shape_constraint, finger_capacity, depth_range, hand_capacity)
         )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])
@@ -239,6 +240,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         first_piece[3],
         first_piece[4],
         first_piece[5],
+        first_piece[6],
     )
     original = copy.deepcopy(package.board)
 
@@ -1173,6 +1175,43 @@ def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_hold(
         tuple(region["depthRangeMillimeters"].items())
         for region in board_package.editor_document(saved)["regions"]
     } == {(("lowerBound", 12), ("upperBound", 16))}
+
+
+def test_save_round_trips_hand_capacity_and_depth_range_for_all_pieces(
+    tmp_path: Path,
+) -> None:
+    """Removing either metadata field from persistence breaks this contract."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+
+    for region in document["regions"]:
+        region["handCapacity"] = 2
+        region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    stored = _read_board(package_root)["holds"][0]
+    assert stored["handCapacity"] == 2
+    assert stored["depthRangeMillimeters"] == {"lowerBound": 12, "upperBound": 16}
+    assert {
+        (region["handCapacity"], tuple(region["depthRangeMillimeters"].items()))
+        for region in board_package.editor_document(saved)["regions"]
+    } == {(2, (("lowerBound", 12), ("upperBound", 16)))}
+
+
+def test_save_rejects_multi_piece_hold_with_mixed_hand_capacity(
+    tmp_path: Path,
+) -> None:
+    """A physical hold has one capacity even when it has multiple paths."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["handCapacity"] = 1
+    document["regions"][1]["handCapacity"] = 2
+
+    with pytest.raises(BoardPackageError, match="share one hand capacity"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 def test_save_rejects_an_explicit_null_finger_capacity(tmp_path: Path) -> None:

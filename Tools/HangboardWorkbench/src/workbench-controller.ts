@@ -26,6 +26,10 @@ function isMillimeterRange(value: unknown): value is { lowerBound: number; upper
     && upperBound >= lowerBound;
 }
 
+function isHandCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 2;
+}
+
 function isHoldRegion(value: unknown): value is HoldRegion {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -35,6 +39,7 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (value.type === undefined || typeof value.type === "string")
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
     && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
+    && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
     && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)
@@ -68,6 +73,7 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   const keys = new Set<string>();
   const fingerCapacityByHoldId = new Map<string, number | undefined>();
   const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
+  const handCapacityByHoldId = new Map<string, number | undefined>();
   for (const region of document.regions) {
     if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
       throw new Error("Every hold needs a key");
@@ -89,6 +95,10 @@ export function validateEditorDocument(document: unknown): EditorDocument {
       && !isMillimeterRange(region.depthRangeMillimeters)) {
       throw new Error(`Hold ${region.key} depth range must be positive and ordered`);
     }
+    if (Object.hasOwn(region, "handCapacity")
+      && !isHandCapacity(region.handCapacity)) {
+      throw new Error(`Hold ${region.key} hand capacity must be between 1 and 2`);
+    }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);
     }
@@ -107,6 +117,11 @@ export function validateEditorDocument(document: unknown): EditorDocument {
         throw new Error(`Hold ${holdID} pieces must share one depth range`);
       }
       depthRangeByHoldId.set(holdID, depthRange);
+      if (handCapacityByHoldId.has(holdID)
+        && handCapacityByHoldId.get(holdID) !== region.handCapacity) {
+        throw new Error(`Hold ${holdID} pieces must share one hand capacity`);
+      }
+      handCapacityByHoldId.set(holdID, region.handCapacity);
     }
   }
   if (!isEditorDocument(document)) {

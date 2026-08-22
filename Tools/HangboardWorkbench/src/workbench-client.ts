@@ -42,6 +42,10 @@ function isMillimeterRange(value: unknown): value is { lowerBound: number; upper
     && upperBound >= lowerBound;
 }
 
+function isHandCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 2;
+}
+
 function isHoldRegion(value: unknown): value is EditorDocument["regions"][number] {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -51,6 +55,7 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
     && isOptionalString(value.type)
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
     && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
+    && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"

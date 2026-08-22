@@ -125,6 +125,7 @@ struct BoardHoldDefinition: Codable, Hashable {
     let depthRangeMillimeters: MillimeterRange?
     let gripType: GripType?
     let fingerCapacity: Int?
+    let handCapacity: Int?
     let features: [HoldFeature]?
 
     private enum CodingKeys: String, CodingKey {
@@ -136,6 +137,7 @@ struct BoardHoldDefinition: Codable, Hashable {
         case depthRangeMillimeters
         case gripType
         case fingerCapacity
+        case handCapacity
         case features
         case frame
     }
@@ -184,6 +186,7 @@ struct BoardHoldDefinition: Codable, Hashable {
         )
         gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
     }
 
@@ -197,6 +200,7 @@ struct BoardHoldDefinition: Codable, Hashable {
         try container.encodeIfPresent(depthRangeMillimeters, forKey: .depthRangeMillimeters)
         try container.encodeIfPresent(gripType, forKey: .gripType)
         try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
+        try container.encodeIfPresent(handCapacity, forKey: .handCapacity)
         try container.encodeIfPresent(features, forKey: .features)
     }
 
@@ -205,6 +209,12 @@ struct BoardHoldDefinition: Codable, Hashable {
            !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
             throw BoardGeometryAdaptationError.invalid(
                 "hold \(id) has an invalid finger capacity"
+            )
+        }
+        if let handCapacity,
+           !BoardHold.validHandCapacityRange.contains(handCapacity) {
+            throw BoardGeometryAdaptationError.invalid(
+                "hold \(id) has an invalid hand capacity"
             )
         }
         guard !geometry.isEmpty else {
@@ -223,6 +233,7 @@ struct BoardHoldDefinition: Codable, Hashable {
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
             depthRangeMillimeters: depthRangeMillimeters.map {
                 $0.lowerBound...$0.upperBound
             },
@@ -507,6 +518,16 @@ enum BoardLibraryValidator {
                 BoardLibraryValidationIssue(
                     path: "\(path).fingerCapacity",
                     message: "Finger capacity must be in \(BoardHold.validFingerCapacityRange)."
+                )
+            )
+        }
+
+        if let handCapacity = hold.handCapacity,
+           !BoardHold.validHandCapacityRange.contains(handCapacity) {
+            issues.append(
+                BoardLibraryValidationIssue(
+                    path: "\(path).handCapacity",
+                    message: "Hand capacity must be in \(BoardHold.validHandCapacityRange)."
                 )
             )
         }

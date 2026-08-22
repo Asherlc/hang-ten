@@ -856,6 +856,7 @@ def test_changed_hosted_save_persists_optional_hold_metadata() -> None:
     for region in document["regions"]:
         region["fingerCapacity"] = 3
         region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
+        region["handCapacity"] = 2
 
     saved, _commit_sha = github_board_store.save_editor_document(
         client, TOKEN, BRANCH, "fixture-board", document
@@ -874,6 +875,27 @@ def test_changed_hosted_save_persists_optional_hold_metadata() -> None:
         "lowerBound": 12,
         "upperBound": 16,
     }
+    assert saved.board["holds"][0]["handCapacity"] == 2
+    assert stored["holds"][0]["handCapacity"] == 2
+
+
+def test_changed_hosted_save_persists_optional_hand_capacity() -> None:
+    client = _client(("fixture-board", board_document("fixture.board")))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    for region in document["regions"]:
+        region["handCapacity"] = 2
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert saved.board["holds"][0]["handCapacity"] == 2
+    assert stored["holds"][0]["handCapacity"] == 2
 
 
 def test_stale_sha_conflict_becomes_a_board_save_conflict() -> None:

@@ -137,6 +137,7 @@ export interface HoldEditorActions {
   changeHoldType(type: string): void;
   changeFingerCapacity(capacity: number | undefined): void;
   changeHoldDepthRange(depthRange: MillimeterRange | undefined): void;
+  changeHandCapacity(capacity: number | undefined): void;
   changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
   applyRotation(): void;
@@ -828,6 +829,21 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     });
   }, [actions, busy, document, selectedHold, selectedKeys]);
 
+  const changeHandCapacity = useCallback((capacity: number | undefined): void => {
+    if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 2))) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        if (capacity === undefined) delete region.handCapacity;
+        else region.handCapacity = capacity;
+      }
+    }, {
+      status: "Hand capacity changed. Save when ready.",
+      failureMessage: "Hand capacity is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
   const changeOutlineShape = useCallback((shape: string): void => {
     if (busy || !document || !selectedHold || (shape !== "custom" && !isShapeConstraintShape(shape))) return;
     const label = shape === "roundedRectangle" ? "rounded rectangle" : shape;
@@ -1405,6 +1421,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     changeHoldType,
     changeFingerCapacity,
     changeHoldDepthRange,
+    changeHandCapacity,
     changeOutlineShape,
     rotateHold,
     applyRotation,

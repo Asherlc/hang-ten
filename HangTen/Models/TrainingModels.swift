@@ -389,12 +389,14 @@ struct BoardHold: Identifiable, Hashable {
     let geometry: [BoardHoldPiece]
     let gripType: GripType?
     let fingerCapacity: Int?
+    let handCapacity: Int?
     let frame: HoldFrame
     let sizeMillimeters: Int?
     let depthRangeMillimeters: ClosedRange<Int>?
     let features: Set<HoldFeature>?
 
     static let validFingerCapacityRange = 1...4
+    static let validHandCapacityRange = 1...2
 
     init(
         id: String,
@@ -404,6 +406,7 @@ struct BoardHold: Identifiable, Hashable {
         sizeMillimeters: Int? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
+        handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
@@ -414,6 +417,12 @@ struct BoardHold: Identifiable, Hashable {
                 "BoardHold fingerCapacity must be in \(Self.validFingerCapacityRange)."
             )
         }
+        if let handCapacity {
+            precondition(
+                Self.validHandCapacityRange.contains(handCapacity),
+                "BoardHold handCapacity must be in \(Self.validHandCapacityRange)."
+            )
+        }
 
         self.id = id
         self.name = name
@@ -421,6 +430,7 @@ struct BoardHold: Identifiable, Hashable {
         self.geometry = geometry
         self.gripType = gripType
         self.fingerCapacity = fingerCapacity
+        self.handCapacity = handCapacity
         let firstFrame = geometry[0].frame
         let union = geometry.dropFirst().reduce(firstFrame) { $0.union($1.frame) }
         self.frame = HoldFrame(
@@ -447,6 +457,7 @@ struct BoardHold: Identifiable, Hashable {
         sizeMillimeters: Int? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
+        handCapacity: Int? = nil,
         cueStyle _: HoldCueStyle? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil
@@ -467,6 +478,7 @@ struct BoardHold: Identifiable, Hashable {
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
             depthRangeMillimeters: depthRangeMillimeters,
             features: features
         )
