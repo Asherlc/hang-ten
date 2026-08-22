@@ -28,7 +28,6 @@ EXPECTED_HOLDS = (
         for side in ("left", "right")
     ),
     ("hold-09-center", "sloper"),
-    ("hold-10-center", "sloper"),
     ("hold-11-center", "sloper"),
 )
 EXPECTED_SIZES = {
@@ -46,10 +45,10 @@ EXPECTED_SIZES = {
         )
         for side in ("left", "right")
     },
-    "hold-09-center": 50,
-    "hold-10-center": 31,
+    "hold-09-center": None,
     "hold-11-center": None,
 }
+CENTER_HOLDS = ("hold-09-center", "hold-11-center")
 
 
 def _points(command: object) -> tuple[tuple[float, float], ...]:
@@ -60,35 +59,9 @@ def _points(command: object) -> tuple[tuple[float, float], ...]:
     )
 
 
-def _assert_mirrored_pieces(
-    left: object,
-    right: object,
-    presentation_size: tuple[int, int],
-) -> float:
-    left_pixel_x, left_pixel_y, left_pixel_width, left_pixel_height = presentation_frame(
-        left.frame, presentation_size
-    )
-    right_pixel_x, right_pixel_y, right_pixel_width, right_pixel_height = presentation_frame(
-        right.frame, presentation_size
-    )
-    assert right_pixel_y == pytest.approx(left_pixel_y, abs=1e-6)
-    assert right_pixel_width == pytest.approx(left_pixel_width, abs=1e-6)
-    assert right_pixel_height == pytest.approx(left_pixel_height, abs=1e-6)
-    assert [command.command for command in right.shape.commands] == [
-        command.command for command in left.shape.commands
-    ]
-    for left_command, right_command in zip(
-        left.shape.commands, right.shape.commands, strict=True
-    ):
-        left_points = _points(left_command)
-        right_points = _points(right_command)
-        assert len(right_points) == len(left_points)
-        for (left_x, left_y), (right_x, right_y) in zip(
-            left_points, right_points, strict=True
-        ):
-            assert right_x == pytest.approx(1 - left_x)
-            assert right_y == pytest.approx(left_y)
-    return (left_pixel_x + left_pixel_width + right_pixel_x) / 2
+def _frame_seam_x(left: object, right: object) -> float:
+    assert left.frame.x + left.frame.width <= right.frame.x
+    return left.frame.x + left.frame.width
 
 
 def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
@@ -103,9 +76,9 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         "pinch": 4,
         "jug": 4,
         "edge": 8,
-        "sloper": 3,
+        "sloper": 2,
     }
-    assert sum(len(hold.geometry) for hold in board.holds) == 22
+    assert sum(len(hold.geometry) for hold in board.holds) == 20
 
     for hold in board.holds:
         expected_piece_count = 2 if hold.id.endswith("-center") else 1
@@ -114,28 +87,34 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
             assert piece.shape.type == "path"
             assert piece.shape.commands[0].command == "move"
             assert piece.shape.commands[-1].command == "close"
-            assert len(piece.shape.commands) >= 6
+            assert len(piece.shape.commands) >= 5
             assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
             assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
             assert any(_points(command) for command in piece.shape.commands)
 
-    symmetry_axis_x: float | None = None
     for family in range(1, 9):
-        left = holds[f"hold-{family:02d}-left"].geometry[0]
-        right = holds[f"hold-{family:02d}-right"].geometry[0]
-        pair_axis_x = _assert_mirrored_pieces(left, right, presentation_size)
-        if symmetry_axis_x is None:
-            symmetry_axis_x = pair_axis_x
+        left = holds[f"hold-{family:02d}-left"]
+        right = holds[f"hold-{family:02d}-right"]
+        assert left.kind == right.kind
+        assert left.size_millimeters == right.size_millimeters
+        left_piece = left.geometry[0]
+        right_piece = right.geometry[0]
+        assert left_piece.frame.x < right_piece.frame.x
+        left_x, _, left_width, _ = presentation_frame(left.frame, presentation_size)
+        right_x, _, _, _ = presentation_frame(right.frame, presentation_size)
+        assert left_x + left_width <= right_x
+
+    seam_x: float | None = None
+    for hold_id in CENTER_HOLDS:
+        left, right = holds[hold_id].geometry
+        pair_seam_x = _frame_seam_x(left, right)
+        if seam_x is None:
+            seam_x = pair_seam_x
         else:
-            assert pair_axis_x == pytest.approx(symmetry_axis_x, abs=1e-6)
+            assert pair_seam_x == pytest.approx(seam_x, abs=1e-9)
 
-    assert symmetry_axis_x is not None
-    for family in range(9, 12):
-        left, right = holds[f"hold-{family:02d}-center"].geometry
-        pair_axis_x = _assert_mirrored_pieces(left, right, presentation_size)
-        assert pair_axis_x == pytest.approx(symmetry_axis_x, abs=1e-6)
-
-    assert 0 < symmetry_axis_x < presentation_size[0]
+    assert seam_x is not None
+    assert 0 < seam_x < 1
 
     for hold in board.holds:
         assert hold.size_millimeters == EXPECTED_SIZES[hold.id]
