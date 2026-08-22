@@ -822,8 +822,7 @@ def test_open_rejects_geometry_that_header_only_discovery_defers() -> None:
         "commands": [
             {"command": "move", "to": [0, 0]},
             {"command": "line", "to": [1, 1]},
-            {"command": "line", "to": [1, 0]},
-            {"command": "line", "to": [0, 1]},
+            {"command": "line", "to": [0.5, 0.5]},
             {"command": "close"},
         ],
     }
@@ -834,7 +833,7 @@ def test_open_rejects_geometry_that_header_only_discovery_defers() -> None:
         == "fixture.board"
     )
     with pytest.raises(
-        board_package.BoardPackageError, match="must not self-intersect"
+        board_package.BoardPackageError, match="must enclose area"
     ):
         github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
 

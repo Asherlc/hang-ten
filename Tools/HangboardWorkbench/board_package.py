@@ -233,11 +233,11 @@ def _load_board_package(
     )
     board = _load_json(root / "board.json", "board.json")
     # Discovery (header-only PNG inspection) only needs enough validation to
-    # list a board safely -- it doesn't read hold geometry, so skip the
-    # O(pieces^2) self-intersection check there too. The specific board a
-    # caller opens or saves is always reloaded through this function with
-    # inspect_png_header_only=False, which still validates its geometry in
-    # full before anyone reads or writes it.
+    # list a board safely -- it doesn't read hold geometry, so skip the full
+    # geometry check there too. The specific board a caller opens or saves is
+    # always reloaded through this function with inspect_png_header_only=False,
+    # which still validates its geometry in full before anyone reads or writes
+    # it.
     _validate_board(board, width, height, validate_geometry=not inspect_png_header_only)
     return BoardPackage(root, board, width, height)
 
