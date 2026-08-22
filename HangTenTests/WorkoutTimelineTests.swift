@@ -967,6 +967,35 @@ final class CountdownAudioBufferSchedulingBackendTests: XCTestCase {
         XCTAssertEqual(playback.playCallCount, 0)
     }
 
+    // Catches the final cue using a one-second fallback deadline instead of
+    // the actual end of a fractional short segment.
+    func testFinalCueMustFitWithinFractionalShortSegmentEnd() {
+        let playback = RecordingCountdownAudioBufferPlayback()
+        let backend = CountdownAudioBufferSchedulingBackend(
+            buffersForSchedule: { _ in
+                [
+                    "3": [makeCountdownPCMBuffer(duration: 0.5)],
+                    "2": [makeCountdownPCMBuffer(duration: 0.5)],
+                    "1": [makeCountdownPCMBuffer(duration: 0.5)]
+                ]
+            },
+            playback: playback,
+            currentHostTime: { 0 }
+        )
+        let schedule = CountdownAudioSchedule(remainingFrom: "3")
+            .appendingShortIntervals([0.2], startingAt: 3)
+
+        XCTAssertFalse(
+            backend.schedule(
+                schedule,
+                startHostTime: AVAudioTime.hostTime(forSeconds: 100)
+            )
+        )
+        XCTAssertEqual(playback.prepareCallCount, 0)
+        XCTAssertEqual(playback.scheduledBufferCount, 0)
+        XCTAssertEqual(playback.playCallCount, 0)
+    }
+
     // Catches stop leaving pre-scheduled buffers owned by the player node.
     func testStopClearsScheduledPlayback() {
         let playback = RecordingCountdownAudioBufferPlayback()

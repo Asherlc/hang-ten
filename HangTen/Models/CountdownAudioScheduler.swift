@@ -328,7 +328,7 @@ final class CountdownAudioBufferSchedulingBackend: CountdownAudioSchedulingBacke
 
             let cueDeadline = cueIndex + 1 < schedule.cues.count
                 ? schedule.cues[cueIndex + 1].offset
-                : cue.offset + 1
+                : schedule.endOffset
             guard cueBufferOffset < cueDeadline - cue.offset else { return nil }
         }
 
