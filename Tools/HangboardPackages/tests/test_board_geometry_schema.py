@@ -25,17 +25,30 @@ def test_path_command_rejects_coordinates_outside_the_normalized_canvas() -> Non
 
 
 def test_normalized_frame_allows_manual_off_canvas_bounds() -> None:
-    frame = NormalizedFrame.from_json(
-        {"x": -0.003741228478, "y": -0.004892401544, "width": 0.165800496, "height": 0.243309389961},
-        "frame",
-    )
+    frame = NormalizedFrame.from_json({"x": -0.01, "y": 0.97, "width": 1.05, "height": 0.08}, "frame")
 
-    assert frame == NormalizedFrame(
-        x=-0.003741228478,
-        y=-0.004892401544,
-        width=0.165800496,
-        height=0.243309389961,
-    )
+    assert frame == NormalizedFrame(x=-0.01, y=0.97, width=1.05, height=0.08)
+
+
+@pytest.mark.parametrize(
+    ("payload", "message"),
+    [
+        ({"x": True, "y": 0, "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": 0, "y": False, "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": 0, "y": 0, "width": float("inf"), "height": 0.1}, "finite number"),
+        ({"x": 0, "y": 0, "width": 0.1, "height": float("nan")}, "finite number"),
+        ({"x": 0, "y": 0, "width": 0, "height": 0.1}, "must be positive"),
+        ({"x": 0, "y": 0, "width": -0.1, "height": 0.1}, "must be at least 0"),
+        ({"x": 0, "y": 0, "width": 0.1, "height": 0}, "must be positive"),
+        ({"x": 0, "y": 0, "width": 0.1, "height": -0.1}, "must be at least 0"),
+    ],
+)
+def test_normalized_frame_rejects_invalid_coordinates_and_nonpositive_dimensions(
+    payload: dict[str, float | bool],
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        NormalizedFrame.from_json(payload, "frame")
 
 
 def _curve(control1: tuple[float, float], control2: tuple[float, float], x: float, y: float) -> dict:

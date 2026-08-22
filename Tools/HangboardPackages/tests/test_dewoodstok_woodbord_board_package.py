@@ -25,7 +25,7 @@ MIRRORED_PAIRS = (
 )
 
 
-def _assert_commands_close(left: tuple[object, ...], right: tuple[object, ...]) -> None:
+def _assert_commands_close(left: object, right: object) -> None:
     assert left.command == right.command
     for field in ("to", "control", "control1", "control2"):
         left_value = getattr(left, field)
