@@ -238,14 +238,86 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.6519999999999999,
+            "x": 0.652,
             "y": 0.035,
             "width": 0.19,
             "height": 0.128
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.025
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.004338693408,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.995661306592,
+                  0.0
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  1.0,
+                  0.0
+                ],
+                "to": [
+                  1.0,
+                  0.025
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.975
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  1.0,
+                  1.0
+                ],
+                "to": [
+                  0.995661306592,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.004338693408,
+                  1.0
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  0.0,
+                  1.0
+                ],
+                "to": [
+                  0.0,
+                  0.975
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.025
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           },
           "treatment": {
             "type": "surface"
