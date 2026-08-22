@@ -14,6 +14,12 @@ protocol WorkoutSpeechSynthesizing: AnyObject {
 
 extension AVSpeechSynthesizer: WorkoutSpeechSynthesizing {}
 
+enum CountdownAudioPreparationState: Equatable {
+    case preparing
+    case ready
+    case failed
+}
+
 struct WorkoutSpeechOwnership {
     private struct SpeechIdentity {
         let utterance: AVSpeechUtterance
@@ -92,19 +98,55 @@ private final class SystemWorkoutAudioSession: WorkoutAudioSessionManaging {
 }
 
 @MainActor
+protocol WorkoutCountdownCompletionScheduling: AnyObject {
+    func schedule(atUptime uptime: TimeInterval, completion: @escaping () -> Void)
+    func cancel()
+}
+
+@MainActor
+private final class SystemWorkoutCountdownCompletionScheduler:
+    WorkoutCountdownCompletionScheduling
+{
+    private var task: Task<Void, Never>?
+
+    func schedule(atUptime uptime: TimeInterval, completion: @escaping () -> Void) {
+        cancel()
+        let delay = max(0, uptime - ProcessInfo.processInfo.systemUptime)
+        task = Task { @MainActor [weak self] in
+            do {
+                try await Task.sleep(for: .seconds(delay))
+            } catch {
+                return
+            }
+            guard !Task.isCancelled, let self else { return }
+            task = nil
+            completion()
+        }
+    }
+
+    func cancel() {
+        task?.cancel()
+        task = nil
+    }
+}
+
+@MainActor
 final class WorkoutAudioCoach: NSObject, ObservableObject {
     @Published private(set) var isSpeaking = false
+    @Published private(set) var countdownPreparationState: CountdownAudioPreparationState = .preparing
 
     private let synthesizer: any WorkoutSpeechSynthesizing
     private let audioSession: any WorkoutAudioSessionManaging
+    private let countdownScheduler: any CountdownAudioScheduling
+    private let countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
+    private var ownsCountdownSchedule = false
     private var deactivationRetryTask: Task<Void, Never>?
     private var remainingDeactivationRetries: Int
     private var speechOwnership = WorkoutSpeechOwnership()
 
     private static let maximumDeactivationRetries = 1
-
     override convenience init() {
         self.init(
             synthesizer: AVSpeechSynthesizer(),
@@ -112,19 +154,54 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         )
     }
 
-    init(
+    convenience init(
         synthesizer: any WorkoutSpeechSynthesizing,
         audioSession: any WorkoutAudioSessionManaging
     ) {
+        self.init(
+            synthesizer: synthesizer,
+            audioSession: audioSession,
+            countdownScheduler: CountdownAudioScheduler(
+                preferredLanguageCode: Self.preferredLanguageCode,
+                rate: 0.50,
+                pitchMultiplier: 1.0,
+                volume: 1.0
+            )
+        )
+    }
+
+    convenience init(
+        synthesizer: any WorkoutSpeechSynthesizing,
+        audioSession: any WorkoutAudioSessionManaging,
+        countdownScheduler: any CountdownAudioScheduling
+    ) {
+        self.init(
+            synthesizer: synthesizer,
+            audioSession: audioSession,
+            countdownScheduler: countdownScheduler,
+            countdownCompletionScheduler: SystemWorkoutCountdownCompletionScheduler()
+        )
+    }
+
+    init(
+        synthesizer: any WorkoutSpeechSynthesizing,
+        audioSession: any WorkoutAudioSessionManaging,
+        countdownScheduler: any CountdownAudioScheduling,
+        countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
+    ) {
         self.synthesizer = synthesizer
         self.audioSession = audioSession
+        self.countdownScheduler = countdownScheduler
+        self.countdownCompletionScheduler = countdownCompletionScheduler
         self.remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
         super.init()
         synthesizer.delegate = self
+        beginCountdownPrewarm()
     }
 
     func speak(_ phrase: String) {
         guard !phrase.isEmpty else { return }
+        cancelOwnedCountdownSchedule()
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
         configureAudioSessionIfNeeded()
@@ -140,29 +217,106 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         synthesizer.speak(utterance)
     }
 
-    func stop() {
+    @discardableResult
+    func startCountdown(remainingFrom phrase: String, startUptime: TimeInterval) -> Bool {
+        startCountdown(
+            CountdownAudioSchedule(remainingFrom: phrase),
+            startUptime: startUptime
+        )
+    }
+
+    @discardableResult
+    func startCountdown(
+        _ schedule: CountdownAudioSchedule,
+        startUptime: TimeInterval
+    ) -> Bool {
+        guard !ownsCountdownSchedule, countdownPreparationState == .ready else { return false }
+
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
+        guard configureAudioSessionIfNeeded() else { return false }
+
+        let startHostTime = AVAudioTime.hostTime(forSeconds: startUptime)
+        guard countdownScheduler.schedule(schedule, startHostTime: startHostTime) else {
+            let phrases = schedule.cues.map(\.phrase).joined(separator: ",")
+            logger.error("Unable to pre-schedule numeric countdown \(phrases, privacy: .public)")
+            deactivateAudioSessionIfSpeechStopped()
+            return false
+        }
+
+        ownsCountdownSchedule = true
+        let sequenceEndUptime = startUptime + schedule.endOffset
+        countdownCompletionScheduler.schedule(atUptime: sequenceEndUptime) { [weak self] in
+            self?.finishOwnedCountdownSchedule()
+        }
+        return true
+    }
+
+    func stop() {
+        countdownCompletionScheduler.cancel()
+        deactivationRetryTask?.cancel()
+        deactivationRetryTask = nil
+        countdownScheduler.stop()
+        ownsCountdownSchedule = false
         speechOwnership.requestStop()
         isSpeaking = false
         synthesizer.stopSpeaking(at: .immediate)
         deactivateAudioSessionIfSpeechStopped()
+        beginCountdownPrewarm()
     }
 
-    private var preferredLanguageCode: String {
+    private static var preferredLanguageCode: String {
         Locale.preferredLanguages.first ?? "en-US"
     }
 
-    private func configureAudioSessionIfNeeded() {
-        guard !configuredAudioSession else { return }
+    private var preferredLanguageCode: String {
+        Self.preferredLanguageCode
+    }
+
+    @discardableResult
+    private func configureAudioSessionIfNeeded() -> Bool {
+        guard !configuredAudioSession else { return true }
 
         do {
             try audioSession.configureForSpokenCues()
             try audioSession.activate()
             configuredAudioSession = true
             remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
+            return true
         } catch {
             logger.error("Unable to activate spoken cue audio session: \(error.localizedDescription, privacy: .public)")
+            return false
+        }
+    }
+
+    private func cancelOwnedCountdownSchedule() {
+        guard ownsCountdownSchedule else { return }
+        countdownCompletionScheduler.cancel()
+        countdownScheduler.stop()
+        ownsCountdownSchedule = false
+        beginCountdownPrewarm()
+    }
+
+    private func finishOwnedCountdownSchedule() {
+        guard ownsCountdownSchedule else { return }
+        countdownScheduler.stop()
+        ownsCountdownSchedule = false
+        deactivateAudioSessionIfSpeechStopped()
+        beginCountdownPrewarm()
+    }
+
+    private func beginCountdownPrewarm() {
+        countdownPreparationState = .preparing
+        countdownScheduler.prewarm { [weak self] succeeded in
+            if Thread.isMainThread {
+                MainActor.assumeIsolated {
+                    self?.countdownPreparationState = succeeded ? .ready : .failed
+                }
+            } else {
+                Task { @MainActor in
+                    self?.countdownPreparationState = succeeded ? .ready : .failed
+                }
+            }
         }
     }
 
