@@ -224,6 +224,18 @@ test("the browser client navigates to login when an API request is unauthenticat
   assert.deepEqual(assignedUrls, ["/auth/login"]);
 });
 
+test("the browser client preserves an auth-status API failure", async () => {
+  const { runtime } = runtimeFixture(async () => response(
+    { ok: false, error: "Authentication service is unavailable" },
+    { ok: false, status: 503 },
+  ));
+
+  await assert.rejects(
+    createWorkbenchClient(runtime).getAuthStatus(),
+    /Authentication service is unavailable/,
+  );
+});
+
 test("the browser client keeps the current tab on an unauthenticated save and exposes the login URL", async () => {
   let requestOptions: RequestInit | undefined;
   const { runtime, assignedUrls } = runtimeFixture(async (_input, options) => {

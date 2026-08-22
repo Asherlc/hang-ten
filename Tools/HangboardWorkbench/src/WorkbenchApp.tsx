@@ -9,6 +9,7 @@ import { HoldCanvas, type Guide, type GuideAxis } from "./components/HoldCanvas.
 import { HoldInspector } from "./components/HoldInspector.tsx";
 import { RepositoryToolbar } from "./components/RepositoryToolbar.tsx";
 import { ValidationPanel } from "./components/ValidationPanel.tsx";
+import { ApiErrorAlert } from "./components/ApiErrorAlert.tsx";
 
 export interface WorkbenchAppProps {
   dependencies: WorkbenchDependencies;
@@ -233,6 +234,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             guides={guides}
             onMoveGuide={moveGuide}
           />
+          <ApiErrorAlert error={state.apiError} />
           <ValidationPanel validation={state.validation} />
           <footer className="statusbar">
             <span id="editor-status">

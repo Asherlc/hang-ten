@@ -269,6 +269,8 @@ export interface WorkbenchState {
   commitMessage: string;
   rotationDegrees: string;
   validation: string;
+  apiError: string;
+  apiErrorOperation: string | null;
   status: string;
   saveLoginUrl: string | null;
   boardsError: string;
