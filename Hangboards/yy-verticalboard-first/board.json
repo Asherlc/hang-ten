@@ -5,7 +5,7 @@
   "name": "VerticalBoard First",
   "subtitle": "Progressive poplar hangboard with broad jugs, 20- and 35-degree slopers, rounded edges, and an elastic notch.",
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-first",
-  "dimensions": "54 × 13 × 5 cm",
+  "dimensions": "54 \u00d7 13 \u00d7 5 cm",
   "aspectRatio": 2.0,
   "presentation": {
     "assetPath": "assets/primary.png"
@@ -18,8 +18,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.145,
-            "y": 0.418,
+            "x": 0.100223880496,
+            "y": 0.303572139797,
             "width": 0.154,
             "height": 0.025
           },
@@ -29,7 +29,7 @@
               {
                 "command": "move",
                 "to": [
-                  0,
+                  0.0,
                   0.2
                 ]
               },
@@ -41,32 +41,32 @@
                 ],
                 "control2": [
                   0.18,
-                  0
+                  0.0
                 ],
                 "to": [
                   0.36,
-                  0
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  1,
-                  0
+                  1.0,
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.9,
-                  1
+                  1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.08,
-                  1
+                  1.0
                 ]
               },
               {
@@ -76,11 +76,11 @@
                   0.82
                 ],
                 "control2": [
-                  0,
+                  0.0,
                   0.52
                 ],
                 "to": [
-                  0,
+                  0.0,
                   0.2
                 ]
               },
@@ -376,8 +376,20 @@
                   0
                 ]
               },
-              { "command": "line", "to": [1, 0.5] },
-              { "command": "line", "to": [0.96, 1] },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.5
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.96,
+                  1
+                ]
+              },
               {
                 "command": "line",
                 "to": [
@@ -385,8 +397,20 @@
                   1
                 ]
               },
-              { "command": "line", "to": [0, 0.5] },
-              { "command": "line", "to": [0.04, 0] },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.04,
+                  0
+                ]
+              },
               {
                 "command": "close"
               }
@@ -406,8 +430,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.164,
-            "y": 0.444,
+            "x": 0.091860696731,
+            "y": 0.374348258174,
             "width": 0.129,
             "height": 0.043
           },
@@ -418,95 +442,95 @@
                 "command": "move",
                 "to": [
                   0.066666666667,
-                  0
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.933333333333,
-                  0
+                  0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.970152316655,
-                  0
+                  0.970152316405,
+                  0.0
                 ],
                 "control2": [
-                  1,
-                  0.089543050034
+                  1.0,
+                  0.089543063894
                 ],
                 "to": [
-                  1,
+                  1.0,
                   0.2
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  1,
+                  1.0,
                   0.8
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  1,
-                  0.910456949966
+                  1.0,
+                  0.910456962324
                 ],
                 "control2": [
-                  0.970152316655,
-                  1
+                  0.970152316405,
+                  1.0
                 ],
                 "to": [
                   0.933333333333,
-                  1
+                  1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.066666666667,
-                  1
+                  1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.029847683345,
-                  1
+                  0.029847683595,
+                  1.0
                 ],
                 "control2": [
-                  0,
-                  0.910456949966
+                  0.0,
+                  0.910456962324
                 ],
                 "to": [
-                  0,
+                  0.0,
                   0.8
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0,
+                  0.0,
                   0.2
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0,
-                  0.089543050034
+                  0.0,
+                  0.089543063894
                 ],
                 "control2": [
-                  0.029847683345,
-                  0
+                  0.029847683595,
+                  0.0
                 ],
                 "to": [
                   0.066666666667,
-                  0
+                  0.0
                 ]
               },
               {
@@ -516,7 +540,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -639,7 +663,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -762,7 +786,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -885,7 +909,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1008,7 +1032,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1131,7 +1155,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1254,7 +1278,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1377,7 +1401,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1500,7 +1524,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1623,7 +1647,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1746,7 +1770,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1869,7 +1893,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
