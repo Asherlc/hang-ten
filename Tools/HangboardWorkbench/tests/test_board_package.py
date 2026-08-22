@@ -168,16 +168,13 @@ def test_canonical_package_has_the_exact_single_file_inventory() -> None:
         for piece in hold["geometry"]:
             if piece["shape"]["type"] != "path":
                 continue
-            points = [
-                coordinates
-                for command in piece["shape"]["commands"]
-                for key, coordinates in command.items()
-                if key != "command"
-            ]
-            assert min(point[0] for point in points) == pytest.approx(0, abs=5e-7)
-            assert min(point[1] for point in points) == pytest.approx(0, abs=5e-7)
-            assert max(point[0] for point in points) == pytest.approx(1, abs=5e-7)
-            assert max(point[1] for point in points) == pytest.approx(1, abs=5e-7)
+            min_x, max_x, min_y, max_y = board_package.flattened_shape_bounds(
+                piece["shape"]["commands"]
+            )
+            assert min_x == pytest.approx(0, abs=5e-7)
+            assert min_y == pytest.approx(0, abs=5e-7)
+            assert max_x == pytest.approx(1, abs=5e-7)
+            assert max_y == pytest.approx(1, abs=5e-7)
 
 
 def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:

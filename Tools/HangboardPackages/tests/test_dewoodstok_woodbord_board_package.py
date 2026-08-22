@@ -25,6 +25,17 @@ MIRRORED_PAIRS = (
 )
 
 
+def _assert_commands_close(left: tuple[object, ...], right: tuple[object, ...]) -> None:
+    assert left.command == right.command
+    for field in ("to", "control", "control1", "control2"):
+        left_value = getattr(left, field)
+        right_value = getattr(right, field)
+        if left_value is None or right_value is None:
+            assert left_value == right_value
+        else:
+            assert right_value == pytest.approx(left_value, abs=1e-8)
+
+
 def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
@@ -32,8 +43,8 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
         presentation_size = image.size
 
     assert tuple(holds) == EXPECTED_HOLDS
-    assert Counter(hold.kind for hold in holds.values()) == {"pocket": 16, "sloper": 1}
-    assert holds["top-rim"].kind == "sloper"
+    assert Counter(hold.kind for hold in holds.values()) == {"pocket": 16, "jug": 1}
+    assert holds["top-rim"].kind == "jug"
     assert all(holds[hold_id].kind == "pocket" for hold_id in EXPECTED_HOLDS[1:])
 
     for hold in holds.values():
@@ -59,7 +70,12 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
         assert right_y == pytest.approx(left_y, abs=1e-6)
         assert right_width == pytest.approx(left_width, abs=1e-6)
         assert right_height == pytest.approx(left_height, abs=1e-6)
-        assert right.geometry[0].shape.commands == left.geometry[0].shape.commands
+        for left_command, right_command in zip(
+            left.geometry[0].shape.commands,
+            right.geometry[0].shape.commands,
+            strict=True,
+        ):
+            _assert_commands_close(left_command, right_command)
         pair_axis_x = (left_x + left_width + right_x) / 2
         if symmetry_axis_x is None:
             symmetry_axis_x = pair_axis_x
