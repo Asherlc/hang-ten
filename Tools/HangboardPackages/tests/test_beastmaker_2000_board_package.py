@@ -7,7 +7,7 @@ import pytest
 from PIL import Image
 
 from hangboard_packages.board_catalog import load_board_package
-from _board_package_helpers import presentation_frame
+from _board_package_helpers import presentation_frame, serialize_command, serialize_geometry
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -441,33 +441,8 @@ EXPECTED_GEOMETRY = {
 }
 
 
-def _serialize_geometry(hold: object) -> tuple[dict[str, object], ...]:
-    return tuple(_serialize_piece(piece) for piece in hold.geometry)
-
-
-def _serialize_piece(piece: object) -> dict[str, object]:
-    return {
-        "frame": {
-            "x": piece.frame.x,
-            "y": piece.frame.y,
-            "width": piece.frame.width,
-            "height": piece.frame.height,
-        },
-        "commands": tuple(_serialize_command(command) for command in piece.shape.commands),
-    }
-
-
 def _serialize_shape(piece: object) -> tuple[dict[str, object], ...]:
-    return tuple(_serialize_command(command) for command in piece.shape.commands)
-
-
-def _serialize_command(command: object) -> dict[str, object]:
-    serialized: dict[str, object] = {"command": command.command}
-    for key in ("to", "control", "control1", "control2"):
-        value = getattr(command, key)
-        if value is not None:
-            serialized[key] = tuple(value)
-    return serialized
+    return tuple(serialize_command(command) for command in piece.shape.commands)
 
 
 def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
@@ -494,7 +469,7 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
-    assert {hold.id: _serialize_geometry(hold) for hold in board.holds} == EXPECTED_GEOMETRY
+    assert {hold.id: serialize_geometry(hold) for hold in board.holds} == EXPECTED_GEOMETRY
 
     symmetry_axis_x: float | None = None
     for left_id, right_id in MIRRORED_PAIRS:

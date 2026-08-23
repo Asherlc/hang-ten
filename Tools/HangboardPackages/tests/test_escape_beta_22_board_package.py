@@ -7,7 +7,7 @@ import pytest
 from PIL import Image
 
 from hangboard_packages.board_catalog import load_board_package
-from _board_package_helpers import presentation_frame
+from _board_package_helpers import presentation_frame, serialize_geometry
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -310,31 +310,6 @@ def _frame_seam_x(left: object, right: object) -> float:
     return left.frame.x + left.frame.width
 
 
-def _serialize_geometry(hold: object) -> tuple[dict[str, object], ...]:
-    return tuple(_serialize_piece(piece) for piece in hold.geometry)
-
-
-def _serialize_piece(piece: object) -> dict[str, object]:
-    return {
-        "frame": {
-            "x": piece.frame.x,
-            "y": piece.frame.y,
-            "width": piece.frame.width,
-            "height": piece.frame.height,
-        },
-        "commands": tuple(_serialize_command(command) for command in piece.shape.commands),
-    }
-
-
-def _serialize_command(command: object) -> dict[str, object]:
-    serialized: dict[str, object] = {"command": command.command}
-    for key in ("to", "control", "control1", "control2"):
-        value = getattr(command, key)
-        if value is not None:
-            serialized[key] = tuple(value)
-    return serialized
-
-
 def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
@@ -362,7 +337,7 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
             assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
             assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
-    assert {hold.id: _serialize_geometry(hold) for hold in board.holds} == EXPECTED_GEOMETRY
+    assert {hold.id: serialize_geometry(hold) for hold in board.holds} == EXPECTED_GEOMETRY
 
     for family in range(1, 9):
         left = holds[f"hold-{family:02d}-left"]
