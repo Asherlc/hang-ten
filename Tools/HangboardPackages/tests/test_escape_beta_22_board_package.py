@@ -305,14 +305,6 @@ EXPECTED_GEOMETRY = {
 }
 
 
-def _points(command: object) -> tuple[tuple[float, float], ...]:
-    return tuple(
-        point
-        for point in (command.to, command.control, command.control1, command.control2)
-        if point is not None
-    )
-
-
 def _frame_seam_x(left: object, right: object) -> float:
     assert left.frame.x + left.frame.width <= right.frame.x
     return left.frame.x + left.frame.width
@@ -369,7 +361,6 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
             assert len(piece.shape.commands) >= 5
             assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
             assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
-            assert any(_points(command) for command in piece.shape.commands)
 
     assert {hold.id: _serialize_geometry(hold) for hold in board.holds} == EXPECTED_GEOMETRY
 

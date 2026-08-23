@@ -35,6 +35,8 @@ def test_normalized_frame_allows_manual_off_canvas_bounds() -> None:
     [
         ({"x": True, "y": 0, "width": 0.1, "height": 0.1}, "finite number"),
         ({"x": 0, "y": False, "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": float("nan"), "y": 0, "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": 0, "y": float("inf"), "width": 0.1, "height": 0.1}, "finite number"),
         ({"x": 0, "y": 0, "width": float("inf"), "height": 0.1}, "finite number"),
         ({"x": 0, "y": 0, "width": 0.1, "height": float("nan")}, "finite number"),
         ({"x": 0, "y": 0, "width": 0, "height": 0.1}, "must be positive"),

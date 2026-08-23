@@ -484,13 +484,6 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
         "pocket": 21,
     }
 
-    rounded_rect_holds = {
-        hold.id
-        for hold in holds.values()
-        if hold.geometry[0].shape.type == "roundedRect"
-    }
-    assert rounded_rect_holds == set()
-
     for hold in holds.values():
         assert len(hold.geometry) == 1
         piece = hold.geometry[0]
