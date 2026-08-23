@@ -19,6 +19,7 @@ EXPECTED_HOLDS = (
     *(f"front-lower-{index}" for index in range(1, 10)),
     "hold-26",
     "hold-27",
+    "hold-28",
 )
 EXPECTED_KINDS = {
     **{f"top-sloper-{index}": "sloper" for index in range(1, 5)},
@@ -44,6 +45,7 @@ EXPECTED_KINDS = {
     "front-lower-9": "pocket",
     "hold-26": "pocket",
     "hold-27": "pocket",
+    "hold-28": "sloper",
 }
 MIRRORED_PAIRS = (
     ("front-upper-1", "front-upper-2"),
@@ -422,6 +424,20 @@ EXPECTED_GEOMETRY = {
             ),
         },
     ),
+    "hold-28": (
+        {
+            "frame": {"x": 0.812506858125, "y": 0.047655822695, "width": 0.172863552774, "height": 0.274613035461},
+            "commands": (
+                {"command": "move", "to": (0.971020392453, 0.295207314029)},
+                {"command": "line", "to": (1.0, 1.0)},
+                {"command": "line", "to": (0.041653869886, 1.0)},
+                {"command": "curve", "control1": (0.018516242746, 0.658141102381), "control2": (0.009258121373, 0.328834032043), "to": (0.0, 0.029251289719)},
+                {"command": "curve", "control1": (0.182233772326, 0.010330442285), "control2": (0.589591143985, 0.0), "to": (0.793269828394, 0.0)},
+                {"command": "quad", "control": (0.959810459103, 0.047458418471), "to": (0.971020392453, 0.295207314029)},
+                {"command": "close"},
+            ),
+        },
+    ),
 }
 
 
@@ -463,7 +479,7 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     assert tuple(holds) == EXPECTED_HOLDS
     assert {hold_id: hold.kind for hold_id, hold in holds.items()} == EXPECTED_KINDS
     assert Counter(hold.kind for hold in holds.values()) == {
-        "sloper": 4,
+        "sloper": 5,
         "edge": 1,
         "pocket": 21,
     }
