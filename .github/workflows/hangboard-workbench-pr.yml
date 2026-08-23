@@ -131,7 +131,7 @@ jobs:
 
       # actions/cache v4.2.3
       - name: Restore native Swift build products
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: Tools/HangboardWorkbench/macos/.build
           key: hangboard-workbench-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Tools/HangboardWorkbench/macos/Package.resolved') }}

@@ -122,7 +122,7 @@ jobs:
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
           key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
