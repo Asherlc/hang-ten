@@ -284,10 +284,6 @@
                 "command": "close"
               }
             ]
-          },
-          "shapeConstraint": {
-            "shape": "circle",
-            "rotationDegrees": 0.0
           }
         }
       ]
