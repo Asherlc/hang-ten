@@ -377,7 +377,10 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
         status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         assert status == 200
         board = opened["board"]
-        assert board["imageUrl"] == "/api/boards/fixture.board/image"
+        assert (
+            board["imageUrl"]
+            == "/api/boards/fixture.board/image?presentationID=primary"
+        )
         assert board["saveUrl"] == "/api/boards/fixture.board"
         assert [region["key"] for region in board["document"]["regions"]] == [
             "hold-left-piece-0",
