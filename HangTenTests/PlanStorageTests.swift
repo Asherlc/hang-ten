@@ -94,8 +94,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(
             WorkoutPresentationContent.cueCardRows(step: step, countdown: 3, isComplete: false),
             [
-                InstructionAccessoryCardRow(kind: .instruction, text: "Source instruction"),
-                InstructionAccessoryCardRow(kind: .accessory, text: "Source accessory")
+                InstructionAccessoryCardRow(kind: .instruction, text: "Source instruction")
             ]
         )
     }
