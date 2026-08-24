@@ -86,7 +86,16 @@ def test_package_contents_and_metadata(package: board_package.BoardPackage, pixe
     assert board["manufacturer"] == "Trango"
     assert board["name"] == "Rock Prodigy Pivot"
     assert board["dimensions"] == "15.5 × 5 × 2.5 in"
-    assert board["presentation"] == {"assetPath": "assets/primary.png"}
+    assert board["presentations"] == [
+        {
+            "id": "primary",
+            "name": "Primary",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": width / height,
+            "default": True,
+        }
+    ]
+    assert all(hold["presentationID"] == "primary" for hold in board["holds"])
     assert (width, height) == EXPECTED_PIXEL_SIZE
     assert board["aspectRatio"] == width / height
 

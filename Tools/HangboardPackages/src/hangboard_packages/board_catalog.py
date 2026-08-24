@@ -387,7 +387,6 @@ class BoardHold:
 
 @dataclass(frozen=True)
 class BoardDocument:
-    schema_version: int
     id: str
     facts: Mapping[str, Any]
     holds: tuple[BoardHold, ...]
@@ -403,7 +402,7 @@ class BoardDocument:
 
     @property
     def presentation_asset_path(self) -> str:
-        """Return the default surface's asset path for legacy consumers."""
+        """Return the default surface's asset path."""
         return next(
             presentation.asset_path
             for presentation in self.presentations
@@ -437,7 +436,6 @@ def _load_hold(
     source: str,
     *,
     presentation_id: str,
-    requires_presentation_id: bool,
 ) -> BoardHold:
     payload = _mapping(value, source)
     _closed(
@@ -452,7 +450,7 @@ def _load_hold(
             "handCapacity",
             "features",
         }
-        | ({"presentationID"} if requires_presentation_id else set()),
+        | {"presentationID"},
     )
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
@@ -528,7 +526,6 @@ def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...
 
 def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     required = {
-        "schemaVersion",
         "id",
         "manufacturer",
         "name",
@@ -536,50 +533,17 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "productURL",
         "dimensions",
         "aspectRatio",
+        "presentations",
         "holds",
     }
-    schema_version = value.get("schemaVersion")
-    if isinstance(schema_version, bool) or schema_version not in {1, 2}:
-        _closed(
-            value,
-            required,
-            "board.json",
-            optional={"presentation", "presentations"},
-        )
-        raise ValueError("board.json.schemaVersion must be 1 or 2")
-    if schema_version == 1:
-        _closed(value, required, "board.json", optional={"presentation"})
-    else:
-        _closed(value, required | {"presentations"}, "board.json")
+    _closed(value, required, "board.json")
     facts: dict[str, Any] = {}
     for key in ("manufacturer", "name", "subtitle", "productURL", "dimensions"):
         facts[key] = _string(value[key], f"board.json.{key}")
     facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")
-    if schema_version == 1:
-        presentation_asset_path = "assets/primary.png"
-        if "presentation" in value:
-            presentation = _mapping(value["presentation"], "board.json.presentation")
-            _closed(presentation, {"assetPath"}, "board.json.presentation")
-            presentation_asset_path = _string(
-                presentation["assetPath"], "board.json.presentation.assetPath"
-            )
-            if presentation_asset_path != "assets/primary.png":
-                raise ValueError(
-                    "board.json.presentation.assetPath must be assets/primary.png"
-                )
-        presentations = (
-            BoardPresentation(
-                "primary",
-                "Primary",
-                presentation_asset_path,
-                facts["aspectRatio"],
-                True,
-            ),
-        )
-    else:
-        presentations = _load_presentations(value["presentations"], "board.json.presentations")
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
         raise ValueError("board.json.holds must be a non-empty array")
@@ -588,26 +552,22 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     for index, item in enumerate(raw_holds):
         source = f"board.json.holds[{index}]"
         payload = _mapping(item, source)
-        presentation_id = "primary"
-        if schema_version == 2:
-            presentation_id = _identifier(
-                payload.get("presentationID"), f"{source}.presentationID"
-            )
-            if presentation_id not in presentation_ids:
-                raise ValueError(f"{source}.presentationID is an unknown presentationID")
+        presentation_id = _identifier(
+            payload.get("presentationID"), f"{source}.presentationID"
+        )
+        if presentation_id not in presentation_ids:
+            raise ValueError(f"{source}.presentationID is an unknown presentationID")
         holds.append(
             _load_hold(
                 payload,
                 source,
                 presentation_id=presentation_id,
-                requires_presentation_id=schema_version == 2,
             )
         )
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
     return BoardDocument(
-        schema_version,
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),
         holds_tuple,
@@ -648,18 +608,17 @@ def _validate_finished_shape(root: Path, board: BoardDocument) -> None:
         if asset.is_symlink() or not asset.is_file():
             raise ValueError(f"{asset_path} must be a regular non-symlink file")
         image_dimensions[asset_path] = _validate_png_structure(asset, asset_path)
-    if board.schema_version == 2:
-        for presentation in board.presentations:
-            width, height = image_dimensions[presentation.asset_path]
-            image_aspect_ratio = width / height
-            relative_error = (
-                abs(presentation.aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+    for presentation in board.presentations:
+        width, height = image_dimensions[presentation.asset_path]
+        image_aspect_ratio = width / height
+        relative_error = (
+            abs(presentation.aspect_ratio - image_aspect_ratio) / image_aspect_ratio
+        )
+        if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
+            raise ValueError(
+                f"board.json.presentations[{presentation.id}].aspectRatio must match "
+                "its image width/height within 0.1%"
             )
-            if relative_error > _ASPECT_RATIO_RELATIVE_TOLERANCE:
-                raise ValueError(
-                    f"board.json.presentations[{presentation.id}].aspectRatio must match "
-                    "its image width/height within 0.1%"
-                )
 
 
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"

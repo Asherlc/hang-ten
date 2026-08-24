@@ -46,7 +46,11 @@ from server import (  # noqa: E402
     create_server,
     validate_hang_ten_checkout,
 )
-from workbench_fixtures import PRIMARY_IMAGE, board_document, board_document_v2  # noqa: E402
+from workbench_fixtures import (  # noqa: E402
+    PRIMARY_IMAGE,
+    board_document,
+    multi_presentation_board_document,
+)
 
 HOSTED_TOKEN = "ghp_hosted_session"
 HOSTED_BRANCH = "workbench-default"
@@ -77,7 +81,7 @@ def _write_library(root: Path) -> Path:
     return library
 
 
-def _write_v2_library(root: Path) -> Path:
+def _write_multi_presentation_library(root: Path) -> Path:
     library = root / "Hangboards"
     package = library / "fixture-v2"
     assets = package / "assets"
@@ -87,7 +91,7 @@ def _write_v2_library(root: Path) -> Path:
     back[-12:-12] = b""
     (assets / "back.png").write_bytes(bytes(back))
     (package / "board.json").write_text(
-        json.dumps(board_document_v2("fixture.v2"), indent=2) + "\n",
+        json.dumps(multi_presentation_board_document("fixture.multi"), indent=2) + "\n",
         encoding="utf-8",
     )
     return library
@@ -386,13 +390,13 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
             assert response.read(8) == b"\x89PNG\r\n\x1a\n"
 
 
-def test_v2_board_payload_lists_surfaces_and_opens_the_requested_canvas(
+def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
     tmp_path: Path,
 ) -> None:
-    library = _write_v2_library(tmp_path)
+    library = _write_multi_presentation_library(tmp_path)
 
     with running_server(library) as base:
-        status, opened = request_json(base, "GET", "/api/boards/fixture.v2")
+        status, opened = request_json(base, "GET", "/api/boards/fixture.multi")
         assert status == 200
         board = opened["board"]
         assert board["selectedPresentationID"] == "front"
@@ -401,13 +405,13 @@ def test_v2_board_payload_lists_surfaces_and_opens_the_requested_canvas(
             {
                 "presentationID": "front",
                 "displayName": "Front",
-                "imageUrl": "/api/boards/fixture.v2/image?presentationID=front",
+                "imageUrl": "/api/boards/fixture.multi/image?presentationID=front",
                 "default": True,
             },
             {
                 "presentationID": "back",
                 "displayName": "Back",
-                "imageUrl": "/api/boards/fixture.v2/image?presentationID=back",
+                "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
                 "default": False,
             },
         ]
@@ -416,7 +420,7 @@ def test_v2_board_payload_lists_surfaces_and_opens_the_requested_canvas(
         status, opened_back = request_json(
             base,
             "GET",
-            "/api/boards/fixture.v2?presentationID=back",
+            "/api/boards/fixture.multi?presentationID=back",
         )
         assert status == 200
         back_board = opened_back["board"]

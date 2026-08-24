@@ -841,7 +841,7 @@ def _save_loaded_editor_document(
         width,
         height,
         presentation.id,
-        require_presentation_id=live.board.get("schemaVersion") == 2,
+        require_presentation_id=True,
     )
 
     pieces_by_hold: dict[
@@ -866,7 +866,7 @@ def _save_loaded_editor_document(
     current_holds = {
         hold["id"]: hold
         for hold in live.board["holds"]
-        if hold.get("presentationID", "primary") == presentation.id
+        if hold["presentationID"] == presentation.id
     }
     current_paths = board_package._current_display_paths(
         pieces_by_hold, current_holds, width, height
@@ -1113,10 +1113,6 @@ def _load_package_from_entries(
     presentation_values = board_package._parse_board_presentations(board)
     expected_assets = {item[2] for item in presentation_values}
     if set(asset_entries) != expected_assets:
-        if board.get("schemaVersion") == 1:
-            raise board_package.BoardPackageError(
-                "board package must contain only board.json and assets/primary.png"
-            )
         raise board_package.BoardPackageError(
             "board package assets must exactly match its presentations"
         )
@@ -1214,13 +1210,13 @@ def _raise_for_incomplete_layout(slug: str, entries: Mapping[str, TreeEntry]) ->
             and entries["assets/primary.png"].type != "blob"
         ):
             raise board_package.BoardPackageError(
-                "board package must contain only board.json and assets/primary.png"
+                "board package assets must exactly match its presentations"
             )
         if entries["board.json"].type != "blob":
             raise board_package.BoardPackageError("board.json is missing")
     if "board.json" in entries:
         raise board_package.BoardPackageError(
-            "board package must contain only board.json and assets/primary.png"
+            "board package must contain only board.json and assets/"
         )
     if set(entries) == {"assets"} and entries["assets"].type != "tree":
         raise board_package.BoardPackageError(

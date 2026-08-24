@@ -38,7 +38,7 @@ from workbench_fixtures import (  # noqa: E402
     CANONICAL_PACKAGE,
     PRIMARY_IMAGE,
     board_document,
-    board_document_v2,
+    multi_presentation_board_document,
 )
 
 
@@ -153,19 +153,21 @@ def _package_snapshot(package: Path) -> dict[str, bytes]:
     }
 
 
-def _write_v2_package(library: Path) -> Path:
-    package = library / "fixture-v2"
+def _write_multi_presentation_package(library: Path) -> Path:
+    package = library / "fixture-multi-presentation"
     assets = package / "assets"
     assets.mkdir(parents=True)
     shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
     shutil.copyfile(PRIMARY_IMAGE, assets / "back.png")
-    _write_json(package / "board.json", board_document_v2("fixture.v2"))
+    _write_json(
+        package / "board.json", multi_presentation_board_document("fixture.multi")
+    )
     return package
 
 
-def test_v2_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> None:
+def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> None:
     library = _library(tmp_path)
-    package_root = _write_v2_package(library)
+    package_root = _write_multi_presentation_package(library)
 
     package = board_package.load_board_package(package_root)
     front = board_package.editor_document(package)
@@ -186,26 +188,34 @@ def test_v2_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> 
     ]
 
 
-def test_v1_without_optional_presentation_uses_the_primary_surface(
-    tmp_path: Path,
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (lambda board: board.__setitem__("presentation", {"assetPath": "assets/primary.png"}), "unknown keys"),
+        (lambda board: board.pop("presentations"), "missing keys"),
+        (lambda board: board["holds"][0].pop("presentationID"), "presentationID"),
+        (lambda board: board["holds"][0].__setitem__("presentationID", "missing"), "presentationID is unknown"),
+    ],
+)
+def test_rejects_legacy_or_incomplete_presentation_shape(
+    tmp_path: Path, mutation, message: str
 ) -> None:
     library = _library(tmp_path)
     package_root = _write_finished_package(
         library, "fixture-board", "fixture.board"
     )
-    _mutate_board(package_root, lambda board: board.pop("presentation"))
+    _mutate_board(package_root, mutation)
 
-    package = board_package.load_board_package(package_root)
-
-    assert [presentation.id for presentation in package.presentations] == ["primary"]
-    assert board_package.editor_document(package)["presentationID"] == "primary"
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
 
 
-def test_v2_save_changes_only_the_selected_presentation_and_preserves_assets(
+def test_save_changes_only_the_selected_presentation_and_preserves_assets(
     tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
-    package_root = _write_v2_package(library)
+    package_root = _write_multi_presentation_package(library)
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package, "front")
     before = _package_snapshot(package_root)
@@ -226,7 +236,9 @@ def test_v2_save_changes_only_the_selected_presentation_and_preserves_assets(
         }
     )
 
-    saved = board_package.save_editor_document(library, "fixture-v2", document)
+    saved = board_package.save_editor_document(
+        library, "fixture-multi-presentation", document
+    )
 
     assert board_package.editor_document(saved, "front")["presentationID"] == "front"
     assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
@@ -642,7 +654,10 @@ def test_rejects_sidecars_and_extra_package_files(
     extra.parent.mkdir(parents=True, exist_ok=True)
     extra.write_bytes(b"{}")
 
-    with pytest.raises(BoardPackageError, match="only board.json and assets/primary.png"):
+    with pytest.raises(
+        BoardPackageError,
+        match="only board.json and assets/|assets must exactly match",
+    ):
         board_package.load_board_package(package)
 
 
@@ -866,7 +881,7 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     package = board_package.load_board_package(package_root)
     hold = package.board["holds"][0]
 
-    assert set(hold) == {"id", "name", "kind", "geometry"}
+    assert set(hold) == {"id", "name", "kind", "presentationID", "geometry"}
     assert package.hold_frame("hold-left").to_json() == {
         "x": 0.05,
         "y": 0.1,
@@ -1355,7 +1370,11 @@ def test_save_adds_a_new_hold(tmp_path: Path) -> None:
             "key": "hold-right-piece-0",
             "type": "pinch",
             "displayPath": "M 900 100 L 950 100 L 950 150 Z",
-            "metadata": {"holdID": "hold-right", "pieceIndex": 0},
+            "metadata": {
+                "holdID": "hold-right",
+                "pieceIndex": 0,
+                "presentationID": "primary",
+            },
         }
     )
 

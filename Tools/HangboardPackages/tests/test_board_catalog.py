@@ -195,12 +195,10 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
     assert package.board.presentation_asset_path == "assets/primary.png"
 
 
-def test_schema_v1_exposes_an_implicit_primary_presentation(tmp_path: Path) -> None:
+def test_unversioned_board_loads_its_declared_primary_presentation(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_board_package(tmp_path / "fixture-model")
     document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
-    document.pop("presentation")
-    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
     package = module.load_board_package(package_root)
 
     assert package.board.presentations == (
@@ -215,7 +213,7 @@ def test_schema_v1_exposes_an_implicit_primary_presentation(tmp_path: Path) -> N
     assert {hold.presentation_id for hold in package.board.holds} == {"primary"}
 
 
-def test_schema_v2_loads_declared_presentations_and_scoped_holds(
+def test_unversioned_board_loads_declared_presentations_and_scoped_holds(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -234,7 +232,7 @@ def test_schema_v2_loads_declared_presentations_and_scoped_holds(
     assert package.board.presentation_asset_path == "assets/primary.png"
 
 
-def test_schema_v2_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
+def test_unversioned_board_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
     tmp_path: Path,
 ) -> None:
     module = load_board_catalog_module()
@@ -248,7 +246,7 @@ def test_schema_v2_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
 @pytest.mark.parametrize(
     "write_package",
     [write_board_package, write_multi_presentation_board_package],
-    ids=["schema-v1", "schema-v2"],
+    ids=["primary", "multi-presentation"],
 )
 def test_package_loader_reports_missing_required_top_level_fields_as_value_errors(
     tmp_path: Path, write_package
@@ -295,7 +293,7 @@ def test_package_loader_reports_missing_required_top_level_fields_as_value_error
         ),
     ],
 )
-def test_schema_v2_rejects_invalid_presentation_identifiers_and_defaults(
+def test_unversioned_board_rejects_invalid_presentation_identifiers_and_defaults(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()
@@ -308,7 +306,7 @@ def test_schema_v2_rejects_invalid_presentation_identifiers_and_defaults(
         module.load_board_package(package_root)
 
 
-def test_schema_v2_rejects_hold_with_an_unknown_presentation_id(tmp_path: Path) -> None:
+def test_unversioned_board_rejects_hold_with_an_unknown_presentation_id(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
     document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
@@ -340,7 +338,7 @@ def test_schema_v2_rejects_hold_with_an_unknown_presentation_id(tmp_path: Path) 
         ),
     ],
 )
-def test_schema_v2_rejects_undeclared_missing_and_escaping_assets(
+def test_unversioned_board_rejects_undeclared_missing_and_escaping_assets(
     tmp_path: Path, mutation, message: str
 ) -> None:
     module = load_board_catalog_module()

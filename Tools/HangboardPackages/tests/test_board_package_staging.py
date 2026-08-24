@@ -10,7 +10,9 @@ import pytest
 
 from conftest import (
     ALTERNATE_PRIMARY_PNG_BYTES,
+    PRIMARY_PNG_HEIGHT,
     PRIMARY_PNG_BYTES,
+    PRIMARY_PNG_WIDTH,
     SECONDARY_PNG_BYTES,
     write_board_package,
     write_multi_presentation_board_package,
@@ -110,12 +112,18 @@ def test_repeated_staging_refreshes_nested_package_bytes(
     assert staged_primary.read_bytes() == PRIMARY_PNG_BYTES
 
     primary.write_bytes(ALTERNATE_PRIMARY_PNG_BYTES)
+    board_path = packages[0] / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+    alternate_aspect_ratio = (PRIMARY_PNG_WIDTH + 2) / (PRIMARY_PNG_HEIGHT + 2)
+    board["aspectRatio"] = alternate_aspect_ratio
+    board["presentations"][0]["aspectRatio"] = alternate_aspect_ratio
+    board_path.write_text(json.dumps(board), encoding="utf-8")
     module.stage_board_packages(repository_root, destination)
 
     assert staged_primary.read_bytes() == ALTERNATE_PRIMARY_PNG_BYTES
 
 
-def test_staging_copies_the_exact_schema_v2_declared_asset_set(
+def test_staging_copies_the_exact_declared_asset_set(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_staging_module()
