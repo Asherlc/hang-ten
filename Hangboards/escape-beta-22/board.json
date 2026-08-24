@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "escape-beta-22",
   "manufacturer": "Escape Climbing",
   "name": "Beta Board",
@@ -7,9 +6,6 @@
   "productURL": "https://escapeclimbing.com/products/ec72100",
   "dimensions": "26 \u00d7 6 \u00d7 2 in",
   "aspectRatio": 3.814720812182741,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "hold-01-left",
@@ -76,7 +72,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-01-right",
@@ -143,7 +140,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-02-left",
@@ -213,7 +211,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-02-right",
@@ -283,7 +282,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-03-left",
@@ -350,7 +350,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-03-right",
@@ -417,7 +418,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-04-left",
@@ -484,7 +486,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-04-right",
@@ -551,7 +554,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-05-left",
@@ -607,7 +611,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-05-right",
@@ -617,7 +622,7 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.774815871590,
+            "x": 0.77481587159,
             "y": 0.645576454315,
             "width": 0.106572015968,
             "height": 0.164450550761
@@ -663,7 +668,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-06-left",
@@ -723,7 +729,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-06-right",
@@ -783,7 +790,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-07-left",
@@ -846,7 +854,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-07-right",
@@ -909,7 +918,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-08-left",
@@ -972,7 +982,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-08-right",
@@ -1035,7 +1046,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-09-center",
@@ -1177,7 +1189,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-11-center",
@@ -1334,7 +1347,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.814720812182741,
+      "default": true
     }
   ]
 }

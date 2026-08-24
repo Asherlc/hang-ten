@@ -1,0 +1,529 @@
+{
+  "id": "metolius.light-rail-2",
+  "manufacturer": "Metolius",
+  "name": "Light Rail 2.0",
+  "subtitle": "Portable reversible training rail with four holds.",
+  "productURL": "https://www.metoliusclimbing.com/products/light-rail",
+  "dimensions": "18 \u00d7 3 \u00d7 1.5 in",
+  "aspectRatio": 1.5,
+  "presentations": [
+    {
+      "id": "20mm-side",
+      "name": "40 mm jug and 20 mm edge",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    },
+    {
+      "id": "15mm-side",
+      "name": "40 mm jug and 15 mm edge",
+      "assetPath": "assets/15mm-surface.png",
+      "aspectRatio": 1.7768331562167907,
+      "default": false
+    }
+  ],
+  "holds": [
+    {
+      "id": "jug-40-20mm-side",
+      "name": "40 mm rounded jug on 20 mm side",
+      "kind": "jug",
+      "sizeMillimeters": 40,
+      "presentationID": "20mm-side",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.025,
+            "y": 0.436,
+            "width": 0.95,
+            "height": 0.101
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.018,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.982,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.992,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.16
+                ],
+                "to": [
+                  1.0,
+                  0.36
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.64
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.84
+                ],
+                "control2": [
+                  0.992,
+                  1.0
+                ],
+                "to": [
+                  0.982,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.018,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.008,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.84
+                ],
+                "to": [
+                  0.0,
+                  0.64
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.36
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.16
+                ],
+                "control2": [
+                  0.008,
+                  0.0
+                ],
+                "to": [
+                  0.018,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-20",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "presentationID": "20mm-side",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.099,
+            "y": 0.558,
+            "width": 0.802,
+            "height": 0.053
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.013,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.987,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.995,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.17
+                ],
+                "to": [
+                  1.0,
+                  0.39
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.61
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.83
+                ],
+                "control2": [
+                  0.995,
+                  1.0
+                ],
+                "to": [
+                  0.987,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.013,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.005,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.83
+                ],
+                "to": [
+                  0.0,
+                  0.61
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.39
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.17
+                ],
+                "control2": [
+                  0.005,
+                  0.0
+                ],
+                "to": [
+                  0.013,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jug-40-15mm-side",
+      "name": "40 mm rounded jug on 15 mm side",
+      "kind": "jug",
+      "sizeMillimeters": 40,
+      "presentationID": "15mm-side",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.034,
+            "y": 0.406,
+            "width": 0.932,
+            "height": 0.103
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.019,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.981,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.992,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.16
+                ],
+                "to": [
+                  1.0,
+                  0.36
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.64
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.84
+                ],
+                "control2": [
+                  0.992,
+                  1.0
+                ],
+                "to": [
+                  0.981,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.019,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.008,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.84
+                ],
+                "to": [
+                  0.0,
+                  0.64
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.36
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.16
+                ],
+                "control2": [
+                  0.008,
+                  0.0
+                ],
+                "to": [
+                  0.019,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-15",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "presentationID": "15mm-side",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.083,
+            "y": 0.551,
+            "width": 0.834,
+            "height": 0.047
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.013,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.987,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.995,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.17
+                ],
+                "to": [
+                  1.0,
+                  0.39
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.61
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.83
+                ],
+                "control2": [
+                  0.995,
+                  1.0
+                ],
+                "to": [
+                  0.987,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.013,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.005,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.83
+                ],
+                "to": [
+                  0.0,
+                  0.61
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.39
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.17
+                ],
+                "control2": [
+                  0.005,
+                  0.0
+                ],
+                "to": [
+                  0.013,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    }
+  ]
+}

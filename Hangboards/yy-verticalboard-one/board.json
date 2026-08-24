@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "yy.verticalboard-one",
   "manufacturer": "YY Vertical",
   "name": "VerticalBoard One",
@@ -7,9 +6,6 @@
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-one",
   "dimensions": "62 \u00d7 13 \u00d7 5.5 cm",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-left",
@@ -93,7 +89,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -177,7 +174,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-35-left",
@@ -261,7 +259,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-35-right",
@@ -345,7 +344,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-20-center",
@@ -420,7 +420,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-left",
@@ -529,7 +530,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-right",
@@ -638,7 +640,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-45-left",
@@ -747,7 +750,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-45-right",
@@ -856,7 +860,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-50-left",
@@ -966,7 +971,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-50-right",
@@ -1076,7 +1082,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-inclined-25-left",
@@ -1185,7 +1192,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-inclined-25-right",
@@ -1294,7 +1302,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-30-left",
@@ -1404,7 +1413,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-30-right",
@@ -1514,7 +1524,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "center-handle",
@@ -1622,7 +1633,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-left",
@@ -1731,7 +1743,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-right",
@@ -1840,7 +1853,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-18-left",
@@ -1949,7 +1963,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-18-right",
@@ -2058,7 +2073,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

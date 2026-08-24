@@ -14,6 +14,12 @@ final class TelemetryTests: XCTestCase {
             RootTab.initial(environment: ["HANGTEN_REVIEW_HISTORY": "1"]),
             .history
         )
+
+        XCTAssertNil(RootReviewDestination.initial(environment: [:]))
+        XCTAssertEqual(
+            RootReviewDestination.initial(environment: ["HANGTEN_REVIEW_WORKOUT": "1"]),
+            .workout
+        )
     }
 
     func testConfigurationWithoutAProjectTokenBuildsNoOpDependencies() {

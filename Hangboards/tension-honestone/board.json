@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "tension.honestone",
   "manufacturer": "Tension Climbing",
   "name": "Honestone",
@@ -7,9 +6,6 @@
   "productURL": "https://tensionclimbing.com/products/honestone",
   "dimensions": "25 \u00d7 6 \u00d7 2.5 in",
   "aspectRatio": 1.7768331562167907,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-macro-sloper",
@@ -236,7 +232,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-left",
@@ -328,7 +325,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-right",
@@ -420,7 +418,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-15-left",
@@ -542,7 +541,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-15-right",
@@ -664,7 +664,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-center",
@@ -773,7 +774,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-8-left",
@@ -895,7 +897,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-8-right",
@@ -1017,7 +1020,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.7768331562167907,
+      "default": true
     }
   ]
 }

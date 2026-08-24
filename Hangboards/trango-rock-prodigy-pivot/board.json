@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "trango.rock-prodigy-pivot",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Pivot",
@@ -7,9 +6,6 @@
   "productURL": "https://trango.com/products/rock-prodigy-pivot?variant=33101615890537",
   "dimensions": "15.5 \u00d7 5 \u00d7 2.5 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "upper-sloped-crimp-left",
@@ -132,7 +128,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "upper-sloped-crimp-right",
@@ -255,7 +252,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-sloped-crimp-left",
@@ -363,7 +361,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-sloped-crimp-right",
@@ -471,7 +470,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "variable-edge-left",
@@ -588,7 +588,8 @@
             "rotationDegrees": -2.820401178291945
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "variable-edge-right",
@@ -705,7 +706,8 @@
             "rotationDegrees": 3.108985872876474
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "medium-crimp-left",
@@ -833,7 +835,8 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "medium-crimp-right",
@@ -961,7 +964,8 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "large-crimp-left",
@@ -1089,7 +1093,8 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "large-crimp-right",
@@ -1217,7 +1222,8 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "two-finger-pocket-left",
@@ -1347,7 +1353,8 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "two-finger-pocket-right",
@@ -1477,7 +1484,8 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "three-finger-pocket-left",
@@ -1622,7 +1630,8 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "three-finger-pocket-right",
@@ -1767,7 +1776,8 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-wedge-pinch-left",
@@ -2021,7 +2031,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-wedge-pinch-right",
@@ -2275,7 +2286,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-sloper-left",
@@ -2514,7 +2526,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-sloper-right",
@@ -2753,7 +2766,17 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

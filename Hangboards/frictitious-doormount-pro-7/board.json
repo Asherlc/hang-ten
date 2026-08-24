@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "frictitious.doormount-pro-7",
   "manufacturer": "Frictitious Climbing",
   "name": "DoorMount Pro 7",
@@ -7,9 +6,6 @@
   "productURL": "https://frictitiousclimbing.com/en-ca/products/doormount-pro",
   "dimensions": "25.5 \u00d7 4.5 \u00d7 2.25 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-jug",
@@ -79,7 +75,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-35-left",
@@ -202,7 +199,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-35-right",
@@ -325,7 +323,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mixed-25-pocket-left",
@@ -447,7 +446,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mixed-25-pocket-right",
@@ -569,7 +569,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-6",
@@ -678,7 +679,8 @@
           }
         }
       ],
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "presentationID": "primary"
     },
     {
       "id": "hold-7",
@@ -787,7 +789,8 @@
           }
         }
       ],
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "presentationID": "primary"
     },
     {
       "id": "hold-8",
@@ -909,7 +912,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-9",
@@ -1031,7 +1035,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-10",
@@ -1153,7 +1158,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-11",
@@ -1275,7 +1281,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-12",
@@ -1397,7 +1404,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-13",
@@ -1519,7 +1527,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

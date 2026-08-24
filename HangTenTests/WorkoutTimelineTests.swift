@@ -2093,8 +2093,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
             XCTAssertEqual(plan.duration, 600)
             XCTAssertEqual(plan.provenance, .adapted)
             XCTAssertEqual(plan.sourceURL, sourceURL)
-            XCTAssertTrue(plan.subtitle.contains("guided task timing"))
-            XCTAssertTrue(plan.subtitle.contains("5 seconds"))
+            XCTAssertEqual(plan.subtitle, "Ten 60-second hangboard sequences.")
             XCTAssertEqual(plan.steps.map(\.number), Array(1...plan.steps.count))
             XCTAssertEqual(Set(plan.steps.map(\.id)).count, plan.steps.count)
         }

@@ -1,0 +1,392 @@
+{
+  "id": "metolius.prime-rib",
+  "manufacturer": "Metolius",
+  "name": "Prime Rib",
+  "subtitle": "Compact training board with three full-width edges.",
+  "productURL": "https://www.metoliusclimbing.com/products/prime-rib",
+  "dimensions": "20 \u00d7 4.2 \u00d7 1.5 in",
+  "aspectRatio": 1.8461538461538463,
+  "presentations": [
+    {
+      "id": "front",
+      "name": "Front",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.8461538461538463,
+      "default": true
+    }
+  ],
+  "holds": [
+    {
+      "id": "edge-38",
+      "name": "38 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 38,
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.037,
+            "y": 0.337,
+            "width": 0.926,
+            "height": 0.078
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.018,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.982,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.993,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.16
+                ],
+                "to": [
+                  1.0,
+                  0.37
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.63
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.84
+                ],
+                "control2": [
+                  0.993,
+                  1.0
+                ],
+                "to": [
+                  0.982,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.018,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.007,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.84
+                ],
+                "to": [
+                  0.0,
+                  0.63
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.37
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.16
+                ],
+                "control2": [
+                  0.007,
+                  0.0
+                ],
+                "to": [
+                  0.018,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-23",
+      "name": "23 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 23,
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.037,
+            "y": 0.483,
+            "width": 0.926,
+            "height": 0.065
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.018,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.982,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.993,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.16
+                ],
+                "to": [
+                  1.0,
+                  0.37
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.63
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.84
+                ],
+                "control2": [
+                  0.993,
+                  1.0
+                ],
+                "to": [
+                  0.982,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.018,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.007,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.84
+                ],
+                "to": [
+                  0.0,
+                  0.63
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.37
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.16
+                ],
+                "control2": [
+                  0.007,
+                  0.0
+                ],
+                "to": [
+                  0.018,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-15",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.037,
+            "y": 0.609,
+            "width": 0.926,
+            "height": 0.068
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.012,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.988,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.995,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.1
+                ],
+                "to": [
+                  1.0,
+                  0.26
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.74
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.9
+                ],
+                "control2": [
+                  0.995,
+                  1.0
+                ],
+                "to": [
+                  0.988,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.012,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.005,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.9
+                ],
+                "to": [
+                  0.0,
+                  0.74
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.26
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.1
+                ],
+                "control2": [
+                  0.005,
+                  0.0
+                ],
+                "to": [
+                  0.012,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    }
+  ]
+}

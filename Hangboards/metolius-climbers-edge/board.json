@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "metolius.climbers-edge",
   "manufacturer": "Metolius",
   "name": "Climber's Edge",
@@ -7,9 +6,6 @@
   "productURL": "https://www.metoliusclimbing.com/products/climbers-edge-board",
   "dimensions": "23.6 \u00d7 6.3 in",
   "aspectRatio": 1.8744541484716157,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-left",
@@ -82,7 +78,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-sloper-left",
@@ -151,7 +148,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "round-sloper-center",
@@ -258,11 +256,12 @@
             "type": "surface"
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "oval",
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-sloper-right",
@@ -331,7 +330,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -404,7 +404,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-left",
@@ -527,7 +528,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-15-left",
@@ -650,7 +652,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-center",
@@ -773,7 +776,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-15-right",
@@ -896,7 +900,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-right",
@@ -1019,7 +1024,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-17-5-left",
@@ -1141,7 +1147,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-12-5-left",
@@ -1263,7 +1270,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-7-5-center",
@@ -1385,7 +1393,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-12-5-right",
@@ -1507,7 +1516,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-17-5-right",
@@ -1629,7 +1639,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.8744541484716157,
+      "default": true
     }
   ]
 }

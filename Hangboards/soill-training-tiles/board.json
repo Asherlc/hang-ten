@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "soill.training-tiles",
   "manufacturer": "So iLL",
   "name": "Training Tiles \u2022 So iLL x Meagan Martin",
@@ -7,9 +6,6 @@
   "productURL": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
   "dimensions": "Each tile approximately 14 \u00d7 8 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "pocket-left",
@@ -99,7 +95,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-right",
@@ -189,7 +186,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-sloper-left",
@@ -301,7 +299,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-sloper-right",
@@ -413,7 +412,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "inner-sloper-left",
@@ -518,7 +518,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "inner-sloper-right",
@@ -623,7 +624,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-edge-upper-left",
@@ -728,7 +730,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-edge-upper-right",
@@ -833,7 +836,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-edge-lower-left",
@@ -930,7 +934,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-edge-lower-right",
@@ -1027,7 +1032,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-outer-left",
@@ -1124,7 +1130,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-outer-right",
@@ -1221,7 +1228,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-center-left",
@@ -1318,7 +1326,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-center-right",
@@ -1415,7 +1424,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-inner-left",
@@ -1512,7 +1522,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-inner-right",
@@ -1609,7 +1620,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
     }
   ]
 }

@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "tension.grindstone",
   "manufacturer": "Tension Climbing",
   "name": "Grindstone",
@@ -7,9 +6,6 @@
   "productURL": "https://tensionclimbing.com/products/grindstone",
   "dimensions": "22 \u00d7 6 \u00d7 2.75 in",
   "aspectRatio": 1.7768331562167907,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-jug",
@@ -94,7 +90,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-8-left",
@@ -202,7 +199,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-8-right",
@@ -310,7 +308,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-30-25-left",
@@ -432,7 +431,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-30-25-right",
@@ -554,7 +554,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-50-center",
@@ -677,7 +678,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-15-left",
@@ -799,7 +801,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-15-right",
@@ -1653,7 +1656,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.7768331562167907,
+      "default": true
     }
   ]
 }

@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "escape.unlimited",
   "manufacturer": "Escape Climbing",
   "name": "Unlimited Board",
@@ -7,9 +6,6 @@
   "productURL": "https://escapeclimbing.com/products/ec72000",
   "dimensions": "23.5 \u00d7 6 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-sloper-60",
@@ -94,7 +90,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-45-left",
@@ -203,7 +200,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-45-right",
@@ -312,7 +310,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-left",
@@ -421,7 +420,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-right",
@@ -530,7 +530,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-15-left",
@@ -639,7 +640,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-15-right",
@@ -748,7 +750,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }
