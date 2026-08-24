@@ -410,7 +410,7 @@ struct BoardHold: Identifiable, Hashable {
         handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Int>? = nil,
         features: Set<HoldFeature>? = nil,
-        presentationID: String = BoardPresentation.legacyPrimaryID
+        presentationID: String = BoardPresentation.primaryID
     ) {
         precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
         if let fingerCapacity {
@@ -484,7 +484,7 @@ struct BoardHold: Identifiable, Hashable {
             handCapacity: handCapacity,
             depthRangeMillimeters: depthRangeMillimeters,
             features: features,
-            presentationID: BoardPresentation.legacyPrimaryID
+            presentationID: BoardPresentation.primaryID
         )
     }
 
@@ -499,6 +499,8 @@ struct BoardHold: Identifiable, Hashable {
 }
 
 struct BoardPresentation: Identifiable, Hashable {
+    static let primaryID = "primary"
+
     let id: String
     let name: String
     let aspectRatio: CGFloat
@@ -545,7 +547,7 @@ struct TrainingBoard: Identifiable, Hashable {
         self.presentations = presentations.isEmpty
             ? [
                 BoardPresentation(
-                    id: BoardPresentation.legacyPrimaryID,
+                    id: BoardPresentation.primaryID,
                     name: "Primary",
                     aspectRatio: aspectRatio,
                     isDefault: true

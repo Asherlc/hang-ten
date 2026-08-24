@@ -205,7 +205,7 @@ struct BoardHoldDefinition: Codable, Hashable {
     }
 
     func trainingBoardHold(
-        presentationID: String = BoardPresentation.legacyPrimaryID
+        presentationID: String = BoardPresentation.primaryID
     ) throws -> BoardHold {
         if let fingerCapacity,
            !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
@@ -290,14 +290,14 @@ struct BoardDefinition: Codable, Hashable {
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
             holds: try holds.map {
-                try $0.trainingBoardHold(presentationID: BoardPresentation.legacyPrimaryID)
+                try $0.trainingBoardHold(presentationID: BoardPresentation.primaryID)
             },
             semanticHolds: semanticHolds,
             productURL: productURL,
             photoAssetName: photoAssetName,
             presentations: [
                 BoardPresentation(
-                    id: BoardPresentation.legacyPrimaryID,
+                    id: BoardPresentation.primaryID,
                     name: "Primary",
                     aspectRatio: CGFloat(aspectRatio),
                     isDefault: true

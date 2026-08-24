@@ -166,28 +166,23 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
-            let schemaVersion = try XCTUnwrap(boardDocument["schemaVersion"] as? Int)
-            XCTAssertTrue(schemaVersion == 1 || schemaVersion == 2)
-            if schemaVersion == 1 {
-                XCTAssertEqual(assetPaths, ["assets/primary.png"])
-                XCTAssertTrue(holds.allSatisfy { $0["presentationID"] == nil })
-            } else {
-                let presentations = try XCTUnwrap(
-                    boardDocument["presentations"] as? [[String: Any]]
-                )
-                let declaredAssets = Set(
-                    presentations.compactMap { presentation in
-                        presentation["assetPath"] as? String
-                    }
-                )
-                XCTAssertEqual(assetPaths, declaredAssets)
-                let presentationIDs = Set(
-                    presentations.compactMap { $0["id"] as? String }
-                )
-                XCTAssertTrue(holds.allSatisfy {
-                    ($0["presentationID"] as? String).map(presentationIDs.contains) == true
-                })
-            }
+            XCTAssertNil(boardDocument["schemaVersion"])
+            XCTAssertNil(boardDocument["presentation"])
+            let presentations = try XCTUnwrap(
+                boardDocument["presentations"] as? [[String: Any]]
+            )
+            let declaredAssets = Set(
+                presentations.compactMap { presentation in
+                    presentation["assetPath"] as? String
+                }
+            )
+            XCTAssertEqual(assetPaths, declaredAssets)
+            let presentationIDs = Set(
+                presentations.compactMap { $0["id"] as? String }
+            )
+            XCTAssertTrue(holds.allSatisfy {
+                ($0["presentationID"] as? String).map(presentationIDs.contains) == true
+            })
             XCTAssertEqual(boardDocument["id"] as? String, board.id)
             XCTAssertFalse(holds.isEmpty)
             XCTAssertTrue(holds.allSatisfy { !($0["geometry"] as? [[String: Any]] ?? []).isEmpty })
