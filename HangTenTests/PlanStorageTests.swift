@@ -2,6 +2,16 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testBundledPlanLibraryContainsNoVersionFields() throws {
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: bundledPlanLibraryData()) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(document["metadata"] as? [String: Any])
+
+        XCTAssertNil(document["schemaVersion"])
+        XCTAssertNil(metadata["version"])
+    }
+
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
         let packageStore = BoardCatalog.packageStore
         let store = try PlanLibraryStore(

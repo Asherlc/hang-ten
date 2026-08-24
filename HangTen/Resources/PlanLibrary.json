@@ -14864,8 +14864,7 @@
       "All research and coach routines are explicitly marked as adapted.",
       "Board mappings keep plan targets semantic and board-specific IDs replaceable."
     ],
-    "title" : "Hang Ten training plans",
-    "version" : "3.0.0"
+    "title" : "Hang Ten training plans"
   },
   "plans" : [
     {
@@ -15447,6 +15446,5 @@
         "title" : "REI · Hangboard Sample Workout"
       }
     }
-  ],
-  "schemaVersion" : 3
+  ]
 }
