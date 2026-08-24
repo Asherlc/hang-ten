@@ -789,8 +789,6 @@ def _png_has_alpha_zero(
     def consume(decoded: bytes) -> None:
         nonlocal decoded_size, pending, previous, row_count, transparent_pixel_found
         decoded_size += len(decoded)
-        if transparent_pixel_found:
-            return
         pending.extend(decoded)
         offset = 0
         while len(pending) - offset >= stride + 1:
@@ -799,26 +797,26 @@ def _png_has_alpha_zero(
             filter_type = pending[offset]
             row_start = offset + 1
             row_end = row_start + stride
-            row = _unfilter_png_row(
-                bytes(pending[row_start:row_end]),
-                previous,
-                filter_type,
-                filter_bytes_per_pixel,
-                asset_path,
-            )
-            transparent_pixel_found = transparent_pixel_found or _row_has_alpha_zero(
-                row=row,
-                width=width,
-                bit_depth=bit_depth,
-                color_type=color_type,
-                transparency=transparency,
-            )
-            previous = row
+            if filter_type not in {0, 1, 2, 3, 4}:
+                raise ValueError(f"{asset_path} has an invalid PNG row filter")
+            if not transparent_pixel_found:
+                row = _unfilter_png_row(
+                    bytes(pending[row_start:row_end]),
+                    previous,
+                    filter_type,
+                    filter_bytes_per_pixel,
+                    asset_path,
+                )
+                transparent_pixel_found = _row_has_alpha_zero(
+                    row=row,
+                    width=width,
+                    bit_depth=bit_depth,
+                    color_type=color_type,
+                    transparency=transparency,
+                )
+                previous = row
             row_count += 1
             offset = row_end
-            if transparent_pixel_found:
-                pending.clear()
-                return
         if offset:
             del pending[:offset]
 
@@ -833,10 +831,8 @@ def _png_has_alpha_zero(
         not decompressor.eof
         or decompressor.unused_data
         or decoded_size != expected_size
-        or (
-            not transparent_pixel_found
-            and (row_count != height or pending)
-        )
+        or row_count != height
+        or pending
     ):
         raise ValueError(f"{asset_path} has malformed image data")
     return transparent_pixel_found

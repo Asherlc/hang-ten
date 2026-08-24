@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+from collections import deque
+from contextlib import contextmanager
 import os
 import tempfile
 from pathlib import Path
@@ -15,6 +17,14 @@ from PIL import Image
 DEFAULT_MODEL_NAME = "u2net"
 MODEL_IDENTIFIER = f"rembg.{DEFAULT_MODEL_NAME}"
 DEFAULT_MODEL_ROOT = Path(".context/hangboard-rembg-models")
+_SESSION_ARTIFACT = ":memory:.ses"
+_MAX_ENCLOSED_BACKGROUND_PIXELS = 100_000
+_ENCLOSED_BACKGROUND_SEEDS = {
+    "tension-grindstone": ((887, 443),),
+    "yy-travelboard": ((190, 625), (1348, 625)),
+    "yy-verticalboard-evo": ((887, 500),),
+    "yy-penta-evo": ((145, 595), (1385, 595), (180, 720), (1355, 720)),
+}
 
 
 class SegmentationResult(NamedTuple):
@@ -23,17 +33,36 @@ class SegmentationResult(NamedTuple):
     opaque_pixels: int
 
 
+@contextmanager
+def _rembg_working_directory(model_root: Path):
+    """Contain ONNX Runtime's session sidecar outside the repository root."""
+    model_root.mkdir(parents=True, exist_ok=True)
+    original_directory = Path.cwd()
+    original_artifact = original_directory / _SESSION_ARTIFACT
+    artifact_was_present = original_artifact.exists()
+    try:
+        os.chdir(model_root)
+        yield
+    finally:
+        os.chdir(original_directory)
+        (model_root / _SESSION_ARTIFACT).unlink(missing_ok=True)
+        if not artifact_was_present:
+            original_artifact.unlink(missing_ok=True)
+
+
 def _rembg_session(model_name: str, model_root: Path) -> Any:
     """Create one rembg session and keep its downloaded model in the workspace."""
     model_root.mkdir(parents=True, exist_ok=True)
     os.environ["U2NET_HOME"] = str(model_root.resolve())
+    os.environ["ORT_DISABLE_TELEMETRY"] = "1"
     try:
         from rembg import new_session
     except ModuleNotFoundError as error:
         raise RuntimeError(
             "rembg is required; install Tools/HangboardPackages[backdrop] first"
         ) from error
-    return new_session(model_name)
+    with _rembg_working_directory(model_root):
+        return new_session(model_name)
 
 
 def _remove_background(source: Image.Image, *, session: Any) -> Image.Image:
@@ -49,6 +78,52 @@ def _remove_background(source: Image.Image, *, session: Any) -> Image.Image:
     if not isinstance(mask, Image.Image):
         raise ValueError("rembg did not return a PIL mask")
     return mask
+
+
+def _clear_known_enclosed_backgrounds(
+    source: Image.Image, mask: Image.Image, package_name: str
+) -> Image.Image:
+    """Clear only reviewed, source-color-connected through-hole backgrounds.
+
+    U-2-Net occasionally retains a white background enclosed by a board.  These
+    seeds were reviewed against the source photos; each flood fill is bounded by
+    its own RGB sample, so it cannot remove shaded wood, ropes, lettering, or a
+    disconnected board surface.
+    """
+    seeds = _ENCLOSED_BACKGROUND_SEEDS.get(package_name, ())
+    if not seeds:
+        return mask
+    rgb_source = source.convert("RGB")
+    pixels = rgb_source.load()
+    alpha = bytearray(mask.convert("L").tobytes())
+    width, height = source.size
+    for seed_x, seed_y in seeds:
+        if not 0 <= seed_x < width or not 0 <= seed_y < height:
+            raise ValueError(f"enclosed-background seed is outside {package_name}")
+        seed_color = pixels[seed_x, seed_y]
+        pending = deque([(seed_x, seed_y)])
+        visited: set[tuple[int, int]] = set()
+        while pending:
+            x, y = pending.popleft()
+            if (x, y) in visited:
+                continue
+            visited.add((x, y))
+            offset = y * width + x
+            color = pixels[x, y]
+            if max(abs(color[index] - seed_color[index]) for index in range(3)) > 12:
+                continue
+            alpha[offset] = 0
+            if len(visited) > _MAX_ENCLOSED_BACKGROUND_PIXELS:
+                raise ValueError(f"enclosed-background fill exceeded its limit for {package_name}")
+            for neighbor_x, neighbor_y in (
+                (x - 1, y),
+                (x + 1, y),
+                (x, y - 1),
+                (x, y + 1),
+            ):
+                if 0 <= neighbor_x < width and 0 <= neighbor_y < height:
+                    pending.append((neighbor_x, neighbor_y))
+    return Image.frombytes("L", source.size, bytes(alpha))
 
 
 def process_png(
@@ -68,11 +143,15 @@ def process_png(
     try:
         with Image.open(path) as source_image:
             source = source_image.convert("RGBA")
-            mask = _remove_background(source, session=session).convert("L")
+            with _rembg_working_directory(model_root):
+                mask = _remove_background(source, session=session).convert("L")
             if mask.size != source.size:
                 raise ValueError(
                     f"rembg mask size {mask.size} does not match source {source.size}"
                 )
+            mask = _clear_known_enclosed_backgrounds(
+                source, mask, path.parent.parent.name
+            )
             source.putalpha(mask)
             histogram = mask.histogram()
             transparent_pixels = histogram[0]

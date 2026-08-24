@@ -175,14 +175,14 @@ def test_completed_package_accepts_a_primary_png_with_actual_alpha_zero(
     assert [item.root.name for item in inventory.packages] == ["fixture-model"]
 
 
-def test_primary_transparency_validation_does_not_decompress_the_whole_image(
+def test_primary_transparency_validation_uses_the_streaming_zlib_api(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_board_catalog_module()
     write_board_package(tmp_path / "fixture-model")
 
     def prohibit_full_decompression(*_args, **_kwargs):
-        raise AssertionError("full-image decompression must not be used")
+        raise AssertionError("the one-shot zlib API must not be used")
 
     monkeypatch.setattr(module.zlib, "decompress", prohibit_full_decompression)
 
@@ -191,10 +191,30 @@ def test_primary_transparency_validation_does_not_decompress_the_whole_image(
     assert [item.root.name for item in inventory.packages] == ["fixture-model"]
 
 
-def test_primary_transparency_validation_stops_unfiltering_after_alpha_zero(
+def test_primary_transparency_validation_rejects_an_invalid_filter_after_alpha_zero(
+    tmp_path: Path,
+) -> None:
+    """Alpha discovery must not skip structural validation of later scanlines."""
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    raw_rows = b"\x00\xff\xff\xff\x00" + b"\x05\xff\xff\xff\xff"
+    ihdr = struct.pack(">IIBBBBB", 1, 2, 8, 6, 0, 0, 0)
+    malformed = (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", ihdr)
+        + _png_chunk(b"IDAT", zlib.compress(raw_rows))
+        + _png_chunk(b"IEND")
+    )
+    (package / "assets" / "primary.png").write_bytes(malformed)
+
+    with pytest.raises(ValueError, match="invalid PNG row filter"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_primary_transparency_validation_checks_later_filters_without_unfiltering(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Large already-transparent primaries must not pay Python row work in full."""
+    """Keep full structural checks without Python pixel work after alpha-zero."""
     module = load_board_catalog_module()
     write_board_package(tmp_path / "fixture-model")
     original = module._unfilter_png_row

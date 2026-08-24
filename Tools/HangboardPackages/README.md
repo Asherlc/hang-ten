@@ -46,6 +46,13 @@ root:
 The script fails rather than writing an all-opaque or all-transparent result.
 Generated output files are temporary and atomically replaced.
 
+For the few reviewed source photos where U-2-Net retains white background in an
+enclosed through-hole, the script has a tightly bounded seed map. It clears
+only four-connected pixels within 12 RGB levels of the reviewed source sample,
+with a 100,000-pixel ceiling; it does not run a broad white-pixel cleanup. ONNX
+Runtime telemetry is disabled before the model loads, so its session sidecar is
+not created in the repository root.
+
 Direct discovery sorts complete packages by manufacturer, board name, board
 ID, and package path. Exact primary-only directories are reported separately
 as drafts. Any other incomplete directory fails validation.

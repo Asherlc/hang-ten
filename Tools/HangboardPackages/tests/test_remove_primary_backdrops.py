@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import importlib.util
+import os
+import sys
 from pathlib import Path
 from types import ModuleType
+from types import SimpleNamespace
 
 from PIL import Image
+import pytest
 
 
 SCRIPT_PATH = (
@@ -13,6 +17,38 @@ SCRIPT_PATH = (
 CONTACT_BOUNDARY_FIXTURE = (
     Path(__file__).resolve().parent / "fixtures" / "metolius-contact-boundary.png"
 )
+HANGBOARDS_ROOT = Path(__file__).resolve().parents[3] / "Hangboards"
+
+
+@pytest.mark.parametrize(
+    ("package", "hole", "preserved"),
+    [
+        ("tension-grindstone", (887, 443), (887, 360)),
+        ("yy-travelboard", (190, 625), (768, 512)),
+        ("yy-travelboard", (1348, 625), (768, 512)),
+        ("yy-verticalboard-evo", (887, 500), (887, 443)),
+        ("yy-penta-evo", (145, 595), (768, 900)),
+        ("yy-penta-evo", (1385, 595), (768, 900)),
+        ("yy-penta-evo", (180, 720), (768, 900)),
+        ("yy-penta-evo", (1355, 720), (768, 900)),
+    ],
+)
+def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
+    package: str, hole: tuple[int, int], preserved: tuple[int, int]
+) -> None:
+    """Regression fixtures for the white through-holes rembg leaves opaque."""
+    module = _load_script()
+    path = HANGBOARDS_ROOT / package / "assets" / "primary.png"
+    with Image.open(path) as source_image:
+        source = source_image.convert("RGBA")
+    opaque_mask = Image.new("L", source.size, color=255)
+
+    corrected = module._clear_known_enclosed_backgrounds(
+        source, opaque_mask, package
+    )
+
+    assert corrected.getpixel(hole) == 0
+    assert corrected.getpixel(preserved) == 255
 
 
 def _load_script() -> ModuleType:
@@ -102,3 +138,47 @@ def test_process_png_resegments_an_existing_alpha_source(
     assert calls == [("u2net", model_root)]
     with Image.open(path) as output:
         assert output.convert("RGBA").getchannel("A").getextrema() == (0, 255)
+
+
+def test_process_png_keeps_onnx_session_artifacts_out_of_the_repository_root(
+    tmp_path: Path, monkeypatch
+) -> None:
+    module = _load_script()
+    path = tmp_path / "package" / "assets" / "primary.png"
+    path.parent.mkdir(parents=True)
+    Image.new("RGB", (3, 2), color=(120, 100, 80)).save(path, format="PNG")
+    model_root = tmp_path / "model-cache"
+
+    def remove_background(source: Image.Image, *, session: object) -> Image.Image:
+        assert Path.cwd() == model_root
+        (model_root / ":memory:.ses").write_text("session", encoding="utf-8")
+        (tmp_path / ":memory:.ses").write_text("late-session", encoding="utf-8")
+        mask = Image.new("L", source.size, color=255)
+        mask.putpixel((0, 0), 0)
+        return mask
+
+    monkeypatch.setattr(module, "_remove_background", remove_background)
+    monkeypatch.chdir(tmp_path)
+
+    module.process_png(path, model_root=model_root, session=object())
+
+    assert not (tmp_path / ":memory:.ses").exists()
+    assert not (model_root / ":memory:.ses").exists()
+
+
+def test_rembg_session_disables_onnx_telemetry_before_initialization(
+    tmp_path: Path, monkeypatch
+) -> None:
+    module = _load_script()
+    seen = []
+
+    def new_session(model_name: str) -> object:
+        seen.append((model_name, os.environ.get("ORT_DISABLE_TELEMETRY")))
+        return object()
+
+    monkeypatch.delenv("ORT_DISABLE_TELEMETRY", raising=False)
+    monkeypatch.setitem(sys.modules, "rembg", SimpleNamespace(new_session=new_session))
+
+    module._rembg_session("u2net", tmp_path / "model-cache")
+
+    assert seen == [("u2net", "1")]
