@@ -49,18 +49,11 @@ final class PlanStorageTests: XCTestCase {
             definition: makeLibrary(
                 steps: [
                     makeStep(
-                        id: "rest",
+                        id: "conditioning",
                         duration: 30,
-                        phase: .rest,
+                        phase: .conditioning,
                         targets: [],
-                        segments: [
-                            WorkoutSegmentDefinition(
-                                kind: .rest,
-                                targets: [],
-                                timing: .fixed,
-                                duration: 30
-                            )
-                        ]
+                        segments: []
                     )
                 ]
             )
