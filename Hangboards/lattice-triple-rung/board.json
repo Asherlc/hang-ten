@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "lattice-triple-rung",
   "manufacturer": "Lattice Training",
   "name": "Triple Rung",
@@ -7,9 +6,6 @@
   "productURL": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
   "dimensions": "55 \u00d7 13 \u00d7 5 cm",
   "aspectRatio": 3.7297979797979797,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "edge-45",
@@ -134,7 +130,8 @@
           }
         }
       ],
-      "sizeMillimeters": 45
+      "sizeMillimeters": 45,
+      "presentationID": "primary"
     },
     {
       "id": "edge-10",
@@ -259,7 +256,8 @@
           }
         }
       ],
-      "sizeMillimeters": 10
+      "sizeMillimeters": 10,
+      "presentationID": "primary"
     },
     {
       "id": "edge-20",
@@ -384,7 +382,17 @@
           }
         }
       ],
-      "sizeMillimeters": 20
+      "sizeMillimeters": 20,
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.7297979797979797,
+      "default": true
     }
   ]
 }

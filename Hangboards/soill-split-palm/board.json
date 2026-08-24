@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "soill.split-palm",
   "manufacturer": "So iLL",
   "name": "Split Palm",
@@ -7,9 +6,6 @@
   "productURL": "https://soillholds.com/products/split-palm",
   "dimensions": "Each piece: 16.5 \u00d7 11 \u00d7 3.875 in",
   "aspectRatio": 1.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-left",
@@ -129,7 +125,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -249,7 +246,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "large-sloper-left",
@@ -343,7 +341,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "large-sloper-right",
@@ -437,7 +436,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "small-sloper-left",
@@ -542,7 +542,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "small-sloper-right",
@@ -647,7 +648,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloping-rail-38-left",
@@ -752,7 +754,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloping-rail-38-right",
@@ -857,7 +860,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-edge-25-left",
@@ -954,7 +958,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-edge-25-right",
@@ -1051,7 +1056,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-crimp-12-left",
@@ -1148,7 +1154,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-crimp-12-right",
@@ -1245,7 +1252,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-sloping-crimp-12-left",
@@ -1342,7 +1350,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-sloping-crimp-12-right",
@@ -1439,7 +1448,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.0,
+      "default": true
     }
   ]
 }

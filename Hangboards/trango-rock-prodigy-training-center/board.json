@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "trango.rock-prodigy-training-center",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Training Center",
@@ -7,9 +6,6 @@
   "productURL": "https://trango.com/products/rock-prodigy-training-center",
   "dimensions": "9.1 \u00d7 12.1 in",
   "aspectRatio": 2.8344827586206898,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "sloper-left",
@@ -115,7 +111,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-right",
@@ -221,7 +218,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-left",
@@ -344,7 +342,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -467,7 +466,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-large-vder-left",
@@ -591,7 +591,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-large-vder-right",
@@ -715,7 +716,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-shallow-vder-left",
@@ -835,7 +837,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-shallow-vder-right",
@@ -955,7 +958,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-thin-crimp-left",
@@ -972,9 +976,13 @@
             "width": 0.10137875101378718,
             "height": 0.07268988703566268
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.387411793974}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.387411793974
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-thin-crimp-right",
@@ -991,9 +999,13 @@
             "width": 0.10137875101378718,
             "height": 0.07268988703566268
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.387411793974}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.387411793974
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-three-finger-slot-left",
@@ -1118,7 +1130,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-three-finger-slot-right",
@@ -1243,7 +1256,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-deep-left",
@@ -1262,9 +1276,13 @@
             "width": 0.07948094079480898,
             "height": 0.0711264367816074
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-deep-right",
@@ -1283,9 +1301,13 @@
             "width": 0.07948094079480898,
             "height": 0.0711264367816074
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-deep-left",
@@ -1304,9 +1326,13 @@
             "width": 0.055150040551500544,
             "height": 0.0774022988505759
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.363825363825}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.363825363825
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-deep-right",
@@ -1325,9 +1351,13 @@
             "width": 0.055150040551500544,
             "height": 0.0774022988505759
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.363825363825}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.363825363825
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-medium-shallow-left",
@@ -1346,9 +1376,13 @@
             "width": 0.05109489051094914,
             "height": 0.0711264367816074
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.371687136393}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.371687136393
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-medium-shallow-right",
@@ -1367,9 +1401,13 @@
             "width": 0.05109489051094914,
             "height": 0.0711264367816074
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.371687136393}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.371687136393
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-shallow-left",
@@ -1388,9 +1426,13 @@
             "width": 0.055150040551500544,
             "height": 0.07531034482758736
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.373931623932}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.373931623932
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-shallow-right",
@@ -1409,9 +1451,13 @@
             "width": 0.055150040551500544,
             "height": 0.07531034482758736
           },
-          "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.373931623932}
+          "shape": {
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.373931623932
+          }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-medium-left",
@@ -1622,7 +1668,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-medium-right",
@@ -1833,7 +1880,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-wide-left",
@@ -2023,7 +2071,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-wide-right",
@@ -2213,7 +2262,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.8344827586206898,
+      "default": true
     }
   ]
 }

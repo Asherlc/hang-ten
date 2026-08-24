@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "evolv-kilter-basic-long",
   "manufacturer": "Evolv",
   "name": "Basic Training Board (Long)",
@@ -7,9 +6,6 @@
   "productURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
   "dimensions": "79 \u00d7 16 \u00d7 6 cm",
   "aspectRatio": 1.5024437927663734,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-rounded",
@@ -64,7 +60,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20",
@@ -120,7 +117,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-15",
@@ -176,7 +174,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10",
@@ -232,7 +231,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5024437927663734,
+      "default": true
     }
   ]
 }

@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "frictitious.megalith",
   "manufacturer": "Frictitious Climbing",
   "name": "The Megalith",
@@ -7,9 +6,6 @@
   "productURL": "https://frictitiousclimbing.com/products/megalith",
   "dimensions": "26.75 \u00d7 6.5 \u00d7 2.25 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-jug",
@@ -79,7 +75,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-8-10-12-left",
@@ -187,7 +184,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-8-10-12-right",
@@ -295,7 +293,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-30-40-pocket-left",
@@ -403,7 +402,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-30-40-pocket-right",
@@ -511,7 +511,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "center-edge-25",
@@ -634,7 +635,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-15-20-left",
@@ -742,7 +744,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-15-20-right",
@@ -850,7 +853,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-left",
@@ -945,7 +949,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-right",
@@ -1040,7 +1045,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-11",
@@ -1148,7 +1154,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-12",
@@ -1256,7 +1263,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-13",
@@ -1364,7 +1372,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-14",
@@ -1472,7 +1481,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
     }
   ]
 }

@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "trango.rock-prodigy-natural",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Natural",
@@ -7,9 +6,6 @@
   "productURL": "https://trango.com/products/rock-prodigy-natural",
   "dimensions": "7.5 \u00d7 6 \u00d7 1.5 in (each board)",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-jug-left",
@@ -102,7 +98,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-jug-right",
@@ -195,7 +192,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-variable-rail-left",
@@ -303,7 +301,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-variable-rail-right",
@@ -411,7 +410,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-variable-rail-left",
@@ -519,7 +519,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-variable-rail-right",
@@ -627,7 +628,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "closed-crimp-left",
@@ -721,7 +723,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "closed-crimp-right",
@@ -815,7 +818,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "upper-pocket-left",
@@ -910,7 +914,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "upper-pocket-right",
@@ -1005,7 +1010,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "center-lower-pocket-left",
@@ -1099,7 +1105,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "center-lower-pocket-right",
@@ -1193,7 +1200,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-supported-pocket-left",
@@ -1366,7 +1374,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-supported-pocket-right",
@@ -1539,7 +1548,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
     }
   ]
 }

@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "zlagboard.evo",
   "manufacturer": "Zlagboard",
   "name": "Zlagboard.Evo",
@@ -7,9 +6,6 @@
   "productURL": "https://www.zlagboard.com/hangboards",
   "dimensions": "70 \u00d7 23 \u00d7 6 cm",
   "aspectRatio": 2.7562913907284767,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-jug-left",
@@ -83,7 +79,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-jug-right",
@@ -157,7 +154,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-32-left",
@@ -224,7 +222,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-32-right",
@@ -291,7 +290,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-20-left",
@@ -358,7 +358,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-20-right",
@@ -425,7 +426,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-jug-center",
@@ -492,7 +494,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-30-left",
@@ -601,7 +604,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-edge-30-left",
@@ -710,7 +714,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-edge-25-left",
@@ -819,7 +824,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-35-center",
@@ -928,7 +934,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-edge-25-right",
@@ -1037,7 +1044,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-edge-30-right",
@@ -1146,7 +1154,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-30-right",
@@ -1255,7 +1264,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-left",
@@ -1364,7 +1374,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-edge-25-lower-left",
@@ -1473,7 +1484,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-30-inner-left",
@@ -1582,7 +1594,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-edge-30-center",
@@ -1691,7 +1704,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-30-inner-right",
@@ -1800,7 +1814,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-edge-25-lower-right",
@@ -1909,7 +1924,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-right",
@@ -2018,7 +2034,17 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.7562913907284767,
+      "default": true
     }
   ]
 }
