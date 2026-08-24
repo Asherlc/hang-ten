@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "metolius.simulator-3d",
   "manufacturer": "Metolius",
   "name": "Simulator 3-D",
@@ -7,9 +6,6 @@
   "productURL": "https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board",
   "dimensions": "28 \u00d7 8.75 in",
   "aspectRatio": 1.6553846153846155,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-1-left",
@@ -71,7 +67,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "round-sloper-3-left",
@@ -137,7 +134,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-14-center",
@@ -203,7 +201,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "round-sloper-3-right",
@@ -269,7 +268,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-1-right",
@@ -331,7 +331,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-4-left",
@@ -441,7 +442,8 @@
             "rotationDegrees": -13.222387583190198
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-5-left",
@@ -564,7 +566,8 @@
             "rotationDegrees": -12.774589400712102
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-6-left",
@@ -687,7 +690,8 @@
             "rotationDegrees": -7.680505202667746
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-7-left",
@@ -810,7 +814,8 @@
             "rotationDegrees": -2.3757882160318786
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-8-left",
@@ -920,7 +925,8 @@
             "rotationDegrees": -12.987248256250837
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-9-left",
@@ -1030,7 +1036,8 @@
             "rotationDegrees": -6.928403434639677
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-10-left",
@@ -1140,7 +1147,8 @@
             "rotationDegrees": -3.467441748910119
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-11-left",
@@ -1249,7 +1257,8 @@
             "rotationDegrees": -10.150585965232153
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-12-left",
@@ -1359,7 +1368,8 @@
             "rotationDegrees": -5.862031217471895
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-13-left",
@@ -1469,7 +1479,8 @@
             "rotationDegrees": -2.869484292890661
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-15-center",
@@ -1579,7 +1590,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-16-center",
@@ -1689,7 +1701,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-17-center",
@@ -1799,7 +1812,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-18-center",
@@ -1909,7 +1923,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-13-right",
@@ -1920,7 +1935,7 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.564448173980,
+            "x": 0.56444817398,
             "y": 0.586337156629,
             "width": 0.054732638465,
             "height": 0.050283789305
@@ -2019,7 +2034,8 @@
             "rotationDegrees": -2.869484292890661
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-12-right",
@@ -2129,7 +2145,8 @@
             "rotationDegrees": -5.862031217471895
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-11-right",
@@ -2238,7 +2255,8 @@
             "rotationDegrees": -10.150585965232153
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-10-right",
@@ -2348,7 +2366,8 @@
             "rotationDegrees": -3.467441748910119
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-9-right",
@@ -2458,7 +2477,8 @@
             "rotationDegrees": -6.928403434639677
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-8-right",
@@ -2568,7 +2588,8 @@
             "rotationDegrees": -12.987248256250837
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-7-right",
@@ -2578,7 +2599,7 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.575441576470,
+            "x": 0.57544157647,
             "y": 0.3901787871,
             "width": 0.096959237394,
             "height": 0.06284496221
@@ -2618,7 +2639,7 @@
               {
                 "command": "line",
                 "to": [
-                  0.000059406006,
+                  5.9406006e-05,
                   0.720430381168
                 ]
               },
@@ -2691,7 +2712,8 @@
             "rotationDegrees": -2.3757882160318786
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-6-right",
@@ -2814,7 +2836,8 @@
             "rotationDegrees": -7.680505202667746
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-5-right",
@@ -2937,7 +2960,8 @@
             "rotationDegrees": -12.774589400712102
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-4-right",
@@ -3047,7 +3071,17 @@
             "rotationDegrees": -13.222387583190198
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.6553846153846155,
+      "default": true
     }
   ]
 }

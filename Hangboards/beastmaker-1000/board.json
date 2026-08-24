@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "beastmaker-1000",
   "manufacturer": "Beastmaker",
   "name": "Beastmaker 1000",
@@ -7,9 +6,6 @@
   "productURL": "https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series",
   "dimensions": "580 \u00d7 150 mm",
   "aspectRatio": 3.861003861003861,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-left",
@@ -73,7 +69,8 @@
       "fingerCapacity": 4,
       "features": [
         "jug"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -140,7 +137,8 @@
       "fingerCapacity": 4,
       "features": [
         "jug"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-35-left",
@@ -202,7 +200,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-35-right",
@@ -264,7 +263,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-center",
@@ -319,7 +319,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-outer-left",
@@ -431,7 +432,8 @@
       "sizeMillimeters": 15,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-outer-right",
@@ -543,7 +545,8 @@
       "sizeMillimeters": 15,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-left",
@@ -655,7 +658,8 @@
       "sizeMillimeters": 30,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-right",
@@ -767,7 +771,8 @@
       "sizeMillimeters": 30,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-outer-left",
@@ -879,7 +884,8 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-mid-left",
@@ -991,7 +997,8 @@
       "sizeMillimeters": 50,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-inner-left",
@@ -1103,7 +1110,8 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-center",
@@ -1215,7 +1223,8 @@
       "sizeMillimeters": 53,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-inner-right",
@@ -1327,7 +1336,8 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-mid-right",
@@ -1439,7 +1449,8 @@
       "sizeMillimeters": 50,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-outer-right",
@@ -1551,7 +1562,8 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-outer-left",
@@ -1663,7 +1675,8 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-mid-left",
@@ -1775,7 +1788,8 @@
       "sizeMillimeters": 25,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-inner-left",
@@ -1887,7 +1901,8 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-inner-right",
@@ -1999,7 +2014,8 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-mid-right",
@@ -2111,7 +2127,8 @@
       "sizeMillimeters": 25,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-outer-right",
@@ -2223,7 +2240,17 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.861003861003861,
+      "default": true
     }
   ]
 }

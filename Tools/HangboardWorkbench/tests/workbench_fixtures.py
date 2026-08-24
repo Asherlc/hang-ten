@@ -18,7 +18,6 @@ def board_document(
     name: str = "Fixture Board",
 ) -> dict[str, object]:
     return {
-        "schemaVersion": 1,
         "id": board_id,
         "manufacturer": manufacturer,
         "name": name,
@@ -26,12 +25,21 @@ def board_document(
         "productURL": f"https://example.com/{board_id}",
         "dimensions": "20 × 10 cm",
         "aspectRatio": 1774 / 457,
-        "presentation": {"assetPath": "assets/primary.png"},
+        "presentations": [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 1774 / 457,
+                "default": True,
+            }
+        ],
         "holds": [
             {
                 "id": "hold-left",
                 "name": "Left hold",
                 "kind": "jug",
+                "presentationID": "primary",
                 "geometry": [
                     {
                         "frame": {
@@ -64,10 +72,8 @@ def board_document(
     }
 
 
-def board_document_v2(board_id: str) -> dict[str, object]:
+def multi_presentation_board_document(board_id: str) -> dict[str, object]:
     board = board_document(board_id)
-    board["schemaVersion"] = 2
-    board.pop("presentation")
     board["presentations"] = [
         {
             "id": "front",

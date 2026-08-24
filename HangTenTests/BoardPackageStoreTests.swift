@@ -51,31 +51,12 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: imageURL), try presentationBytes())
     }
 
-    func testStoreSynthesizesPrimaryPresentationWhenSchemaV1PresentationIsOmitted() throws {
+    func testStoreRejectsFormerPresentationField() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
             ) { board in
-                board.removeValue(forKey: "presentation")
-            }
-        }
-        defer { fixture.remove() }
-
-        let store = try BoardPackageStore(bundle: fixture.bundle)
-        let board = try XCTUnwrap(store.boards.first)
-
-        XCTAssertEqual(board.defaultPresentation.id, "primary")
-        XCTAssertEqual(board.defaultPresentation.aspectRatio, 2)
-        XCTAssertEqual(board.holds.map(\.presentationID), ["primary"])
-        XCTAssertEqual(store.presentationImageURL(for: board)?.lastPathComponent, "primary.png")
-    }
-
-    func testStoreRejectsNullSchemaV1PresentationWhenKeyIsPresent() throws {
-        let fixture = try makeFixtureBundle { hangboardsURL in
-            try self.mutateBoard(
-                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
-            ) { board in
-                board["presentation"] = NSNull()
+                board["presentation"] = ["assetPath": "assets/primary.png"]
             }
         }
         defer { fixture.remove() }
@@ -88,7 +69,25 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreRejectsSchemaV1PresentationIDKeyEvenWhenValueIsNull() throws {
+    func testStoreRejectsFormerSchemaVersionField() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["schemaVersion"] = 2
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
+    }
+
+    func testStoreRejectsNullRequiredPresentationID() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
@@ -101,15 +100,15 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
-                return XCTFail("Expected invalidPackage, got \(error)")
-            }
-            XCTAssertEqual(reason, "schema version 1 holds cannot declare presentationID")
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
         }
     }
 
-    func testStoreLoadsSchemaV2PresentationAssetsAndScopedHolds() throws {
-        let fixture = try makeSchemaV2FixtureBundle()
+    func testStoreLoadsPresentationAssetsAndScopedHolds() throws {
+        let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
 
         let store = try BoardPackageStore(bundle: fixture.bundle)
@@ -131,7 +130,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: backURL), try squarePresentationBytes())
     }
 
-    func testStoreRejectsMalformedSchemaV2PresentationDocuments() throws {
+    func testStoreRejectsMalformedPresentationDocuments() throws {
         let mutations: [(inout [String: Any]) throws -> Void] = [
             { board in
                 var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
@@ -169,15 +168,15 @@ final class BoardPackageStoreTests: XCTestCase {
         ]
 
         for mutation in mutations {
-            let fixture = try makeSchemaV2FixtureBundle(boardMutation: mutation)
+            let fixture = try makeMultiPresentationFixtureBundle(boardMutation: mutation)
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
         }
     }
 
-    func testStoreAcceptsCanonicalNestedSchemaV2AssetsWithEqualBasenames() throws {
-        let fixture = try makeSchemaV2FixtureBundle(
+    func testStoreAcceptsCanonicalNestedAssetsWithEqualBasenames() throws {
+        let fixture = try makeMultiPresentationFixtureBundle(
             boardMutation: { board in
                 var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
                 presentations[0]["assetPath"] = "assets/front/shared.png"
@@ -224,7 +223,7 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
-    func testStoreRejectsMissingUndeclaredAndSymlinkedSchemaV2Assets() throws {
+    func testStoreRejectsMissingUndeclaredAndSymlinkedAssets() throws {
         let mutations: [((URL) throws -> Void)] = [
             { assetsURL in
                 try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("back.png"))
@@ -245,21 +244,21 @@ final class BoardPackageStoreTests: XCTestCase {
         ]
 
         for mutateAssets in mutations {
-            let fixture = try makeSchemaV2FixtureBundle(mutateAssets: mutateAssets)
+            let fixture = try makeMultiPresentationFixtureBundle(mutateAssets: mutateAssets)
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
         }
     }
 
-    func testStoreRejectsNoncanonicalInPackageSchemaV2AssetPaths() throws {
+    func testStoreRejectsNoncanonicalInPackageAssetPaths() throws {
         for assetPath in [
             "assets//back.png",
             "assets/./back.png",
             "assets/rear/../back.png",
             "assets/back.jpg"
         ] {
-            let fixture = try makeSchemaV2FixtureBundle(boardMutation: { board in
+            let fixture = try makeMultiPresentationFixtureBundle(boardMutation: { board in
                 var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
                 presentations[1]["assetPath"] = assetPath
                 board["presentations"] = presentations
@@ -278,8 +277,8 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreAppliesSchemaV2AspectRatioToleranceAtPointOnePercentBoundary() throws {
-        let accepted = try makeSchemaV2FixtureBundle(boardMutation: { board in
+    func testStoreAppliesAspectRatioToleranceAtPointOnePercentBoundary() throws {
+        let accepted = try makeMultiPresentationFixtureBundle(boardMutation: { board in
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
             presentations[1]["aspectRatio"] = 1.001
             board["presentations"] = presentations
@@ -287,7 +286,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { accepted.remove() }
         XCTAssertNoThrow(try BoardPackageStore(bundle: accepted.bundle))
 
-        let rejected = try makeSchemaV2FixtureBundle(boardMutation: { board in
+        let rejected = try makeMultiPresentationFixtureBundle(boardMutation: { board in
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
             presentations[1]["aspectRatio"] = 1.0010001
             board["presentations"] = presentations
@@ -304,8 +303,8 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreRejectsSchemaV2AssetEscapeMalformedPNGAndAspectMismatch() throws {
-        let escaping = try makeSchemaV2FixtureBundle(boardMutation: { board in
+    func testStoreRejectsAssetEscapeMalformedPNGAndAspectMismatch() throws {
+        let escaping = try makeMultiPresentationFixtureBundle(boardMutation: { board in
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
             presentations[1]["assetPath"] = "../outside.png"
             board["presentations"] = presentations
@@ -321,7 +320,7 @@ final class BoardPackageStoreTests: XCTestCase {
             )
         }
 
-        let malformedPNG = try makeSchemaV2FixtureBundle(
+        let malformedPNG = try makeMultiPresentationFixtureBundle(
             mutateAssets: { assetsURL in
                 try Data("not a png".utf8).write(to: assetsURL.appendingPathComponent("back.png"))
             }
@@ -329,7 +328,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { malformedPNG.remove() }
         XCTAssertThrowsError(try BoardPackageStore(bundle: malformedPNG.bundle))
 
-        let aspectMismatch = try makeSchemaV2FixtureBundle(boardMutation: { board in
+        let aspectMismatch = try makeMultiPresentationFixtureBundle(boardMutation: { board in
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
             presentations[1]["aspectRatio"] = 2
             board["presentations"] = presentations
@@ -344,7 +343,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testBoardMapPresentationSelectionUsesMatchingImageAndHoldPaths() throws {
-        let fixture = try makeSchemaV2FixtureBundle()
+        let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
         let store = try BoardPackageStore(bundle: fixture.bundle)
         let board = try XCTUnwrap(store.boards.first)
@@ -372,7 +371,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testBoardMapSelectionPrioritizesInitialHighlightedHoldOverRequestedSurface() throws {
-        let fixture = try makeSchemaV2FixtureBundle()
+        let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
 
@@ -387,7 +386,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testBoardMapSelectionMovesToNewActiveHoldWhenAnotherSurfaceIsAlreadyHighlighted() throws {
-        let fixture = try makeSchemaV2FixtureBundle()
+        let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
         var selection = BoardMapPresentationSelection(
@@ -408,7 +407,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testBoardMapSelectionKeepsManuallySelectedSurfaceWhileAddingAndRemovingHolds() throws {
-        let fixture = try makeSchemaV2FixtureBundle()
+        let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
         var selection = BoardMapPresentationSelection(
@@ -437,7 +436,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testBoardMapSelectionAppliesCallerPresentationChangeDespiteStaleActiveHold() throws {
-        let fixture = try makeSchemaV2FixtureBundle()
+        let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
         var selection = BoardMapPresentationSelection(
@@ -702,7 +701,7 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreRejectsPresentationPathOtherThanPrimaryAsset() throws {
+    func testStoreRejectsFormerPresentationPathField() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
@@ -713,14 +712,14 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
-                return XCTFail("Expected invalidPackage, got \(error)")
-            }
-            XCTAssertEqual(reason, "presentation.assetPath must be assets/primary.png")
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
         }
     }
 
-    func testStoreRejectsPresentationPathThatEscapesPackage() throws {
+    func testStoreRejectsFormerPresentationPathEscape() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
@@ -733,10 +732,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             XCTAssertEqual(
                 error as? BoardPackageStoreError,
-                .presentationAssetPathEscape(
-                    boardID: "fixture.board",
-                    path: "../outside/primary.png"
-                )
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
             )
         }
     }
@@ -1214,7 +1210,7 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
-    private func makeSchemaV2FixtureBundle(
+    private func makeMultiPresentationFixtureBundle(
         boardMutation: ((inout [String: Any]) throws -> Void)? = nil,
         mutateAssets: ((URL) throws -> Void)? = nil
     ) throws -> FixtureBundle {
@@ -1223,8 +1219,6 @@ final class BoardPackageStoreTests: XCTestCase {
             let assetsURL = packageURL.appendingPathComponent("assets")
             try self.squarePresentationBytes().write(to: assetsURL.appendingPathComponent("back.png"))
             try self.mutateBoard(at: packageURL.appendingPathComponent("board.json")) { board in
-                board["schemaVersion"] = 2
-                board.removeValue(forKey: "presentation")
                 board["presentations"] = [[
                     "id": "front",
                     "name": "Front",
@@ -1297,7 +1291,6 @@ final class BoardPackageStoreTests: XCTestCase {
     private func boardData(for package: PackageSpec) throws -> Data {
         try JSONSerialization.data(
             withJSONObject: [
-                "schemaVersion": 1,
                 "id": package.id,
                 "manufacturer": package.manufacturer,
                 "name": package.name,
@@ -1305,11 +1298,18 @@ final class BoardPackageStoreTests: XCTestCase {
                 "productURL": "https://example.com/\(package.id)",
                 "dimensions": "20 × 10 cm",
                 "aspectRatio": 2,
-                "presentation": ["assetPath": "assets/primary.png"],
+                "presentations": [[
+                    "id": "primary",
+                    "name": "Primary",
+                    "assetPath": "assets/primary.png",
+                    "aspectRatio": 2,
+                    "default": true
+                ]],
                 "holds": [[
                     "id": "hold-left",
                     "name": "Left hold",
                     "kind": "jug",
+                    "presentationID": "primary",
                     "geometry": [[
                         "frame": ["x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3],
                         "shape": ["type": "roundedRect", "cornerRadiusFraction": 0.2]

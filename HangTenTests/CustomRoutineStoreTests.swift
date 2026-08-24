@@ -2,6 +2,79 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
+    func testStoreDoesNotLoadFormerVersionedStorageKey() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(
+            try JSONEncoder().encode(
+                CustomRoutineLibrary(routines: [genericDefinition(id: "custom.former-key")])
+            ),
+            forKey: "HangTen.customRoutines.v1"
+        )
+
+        let store = CustomRoutineStore(defaults: defaults)
+
+        XCTAssertTrue(store.routines.isEmpty)
+    }
+
+    func testCustomRoutineLibraryEncodingContainsOnlyRoutines() throws {
+        let data = try JSONEncoder().encode(CustomRoutineLibrary(routines: []))
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: data) as? [String: Any]
+        )
+
+        XCTAssertEqual(Set(document.keys), ["routines"])
+        XCTAssertNil(document["schemaVersion"])
+    }
+
+    func testCustomRoutineSegmentsEncodeOnlyPluralTargets() throws {
+        let segment = WorkoutSegmentDefinition(
+            kind: .work,
+            targets: [.kind(.edge)],
+            timing: .fixed,
+            duration: 10
+        )
+        let routine = CustomRoutineDefinition(
+            id: "custom.segment-shape",
+            title: "Segment shape",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "hang",
+                title: "Edge hang",
+                instruction: "Hang.",
+                accessory: "10s",
+                duration: 10,
+                phase: .hang,
+                targets: [.kind(.edge)],
+                segments: [segment]
+            )]
+        )
+        let data = try JSONEncoder().encode(CustomRoutineLibrary(routines: [routine]))
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: data) as? [String: Any]
+        )
+        let routines = try XCTUnwrap(document["routines"] as? [[String: Any]])
+        let steps = try XCTUnwrap(routines[0]["steps"] as? [[String: Any]])
+        let segments = try XCTUnwrap(steps[0]["segments"] as? [[String: Any]])
+
+        XCTAssertEqual(segments[0]["targets"] as? [[String: String]], [["kind": "edge"]])
+        XCTAssertNil(segments[0]["target"])
+    }
+
+    func testCustomRoutineLibraryRejectsFormerSchemaVersionField() {
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(
+                CustomRoutineLibrary.self,
+                from: Data(#"{"schemaVersion":1,"routines":[]}"#.utf8)
+            )
+        )
+    }
+
     func testCompactIIPocketsExposeCapacityWithDistinctGripSemantics() throws {
         let twoFingerPocket = try XCTUnwrap(
             BoardCatalog.defaultBoard.holds.first { $0.id == "pocket-29-two-left" }
@@ -64,7 +137,6 @@ final class CustomRoutineStoreTests: XCTestCase {
         let library = PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
                 id: "exact-finger-library",
-                version: "1",
                 title: "Exact fingers",
                 generatedAt: "2026-08-07"
             ),
@@ -100,7 +172,6 @@ final class CustomRoutineStoreTests: XCTestCase {
             Data(
                 #"""
                 {
-                  "schemaVersion": 1,
                   "routines": [{
                     "id": "custom.legacy-cues",
                     "title": "Legacy cues",
@@ -181,8 +252,14 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         try store.save(definition)
 
+        let persistedData = try XCTUnwrap(defaults.data(forKey: CustomRoutineStore.defaultKey))
+        let persistedDocument = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: persistedData) as? [String: Any]
+        )
         let persisted = try XCTUnwrap(store.routines.first)
         let reloaded = CustomRoutineStore(defaults: defaults)
+
+        XCTAssertEqual(Set(persistedDocument.keys), ["routines"])
         XCTAssertEqual(reloaded.routines, [persisted])
         XCTAssertEqual(persisted.steps.map(\.id), ["step-1"])
         XCTAssertEqual(persisted.steps.map { $0.segments.count }, [1])
@@ -845,7 +922,6 @@ final class CustomRoutineStoreTests: XCTestCase {
         PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
                 id: "test.library",
-                version: "1",
                 title: "Test library",
                 generatedAt: "2026-08-05"
             ),

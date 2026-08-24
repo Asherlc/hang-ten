@@ -58,7 +58,6 @@ function storageFixture(initial: Record<string, string> = {}): Pick<Storage, "ge
 
 function editorDocument(path = "M 1 1 L 20 1 L 20 20 Z"): EditorDocument {
   return {
-    schemaVersion: 1,
     canvas: { width: 100, height: 50 },
     regions: [{ key: "hold-1", type: "jug", displayPath: path }],
   };

@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "nature.stoak-board-iii",
   "manufacturer": "Nature Climbing",
   "name": "Stoak Board III Oak",
@@ -7,9 +6,6 @@
   "productURL": "https://natureclimbing.com/products/stoak-board-iii",
   "dimensions": "57 \u00d7 12 \u00d7 5.5 cm",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-jug",
@@ -109,7 +105,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "open-hand-55",
@@ -210,7 +207,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-22-center",
@@ -333,7 +331,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "gradient-edge-left",
@@ -410,7 +409,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "gradient-edge-right",
@@ -487,7 +487,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-composite-left",
@@ -605,7 +606,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-composite-right",
@@ -723,7 +725,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-composite-center",
@@ -848,7 +851,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

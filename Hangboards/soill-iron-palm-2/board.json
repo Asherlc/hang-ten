@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "soill.iron-palm-2",
   "manufacturer": "So iLL",
   "name": "Iron Palm 2.0",
@@ -7,9 +6,6 @@
   "productURL": "https://soillholds.com/products/iron-palm-2-0",
   "dimensions": "27 \u00d7 11.5 \u00d7 4 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "sloper-left",
@@ -129,7 +125,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-right",
@@ -249,7 +246,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-left",
@@ -384,7 +382,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-right",
@@ -519,7 +518,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-incut-jug",
@@ -631,7 +631,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "rounded-edge-40",
@@ -729,7 +730,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-edge-25",
@@ -827,7 +829,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-edge-15",
@@ -955,7 +958,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
     }
   ]
 }

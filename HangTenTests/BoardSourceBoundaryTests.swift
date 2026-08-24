@@ -84,6 +84,34 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
+    func testBundledContentDoesNotContainSchemaVersion() throws {
+        let repositoryRoot = repositoryRootURL()
+        let boardURLs = try BoardSourceBoundaryAudit.bundledBoardDocumentURLs(
+            at: repositoryRoot
+        )
+
+        XCTAssertFalse(boardURLs.isEmpty)
+        for boardURL in boardURLs {
+            let boardDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+            )
+            XCTAssertNil(
+                boardDocument["schemaVersion"],
+                "Remove schemaVersion from \(boardURL.path)."
+            )
+        }
+
+        let planURL = repositoryRoot
+            .appendingPathComponent("HangTen/Resources/PlanLibrary.json")
+        let planDocument = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: planURL)) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(planDocument["metadata"] as? [String: Any])
+
+        XCTAssertNil(planDocument["schemaVersion"])
+        XCTAssertNil(metadata["version"])
+    }
+
     func testEveryBuiltInPlanTargetResolvesOnItsPackageBoard() {
         for plan in PlanCatalog.all {
             let board = BoardCatalog.board(for: plan.boardID)
@@ -166,28 +194,23 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
-            let schemaVersion = try XCTUnwrap(boardDocument["schemaVersion"] as? Int)
-            XCTAssertTrue(schemaVersion == 1 || schemaVersion == 2)
-            if schemaVersion == 1 {
-                XCTAssertEqual(assetPaths, ["assets/primary.png"])
-                XCTAssertTrue(holds.allSatisfy { $0["presentationID"] == nil })
-            } else {
-                let presentations = try XCTUnwrap(
-                    boardDocument["presentations"] as? [[String: Any]]
-                )
-                let declaredAssets = Set(
-                    presentations.compactMap { presentation in
-                        presentation["assetPath"] as? String
-                    }
-                )
-                XCTAssertEqual(assetPaths, declaredAssets)
-                let presentationIDs = Set(
-                    presentations.compactMap { $0["id"] as? String }
-                )
-                XCTAssertTrue(holds.allSatisfy {
-                    ($0["presentationID"] as? String).map(presentationIDs.contains) == true
-                })
-            }
+            XCTAssertNil(boardDocument["schemaVersion"])
+            XCTAssertNil(boardDocument["presentation"])
+            let presentations = try XCTUnwrap(
+                boardDocument["presentations"] as? [[String: Any]]
+            )
+            let declaredAssets = Set(
+                presentations.compactMap { presentation in
+                    presentation["assetPath"] as? String
+                }
+            )
+            XCTAssertEqual(assetPaths, declaredAssets)
+            let presentationIDs = Set(
+                presentations.compactMap { $0["id"] as? String }
+            )
+            XCTAssertTrue(holds.allSatisfy {
+                ($0["presentationID"] as? String).map(presentationIDs.contains) == true
+            })
             XCTAssertEqual(boardDocument["id"] as? String, board.id)
             XCTAssertFalse(holds.isEmpty)
             XCTAssertTrue(holds.allSatisfy { !($0["geometry"] as? [[String: Any]] ?? []).isEmpty })
@@ -349,7 +372,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testBoundaryAuditAllowsCanonicalPresentationVocabularyOnlyInGenericLoader() {
+    func testBoundaryAuditAllowsCanonicalPresentationVocabularyInGenericOwners() {
         let canonicalPresentationVocabulary: Set<String> = [
             "assets/primary.png",
             "primary.png",
@@ -364,6 +387,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
         XCTAssertEqual(
             BoardSourceBoundaryAudit.findings(
                 relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ),
+            []
+        )
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
                 source: genericLoaderSource,
                 packageOwnedLiterals: canonicalPresentationVocabulary
             ),
@@ -471,13 +502,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let holds = try XCTUnwrap(boardObject["holds"] as? [[String: Any]])
             identifiers.formUnion(try holds.map { try XCTUnwrap($0["id"] as? String) })
 
-            if let presentation = boardObject["presentation"] as? [String: Any],
-               let assetPath = presentation["assetPath"] as? String {
-                let assetURL = URL(fileURLWithPath: assetPath)
-                identifiers.insert(assetPath)
-                identifiers.insert(assetURL.lastPathComponent)
-                identifiers.insert(assetURL.deletingPathExtension().lastPathComponent)
-            }
             for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {
                 guard let assetPath = presentation["assetPath"] as? String else { continue }
                 let assetURL = URL(fileURLWithPath: assetPath)

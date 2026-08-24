@@ -41,7 +41,7 @@ function documentFixture(regions: EditorDocument["regions"] = [
   { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 } },
   { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
 ]): EditorDocument {
-  return { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions };
+  return { canvas: { width: 100, height: 50 }, regions };
 }
 
 function boardFixture(document = documentFixture()): Board {
@@ -197,7 +197,6 @@ test("switching presentations changes the focused canvas and scopes new holds", 
     },
   ];
   const frontDocument: EditorDocument = {
-    schemaVersion: 1,
     presentationID: "front",
     canvas: { width: 100, height: 50 },
     regions: [{
@@ -209,7 +208,6 @@ test("switching presentations changes the focused canvas and scopes new holds", 
     }],
   };
   const backDocument: EditorDocument = {
-    schemaVersion: 1,
     presentationID: "back",
     canvas: { width: 80, height: 120 },
     regions: [{
@@ -1965,7 +1963,6 @@ test("malformed selected paths report interaction failures instead of throwing",
 
 function constrainedBoardFixture(): Board {
   const document: EditorDocument = {
-    schemaVersion: 1,
     canvas: { width: 120, height: 80 },
     regions: [
       {

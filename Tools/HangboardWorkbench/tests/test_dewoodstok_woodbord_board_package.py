@@ -220,7 +220,16 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert board["productURL"] == "https://www.dewoodstok.nl/product/hangboard-woodbord/"
     assert board["dimensions"] == "590 × 148 × 40 mm"
     assert math.isclose(board["aspectRatio"], image_aspect_ratio, rel_tol=0, abs_tol=1e-12)
-    assert board["presentation"] == {"assetPath": "assets/primary.png"}
+    assert board["presentations"] == [
+        {
+            "id": "primary",
+            "name": "Primary",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": image_aspect_ratio,
+            "default": True,
+        }
+    ]
+    assert all(hold["presentationID"] == "primary" for hold in holds.values())
     assert tuple(hold["id"] for hold in board["holds"]) == EXPECTED_HOLDS
     assert tuple(holds) == EXPECTED_HOLDS
     assert Counter(hold["kind"] for hold in holds.values()) == {"pocket": 16, "jug": 1}

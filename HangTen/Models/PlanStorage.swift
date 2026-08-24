@@ -1,17 +1,37 @@
 import Foundation
 
-// MARK: - Versioned plan definitions
+private struct PlanLibraryCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
 
-/// The schema version is part of the persisted document rather than being
-/// inferred from the app version. That lets a future decoder migrate old
-/// training libraries without changing the runtime workout model.
-enum PlanDefinitionSchema {
-    static let currentVersion = 3
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        intValue = nil
+    }
+
+    init?(intValue: Int) {
+        stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}
+
+private extension Decoder {
+    func rejectFormerPlanLibraryKeys(_ keys: Set<String>) throws {
+        let container = try self.container(keyedBy: PlanLibraryCodingKey.self)
+        guard let key = container.allKeys.first(where: { keys.contains($0.stringValue) }) else {
+            return
+        }
+
+        throw DecodingError.dataCorruptedError(
+            forKey: key,
+            in: container,
+            debugDescription: "Former plan-library field \(key.stringValue) is not supported."
+        )
+    }
 }
 
 struct PlanLibraryMetadata: Codable, Hashable {
     let id: String
-    let version: String
     let title: String
     let generatedAt: String
     let defaultPlanID: String?
@@ -19,18 +39,34 @@ struct PlanLibraryMetadata: Codable, Hashable {
 
     init(
         id: String,
-        version: String,
         title: String,
         generatedAt: String,
         defaultPlanID: String? = nil,
         notes: [String] = []
     ) {
         self.id = id
-        self.version = version
         self.title = title
         self.generatedAt = generatedAt
         self.defaultPlanID = defaultPlanID
         self.notes = notes
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case generatedAt
+        case defaultPlanID
+        case notes
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectFormerPlanLibraryKeys(["version"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        generatedAt = try container.decode(String.self, forKey: .generatedAt)
+        defaultPlanID = try container.decodeIfPresent(String.self, forKey: .defaultPlanID)
+        notes = try container.decode([String].self, forKey: .notes)
     }
 }
 
@@ -202,23 +238,8 @@ enum WorkoutTargetDefinition: Codable, Hashable {
 struct WorkoutSegmentDefinition: Codable, Hashable {
     let kind: WorkoutSegmentKind
     let targets: [WorkoutTargetDefinition]
-    var target: WorkoutTargetDefinition? { targets.first }
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
-
-    init(
-        kind: WorkoutSegmentKind,
-        target: WorkoutTargetDefinition?,
-        timing: WorkoutSegmentTiming,
-        duration: TimeInterval?
-    ) {
-        self.init(
-            kind: kind,
-            targets: target.map { [$0] } ?? [],
-            timing: timing,
-            duration: duration
-        )
-    }
 
     init(
         kind: WorkoutSegmentKind,
@@ -234,7 +255,6 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
 
     private enum CodingKeys: String, CodingKey {
         case kind
-        case target
         case targets
         case timing
         case duration
@@ -243,19 +263,7 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
-        if let decodedTargets = try container.decodeIfPresent(
-            [WorkoutTargetDefinition].self,
-            forKey: .targets
-        ) {
-            targets = decodedTargets
-        } else if let legacyTarget = try container.decodeIfPresent(
-            WorkoutTargetDefinition.self,
-            forKey: .target
-        ) {
-            targets = [legacyTarget]
-        } else {
-            targets = []
-        }
+        targets = try container.decode([WorkoutTargetDefinition].self, forKey: .targets)
         timing = try container.decode(WorkoutSegmentTiming.self, forKey: .timing)
         duration = try container.decodeIfPresent(TimeInterval.self, forKey: .duration)
     }
@@ -263,11 +271,7 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(kind, forKey: .kind)
-        if targets.count == 1 {
-            try container.encode(targets[0], forKey: .target)
-        } else if !targets.isEmpty {
-            try container.encode(targets, forKey: .targets)
-        }
+        try container.encode(targets, forKey: .targets)
         try container.encode(timing, forKey: .timing)
         try container.encodeIfPresent(duration, forKey: .duration)
     }
@@ -507,24 +511,37 @@ struct PlanDefinition: Codable, Hashable, Identifiable {
 }
 
 struct PlanLibraryDefinition: Codable, Hashable {
-    let schemaVersion: Int
     let metadata: PlanLibraryMetadata
     let boardMappings: [BoardMappingDefinition]
     let blocks: [WorkoutBlockDefinition]
     let plans: [PlanDefinition]
 
     init(
-        schemaVersion: Int = PlanDefinitionSchema.currentVersion,
         metadata: PlanLibraryMetadata,
         boardMappings: [BoardMappingDefinition],
         blocks: [WorkoutBlockDefinition],
         plans: [PlanDefinition]
     ) {
-        self.schemaVersion = schemaVersion
         self.metadata = metadata
         self.boardMappings = boardMappings
         self.blocks = blocks
         self.plans = plans
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case metadata
+        case boardMappings
+        case blocks
+        case plans
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectFormerPlanLibraryKeys(["schemaVersion"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        metadata = try container.decode(PlanLibraryMetadata.self, forKey: .metadata)
+        boardMappings = try container.decode([BoardMappingDefinition].self, forKey: .boardMappings)
+        blocks = try container.decode([WorkoutBlockDefinition].self, forKey: .blocks)
+        plans = try container.decode([PlanDefinition].self, forKey: .plans)
     }
 
     func validationIssues(availableBoards: [TrainingBoard]) -> [PlanValidationIssue] {
@@ -551,7 +568,6 @@ struct PlanValidationReport: Hashable {
 
 enum PlanLibraryStoreError: LocalizedError {
     case decoding(Error)
-    case unsupportedSchema(Int)
     case validationFailed([PlanValidationIssue])
     case missingPlan(String)
     case missingBlock(String)
@@ -562,8 +578,6 @@ enum PlanLibraryStoreError: LocalizedError {
         switch self {
         case .decoding(let error):
             return "The plan library could not be decoded: \(error.localizedDescription)"
-        case .unsupportedSchema(let version):
-            return "The plan library uses unsupported schema version \(version)."
         case .validationFailed(let issues):
             return issues.map(\.description).joined(separator: "\n")
         case .missingPlan(let id):
@@ -586,15 +600,6 @@ enum PlanLibraryValidator {
         var issues: [PlanValidationIssue] = []
         let boardByID = Dictionary(grouping: availableBoards, by: \.id)
         let boardIDs = Set(boardByID.keys)
-
-        if library.schemaVersion != PlanDefinitionSchema.currentVersion {
-            issues.append(
-                PlanValidationIssue(
-                    path: "schemaVersion",
-                    message: "Expected \(PlanDefinitionSchema.currentVersion), got \(library.schemaVersion)."
-                )
-            )
-        }
 
         validateLibraryMetadata(library.metadata, issues: &issues)
 
@@ -685,9 +690,6 @@ enum PlanLibraryValidator {
         if metadata.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "metadata.id", message: "Library ID cannot be empty."))
         }
-        if metadata.version.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            issues.append(PlanValidationIssue(path: "metadata.version", message: "Library version cannot be empty."))
-        }
         if metadata.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "metadata.title", message: "Library title cannot be empty."))
         }
@@ -742,7 +744,7 @@ enum PlanLibraryValidator {
         }
         let isCompoundStep = step.segments.count > 1
         for (index, segment) in step.segments.enumerated() {
-            let targetPath = "\(path).segments[\(index)].target"
+            let targetPath = "\(path).segments[\(index)].targets"
             let timingPath = "\(path).segments[\(index)].timing"
             let durationPath = "\(path).segments[\(index)].duration"
             if segment.kind == .work && segment.targets.isEmpty {
@@ -1093,9 +1095,6 @@ struct PlanDefinitionResolver {
         guard issues.isEmpty else {
             throw PlanLibraryStoreError.validationFailed(issues)
         }
-        guard library.schemaVersion == PlanDefinitionSchema.currentVersion else {
-            throw PlanLibraryStoreError.unsupportedSchema(library.schemaVersion)
-        }
         self.library = library
         self.availableBoards = availableBoards
     }
@@ -1288,26 +1287,14 @@ struct PlanLibraryStore {
         definition: PlanLibraryDefinition,
         availableBoards: [TrainingBoard] = BoardCatalog.all
     ) throws {
-        let normalizedDefinition = Self.normalizedDefinition(definition)
-        let issues = normalizedDefinition.validationIssues(availableBoards: availableBoards)
+        let issues = definition.validationIssues(availableBoards: availableBoards)
         guard issues.isEmpty else {
             throw PlanLibraryStoreError.validationFailed(issues)
         }
-        let resolver = try PlanDefinitionResolver(library: normalizedDefinition, availableBoards: availableBoards)
-        self.definition = normalizedDefinition
+        let resolver = try PlanDefinitionResolver(library: definition, availableBoards: availableBoards)
+        self.definition = definition
         self.plans = try resolver.resolveAll()
         self.validationReport = PlanValidationReport(issues: issues)
-    }
-
-    private static func normalizedDefinition(_ definition: PlanLibraryDefinition) -> PlanLibraryDefinition {
-        guard definition.schemaVersion == 2 else { return definition }
-        return PlanLibraryDefinition(
-            schemaVersion: PlanDefinitionSchema.currentVersion,
-            metadata: definition.metadata,
-            boardMappings: definition.boardMappings,
-            blocks: definition.blocks,
-            plans: definition.plans
-        )
     }
 
     init(
@@ -1423,12 +1410,10 @@ typealias PlanStore = PlanLibraryStore
 
 private final class PlanLibraryBundleToken {}
 
-// MARK: - Built-in migration document
+// MARK: - Built-in plan library definition
 
-/// Converts the existing routines once into the versioned representation.
-/// Keeping this conversion next to the definitions makes it possible to
-/// compare the resolved plans against the legacy catalog while the storage
-/// format is introduced, and avoids silently changing any routine timing.
+/// Converts the seed routines into the bundled plan library without changing
+/// their resolved timing or order.
 enum BuiltInPlanLibraryDefinition {
     private static let boardMappings = LegacyPlanSeedBoardMappings.all
 
@@ -1488,7 +1473,6 @@ enum BuiltInPlanLibraryDefinition {
         return PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
                 id: "hang-ten.built-in",
-                version: "3.0.0",
                 title: "Hang Ten training plans",
                 generatedAt: "2026-08-01",
                 defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,

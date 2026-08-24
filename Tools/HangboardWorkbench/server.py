@@ -158,9 +158,8 @@ def _display_name(package: BoardPackage) -> str:
     return f"{manufacturer} {name}".strip()
 
 
-def _presentation_image_url(board_id: str, presentation_id: str, *, legacy: bool) -> str:
-    base = f"/api/boards/{board_id}/image"
-    return base if legacy else f"{base}?presentationID={presentation_id}"
+def _presentation_image_url(board_id: str, presentation_id: str) -> str:
+    return f"/api/boards/{board_id}/image?presentationID={presentation_id}"
 
 
 def _board_payload(
@@ -179,9 +178,8 @@ def _board_payload(
     }
     if include_document:
         presentation = package.presentation(presentation_id)
-        legacy = package.board.get("schemaVersion") == 1
         payload.update(
-            imageUrl=_presentation_image_url(board_id, presentation.id, legacy=legacy),
+            imageUrl=_presentation_image_url(board_id, presentation.id),
             holdIDs=list(package.hold_ids),
             saveUrl=f"/api/boards/{board_id}",
             selectedPresentationID=presentation.id,
@@ -189,7 +187,7 @@ def _board_payload(
                 {
                     "presentationID": item.id,
                     "displayName": item.name,
-                    "imageUrl": _presentation_image_url(board_id, item.id, legacy=legacy),
+                    "imageUrl": _presentation_image_url(board_id, item.id),
                     "default": item.is_default,
                 }
                 for item in package.presentations
