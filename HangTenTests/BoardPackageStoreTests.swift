@@ -812,6 +812,9 @@ final class BoardPackageStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(object["command"] as? String, "curve")
+        XCTAssertEqual(object["to"] as? [Double], [1, 1])
+        XCTAssertEqual(object["control1"] as? [Double], [0, 0])
+        XCTAssertEqual(object["control2"] as? [Double], [1, 0])
         XCTAssertNil(object["bendable"])
     }
 
