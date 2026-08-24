@@ -1519,11 +1519,9 @@ enum BuiltInPlanLibraryDefinition {
         } else if plan.id.hasPrefix("device.") {
             category = "device"
         } else if [
-            LegacyPlanSeedCatalog.latticeLiteHomeAdaptations.id,
             LegacyPlanSeedCatalog.hoopersBetaIntroductory.id,
             LegacyPlanSeedCatalog.methodRepeaters.id,
-            LegacyPlanSeedCatalog.methodEMOM.id,
-            LegacyPlanSeedCatalog.latticeBeginnerGuide.id
+            LegacyPlanSeedCatalog.methodEMOM.id
         ].contains(plan.id) {
             category = "coach"
         } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
@@ -1538,11 +1536,6 @@ enum BuiltInPlanLibraryDefinition {
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
             ]
-        } else if plan.id == LegacyPlanSeedCatalog.latticeLiteHomeAdaptations.id {
-            notes = [
-                "Weekly-template frequencies are preserved exactly from the source sample week.",
-                "The app uses 60-second manual/coach-guided preview rows because the source template does not prescribe task durations or counts."
-            ]
         } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
             notes = [
                 "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",
@@ -1553,11 +1546,6 @@ enum BuiltInPlanLibraryDefinition {
                 "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
                 "The app defaults repeater ranges to 7s/7s and 105s recovery, and uses 5 seconds per pull-up or 1 second per knee raise where the source gives no movement duration."
             ]
-        } else if plan.id == LegacyPlanSeedCatalog.latticeBeginnerGuide.id {
-            notes = [
-                "Reference-plan guidance is preserved without inventing counts or a weekly schedule.",
-                "The app uses coach-guided preview rows; the 20-second foot-supported hang remains explicitly an example, not a universal prescription."
-            ]
         } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
             notes = [
                 "Source warm-up alternatives, five grip groups, 7–10s/5s interval guidance, six repeats, recovery, and pain warning are retained.",
@@ -1565,6 +1553,11 @@ enum BuiltInPlanLibraryDefinition {
             ]
         } else {
             notes = ["Preserved from the original Hang Ten routine catalog."]
+        }
+
+        var tags = ["built-in", category]
+        if plan.id == LegacyPlanSeedCatalog.forceF80.id || plan.id == LegacyPlanSeedCatalog.forceF100.id {
+            tags.append("requires-instrumented-12mm-force-feedback")
         }
 
         let metadata = PlanMetadata(
@@ -1575,7 +1568,7 @@ enum BuiltInPlanLibraryDefinition {
             sourceURL: plan.sourceURL,
             provenance: plan.provenance,
             category: category,
-            tags: ["built-in", category],
+            tags: tags,
             equipment: ["hangboard"],
             notes: notes
         )
@@ -1730,11 +1723,9 @@ enum PlanCatalog {
     static let ladders = required("coach.bechtel-three-six-nine")
     static let densityHangs = required("coach.density-hangs")
     static let zlagboardEndurance = required("device.zlagboard-sixty-sixty")
-    static let latticeLiteHomeAdaptations = required("lattice.lite-home-adaptations")
     static let hoopersBetaIntroductory = required("hoopers-beta.introductory-home-hangboard")
     static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
-    static let latticeBeginnerGuide = required("lattice.beginner-climbers-training-guide")
     static let reiHangboardSample = required("rei.hangboard-sample-workout")
 
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!

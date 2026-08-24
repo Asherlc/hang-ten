@@ -2,6 +2,135 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testBuiltInPlanPresentationFieldsUseAthleteFacingCopy() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let visibleFields = store.plans.flatMap { plan in
+            [plan.subtitle] + plan.steps.flatMap { [$0.instruction, $0.accessory] }
+        }
+        let auditNarration = [
+            "app timer",
+            "app default",
+            "app-guided",
+            "app recovery",
+            "source range",
+            "no source count",
+            "source's",
+            "source does not prescribe",
+            "source gives no",
+            "guided default",
+            "adaptation",
+            "semantic",
+            "app choices",
+            "app uses"
+        ]
+
+        XCTAssertEqual(
+            visibleFields.filter { field in
+                let normalized = field.lowercased()
+                return auditNarration.contains { normalized.contains($0) }
+            },
+            [],
+            "Built-in plan fields must state the workout, not its audit history."
+        )
+    }
+
+    func testInstructionAccessoryContentPreservesSourceBackedPlanText() {
+        let rows = InstructionAccessoryCardContent.rows(
+            instruction: "Nice work on the prescribed 7-second hang.",
+            accessory: "Step off and shake out for the prescribed 3-minute recovery."
+        )
+
+        XCTAssertEqual(
+            rows,
+            [
+                InstructionAccessoryCardRow(kind: .instruction, text: "Nice work on the prescribed 7-second hang."),
+                InstructionAccessoryCardRow(kind: .accessory, text: "Step off and shake out for the prescribed 3-minute recovery.")
+            ]
+        )
+    }
+
+    func testBundledF80PreservesForceFeedbackAndStopRule() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f80"))
+        let hangSteps = plan.steps.filter {
+            $0.id.hasPrefix("f80-set-") && $0.phase == .hang
+        }
+
+        XCTAssertEqual(hangSteps.count, 36)
+        XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 10 })
+        XCTAssertTrue(plan.subtitle.lowercased().contains("three sets"))
+        XCTAssertTrue(plan.subtitle.contains("12"))
+        XCTAssertTrue(plan.subtitle.contains("80% MFSi"))
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("real-time force feedback") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("Stop the set if force falls below 70% MFSi.") })
+    }
+
+    func testBundledF100PreservesForceFeedbackProtocolFacts() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f100"))
+        let hangSteps = plan.steps.filter {
+            $0.id.hasPrefix("f100-set-") && $0.phase == .hang
+        }
+
+        XCTAssertEqual(hangSteps.count, 24)
+        XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 6 })
+        XCTAssertTrue(plan.subtitle.lowercased().contains("two sets"))
+        XCTAssertTrue(plan.subtitle.contains("six 6-second hangs per hand"))
+        XCTAssertTrue(plan.subtitle.contains("6-second"))
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("real-time force feedback") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
+    }
+
+    func testWorkoutCueCardShowsSourceInstructionDuringCountdown() {
+        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "Source accessory", duration: 10, phase: .hang, targets: [])
+
+        XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: false), "Source title")
+        XCTAssertEqual(
+            WorkoutPresentationContent.cueCardRows(step: step, countdown: 3, isComplete: false),
+            [
+                InstructionAccessoryCardRow(kind: .instruction, text: "Source instruction")
+            ]
+        )
+    }
+
+    func testWorkoutCueCardIsOmittedAfterCompletion() {
+        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "Source accessory", duration: 10, phase: .hang, targets: [])
+
+        XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: true), "Session complete")
+        XCTAssertNil(WorkoutPresentationContent.cueCardRows(step: step, countdown: 0, isComplete: true))
+    }
+
+    func testForceFeedbackPlansAreUnavailableUntilInstrumentedEdgeSetupCanBeVerified() {
+        for plan in [LegacyPlanSeedCatalog.forceF80, LegacyPlanSeedCatalog.forceF100] {
+            XCTAssertEqual(
+                PlanStartAvailabilityPolicy.availability(for: plan),
+                .unavailable(requirement: "Requires real-time force feedback from an instrumented 12 mm edge.")
+            )
+        }
+    }
+
+    func testOrdinaryPlanRemainsAvailableToStart() {
+        XCTAssertEqual(
+            PlanStartAvailabilityPolicy.availability(for: LegacyPlanSeedCatalog.maxHangs),
+            .available
+        )
+    }
+
+    func testPlanSourcePresentationContainsOnlySourceName() {
+        let plan = LegacyPlanSeedCatalog.maxHangs
+        XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Lattice max hang protocol")
+    }
+
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
         let packageStore = BoardCatalog.packageStore
         let store = try PlanLibraryStore(
@@ -1190,13 +1319,25 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
+    func testLatticeBeginnerGuideIsNotAvailableFromBuiltInCatalog() {
+        let removedPlanID = "lattice.beginner-climbers-training-guide"
+
+        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
+    }
+
+    func testLatticeLiteHomeAdaptationsIsNotAvailableFromBuiltInCatalog() {
+        let removedPlanID = "lattice.lite-home-adaptations"
+
+        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
+    }
+
     func testRequestedSourcePlansAreSeededAndResolved() throws {
         let expectedIDs = [
-            "lattice.lite-home-adaptations",
             "hoopers-beta.introductory-home-hangboard",
             "method.intermediate-hangboarding.repeaters",
             "method.intermediate-hangboarding.emom",
-            "lattice.beginner-climbers-training-guide",
             "rei.hangboard-sample-workout"
         ]
 
@@ -1205,7 +1346,7 @@ final class PlanStorageTests: XCTestCase {
         })
         XCTAssertEqual(
             expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
-            ["coach", "coach", "coach", "coach", "coach", "retailer"]
+            ["coach", "coach", "coach", "retailer"]
         )
     }
 
@@ -1633,8 +1774,6 @@ final class PlanStorageTests: XCTestCase {
             return ["subtitle", "accessory", "duration", "interval"]
         case "research.max-hangs":
             return ["subtitle", "accessory", "count", "duration", "interval"]
-        case "research.force-feedback-f100":
-            return ["instruction", "count", "interval"]
         case "research.eva-int-hangs":
             return ["subtitle", "instruction", "accessory", "count", "duration", "interval"]
         case "research.abrahangs":

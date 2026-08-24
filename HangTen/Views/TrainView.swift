@@ -160,10 +160,10 @@ struct TrainView: View {
     private var noCompatiblePlan: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionLabel(title: "No compatible routine")
-            Text("This board needs a routine whose hold targets resolve exactly.")
+            Text("No routines are available for this board.")
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
-            Text("Choose another board or add a source-audited routine before starting a session.")
+            Text("Choose another board or browse plans.")
                 .font(.system(size: 13, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
         }
