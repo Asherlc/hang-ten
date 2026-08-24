@@ -81,19 +81,43 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(hangSteps.count, 24)
         XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 6 })
         XCTAssertTrue(plan.subtitle.lowercased().contains("two sets"))
-        XCTAssertTrue(plan.subtitle.contains("six per hand"))
+        XCTAssertTrue(plan.subtitle.contains("six 6-second hangs per hand"))
         XCTAssertTrue(plan.subtitle.contains("6-second"))
         XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("real-time force feedback") })
         XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
     }
 
-    func testWorkoutPresentationUsesOnlyStepContentOrNeutralState() {
+    func testWorkoutCueCardShowsSourceInstructionDuringCountdown() {
         let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "", duration: 10, phase: .hang, targets: [])
+
         XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: false), "Source title")
+        XCTAssertEqual(
+            WorkoutPresentationContent.cueCardRows(step: step, countdown: 3, isComplete: false),
+            [InstructionAccessoryCardRow(kind: .instruction, text: "Source instruction")]
+        )
+    }
+
+    func testWorkoutCueCardIsOmittedAfterCompletion() {
+        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "Source accessory", duration: 10, phase: .hang, targets: [])
+
         XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: true), "Session complete")
-        XCTAssertEqual(WorkoutPresentationContent.instruction(step: step, countdown: 0, isComplete: false), "Source instruction")
-        XCTAssertNil(WorkoutPresentationContent.instruction(step: step, countdown: 3, isComplete: false))
-        XCTAssertNil(WorkoutPresentationContent.instruction(step: step, countdown: 0, isComplete: true))
+        XCTAssertNil(WorkoutPresentationContent.cueCardRows(step: step, countdown: 0, isComplete: true))
+    }
+
+    func testForceFeedbackPlansAreUnavailableUntilInstrumentedEdgeSetupCanBeVerified() {
+        for plan in [LegacyPlanSeedCatalog.forceF80, LegacyPlanSeedCatalog.forceF100] {
+            XCTAssertEqual(
+                PlanStartAvailabilityPolicy.availability(for: plan),
+                .unavailable(requirement: "Requires real-time force feedback from an instrumented 12 mm edge.")
+            )
+        }
+    }
+
+    func testOrdinaryPlanRemainsAvailableToStart() {
+        XCTAssertEqual(
+            PlanStartAvailabilityPolicy.availability(for: LegacyPlanSeedCatalog.maxHangs),
+            .available
+        )
     }
 
     func testPlanSourcePresentationContainsOnlySourceName() {

@@ -91,9 +91,16 @@ enum WorkoutPresentationContent {
         isComplete ? "Session complete" : step.title
     }
 
-    static func instruction(step: WorkoutStep, countdown: Int, isComplete: Bool) -> String? {
-        guard !isComplete, countdown == 0 else { return nil }
-        return InstructionAccessoryCardContent.instructionText(step.instruction)
+    static func cueCardRows(
+        step: WorkoutStep,
+        countdown: Int,
+        isComplete: Bool
+    ) -> [InstructionAccessoryCardRow]? {
+        guard !isComplete else { return nil }
+        let rows = countdown > 0
+            ? InstructionAccessoryCardContent.rows(instruction: step.instruction, accessory: "")
+            : InstructionAccessoryCardContent.rows(instruction: step.instruction, accessory: step.accessory)
+        return rows.isEmpty ? nil : rows
     }
 }
 
@@ -698,6 +705,25 @@ enum PlanDetailPlanResolver {
     }
 }
 
+enum PlanStartAvailability: Equatable {
+    case available
+    case unavailable(requirement: String)
+}
+
+enum PlanStartAvailabilityPolicy {
+    private static let forceFeedbackPlanIDs: Set<String> = [
+        "research.force-feedback-f80",
+        "research.force-feedback-f100"
+    ]
+
+    static func availability(for plan: TrainingPlan) -> PlanStartAvailability {
+        guard forceFeedbackPlanIDs.contains(plan.id) else { return .available }
+        return .unavailable(
+            requirement: "Requires real-time force feedback from an instrumented 12 mm edge."
+        )
+    }
+}
+
 private enum PlanDetailResolutionError: LocalizedError {
     case unavailable
 
@@ -820,22 +846,43 @@ struct PlanDetailView: View {
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
 
-            NavigationLink(destination: WorkoutView(plan: currentPlan, startsImmediately: true)) {
-                HStack {
-                    Image(systemName: "play.fill")
-                    Text("Start routine")
-                    Spacer()
-                    Text(currentPlan.durationLabel)
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+            switch PlanStartAvailabilityPolicy.availability(for: currentPlan) {
+            case .available:
+                NavigationLink(destination: WorkoutView(plan: currentPlan, startsImmediately: true)) {
+                    startRoutineLabel(for: currentPlan)
                 }
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
-                .padding(.horizontal, 17)
-                .padding(.vertical, 15)
-                .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .buttonStyle(.plain)
+            case .unavailable(let requirement):
+                VStack(alignment: .leading, spacing: 8) {
+                    Button(action: {}) {
+                        startRoutineLabel(for: currentPlan)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(true)
+                    Text(requirement)
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Routine unavailable. \(requirement)")
             }
-            .buttonStyle(.plain)
         }
+    }
+
+    private func startRoutineLabel(for plan: TrainingPlan) -> some View {
+        HStack {
+            Image(systemName: "play.fill")
+            Text("Start routine")
+            Spacer()
+            Text(plan.durationLabel)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+        }
+        .font(.system(size: 16, weight: .bold, design: .rounded))
+        .foregroundStyle(Color.hangInk)
+        .padding(.horizontal, 17)
+        .padding(.vertical, 15)
+        .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
@@ -1906,14 +1953,18 @@ struct WorkoutView: View {
 						fingerConfiguration: holdCue.fingerConfiguration
 					)
 				}
-				cueCard(
+				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
 					step: step,
-					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isResting: isResting,
-					isComplete: isComplete,
-					showsHoldPreview: showsHoldPreview
-				)
+					isComplete: isComplete
+				) {
+					cueCard(
+						rows: cueCardRows,
+						step: step,
+						countdown: countdown,
+						isResting: isResting
+					)
+				}
 				if motherboardBluetoothService.state.showsWorkoutMeter {
 					meter(step: step)
 				}
@@ -1989,13 +2040,18 @@ struct WorkoutView: View {
 			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 
 			HStack(alignment: .center, spacing: 12) {
-				landscapeCueCard(
-					step: step,
-					countdown: countdown,
-					isResting: isResting,
-					isComplete: isComplete,
-					showsHoldPreview: showsHoldPreview
-				)
+					if let cueCardRows = WorkoutPresentationContent.cueCardRows(
+						step: step,
+						countdown: countdown,
+						isComplete: isComplete
+					) {
+						landscapeCueCard(
+							rows: cueCardRows,
+							step: step,
+							countdown: countdown,
+							isResting: isResting
+						)
+					}
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
 					.frame(width: 224)
 			}
@@ -2090,25 +2146,24 @@ struct WorkoutView: View {
 	}
 
 	private func landscapeCueCard(
+		rows: [InstructionAccessoryCardRow],
 		step: WorkoutStep,
 		countdown: Int,
-		isResting: Bool,
-		isComplete: Bool,
-		showsHoldPreview: Bool
+		isResting: Bool
 	) -> some View {
-        let instructionText = WorkoutPresentationContent.instruction(step: step, countdown: countdown, isComplete: isComplete)
-        let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
+		let instructionText = rows.first { $0.kind == .instruction }?.text
+		let accessoryText = rows.first { $0.kind == .accessory }?.text
 		return VStack(alignment: .leading, spacing: 5) {
-			SectionLabel(title: isComplete ? "Complete" : countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
-            if !isComplete, countdown == 0, let text = instructionText {
-                Text(text)
+			SectionLabel(title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
+			if let text = instructionText {
+				Text(text)
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
                     .lineLimit(2)
                     .minimumScaleFactor(0.82)
             }
 
-            if !isComplete, countdown == 0, let accessoryText {
+			if let accessoryText {
                 Text(accessoryText)
                     .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundStyle(step.phase.textTint)
@@ -2187,35 +2242,33 @@ struct WorkoutView: View {
         }
     }
 
-    private func cueCard(
-        step: WorkoutStep,
-		stepElapsed: TimeInterval,
+	private func cueCard(
+		rows: [InstructionAccessoryCardRow],
+		step: WorkoutStep,
 		countdown: Int,
-		isResting: Bool,
-		isComplete: Bool,
-		showsHoldPreview: Bool
-    ) -> some View {
-        let instructionText = WorkoutPresentationContent.instruction(step: step, countdown: countdown, isComplete: isComplete)
-        let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
-        return VStack(alignment: .leading, spacing: 11) {
-            HStack {
-                SectionLabel(title: isComplete ? "Complete" : countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
-                Spacer()
-                if !isComplete, countdown == 0 {
+		isResting: Bool
+	) -> some View {
+		let instructionText = rows.first { $0.kind == .instruction }?.text
+		let accessoryText = rows.first { $0.kind == .accessory }?.text
+		return VStack(alignment: .leading, spacing: 11) {
+			HStack {
+				SectionLabel(title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
+				Spacer()
+				if countdown == 0 {
                     Text(intervalLabel(for: step))
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
                 }
             }
 
-            if !isComplete, countdown == 0, let text = instructionText {
+			if let text = instructionText {
                 Text(text)
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-			if !isComplete, countdown == 0, let text = accessoryText {
+			if let text = accessoryText {
 				Text(text)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(isResting ? WorkoutPhase.rest.textTint : step.phase.textTint)
