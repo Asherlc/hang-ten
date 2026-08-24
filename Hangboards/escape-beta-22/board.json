@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "escape-beta-22",
   "manufacturer": "Escape Climbing",
   "name": "Beta Board",
@@ -7,12 +6,19 @@
   "productURL": "https://escapeclimbing.com/products/ec72100",
   "dimensions": "26 \u00d7 6 \u00d7 2 in",
   "aspectRatio": 3.814720812182741,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.814720812182741,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "hold-01-left",
+      "presentationID": "primary",
       "name": "Left Thin Pinch",
       "kind": "pinch",
       "geometry": [
@@ -80,6 +86,7 @@
     },
     {
       "id": "hold-01-right",
+      "presentationID": "primary",
       "name": "Right Thin Pinch",
       "kind": "pinch",
       "geometry": [
@@ -147,6 +154,7 @@
     },
     {
       "id": "hold-02-left",
+      "presentationID": "primary",
       "name": "Left Wide Pinch",
       "kind": "pinch",
       "geometry": [
@@ -217,6 +225,7 @@
     },
     {
       "id": "hold-02-right",
+      "presentationID": "primary",
       "name": "Right Wide Pinch",
       "kind": "pinch",
       "geometry": [
@@ -287,6 +296,7 @@
     },
     {
       "id": "hold-03-left",
+      "presentationID": "primary",
       "name": "Left 38mm Mini-Jug",
       "kind": "jug",
       "sizeMillimeters": 38,
@@ -354,6 +364,7 @@
     },
     {
       "id": "hold-03-right",
+      "presentationID": "primary",
       "name": "Right 38mm Mini-Jug",
       "kind": "jug",
       "sizeMillimeters": 38,
@@ -421,6 +432,7 @@
     },
     {
       "id": "hold-04-left",
+      "presentationID": "primary",
       "name": "Left 29mm Incut Jug",
       "kind": "jug",
       "sizeMillimeters": 29,
@@ -488,6 +500,7 @@
     },
     {
       "id": "hold-04-right",
+      "presentationID": "primary",
       "name": "Right 29mm Incut Jug",
       "kind": "jug",
       "sizeMillimeters": 29,
@@ -555,6 +568,7 @@
     },
     {
       "id": "hold-05-left",
+      "presentationID": "primary",
       "name": "Left 12mm Incut Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -611,13 +625,14 @@
     },
     {
       "id": "hold-05-right",
+      "presentationID": "primary",
       "name": "Right 12mm Incut Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
       "geometry": [
         {
           "frame": {
-            "x": 0.774815871590,
+            "x": 0.77481587159,
             "y": 0.645576454315,
             "width": 0.106572015968,
             "height": 0.164450550761
@@ -667,6 +682,7 @@
     },
     {
       "id": "hold-06-left",
+      "presentationID": "primary",
       "name": "Left 38mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 38,
@@ -727,6 +743,7 @@
     },
     {
       "id": "hold-06-right",
+      "presentationID": "primary",
       "name": "Right 38mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 38,
@@ -787,6 +804,7 @@
     },
     {
       "id": "hold-07-left",
+      "presentationID": "primary",
       "name": "Left 29mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 29,
@@ -850,6 +868,7 @@
     },
     {
       "id": "hold-07-right",
+      "presentationID": "primary",
       "name": "Right 29mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 29,
@@ -913,6 +932,7 @@
     },
     {
       "id": "hold-08-left",
+      "presentationID": "primary",
       "name": "Left 12mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -976,6 +996,7 @@
     },
     {
       "id": "hold-08-right",
+      "presentationID": "primary",
       "name": "Right 12mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -1039,6 +1060,7 @@
     },
     {
       "id": "hold-09-center",
+      "presentationID": "primary",
       "name": "Hold 09 Center",
       "kind": "sloper",
       "geometry": [
@@ -1181,6 +1203,7 @@
     },
     {
       "id": "hold-11-center",
+      "presentationID": "primary",
       "name": "Hold 11 Center",
       "kind": "sloper",
       "geometry": [

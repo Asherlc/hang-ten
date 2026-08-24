@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "metolius.project",
   "manufacturer": "Metolius",
   "name": "Project",
@@ -7,12 +6,19 @@
   "productURL": "https://www.metoliusclimbing.com/products/project-training-board",
   "dimensions": "24.5 \u00d7 6 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "jug-1-left",
+      "presentationID": "primary",
       "name": "Left #1 outer jug",
       "kind": "jug",
       "geometry": [
@@ -72,6 +78,7 @@
     },
     {
       "id": "round-sloper-8-center",
+      "presentationID": "primary",
       "name": "Center #8 53 mm round sloper",
       "kind": "sloper",
       "geometry": [
@@ -153,6 +160,7 @@
     },
     {
       "id": "jug-1-right",
+      "presentationID": "primary",
       "name": "Right #1 outer jug",
       "kind": "jug",
       "geometry": [
@@ -212,6 +220,7 @@
     },
     {
       "id": "pocket-3-left",
+      "presentationID": "primary",
       "name": "Left #3 45 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 45,
@@ -322,6 +331,7 @@
     },
     {
       "id": "edge-4-left",
+      "presentationID": "primary",
       "name": "Left #4 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -431,6 +441,7 @@
     },
     {
       "id": "pocket-5-left",
+      "presentationID": "primary",
       "name": "Left #5 40 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 40,
@@ -541,6 +552,7 @@
     },
     {
       "id": "pocket-6-left",
+      "presentationID": "primary",
       "name": "Left #6 22 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -651,6 +663,7 @@
     },
     {
       "id": "pocket-7-left",
+      "presentationID": "primary",
       "name": "Left #7 22 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -761,6 +774,7 @@
     },
     {
       "id": "edge-9-center",
+      "presentationID": "primary",
       "name": "Center #9 39 mm edge",
       "kind": "edge",
       "sizeMillimeters": 39,
@@ -884,6 +898,7 @@
     },
     {
       "id": "edge-10-center",
+      "presentationID": "primary",
       "name": "Center #10 16 mm edge",
       "kind": "edge",
       "sizeMillimeters": 16,
@@ -1007,6 +1022,7 @@
     },
     {
       "id": "pocket-7-right",
+      "presentationID": "primary",
       "name": "Right #7 22 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -1117,6 +1133,7 @@
     },
     {
       "id": "pocket-6-right",
+      "presentationID": "primary",
       "name": "Right #6 22 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -1227,6 +1244,7 @@
     },
     {
       "id": "pocket-5-right",
+      "presentationID": "primary",
       "name": "Right #5 40 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 40,
@@ -1337,6 +1355,7 @@
     },
     {
       "id": "edge-4-right",
+      "presentationID": "primary",
       "name": "Right #4 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -1446,6 +1465,7 @@
     },
     {
       "id": "pocket-3-right",
+      "presentationID": "primary",
       "name": "Right #3 45 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 45,

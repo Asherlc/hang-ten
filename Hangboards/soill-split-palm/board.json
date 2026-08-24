@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "soill.split-palm",
   "manufacturer": "So iLL",
   "name": "Split Palm",
@@ -7,12 +6,19 @@
   "productURL": "https://soillholds.com/products/split-palm",
   "dimensions": "Each piece: 16.5 \u00d7 11 \u00d7 3.875 in",
   "aspectRatio": 1.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.0,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "presentationID": "primary",
       "name": "Left jug",
       "kind": "jug",
       "geometry": [
@@ -80,6 +86,7 @@
     },
     {
       "id": "large-sloper-left",
+      "presentationID": "primary",
       "name": "Left large sloper",
       "kind": "sloper",
       "geometry": [
@@ -185,6 +192,7 @@
     },
     {
       "id": "small-sloper-left",
+      "presentationID": "primary",
       "name": "Left small sloper",
       "kind": "sloper",
       "geometry": [
@@ -279,6 +287,7 @@
     },
     {
       "id": "sloping-rail-38-left",
+      "presentationID": "primary",
       "name": "Left 38.1 mm sloping rail",
       "kind": "edge",
       "geometry": [
@@ -401,6 +410,7 @@
     },
     {
       "id": "flat-edge-25-left",
+      "presentationID": "primary",
       "name": "Left 25.4 mm flat rail",
       "kind": "edge",
       "geometry": [
@@ -482,6 +492,7 @@
     },
     {
       "id": "flat-edge-25-right",
+      "presentationID": "primary",
       "name": "Right 25.4 mm flat rail",
       "kind": "edge",
       "geometry": [
@@ -556,6 +567,7 @@
     },
     {
       "id": "outer-crimp-12-left",
+      "presentationID": "primary",
       "name": "Left 12.7 mm outer crimp",
       "kind": "edge",
       "geometry": [
@@ -678,6 +690,7 @@
     },
     {
       "id": "bottom-sloping-crimp-12-left",
+      "presentationID": "primary",
       "name": "Left 12.7 mm bottom sloping crimp",
       "kind": "edge",
       "geometry": [
@@ -745,6 +758,7 @@
     },
     {
       "id": "hold-9",
+      "presentationID": "primary",
       "name": "Hold 9",
       "kind": "edge",
       "geometry": [
@@ -812,6 +826,7 @@
     },
     {
       "id": "hold-10",
+      "presentationID": "primary",
       "name": "Hold 10",
       "kind": "edge",
       "geometry": [
@@ -902,6 +917,7 @@
     },
     {
       "id": "hold-11",
+      "presentationID": "primary",
       "name": "Hold 11",
       "kind": "jug",
       "geometry": [
@@ -969,6 +985,7 @@
     },
     {
       "id": "hold-12",
+      "presentationID": "primary",
       "name": "Hold 12",
       "kind": "sloper",
       "geometry": [
@@ -1074,6 +1091,7 @@
     },
     {
       "id": "hold-13",
+      "presentationID": "primary",
       "name": "Hold 13",
       "kind": "edge",
       "geometry": [
@@ -1164,6 +1182,7 @@
     },
     {
       "id": "hold-14",
+      "presentationID": "primary",
       "name": "Hold 14",
       "kind": "edge",
       "geometry": [
@@ -1231,6 +1250,7 @@
     },
     {
       "id": "hold-15",
+      "presentationID": "primary",
       "name": "Hold 15",
       "kind": "edge",
       "geometry": [
@@ -1305,6 +1325,7 @@
     },
     {
       "id": "hold-16",
+      "presentationID": "primary",
       "name": "Hold 16",
       "kind": "sloper",
       "geometry": [
@@ -1399,6 +1420,7 @@
     },
     {
       "id": "hold-17",
+      "presentationID": "primary",
       "name": "Hold 17",
       "kind": "edge",
       "geometry": [
@@ -1480,6 +1502,7 @@
     },
     {
       "id": "hold-18",
+      "presentationID": "primary",
       "name": "Hold 18",
       "kind": "edge",
       "geometry": [
@@ -1547,6 +1570,7 @@
     },
     {
       "id": "hold-19",
+      "presentationID": "primary",
       "name": "Hold 19",
       "kind": "edge",
       "geometry": [
@@ -1669,6 +1693,7 @@
     },
     {
       "id": "hold-20",
+      "presentationID": "primary",
       "name": "Hold 20",
       "kind": "edge",
       "geometry": [

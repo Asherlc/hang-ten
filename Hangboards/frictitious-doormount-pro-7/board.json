@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "frictitious.doormount-pro-7",
   "manufacturer": "Frictitious Climbing",
   "name": "DoorMount Pro 7",
@@ -7,12 +6,19 @@
   "productURL": "https://frictitiousclimbing.com/en-ca/products/doormount-pro",
   "dimensions": "25.5 \u00d7 4.5 \u00d7 2.25 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "top-jug",
+      "presentationID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
       "geometry": [
@@ -83,6 +89,7 @@
     },
     {
       "id": "edge-35-left",
+      "presentationID": "primary",
       "name": "Left 35 mm edge",
       "kind": "edge",
       "sizeMillimeters": 35,
@@ -206,6 +213,7 @@
     },
     {
       "id": "edge-35-right",
+      "presentationID": "primary",
       "name": "Right 35 mm edge",
       "kind": "edge",
       "sizeMillimeters": 35,
@@ -329,6 +337,7 @@
     },
     {
       "id": "mixed-25-pocket-left",
+      "presentationID": "primary",
       "name": "Left continuous 25 mm edge and pocket contact",
       "kind": "edge",
       "geometry": [
@@ -451,6 +460,7 @@
     },
     {
       "id": "mixed-25-pocket-right",
+      "presentationID": "primary",
       "name": "Right continuous 25 mm edge and pocket contact",
       "kind": "edge",
       "geometry": [
@@ -573,6 +583,7 @@
     },
     {
       "id": "hold-6",
+      "presentationID": "primary",
       "name": "Hold 6",
       "kind": "pocket",
       "geometry": [
@@ -682,6 +693,7 @@
     },
     {
       "id": "hold-7",
+      "presentationID": "primary",
       "name": "Hold 7",
       "kind": "pocket",
       "geometry": [
@@ -791,6 +803,7 @@
     },
     {
       "id": "hold-8",
+      "presentationID": "primary",
       "name": "Hold 8",
       "kind": "edge",
       "geometry": [
@@ -913,6 +926,7 @@
     },
     {
       "id": "hold-9",
+      "presentationID": "primary",
       "name": "Hold 9",
       "kind": "edge",
       "geometry": [
@@ -1035,6 +1049,7 @@
     },
     {
       "id": "hold-10",
+      "presentationID": "primary",
       "name": "Hold 10",
       "kind": "edge",
       "geometry": [
@@ -1157,6 +1172,7 @@
     },
     {
       "id": "hold-11",
+      "presentationID": "primary",
       "name": "Hold 11",
       "kind": "edge",
       "geometry": [
@@ -1279,6 +1295,7 @@
     },
     {
       "id": "hold-12",
+      "presentationID": "primary",
       "name": "Hold 12",
       "kind": "edge",
       "geometry": [
@@ -1401,6 +1418,7 @@
     },
     {
       "id": "hold-13",
+      "presentationID": "primary",
       "name": "Hold 13",
       "kind": "edge",
       "geometry": [

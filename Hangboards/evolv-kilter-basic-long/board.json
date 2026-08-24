@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "evolv-kilter-basic-long",
   "manufacturer": "Evolv",
   "name": "Basic Training Board (Long)",
@@ -7,12 +6,19 @@
   "productURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
   "dimensions": "79 \u00d7 16 \u00d7 6 cm",
   "aspectRatio": 1.5024437927663734,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5024437927663734,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "jug-rounded",
+      "presentationID": "primary",
       "name": "Rounded jug",
       "kind": "jug",
       "geometry": [
@@ -68,6 +74,7 @@
     },
     {
       "id": "edge-20",
+      "presentationID": "primary",
       "name": "20 mm rounded edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -124,6 +131,7 @@
     },
     {
       "id": "edge-15",
+      "presentationID": "primary",
       "name": "15 mm rounded edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -180,6 +188,7 @@
     },
     {
       "id": "edge-10",
+      "presentationID": "primary",
       "name": "10 mm rounded edge",
       "kind": "edge",
       "sizeMillimeters": 10,

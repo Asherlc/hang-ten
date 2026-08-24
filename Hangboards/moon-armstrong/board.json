@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "moon.armstrong",
   "manufacturer": "Moon Climbing",
   "name": "Armstrong Fingerboard Beech",
@@ -7,12 +6,19 @@
   "productURL": "https://moonclimbing.com/moon-armstrong-fingerboard-beech.html",
   "dimensions": "65 \u00d7 16.5 \u00d7 5.5 cm",
   "aspectRatio": 1.7768331562167907,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.7768331562167907,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "sloper-left",
+      "presentationID": "primary",
       "name": "Left 35-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -138,6 +144,7 @@
     },
     {
       "id": "sloper-right",
+      "presentationID": "primary",
       "name": "Right 35-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -263,6 +270,7 @@
     },
     {
       "id": "jug-left",
+      "presentationID": "primary",
       "name": "Left in-cut jug",
       "kind": "jug",
       "geometry": [
@@ -371,6 +379,7 @@
     },
     {
       "id": "jug-right",
+      "presentationID": "primary",
       "name": "Right in-cut jug",
       "kind": "jug",
       "geometry": [
@@ -479,6 +488,7 @@
     },
     {
       "id": "center-jug",
+      "presentationID": "primary",
       "name": "Center one-arm jug",
       "kind": "jug",
       "geometry": [
@@ -578,6 +588,7 @@
     },
     {
       "id": "edge-25-left",
+      "presentationID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -687,6 +698,7 @@
     },
     {
       "id": "edge-25-right",
+      "presentationID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -796,6 +808,7 @@
     },
     {
       "id": "edge-20-left",
+      "presentationID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -905,6 +918,7 @@
     },
     {
       "id": "edge-20-right",
+      "presentationID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1014,6 +1028,7 @@
     },
     {
       "id": "edge-15-left",
+      "presentationID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1123,6 +1138,7 @@
     },
     {
       "id": "edge-15-right",
+      "presentationID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1232,6 +1248,7 @@
     },
     {
       "id": "edge-10-left",
+      "presentationID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -1341,6 +1358,7 @@
     },
     {
       "id": "edge-10-right",
+      "presentationID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -1450,6 +1468,7 @@
     },
     {
       "id": "edge-8-left",
+      "presentationID": "primary",
       "name": "Left 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -1559,6 +1578,7 @@
     },
     {
       "id": "edge-8-right",
+      "presentationID": "primary",
       "name": "Right 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -1668,6 +1688,7 @@
     },
     {
       "id": "two-finger-pocket-left",
+      "presentationID": "primary",
       "name": "Left 22 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -1778,6 +1799,7 @@
     },
     {
       "id": "two-finger-pocket-right",
+      "presentationID": "primary",
       "name": "Right 22 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -1888,6 +1910,7 @@
     },
     {
       "id": "center-edge-22",
+      "presentationID": "primary",
       "name": "Center 22 mm one-arm edge",
       "kind": "edge",
       "sizeMillimeters": 22,
@@ -2011,6 +2034,7 @@
     },
     {
       "id": "center-edge-18",
+      "presentationID": "primary",
       "name": "Center 18 mm one-arm edge",
       "kind": "edge",
       "sizeMillimeters": 18,

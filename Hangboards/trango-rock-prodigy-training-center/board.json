@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "trango.rock-prodigy-training-center",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Training Center",
@@ -7,12 +6,19 @@
   "productURL": "https://trango.com/products/rock-prodigy-training-center",
   "dimensions": "9.1 \u00d7 12.1 in",
   "aspectRatio": 2.8344827586206898,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.8344827586206898,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "sloper-left",
+      "presentationID": "primary",
       "name": "Left sloper",
       "kind": "sloper",
       "gripType": "sloper",
@@ -119,6 +125,7 @@
     },
     {
       "id": "sloper-right",
+      "presentationID": "primary",
       "name": "Right sloper",
       "kind": "sloper",
       "gripType": "sloper",
@@ -225,6 +232,7 @@
     },
     {
       "id": "jug-left",
+      "presentationID": "primary",
       "name": "Left jug",
       "kind": "jug",
       "features": [
@@ -348,6 +356,7 @@
     },
     {
       "id": "jug-right",
+      "presentationID": "primary",
       "name": "Right jug",
       "kind": "jug",
       "features": [
@@ -471,6 +480,7 @@
     },
     {
       "id": "edge-large-vder-left",
+      "presentationID": "primary",
       "name": "Left large variable-depth edge rail",
       "kind": "edge",
       "gripType": "openHand",
@@ -583,6 +593,7 @@
     },
     {
       "id": "edge-large-vder-right",
+      "presentationID": "primary",
       "name": "Right large variable-depth edge rail",
       "kind": "edge",
       "gripType": "openHand",
@@ -695,6 +706,7 @@
     },
     {
       "id": "edge-shallow-vder-left",
+      "presentationID": "primary",
       "name": "Left shallow variable-depth edge rail",
       "kind": "edge",
       "geometry": [
@@ -803,6 +815,7 @@
     },
     {
       "id": "edge-shallow-vder-right",
+      "presentationID": "primary",
       "name": "Right shallow variable-depth edge rail",
       "kind": "edge",
       "geometry": [
@@ -911,6 +924,7 @@
     },
     {
       "id": "edge-thin-crimp-left",
+      "presentationID": "primary",
       "name": "Left thin crimp",
       "kind": "edge",
       "features": [
@@ -933,6 +947,7 @@
     },
     {
       "id": "edge-thin-crimp-right",
+      "presentationID": "primary",
       "name": "Right thin crimp",
       "kind": "edge",
       "features": [
@@ -955,6 +970,7 @@
     },
     {
       "id": "pocket-three-finger-slot-left",
+      "presentationID": "primary",
       "name": "Left shallow three-finger slot",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -1068,6 +1084,7 @@
     },
     {
       "id": "pocket-three-finger-slot-right",
+      "presentationID": "primary",
       "name": "Right shallow three-finger slot",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -1181,6 +1198,7 @@
     },
     {
       "id": "pocket-index-middle-deep-left",
+      "presentationID": "primary",
       "name": "Left index-middle deep pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1294,6 +1312,7 @@
     },
     {
       "id": "pocket-index-middle-deep-right",
+      "presentationID": "primary",
       "name": "Right index-middle deep pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1407,6 +1426,7 @@
     },
     {
       "id": "pocket-middle-ring-deep-left",
+      "presentationID": "primary",
       "name": "Left middle-ring deep pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1520,6 +1540,7 @@
     },
     {
       "id": "pocket-middle-ring-deep-right",
+      "presentationID": "primary",
       "name": "Right middle-ring deep pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1633,6 +1654,7 @@
     },
     {
       "id": "pocket-index-middle-medium-shallow-left",
+      "presentationID": "primary",
       "name": "Left index-middle medium/shallow pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1746,6 +1768,7 @@
     },
     {
       "id": "pocket-index-middle-medium-shallow-right",
+      "presentationID": "primary",
       "name": "Right index-middle medium/shallow pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1859,6 +1882,7 @@
     },
     {
       "id": "pocket-middle-ring-shallow-left",
+      "presentationID": "primary",
       "name": "Left middle-ring shallow pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1972,6 +1996,7 @@
     },
     {
       "id": "pocket-middle-ring-shallow-right",
+      "presentationID": "primary",
       "name": "Right middle-ring shallow pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -2085,6 +2110,7 @@
     },
     {
       "id": "pinch-medium-left",
+      "presentationID": "primary",
       "name": "Left medium pinch",
       "kind": "pinch",
       "features": [
@@ -2296,6 +2322,7 @@
     },
     {
       "id": "pinch-medium-right",
+      "presentationID": "primary",
       "name": "Right medium pinch",
       "kind": "pinch",
       "features": [
@@ -2507,6 +2534,7 @@
     },
     {
       "id": "pinch-wide-left",
+      "presentationID": "primary",
       "name": "Left wide pinch",
       "kind": "pinch",
       "features": [
@@ -2697,6 +2725,7 @@
     },
     {
       "id": "pinch-wide-right",
+      "presentationID": "primary",
       "name": "Right wide pinch",
       "kind": "pinch",
       "features": [

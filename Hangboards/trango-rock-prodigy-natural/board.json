@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "trango.rock-prodigy-natural",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Natural",
@@ -7,12 +6,19 @@
   "productURL": "https://trango.com/products/rock-prodigy-natural",
   "dimensions": "7.5 \u00d7 6 \u00d7 1.5 in (each board)",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "top-jug-right",
+      "presentationID": "primary",
       "name": "Right 40 mm top jug",
       "kind": "jug",
       "sizeMillimeters": 40,
@@ -91,6 +97,7 @@
     },
     {
       "id": "top-variable-rail-left",
+      "presentationID": "primary",
       "name": "Left 20\u201333 mm top variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -203,6 +210,7 @@
     },
     {
       "id": "top-variable-rail-right",
+      "presentationID": "primary",
       "name": "Right 20\u201333 mm top variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -315,6 +323,7 @@
     },
     {
       "id": "bottom-variable-rail-left",
+      "presentationID": "primary",
       "name": "Left 10\u201324 mm bottom variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -427,6 +436,7 @@
     },
     {
       "id": "bottom-variable-rail-right",
+      "presentationID": "primary",
       "name": "Right 10\u201324 mm bottom variable-depth rail",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -539,6 +549,7 @@
     },
     {
       "id": "closed-crimp-left",
+      "presentationID": "primary",
       "name": "Left closed crimp",
       "kind": "edge",
       "geometry": [
@@ -633,6 +644,7 @@
     },
     {
       "id": "closed-crimp-right",
+      "presentationID": "primary",
       "name": "Right closed crimp",
       "kind": "edge",
       "geometry": [
@@ -727,6 +739,7 @@
     },
     {
       "id": "upper-pocket-left",
+      "presentationID": "primary",
       "name": "Left 38 mm upper pocket",
       "kind": "pocket",
       "sizeMillimeters": 38,
@@ -836,6 +849,7 @@
     },
     {
       "id": "upper-pocket-right",
+      "presentationID": "primary",
       "name": "Right 38 mm upper pocket",
       "kind": "pocket",
       "sizeMillimeters": 38,
@@ -945,6 +959,7 @@
     },
     {
       "id": "center-lower-pocket-left",
+      "presentationID": "primary",
       "name": "Left center lower pocket",
       "kind": "pocket",
       "geometry": [
@@ -1053,6 +1068,7 @@
     },
     {
       "id": "center-lower-pocket-right",
+      "presentationID": "primary",
       "name": "Right center lower pocket",
       "kind": "pocket",
       "geometry": [
@@ -1161,6 +1177,7 @@
     },
     {
       "id": "outer-supported-pocket-left",
+      "presentationID": "primary",
       "name": "Left outer supported pocket",
       "kind": "pocket",
       "geometry": [
@@ -1370,6 +1387,7 @@
     },
     {
       "id": "outer-supported-pocket-right",
+      "presentationID": "primary",
       "name": "Right outer supported pocket",
       "kind": "pocket",
       "geometry": [
@@ -1579,6 +1597,7 @@
     },
     {
       "id": "hold-14",
+      "presentationID": "primary",
       "name": "Hold 14",
       "kind": "jug",
       "geometry": [

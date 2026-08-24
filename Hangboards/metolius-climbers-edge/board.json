@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "metolius.climbers-edge",
   "manufacturer": "Metolius",
   "name": "Climber's Edge",
@@ -7,12 +6,19 @@
   "productURL": "https://www.metoliusclimbing.com/products/climbers-edge-board",
   "dimensions": "23.6 \u00d7 6.3 in",
   "aspectRatio": 1.8744541484716157,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.8744541484716157,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "presentationID": "primary",
       "name": "Left jug",
       "kind": "jug",
       "geometry": [
@@ -86,6 +92,7 @@
     },
     {
       "id": "flat-sloper-left",
+      "presentationID": "primary",
       "name": "Left 20-degree flat sloper",
       "kind": "sloper",
       "geometry": [
@@ -155,6 +162,7 @@
     },
     {
       "id": "round-sloper-center",
+      "presentationID": "primary",
       "name": "Center 40 mm-radius round sloper",
       "kind": "sloper",
       "geometry": [
@@ -266,6 +274,7 @@
     },
     {
       "id": "flat-sloper-right",
+      "presentationID": "primary",
       "name": "Right 20-degree flat sloper",
       "kind": "sloper",
       "geometry": [
@@ -335,6 +344,7 @@
     },
     {
       "id": "jug-right",
+      "presentationID": "primary",
       "name": "Right jug",
       "kind": "jug",
       "geometry": [
@@ -408,6 +418,7 @@
     },
     {
       "id": "edge-20-left",
+      "presentationID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -531,6 +542,7 @@
     },
     {
       "id": "edge-15-left",
+      "presentationID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -654,6 +666,7 @@
     },
     {
       "id": "edge-10-center",
+      "presentationID": "primary",
       "name": "Center 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -777,6 +790,7 @@
     },
     {
       "id": "edge-15-right",
+      "presentationID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -900,6 +914,7 @@
     },
     {
       "id": "edge-20-right",
+      "presentationID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1023,6 +1038,7 @@
     },
     {
       "id": "edge-17-5-left",
+      "presentationID": "primary",
       "name": "Left 17.5 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1145,6 +1161,7 @@
     },
     {
       "id": "edge-12-5-left",
+      "presentationID": "primary",
       "name": "Left 12.5 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1267,6 +1284,7 @@
     },
     {
       "id": "edge-7-5-center",
+      "presentationID": "primary",
       "name": "Center 7.5 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1389,6 +1407,7 @@
     },
     {
       "id": "edge-12-5-right",
+      "presentationID": "primary",
       "name": "Right 12.5 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1511,6 +1530,7 @@
     },
     {
       "id": "edge-17-5-right",
+      "presentationID": "primary",
       "name": "Right 17.5 mm edge",
       "kind": "edge",
       "geometry": [

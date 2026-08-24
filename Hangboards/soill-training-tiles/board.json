@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "soill.training-tiles",
   "manufacturer": "So iLL",
   "name": "Training Tiles \u2022 So iLL x Meagan Martin",
@@ -7,12 +6,19 @@
   "productURL": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
   "dimensions": "Each tile approximately 14 \u00d7 8 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "pocket-left",
+      "presentationID": "primary",
       "name": "Left pocket",
       "kind": "pocket",
       "geometry": [
@@ -103,6 +109,7 @@
     },
     {
       "id": "pocket-right",
+      "presentationID": "primary",
       "name": "Right pocket",
       "kind": "pocket",
       "geometry": [
@@ -193,6 +200,7 @@
     },
     {
       "id": "outer-sloper-left",
+      "presentationID": "primary",
       "name": "Left outer sloper",
       "kind": "sloper",
       "geometry": [
@@ -305,6 +313,7 @@
     },
     {
       "id": "outer-sloper-right",
+      "presentationID": "primary",
       "name": "Right outer sloper",
       "kind": "sloper",
       "geometry": [
@@ -417,6 +426,7 @@
     },
     {
       "id": "inner-sloper-left",
+      "presentationID": "primary",
       "name": "Left inner sloper",
       "kind": "sloper",
       "geometry": [
@@ -522,6 +532,7 @@
     },
     {
       "id": "inner-sloper-right",
+      "presentationID": "primary",
       "name": "Right inner sloper",
       "kind": "sloper",
       "geometry": [
@@ -627,6 +638,7 @@
     },
     {
       "id": "middle-edge-upper-left",
+      "presentationID": "primary",
       "name": "Left upper middle edge",
       "kind": "edge",
       "geometry": [
@@ -732,6 +744,7 @@
     },
     {
       "id": "middle-edge-upper-right",
+      "presentationID": "primary",
       "name": "Right upper middle edge",
       "kind": "edge",
       "geometry": [
@@ -837,6 +850,7 @@
     },
     {
       "id": "middle-edge-lower-left",
+      "presentationID": "primary",
       "name": "Left lower middle edge",
       "kind": "edge",
       "geometry": [
@@ -934,6 +948,7 @@
     },
     {
       "id": "middle-edge-lower-right",
+      "presentationID": "primary",
       "name": "Right lower middle edge",
       "kind": "edge",
       "geometry": [
@@ -1031,6 +1046,7 @@
     },
     {
       "id": "bottom-edge-outer-left",
+      "presentationID": "primary",
       "name": "Left outer bottom edge",
       "kind": "edge",
       "geometry": [
@@ -1128,6 +1144,7 @@
     },
     {
       "id": "bottom-edge-outer-right",
+      "presentationID": "primary",
       "name": "Right outer bottom edge",
       "kind": "edge",
       "geometry": [
@@ -1225,6 +1242,7 @@
     },
     {
       "id": "bottom-edge-center-left",
+      "presentationID": "primary",
       "name": "Left center bottom edge",
       "kind": "edge",
       "geometry": [
@@ -1322,6 +1340,7 @@
     },
     {
       "id": "bottom-edge-center-right",
+      "presentationID": "primary",
       "name": "Right center bottom edge",
       "kind": "edge",
       "geometry": [
@@ -1419,6 +1438,7 @@
     },
     {
       "id": "bottom-edge-inner-left",
+      "presentationID": "primary",
       "name": "Left inner bottom edge",
       "kind": "edge",
       "geometry": [
@@ -1516,6 +1536,7 @@
     },
     {
       "id": "bottom-edge-inner-right",
+      "presentationID": "primary",
       "name": "Right inner bottom edge",
       "kind": "edge",
       "geometry": [

@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "yy.verticalboard-one",
   "manufacturer": "YY Vertical",
   "name": "VerticalBoard One",
@@ -7,12 +6,19 @@
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-one",
   "dimensions": "62 \u00d7 13 \u00d7 5.5 cm",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "presentationID": "primary",
       "name": "Left top jug",
       "kind": "jug",
       "geometry": [
@@ -97,6 +103,7 @@
     },
     {
       "id": "jug-right",
+      "presentationID": "primary",
       "name": "Right top jug",
       "kind": "jug",
       "geometry": [
@@ -181,6 +188,7 @@
     },
     {
       "id": "sloper-35-left",
+      "presentationID": "primary",
       "name": "Left 35-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -265,6 +273,7 @@
     },
     {
       "id": "sloper-35-right",
+      "presentationID": "primary",
       "name": "Right 35-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -349,6 +358,7 @@
     },
     {
       "id": "sloper-20-center",
+      "presentationID": "primary",
       "name": "Center 20-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -424,6 +434,7 @@
     },
     {
       "id": "edge-25-left",
+      "presentationID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -533,6 +544,7 @@
     },
     {
       "id": "edge-25-right",
+      "presentationID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -642,6 +654,7 @@
     },
     {
       "id": "edge-45-left",
+      "presentationID": "primary",
       "name": "Left 45 mm edge",
       "kind": "edge",
       "sizeMillimeters": 45,
@@ -751,6 +764,7 @@
     },
     {
       "id": "edge-45-right",
+      "presentationID": "primary",
       "name": "Right 45 mm edge",
       "kind": "edge",
       "sizeMillimeters": 45,
@@ -860,6 +874,7 @@
     },
     {
       "id": "pocket-50-left",
+      "presentationID": "primary",
       "name": "Left 50 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 50,
@@ -970,6 +985,7 @@
     },
     {
       "id": "pocket-50-right",
+      "presentationID": "primary",
       "name": "Right 50 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 50,
@@ -1080,6 +1096,7 @@
     },
     {
       "id": "edge-inclined-25-left",
+      "presentationID": "primary",
       "name": "Left 25 mm inclined edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -1189,6 +1206,7 @@
     },
     {
       "id": "edge-inclined-25-right",
+      "presentationID": "primary",
       "name": "Right 25 mm inclined edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -1298,6 +1316,7 @@
     },
     {
       "id": "pocket-30-left",
+      "presentationID": "primary",
       "name": "Left 30 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -1408,6 +1427,7 @@
     },
     {
       "id": "pocket-30-right",
+      "presentationID": "primary",
       "name": "Right 30 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -1518,6 +1538,7 @@
     },
     {
       "id": "center-handle",
+      "presentationID": "primary",
       "name": "Center multifunction handle",
       "kind": "jug",
       "geometry": [
@@ -1626,6 +1647,7 @@
     },
     {
       "id": "edge-20-left",
+      "presentationID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1735,6 +1757,7 @@
     },
     {
       "id": "edge-20-right",
+      "presentationID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1844,6 +1867,7 @@
     },
     {
       "id": "edge-18-left",
+      "presentationID": "primary",
       "name": "Left 18 mm edge",
       "kind": "edge",
       "sizeMillimeters": 18,
@@ -1953,6 +1977,7 @@
     },
     {
       "id": "edge-18-right",
+      "presentationID": "primary",
       "name": "Right 18 mm edge",
       "kind": "edge",
       "sizeMillimeters": 18,

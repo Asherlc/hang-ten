@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "tension.grindstone",
   "manufacturer": "Tension Climbing",
   "name": "Grindstone",
@@ -7,12 +6,19 @@
   "productURL": "https://tensionclimbing.com/products/grindstone",
   "dimensions": "22 \u00d7 6 \u00d7 2.75 in",
   "aspectRatio": 1.7768331562167907,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.7768331562167907,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "top-jug",
+      "presentationID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
       "geometry": [
@@ -98,6 +104,7 @@
     },
     {
       "id": "edge-10-8-left",
+      "presentationID": "primary",
       "name": "Left 10/8 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -206,6 +213,7 @@
     },
     {
       "id": "edge-10-8-right",
+      "presentationID": "primary",
       "name": "Right 10/8 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -314,6 +322,7 @@
     },
     {
       "id": "edge-30-25-left",
+      "presentationID": "primary",
       "name": "Left 30/25 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -436,6 +445,7 @@
     },
     {
       "id": "edge-30-25-right",
+      "presentationID": "primary",
       "name": "Right 30/25 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -558,6 +568,7 @@
     },
     {
       "id": "edge-50-center",
+      "presentationID": "primary",
       "name": "50 mm center one-arm edge",
       "kind": "edge",
       "sizeMillimeters": 50,
@@ -681,6 +692,7 @@
     },
     {
       "id": "edge-20-15-left",
+      "presentationID": "primary",
       "name": "Left 20/15 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -803,6 +815,7 @@
     },
     {
       "id": "edge-20-15-right",
+      "presentationID": "primary",
       "name": "Right 20/15 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -925,6 +938,7 @@
     },
     {
       "id": "hold-9",
+      "presentationID": "primary",
       "name": "Hold 9",
       "kind": "edge",
       "geometry": [
@@ -1047,6 +1061,7 @@
     },
     {
       "id": "hold-10",
+      "presentationID": "primary",
       "name": "Hold 10",
       "kind": "edge",
       "geometry": [
@@ -1169,6 +1184,7 @@
     },
     {
       "id": "hold-11",
+      "presentationID": "primary",
       "name": "Hold 11",
       "kind": "edge",
       "geometry": [
@@ -1291,6 +1307,7 @@
     },
     {
       "id": "hold-12",
+      "presentationID": "primary",
       "name": "Hold 12",
       "kind": "edge",
       "geometry": [
@@ -1413,6 +1430,7 @@
     },
     {
       "id": "hold-13",
+      "presentationID": "primary",
       "name": "Hold 13",
       "kind": "edge",
       "geometry": [
@@ -1535,6 +1553,7 @@
     },
     {
       "id": "hold-14",
+      "presentationID": "primary",
       "name": "Hold 14",
       "kind": "edge",
       "geometry": [

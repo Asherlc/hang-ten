@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "nature.stoak-board-iii",
   "manufacturer": "Nature Climbing",
   "name": "Stoak Board III Oak",
@@ -7,12 +6,19 @@
   "productURL": "https://natureclimbing.com/products/stoak-board-iii",
   "dimensions": "57 \u00d7 12 \u00d7 5.5 cm",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "top-jug",
+      "presentationID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
       "geometry": [
@@ -97,6 +103,7 @@
     },
     {
       "id": "edge-22-center",
+      "presentationID": "primary",
       "name": "Center 22 mm edge",
       "kind": "edge",
       "sizeMillimeters": 22,
@@ -206,6 +213,7 @@
     },
     {
       "id": "gradient-edge-left",
+      "presentationID": "primary",
       "name": "Left gradient 10\u201325 mm edge",
       "kind": "edge",
       "geometry": [
@@ -331,6 +339,7 @@
     },
     {
       "id": "gradient-edge-right",
+      "presentationID": "primary",
       "name": "Right gradient 10\u201325 mm edge",
       "kind": "edge",
       "geometry": [
@@ -456,6 +465,7 @@
     },
     {
       "id": "lower-composite-left",
+      "presentationID": "primary",
       "name": "Left continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
       "geometry": [
@@ -578,6 +588,7 @@
     },
     {
       "id": "lower-composite-right",
+      "presentationID": "primary",
       "name": "Right continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
       "geometry": [
@@ -700,6 +711,7 @@
     },
     {
       "id": "lower-composite-center",
+      "presentationID": "primary",
       "name": "Center continuous 30 mm granite / ergonomic wood contact",
       "kind": "edge",
       "geometry": [

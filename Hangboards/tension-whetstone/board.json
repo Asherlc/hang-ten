@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "tension.whetstone",
   "manufacturer": "Tension Climbing",
   "name": "Whetstone",
@@ -7,12 +6,19 @@
   "productURL": "https://tensionclimbing.com/products/whetstone",
   "dimensions": "25 \u00d7 6 \u00d7 2 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "top-ergo-jug",
+      "presentationID": "primary",
       "name": "Continuous ergo-bump top jug",
       "kind": "jug",
       "geometry": [
@@ -217,6 +223,7 @@
     },
     {
       "id": "pocket-40-left",
+      "presentationID": "primary",
       "name": "Left 40 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 40,
@@ -298,6 +305,7 @@
     },
     {
       "id": "edge-40-30-left",
+      "presentationID": "primary",
       "name": "Left 40/30 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -420,6 +428,7 @@
     },
     {
       "id": "edge-40-30-right",
+      "presentationID": "primary",
       "name": "Right 40/30 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -542,6 +551,7 @@
     },
     {
       "id": "edge-40-center",
+      "presentationID": "primary",
       "name": "40 mm center incut edge",
       "kind": "edge",
       "sizeMillimeters": 40,
@@ -651,6 +661,7 @@
     },
     {
       "id": "edge-25-20-left",
+      "presentationID": "primary",
       "name": "Left 25/20 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -773,6 +784,7 @@
     },
     {
       "id": "edge-25-20-right",
+      "presentationID": "primary",
       "name": "Right 25/20 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -895,6 +907,7 @@
     },
     {
       "id": "hold-8",
+      "presentationID": "primary",
       "name": "Hold 8",
       "kind": "pocket",
       "fingerCapacity": 2,
@@ -974,6 +987,7 @@
     },
     {
       "id": "hold-9",
+      "presentationID": "primary",
       "name": "Hold 9",
       "kind": "edge",
       "geometry": [
@@ -1096,6 +1110,7 @@
     },
     {
       "id": "hold-10",
+      "presentationID": "primary",
       "name": "Hold 10",
       "kind": "edge",
       "geometry": [
@@ -1218,6 +1233,7 @@
     },
     {
       "id": "hold-11",
+      "presentationID": "primary",
       "name": "Hold 11",
       "kind": "edge",
       "geometry": [
@@ -1340,6 +1356,7 @@
     },
     {
       "id": "hold-12",
+      "presentationID": "primary",
       "name": "Hold 12",
       "kind": "edge",
       "geometry": [

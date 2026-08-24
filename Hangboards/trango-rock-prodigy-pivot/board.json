@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "trango.rock-prodigy-pivot",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Pivot",
@@ -7,12 +6,19 @@
   "productURL": "https://trango.com/products/rock-prodigy-pivot?variant=33101615890537",
   "dimensions": "15.5 \u00d7 5 \u00d7 2.5 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "upper-sloped-crimp-left",
+      "presentationID": "primary",
       "name": "Left upper sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -136,6 +142,7 @@
     },
     {
       "id": "upper-sloped-crimp-right",
+      "presentationID": "primary",
       "name": "Right upper sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -259,6 +266,7 @@
     },
     {
       "id": "outer-sloped-crimp-left",
+      "presentationID": "primary",
       "name": "Left outer sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -367,6 +375,7 @@
     },
     {
       "id": "outer-sloped-crimp-right",
+      "presentationID": "primary",
       "name": "Right outer sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -475,6 +484,7 @@
     },
     {
       "id": "variable-edge-left",
+      "presentationID": "primary",
       "name": "Left variable-depth edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -592,6 +602,7 @@
     },
     {
       "id": "variable-edge-right",
+      "presentationID": "primary",
       "name": "Right variable-depth edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -709,6 +720,7 @@
     },
     {
       "id": "medium-crimp-left",
+      "presentationID": "primary",
       "name": "Left medium crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -837,6 +849,7 @@
     },
     {
       "id": "medium-crimp-right",
+      "presentationID": "primary",
       "name": "Right medium crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -965,6 +978,7 @@
     },
     {
       "id": "large-crimp-left",
+      "presentationID": "primary",
       "name": "Left large crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -1093,6 +1107,7 @@
     },
     {
       "id": "large-crimp-right",
+      "presentationID": "primary",
       "name": "Right large crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -1221,6 +1236,7 @@
     },
     {
       "id": "two-finger-pocket-left",
+      "presentationID": "primary",
       "name": "Left two-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1351,6 +1367,7 @@
     },
     {
       "id": "two-finger-pocket-right",
+      "presentationID": "primary",
       "name": "Right two-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1481,6 +1498,7 @@
     },
     {
       "id": "three-finger-pocket-left",
+      "presentationID": "primary",
       "name": "Left three-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1626,6 +1644,7 @@
     },
     {
       "id": "three-finger-pocket-right",
+      "presentationID": "primary",
       "name": "Right three-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1771,6 +1790,7 @@
     },
     {
       "id": "outer-wedge-pinch-left",
+      "presentationID": "primary",
       "name": "Left outer wedge jug and pinch surface",
       "kind": "pinch",
       "geometry": [
@@ -2025,6 +2045,7 @@
     },
     {
       "id": "outer-wedge-pinch-right",
+      "presentationID": "primary",
       "name": "Right outer wedge jug and pinch surface",
       "kind": "pinch",
       "geometry": [
@@ -2279,6 +2300,7 @@
     },
     {
       "id": "lower-sloper-left",
+      "presentationID": "primary",
       "name": "Left lower rotation sloper",
       "kind": "sloper",
       "geometry": [
@@ -2518,6 +2540,7 @@
     },
     {
       "id": "lower-sloper-right",
+      "presentationID": "primary",
       "name": "Right lower rotation sloper",
       "kind": "sloper",
       "geometry": [

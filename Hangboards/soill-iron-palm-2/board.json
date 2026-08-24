@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "soill.iron-palm-2",
   "manufacturer": "So iLL",
   "name": "Iron Palm 2.0",
@@ -7,12 +6,19 @@
   "productURL": "https://soillholds.com/products/iron-palm-2-0",
   "dimensions": "27 \u00d7 11.5 \u00d7 4 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "sloper-left",
+      "presentationID": "primary",
       "name": "Left sloper",
       "kind": "sloper",
       "geometry": [
@@ -107,6 +113,7 @@
     },
     {
       "id": "sloper-right",
+      "presentationID": "primary",
       "name": "Right sloper",
       "kind": "sloper",
       "geometry": [
@@ -201,6 +208,7 @@
     },
     {
       "id": "pinch-left",
+      "presentationID": "primary",
       "name": "Left 3-inch pinch",
       "kind": "pinch",
       "geometry": [
@@ -283,6 +291,7 @@
     },
     {
       "id": "top-incut-jug",
+      "presentationID": "primary",
       "name": "Incut top jug rail",
       "kind": "jug",
       "geometry": [
@@ -388,6 +397,7 @@
     },
     {
       "id": "rounded-edge-40",
+      "presentationID": "primary",
       "name": "40 mm rounded rail",
       "kind": "edge",
       "sizeMillimeters": 40,
@@ -464,6 +474,7 @@
     },
     {
       "id": "flat-edge-25",
+      "presentationID": "primary",
       "name": "25 mm flat rail",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -532,6 +543,7 @@
     },
     {
       "id": "flat-edge-15",
+      "presentationID": "primary",
       "name": "15 mm flat rail",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -615,6 +627,7 @@
     },
     {
       "id": "hold-8",
+      "presentationID": "primary",
       "name": "Hold 8",
       "kind": "pinch",
       "geometry": [

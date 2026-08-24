@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "escape.unlimited",
   "manufacturer": "Escape Climbing",
   "name": "Unlimited Board",
@@ -7,12 +6,19 @@
   "productURL": "https://escapeclimbing.com/products/ec72000",
   "dimensions": "23.5 \u00d7 6 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
   "holds": [
     {
       "id": "top-sloper-60",
+      "presentationID": "primary",
       "name": "Full-width 60 mm top sloper",
       "kind": "sloper",
       "sizeMillimeters": 60,
@@ -98,6 +104,7 @@
     },
     {
       "id": "edge-45-left",
+      "presentationID": "primary",
       "name": "Left 45 mm edge",
       "kind": "edge",
       "sizeMillimeters": 45,
@@ -207,6 +214,7 @@
     },
     {
       "id": "edge-45-right",
+      "presentationID": "primary",
       "name": "Right 45 mm edge",
       "kind": "edge",
       "sizeMillimeters": 45,
@@ -316,6 +324,7 @@
     },
     {
       "id": "edge-20-left",
+      "presentationID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -425,6 +434,7 @@
     },
     {
       "id": "edge-20-right",
+      "presentationID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -534,6 +544,7 @@
     },
     {
       "id": "edge-15-left",
+      "presentationID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -643,6 +654,7 @@
     },
     {
       "id": "edge-15-right",
+      "presentationID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
