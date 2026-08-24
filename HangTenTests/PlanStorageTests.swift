@@ -1364,10 +1364,8 @@ final class PlanStorageTests: XCTestCase {
         let boardStore = try BoardLibraryStore(data: Data(
             #"""
             {
-              "schemaVersion": 1,
               "metadata": {
                 "id": "fixture.board-library",
-                "version": "1.0.0",
                 "title": "Fixture board library",
                 "generatedAt": "2026-08-10",
                 "notes": []
@@ -1383,26 +1381,29 @@ final class PlanStorageTests: XCTestCase {
                   {
                     "id": "fixture.edge",
                     "name": "Fixture edge",
-                    "shortLabel": "E",
-                    "detail": "A fixture edge.",
                     "kind": "edge",
-                    "frame": { "x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4 }
+                    "geometry": [{
+                      "frame": { "x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0 }
+                    }]
                   },
                   {
                     "id": "fixture.pinch",
                     "name": "Fixture pinch",
-                    "shortLabel": "P",
-                    "detail": "A fixture pinch.",
                     "kind": "pinch",
-                    "frame": { "x": 0.4, "y": 0.2, "width": 0.2, "height": 0.4 }
+                    "geometry": [{
+                      "frame": { "x": 0.4, "y": 0.2, "width": 0.2, "height": 0.4 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0 }
+                    }]
                   },
                   {
                     "id": "fixture.jug",
                     "name": "Fixture jug",
-                    "shortLabel": "J",
-                    "detail": "A fixture jug.",
                     "kind": "jug",
-                    "frame": { "x": 0.7, "y": 0.2, "width": 0.2, "height": 0.4 }
+                    "geometry": [{
+                      "frame": { "x": 0.7, "y": 0.2, "width": 0.2, "height": 0.4 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0 }
+                    }]
                   }
                 ],
                 "semanticHolds": {

@@ -1,12 +1,39 @@
 import Foundation
 
-enum BoardDefinitionSchema {
-    static let currentVersion = 1
+private struct BoardLibraryAnyCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        self.intValue = nil
+    }
+
+    init?(intValue: Int) {
+        self.stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}
+
+private extension Decoder {
+    func rejectBoardLibraryUnknownKeys(_ allowedKeys: Set<String>) throws {
+        let container = try container(keyedBy: BoardLibraryAnyCodingKey.self)
+        guard let unknownKey = container.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) else {
+            return
+        }
+        throw DecodingError.dataCorrupted(
+            DecodingError.Context(
+                codingPath: codingPath + [unknownKey],
+                debugDescription: "Unknown key \(unknownKey.stringValue)"
+            )
+        )
+    }
 }
 
 struct BoardLibraryMetadata: Codable, Hashable {
     let id: String
-    let version: String
     let title: String
     let generatedAt: String
     let defaultBoardID: String?
@@ -14,18 +41,36 @@ struct BoardLibraryMetadata: Codable, Hashable {
 
     init(
         id: String,
-        version: String,
         title: String,
         generatedAt: String,
         defaultBoardID: String? = nil,
         notes: [String] = []
     ) {
         self.id = id
-        self.version = version
         self.title = title
         self.generatedAt = generatedAt
         self.defaultBoardID = defaultBoardID
         self.notes = notes
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case generatedAt
+        case defaultBoardID
+        case notes
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectBoardLibraryUnknownKeys([
+            "id", "title", "generatedAt", "defaultBoardID", "notes"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        generatedAt = try container.decode(String.self, forKey: .generatedAt)
+        defaultBoardID = try container.decodeIfPresent(String.self, forKey: .defaultBoardID)
+        notes = try container.decode([String].self, forKey: .notes)
     }
 }
 
@@ -139,45 +184,18 @@ struct BoardHoldDefinition: Codable, Hashable {
         case fingerCapacity
         case handCapacity
         case features
-        case frame
     }
 
     init(from decoder: Decoder) throws {
+        try decoder.rejectBoardLibraryUnknownKeys([
+            "id", "name", "kind", "geometry", "sizeMillimeters", "depthRangeMillimeters",
+            "gripType", "fingerCapacity", "handCapacity", "features"
+        ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
-
-        if let pieces = try container.decodeIfPresent(
-            [BoardHoldPieceDocument].self,
-            forKey: .geometry
-        ) {
-            if container.contains(.frame) {
-                throw DecodingError.dataCorrupted(
-                    .init(
-                        codingPath: container.codingPath + [CodingKeys.geometry],
-                        debugDescription: "hold \(id) declares both geometry and legacy frame"
-                    )
-                )
-            }
-            geometry = pieces
-        } else {
-            // Temporary compatibility for frame-only generated-library and
-            // hand-built fixtures. Canonical package documents require
-            // geometry and use their own closed decoder.
-            let frame = try container.decode(BoardPackageFrameDocument.self, forKey: .frame)
-            geometry = [
-                BoardHoldPieceDocument(
-                    frame: frame,
-                    shape: BoardGeometryShapeDocument(
-                        type: "roundedRect",
-                        commands: nil,
-                        cornerRadiusFraction: 0
-                    ),
-                    treatment: nil
-                )
-            ]
-        }
+        geometry = try container.decode([BoardHoldPieceDocument].self, forKey: .geometry)
 
         sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
@@ -308,14 +326,24 @@ struct BoardDefinition: Codable, Hashable {
 }
 
 struct BoardLibraryDefinition: Codable, Hashable {
-    let schemaVersion: Int
     let metadata: BoardLibraryMetadata
     let boards: [BoardDefinition]
 
-    init(schemaVersion: Int, metadata: BoardLibraryMetadata, boards: [BoardDefinition]) {
-        self.schemaVersion = schemaVersion
+    init(metadata: BoardLibraryMetadata, boards: [BoardDefinition]) {
         self.metadata = metadata
         self.boards = boards
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case metadata
+        case boards
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectBoardLibraryUnknownKeys(["metadata", "boards"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        metadata = try container.decode(BoardLibraryMetadata.self, forKey: .metadata)
+        boards = try container.decode([BoardDefinition].self, forKey: .boards)
     }
 
     func validationIssues() -> [BoardLibraryValidationIssue] {
@@ -353,15 +381,6 @@ enum BoardLibraryValidator {
     static func issues(for library: BoardLibraryDefinition) -> [BoardLibraryValidationIssue] {
         var issues: [BoardLibraryValidationIssue] = []
 
-        if library.schemaVersion != BoardDefinitionSchema.currentVersion {
-            issues.append(
-                BoardLibraryValidationIssue(
-                    path: "schemaVersion",
-                    message: "Expected \(BoardDefinitionSchema.currentVersion), got \(library.schemaVersion)."
-                )
-            )
-        }
-
         validateMetadata(library.metadata, issues: &issues)
 
         var boardIDs = Set<String>()
@@ -396,7 +415,6 @@ enum BoardLibraryValidator {
         issues: inout [BoardLibraryValidationIssue]
     ) {
         validateNonEmpty(metadata.id, path: "metadata.id", label: "Library ID", issues: &issues)
-        validateNonEmpty(metadata.version, path: "metadata.version", label: "Library version", issues: &issues)
         validateNonEmpty(metadata.title, path: "metadata.title", label: "Library title", issues: &issues)
     }
 

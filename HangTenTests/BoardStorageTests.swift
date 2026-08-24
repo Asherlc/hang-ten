@@ -5,9 +5,9 @@ final class BoardStorageTests: XCTestCase {
     func testFrameOnlyBoardHoldCreatesRectangleGeometryAndDerivesBounds() throws {
         let suppliedFrame = HoldFrame(x: 0.2, y: 0.3, width: 0.4, height: 0.2)
         let hold = BoardHold(
-            id: "legacy-frame-hold",
-            name: "Legacy frame hold",
-            shortLabel: "Legacy",
+            id: "frame-hold",
+            name: "Frame hold",
+            shortLabel: "Frame",
             detail: "Fixture",
             kind: .edge,
             frame: suppliedFrame
@@ -66,10 +66,10 @@ final class BoardStorageTests: XCTestCase {
             let json = String(decoding: export, as: UTF8.self)
             let boards = try XCTUnwrap(json.range(of: "\"boards\""))
             let metadata = try XCTUnwrap(json.range(of: "\"metadata\""))
-            let schemaVersion = try XCTUnwrap(json.range(of: "\"schemaVersion\""))
 
             XCTAssertLessThan(boards.lowerBound, metadata.lowerBound)
-            XCTAssertLessThan(metadata.lowerBound, schemaVersion.lowerBound)
+            XCTAssertNil(json.range(of: "\"schemaVersion\""))
+            XCTAssertNil(json.range(of: "\"version\""))
         }
 
         XCTAssertEqual(try BoardLibraryStore(data: firstCompactExport).boards, store.boards)
@@ -95,6 +95,27 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertThrowsError(try BoardLibraryStore(contentsOf: malformedURL)) { error in
             guard case BoardLibraryStoreError.decoding = error else {
                 return XCTFail("Expected a decoding error, got: \(error)")
+            }
+        }
+    }
+
+    func testBoardLibraryRejectsFormerSchemaFields() throws {
+        for mutation in [
+            { (document: inout [String: Any]) in
+                document["schemaVersion"] = 1
+            },
+            { (document: inout [String: Any]) in
+                var metadata = try XCTUnwrap(document["metadata"] as? [String: Any])
+                metadata["version"] = "1.0.0"
+                document["metadata"] = metadata
+            }
+        ] {
+            let data = try fixtureData(mutating: mutation)
+
+            XCTAssertThrowsError(try BoardLibraryStore(data: data)) { error in
+                guard case BoardLibraryStoreError.decoding = error else {
+                    return XCTFail("Expected a decoding error, got: \(error)")
+                }
             }
         }
     }
@@ -180,7 +201,7 @@ final class BoardStorageTests: XCTestCase {
         }
     }
 
-    func testBoardHoldDefinitionRejectsGeometryAndLegacyFrameTogether() throws {
+    func testBoardHoldDefinitionRejectsFormerFrameField() throws {
         let data = Data(
             #"{"id":"fixture.ambiguous","name":"Ambiguous","kind":"edge","frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2},"geometry":[{"frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2},"shape":{"type":"roundedRect","cornerRadiusFraction":0.1}}]}"#.utf8
         )
@@ -190,7 +211,7 @@ final class BoardStorageTests: XCTestCase {
 
     func testDirectHoldConversionRejectsInvalidFingerCapacityByThrowing() throws {
         let data = Data(
-            #"{"id":"fixture.capacity","name":"Capacity","kind":"edge","fingerCapacity":0,"frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2}}"#.utf8
+            #"{"id":"fixture.capacity","name":"Capacity","kind":"edge","fingerCapacity":0,"geometry":[{"frame":{"x":0.1,"y":0.1,"width":0.2,"height":0.2},"shape":{"type":"roundedRect","cornerRadiusFraction":0}}]}"#.utf8
         )
         let definition = try JSONDecoder().decode(BoardHoldDefinition.self, from: data)
 
@@ -383,10 +404,8 @@ final class BoardStorageTests: XCTestCase {
         Data(
             #"""
             {
-              "schemaVersion": 1,
               "metadata": {
                 "id": "fixture.library",
-                "version": "1.0.0",
                 "title": "Fixture library",
                 "generatedAt": "2026-08-10",
                 "defaultBoardID": "fixture.board",

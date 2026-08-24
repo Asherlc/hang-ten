@@ -466,13 +466,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let holds = try XCTUnwrap(boardObject["holds"] as? [[String: Any]])
             identifiers.formUnion(try holds.map { try XCTUnwrap($0["id"] as? String) })
 
-            if let presentation = boardObject["presentation"] as? [String: Any],
-               let assetPath = presentation["assetPath"] as? String {
-                let assetURL = URL(fileURLWithPath: assetPath)
-                identifiers.insert(assetPath)
-                identifiers.insert(assetURL.lastPathComponent)
-                identifiers.insert(assetURL.deletingPathExtension().lastPathComponent)
-            }
             for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {
                 guard let assetPath = presentation["assetPath"] as? String else { continue }
                 let assetURL = URL(fileURLWithPath: assetPath)
