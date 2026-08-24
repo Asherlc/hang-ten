@@ -199,11 +199,83 @@ final class BoardPackageWriterTests: XCTestCase {
             let encoded = try BoardPackageWriter.data(for: decoded)
             let redecoded = try BoardEditableDocument(data: encoded)
 
-            assertSemanticallyEqual(decoded, redecoded, file: #filePath, line: #line)
+            if redecoded != decoded {
+                XCTFail(
+                    "round-trip \(slug): redecoded document differs; "
+                        + Self.describeFirstDifference(decoded, redecoded).map { "first difference: \($0)" }
+                            ?? "documents compare unequal at an unknown field"
+                )
+                continue
+            }
 
             let reencoded = try BoardPackageWriter.data(for: redecoded)
-            XCTAssertEqual(encoded, reencoded, "encoding must be a deterministic fixpoint for \(slug)")
+            XCTAssertEqual(
+                encoded, reencoded,
+                "encoding must be a deterministic fixpoint for \(slug)"
+            )
         }
+    }
+
+    private static func describeFirstDifference(
+        _ left: BoardEditableDocument,
+        _ right: BoardEditableDocument
+    ) -> String? {
+        if left.holds.count != right.holds.count {
+            return "hold count \(left.holds.count) != \(right.holds.count)"
+        }
+        for (holdIndex, leftHold) in left.holds.enumerated() {
+            let rightHold = right.holds[holdIndex]
+            if leftHold.id != rightHold.id { return "holds[\(holdIndex)].id \(leftHold.id) != \(rightHold.id)" }
+            if leftHold.name != rightHold.name { return "\(leftHold.id) name differs" }
+            if leftHold.kind != rightHold.kind { return "\(leftHold.id) kind differs" }
+            if leftHold.sizeMillimeters != rightHold.sizeMillimeters { return "\(leftHold.id) size differs" }
+            if leftHold.depthRangeMillimeters != rightHold.depthRangeMillimeters { return "\(leftHold.id) depth differs" }
+            if leftHold.gripType != rightHold.gripType { return "\(leftHold.id) gripType differs" }
+            if leftHold.fingerCapacity != rightHold.fingerCapacity { return "\(leftHold.id) fingerCapacity differs" }
+            if leftHold.handCapacity != rightHold.handCapacity { return "\(leftHold.id) handCapacity differs" }
+            if leftHold.features != rightHold.features { return "\(leftHold.id) features differ" }
+            if leftHold.geometry.count != rightHold.geometry.count {
+                return "\(leftHold.id) piece count \(leftHold.geometry.count) != \(rightHold.geometry.count)"
+            }
+            for (pieceIndex, leftPiece) in leftHold.geometry.enumerated() {
+                let rightPiece = rightHold.geometry[pieceIndex]
+                let label = "\(leftHold.id).geometry[\(pieceIndex)]"
+                if leftPiece.frame != rightPiece.frame { return "\(label) frame \(leftPiece.frame) != \(rightPiece.frame)" }
+                if leftPiece.shape.type != rightPiece.shape.type { return "\(label) shape type differs" }
+                if leftPiece.shape.cornerRadiusFraction != rightPiece.shape.cornerRadiusFraction {
+                    return "\(label) corner radius differs"
+                }
+                if leftPiece.shapeConstraint != rightPiece.shapeConstraint {
+                    return "\(label) constraint \(String(describing: leftPiece.shapeConstraint)) != \(String(describing: rightPiece.shapeConstraint))"
+                }
+                if leftPiece.treatment != rightPiece.treatment { return "\(label) treatment differs" }
+                let leftCommands = leftPiece.shape.commands ?? []
+                let rightCommands = rightPiece.shape.commands ?? []
+                if leftCommands.count != rightCommands.count {
+                    return "\(label) command count \(leftCommands.count) != \(rightCommands.count)"
+                }
+                for (commandIndex, leftCommand) in leftCommands.enumerated() {
+                    let rightCommand = rightCommands[commandIndex]
+                    if leftCommand != rightCommand {
+                        return "\(label).commands[\(commandIndex)] \(describeCommand(leftCommand)) != \(describeCommand(rightCommand))"
+                    }
+                }
+            }
+        }
+        return nil
+    }
+
+    private static func describeCommand(_ command: BoardGeometryPathCommandDocument) -> String {
+        "\(command.command) to=\(command.to.map(describePoint) ?? "nil")"
+            + " control=\(command.control.map(describePoint) ?? "nil")"
+            + " control1=\(command.control1.map(describePoint) ?? "nil")"
+            + " control2=\(command.control2.map(describePoint) ?? "nil")"
+    }
+
+    private static func describePoint(_ values: [Double]) -> String {
+        values.map { value in
+            String(format: "%.17g", value)
+        }.joined(separator: ",")
     }
 
     func testCanonicalFormattingMatchesRepositoryConventions() throws {

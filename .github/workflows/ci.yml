@@ -274,7 +274,7 @@ jobs:
       needs.changes.outputs.workflow == 'true' ||
       needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       # actions/checkout v4.2.2
@@ -347,7 +347,7 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure()
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-${{ github.run_id }}
