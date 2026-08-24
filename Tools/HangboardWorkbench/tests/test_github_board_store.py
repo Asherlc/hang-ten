@@ -868,6 +868,41 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     assert saved.board_json_sha == expected_sha
 
 
+def test_changed_hosted_save_persists_a_bendable_curve_marker() -> None:
+    board = board_document("fixture.board")
+    board["holds"][0]["geometry"][0]["shape"] = {
+        "type": "path",
+        "commands": [
+            {"command": "move", "to": [0, 0]},
+            {
+                "command": "curve",
+                "control1": [0.25, 0],
+                "control2": [0.75, 0],
+                "to": [1, 0],
+            },
+            {"command": "line", "to": [1, 1]},
+            {"command": "line", "to": [0, 1]},
+            {"command": "close"},
+        ],
+    }
+    client = _client(("fixture-board", board))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    document["regions"][0]["bendableCommandIndexes"] = [1]
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    commands = saved.board["holds"][0]["geometry"][0]["shape"]["commands"]
+    assert commands[1]["bendable"] is True
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert "bendableCommandIndexes" not in json.dumps(stored)
+
+
 def test_v2_hosted_save_preserves_unselected_holds_and_presentation_assets() -> None:
     board = board_document_v2("fixture.v2")
     files = _complete_package("fixture-v2", board)
