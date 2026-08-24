@@ -2,6 +2,51 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testBuiltInPlanPresentationFieldsUseAthleteFacingCopy() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let visibleFields = store.plans.flatMap { plan in
+            [plan.subtitle] + plan.steps.flatMap { [$0.instruction, $0.accessory] }
+        }
+        let auditNarration = [
+            "app timer",
+            "app default",
+            "app-guided",
+            "app recovery",
+            "source range",
+            "no source count",
+            "source's",
+            "source does not prescribe",
+            "source gives no",
+            "guided default",
+            "adaptation"
+        ]
+
+        XCTAssertEqual(
+            visibleFields.filter { field in
+                let normalized = field.lowercased()
+                return auditNarration.contains { normalized.contains($0) }
+            },
+            [],
+            "Built-in plan fields must state the workout, not its audit history."
+        )
+    }
+
+    func testRuntimePresentationDoesNotEmitGenericCoaching() {
+        let rows = InstructionAccessoryCardContent.rows(
+            instruction: "Get into position for the next hang.",
+            accessory: "Cool down, then log how your fingers feel."
+        )
+
+        XCTAssertEqual(rows, [])
+    }
+
+    func testAdaptedProvenanceDetailIsNotCustomerFacingAuditNarration() {
+        XCTAssertEqual(RoutineProvenance.adapted.detail, "")
+    }
+
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
         let packageStore = BoardCatalog.packageStore
         let store = try PlanLibraryStore(

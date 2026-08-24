@@ -59,6 +59,14 @@ struct InstructionAccessoryCardRow: Equatable {
 }
 
 enum InstructionAccessoryCardContent {
+    private static let genericRuntimeCoaching = [
+        "get into position",
+        "cool down, then log",
+        "take a few easy minutes",
+        "nice work",
+        "step off and shake out"
+    ]
+
     static func rows(instruction: String, accessory: String) -> [InstructionAccessoryCardRow] {
         [
             row(kind: .instruction, text: instruction),
@@ -78,10 +86,12 @@ enum InstructionAccessoryCardContent {
         kind: InstructionAccessoryCardRow.Kind,
         text: String
     ) -> InstructionAccessoryCardRow? {
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              !genericRuntimeCoaching.contains(where: { trimmed.localizedCaseInsensitiveContains($0) }) else {
             return nil
         }
-        return InstructionAccessoryCardRow(kind: kind, text: text)
+        return InstructionAccessoryCardRow(kind: kind, text: trimmed)
     }
 }
 
@@ -214,7 +224,7 @@ struct PlansView: View {
                         Text("Choose your session.")
                             .font(.system(size: 31, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.hangInk)
-                        Text("Official manufacturer sequences and source-linked adapted protocols. Hold targets are matched to your board.")
+                        Text("Browse routines for your board.")
                             .font(.system(size: 15, weight: .medium, design: .rounded))
                             .foregroundStyle(Color.hangMuted)
                             .fixedSize(horizontal: false, vertical: true)
@@ -554,9 +564,9 @@ struct PlansView: View {
             HStack(spacing: 8) {
                 Image(systemName: "link")
                     .foregroundStyle(Color.hangGreenDark)
-                SectionLabel(title: "Built from the source")
+                SectionLabel(title: "Learn more")
             }
-            Text("The three Metolius sequences preserve their official task data. Research and coach protocols are labeled Adapted when Hang Ten adds guidance or maps them to this board; every plan retains its own source link.")
+            Text("Each routine includes its source link.")
                 .font(.system(size: 14, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
@@ -599,11 +609,6 @@ private struct PlanCard: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
-                Pill(
-                    title: plan.provenance.label,
-                    tint: Color.hangGreenDark,
-                    fill: Color.hangGreen.opacity(0.16)
-                )
                 if isIncompatible {
                     Pill(title: "Not on this board", tint: .orange, fill: Color.orange.opacity(0.12))
                 }
@@ -798,11 +803,6 @@ struct PlanDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Pill(title: currentPlan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
-                Pill(
-                    title: currentPlan.provenance.label,
-                    tint: Color.hangGreenDark,
-                    fill: Color.hangGreen.opacity(0.16)
-                )
                 Spacer()
                 Label(currentPlan.durationLabel, systemImage: "timer")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -862,7 +862,7 @@ struct PlanDetailView: View {
                 )
             }
 			if store.usesFallbackMapping(currentPlan, on: board) {
-				Text("Board mapping note: a source-specific hold variant uses the closest manufacturer-documented feature available on this board. The prescribed task text remains unchanged.")
+				Text("Uses the closest available hold on this board.")
 					.font(.system(size: 12, weight: .medium, design: .rounded))
 					.foregroundStyle(Color.hangMuted)
 					.fixedSize(horizontal: false, vertical: true)
@@ -933,10 +933,6 @@ struct PlanDetailView: View {
                     Text("Source: \(currentPlan.sourceLabel)")
                         .font(.system(size: 14, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text(currentPlan.provenance.detail)
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
-                        .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
                 if showsExternalLink {
@@ -957,7 +953,7 @@ struct PlanDetailView: View {
             Text(plan.title)
                 .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
-            Text("This routine does not support \(store.selectedBoard.name). Choose a compatible plan for your selected board.")
+            Text("Choose another board or a different routine.")
                 .font(.system(size: 14, weight: .medium, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
@@ -2052,7 +2048,7 @@ struct WorkoutView: View {
 							? "Get ready"
 							: "Step \(step.number) of \(plan.steps.count)"
 				)
-				Text(isComplete ? "Nice work." : isResting ? "Step off and shake out" : step.title)
+				Text(isComplete ? "Session complete" : step.title)
 					.font(.system(size: 22, weight: .bold, design: .rounded))
 					.foregroundStyle(Color.hangInk)
 					.lineLimit(1)
@@ -2099,12 +2095,8 @@ struct WorkoutView: View {
         let instructionText = InstructionAccessoryCardContent.instructionText(step.instruction)
         let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
 		return VStack(alignment: .leading, spacing: 5) {
-			SectionLabel(title: isComplete ? "What next" : countdown > 0 ? "Next up" : isResting ? "Recovery cue" : "Your cue")
-            if let text = isComplete
-                ? "Cool down, then log how your fingers feel."
-                : countdown > 0
-                    ? "Get into position for \(step.title.lowercased())."
-                    : instructionText {
+			SectionLabel(title: isComplete ? "Complete" : countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
+            if !isComplete, countdown == 0, let text = instructionText {
                 Text(text)
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
@@ -2159,7 +2151,7 @@ struct WorkoutView: View {
             .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
             .accessibilityIdentifier("workout.routinePicker")
 
-            Text(isComplete ? "Nice work." : countdown > 0 ? step.title : isResting ? "Step off and shake out" : step.title)
+            Text(isComplete ? "Session complete" : step.title)
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
 
@@ -2177,7 +2169,7 @@ struct WorkoutView: View {
                     .foregroundStyle(Color.hangInk)
                 Text(
                     isComplete
-                        ? "ready to log"
+                        ? "complete"
                         : countdown > 0
                             ? "starting in"
                             : isResting ? "rest" : step.hasRestInterval ? "left in cue" : "left in cycle"
@@ -2203,7 +2195,7 @@ struct WorkoutView: View {
         let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
         return VStack(alignment: .leading, spacing: 11) {
             HStack {
-                SectionLabel(title: isComplete ? "What next" : countdown > 0 ? "Next up" : isResting ? "Recovery cue" : "Your cue")
+                SectionLabel(title: isComplete ? "Complete" : countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
                 Spacer()
                 if !isComplete, countdown == 0 {
                     Text(intervalLabel(for: step))
@@ -2212,11 +2204,7 @@ struct WorkoutView: View {
                 }
             }
 
-            if let text = isComplete
-                ? "Take a few easy minutes to cool down, then log how your fingers feel."
-                : countdown > 0
-                    ? "Get into position for \(step.title.lowercased()). The timer starts in \(countdown)."
-                    : instructionText {
+            if !isComplete, countdown == 0, let text = instructionText {
                 Text(text)
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangInk)

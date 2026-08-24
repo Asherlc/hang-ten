@@ -136,7 +136,7 @@ struct MotherboardSettingsView: View {
             } header: {
                 Text("Sensor profile")
             } footer: {
-                Text("Only source-audited sensor protocols are available. Disconnect before changing the profile.")
+                Text("Disconnect before changing the profile.")
             }
 
             Section("Force unit") {
