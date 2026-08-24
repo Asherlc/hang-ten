@@ -1,9 +1,11 @@
 # Training plan source audit — 2026-08-10
 
-The five built-in plan entries below cover the four requested resources. All
-are classified `adapted`: the sources are not current Metolius built-ins, and
-Hang Ten supplies runnable rows, manual timing defaults, or board resolution
-where the source is a weekly template or prose guidance.
+Four bundled plan entries cover the first three requested resources below:
+one from Hooper's Beta, two from Method Climbing, and one from REI. All are
+classified `adapted`: the sources are not current Metolius built-ins, and Hang
+Ten supplies runnable rows, manual timing defaults, or board resolution where
+the source is a weekly template or prose guidance. Section 4 documents Rock
+Prodigy, which is not bundled.
 
 ## 1. Hooper's Beta introductory home hangboard routine
 
