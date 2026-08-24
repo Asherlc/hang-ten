@@ -73,6 +73,23 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertEqual(options.equipment, ["hangboard", "weights"])
     }
 
+    func testConsumerFilterPresentationExcludesProvenanceAndRetainsAthleteFacets() {
+        let options = PlanFilterOptions(metadata: [
+            metadata(
+                level: "Advanced",
+                provenance: .adapted,
+                category: "research",
+                tags: ["strength"],
+                equipment: ["hangboard"]
+            )
+        ])
+
+        XCTAssertEqual(
+            PlanFilterPresentationContent.visibleFacets(for: options),
+            [.difficulty, .category, .tags, .equipment]
+        )
+    }
+
     func testClearRemovesSelectionsAndActiveFacetCount() {
         var filters = PlanFilters()
         filters.levels = ["Advanced"]

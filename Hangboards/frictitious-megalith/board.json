@@ -6,19 +6,9 @@
   "productURL": "https://frictitiousclimbing.com/products/megalith",
   "dimensions": "26.75 \u00d7 6.5 \u00d7 2.25 in",
   "aspectRatio": 1.5,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 1.5,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "top-jug",
-      "presentationID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
       "geometry": [
@@ -85,11 +75,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-8-10-12-left",
-      "presentationID": "primary",
       "name": "Left 8 / 10 / 12 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -194,11 +184,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-8-10-12-right",
-      "presentationID": "primary",
       "name": "Right 8 / 10 / 12 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -303,11 +293,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-30-40-pocket-left",
-      "presentationID": "primary",
       "name": "Left continuous 30 / 40 mm edge with integrated pocket",
       "kind": "edge",
       "geometry": [
@@ -412,11 +402,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-30-40-pocket-right",
-      "presentationID": "primary",
       "name": "Right continuous 30 / 40 mm edge with integrated pocket",
       "kind": "edge",
       "geometry": [
@@ -521,11 +511,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "center-edge-25",
-      "presentationID": "primary",
       "name": "Center 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -645,11 +635,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-15-20-left",
-      "presentationID": "primary",
       "name": "Left continuous 15 / 20 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -754,11 +744,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "stepped-15-20-right",
-      "presentationID": "primary",
       "name": "Right continuous 15 / 20 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -863,11 +853,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-left",
-      "presentationID": "primary",
       "name": "Left mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -959,11 +949,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-right",
-      "presentationID": "primary",
       "name": "Right mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -1055,11 +1045,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-11",
-      "presentationID": "primary",
       "name": "Hold 11",
       "kind": "edge",
       "geometry": [
@@ -1164,11 +1154,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-12",
-      "presentationID": "primary",
       "name": "Hold 12",
       "kind": "edge",
       "geometry": [
@@ -1273,11 +1263,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-13",
-      "presentationID": "primary",
       "name": "Hold 13",
       "kind": "edge",
       "geometry": [
@@ -1382,11 +1372,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-14",
-      "presentationID": "primary",
       "name": "Hold 14",
       "kind": "edge",
       "geometry": [
@@ -1491,7 +1481,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
     }
   ]
 }

@@ -14,6 +14,50 @@ protocol WorkoutSpeechSynthesizing: AnyObject {
 
 extension AVSpeechSynthesizer: WorkoutSpeechSynthesizing {}
 
+struct WorkoutSpeechVoiceCandidate {
+    let identifier: String
+    let language: String
+    let quality: AVSpeechSynthesisVoiceQuality
+}
+
+enum WorkoutSpeechVoiceSelector {
+    static func bestCandidate(
+        from candidates: [WorkoutSpeechVoiceCandidate],
+        preferredLanguage: String
+    ) -> WorkoutSpeechVoiceCandidate? {
+        let exactLocaleCandidates = candidates.filter {
+            $0.language.caseInsensitiveCompare(preferredLanguage) == .orderedSame
+        }
+        return exactLocaleCandidates.max { qualityRank($0.quality) < qualityRank($1.quality) }
+    }
+
+    static func bestInstalledVoice(for preferredLanguage: String) -> AVSpeechSynthesisVoice? {
+        let voices = AVSpeechSynthesisVoice.speechVoices()
+        let candidates = voices.map {
+            WorkoutSpeechVoiceCandidate(
+                identifier: $0.identifier,
+                language: $0.language,
+                quality: $0.quality
+            )
+        }
+        guard let candidate = bestCandidate(
+            from: candidates,
+            preferredLanguage: preferredLanguage
+        ) else {
+            return nil
+        }
+        return voices.first { $0.identifier == candidate.identifier }
+    }
+
+    private static func qualityRank(_ quality: AVSpeechSynthesisVoiceQuality) -> Int {
+        switch quality {
+        case .premium: return 3
+        case .enhanced: return 2
+        default: return 1
+        }
+    }
+}
+
 enum CountdownAudioPreparationState: Equatable {
     case preparing
     case ready
@@ -207,7 +251,9 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         configureAudioSessionIfNeeded()
 
         let utterance = AVSpeechUtterance(string: phrase)
-        utterance.voice = AVSpeechSynthesisVoice(language: preferredLanguageCode)
+        utterance.voice = WorkoutSpeechVoiceSelector.bestInstalledVoice(
+            for: preferredLanguageCode
+        ) ?? AVSpeechSynthesisVoice(language: preferredLanguageCode)
         utterance.rate = phrase.count <= 2 ? 0.50 : 0.47
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0

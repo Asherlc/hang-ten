@@ -6,19 +6,9 @@
   "productURL": "https://tensionclimbing.com/products/honestone",
   "dimensions": "25 \u00d7 6 \u00d7 2.5 in",
   "aspectRatio": 1.7768331562167907,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 1.7768331562167907,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "top-macro-sloper",
-      "presentationID": "primary",
       "name": "Continuous 35\u00b0/45\u00b0 top macro sloper",
       "kind": "sloper",
       "geometry": [
@@ -242,11 +232,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-left",
-      "presentationID": "primary",
       "name": "Left 25 mm one-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -335,11 +325,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "mono-right",
-      "presentationID": "primary",
       "name": "Right 25 mm one-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -428,11 +418,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-15-left",
-      "presentationID": "primary",
       "name": "Left 20/15 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -551,11 +541,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-15-right",
-      "presentationID": "primary",
       "name": "Right 20/15 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -674,11 +664,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-center",
-      "presentationID": "primary",
       "name": "25 mm center incut edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -784,11 +774,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-8-left",
-      "presentationID": "primary",
       "name": "Left 10/8 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -907,11 +897,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-8-right",
-      "presentationID": "primary",
       "name": "Right 10/8 mm stepped edge",
       "kind": "edge",
       "geometry": [
@@ -1030,7 +1020,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.7768331562167907,
+      "default": true
     }
   ]
 }

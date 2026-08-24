@@ -44,12 +44,14 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"
-        && typeof metadata.pieceIndex === "number"));
+        && typeof metadata.pieceIndex === "number"
+        && (metadata.presentationID === undefined || typeof metadata.presentationID === "string")));
 }
 
 function isEditorDocument(value: unknown): value is EditorDocument {
   return isRecord(value)
-    && typeof value.schemaVersion === "number"
+    && Object.keys(value).every((key) => key === "presentationID" || key === "canvas" || key === "regions")
+    && (value.presentationID === undefined || typeof value.presentationID === "string")
     && isRecord(value.canvas)
     && typeof value.canvas.width === "number"
     && typeof value.canvas.height === "number"
@@ -61,6 +63,10 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   if (!isRecord(document)) {
     throw new TypeError("Hold document is required");
   }
+  const unknownKey = Object.keys(document).find(
+    (key) => key !== "presentationID" && key !== "canvas" && key !== "regions",
+  );
+  if (unknownKey) throw new Error(`Hold document has unknown field ${unknownKey}`);
   const canvas = document.canvas;
   if (!isRecord(canvas)
     || !Number.isFinite(canvas.width)
@@ -70,6 +76,12 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     throw new Error("Hold document needs a valid canvas");
   }
   if (!Array.isArray(document.regions)) throw new Error("Hold document needs holds");
+  const presentationID = typeof document.presentationID === "string"
+    ? document.presentationID
+    : null;
+  if (document.presentationID !== undefined && !presentationID) {
+    throw new Error("Hold document needs a valid presentation");
+  }
   const keys = new Set<string>();
   const fingerCapacityByHoldId = new Map<string, number | undefined>();
   const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
@@ -101,6 +113,9 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);
+    }
+    if (presentationID && region.metadata?.presentationID !== presentationID) {
+      throw new Error(`Hold ${region.key} must belong to the selected presentation`);
     }
     if (region.metadata) {
       const { holdID } = region.metadata;
@@ -149,6 +164,10 @@ export async function loadBoardAtomically<ImageType>(options: {
   const board = await getBoard(boardId);
   if (!board || board.boardId !== boardId || !board.imageUrl) {
     throw new Error("Workbench returned an invalid board");
+  }
+  if (board.selectedPresentationID
+    && board.document.presentationID !== board.selectedPresentationID) {
+    throw new Error("Workbench returned a mismatched presentation");
   }
   validateEditorDocument(board.document);
   let image: ImageType;

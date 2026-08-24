@@ -4,6 +4,7 @@ import XCTest
 final class BoardSourceBoundaryTests: XCTestCase {
     private enum PackageDiscoveryError: Error {
         case invalidRootChild(String)
+        case invalidAssetPath(String)
     }
 
     func testCatalogContainsExactlyRegisteredPackageBoards() {
@@ -19,22 +20,33 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "lattice-triple-rung",
             "metolius.climbers-edge",
             "metolius.contact",
+            "metolius.foundry",
+            "metolius.light-rail-2",
+            "metolius.prime-rib",
             "metolius.project",
+            "metolius.rock-rings-3d",
             "metolius.simulator-3d",
             "metolius.wood-grips-compact-ii",
+            "metolius.wood-grips-deluxe-ii",
             "moon.armstrong",
             "nature.stoak-board-iii",
             "soill.iron-palm-2",
             "soill.split-palm",
             "soill.training-tiles",
             "target10a.linebreaker-base",
+            "tension.flash-board",
             "tension.grindstone",
             "tension.honestone",
             "tension.whetstone",
+            "the-hangboard.the-hangboard",
             "trango.rock-prodigy-forge",
             "trango.rock-prodigy-natural",
             "trango.rock-prodigy-pivot",
             "trango.rock-prodigy-training-center",
+            "yy.baguette",
+            "yy.baguette-evo",
+            "yy.penta-evo",
+            "yy.travelboard",
             "yy.verticalboard-evo",
             "yy.verticalboard-first",
             "yy.verticalboard-light",
@@ -70,6 +82,34 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 "Expected \(board.id) presentation image below \(expectedAssetsURL.path), got \(imageURL.path)."
             )
         }
+    }
+
+    func testBundledContentDoesNotContainSchemaVersion() throws {
+        let repositoryRoot = repositoryRootURL()
+        let boardURLs = try BoardSourceBoundaryAudit.bundledBoardDocumentURLs(
+            at: repositoryRoot
+        )
+
+        XCTAssertFalse(boardURLs.isEmpty)
+        for boardURL in boardURLs {
+            let boardDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+            )
+            XCTAssertNil(
+                boardDocument["schemaVersion"],
+                "Remove schemaVersion from \(boardURL.path)."
+            )
+        }
+
+        let planURL = repositoryRoot
+            .appendingPathComponent("HangTen/Resources/PlanLibrary.json")
+        let planDocument = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: planURL)) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(planDocument["metadata"] as? [String: Any])
+
+        XCTAssertNil(planDocument["schemaVersion"])
+        XCTAssertNil(metadata["version"])
     }
 
     func testEveryBuiltInPlanTargetResolvesOnItsPackageBoard() {
@@ -151,20 +191,54 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let packageEntries = try Set(
                 FileManager.default.contentsOfDirectory(atPath: packageURL.path)
             )
-            let assetEntries = try Set(
-                FileManager.default.contentsOfDirectory(
-                    atPath: packageURL.appendingPathComponent("assets").path
-                )
-            )
+            let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
             XCTAssertEqual(packageEntries, ["assets", "board.json"])
-            XCTAssertEqual(assetEntries, ["primary.png"])
-            XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 1)
+            XCTAssertNil(boardDocument["schemaVersion"])
+            XCTAssertNil(boardDocument["presentation"])
+            let presentations = try XCTUnwrap(
+                boardDocument["presentations"] as? [[String: Any]]
+            )
+            let declaredAssets = Set(
+                presentations.compactMap { presentation in
+                    presentation["assetPath"] as? String
+                }
+            )
+            XCTAssertEqual(assetPaths, declaredAssets)
+            let presentationIDs = Set(
+                presentations.compactMap { $0["id"] as? String }
+            )
+            XCTAssertTrue(holds.allSatisfy {
+                ($0["presentationID"] as? String).map(presentationIDs.contains) == true
+            })
             XCTAssertEqual(boardDocument["id"] as? String, board.id)
             XCTAssertFalse(holds.isEmpty)
             XCTAssertTrue(holds.allSatisfy { !($0["geometry"] as? [[String: Any]] ?? []).isEmpty })
             XCTAssertTrue(holds.allSatisfy { $0["cueStyle"] == nil })
         }
+    }
+
+    func testPackageAssetBoundaryEnumerationPreservesNestedPathsAndEqualBasenames() throws {
+        let packageURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("BoardSourceBoundaryTests-\(UUID().uuidString)")
+        let frontURL = packageURL.appendingPathComponent("assets/front/shared.png")
+        let rearURL = packageURL.appendingPathComponent("assets/rear/shared.png")
+        try FileManager.default.createDirectory(
+            at: frontURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try FileManager.default.createDirectory(
+            at: rearURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data([0]).write(to: frontURL)
+        try Data([1]).write(to: rearURL)
+        defer { try? FileManager.default.removeItem(at: packageURL) }
+
+        XCTAssertEqual(
+            try packageRelativeAssetPaths(in: packageURL),
+            ["assets/front/shared.png", "assets/rear/shared.png"]
+        )
     }
 
     func testBoardMapUsesOnePhysicalPathForHighlightingAndHitTesting() throws {
@@ -191,19 +265,19 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
         XCTAssertTrue(source.contains("let boardBounds = proxy.size"))
         let physicalHoldVisualFrame =
-            "                    )\n" +
-            "                    .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "                }\n" +
-            "            }"
+            "                        )\n" +
+            "                        .frame(width: boardBounds.width, height: boardBounds.height)\n" +
+            "                    }\n" +
+            "                }"
         XCTAssertTrue(
             source.contains(physicalHoldVisualFrame),
             "Each PhysicalHoldVisual must receive the board's explicit bounds."
         )
         let outerZStackFrame =
+            "                }\n" +
+            "                .frame(width: boardBounds.width, height: boardBounds.height)\n" +
             "            }\n" +
-            "            .frame(width: boardBounds.width, height: boardBounds.height)\n" +
-            "        }\n" +
-            "        .aspectRatio(board.aspectRatio, contentMode: .fit)"
+            "            .aspectRatio(content.presentation.aspectRatio, contentMode: .fit)"
         XCTAssertTrue(
             source.contains(outerZStackFrame),
             "The outer board ZStack must receive the board's explicit bounds."
@@ -298,7 +372,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testBoundaryAuditAllowsCanonicalPresentationVocabularyOnlyInGenericLoader() {
+    func testBoundaryAuditAllowsCanonicalPresentationVocabularyInGenericOwners() {
         let canonicalPresentationVocabulary: Set<String> = [
             "assets/primary.png",
             "primary.png",
@@ -313,6 +387,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
         XCTAssertEqual(
             BoardSourceBoundaryAudit.findings(
                 relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ),
+            []
+        )
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
                 source: genericLoaderSource,
                 packageOwnedLiterals: canonicalPresentationVocabulary
             ),
@@ -420,8 +502,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let holds = try XCTUnwrap(boardObject["holds"] as? [[String: Any]])
             identifiers.formUnion(try holds.map { try XCTUnwrap($0["id"] as? String) })
 
-            if let presentation = boardObject["presentation"] as? [String: Any],
-               let assetPath = presentation["assetPath"] as? String {
+            for presentation in boardObject["presentations"] as? [[String: Any]] ?? [] {
+                guard let assetPath = presentation["assetPath"] as? String else { continue }
                 let assetURL = URL(fileURLWithPath: assetPath)
                 identifiers.insert(assetPath)
                 identifiers.insert(assetURL.lastPathComponent)
@@ -431,6 +513,39 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
 
         return identifiers
+    }
+
+    private func packageRelativeAssetPaths(in packageURL: URL) throws -> Set<String> {
+        let assetsURL = packageURL.appendingPathComponent("assets", isDirectory: true)
+        guard let enumerator = FileManager.default.enumerator(
+            at: assetsURL,
+            includingPropertiesForKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ]
+        ) else {
+            throw PackageDiscoveryError.invalidAssetPath("assets")
+        }
+        let packagePrefix = packageURL.standardizedFileURL.path + "/"
+        var paths = Set<String>()
+        for case let itemURL as URL in enumerator {
+            let values = try itemURL.resourceValues(forKeys: [
+                .isDirectoryKey,
+                .isRegularFileKey,
+                .isSymbolicLinkKey
+            ])
+            guard values.isSymbolicLink != true else {
+                throw PackageDiscoveryError.invalidAssetPath(itemURL.path)
+            }
+            if values.isDirectory == true { continue }
+            let itemPath = itemURL.standardizedFileURL.path
+            guard values.isRegularFile == true, itemPath.hasPrefix(packagePrefix) else {
+                throw PackageDiscoveryError.invalidAssetPath(itemURL.path)
+            }
+            paths.insert(String(itemPath.dropFirst(packagePrefix.count)))
+        }
+        return paths
     }
 
     private func discoveredPackagePaths(at repositoryRoot: URL) throws -> [String: String] {

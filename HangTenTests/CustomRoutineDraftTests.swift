@@ -352,7 +352,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 targets: [.holdIDs(["edge-left", "edge-right"])],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    target: .holdIDs(["edge-left", "edge-right"]),
+                    targets: [.holdIDs(["edge-left", "edge-right"])],
                     timing: .fixed,
                     duration: 10
                 )],
@@ -430,7 +430,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             targets: sourceStep.targets,
             segments: [WorkoutSegmentDefinition(
                 kind: .work,
-                target: .kind(.jug),
+                targets: [.kind(.jug)],
                 timing: .fixed,
                 duration: 10
             )],
@@ -536,7 +536,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 targets: [.feature(.roundSloper, fallbacks: [])],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    target: .feature(.roundSloper, fallbacks: []),
+                    targets: [.feature(.roundSloper, fallbacks: [])],
                     timing: .stopwatch,
                     duration: nil
                 )]
@@ -571,7 +571,7 @@ final class CustomRoutineDraftTests: XCTestCase {
                 targets: [.kind(.jug)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    target: .kind(.jug),
+                    targets: [.kind(.jug)],
                     timing: .undefined,
                     duration: nil
                 )]

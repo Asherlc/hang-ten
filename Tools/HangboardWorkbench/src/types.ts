@@ -11,6 +11,32 @@ export interface PathCommand {
   controls: Point[];
 }
 
+/** Editor-session identity for a path endpoint. Never persisted in board geometry. */
+export interface EditableAnchor extends Point {
+  readonly id: string;
+  readonly ordinal: number;
+  readonly isStart: boolean;
+}
+
+/** Editor-session identity for a Bézier control point. Never persisted in board geometry. */
+export interface EditableControl extends Point {
+  readonly id: string;
+}
+
+export interface EditableSegment {
+  readonly id: string;
+  type: Exclude<PathCommandType, "Z">;
+  anchor: EditableAnchor;
+  controls: EditableControl[];
+}
+
+/** A disposable, editor-only projection of canonical SVG path geometry. */
+export interface EditablePath {
+  readonly regionKey: string;
+  readonly segments: EditableSegment[];
+  readonly closed: boolean;
+}
+
 export type ShapeConstraintShape = "oval" | "circle" | "pill" | "roundedRectangle" | "rectangle";
 
 export interface ShapeConstraint {
@@ -53,6 +79,7 @@ export interface HoldRegion {
   metadata?: {
     holdID: string;
     pieceIndex: number;
+    presentationID?: string;
   };
   fingerCapacity?: number;
   depthRangeMillimeters?: MillimeterRange;
@@ -61,12 +88,19 @@ export interface HoldRegion {
 }
 
 export interface EditorDocument {
-  schemaVersion: number;
+  presentationID?: string;
   canvas: {
     width: number;
     height: number;
   };
   regions: HoldRegion[];
+}
+
+export interface BoardPresentation {
+  presentationID: string;
+  displayName: string;
+  imageUrl: string;
+  default: boolean;
 }
 
 export interface BoardSummary {
@@ -79,7 +113,10 @@ export interface BoardSummary {
 
 export interface Board extends BoardSummary {
   imageUrl: string;
+  holdIDs?: string[];
   saveUrl?: string;
+  selectedPresentationID?: string;
+  presentations?: BoardPresentation[];
   document: EditorDocument;
 }
 
@@ -119,7 +156,7 @@ export interface PullRequestResult {
 
 export interface WorkbenchClient {
   listBoards(): Promise<BoardSummary[]>;
-  getBoard(boardId: string): Promise<Board>;
+  getBoard(boardId: string, presentationID?: string): Promise<Board>;
   saveBoard(boardId: string, document: EditorDocument): Promise<Board>;
   getGitStatus(): Promise<GitStatus>;
   getAuthStatus(): Promise<AuthStatus>;
@@ -302,6 +339,7 @@ export interface WorkbenchActions {
   pushBranch(): Promise<void>;
   openPullRequest(): Promise<void>;
   selectHold(key: string | null, toggle?: boolean): void;
+  selectPresentation(presentationID: string): Promise<void>;
   setRotationDegrees(value: string): void;
   replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;

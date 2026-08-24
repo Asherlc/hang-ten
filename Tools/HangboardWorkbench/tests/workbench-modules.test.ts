@@ -59,7 +59,7 @@ function runtimeFixture(fetchImplementation: BrowserRuntime["fetch"]): RuntimeFi
 }
 
 function editorDocument(regions: EditorDocument["regions"] = []): EditorDocument {
-  return { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions };
+  return { canvas: { width: 100, height: 50 }, regions };
 }
 
 function boardFixture(overrides: Partial<Board> = {}): Board {
@@ -103,6 +103,51 @@ test("the browser client lists and opens direct boards", async () => {
   ]);
   assert.equal((await client.getBoard("compact")).boardId, "compact");
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
+});
+
+test("the browser client requests and validates a selected presentation", async () => {
+  const calls: string[] = [];
+  const document: EditorDocument = {
+    presentationID: "back",
+    canvas: { width: 80, height: 120 },
+    regions: [{
+      key: "back-hold-piece-0",
+      displayPath: "M 1 1 L 20 1 L 20 20 Z",
+      metadata: { holdID: "back-hold", pieceIndex: 0, presentationID: "back" },
+    }],
+  };
+  const { runtime } = runtimeFixture(async (input) => {
+    calls.push(String(input));
+    return response({
+      ok: true,
+      board: boardFixture({
+        imageUrl: "/api/boards/compact/image?presentationID=back",
+        selectedPresentationID: "back",
+        presentations: [
+          {
+            presentationID: "front",
+            displayName: "Front",
+            imageUrl: "/api/boards/compact/image?presentationID=front",
+            default: true,
+          },
+          {
+            presentationID: "back",
+            displayName: "Back",
+            imageUrl: "/api/boards/compact/image?presentationID=back",
+            default: false,
+          },
+        ],
+        document,
+      }),
+    });
+  });
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact", "back");
+
+  assert.equal(board.selectedPresentationID, "back");
+  assert.equal(board.document.presentationID, "back");
+  assert.equal(board.document.regions[0]?.metadata?.presentationID, "back");
+  assert.deepEqual(calls, ["/api/boards/compact?presentationID=back"]);
 });
 
 test("backend requests carry a fifteen-second timeout signal", async (context) => {
@@ -199,7 +244,6 @@ test("the browser client rejects invalid optional hold-region fields", async (co
           holdCount: 1,
           imageUrl: "/api/boards/compact/image",
           document: {
-            schemaVersion: 1,
             canvas: { width: 100, height: 50 },
             regions: [fixture.region],
           },
@@ -504,7 +548,6 @@ test("direct board loading rejects malformed shape constraints before image load
           holdCount: 1,
           imageUrl: "/api/boards/broken/image",
           document: {
-            schemaVersion: 1,
             canvas: { width: 100, height: 50 },
             regions: [{
               key: "hold-1",
@@ -525,7 +568,7 @@ test("direct board loading rejects malformed shape constraints before image load
 });
 
 test("the direct editor model rejects duplicate and open hold paths before saving", () => {
-  const base = { schemaVersion: 1, canvas: { width: 100, height: 50 } };
+  const base = { canvas: { width: 100, height: 50 } };
   assert.throws(() => validateEditorDocument({ ...base, regions: [
     { key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20 Z" },
     { key: "hold-1", displayPath: "M 30 1 L 40 1 L 40 20 Z" },
@@ -533,6 +576,17 @@ test("the direct editor model rejects duplicate and open hold paths before savin
   assert.throws(() => validateEditorDocument({ ...base, regions: [
     { key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20" },
   ] }), /one closed contour/);
+});
+
+test("the direct editor model rejects the removed schema version field", () => {
+  assert.throws(
+    () => validateEditorDocument({
+      schemaVersion: 1,
+      canvas: { width: 100, height: 50 },
+      regions: [{ key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20 Z" }],
+    }),
+    /unknown.*schemaVersion/i,
+  );
 });
 
 test("the direct editor model rejects invalid optional hold-region fields", () => {
@@ -555,7 +609,6 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
   for (const region of invalidRegions) {
     assert.throws(
       () => validateEditorDocument({
-        schemaVersion: 1,
         canvas: { width: 100, height: 50 },
         regions: [region],
       }),
@@ -567,7 +620,6 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
 test("the direct editor model rejects inconsistent finger capacities for one physical hold", () => {
   assert.throws(
     () => validateEditorDocument({
-      schemaVersion: 1,
       canvas: { width: 100, height: 50 },
       regions: [
         {
@@ -591,7 +643,6 @@ test("the direct editor model rejects inconsistent finger capacities for one phy
 test("the direct editor model rejects invalid and inconsistent hand capacities", () => {
   assert.throws(
     () => validateEditorDocument({
-      schemaVersion: 1,
       canvas: { width: 100, height: 50 },
       regions: [{
         key: "hold-1-piece-0",
@@ -605,7 +656,6 @@ test("the direct editor model rejects invalid and inconsistent hand capacities",
 
   assert.throws(
     () => validateEditorDocument({
-      schemaVersion: 1,
       canvas: { width: 100, height: 50 },
       regions: [
         {

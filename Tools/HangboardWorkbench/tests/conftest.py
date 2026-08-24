@@ -22,7 +22,6 @@ def board_document(
     name: str = "Fixture Board",
 ) -> dict[str, Any]:
     return {
-        "schemaVersion": 1,
         "id": board_id,
         "manufacturer": manufacturer,
         "name": name,
@@ -30,12 +29,21 @@ def board_document(
         "productURL": f"https://example.com/{board_id}",
         "dimensions": "20 × 10 cm",
         "aspectRatio": 1774 / 457,
-        "presentation": {"assetPath": "assets/primary.png"},
+        "presentations": [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": 1774 / 457,
+                "default": True,
+            }
+        ],
         "holds": [
             {
                 "id": "hold-left",
                 "name": "Left hold",
                 "kind": "jug",
+                "presentationID": "primary",
                 "geometry": [
                     {
                         "frame": {"x": 0.05, "y": 0.2, "width": 0.1, "height": 0.3},

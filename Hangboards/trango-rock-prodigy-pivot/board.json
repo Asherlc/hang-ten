@@ -6,19 +6,9 @@
   "productURL": "https://trango.com/products/rock-prodigy-pivot?variant=33101615890537",
   "dimensions": "15.5 \u00d7 5 \u00d7 2.5 in",
   "aspectRatio": 2.0,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 2.0,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "upper-sloped-crimp-left",
-      "presentationID": "primary",
       "name": "Left upper sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -138,11 +128,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "upper-sloped-crimp-right",
-      "presentationID": "primary",
       "name": "Right upper sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -262,11 +252,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-sloped-crimp-left",
-      "presentationID": "primary",
       "name": "Left outer sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -371,11 +361,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-sloped-crimp-right",
-      "presentationID": "primary",
       "name": "Right outer sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -480,11 +470,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "variable-edge-left",
-      "presentationID": "primary",
       "name": "Left variable-depth edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -494,10 +484,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.123321118202,
-            "y": 0.528092955682,
-            "width": 0.33342389212,
-            "height": 0.104064522584
+            "x": 0.1216040298461914,
+            "y": 0.5282745336914063,
+            "width": 0.3388272079467773,
+            "height": 0.11334546630859374
           },
           "shape": {
             "type": "path",
@@ -505,82 +495,98 @@
               {
                 "command": "move",
                 "to": [
-                  0.053398061741,
-                  0.28067589323
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.94107516185,
-                  0.000443542685
+                  0.06358984653084004,
+                  0.09709666091654981
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.972054046634,
-                  -0.009336238862
+                  0.24686910670688414,
+                  -0.018390975477844962
                 ],
                 "control2": [
-                  0.998404605398,
-                  0.143662586508
+                  0.725431619388777,
+                  -0.028889851513699036
                 ],
                 "to": [
-                  0.999930783218,
-                  0.342175971891
+                  0.9494396040483865,
+                  0.05510115677313354
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  1.001456961038,
-                  0.540689357273
+                  1.0003505096528431,
+                  0.11809441298825799
                 ],
                 "control2": [
-                  0.977580823043,
-                  0.709544326176
+                  1.0105326907737344,
+                  0.32807193370533944
                 ],
                 "to": [
-                  0.946601938259,
-                  0.719324107723
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.05892483815,
-                  0.999556458268
+                  0.9901683285319518,
+                  0.5170517023507127
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.027945953366,
-                  1.009336228981
+                  0.9698039662901691,
+                  0.7690247272112104
                 ],
                 "control2": [
-                  0.001595394602,
-                  0.856337414445
+                  0.9188930606857125,
+                  0.9160089917131675
                 ],
                 "to": [
-                  6.9216782e-05,
-                  0.657824029062
+                  0.8374356117185817,
+                  0.9580044958565836
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  -0.001456961038,
-                  0.45931064368
+                  0.6134276270589722,
+                  1.010498876035854
                 ],
                 "control2": [
-                  0.022419176957,
-                  0.290455674777
+                  0.2774156500695582,
+                  1.0209977520717082
                 ],
                 "to": [
-                  0.053398061741,
-                  0.28067589323
+                  0.07377202765173138,
+                  0.9475056198207297
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01267894092638334,
+                  0.8845123636056053
+                ],
+                "control2": [
+                  -0.007685421315399337,
+                  0.6955325949602319
+                ],
+                "to": [
+                  0.0024967598054920015,
+                  0.4855550742431505
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01267894092638334,
+                  0.2860764295619231
+                ],
+                "control2": [
+                  0.02286112204727468,
+                  0.16008991713167425
+                ],
+                "to": [
+                  0.06358984653084004,
+                  0.09709666091654981
                 ]
               },
               {
@@ -592,17 +598,13 @@
             "type": "recess",
             "rimInsetFraction": 0.08,
             "depth": "deep"
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": -2.820401178291945
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "variable-edge-right",
-      "presentationID": "primary",
       "name": "Right variable-depth edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -612,10 +614,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.542415975621,
-            "y": 0.53070583061,
-            "width": 0.333976372321,
-            "height": 0.104509761454
+            "x": 0.5395687622070313,
+            "y": 0.5282745336914063,
+            "width": 0.3388272079467773,
+            "height": 0.11334546630859374
           },
           "shape": {
             "type": "path",
@@ -623,82 +625,98 @@
               {
                 "command": "move",
                 "to": [
-                  0.056936183593,
-                  0.000514877747
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.948921900484,
-                  0.310163701358
+                  0.9364101534691601,
+                  0.09709666091654981
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.978704728901,
-                  0.320502669666
+                  0.7531308932931159,
+                  -0.018390975477844962
                 ],
                 "control2": [
-                  1.001537106474,
-                  0.483193923476
+                  0.274568380611223,
+                  -0.028889851513699036
                 ],
                 "to": [
-                  0.999919440782,
-                  0.67354478482
+                  0.050560395951613504,
+                  0.05510115677313354
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.99830177509,
-                  0.863895635377
+                  -0.00035050965284318423,
+                  0.11809441298825799
                 ],
                 "control2": [
-                  0.972846646512,
-                  1.00982409151
+                  -0.010532690773734523,
+                  0.32807193370533944
                 ],
                 "to": [
-                  0.943063816407,
-                  0.999485123202
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.051078099516,
-                  0.689836299591
+                  0.009831671468048154,
+                  0.5170517023507127
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.021295271099,
-                  0.679497320495
+                  0.030196033709830834,
+                  0.7690247272112104
                 ],
                 "control2": [
-                  -0.001537106474,
-                  0.516806066686
+                  0.08110693931428753,
+                  0.9160089917131675
                 ],
                 "to": [
-                  8.0559218e-05,
-                  0.326455216129
+                  0.16256438828141825,
+                  0.9580044958565836
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.00169822491,
-                  0.136104365572
+                  0.38657237294102775,
+                  1.010498876035854
                 ],
                 "control2": [
-                  0.027153353488,
-                  -0.009824101349
+                  0.7225843499304418,
+                  1.0209977520717082
                 ],
                 "to": [
-                  0.056936183593,
-                  0.000514877747
+                  0.9262279723482687,
+                  0.9475056198207297
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.9873210590736167,
+                  0.8845123636056053
+                ],
+                "control2": [
+                  1.0076854213153994,
+                  0.6955325949602319
+                ],
+                "to": [
+                  0.9975032401945081,
+                  0.4855550742431505
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.9873210590736167,
+                  0.2860764295619231
+                ],
+                "control2": [
+                  0.9771388779527254,
+                  0.16008991713167425
+                ],
+                "to": [
+                  0.9364101534691601,
+                  0.09709666091654981
                 ]
               },
               {
@@ -710,17 +728,13 @@
             "type": "recess",
             "rimInsetFraction": 0.08,
             "depth": "deep"
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 3.108985872876474
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "medium-crimp-left",
-      "presentationID": "primary",
       "name": "Left medium crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -845,11 +859,11 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "medium-crimp-right",
-      "presentationID": "primary",
       "name": "Right medium crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -974,11 +988,11 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "large-crimp-left",
-      "presentationID": "primary",
       "name": "Left large crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -1103,11 +1117,11 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "large-crimp-right",
-      "presentationID": "primary",
       "name": "Right large crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -1232,11 +1246,11 @@
             "rimInsetFraction": 0.1
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "two-finger-pocket-left",
-      "presentationID": "primary",
       "name": "Left two-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1363,11 +1377,11 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "two-finger-pocket-right",
-      "presentationID": "primary",
       "name": "Right two-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1494,11 +1508,11 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "three-finger-pocket-left",
-      "presentationID": "primary",
       "name": "Left three-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1640,11 +1654,11 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "three-finger-pocket-right",
-      "presentationID": "primary",
       "name": "Right three-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1786,20 +1800,20 @@
             "depth": "deep"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-wedge-pinch-left",
-      "presentationID": "primary",
       "name": "Left outer wedge jug and pinch surface",
       "kind": "pinch",
       "geometry": [
         {
           "frame": {
-            "x": 0.021392401353,
-            "y": 0.279277184893,
-            "width": 0.208488564825,
-            "height": 0.299997793965
+            "x": 0.0263,
+            "y": 0.2831930078125255,
+            "width": 0.20672478332512037,
+            "height": 0.289997242126384
           },
           "shape": {
             "type": "path",
@@ -1808,96 +1822,127 @@
                 "command": "move",
                 "to": [
                   0.0,
-                  0.863864924352
+                  0.9753437312489845
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.03383722088,
-                  0.746566391755
+                  0.0,
+                  0.8413079738230002
                 ],
                 "control2": [
-                  0.020624632356,
-                  0.643066795651
+                  0.020800602283040495,
+                  0.7278931021536158
                 ],
                 "to": [
-                  0.061873897069,
-                  0.603199835825
+                  0.06240180684912148,
+                  0.6866513306383947
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.321068793312,
-                  0.341519899549
+                  0.26000752853851056,
+                  0.35671715851157326
                 ],
                 "control2": [
-                  0.537627433052,
-                  0.072417920721
+                  0.47841385251094015,
+                  0.07833520077928345
                 ],
                 "to": [
-                  0.66137522719,
-                  0.022584220939
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.963501049214,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.644626942411
+                  0.6032174662091832,
+                  0.026782986384751788
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.443752327003,
-                  0.698807836882
+                  0.7176207787664103,
+                  -0.004148342252169301
                 ],
                 "control2": [
-                  0.56955848281,
-                  0.950263534126
+                  0.8320240913226286,
+                  -0.004148342252169301
                 ],
                 "to": [
-                  0.244258552199,
-                  0.983995950533
+                  0.8944258981717501,
+                  0.006162100627141202
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.091227405825,
-                  0.993962694248
+                  0.9672280061628962,
+                  0.026782986384751788
                 ],
                 "control2": [
-                  0.066203255657,
-                  1.010578975773
+                  1.0088292107289771,
+                  0.1917500724476573
                 ],
                 "to": [
-                  0.066203255657,
-                  0.99064549586
+                  0.9984289095869525,
+                  0.5216842445744787
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.038250771077,
-                  0.944295609745
+                  0.9152265004547906,
+                  0.5526155732113999
                 ],
                 "control2": [
-                  0.01471183399,
-                  0.926573592918
+                  0.8424243924646532,
+                  0.5732364589700208
+                ],
+                "to": [
+                  0.7904228867565475,
+                  0.5835469018483209
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.6864198753413451,
+                  0.6247886733645525
+                ],
+                "control2": [
+                  0.5928171650671584,
+                  0.7072722163960051
+                ],
+                "to": [
+                  0.488814153651956,
+                  0.7691348736698473
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.32240933538763206,
+                  0.8722393024599212
+                ],
+                "control2": [
+                  0.15600451712330812,
+                  0.9547228454913739
+                ],
+                "to": [
+                  0.031200903425065155,
+                  0.9959646170065951
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.010400301142024662,
+                  1.0062750598859056
+                ],
+                "control2": [
+                  0.0,
+                  0.9959646170065951
                 ],
                 "to": [
                   0.0,
-                  0.863864924352
+                  0.9753437312489845
                 ]
               },
               {
@@ -2010,11 +2055,266 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "outer-wedge-pinch-right",
+      "name": "Right outer wedge jug and pinch surface",
+      "kind": "pinch",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.7669752166748797,
+            "y": 0.2831930078125255,
+            "width": 0.20672478332512037,
+            "height": 0.289997242126384
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.9753437312489845
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.8413079738230002
+                ],
+                "control2": [
+                  0.9791993977169595,
+                  0.7278931021536158
+                ],
+                "to": [
+                  0.9375981931508786,
+                  0.6866513306383947
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.7399924714614894,
+                  0.35671715851157326
+                ],
+                "control2": [
+                  0.5215861474890597,
+                  0.07833520077928345
+                ],
+                "to": [
+                  0.39678253379081685,
+                  0.026782986384751788
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.28237922123358966,
+                  -0.004148342252169301
+                ],
+                "control2": [
+                  0.1679759086773714,
+                  -0.004148342252169301
+                ],
+                "to": [
+                  0.10557410182824992,
+                  0.006162100627141202
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.03277199383710376,
+                  0.026782986384751788
+                ],
+                "control2": [
+                  -0.008829210728977235,
+                  0.1917500724476573
+                ],
+                "to": [
+                  0.001571090413047427,
+                  0.5216842445744787
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.08477349954520941,
+                  0.5526155732113999
+                ],
+                "control2": [
+                  0.15757560753534675,
+                  0.5732364589700208
+                ],
+                "to": [
+                  0.20957711324345238,
+                  0.5835469018483209
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.31358012465865487,
+                  0.6247886733645525
+                ],
+                "control2": [
+                  0.4071828349328415,
+                  0.7072722163960051
+                ],
+                "to": [
+                  0.5111858463480439,
+                  0.7691348736698473
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.6775906646123679,
+                  0.8722393024599212
+                ],
+                "control2": [
+                  0.8439954828766919,
+                  0.9547228454913739
+                ],
+                "to": [
+                  0.9687990965749348,
+                  0.9959646170065951
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.9895996988579753,
+                  1.0062750598859056
+                ],
+                "control2": [
+                  1.0,
+                  0.9959646170065951
+                ],
+                "to": [
+                  1.0,
+                  0.9753437312489845
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        },
+        {
+          "frame": {
+            "x": 0.7007399999999999,
+            "y": 0.6559806768798734,
+            "width": 0.08352,
+            "height": 0.06469686218262324
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.08252831652088234
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.760416666667,
+                  -0.06616513901076337
+                ],
+                "control2": [
+                  0.447916666667,
+                  0.013900567813718168
+                ],
+                "to": [
+                  0.25,
+                  0.10540423275660372
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.104166666667,
+                  0.19690789769948924
+                ],
+                "control2": [
+                  0.010416666667,
+                  0.3684772694668563
+                ],
+                "to": [
+                  0.0,
+                  0.517170724998502
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.052083333333,
+                  0.7688058035914372
+                ],
+                "control2": [
+                  0.208333333333,
+                  0.9632510915945258
+                ],
+                "to": [
+                  0.375,
+                  0.9975649659475646
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.583333333333,
+                  1.020440882183286
+                ],
+                "control2": [
+                  0.708333333333,
+                  0.8831853847689576
+                ],
+                "to": [
+                  0.78125,
+                  0.6773021386485517
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.864583333333,
+                  0.4256670600556165
+                ],
+                "control2": [
+                  0.947916666667,
+                  0.24265973017093206
+                ],
+                "to": [
+                  1.0,
+                  0.08252831652088234
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-sloper-left",
-      "presentationID": "primary",
       "name": "Left lower rotation sloper",
       "kind": "sloper",
       "geometry": [
@@ -2250,11 +2550,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-sloper-right",
-      "presentationID": "primary",
       "name": "Right lower rotation sloper",
       "kind": "sloper",
       "geometry": [
@@ -2490,7 +2790,17 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

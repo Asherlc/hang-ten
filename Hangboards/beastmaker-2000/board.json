@@ -6,19 +6,9 @@
   "productURL": "https://www.beastmaker.co.uk/products/beastmaker-2000-series",
   "dimensions": "580 \u00d7 150 \u00d7 58 mm",
   "aspectRatio": 3.6117021276595747,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 3.6117021276595747,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "top-sloper-1",
-      "presentationID": "primary",
       "name": "Top Sloper 1",
       "kind": "sloper",
       "geometry": [
@@ -101,11 +91,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-2",
-      "presentationID": "primary",
       "name": "Top Sloper 2",
       "kind": "sloper",
       "geometry": [
@@ -162,11 +152,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-3",
-      "presentationID": "primary",
       "name": "Top Sloper 3",
       "kind": "sloper",
       "geometry": [
@@ -218,11 +208,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-sloper-4",
-      "presentationID": "primary",
       "name": "Top Sloper 4",
       "kind": "sloper",
       "geometry": [
@@ -279,11 +269,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-1",
-      "presentationID": "primary",
       "name": "Front Upper 1",
       "kind": "pocket",
       "geometry": [
@@ -388,11 +378,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-2",
-      "presentationID": "primary",
       "name": "Front Upper 2",
       "kind": "pocket",
       "geometry": [
@@ -497,11 +487,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-1",
-      "presentationID": "primary",
       "name": "Front Middle 1",
       "kind": "pocket",
       "geometry": [
@@ -607,11 +597,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-2",
-      "presentationID": "primary",
       "name": "Front Middle 2",
       "kind": "pocket",
       "geometry": [
@@ -703,11 +693,11 @@
           }
         }
       ],
-      "fingerCapacity": 1
+      "fingerCapacity": 1,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-3",
-      "presentationID": "primary",
       "name": "Front Middle 3",
       "kind": "pocket",
       "geometry": [
@@ -813,11 +803,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-4",
-      "presentationID": "primary",
       "name": "Front Middle 4",
       "kind": "pocket",
       "geometry": [
@@ -923,11 +913,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-5",
-      "presentationID": "primary",
       "name": "Front Middle 5",
       "kind": "pocket",
       "geometry": [
@@ -1033,11 +1023,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-6",
-      "presentationID": "primary",
       "name": "Front Middle 6",
       "kind": "pocket",
       "geometry": [
@@ -1143,11 +1133,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-7",
-      "presentationID": "primary",
       "name": "Front Middle 7",
       "kind": "pocket",
       "geometry": [
@@ -1253,11 +1243,11 @@
           }
         }
       ],
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-8",
-      "presentationID": "primary",
       "name": "Front Middle 8",
       "kind": "pocket",
       "geometry": [
@@ -1349,11 +1339,11 @@
           }
         }
       ],
-      "fingerCapacity": 1
+      "fingerCapacity": 1,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-9",
-      "presentationID": "primary",
       "name": "Front Middle 9",
       "kind": "pocket",
       "geometry": [
@@ -1459,11 +1449,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-1",
-      "presentationID": "primary",
       "name": "Front Lower 1",
       "kind": "edge",
       "geometry": [
@@ -1569,11 +1559,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-2",
-      "presentationID": "primary",
       "name": "Front Lower 2",
       "kind": "pocket",
       "geometry": [
@@ -1665,11 +1655,11 @@
           }
         }
       ],
-      "fingerCapacity": 1
+      "fingerCapacity": 1,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-3",
-      "presentationID": "primary",
       "name": "Front Lower 3",
       "kind": "pocket",
       "geometry": [
@@ -1775,11 +1765,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-4",
-      "presentationID": "primary",
       "name": "Front Lower 4",
       "kind": "pocket",
       "geometry": [
@@ -1885,11 +1875,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-5",
-      "presentationID": "primary",
       "name": "22 mm Center Edge",
       "kind": "pocket",
       "geometry": [
@@ -1996,11 +1986,11 @@
         }
       ],
       "sizeMillimeters": 22,
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-6",
-      "presentationID": "primary",
       "name": "Front Lower 6",
       "kind": "pocket",
       "geometry": [
@@ -2106,11 +2096,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-7",
-      "presentationID": "primary",
       "name": "Front Lower 7",
       "kind": "pocket",
       "geometry": [
@@ -2216,11 +2206,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-8",
-      "presentationID": "primary",
       "name": "Front Lower 8",
       "kind": "pocket",
       "geometry": [
@@ -2312,11 +2302,11 @@
           }
         }
       ],
-      "fingerCapacity": 1
+      "fingerCapacity": 1,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-9",
-      "presentationID": "primary",
       "name": "Front Lower 9",
       "kind": "pocket",
       "geometry": [
@@ -2422,11 +2412,11 @@
           }
         }
       ],
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "presentationID": "primary"
     },
     {
       "id": "hold-26",
-      "presentationID": "primary",
       "name": "Hold 26",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -2518,11 +2508,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-27",
-      "presentationID": "primary",
       "name": "Hold 27",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -2614,11 +2604,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-28",
-      "presentationID": "primary",
       "name": "Hold 28",
       "kind": "sloper",
       "fingerCapacity": 3,
@@ -2701,7 +2691,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.6117021276595747,
+      "default": true
     }
   ]
 }

@@ -6,19 +6,9 @@
   "productURL": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
   "dimensions": "590 \u00d7 148 \u00d7 40 mm",
   "aspectRatio": 3.6236559139784945,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 3.6236559139784945,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "top-rim",
-      "presentationID": "primary",
       "name": "Top rim",
       "kind": "jug",
       "geometry": [
@@ -85,11 +75,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-1",
-      "presentationID": "primary",
       "name": "Upper pocket 1",
       "kind": "pocket",
       "geometry": [
@@ -195,11 +185,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-2",
-      "presentationID": "primary",
       "name": "Upper pocket 2",
       "kind": "pocket",
       "geometry": [
@@ -305,11 +295,11 @@
           }
         }
       ],
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-3",
-      "presentationID": "primary",
       "name": "Upper pocket 3",
       "kind": "pocket",
       "geometry": [
@@ -415,11 +405,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-4",
-      "presentationID": "primary",
       "name": "Upper pocket 4",
       "kind": "pocket",
       "geometry": [
@@ -525,11 +515,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-5",
-      "presentationID": "primary",
       "name": "Upper pocket 5",
       "kind": "pocket",
       "geometry": [
@@ -635,11 +625,11 @@
           }
         }
       ],
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-6",
-      "presentationID": "primary",
       "name": "Upper pocket 6",
       "kind": "pocket",
       "geometry": [
@@ -745,11 +735,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-1",
-      "presentationID": "primary",
       "name": "Middle pocket 1",
       "kind": "pocket",
       "geometry": [
@@ -855,11 +845,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-2",
-      "presentationID": "primary",
       "name": "Middle pocket 2",
       "kind": "pocket",
       "geometry": [
@@ -965,11 +955,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-3",
-      "presentationID": "primary",
       "name": "Middle pocket 3",
       "kind": "pocket",
       "geometry": [
@@ -1075,11 +1065,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-middle-4",
-      "presentationID": "primary",
       "name": "Middle pocket 4",
       "kind": "pocket",
       "geometry": [
@@ -1185,11 +1175,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-1",
-      "presentationID": "primary",
       "name": "Lower pocket 1",
       "kind": "pocket",
       "geometry": [
@@ -1295,11 +1285,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-2",
-      "presentationID": "primary",
       "name": "Lower pocket 2",
       "kind": "pocket",
       "geometry": [
@@ -1405,11 +1395,11 @@
           }
         }
       ],
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-3",
-      "presentationID": "primary",
       "name": "Lower pocket 3",
       "kind": "pocket",
       "geometry": [
@@ -1515,11 +1505,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-4",
-      "presentationID": "primary",
       "name": "Lower pocket 4",
       "kind": "pocket",
       "geometry": [
@@ -1625,11 +1615,11 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-5",
-      "presentationID": "primary",
       "name": "Lower pocket 5",
       "kind": "pocket",
       "geometry": [
@@ -1735,11 +1725,11 @@
           }
         }
       ],
-      "fingerCapacity": 2
+      "fingerCapacity": 2,
+      "presentationID": "primary"
     },
     {
       "id": "front-lower-6",
-      "presentationID": "primary",
       "name": "Lower pocket 6",
       "kind": "pocket",
       "geometry": [
@@ -1845,7 +1835,17 @@
           }
         }
       ],
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.6236559139784945,
+      "default": true
     }
   ]
 }

@@ -38,6 +38,7 @@ from workbench_fixtures import (  # noqa: E402
     CANONICAL_PACKAGE,
     PRIMARY_IMAGE,
     board_document,
+    multi_presentation_board_document,
 )
 
 
@@ -150,6 +151,116 @@ def _package_snapshot(package: Path) -> dict[str, bytes]:
         for path in sorted(package.rglob("*"))
         if path.is_file()
     }
+
+
+def _write_multi_presentation_package(library: Path) -> Path:
+    package = library / "fixture-multi-presentation"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    shutil.copyfile(PRIMARY_IMAGE, assets / "back.png")
+    _write_json(
+        package / "board.json", multi_presentation_board_document("fixture.multi")
+    )
+    return package
+
+
+def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+
+    package = board_package.load_board_package(package_root)
+    front = board_package.editor_document(package)
+    back = board_package.editor_document(package, "back")
+
+    assert [presentation.id for presentation in package.presentations] == ["front", "back"]
+    assert front["presentationID"] == "front"
+    assert back["presentationID"] == "back"
+    assert {region["metadata"]["presentationID"] for region in front["regions"]} == {"front"}
+    assert {region["metadata"]["presentationID"] for region in back["regions"]} == {"back"}
+    assert [region["metadata"]["holdID"] for region in front["regions"]] == [
+        "hold-left",
+        "hold-left",
+    ]
+    assert [region["metadata"]["holdID"] for region in back["regions"]] == [
+        "hold-back",
+        "hold-back",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (lambda board: board.__setitem__("presentation", {"assetPath": "assets/primary.png"}), "unknown keys"),
+        (lambda board: board.pop("presentations"), "missing keys"),
+        (lambda board: board["holds"][0].pop("presentationID"), "presentationID"),
+        (lambda board: board["holds"][0].__setitem__("presentationID", "missing"), "presentationID is unknown"),
+    ],
+)
+def test_rejects_legacy_or_incomplete_presentation_shape(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(package_root, mutation)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+def test_save_changes_only_the_selected_presentation_and_preserves_assets(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package, "front")
+    before = _package_snapshot(package_root)
+    back_before = copy.deepcopy(package.board["holds"][1])
+    for region in document["regions"]:
+        region["type"] = "sloper"
+    document["regions"].append(
+        {
+            "id": 3,
+            "key": "new-front-piece-0",
+            "type": "edge",
+            "displayPath": "M 800 200 L 900 200 L 900 300 L 800 300 Z",
+            "metadata": {
+                "holdID": "new-front",
+                "pieceIndex": 0,
+                "presentationID": "front",
+            },
+        }
+    )
+
+    saved = board_package.save_editor_document(
+        library, "fixture-multi-presentation", document
+    )
+
+    assert board_package.editor_document(saved, "front")["presentationID"] == "front"
+    assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
+    new_hold = next(hold for hold in saved.board["holds"] if hold["id"] == "new-front")
+    assert new_hold["presentationID"] == "front"
+    after = _package_snapshot(package_root)
+    assert after["assets/primary.png"] == before["assets/primary.png"]
+    assert after["assets/back.png"] == before["assets/back.png"]
+
+
+def test_save_rejects_the_removed_editor_document_schema_version(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["schemaVersion"] = 1
+
+    with pytest.raises(BoardPackageError, match="unknown keys.*schemaVersion"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 def test_canonical_package_has_the_exact_single_file_inventory() -> None:
@@ -557,7 +668,10 @@ def test_rejects_sidecars_and_extra_package_files(
     extra.parent.mkdir(parents=True, exist_ok=True)
     extra.write_bytes(b"{}")
 
-    with pytest.raises(BoardPackageError, match="only board.json and assets/primary.png"):
+    with pytest.raises(
+        BoardPackageError,
+        match="only board.json and assets/|assets must exactly match",
+    ):
         board_package.load_board_package(package)
 
 
@@ -781,7 +895,7 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     package = board_package.load_board_package(package_root)
     hold = package.board["holds"][0]
 
-    assert set(hold) == {"id", "name", "kind", "geometry"}
+    assert set(hold) == {"id", "name", "kind", "presentationID", "geometry"}
     assert package.hold_frame("hold-left").to_json() == {
         "x": 0.05,
         "y": 0.1,
@@ -816,8 +930,8 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
         "hold-left-piece-1",
     ]
     assert [region["metadata"] for region in document["regions"]] == [
-        {"holdID": "hold-left", "pieceIndex": 0},
-        {"holdID": "hold-left", "pieceIndex": 1},
+        {"holdID": "hold-left", "pieceIndex": 0, "presentationID": "primary"},
+        {"holdID": "hold-left", "pieceIndex": 1, "presentationID": "primary"},
     ]
 
 
@@ -1270,7 +1384,11 @@ def test_save_adds_a_new_hold(tmp_path: Path) -> None:
             "key": "hold-right-piece-0",
             "type": "pinch",
             "displayPath": "M 900 100 L 950 100 L 950 150 Z",
-            "metadata": {"holdID": "hold-right", "pieceIndex": 0},
+            "metadata": {
+                "holdID": "hold-right",
+                "pieceIndex": 0,
+                "presentationID": "primary",
+            },
         }
     )
 

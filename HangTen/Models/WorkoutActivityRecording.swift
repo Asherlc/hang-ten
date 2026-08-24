@@ -88,7 +88,12 @@ internal enum BoardTargetResolver {
         }
         if let feature = target.feature {
             let exact = matching(feature, fingerCapacity: target.fingerCapacity, on: board)
-            if !exact.isEmpty { return exact.map(\.id) }
+            if !exact.isEmpty {
+                if feature.holdKind == .pocket, target.fingerCapacity != nil {
+                    return onePocketPerHand(from: exact).map(\.id)
+                }
+                return exact.map(\.id)
+            }
             for fallback in target.fallbackFeatures {
                 let matches = matching(fallback, fingerCapacity: target.fingerCapacity, on: board)
                 if !matches.isEmpty { return matches.map(\.id) }
@@ -227,9 +232,8 @@ internal enum BoardTargetResolver {
         return pockets.filter { $0.fingerCapacity == capacity }
     }
 
-    /// An unconstrained edge-to-pocket substitution represents a two-handed
-    /// hang, so highlight one pocket on each half of the board rather than
-    /// every pocket that could theoretically satisfy the substitution.
+    /// A bilateral pocket target represents a two-handed hang, so highlight
+    /// one pocket on each half of the board rather than every eligible pocket.
     private static func onePocketPerHand(from pockets: [BoardHold]) -> [BoardHold] {
         let left = pockets.first { $0.frame.x + $0.frame.width / 2 < 0.5 }
         let right = pockets.first { $0.frame.x + $0.frame.width / 2 >= 0.5 }

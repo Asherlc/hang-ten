@@ -6,19 +6,9 @@
   "productURL": "https://www.metoliusclimbing.com/products/contact-training-board",
   "dimensions": "32.5 \u00d7 11 \u00d7 2.625 in",
   "aspectRatio": 2.0,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 2.0,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "pinch-left",
-      "presentationID": "primary",
       "name": "Left variable-width pinch",
       "kind": "pinch",
       "geometry": [
@@ -92,11 +82,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-left",
-      "presentationID": "primary",
       "name": "Left outer jug",
       "kind": "jug",
       "geometry": [
@@ -155,11 +145,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-sloper-center",
-      "presentationID": "primary",
       "name": "Center 53 mm flat sloper",
       "kind": "sloper",
       "geometry": [
@@ -225,11 +215,11 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-4-left",
-      "presentationID": "primary",
       "name": "Left #4 30 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -336,11 +326,11 @@
             "rotationDegrees": 0.057589686092569536
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-5-left",
-      "presentationID": "primary",
       "name": "Left #5 40 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 40,
@@ -447,11 +437,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-6-left",
-      "presentationID": "primary",
       "name": "Left #6 20 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 20,
@@ -558,11 +548,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-7-left",
-      "presentationID": "primary",
       "name": "Left #7 30 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -669,11 +659,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-8-left",
-      "presentationID": "primary",
       "name": "Left #8 32 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 32,
@@ -780,11 +770,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-9-left",
-      "presentationID": "primary",
       "name": "Left #9 20 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 20,
@@ -891,11 +881,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-10-left",
-      "presentationID": "primary",
       "name": "Left #10 25 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -1002,11 +992,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-11-left",
-      "presentationID": "primary",
       "name": "Left #11 25 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -1113,11 +1103,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-12-left",
-      "presentationID": "primary",
       "name": "Left #12 12 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 12,
@@ -1224,11 +1214,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-13-left",
-      "presentationID": "primary",
       "name": "Left #13 17 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 17,
@@ -1335,11 +1325,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-14-left",
-      "presentationID": "primary",
       "name": "Left #14 17 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 17,
@@ -1446,11 +1436,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-16-center",
-      "presentationID": "primary",
       "name": "Center #16 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1556,11 +1546,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-17-center",
-      "presentationID": "primary",
       "name": "Center #17 35 mm edge",
       "kind": "edge",
       "sizeMillimeters": 35,
@@ -1680,11 +1670,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-18-center",
-      "presentationID": "primary",
       "name": "Center #18 28 mm edge",
       "kind": "edge",
       "sizeMillimeters": 28,
@@ -1804,11 +1794,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-19-center",
-      "presentationID": "primary",
       "name": "Center #19 23 mm edge",
       "kind": "edge",
       "sizeMillimeters": 23,
@@ -1928,11 +1918,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-14-right",
-      "presentationID": "primary",
       "name": "Right #14 17 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 17,
@@ -2039,11 +2029,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-13-right",
-      "presentationID": "primary",
       "name": "Right #13 17 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 17,
@@ -2150,11 +2140,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-12-right",
-      "presentationID": "primary",
       "name": "Right #12 12 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 12,
@@ -2261,11 +2251,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-11-right",
-      "presentationID": "primary",
       "name": "Right #11 25 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -2372,11 +2362,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-10-right",
-      "presentationID": "primary",
       "name": "Right #10 25 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -2483,11 +2473,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-9-right",
-      "presentationID": "primary",
       "name": "Right #9 20 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 20,
@@ -2594,11 +2584,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-8-right",
-      "presentationID": "primary",
       "name": "Right #8 32 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 32,
@@ -2705,11 +2695,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-7-right",
-      "presentationID": "primary",
       "name": "Right #7 30 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -2816,11 +2806,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-6-right",
-      "presentationID": "primary",
       "name": "Right #6 20 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 20,
@@ -2927,11 +2917,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-5-right",
-      "presentationID": "primary",
       "name": "Right #5 40 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 40,
@@ -3038,11 +3028,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-4-right",
-      "presentationID": "primary",
       "name": "Right #4 30 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -3149,11 +3139,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-31",
-      "presentationID": "primary",
       "name": "Hold 31",
       "kind": "jug",
       "geometry": [
@@ -3209,11 +3199,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "hold-32",
-      "presentationID": "primary",
       "name": "Hold 32",
       "kind": "pinch",
       "geometry": [
@@ -3284,7 +3274,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

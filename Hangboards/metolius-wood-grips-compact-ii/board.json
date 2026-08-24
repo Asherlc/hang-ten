@@ -6,19 +6,9 @@
   "productURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
   "dimensions": "24\" \u00d7 6.2\"",
   "aspectRatio": 3.88,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 3.88,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "jug-left",
-      "presentationID": "primary",
       "name": "Left outer jug",
       "kind": "jug",
       "geometry": [
@@ -81,11 +71,11 @@
       "fingerCapacity": 4,
       "features": [
         "jug"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-flat-left",
-      "presentationID": "primary",
       "name": "Left 56 mm flat sloper",
       "kind": "sloper",
       "geometry": [
@@ -141,11 +131,11 @@
       "fingerCapacity": 4,
       "features": [
         "largeSlope"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-round-center",
-      "presentationID": "primary",
       "name": "Center 56 mm round sloper",
       "kind": "sloper",
       "geometry": [
@@ -208,11 +198,11 @@
       "fingerCapacity": 4,
       "features": [
         "roundSloper"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-flat-right",
-      "presentationID": "primary",
       "name": "Right 56 mm flat sloper",
       "kind": "sloper",
       "geometry": [
@@ -268,11 +258,11 @@
       "fingerCapacity": 4,
       "features": [
         "largeSlope"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
-      "presentationID": "primary",
       "name": "Right outer jug",
       "kind": "jug",
       "geometry": [
@@ -342,11 +332,11 @@
       "fingerCapacity": 4,
       "features": [
         "jug"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-29-left",
-      "presentationID": "primary",
       "name": "Left 29 mm edge",
       "kind": "edge",
       "geometry": [
@@ -411,11 +401,11 @@
       "fingerCapacity": 4,
       "features": [
         "largeEdge"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-29-three-left",
-      "presentationID": "primary",
       "name": "Left 29 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -531,11 +521,11 @@
       "fingerCapacity": 3,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-29-two-left",
-      "presentationID": "primary",
       "name": "Left 29 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -651,11 +641,11 @@
       "fingerCapacity": 2,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-29-four-center",
-      "presentationID": "primary",
       "name": "Center 29 mm four-finger pocket",
       "kind": "pocket",
       "gripType": "fourFingerPocket",
@@ -771,11 +761,11 @@
       "fingerCapacity": 4,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-29-two-right",
-      "presentationID": "primary",
       "name": "Right 29 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -891,11 +881,11 @@
       "fingerCapacity": 2,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-29-three-right",
-      "presentationID": "primary",
       "name": "Right 29 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -1011,11 +1001,11 @@
       "fingerCapacity": 3,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-29-right",
-      "presentationID": "primary",
       "name": "Right 29 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1080,11 +1070,11 @@
       "fingerCapacity": 4,
       "features": [
         "largeEdge"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-19-left",
-      "presentationID": "primary",
       "name": "Left 19 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1157,11 +1147,11 @@
       "features": [
         "mediumEdge",
         "smallEdge"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-19-three-left",
-      "presentationID": "primary",
       "name": "Left 19 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -1277,11 +1267,11 @@
       "fingerCapacity": 3,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-19-three-right",
-      "presentationID": "primary",
       "name": "Right 19 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -1397,11 +1387,11 @@
       "fingerCapacity": 3,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-19-two-left",
-      "presentationID": "primary",
       "name": "Left 19 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1517,11 +1507,11 @@
       "fingerCapacity": 2,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-19-two-right",
-      "presentationID": "primary",
       "name": "Right 19 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1637,11 +1627,11 @@
       "fingerCapacity": 2,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-19-four-center",
-      "presentationID": "primary",
       "name": "Center 19 mm four-finger pocket",
       "kind": "pocket",
       "gripType": "fourFingerPocket",
@@ -1757,11 +1747,11 @@
       "fingerCapacity": 4,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-19-right",
-      "presentationID": "primary",
       "name": "Right 19 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1827,7 +1817,17 @@
       "features": [
         "mediumEdge",
         "smallEdge"
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.88,
+      "default": true
     }
   ]
 }

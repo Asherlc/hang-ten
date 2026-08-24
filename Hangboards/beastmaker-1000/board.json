@@ -6,19 +6,9 @@
   "productURL": "https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series",
   "dimensions": "580 \u00d7 150 mm",
   "aspectRatio": 3.861003861003861,
-  "presentations": [
-    {
-      "id": "primary",
-      "name": "Primary",
-      "assetPath": "assets/primary.png",
-      "aspectRatio": 3.861003861003861,
-      "default": true
-    }
-  ],
   "holds": [
     {
       "id": "jug-left",
-      "presentationID": "primary",
       "name": "Jug Left",
       "kind": "jug",
       "geometry": [
@@ -79,11 +69,11 @@
       "fingerCapacity": 4,
       "features": [
         "jug"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
-      "presentationID": "primary",
       "name": "Jug Right",
       "kind": "jug",
       "geometry": [
@@ -147,11 +137,11 @@
       "fingerCapacity": 4,
       "features": [
         "jug"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-35-left",
-      "presentationID": "primary",
       "name": "Sloper 35 Left",
       "kind": "sloper",
       "geometry": [
@@ -210,11 +200,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-35-right",
-      "presentationID": "primary",
       "name": "Sloper 35 Right",
       "kind": "sloper",
       "geometry": [
@@ -273,11 +263,11 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-center",
-      "presentationID": "primary",
       "name": "Sloper Center",
       "kind": "sloper",
       "geometry": [
@@ -329,11 +319,11 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-outer-left",
-      "presentationID": "primary",
       "name": "Pocket Top Outer Left",
       "kind": "pocket",
       "geometry": [
@@ -442,11 +432,11 @@
       "sizeMillimeters": 15,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-outer-right",
-      "presentationID": "primary",
       "name": "Pocket Top Outer Right",
       "kind": "pocket",
       "geometry": [
@@ -555,11 +545,11 @@
       "sizeMillimeters": 15,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-left",
-      "presentationID": "primary",
       "name": "Pocket Top Left",
       "kind": "pocket",
       "geometry": [
@@ -668,11 +658,11 @@
       "sizeMillimeters": 30,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-top-right",
-      "presentationID": "primary",
       "name": "Pocket Top Right",
       "kind": "pocket",
       "geometry": [
@@ -781,11 +771,11 @@
       "sizeMillimeters": 30,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-outer-left",
-      "presentationID": "primary",
       "name": "Pocket Middle Outer Left",
       "kind": "pocket",
       "geometry": [
@@ -894,11 +884,11 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-mid-left",
-      "presentationID": "primary",
       "name": "Pocket Middle Mid Left",
       "kind": "pocket",
       "geometry": [
@@ -1007,11 +997,11 @@
       "sizeMillimeters": 50,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-inner-left",
-      "presentationID": "primary",
       "name": "Pocket Middle Inner Left",
       "kind": "pocket",
       "geometry": [
@@ -1120,11 +1110,11 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-center",
-      "presentationID": "primary",
       "name": "Pocket Middle Center",
       "kind": "pocket",
       "geometry": [
@@ -1233,11 +1223,11 @@
       "sizeMillimeters": 53,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-inner-right",
-      "presentationID": "primary",
       "name": "Pocket Middle Inner Right",
       "kind": "pocket",
       "geometry": [
@@ -1346,11 +1336,11 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-mid-right",
-      "presentationID": "primary",
       "name": "Pocket Middle Mid Right",
       "kind": "pocket",
       "geometry": [
@@ -1459,11 +1449,11 @@
       "sizeMillimeters": 50,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-outer-right",
-      "presentationID": "primary",
       "name": "Pocket Middle Outer Right",
       "kind": "pocket",
       "geometry": [
@@ -1572,11 +1562,11 @@
       "sizeMillimeters": 45,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-outer-left",
-      "presentationID": "primary",
       "name": "Pocket Bottom Outer Left",
       "kind": "pocket",
       "geometry": [
@@ -1685,11 +1675,11 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-mid-left",
-      "presentationID": "primary",
       "name": "Pocket Bottom Mid Left",
       "kind": "pocket",
       "geometry": [
@@ -1798,11 +1788,11 @@
       "sizeMillimeters": 25,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-inner-left",
-      "presentationID": "primary",
       "name": "Pocket Bottom Inner Left",
       "kind": "pocket",
       "geometry": [
@@ -1911,11 +1901,11 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-inner-right",
-      "presentationID": "primary",
       "name": "Pocket Bottom Inner Right",
       "kind": "pocket",
       "geometry": [
@@ -2024,11 +2014,11 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-mid-right",
-      "presentationID": "primary",
       "name": "Pocket Bottom Mid Right",
       "kind": "pocket",
       "geometry": [
@@ -2137,11 +2127,11 @@
       "sizeMillimeters": 25,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-bottom-outer-right",
-      "presentationID": "primary",
       "name": "Pocket Bottom Outer Right",
       "kind": "pocket",
       "geometry": [
@@ -2250,7 +2240,17 @@
       "sizeMillimeters": 20,
       "features": [
         "pocket"
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 3.861003861003861,
+      "default": true
     }
   ]
 }
