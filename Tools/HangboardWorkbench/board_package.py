@@ -184,6 +184,7 @@ _EditorPiece = tuple[
     str,
     Any,
     dict[str, object] | None,
+    tuple[int, ...],
     int | None,
     dict[str, int] | None,
     int | None,
@@ -384,6 +385,9 @@ def editor_document(
                 region["shapeConstraint"] = _parse_shape_constraint(
                     piece["shapeConstraint"], f"hold {key}.shapeConstraint"
                 )
+            bendable_command_indexes = _bendable_command_indexes(piece)
+            if bendable_command_indexes:
+                region["bendableCommandIndexes"] = bendable_command_indexes
             if "fingerCapacity" in hold:
                 region["fingerCapacity"] = hold["fingerCapacity"]
             if "depthRangeMillimeters" in hold:
@@ -437,12 +441,22 @@ def save_editor_document(
             kind,
             path,
             shape_constraint,
+            bendable_command_indexes,
             finger_capacity,
             depth_range,
             hand_capacity,
         ) in parsed_regions.values():
             pieces_by_hold.setdefault(hold_id, []).append(
-                (piece_index, kind, path, shape_constraint, finger_capacity, depth_range, hand_capacity)
+                (
+                    piece_index,
+                    kind,
+                    path,
+                    shape_constraint,
+                    bendable_command_indexes,
+                    finger_capacity,
+                    depth_range,
+                    hand_capacity,
+                )
             )
         for pieces in pieces_by_hold.values():
             pieces.sort(key=lambda item: item[0])
@@ -512,7 +526,16 @@ def _apply_editor_document(
         pieces = pieces_by_hold[hold_id]
         existing = existing_by_id.get(hold_id)
         geometry: list[dict[str, Any]] = []
-        for piece_index, _kind, path, shape_constraint, _finger_capacity, _depth_range, _hand_capacity in pieces:
+        for (
+            piece_index,
+            _kind,
+            path,
+            shape_constraint,
+            bendable_command_indexes,
+            _finger_capacity,
+            _depth_range,
+            _hand_capacity,
+        ) in pieces:
             existing_geometry = existing["geometry"] if existing is not None else []
             if piece_index < len(existing_geometry):
                 piece = existing_geometry[piece_index]
@@ -525,12 +548,14 @@ def _apply_editor_document(
                     piece.pop("shapeConstraint", None)
                 else:
                     piece["shapeConstraint"] = dict(shape_constraint)
+                _apply_bendable_command_indexes(piece, bendable_command_indexes)
                 geometry.append(piece)
             else:
                 frame, shape = shape_for_path(path, width, height)
                 piece = {"frame": frame.to_json(), "shape": _rounded_json(shape)}
                 if shape_constraint is not None:
                     piece["shapeConstraint"] = dict(shape_constraint)
+                _apply_bendable_command_indexes(piece, bendable_command_indexes)
                 geometry.append(piece)
         hold_json = (
             existing
@@ -538,18 +563,18 @@ def _apply_editor_document(
             else {"id": hold_id, "name": _default_hold_name(hold_id)}
         )
         hold_json["kind"] = pieces[0][1]
-        if pieces[0][4] is None:
+        if pieces[0][5] is None:
             hold_json.pop("fingerCapacity", None)
         else:
-            hold_json["fingerCapacity"] = pieces[0][4]
-        if pieces[0][5] is None:
+            hold_json["fingerCapacity"] = pieces[0][5]
+        if pieces[0][6] is None:
             hold_json.pop("depthRangeMillimeters", None)
         else:
-            hold_json["depthRangeMillimeters"] = dict(pieces[0][5])
-        if pieces[0][6] is None:
+            hold_json["depthRangeMillimeters"] = dict(pieces[0][6])
+        if pieces[0][7] is None:
             hold_json.pop("handCapacity", None)
         else:
-            hold_json["handCapacity"] = pieces[0][6]
+            hold_json["handCapacity"] = pieces[0][7]
         hold_json["geometry"] = geometry
         if presentation_id is not None and copied_board.get("schemaVersion") == 2:
             hold_json["presentationID"] = presentation_id
@@ -589,7 +614,16 @@ def _current_display_paths(
     for hold_id, pieces in pieces_by_hold.items():
         hold = current_holds.get(hold_id)
         geometry = hold["geometry"] if hold is not None else []
-        for piece_index, _kind, _path, _shape_constraint, _finger_capacity, _depth_range, _hand_capacity in pieces:
+        for (
+            piece_index,
+            _kind,
+            _path,
+            _shape_constraint,
+            _bendable_command_indexes,
+            _finger_capacity,
+            _depth_range,
+            _hand_capacity,
+        ) in pieces:
             if piece_index < len(geometry):
                 piece = geometry[piece_index]
                 paths[(hold_id, piece_index)] = display_path_for_shape(
@@ -612,11 +646,20 @@ def _editor_document_is_dirty(
         hold = current_holds[hold_id]
         if (hold["kind"] != pieces[0][1]
             or len(hold["geometry"]) != len(pieces)
-            or hold.get("fingerCapacity") != pieces[0][4]
-            or hold.get("depthRangeMillimeters") != pieces[0][5]
-            or hold.get("handCapacity") != pieces[0][6]):
+            or hold.get("fingerCapacity") != pieces[0][5]
+            or hold.get("depthRangeMillimeters") != pieces[0][6]
+            or hold.get("handCapacity") != pieces[0][7]):
             return True
-        for piece_index, _kind, path, shape_constraint, _finger_capacity, _depth_range, _hand_capacity in pieces:
+        for (
+            piece_index,
+            _kind,
+            path,
+            shape_constraint,
+            bendable_command_indexes,
+            _finger_capacity,
+            _depth_range,
+            _hand_capacity,
+        ) in pieces:
             current_path = current_paths.get((hold_id, piece_index))
             if current_path is None or path.data != current_path.data:
                 return True
@@ -630,6 +673,8 @@ def _editor_document_is_dirty(
                 else None
             )
             if current_constraint != shape_constraint:
+                return True
+            if _bendable_command_indexes(piece) != list(bendable_command_indexes):
                 return True
     return False
 
@@ -1131,11 +1176,22 @@ def _validate_editor_document(
     require_presentation_id: bool = False,
 ) -> dict[
     str,
-    tuple[str, int, str, Any, dict[str, object] | None, int | None, dict[str, int] | None, int | None],
+    tuple[
+        str,
+        int,
+        str,
+        Any,
+        dict[str, object] | None,
+        tuple[int, ...],
+        int | None,
+        dict[str, int] | None,
+        int | None,
+    ],
 ]:
     """Parse and cross-validate an editor document, allowing added/removed/
     recategorized holds. Returns key -> (holdID, pieceIndex, kind, parsed path,
-    shape constraint, finger capacity, depth range, hand capacity)."""
+    shape constraint, bendable command indexes, finger capacity, depth range,
+    hand capacity)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
     _required_and_allowed_keys(
@@ -1160,7 +1216,17 @@ def _validate_editor_document(
 
     parsed: dict[
         str,
-        tuple[str, int, str, Any, dict[str, object] | None, int | None, dict[str, int] | None, int | None],
+        tuple[
+            str,
+            int,
+            str,
+            Any,
+            dict[str, object] | None,
+            tuple[int, ...],
+            int | None,
+            dict[str, int] | None,
+            int | None,
+        ],
     ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
     kind_by_hold: dict[str, str] = {}
@@ -1180,6 +1246,7 @@ def _validate_editor_document(
                 "displayPath",
                 "metadata",
                 "shapeConstraint",
+                "bendableCommandIndexes",
                 "fingerCapacity",
                 "depthRangeMillimeters",
                 "handCapacity",
@@ -1238,6 +1305,16 @@ def _validate_editor_document(
             )
             if "shapeConstraint" in region
             else None
+        )
+        bendable_command_indexes = (
+            _parse_bendable_command_indexes(
+                region["bendableCommandIndexes"],
+                f"editor region {key}.bendableCommandIndexes",
+                parsed_path,
+                shape_constraint,
+            )
+            if "bendableCommandIndexes" in region
+            else ()
         )
         if "fingerCapacity" in region:
             finger_capacity = region["fingerCapacity"]
@@ -1298,6 +1375,7 @@ def _validate_editor_document(
             kind,
             parsed_path,
             shape_constraint,
+            bendable_command_indexes,
             finger_capacity,
             depth_range,
             hand_capacity,
@@ -1310,6 +1388,58 @@ def _validate_editor_document(
             )
 
     return parsed
+
+
+def _bendable_command_indexes(piece: Mapping[str, Any]) -> list[int]:
+    if "shapeConstraint" in piece:
+        return []
+    shape = piece.get("shape")
+    commands = shape.get("commands") if isinstance(shape, Mapping) else None
+    if not isinstance(commands, list):
+        return []
+    return [
+        index
+        for index, command in enumerate(commands)
+        if isinstance(command, Mapping)
+        and command.get("command") == "curve"
+        and command.get("bendable") is True
+    ]
+
+
+def _parse_bendable_command_indexes(
+    value: object,
+    label: str,
+    path: ClosedPath,
+    shape_constraint: dict[str, object] | None,
+) -> tuple[int, ...]:
+    if shape_constraint is not None:
+        raise BoardPackageError(f"{label} cannot be used with a shapeConstraint")
+    if not isinstance(value, list):
+        raise BoardPackageError(f"{label} must be an array")
+    if any(isinstance(index, bool) or not isinstance(index, int) or index < 0 for index in value):
+        raise BoardPackageError(f"{label} must contain non-negative integers")
+    if len(value) != len(set(value)):
+        raise BoardPackageError(f"{label} must not contain duplicates")
+    for index in value:
+        if index >= len(path.commands) or path.commands[index][0] != "C":
+            raise BoardPackageError(f"{label} must select cubic curve commands")
+    return tuple(value)
+
+
+def _apply_bendable_command_indexes(
+    piece: dict[str, Any], indexes: tuple[int, ...],
+) -> None:
+    shape = piece["shape"]
+    commands = shape.get("commands") if isinstance(shape, Mapping) else None
+    if not isinstance(commands, list):
+        if indexes:
+            raise BoardPackageError("bendableCommandIndexes must select cubic curve commands")
+        return
+    for command in commands:
+        if command.get("command") == "curve":
+            command.pop("bendable", None)
+    for index in indexes:
+        commands[index]["bendable"] = True
 
 
 def _piece_key(hold_id: str, piece_index: int) -> str:

@@ -29,6 +29,7 @@ export function cloneEditorDocument(document: EditorDocument): EditorDocument {
       ...(region.metadata ? { metadata: { ...region.metadata } } : {}),
       ...(region.depthRangeMillimeters ? { depthRangeMillimeters: { ...region.depthRangeMillimeters } } : {}),
       ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
+      ...(region.bendableCommandIndexes ? { bendableCommandIndexes: [...region.bendableCommandIndexes] } : {}),
     })),
   };
 }

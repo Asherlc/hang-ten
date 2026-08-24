@@ -30,6 +30,12 @@ function isHandCapacity(value: unknown): value is number {
   return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 2;
 }
 
+function isBendableCommandIndexes(value: unknown): value is number[] {
+  return Array.isArray(value)
+    && value.every((index) => typeof index === "number" && Number.isInteger(index) && index >= 0)
+    && new Set(value).size === value.length;
+}
+
 function isHoldRegion(value: unknown): value is HoldRegion {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -40,6 +46,8 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
     && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
     && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
+    && (value.bendableCommandIndexes === undefined
+      || isBendableCommandIndexes(value.bendableCommandIndexes))
     && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)

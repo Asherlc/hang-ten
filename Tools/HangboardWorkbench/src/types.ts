@@ -59,6 +59,7 @@ export interface HoldRegion {
   depthRangeMillimeters?: MillimeterRange;
   handCapacity?: number;
   shapeConstraint?: ShapeConstraint;
+  bendableCommandIndexes?: number[];
 }
 
 export interface EditorDocument {
