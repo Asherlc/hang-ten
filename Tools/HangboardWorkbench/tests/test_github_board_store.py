@@ -302,6 +302,39 @@ def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     assert len(client.calls_named("get_blob")) == 2
 
 
+def test_hosted_catalog_lists_schema_v2_boards_without_loading_presentation_images() -> None:
+    """Fails if catalog validation rejects v2 metadata or fetches image assets."""
+    board = board_document_v2("fixture.v2")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+
+    listings = store.discover_packages(TOKEN, BRANCH)
+
+    assert [(listing.slug, listing.board_id) for listing in listings] == [
+        ("fixture-v2", "fixture.v2")
+    ]
+    assert len(client.calls_named("get_blob")) == 1
+
+
+def test_hosted_catalog_rejects_schema_v2_hold_with_unknown_presentation_id() -> None:
+    """Fails if catalog listing accepts a hold outside the declared presentations."""
+    board = board_document_v2("fixture.v2")
+    hold = board["holds"][0]
+    assert isinstance(hold, dict)
+    hold["presentationID"] = "missing"
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(board_package.BoardPackageError, match="presentationID is unknown"):
+        store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_blob")) == 1
+
+
 def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() -> None:
     """Fails if catalog loading serializes independent package blob reads."""
     client = _OverlappingBlobClient(

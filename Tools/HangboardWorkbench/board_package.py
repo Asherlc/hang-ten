@@ -940,14 +940,16 @@ def _validate_board(
 
 def validate_catalog_board(board: Mapping[str, Any]) -> None:
     """Validate board metadata that does not depend on decoding its primary image."""
-    _exact_keys(board, _BOARD_FIELDS, "board.json")
-    _schema_version_one(board.get("schemaVersion"), "board.json.schemaVersion")
+    parsed_presentations = _parse_board_presentations(board)
+    schema_version = board["schemaVersion"]
     _identifier(board.get("id"), "board.json.id")
     for field in ("manufacturer", "name", "subtitle", "dimensions"):
         _non_empty_string(board.get(field), f"board.json.{field}")
     _https_url(board.get("productURL"), "board.json.productURL")
     _positive_number(board.get("aspectRatio"), "board.json.aspectRatio")
-    if board.get("presentation") != {"assetPath": "assets/primary.png"}:
+    if schema_version == 1 and board.get("presentation") != {
+        "assetPath": "assets/primary.png"
+    }:
         raise BoardPackageError(
             "board.json.presentation must declare assets/primary.png"
         )
@@ -955,12 +957,25 @@ def validate_catalog_board(board: Mapping[str, Any]) -> None:
     if not isinstance(holds, list) or not holds:
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
+    presentation_ids = {item[0] for item in parsed_presentations}
     for index, hold in enumerate(holds):
+        label = f"board.json.holds[{index}]"
+        hold_presentation_id = (
+            _identifier(
+                hold.get("presentationID") if isinstance(hold, Mapping) else None,
+                f"{label}.presentationID",
+            )
+            if schema_version == 2
+            else "primary"
+        )
+        if hold_presentation_id not in presentation_ids:
+            raise BoardPackageError(f"{label}.presentationID is unknown")
         hold_id = _validate_hold(
             hold,
             1,
             1,
-            f"board.json.holds[{index}]",
+            label,
+            requires_presentation_id=schema_version == 2,
             validate_geometry=False,
         )
         if hold_id in identifiers:
