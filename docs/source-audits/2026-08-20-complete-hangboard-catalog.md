@@ -131,9 +131,10 @@ frame/path were also inspected directly. No browser session was connected in
 this environment, so an interactive Workbench canvas-overlay review was not
 available and is not claimed here. Package validation and the focused invariant
 tests check the 18-item numbered inventory, schema-v2 presentation ownership,
-and exact mirrored frames. Interactive Workbench canvas review plus full in-app
-active-highlight and hit-test review remain for the plan's final catalog-wide
-visual-validation task.
+and exact mirrored frames. Task 12 later completed the in-app normal-image,
+all-active, and 18-of-18 hit-target review; the catalog-wide evidence is
+consolidated below. Interactive Workbench canvas review remains unavailable and
+is not claimed.
 
 ## Metolius Prime Rib
 
@@ -243,9 +244,10 @@ constraints. The Workbench image endpoint serves a byte-identical copy of the
 checked-in PNG. Focused package tests lock the exact three-item source
 inventory, schema-v2 presentation ownership, official dimensions, image aspect
 ratio, and nonempty path geometry. The server was shut down after review and
-port 4173 was verified free. Interactive Workbench canvas review plus full
-in-app active-highlight and hit-test review remain for the plan's final
-catalog-wide visual-validation task.
+port 4173 was verified free. Task 12 later completed the in-app normal-image,
+all-active, and 3-of-3 hit-target review; the catalog-wide evidence is
+consolidated below. Interactive Workbench canvas review remains unavailable and
+is not claimed.
 
 ## Metolius Wood Grips II Deluxe
 
@@ -382,9 +384,10 @@ Deluxe` with one `front` presentation, 26 holds, and 26 regions. The image
 endpoint serves a byte-identical copy of the checked-in 1774 × 887 PNG, and
 the extracted editor document retains 15 operator-selected rounded-rectangle
 constraints plus 11 custom paths. The accepted illustration, each contact
-frame, and every saved path were inspected directly. Interactive Workbench
-canvas overlay review plus full in-app active-highlight and hit-test review
-remain for the plan's final catalog-wide visual-validation task.
+frame, and every saved path were inspected directly. Task 12 later completed
+the in-app normal-image, all-active, and 26-of-26 hit-target review; the
+catalog-wide evidence is consolidated below. Interactive Workbench canvas
+review remains unavailable and is not claimed.
 
 ## The Hangboard
 
@@ -541,9 +544,9 @@ rounded-rectangle constraints and three custom paths, and reports the accepted
 the checked-in PNG (both SHA-256
 `81d1acd69995cffe8b413389ea27466882585b0709315f5abd089e30a0fc0789`).
 The temporary Workbench server was shut down and its localhost port was verified
-free. Interactive Workbench canvas review plus full in-app active-highlight and
-hit-test review remain for the plan's final catalog-wide visual-validation
-task.
+free. Task 12 later completed the in-app normal-image, all-active, and 15-of-15
+hit-target review; the catalog-wide evidence is consolidated below. Interactive
+Workbench canvas review remains unavailable and is not claimed.
 
 ## Tension Flash Board
 
@@ -709,8 +712,10 @@ Workbench package extraction reports the ordered presentations as
 the three default-surface IDs when switched to `three-edge`, and exactly the
 four alternate-surface IDs when switched to `two-edge`. Focused Workbench v2
 tests also pass for per-presentation filtering and preservation on save.
-Interactive canvas overlay review and full in-app active-highlight/hit-test
-review remain for the plan's final catalog-wide visual-validation task.
+Task 12 later completed in-app normal-image, all-active, and 7-of-7 hit-target
+review across both presentations; the catalog-wide evidence is consolidated
+below. Interactive Workbench canvas review remains unavailable and is not
+claimed.
 
 ## Metolius Light Rail 2.0
 
@@ -1352,5 +1357,97 @@ the corrected visible recesses without clipping. The installed primary asset
 matched SHA-256
 `553fc72b75fcf18c1fa5ccba03eb7013bb40d1e4eaf4174cc68abc592dc0ed62`.
 The exact simulator and all workspace-owned validation artifacts were deleted
-after review, and their absence was verified. Catalog-wide completion of the
-remaining Task 12 boards is tracked separately.
+after review, and their absence was verified.
+
+## Task 12 catalog-wide visual and runtime validation
+
+Completed 2026-08-23; consolidated into this durable audit on 2026-08-24.
+
+The catalog review used signed Debug builds installed from workspace-local
+Derived Data on isolated, workspace-owned iOS simulators. In the board-specific
+custom-routine step editor, each saved physical path is exposed as an
+accessibility hit target and the same path supplies the active fill, stroke,
+interaction shape, and accessibility content shape. For every presentation,
+the normal AI-simplified image was inspected, every expected target was tapped,
+and the all-active overlay was inspected at original screenshot resolution.
+
+The final result is **19 of 19 presentations** and **126 of 126 physical hold
+targets** aligned and tappable:
+
+| Validation phase | Presentations | Targets | Scope |
+| --- | ---: | ---: | --- |
+| Initial pass before the stop gate | 5 / 5 | 70 / 70 | Foundry, Prime Rib, Wood Grips II Deluxe, The Hangboard, and Rock Rings 3D |
+| Penta Evo correction pass | 1 / 1 | 14 / 14 | Corrected mirrored `front-pair` image and every left/right contact |
+| Resumed remaining pass | 13 / 13 | 42 / 42 | Flash Board, Light Rail 2.0, TravelBoard, La Baguette, and Baguette Evo, including every alternate presentation |
+| **Combined** | **19 / 19** | **126 / 126** | **All eleven new packages and all declared presentations** |
+
+The durable per-presentation result is:
+
+| Package | Presentation | Accepted targets | Normal / all-active result |
+| --- | --- | ---: | --- |
+| Metolius Foundry | `front` | 18 / 18 | Aligned |
+| Metolius Prime Rib | `front` | 3 / 3 | Aligned |
+| Metolius Wood Grips II Deluxe | `front` | 26 / 26 | Aligned |
+| The Hangboard | `front` | 15 / 15 | Aligned |
+| Metolius Rock Rings 3D | `front-pair` | 8 / 8 | Aligned |
+| YY Vertical Penta Evo | `front-pair` | 14 / 14 | Aligned after the mirrored-image correction and focused review |
+| Tension Flash Board | `three-edge` | 3 / 3 | Aligned |
+| Tension Flash Board | `two-edge` | 4 / 4 | Aligned |
+| Metolius Light Rail 2.0 | `20mm-side` | 2 / 2 | Aligned |
+| Metolius Light Rail 2.0 | `15mm-side` | 2 / 2 | Aligned |
+| YY Vertical TravelBoard | `front-25-15` | 5 / 5 | Aligned |
+| YY Vertical TravelBoard | `reverse-10` | 1 / 1 | Aligned; through monos are not duplicated |
+| YY Vertical La Baguette | `stepped-face` | 4 / 4 | Aligned |
+| YY Vertical La Baguette | `reverse-face` | 2 / 2 | Aligned; unsupported recess backs remain inactive |
+| YY Vertical Baguette Evo | `paired-25-20-15-10` | 8 / 8 | Aligned |
+| YY Vertical Baguette Evo | `paired-12-8-6` | 6 / 6 | Aligned |
+| YY Vertical Baguette Evo | `central-30-25` | 2 / 2 | Aligned |
+| YY Vertical Baguette Evo | `central-20-6` | 2 / 2 | Aligned |
+| YY Vertical Baguette Evo | `rounded-tray` | 1 / 1 | Aligned |
+
+Surface selectors were exercised in the app and in board-picker previews. The
+browser-control runtime was also queried for the local Workbench URL, but no
+browser backend was connected to this workspace. An interactive Workbench
+canvas session is therefore not claimed. The passing Workbench suites cover
+package extraction, presentation filtering and switching, save preservation,
+and React surface-selection behavior: 318 Python tests, 84 TypeScript module
+tests, and 92 React tests; the production Workbench bundle also built
+successfully.
+
+### Penta Evo stop gate and correction
+
+The first live catalog pass stopped when the Penta Evo illustration showed the
+right unit with the same handedness as the left while its source-supported
+canonical paths were exact horizontal mirrors. Four right-unit paths therefore
+missed the visible mono, duo, and split side-edge contacts. The accepted
+replacement `primary.png` mirrors the right unit to match YY Vertical's
+official paired-front packshot and the existing geometry; no path was changed.
+Its SHA-256 is
+`553fc72b75fcf18c1fa5ccba03eb7013bb40d1e4eaf4174cc68abc592dc0ed62`.
+The focused correction review passed with no findings after static package,
+Workbench extraction, staging-checksum, 14-of-14 target, normal-image, and
+all-active-overlay checks. The source audit above preserves the interrupted
+image-edit provenance limitation without reconstructing a prompt that was not
+recorded.
+
+### Catalog consistency and XCTest completion
+
+After visual review completed, the selected board XCTest run exposed a stale
+33-ID literal in
+`BoardSourceBoundaryTests.testCatalogContainsExactlyRegisteredPackageBoards`;
+the runtime catalog itself correctly loaded all 44 packages. Commit `87b9de5d`
+updated only that test expectation with the eleven packages in this expansion.
+The focused test first reproduced the stale expectation failure, then passed
+after the update. The final selected board suite passed **101 tests with zero
+failures**: 41 `BoardPackageStoreTests`, 5 `BoardPickerFiltersTests`, 13
+`BoardSourceBoundaryTests`, 21 `BoardStorageTests`, and 21
+`BoardTargetSubstitutionTests`. Independent review confirmed that the 44 unique
+expected IDs exactly match the current validated package manifests and found
+no issues.
+
+Final package validation and status both reported 44 boards and zero drafts.
+The initial Task 12 structural gate also staged all 44 packages through the real
+Xcode resource-staging script. Every exact simulator used for the visual,
+Penta-correction, and XCTest runs was archived and deleted; pending/owned
+manifests and task-specific Derived Data, screenshots, logs, and staging trees
+were cleared and verified absent without touching shared resources.
