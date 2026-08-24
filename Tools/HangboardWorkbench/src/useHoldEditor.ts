@@ -1151,24 +1151,31 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } else if (target.classList.contains("path-editor-vertex")
       || target.classList.contains("path-editor-control")
       || (target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key)) {
-      if (!editablePath) {
+      let dragEditablePath = editablePath;
+      if (!dragEditablePath) {
         try {
-          createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+          dragEditablePath = createEditablePath(
+            selectedHold.key,
+            selectedHold.displayPath,
+            pathEditor,
+            selectedHold.bendableCommandIndexes,
+          );
         } catch (error: unknown) {
           reportInvalidPath(error);
+          return;
         }
-        return;
       }
+      if (!dragEditablePath) return;
       const anchorID = target.getAttribute("data-anchor-id");
       const controlID = target.getAttribute("data-control-id");
       if (target.classList.contains("path-editor-vertex") && !anchorID) return;
       if (target.classList.contains("path-editor-control") && !controlID) return;
-      const originalEditablePath = cloneEditablePath(editablePath);
-      const bendableSegmentID = target.classList.contains("region-shape")
-        ? closestEditableSegmentID(editablePath, point)
+      const originalEditablePath = cloneEditablePath(dragEditablePath);
+      const bendableSegmentID = !selectedHold.shapeConstraint && target.classList.contains("region-shape")
+        ? closestEditableSegmentID(dragEditablePath, point)
         : null;
       const bendsSegment = bendableSegmentID !== null
-        && editableSegmentAfter(editablePath, bendableSegmentID)?.command.bendable === true;
+        && editableSegmentAfter(dragEditablePath, bendableSegmentID)?.command.bendable === true;
       next = {
         ...EMPTY_DRAG,
         active: true,
