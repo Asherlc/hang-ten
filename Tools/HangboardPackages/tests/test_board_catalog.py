@@ -9,7 +9,9 @@ import pytest
 
 from conftest import (
     ALTERNATE_PRIMARY_PNG_BYTES,
+    OPAQUE_PRIMARY_PNG_BYTES,
     PRIMARY_PNG_BYTES,
+    TRANSPARENT_PRIMARY_PNG_BYTES,
     board_document,
     load_board_catalog_module,
     write_board_package,
@@ -141,6 +143,27 @@ def test_completed_package_requires_the_exact_finished_shape(
 
     with pytest.raises(ValueError, match=message):
         module.discover_board_packages(tmp_path)
+
+
+def test_completed_package_rejects_an_opaque_primary_png(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    (package / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="fully transparent pixel"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_completed_package_accepts_a_primary_png_with_actual_alpha_zero(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    (package / "assets" / "primary.png").write_bytes(TRANSPARENT_PRIMARY_PNG_BYTES)
+
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [item.root.name for item in inventory.packages] == ["fixture-model"]
 
 
 def test_discovery_rejects_malformed_completed_package(tmp_path: Path) -> None:

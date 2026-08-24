@@ -28,13 +28,27 @@ def _encode_png(
     return buffer.getvalue()
 
 
+def _encode_transparent_png(width: int, height: int) -> bytes:
+    image = Image.new("RGBA", (width, height), color=(255, 255, 255, 255))
+    image.putpixel((0, 0), (255, 255, 255, 0))
+    buffer = io.BytesIO()
+    image.save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
 PRIMARY_PNG_WIDTH = 40
 PRIMARY_PNG_HEIGHT = 20
-PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT)
+OPAQUE_PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT)
+TRANSPARENT_PRIMARY_PNG_BYTES = _encode_transparent_png(
+    PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT
+)
+PRIMARY_PNG_BYTES = TRANSPARENT_PRIMARY_PNG_BYTES
 SECONDARY_PNG_BYTES = _encode_png(
     PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT, color=(0, 0, 0)
 )
-ALTERNATE_PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH + 2, PRIMARY_PNG_HEIGHT + 2)
+ALTERNATE_PRIMARY_PNG_BYTES = _encode_transparent_png(
+    PRIMARY_PNG_WIDTH + 2, PRIMARY_PNG_HEIGHT + 2
+)
 
 
 def board_document(
