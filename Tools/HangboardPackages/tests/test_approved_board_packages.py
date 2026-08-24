@@ -14,6 +14,114 @@ from conftest import load_board_catalog_module
 REPO_ROOT = Path(__file__).resolve().parents[3]
 HANGBOARDS_ROOT = REPO_ROOT / "Hangboards"
 COMPACT_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-compact-ii"
+DELUXE_ROOT = HANGBOARDS_ROOT / "metolius-wood-grips-deluxe-ii"
+FOUNDRY_ROOT = HANGBOARDS_ROOT / "metolius-foundry"
+PRIME_RIB_ROOT = HANGBOARDS_ROOT / "metolius-prime-rib"
+FLASH_BOARD_ROOT = HANGBOARDS_ROOT / "tension-flash-board"
+LIGHT_RAIL_ROOT = HANGBOARDS_ROOT / "metolius-light-rail-2"
+ROCK_RINGS_ROOT = HANGBOARDS_ROOT / "metolius-rock-rings-3d"
+YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
+YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
+YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
+YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
+
+
+def _global_path_segment_signatures(
+    geometry: dict[str, object], *, mirror_horizontally: bool = False
+) -> list[tuple[object, ...]]:
+    """Return canonical global segments, independent of traversal direction."""
+    frame = geometry["frame"]
+    commands = geometry["shape"]["commands"]
+
+    def global_point(local: list[float]) -> tuple[float, float]:
+        x = frame["x"] + local[0] * frame["width"]
+        if mirror_horizontally:
+            x = 1 - x
+        y = frame["y"] + local[1] * frame["height"]
+        return (round(x, 12), round(y, 12))
+
+    def line_signature(
+        start: tuple[float, float], end: tuple[float, float]
+    ) -> tuple[object, ...]:
+        ordered = min((start, end), (end, start))
+        return ("line", *ordered)
+
+    def curve_signature(
+        start: tuple[float, float],
+        control1: tuple[float, float],
+        control2: tuple[float, float],
+        end: tuple[float, float],
+    ) -> tuple[object, ...]:
+        forward = (start, control1, control2, end)
+        reverse = (end, control2, control1, start)
+        return ("curve", *min(forward, reverse))
+
+    start: tuple[float, float] | None = None
+    current: tuple[float, float] | None = None
+    segments: list[tuple[object, ...]] = []
+    for command in commands:
+        operation = command["command"]
+        if operation == "move":
+            start = current = global_point(command["to"])
+        elif operation == "line":
+            assert current is not None
+            end = global_point(command["to"])
+            segments.append(line_signature(current, end))
+            current = end
+        elif operation == "curve":
+            assert current is not None
+            end = global_point(command["to"])
+            segments.append(
+                curve_signature(
+                    current,
+                    global_point(command["control1"]),
+                    global_point(command["control2"]),
+                    end,
+                )
+            )
+            current = end
+        else:
+            assert operation == "close"
+            assert current is not None and start is not None
+            if current != start:
+                segments.append(line_signature(current, start))
+            current = start
+    return sorted(segments)
+
+
+def _assert_global_paths_are_horizontal_mirrors(
+    left: dict[str, object], right: dict[str, object]
+) -> None:
+    assert _global_path_segment_signatures(
+        left, mirror_horizontally=True
+    ) == _global_path_segment_signatures(right)
+
+
+PRIME_RIB_HOLDS = (
+    ("edge-38", "38 mm edge", "edge", 38),
+    ("edge-23", "23 mm edge", "edge", 23),
+    ("edge-15", "15 mm edge", "edge", 15),
+)
+FOUNDRY_HOLDS = (
+    ("pinch-1-left", "Left #1 variable pinch", "pinch", None, None),
+    ("jug-2-left", "Left #2 outer jug", "jug", None, None),
+    ("pocket-3-left", "Left #3 32 mm 4-finger pocket", "pocket", 32, 4),
+    ("pocket-4-left", "Left #4 22 mm 3-finger pocket", "pocket", 22, 3),
+    ("pocket-5-left", "Left #5 30 mm 2-finger pocket", "pocket", 30, 2),
+    ("pocket-6-left", "Left #6 15 mm 3-finger pocket", "pocket", 15, 3),
+    ("pocket-7-left", "Left #7 21 mm 2-finger pocket", "pocket", 21, 2),
+    ("sloper-8-center", "Center #8 53 mm flat sloper", "sloper", None, None),
+    ("edge-9-center", "Center #9 16 mm edge", "edge", 16, None),
+    ("edge-10-center", "Center #10 30 mm edge", "edge", 30, None),
+    ("edge-11-center", "Center #11 23 mm edge", "edge", 23, None),
+    ("pocket-7-right", "Right #7 21 mm 2-finger pocket", "pocket", 21, 2),
+    ("pocket-6-right", "Right #6 15 mm 3-finger pocket", "pocket", 15, 3),
+    ("pocket-5-right", "Right #5 30 mm 2-finger pocket", "pocket", 30, 2),
+    ("pocket-4-right", "Right #4 22 mm 3-finger pocket", "pocket", 22, 3),
+    ("pocket-3-right", "Right #3 32 mm 4-finger pocket", "pocket", 32, 4),
+    ("jug-2-right", "Right #2 outer jug", "jug", None, None),
+    ("pinch-1-right", "Right #1 variable pinch", "pinch", None, None),
+)
 COMPACT_HOLDS = (
     ("jug-left", "Left outer jug"),
     ("sloper-flat-left", "Left 56 mm flat sloper"),
@@ -104,6 +212,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
 
     expected_packages = {
         ("metolius.wood-grips-compact-ii", "metolius-wood-grips-compact-ii"),
+        ("metolius.wood-grips-deluxe-ii", "metolius-wood-grips-deluxe-ii"),
         ("beastmaker-1000", "beastmaker-1000"),
         ("beastmaker-2000", "beastmaker-2000"),
         ("dewoodstok-woodbord", "dewoodstok-woodbord"),
@@ -115,6 +224,10 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("lattice-triple-rung", "lattice-triple-rung"),
         ("metolius.climbers-edge", "metolius-climbers-edge"),
         ("metolius.contact", "metolius-contact"),
+        ("metolius.foundry", "metolius-foundry"),
+        ("metolius.light-rail-2", "metolius-light-rail-2"),
+        ("metolius.rock-rings-3d", "metolius-rock-rings-3d"),
+        ("metolius.prime-rib", "metolius-prime-rib"),
         ("metolius.project", "metolius-project"),
         ("metolius.simulator-3d", "metolius-simulator-3d"),
         ("moon.armstrong", "moon-armstrong"),
@@ -123,6 +236,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("soill.split-palm", "soill-split-palm"),
         ("soill.training-tiles", "soill-training-tiles"),
         ("target10a.linebreaker-base", "target10a-linebreaker-base"),
+        ("the-hangboard.the-hangboard", "the-hangboard"),
         ("trango.rock-prodigy-forge", "trango-rock-prodigy-forge"),
         ("trango.rock-prodigy-natural", "trango-rock-prodigy-natural"),
         ("trango.rock-prodigy-pivot", "trango-rock-prodigy-pivot"),
@@ -131,18 +245,51 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
             "trango-rock-prodigy-training-center",
         ),
         ("tension.grindstone", "tension-grindstone"),
+        ("tension.flash-board", "tension-flash-board"),
         ("tension.honestone", "tension-honestone"),
         ("tension.whetstone", "tension-whetstone"),
         ("yy.verticalboard-evo", "yy-verticalboard-evo"),
         ("yy.verticalboard-first", "yy-verticalboard-first"),
         ("yy.verticalboard-light", "yy-verticalboard-light"),
         ("yy.verticalboard-one", "yy-verticalboard-one"),
+        ("yy.travelboard", "yy-travelboard"),
+        ("yy.baguette", "yy-baguette"),
+        ("yy.baguette-evo", "yy-baguette-evo"),
+        ("yy.penta-evo", "yy-penta-evo"),
         ("zlagboard.evo", "zlagboard-evo"),
         ("zlagboard.pro", "zlagboard-pro"),
     }
     assert discovered == expected_packages
     assert inventory.drafts == ()
     assert not (HANGBOARDS_ROOT / "catalog.json").exists()
+
+
+def test_approved_packages_declare_their_complete_presentation_asset_set() -> None:
+    inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
+
+    for package in inventory.packages:
+        document = json.loads((package.root / "board.json").read_text(encoding="utf-8"))
+        actual_assets = {
+            path.relative_to(package.root).as_posix()
+            for path in (package.root / "assets").rglob("*")
+            if path.is_file()
+        }
+        if document["schemaVersion"] == 1:
+            assert document.get("presentation") == {"assetPath": "assets/primary.png"}
+            assert actual_assets == {"assets/primary.png"}
+        elif document["schemaVersion"] == 2:
+            assert "presentation" not in document
+            assert all(
+                isinstance(presentation["aspectRatio"], (int, float))
+                and not isinstance(presentation["aspectRatio"], bool)
+                and presentation["aspectRatio"] > 0
+                for presentation in document["presentations"]
+            )
+            assert actual_assets == {
+                presentation["assetPath"] for presentation in document["presentations"]
+            }
+        else:  # The loader is responsible for rejecting unsupported schemas.
+            raise AssertionError(f"unexpected schemaVersion: {document['schemaVersion']}")
 
 
 def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -> None:
@@ -152,6 +299,437 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
     }
 
     assert relative_paths == {"assets", "assets/primary.png", "board.json"}
+
+
+def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
+    board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.foundry"
+    assert board["presentations"] == [
+        {
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 2.0,
+            "default": True,
+        }
+    ]
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+            hold.get("fingerCapacity"),
+        )
+        for hold in board["holds"]
+    ) == FOUNDRY_HOLDS
+    assert all(hold["presentationID"] == "front" for hold in board["holds"])
+    assert all(hold["geometry"] for hold in board["holds"])
+
+
+def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
+    board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for position in range(1, 8):
+        prefix = "pinch" if position == 1 else "jug" if position == 2 else "pocket"
+        left = holds[f"{prefix}-{position}-left"]["geometry"][0]
+        right = holds[f"{prefix}-{position}-right"]["geometry"][0]
+        left_frame = left["frame"]
+        right_frame = right["frame"]
+
+        assert right_frame["x"] == pytest.approx(
+            1 - left_frame["x"] - left_frame["width"]
+        )
+        assert right_frame["y"] == left_frame["y"]
+        assert right_frame["width"] == left_frame["width"]
+        assert right_frame["height"] == left_frame["height"]
+        assert right.get("shapeConstraint") == left.get("shapeConstraint")
+
+        left_commands = left["shape"]["commands"]
+        right_commands = right["shape"]["commands"]
+        if position >= 3:
+            # These regular paths are themselves horizontally symmetric.
+            assert right_commands == left_commands
+            continue
+
+        assert len(right_commands) == len(left_commands)
+        for left_command, right_command in zip(left_commands, right_commands, strict=True):
+            assert right_command["command"] == left_command["command"]
+            for point_key in ("to", "control", "control1", "control2"):
+                if point_key not in left_command:
+                    assert point_key not in right_command
+                    continue
+                assert right_command[point_key][0] == pytest.approx(
+                    1 - left_command[point_key][0]
+                )
+                assert right_command[point_key][1] == left_command[point_key][1]
+
+
+def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
+    board = json.loads((PRIME_RIB_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.prime-rib"
+    assert board["dimensions"] == "20 × 4.2 × 1.5 in"
+    assert board["presentations"] == [
+        {
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1704 / 923,
+            "default": True,
+        }
+    ]
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+        )
+        for hold in board["holds"]
+    ) == PRIME_RIB_HOLDS
+    assert all(hold["presentationID"] == "front" for hold in board["holds"])
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(
+        hold["geometry"][0]["shape"]["type"] == "path"
+        for hold in board["holds"]
+    )
+
+
+def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
+    board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "tension.flash-board"
+    assert board["dimensions"] == "Not published by manufacturer"
+    assert board["presentations"] == [
+        {
+            "id": "three-edge",
+            "name": "Three-edge surface",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        },
+        {
+            "id": "two-edge",
+            "name": "Two-edge surface",
+            "assetPath": "assets/two-edge-surface.png",
+            "aspectRatio": 2.0,
+            "default": False,
+        },
+    ]
+
+    holds_by_presentation = {
+        presentation_id: tuple(
+            hold["id"]
+            for hold in board["holds"]
+            if hold["presentationID"] == presentation_id
+        )
+        for presentation_id in ("three-edge", "two-edge")
+    }
+    assert holds_by_presentation == {
+        "three-edge": (
+            "three-edge-left",
+            "three-edge-center",
+            "three-edge-right",
+        ),
+        "two-edge": (
+            "two-edge-left",
+            "two-edge-right",
+            "small-crimp-left",
+            "small-crimp-right",
+        ),
+    }
+    assert all(hold["kind"] == "edge" for hold in board["holds"])
+    assert all("sizeMillimeters" not in hold for hold in board["holds"])
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(hold["geometry"][0]["shape"]["type"] == "path" for hold in board["holds"])
+
+    expected_sizes = {
+        "assets/primary.png": (1536, 1024),
+        "assets/two-edge-surface.png": (1774, 887),
+    }
+    for asset_path, expected_size in expected_sizes.items():
+        with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
+            assert image.format == "PNG"
+            assert image.size == expected_size
+
+
+def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.light-rail-2"
+    assert board["dimensions"] == "18 × 3 × 1.5 in"
+    assert board["presentations"] == [
+        {
+            "id": "20mm-side",
+            "name": "40 mm jug and 20 mm edge",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        },
+        {
+            "id": "15mm-side",
+            "name": "40 mm jug and 15 mm edge",
+            "assetPath": "assets/15mm-surface.png",
+            "aspectRatio": 1672 / 941,
+            "default": False,
+        },
+    ]
+
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold["sizeMillimeters"],
+            hold["presentationID"],
+        )
+        for hold in board["holds"]
+    ) == (
+        (
+            "jug-40-20mm-side",
+            "40 mm rounded jug on 20 mm side",
+            "jug",
+            40,
+            "20mm-side",
+        ),
+        ("edge-20", "20 mm edge", "edge", 20, "20mm-side"),
+        (
+            "jug-40-15mm-side",
+            "40 mm rounded jug on 15 mm side",
+            "jug",
+            40,
+            "15mm-side",
+        ),
+        ("edge-15", "15 mm edge", "edge", 15, "15mm-side"),
+    )
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(
+        hold["geometry"][0]["shapeConstraint"] == {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0,
+        }
+        for hold in board["holds"]
+    )
+
+    for asset_path, expected_size in {
+        "assets/primary.png": (1536, 1024),
+        "assets/15mm-surface.png": (1672, 941),
+    }.items():
+        with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
+            assert image.format == "PNG"
+            assert image.size == expected_size
+
+
+def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
+    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.rock-rings-3d"
+    assert board["dimensions"] == "184 × 146 × 57 mm"
+    assert board["presentations"] == [
+        {
+            "id": "front-pair",
+            "name": "Front pair",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        }
+    ]
+
+    assert tuple(
+        (
+            hold["id"],
+            hold["name"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+            hold.get("fingerCapacity"),
+            hold["presentationID"],
+        )
+        for hold in board["holds"]
+    ) == (
+        ("jug-left", "Left unit jug", "jug", None, None, "front-pair"),
+        (
+            "pocket-40-four-left",
+            "Left unit 40 mm four-finger pocket",
+            "pocket",
+            40,
+            4,
+            "front-pair",
+        ),
+        (
+            "pocket-32-three-left",
+            "Left unit 32 mm three-finger pocket",
+            "pocket",
+            32,
+            3,
+            "front-pair",
+        ),
+        (
+            "pocket-25-two-left",
+            "Left unit 25 mm two-finger pocket",
+            "pocket",
+            25,
+            2,
+            "front-pair",
+        ),
+        ("jug-right", "Right unit jug", "jug", None, None, "front-pair"),
+        (
+            "pocket-40-four-right",
+            "Right unit 40 mm four-finger pocket",
+            "pocket",
+            40,
+            4,
+            "front-pair",
+        ),
+        (
+            "pocket-32-three-right",
+            "Right unit 32 mm three-finger pocket",
+            "pocket",
+            32,
+            3,
+            "front-pair",
+        ),
+        (
+            "pocket-25-two-right",
+            "Right unit 25 mm two-finger pocket",
+            "pocket",
+            25,
+            2,
+            "front-pair",
+        ),
+    )
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(hold["geometry"][0]["shape"]["type"] == "path" for hold in board["holds"])
+    assert all(
+        hold["geometry"][0]["shapeConstraint"]
+        == {"shape": "roundedRectangle", "rotationDegrees": 0}
+        for hold in board["holds"]
+        if hold["kind"] == "pocket"
+    )
+
+    with Image.open(ROCK_RINGS_ROOT / "assets" / "primary.png") as image:
+        assert image.format == "PNG"
+        assert image.size == (1536, 1024)
+
+
+def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
+    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for left_id, right_id in (
+        ("jug-left", "jug-right"),
+        ("pocket-40-four-left", "pocket-40-four-right"),
+        ("pocket-32-three-left", "pocket-32-three-right"),
+        ("pocket-25-two-left", "pocket-25-two-right"),
+    ):
+        left = holds[left_id]["geometry"][0]
+        right = holds[right_id]["geometry"][0]
+        left_frame = left["frame"]
+        right_frame = right["frame"]
+
+        assert right_frame["x"] == pytest.approx(
+            1 - left_frame["x"] - left_frame["width"]
+        )
+        assert right_frame["y"] == left_frame["y"]
+        assert right_frame["width"] == left_frame["width"]
+        assert right_frame["height"] == left_frame["height"]
+        assert right["shape"] == left["shape"]
+        assert right.get("shapeConstraint") == left.get("shapeConstraint")
+
+
+def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
+    board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "metolius.wood-grips-deluxe-ii"
+    assert board["dimensions"] == "24 × 8.5 in"
+    assert board["presentations"] == [
+        {
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 2.0,
+            "default": True,
+        }
+    ]
+    assert {
+        (
+            hold["id"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+            hold.get("fingerCapacity"),
+            hold.get("gripType"),
+        )
+        for hold in board["holds"]
+    } == {
+        ("jug-1-left", "jug", None, None, None),
+        ("jug-1-right", "jug", None, None, None),
+        ("sloper-2-flat-left", "sloper", 56, None, None),
+        ("sloper-2-flat-right", "sloper", 56, None, None),
+        ("sloper-12-round-center", "sloper", 56, None, None),
+        ("edge-3-31-left", "edge", 31, None, None),
+        ("edge-3-31-right", "edge", 31, None, None),
+        ("pocket-4-32-three-left", "pocket", 32, 3, "threeFingerPocket"),
+        ("pocket-4-32-three-right", "pocket", 32, 3, "threeFingerPocket"),
+        ("pocket-5-38-two-left", "pocket", 38, 2, "twoFingerPocket"),
+        ("pocket-5-38-two-right", "pocket", 38, 2, "twoFingerPocket"),
+        ("pocket-13-32-four-center", "pocket", 32, 4, "fourFingerPocket"),
+        ("edge-6-25-left", "edge", 25, None, None),
+        ("edge-6-25-right", "edge", 25, None, None),
+        ("pocket-7-25-three-left", "pocket", 25, 3, "threeFingerPocket"),
+        ("pocket-7-25-three-right", "pocket", 25, 3, "threeFingerPocket"),
+        ("pocket-8-28-two-left", "pocket", 28, 2, "twoFingerPocket"),
+        ("pocket-8-28-two-right", "pocket", 28, 2, "twoFingerPocket"),
+        ("pocket-14-25-four-center", "pocket", 25, 4, "fourFingerPocket"),
+        ("edge-9-19-left", "edge", 19, None, None),
+        ("edge-9-19-right", "edge", 19, None, None),
+        ("pocket-10-19-three-left", "pocket", 19, 3, "threeFingerPocket"),
+        ("pocket-10-19-three-right", "pocket", 19, 3, "threeFingerPocket"),
+        ("pocket-11-19-two-left", "pocket", 19, 2, "twoFingerPocket"),
+        ("pocket-11-19-two-right", "pocket", 19, 2, "twoFingerPocket"),
+        ("pocket-15-19-four-center", "pocket", 19, 4, "fourFingerPocket"),
+    }
+    assert len(board["holds"]) == 26
+    assert all(hold["presentationID"] == "front" for hold in board["holds"])
+    assert all(len(hold["geometry"]) == 1 for hold in board["holds"])
+    assert all(hold["geometry"][0]["shape"]["type"] == "path" for hold in board["holds"])
+
+    compact = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    assert board["dimensions"] != compact["dimensions"]
+    assert len(board["holds"]) != len(compact["holds"])
+
+
+def test_deluxe_paired_contacts_use_exact_horizontal_frame_mirrors() -> None:
+    board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+    pairs = (
+        ("jug-1-left", "jug-1-right"),
+        ("sloper-2-flat-left", "sloper-2-flat-right"),
+        ("edge-3-31-left", "edge-3-31-right"),
+        ("pocket-4-32-three-left", "pocket-4-32-three-right"),
+        ("pocket-5-38-two-left", "pocket-5-38-two-right"),
+        ("edge-6-25-left", "edge-6-25-right"),
+        ("pocket-7-25-three-left", "pocket-7-25-three-right"),
+        ("pocket-8-28-two-left", "pocket-8-28-two-right"),
+        ("edge-9-19-left", "edge-9-19-right"),
+        ("pocket-10-19-three-left", "pocket-10-19-three-right"),
+        ("pocket-11-19-two-left", "pocket-11-19-two-right"),
+    )
+
+    for left_id, right_id in pairs:
+        left = holds[left_id]["geometry"][0]["frame"]
+        right = holds[right_id]["geometry"][0]["frame"]
+        assert right["x"] == pytest.approx(1 - left["x"] - left["width"])
+        assert right["y"] == left["y"]
+        assert right["width"] == left["width"]
+        assert right["height"] == left["height"]
 
 
 def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry() -> None:
@@ -250,3 +828,238 @@ def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
 
     assert repaired.size == (1774, 457)
     assert hashlib.sha256(repaired_path.read_bytes()).hexdigest() == "7e39c41e0e3bfb3d61d2ba0c331281bc04c06e98817ecc0fa8e3180f7923216e"
+
+
+def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
+    board = json.loads((YY_TRAVELBOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.travelboard"
+    assert board["dimensions"] == "34 × 10 × 3 cm"
+    assert [(item["id"], item["assetPath"]) for item in board["presentations"]] == [
+        ("front-25-15", "assets/primary.png"),
+        ("reverse-10", "assets/reverse.png"),
+    ]
+    assert {
+        (
+            hold["id"],
+            hold["kind"],
+            hold.get("sizeMillimeters"),
+            hold.get("fingerCapacity"),
+            hold["presentationID"],
+        )
+        for hold in board["holds"]
+    } == {
+        ("tray", "jug", None, None, "front-25-15"),
+        ("edge-25", "edge", 25, None, "front-25-15"),
+        ("edge-15", "edge", 15, None, "front-25-15"),
+        ("mono-left", "pocket", None, 1, "front-25-15"),
+        ("mono-right", "pocket", None, 1, "front-25-15"),
+        ("edge-10", "edge", 10, None, "reverse-10"),
+    }
+
+
+def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
+    board = json.loads((YY_BAGUETTE_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.baguette"
+    assert board["dimensions"] == "47 × 4 × 4 cm"
+    assert board["presentations"] == [
+        {
+            "id": "stepped-face",
+            "name": "30 / 25 / 20 mm and tray face",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1.5,
+            "default": True,
+        },
+        {
+            "id": "reverse-face",
+            "name": "15 / 10 mm face",
+            "assetPath": "assets/reverse.png",
+            "aspectRatio": 1.5,
+            "default": False,
+        },
+    ]
+    assert {
+        (hold["id"], hold["kind"], hold.get("sizeMillimeters"))
+        for hold in board["holds"]
+    } == {
+        ("tray", "jug", None),
+        ("edge-30", "edge", 30),
+        ("edge-25", "edge", 25),
+        ("edge-20", "edge", 20),
+        ("edge-15", "edge", 15),
+        ("edge-10", "edge", 10),
+    }
+    assert [(hold["id"], hold["presentationID"]) for hold in board["holds"]] == [
+        ("edge-30", "stepped-face"),
+        ("tray", "stepped-face"),
+        ("edge-20", "stepped-face"),
+        ("edge-25", "stepped-face"),
+        ("edge-15", "reverse-face"),
+        ("edge-10", "reverse-face"),
+    ]
+
+
+def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> None:
+    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.baguette-evo"
+    assert board["dimensions"] == "52 × 5 × 5 cm"
+    assert board["presentations"] == [
+        {
+            "id": "paired-25-20-15-10",
+            "name": "25 / 20 / 15 / 10 mm paired edges",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 2.0,
+            "default": True,
+        },
+        {
+            "id": "paired-12-8-6",
+            "name": "12 / 8 / 6 mm paired edges",
+            "assetPath": "assets/shallow-pairs.png",
+            "aspectRatio": 2.0,
+            "default": False,
+        },
+        {
+            "id": "central-30-25",
+            "name": "30 / 25 mm central edges",
+            "assetPath": "assets/central-30-25.png",
+            "aspectRatio": 1.5,
+            "default": False,
+        },
+        {
+            "id": "central-20-6",
+            "name": "20 / 6 mm central edges",
+            "assetPath": "assets/central-20-6.png",
+            "aspectRatio": 2.0,
+            "default": False,
+        },
+        {
+            "id": "rounded-tray",
+            "name": "Rounded tray",
+            "assetPath": "assets/tray.png",
+            "aspectRatio": 1.5,
+            "default": False,
+        },
+    ]
+    assert len(board["holds"]) == 19
+    assert sorted(
+        hold["sizeMillimeters"]
+        for hold in board["holds"]
+        if not hold["id"].startswith("edge-central") and hold["kind"] == "edge"
+    ) == [6, 6, 8, 8, 10, 10, 12, 12, 15, 15, 20, 20, 25, 25]
+    assert {
+        (hold["id"], hold.get("sizeMillimeters"))
+        for hold in board["holds"]
+        if hold["id"].startswith("edge-central")
+    } == {
+        ("edge-central-30", 30),
+        ("edge-central-25", 25),
+        ("edge-central-20", 20),
+        ("edge-central-6", 6),
+    }
+    assert [(hold["id"], hold["kind"]) for hold in board["holds"] if hold["kind"] == "jug"] == [
+        ("rounded-tray", "jug")
+    ]
+    assert [(hold["id"], hold["presentationID"]) for hold in board["holds"]] == [
+        ("edge-20-left", "paired-25-20-15-10"),
+        ("edge-10-left", "paired-25-20-15-10"),
+        ("edge-25-left", "paired-25-20-15-10"),
+        ("edge-15-left", "paired-25-20-15-10"),
+        ("edge-15-right", "paired-25-20-15-10"),
+        ("edge-25-right", "paired-25-20-15-10"),
+        ("edge-10-right", "paired-25-20-15-10"),
+        ("edge-20-right", "paired-25-20-15-10"),
+        ("edge-12-left", "paired-12-8-6"),
+        ("edge-12-right", "paired-12-8-6"),
+        ("edge-8-left", "paired-12-8-6"),
+        ("edge-8-right", "paired-12-8-6"),
+        ("edge-6-upper", "paired-12-8-6"),
+        ("edge-6-lower", "paired-12-8-6"),
+        ("edge-central-30", "central-30-25"),
+        ("edge-central-25", "central-30-25"),
+        ("edge-central-20", "central-20-6"),
+        ("edge-central-6", "central-20-6"),
+        ("rounded-tray", "rounded-tray"),
+    ]
+
+
+def test_yy_baguette_evo_central_30_25_paths_match_the_centered_recess() -> None:
+    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    assert holds["edge-central-30"]["geometry"][0]["frame"] == {
+        "x": 0.420,
+        "y": 0.531,
+        "width": 0.160,
+        "height": 0.030,
+    }
+    assert holds["edge-central-25"]["geometry"][0]["frame"] == {
+        "x": 0.420,
+        "y": 0.597,
+        "width": 0.160,
+        "height": 0.032,
+    }
+
+
+def test_yy_baguette_evo_explicit_pairs_use_exact_horizontal_path_mirrors() -> None:
+    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for size in (25, 20, 15, 12, 10, 8):
+        left = holds[f"edge-{size}-left"]["geometry"][0]
+        right = holds[f"edge-{size}-right"]["geometry"][0]
+        _assert_global_paths_are_horizontal_mirrors(left, right)
+
+
+def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 2
+    assert board["id"] == "yy.penta-evo"
+    assert board["dimensions"] == "Not published by YY Vertical"
+    assert len(board["presentations"]) == 1
+    assert len(board["holds"]) == 14
+    assert sorted(
+        (hold["kind"], hold.get("sizeMillimeters"), hold.get("fingerCapacity"))
+        for hold in board["holds"]
+    ) == sorted(
+        2
+        * [
+            ("edge", 25, None),
+            ("edge", 20, None),
+            ("edge", 15, None),
+            ("edge", 10, None),
+            ("pocket", None, 1),
+            ("pocket", None, 2),
+            ("jug", None, None),
+        ]
+    )
+    assert all(hold["presentationID"] == "front-pair" for hold in board["holds"])
+
+    holds = {hold["id"]: hold for hold in board["holds"]}
+    assert holds["edge-25-left"]["geometry"][0]["frame"] == {
+        "x": 0.116,
+        "y": 0.350,
+        "width": 0.121,
+        "height": 0.122,
+    }
+    assert holds["edge-20-left"]["geometry"][0]["frame"] == {
+        "x": 0.280,
+        "y": 0.350,
+        "width": 0.116,
+        "height": 0.122,
+    }
+
+
+def test_yy_penta_evo_pair_uses_exact_horizontal_path_mirrors() -> None:
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    holds = {hold["id"]: hold for hold in board["holds"]}
+
+    for prefix in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"):
+        left = holds[f"{prefix}-left"]["geometry"][0]
+        right = holds[f"{prefix}-right"]["geometry"][0]
+        _assert_global_paths_are_horizontal_mirrors(left, right)

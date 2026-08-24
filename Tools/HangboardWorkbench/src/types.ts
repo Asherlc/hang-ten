@@ -53,6 +53,7 @@ export interface HoldRegion {
   metadata?: {
     holdID: string;
     pieceIndex: number;
+    presentationID?: string;
   };
   fingerCapacity?: number;
   depthRangeMillimeters?: MillimeterRange;
@@ -62,11 +63,19 @@ export interface HoldRegion {
 
 export interface EditorDocument {
   schemaVersion: number;
+  presentationID?: string;
   canvas: {
     width: number;
     height: number;
   };
   regions: HoldRegion[];
+}
+
+export interface BoardPresentation {
+  presentationID: string;
+  displayName: string;
+  imageUrl: string;
+  default: boolean;
 }
 
 export interface BoardSummary {
@@ -79,7 +88,10 @@ export interface BoardSummary {
 
 export interface Board extends BoardSummary {
   imageUrl: string;
+  holdIDs?: string[];
   saveUrl?: string;
+  selectedPresentationID?: string;
+  presentations?: BoardPresentation[];
   document: EditorDocument;
 }
 
@@ -119,7 +131,7 @@ export interface PullRequestResult {
 
 export interface WorkbenchClient {
   listBoards(): Promise<BoardSummary[]>;
-  getBoard(boardId: string): Promise<Board>;
+  getBoard(boardId: string, presentationID?: string): Promise<Board>;
   saveBoard(boardId: string, document: EditorDocument): Promise<Board>;
   getGitStatus(): Promise<GitStatus>;
   getAuthStatus(): Promise<AuthStatus>;
@@ -302,6 +314,7 @@ export interface WorkbenchActions {
   pushBranch(): Promise<void>;
   openPullRequest(): Promise<void>;
   selectHold(key: string | null, toggle?: boolean): void;
+  selectPresentation(presentationID: string): Promise<void>;
   setRotationDegrees(value: string): void;
   replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;

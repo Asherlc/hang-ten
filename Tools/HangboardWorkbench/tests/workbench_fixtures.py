@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -61,3 +62,32 @@ def board_document(
             }
         ],
     }
+
+
+def board_document_v2(board_id: str) -> dict[str, object]:
+    board = board_document(board_id)
+    board["schemaVersion"] = 2
+    board.pop("presentation")
+    board["presentations"] = [
+        {
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": True,
+        },
+        {
+            "id": "back",
+            "name": "Back",
+            "assetPath": "assets/back.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+        },
+    ]
+    first_hold = board["holds"][0]
+    assert isinstance(first_hold, dict)
+    first_hold["presentationID"] = "front"
+    back_hold = json.loads(json.dumps(first_hold))
+    back_hold.update(id="hold-back", name="Back hold", presentationID="back")
+    board["holds"] = [first_hold, back_hold]
+    return board
