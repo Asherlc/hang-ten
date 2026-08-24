@@ -1269,8 +1269,19 @@ and the official paired-front packshot as the authoritative construction
 reference. It restored exactly two separated upper recesses per unit while
 keeping the unsupported lower pockets absent. The accepted `primary.png` is
 1536 × 1024, ratio 1.5, SHA-256
-`d153f8c4b0842342eee3598b958f8b0b3a48d8b87d6ced80b02e41c327fc430c`.
+`553fc72b75fcf18c1fa5ccba03eb7013bb40d1e4eaf4174cc68abc592dc0ed62`.
 It is NON-evidence and was not geometrically processed after generation.
+
+Task 12 rejected the earlier accepted asset because it rendered both units in
+the same handed orientation while the official paired-front packshot and the
+canonical right-unit paths are exact horizontal mirrors. A built-in image edit
+was interrupted after it had written the replacement asset but before its tool
+result and verbatim prompt were recorded. The replacement was preserved rather
+than regenerated: manual original-resolution review confirmed that the circular
+mono and vertical duo now occupy the outer side of each unit, the tall side
+recess occupies the inner side of each unit, and the two upper recesses remain
+separated by solid apex wood. The exact interrupted prompt is therefore
+unavailable and is deliberately not reconstructed here.
 
 Generation and correction history (verbatim primary requests; the first three
 requests yielded superseded intermediate assets):
@@ -1281,8 +1292,9 @@ requests yielded superseded intermediate assets):
 
 > Remove only the two invented horizontal rounded-rectangle recesses at the very bottom, one from each unit. Fill those areas seamlessly with matching pale laminated wood. Keep the broad curved lower inner edge of each pentagonal opening unobstructed and readable as the tray contact, exactly as in Image 2.
 
-The merge request above produced a rejected intermediate, not the accepted
-asset. Final accepted correction prompt (verbatim):
+The merge request above produced a rejected intermediate. The following was
+the previously accepted correction prompt (verbatim), later superseded by the
+interrupted Task 12 edit:
 
 > Use case: precise-object-edit
 >
@@ -1331,5 +1343,14 @@ full Workbench suite passed. An interactive Workbench browser inspection was
 attempted, but this workspace exposed no connected in-app or extension browser;
 the temporary localhost listener was stopped and its port verified closed.
 
-Catalog-wide iOS simulator normal/active/hit-test inspection remains assigned
-to Task 12; this audit makes no simulator-review claim.
+Task 12's Penta Evo follow-up installed the signed Debug app on a
+workspace-owned iPhone 15 simulator running iOS 26.3. The board-specific
+step editor exposed all 14 expected accessibility targets; all 14 accepted
+automated taps. Manual original-resolution inspection of both the normal and
+all-active states confirmed that the mirrored right-unit overlays align with
+the corrected visible recesses without clipping. The installed primary asset
+matched SHA-256
+`553fc72b75fcf18c1fa5ccba03eb7013bb40d1e4eaf4174cc68abc592dc0ed62`.
+The exact simulator and all workspace-owned validation artifacts were deleted
+after review, and their absence was verified. Catalog-wide completion of the
+remaining Task 12 boards is tracked separately.
