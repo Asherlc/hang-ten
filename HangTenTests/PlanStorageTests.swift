@@ -45,7 +45,26 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testPlanLibraryStoreEncodingOmitsFormerVersionFields() throws {
-        let store = try PlanLibraryStore(definition: makeLibrary(steps: []))
+        let store = try PlanLibraryStore(
+            definition: makeLibrary(
+                steps: [
+                    makeStep(
+                        id: "rest",
+                        duration: 30,
+                        phase: .rest,
+                        targets: [],
+                        segments: [
+                            WorkoutSegmentDefinition(
+                                kind: .rest,
+                                targets: [],
+                                timing: .fixed,
+                                duration: 30
+                            )
+                        ]
+                    )
+                ]
+            )
+        )
         let document = try XCTUnwrap(
             JSONSerialization.jsonObject(with: try store.encodedData()) as? [String: Any]
         )
@@ -441,6 +460,7 @@ final class PlanStorageTests: XCTestCase {
                     "targets": [],
                     "segments": [{
                       "kind": "rest",
+                      "targets": [],
                       "timing": "fixed",
                       "duration": 30
                     }]
@@ -462,6 +482,7 @@ final class PlanStorageTests: XCTestCase {
                       },
                       {
                         "kind": "rest",
+                        "targets": [],
                         "timing": "fixed",
                         "duration": 20
                       }

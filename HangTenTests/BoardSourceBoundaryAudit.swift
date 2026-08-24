@@ -3,8 +3,9 @@ import Foundation
 enum BoardSourceBoundaryAudit {
     private static let planMappingOwnerPath = "HangTen/Models/TrainingModels.swift"
     private static let planMappingOwnerDeclaration = "enum LegacyPlanSeedBoardMappings {"
-    private static let genericPresentationLoaderPaths: Set<String> = [
-        "HangTen/Models/BoardPackageStore.swift"
+    private static let genericPresentationVocabularyOwnerPaths: Set<String> = [
+        "HangTen/Models/BoardPackageStore.swift",
+        "HangTen/Models/TrainingModels.swift"
     ]
     private static let genericCanonicalPresentationLiterals: Set<String> = [
         "assets/primary.png",
@@ -62,7 +63,7 @@ enum BoardSourceBoundaryAudit {
             from: source,
             relativePath: relativePath
         )
-        let exemptedPresentationLiterals = genericPresentationLoaderPaths.contains(relativePath)
+        let exemptedPresentationLiterals = genericPresentationVocabularyOwnerPaths.contains(relativePath)
             ? genericCanonicalPresentationLiterals
             : []
 

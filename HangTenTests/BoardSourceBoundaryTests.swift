@@ -372,7 +372,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testBoundaryAuditAllowsCanonicalPresentationVocabularyOnlyInGenericLoader() {
+    func testBoundaryAuditAllowsCanonicalPresentationVocabularyInGenericOwners() {
         let canonicalPresentationVocabulary: Set<String> = [
             "assets/primary.png",
             "primary.png",
@@ -387,6 +387,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
         XCTAssertEqual(
             BoardSourceBoundaryAudit.findings(
                 relativePath: "HangTen/Models/BoardPackageStore.swift",
+                source: genericLoaderSource,
+                packageOwnedLiterals: canonicalPresentationVocabulary
+            ),
+            []
+        )
+        XCTAssertEqual(
+            BoardSourceBoundaryAudit.findings(
+                relativePath: "HangTen/Models/TrainingModels.swift",
                 source: genericLoaderSource,
                 packageOwnedLiterals: canonicalPresentationVocabulary
             ),
