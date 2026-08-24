@@ -435,7 +435,9 @@ private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedul
             pendingBuffers[phrase] = []
         }
         let utterance = AVSpeechUtterance(string: phrase)
-        utterance.voice = AVSpeechSynthesisVoice(language: preferredLanguageCode)
+        utterance.voice = WorkoutSpeechVoiceSelector.bestInstalledVoice(
+            for: preferredLanguageCode
+        ) ?? AVSpeechSynthesisVoice(language: preferredLanguageCode)
         utterance.rate = rate
         utterance.pitchMultiplier = pitchMultiplier
         utterance.volume = volume
