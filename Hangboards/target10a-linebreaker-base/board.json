@@ -2371,7 +2371,7 @@
     {
       "id": "hold-23",
       "name": "Hold 23",
-      "kind": "edge",
+      "kind": "jug",
       "geometry": [
         {
           "frame": {
