@@ -20,9 +20,19 @@ DEFAULT_MODEL_ROOT = Path(".context/hangboard-rembg-models")
 _SESSION_ARTIFACT = ":memory:.ses"
 _MAX_ENCLOSED_BACKGROUND_PIXELS = 100_000
 _ENCLOSED_BACKGROUND_SEEDS = {
+    "beastmaker-1000": ((215, 10), (785, 10)),
+    "soill-iron-palm-2": ((768, 425), (768, 530), (768, 635)),
+    "soill-training-tiles": ((500, 450),),
     "tension-grindstone": ((887, 443),),
+    "trango-rock-prodigy-pivot": (
+        (590, 310),
+        (710, 310),
+        (1055, 310),
+        (1180, 310),
+    ),
     "yy-travelboard": ((190, 625), (1348, 625)),
     "yy-verticalboard-evo": ((887, 500),),
+    "yy-verticalboard-one": ((887, 500),),
     "yy-penta-evo": ((145, 595), (1385, 595), (180, 720), (1355, 720)),
 }
 
