@@ -28,6 +28,44 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertNil(document["schemaVersion"])
     }
 
+    func testCustomRoutineSegmentsEncodeOnlyPluralTargets() throws {
+        let segment = WorkoutSegmentDefinition(
+            kind: .work,
+            targets: [.kind(.edge)],
+            timing: .fixed,
+            duration: 10
+        )
+        let routine = CustomRoutineDefinition(
+            id: "custom.segment-shape",
+            title: "Segment shape",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "hang",
+                title: "Edge hang",
+                instruction: "Hang.",
+                accessory: "10s",
+                duration: 10,
+                phase: .hang,
+                targets: [.kind(.edge)],
+                segments: [segment]
+            )]
+        )
+        let data = try JSONEncoder().encode(CustomRoutineLibrary(routines: [routine]))
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: data) as? [String: Any]
+        )
+        let routines = try XCTUnwrap(document["routines"] as? [[String: Any]])
+        let steps = try XCTUnwrap(routines[0]["steps"] as? [[String: Any]])
+        let segments = try XCTUnwrap(steps[0]["segments"] as? [[String: Any]])
+
+        XCTAssertEqual(segments[0]["targets"] as? [[String: String]], [["kind": "edge"]])
+        XCTAssertNil(segments[0]["target"])
+    }
+
     func testCustomRoutineLibraryRejectsFormerSchemaVersionField() {
         XCTAssertThrowsError(
             try JSONDecoder().decode(

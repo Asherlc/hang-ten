@@ -238,23 +238,8 @@ enum WorkoutTargetDefinition: Codable, Hashable {
 struct WorkoutSegmentDefinition: Codable, Hashable {
     let kind: WorkoutSegmentKind
     let targets: [WorkoutTargetDefinition]
-    var target: WorkoutTargetDefinition? { targets.first }
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
-
-    init(
-        kind: WorkoutSegmentKind,
-        target: WorkoutTargetDefinition?,
-        timing: WorkoutSegmentTiming,
-        duration: TimeInterval?
-    ) {
-        self.init(
-            kind: kind,
-            targets: target.map { [$0] } ?? [],
-            timing: timing,
-            duration: duration
-        )
-    }
 
     init(
         kind: WorkoutSegmentKind,
@@ -270,7 +255,6 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
 
     private enum CodingKeys: String, CodingKey {
         case kind
-        case target
         case targets
         case timing
         case duration
@@ -279,19 +263,7 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
-        if let decodedTargets = try container.decodeIfPresent(
-            [WorkoutTargetDefinition].self,
-            forKey: .targets
-        ) {
-            targets = decodedTargets
-        } else if let legacyTarget = try container.decodeIfPresent(
-            WorkoutTargetDefinition.self,
-            forKey: .target
-        ) {
-            targets = [legacyTarget]
-        } else {
-            targets = []
-        }
+        targets = try container.decode([WorkoutTargetDefinition].self, forKey: .targets)
         timing = try container.decode(WorkoutSegmentTiming.self, forKey: .timing)
         duration = try container.decodeIfPresent(TimeInterval.self, forKey: .duration)
     }
@@ -299,11 +271,7 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(kind, forKey: .kind)
-        if targets.count == 1 {
-            try container.encode(targets[0], forKey: .target)
-        } else if !targets.isEmpty {
-            try container.encode(targets, forKey: .targets)
-        }
+        try container.encode(targets, forKey: .targets)
         try container.encode(timing, forKey: .timing)
         try container.encodeIfPresent(duration, forKey: .duration)
     }
@@ -776,7 +744,7 @@ enum PlanLibraryValidator {
         }
         let isCompoundStep = step.segments.count > 1
         for (index, segment) in step.segments.enumerated() {
-            let targetPath = "\(path).segments[\(index)].target"
+            let targetPath = "\(path).segments[\(index)].targets"
             let timingPath = "\(path).segments[\(index)].timing"
             let durationPath = "\(path).segments[\(index)].duration"
             if segment.kind == .work && segment.targets.isEmpty {

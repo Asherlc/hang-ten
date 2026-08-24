@@ -56,13 +56,15 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testBundledPlanLibraryContainsNoVersionFields() throws {
+        let data = try bundledPlanLibraryData()
         let document = try XCTUnwrap(
-            JSONSerialization.jsonObject(with: bundledPlanLibraryData()) as? [String: Any]
+            JSONSerialization.jsonObject(with: data) as? [String: Any]
         )
         let metadata = try XCTUnwrap(document["metadata"] as? [String: Any])
 
         XCTAssertNil(document["schemaVersion"])
         XCTAssertNil(metadata["version"])
+        XCTAssertNoThrow(try JSONDecoder().decode(PlanLibraryDefinition.self, from: data))
     }
 
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
@@ -216,13 +218,13 @@ final class PlanStorageTests: XCTestCase {
     func testUnversionedDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
-            target: .feature(.mediumEdge, fallbacks: []),
+            targets: [.feature(.mediumEdge, fallbacks: [])],
             timing: .fixed,
             duration: 20
         )
         let fixedRest = WorkoutSegmentDefinition(
             kind: .rest,
-            target: nil,
+            targets: [],
             timing: .fixed,
             duration: 40
         )
@@ -240,7 +242,7 @@ final class PlanStorageTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        target: .feature(.roundSloper, fallbacks: []),
+                        targets: [.feature(.roundSloper, fallbacks: [])],
                         timing: .stopwatch,
                         duration: nil
                     )
@@ -254,7 +256,7 @@ final class PlanStorageTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        target: .feature(.jug, fallbacks: []),
+                        targets: [.feature(.jug, fallbacks: [])],
                         timing: .undefined,
                         duration: nil
                     )
@@ -287,7 +289,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testSegmentTargetFixturesRoundTripMultiTargetAndLegacyTarget() throws {
+    func testSegmentTargetFixturesRoundTripOnlyPluralTargets() throws {
         let data = Data(
             #"""
             {
@@ -318,7 +320,7 @@ final class PlanStorageTests: XCTestCase {
                     },
                     {
                       "kind": "work",
-                      "target": { "feature": "mediumEdge" },
+                      "targets": [{ "feature": "mediumEdge" }],
                       "timing": "fixed",
                       "duration": 10
                     }
@@ -360,8 +362,8 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertNotNil(encodedSegments[0]["targets"])
         XCTAssertNil(encodedSegments[0]["target"])
-        XCTAssertNotNil(encodedSegments[1]["target"])
-        XCTAssertNil(encodedSegments[1]["targets"])
+        XCTAssertNotNil(encodedSegments[1]["targets"])
+        XCTAssertNil(encodedSegments[1]["target"])
         XCTAssertEqual(
             resolvedSegments[0].targets,
             [.feature(.mediumEdge), .kind(.jug)]
@@ -373,7 +375,45 @@ final class PlanStorageTests: XCTestCase {
             persistedSegments[0].targets,
             [.feature(.mediumEdge, fallbacks: []), .kind(.jug)]
         )
-        XCTAssertEqual(persistedSegments[1].target, .feature(.mediumEdge, fallbacks: []))
+        XCTAssertEqual(persistedSegments[1].targets, [.feature(.mediumEdge, fallbacks: [])])
+    }
+
+    func testPlanLibraryStoreRejectsFormerSingularSegmentTarget() {
+        let data = Data(
+            #"""
+            {
+              "metadata": {
+                "id": "segment.fixture",
+                "title": "Segment fixture",
+                "generatedAt": "2026-08-24",
+                "notes": []
+              },
+              "boardMappings": [],
+              "blocks": [{
+                "id": "segment.block",
+                "title": "Segment block",
+                "steps": [{
+                  "id": "segment.step",
+                  "title": "Segment step",
+                  "instruction": "Hang.",
+                  "accessory": "10s",
+                  "duration": 10,
+                  "phase": "hang",
+                  "targets": [{ "kind": "edge" }],
+                  "segments": [{
+                    "kind": "work",
+                    "target": { "kind": "edge" },
+                    "timing": "fixed",
+                    "duration": 10
+                  }]
+                }]
+              }],
+              "plans": []
+            }
+            """#.utf8
+        )
+
+        XCTAssertThrowsError(try PlanLibraryStore(data: data))
     }
 
     func testUnversionedDefinitionsWithExplicitSegmentsResolveCompatibilityTiming() throws {
@@ -416,7 +456,7 @@ final class PlanStorageTests: XCTestCase {
                     "segments": [
                       {
                         "kind": "work",
-                        "target": { "kind": "edge" },
+                        "targets": [{ "kind": "edge" }],
                         "timing": "fixed",
                         "duration": 10
                       },
@@ -437,7 +477,7 @@ final class PlanStorageTests: XCTestCase {
                     "targets": [{ "kind": "jug" }],
                     "segments": [{
                       "kind": "work",
-                      "target": { "kind": "jug" },
+                        "targets": [{ "kind": "jug" }],
                       "timing": "undefined"
                     }]
                   }
@@ -489,7 +529,7 @@ final class PlanStorageTests: XCTestCase {
     func testFixedSegmentRequiresDuration() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .fixed,
             duration: nil
         )
@@ -502,33 +542,33 @@ final class PlanStorageTests: XCTestCase {
     func testWorkSegmentRequiresTarget() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: nil,
+            targets: [],
             timing: .undefined,
             duration: nil
         )
 
         XCTAssertTrue(validationIssues(for: segment).contains {
-            $0.path == "blocks[0].steps[0].segments[0].target"
+            $0.path == "blocks[0].steps[0].segments[0].targets"
         })
     }
 
     func testRestSegmentCannotTargetAHold() {
         let segment = WorkoutSegmentDefinition(
             kind: .rest,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .fixed,
             duration: 30
         )
 
         XCTAssertTrue(validationIssues(for: segment).contains {
-            $0.path == "blocks[0].steps[0].segments[0].target"
+            $0.path == "blocks[0].steps[0].segments[0].targets"
         })
     }
 
     func testRestSegmentRequiresDurationRegardlessOfTiming() {
         let segment = WorkoutSegmentDefinition(
             kind: .rest,
-            target: nil,
+            targets: [],
             timing: .undefined,
             duration: nil
         )
@@ -541,7 +581,7 @@ final class PlanStorageTests: XCTestCase {
     func testRestSegmentRequiresFixedTiming() {
         let segment = WorkoutSegmentDefinition(
             kind: .rest,
-            target: nil,
+            targets: [],
             timing: .undefined,
             duration: 30
         )
@@ -554,7 +594,7 @@ final class PlanStorageTests: XCTestCase {
     func testStopwatchSegmentCannotHaveDuration() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .stopwatch,
             duration: 10
         )
@@ -567,7 +607,7 @@ final class PlanStorageTests: XCTestCase {
     func testUndefinedSegmentCannotHaveDuration() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .undefined,
             duration: 10
         )
@@ -581,7 +621,7 @@ final class PlanStorageTests: XCTestCase {
         for invalidDuration in [-1.0, .infinity] {
             let segment = WorkoutSegmentDefinition(
                 kind: .work,
-                target: .kind(.edge),
+                targets: [.kind(.edge)],
                 timing: .fixed,
                 duration: invalidDuration
             )
@@ -615,7 +655,7 @@ final class PlanStorageTests: XCTestCase {
     func testSegmentDurationCannotExceedEnclosingStep() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .fixed,
             duration: 31
         )
@@ -633,8 +673,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 5)
                     ]
                 )
             ]
@@ -654,8 +694,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 0),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 0),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 30)
                     ]
                 )
             ]
@@ -675,8 +715,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 0,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 5),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 5)
                     ]
                 )
             ]
@@ -696,8 +736,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 10)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 10)
                     ]
                 ),
                 makeStep(
@@ -705,7 +745,7 @@ final class PlanStorageTests: XCTestCase {
                     duration: 10,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 10)
                     ]
                 )
             ]
@@ -725,8 +765,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .stopwatch, duration: nil),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .stopwatch, duration: nil),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 30)
                     ]
                 )
             ]
@@ -754,7 +794,7 @@ final class PlanStorageTests: XCTestCase {
             duration: 30,
             targets: [.kind(.edge)],
             segments: [
-                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .undefined, duration: nil)
             ]
         )
 
@@ -782,7 +822,7 @@ final class PlanStorageTests: XCTestCase {
             duration: 30,
             targets: [.kind(.edge)],
             segments: [
-                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .undefined, duration: nil)
             ]
         )
 
@@ -911,8 +951,8 @@ final class PlanStorageTests: XCTestCase {
             duration: 12,
             targets: [.kind(.edge)],
             segments: [
-                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 8),
-                WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 4)
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 8),
+                WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 4)
             ]
         )
 
