@@ -342,9 +342,9 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.369090098083,
+            "x": 0.378850098083,
             "y": 0.311575641488,
-            "width": 0.244,
+            "width": 0.23424,
             "height": 0.03
           },
           "shape": {
@@ -353,14 +353,7 @@
               {
                 "command": "move",
                 "to": [
-                  0.04,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.96,
+                  0.0,
                   0.0
                 ]
               },
@@ -368,20 +361,13 @@
                 "command": "line",
                 "to": [
                   1.0,
-                  0.5
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.96,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.04,
+                  1.0,
                   1.0
                 ]
               },
@@ -389,14 +375,7 @@
                 "command": "line",
                 "to": [
                   0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.04,
-                  0.0
+                  1.0
                 ]
               },
               {
@@ -406,6 +385,10 @@
           },
           "treatment": {
             "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
           }
         }
       ]
