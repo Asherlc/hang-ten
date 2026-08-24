@@ -24,7 +24,7 @@ measurement/feedback—the semantic target only highlights a suitable board
 feature and does not reproduce the study protocol. F100 retains its alternating
 right/left instruction without inventing board-side mappings.
 
-## Field decisions for all 19 built-in plans
+## Field decisions for all 18 built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
@@ -45,7 +45,6 @@ right/left instruction without inventing board-side mappings.
 | `hoopers-beta.introductory-home-hangboard` | coach | [Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS](https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine) | title and identifiable routine order, counts, ranges, durations, and qualifiers | subtitle, instruction, accessory, target, count, duration, interval, gripType: the app splits the source routine into guided rows and semantic targets | warmUp, cooldown, fingerConfiguration |
 | `method.intermediate-hangboarding.repeaters` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable five-round 5–7-second repeater ranges | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects range endpoints, expands rows, and supplies semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 | `method.intermediate-hangboarding.emom` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, target, count, duration, interval, gripType: app defaults untimed counted work and maps source holds to semantic targets/cues | warmUp, cooldown, fingerConfiguration |
-| `lattice.beginner-climbers-training-guide` | coach | [Lattice Training · The Beginner Climber's Training Guide](https://latticetraining.com/blog/the-beginners-guide) | title and identifiable foundational task names/priorities | subtitle, instruction, accessory, target, count, duration, interval, gripType: reference rows and preview timing are app representations, not a fabricated source protocol | warmUp, cooldown, fingerConfiguration |
 | `rei.hangboard-sample-workout` | retailer | [REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing](https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html) | title and identifiable warm-up alternatives, five-grip order, repetitions, timing ranges, and recovery guidance | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects preview/range defaults and semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 
 ## Removed catalog content
@@ -88,7 +87,6 @@ grip/finger cue.
     {"planID":"hoopers-beta.introductory-home-hangboard","sourceType":"coach","sourceLabel":"Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS","sourceURL":"https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine"},
     {"planID":"method.intermediate-hangboarding.repeaters","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"method.intermediate-hangboarding.emom","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
-    {"planID":"lattice.beginner-climbers-training-guide","sourceType":"coach","sourceLabel":"Lattice Training · The Beginner Climber's Training Guide","sourceURL":"https://latticetraining.com/blog/the-beginners-guide"},
     {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"}
   ],
   "planFieldRules": [
@@ -174,12 +172,6 @@ grip/finger cue.
     {"planID":"method.intermediate-hangboarding.emom","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"method.intermediate-hangboarding.emom","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
-    {"planID":"lattice.beginner-climbers-training-guide","fields":["title"],"decision":"keep","sourcePrescription":true},
-    {"planID":"lattice.beginner-climbers-training-guide","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
-    {"planID":"lattice.beginner-climbers-training-guide","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
-    {"planID":"lattice.beginner-climbers-training-guide","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
-    {"planID":"lattice.beginner-climbers-training-guide","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-
     {"planID":"rei.hangboard-sample-workout","fields":["title"],"decision":"keep","sourcePrescription":true},
     {"planID":"rei.hangboard-sample-workout","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
     {"planID":"rei.hangboard-sample-workout","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
@@ -240,9 +232,6 @@ grip/finger cue.
     {"planID":"method.intermediate-hangboarding.emom","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"method.intermediate-hangboarding.emom","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"method.intermediate-hangboarding.emom","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
-    {"planID":"lattice.beginner-climbers-training-guide","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
-    {"planID":"lattice.beginner-climbers-training-guide","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
-    {"planID":"lattice.beginner-climbers-training-guide","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"}

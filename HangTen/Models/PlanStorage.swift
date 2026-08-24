@@ -1522,8 +1522,7 @@ enum BuiltInPlanLibraryDefinition {
             LegacyPlanSeedCatalog.latticeLiteHomeAdaptations.id,
             LegacyPlanSeedCatalog.hoopersBetaIntroductory.id,
             LegacyPlanSeedCatalog.methodRepeaters.id,
-            LegacyPlanSeedCatalog.methodEMOM.id,
-            LegacyPlanSeedCatalog.latticeBeginnerGuide.id
+            LegacyPlanSeedCatalog.methodEMOM.id
         ].contains(plan.id) {
             category = "coach"
         } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
@@ -1552,11 +1551,6 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
                 "The app defaults repeater ranges to 7s/7s and 105s recovery, and uses 5 seconds per pull-up or 1 second per knee raise where the source gives no movement duration."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.latticeBeginnerGuide.id {
-            notes = [
-                "Reference-plan guidance is preserved without inventing counts or a weekly schedule.",
-                "The app uses coach-guided preview rows; the 20-second foot-supported hang remains explicitly an example, not a universal prescription."
             ]
         } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
             notes = [
@@ -1734,7 +1728,6 @@ enum PlanCatalog {
     static let hoopersBetaIntroductory = required("hoopers-beta.introductory-home-hangboard")
     static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
-    static let latticeBeginnerGuide = required("lattice.beginner-climbers-training-guide")
     static let reiHangboardSample = required("rei.hangboard-sample-workout")
 
     static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!

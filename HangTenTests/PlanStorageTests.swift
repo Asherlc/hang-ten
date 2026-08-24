@@ -1190,13 +1190,19 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
+    func testLatticeBeginnerGuideIsNotAvailableFromBuiltInCatalog() {
+        let removedPlanID = "lattice.beginner-climbers-training-guide"
+
+        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
+    }
+
     func testRequestedSourcePlansAreSeededAndResolved() throws {
         let expectedIDs = [
             "lattice.lite-home-adaptations",
             "hoopers-beta.introductory-home-hangboard",
             "method.intermediate-hangboarding.repeaters",
             "method.intermediate-hangboarding.emom",
-            "lattice.beginner-climbers-training-guide",
             "rei.hangboard-sample-workout"
         ]
 
@@ -1205,7 +1211,7 @@ final class PlanStorageTests: XCTestCase {
         })
         XCTAssertEqual(
             expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
-            ["coach", "coach", "coach", "coach", "coach", "retailer"]
+            ["coach", "coach", "coach", "coach", "retailer"]
         )
     }
 

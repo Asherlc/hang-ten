@@ -2188,27 +2188,6 @@ enum LegacyPlanSeedCatalog {
         ])
     )
 
-    static let latticeBeginnerGuide = TrainingPlan(
-        id: "lattice.beginner-climbers-training-guide",
-        title: "Lattice Beginner Climber's Foundational Guide",
-        subtitle: "Reference plan, not a fabricated timed protocol; source guidance prioritizes climbing and basic strength first.",
-        level: "Beginner",
-        sourceLabel: "Lattice Training · The Beginner Climber's Training Guide",
-        sourceURL: URL(string: "https://latticetraining.com/blog/the-beginners-guide")!,
-        provenance: .adapted,
-        boardID: nil,
-        steps: numbered([
-            conditioningTask(id: "lattice-beginner-climb-first", title: "Climb and build wall finger strength", instruction: "Prioritize climbing and varied grip practice on the wall before adding hangboarding. The source gives priorities, not a session count or timer."),
-            conditioningTask(id: "lattice-beginner-assisted-pull-ups", title: "Assisted or banded pull-ups", instruction: "Build upper-body and tendon capacity with good-form pull-ups; use assistance or a band as needed. No source count is prescribed."),
-            conditioningTask(id: "lattice-beginner-press-ups", title: "Press-ups", instruction: "Add good-form press-ups for general upper-body capacity. No source count is prescribed."),
-            conditioningTask(id: "lattice-beginner-spiderman", title: "Floor core · Spider-Man holds", instruction: "Use Spider-Man holds to brace tension between hands and feet. Coach-guided; the source prescribes no count or duration."),
-            conditioningTask(id: "lattice-beginner-dish-tucks", title: "Floor core · dish tucks", instruction: "Use dish tucks for general core conditioning. Coach-guided; do not infer a source rep scheme."),
-            conditioningTask(id: "lattice-beginner-moving-plank", title: "Floor core · moving plank variations", instruction: "Use moving plank variations for core conditioning and stability. Coach-guided; no source count or duration is supplied."),
-            conditioningTask(id: "lattice-beginner-deadlifts", title: "Deadlifts", instruction: "Use deadlifts for posterior-chain strength and core bracing, learning form from an experienced trainer if needed. No source count is prescribed."),
-            guidedTask(id: "lattice-beginner-light-hangboard", title: "Later phase · light hangboarding", instruction: "Only later, when appropriate, use a longer light hang such as the source's example of 20 seconds with one foot on the floor. Do not max out; this is an example, not a universal prescription.", accessory: "Example only · 20s with a foot down", phase: .hang, targets: [.feature(.mediumEdge)], duration: 20, timing: .fixed, gripType: .openHand)
-        ])
-    )
-
     static let reiHangboardSample = TrainingPlan(
         id: "rei.hangboard-sample-workout",
         title: "REI · Hangboard Sample Workout",
@@ -2262,7 +2241,6 @@ enum LegacyPlanSeedCatalog {
             hoopersBetaIntroductory,
             methodRepeaters,
             methodEMOM,
-            latticeBeginnerGuide,
             reiHangboardSample
         ]
 
