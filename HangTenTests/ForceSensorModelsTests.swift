@@ -46,7 +46,7 @@ final class ForceSensorModelsTests: XCTestCase {
         )
         XCTAssertEqual(
             ForceSensorConnectionCopy.detail(for: .failed, profile: .genericProgressor),
-            "Try connecting again. If the Generic Progressor-compatible is connected to another app, release it there first, then retry."
+            "Try connecting again. If the Generic Progressor-compatible sensor is connected to another app, release it there first, then retry."
         )
     }
 
@@ -71,6 +71,13 @@ final class ForceSensorModelsTests: XCTestCase {
                 profile: .whC06
             ),
             "A supported sensor scan timed out. Move the sensor closer and try again."
+        )
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.lastError(
+                "Generic WH-C06-compatible is not available yet.",
+                profile: .genericWHC06
+            ),
+            "A supported sensor is not available yet."
         )
     }
 

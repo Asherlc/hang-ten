@@ -530,6 +530,11 @@ enum ForceSensorConnectionCopy {
         guard let error else { return "None" }
 
         let displayProfile = displayProfile(for: profile)
+        if !ForceSensorProfile.connectableCases.contains(profile),
+           error.hasSuffix(" is not available yet.") {
+            return "\(errorSensorDescription(for: displayProfile)) is not available yet."
+        }
+
         return error.replacingOccurrences(
             of: "Motherboard",
             with: errorSensorDescription(for: displayProfile)
@@ -545,7 +550,14 @@ enum ForceSensorConnectionCopy {
     }
 
     private static func failureSensorDescription(for profile: ForceSensorProfile) -> String {
-        profile == .automatic ? "the supported sensor" : "the \(profile.label)"
+        switch profile {
+        case .automatic:
+            "the supported sensor"
+        case .genericProgressor:
+            "the \(profile.label) sensor"
+        default:
+            "the \(profile.label)"
+        }
     }
 
     private static func errorSensorDescription(for profile: ForceSensorProfile) -> String {
