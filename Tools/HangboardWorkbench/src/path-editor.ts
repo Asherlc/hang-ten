@@ -594,6 +594,20 @@ export function makeSegmentBendable(commands: PathCommand[], afterIndex: number)
   return true;
 }
 
+export function bendSegmentToPoint(commands: PathCommand[], afterIndex: number, point: Point): boolean {
+  const start = commands[afterIndex]?.points.at(-1);
+  const curve = commands[afterIndex + 1];
+  if (!start || curve?.type !== "C") return false;
+  const end = curve.points[0];
+  if (!end || !Number.isFinite(point.x) || !Number.isFinite(point.y)) return false;
+  const control = {
+    x: (8 * point.x - start.x - end.x) / 6,
+    y: (8 * point.y - start.y - end.y) / 6,
+  };
+  curve.controls = [{ ...control }, { ...control }];
+  return true;
+}
+
 export function makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean {
   const start = commands[afterIndex]?.points.at(-1);
   const curve = commands[afterIndex + 1];

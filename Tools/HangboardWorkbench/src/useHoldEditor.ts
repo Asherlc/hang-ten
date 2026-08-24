@@ -33,7 +33,7 @@ import type {
 
 interface DragState {
   active: boolean;
-  type: "vertex" | "control" | "path" | "rotation" | "constrained-resize" | null;
+  type: "vertex" | "control" | "path" | "bend" | "rotation" | "constrained-resize" | null;
   holdKey: string | null;
   commandIndex: number;
   controlIndex: number;
@@ -1043,14 +1043,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         reportInvalidPath(error);
         return;
       }
+      const bendableSegmentAfterIndex = target.classList.contains("region-shape")
+        ? closestEditableSegmentIndex(commands, point)
+        : null;
+      const bendsSegment = bendableSegmentAfterIndex !== null
+        && commands[bendableSegmentAfterIndex + 1]?.type === "C";
       next = {
         ...EMPTY_DRAG,
         active: true,
         type: target.classList.contains("path-editor-vertex")
           ? "vertex"
-          : target.classList.contains("path-editor-control") ? "control" : "path",
+          : target.classList.contains("path-editor-control") ? "control" : bendsSegment ? "bend" : "path",
         holdKey: selectedHold.key,
-        commandIndex: Number(target.getAttribute("data-index") ?? -1),
+        commandIndex: bendsSegment ? bendableSegmentAfterIndex : Number(target.getAttribute("data-index") ?? -1),
         controlIndex: Number(target.getAttribute("data-control") ?? -1),
         startX: point.x,
         startY: point.y,
@@ -1146,6 +1151,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           control.x += deltaX;
           control.y += deltaY;
         }
+      } else if (drag.type === "bend") {
+        pathEditor.bendSegmentToPoint(commands, drag.commandIndex, point);
       } else if (drag.type === "path") {
         if (!event.altKey && drag.pathBounds) {
           deltaX += nearbyGuideEdgeOffset(

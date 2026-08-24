@@ -1436,6 +1436,20 @@ test("the second cubic control stays independently draggable after Make bendable
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("dragging a bendable cubic pulls its midpoint to the pointer without moving anchors", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("line menu snaps a diagonal custom-outline segment to the chosen axis", async () => {
   for (const [action, expectedPath, expectedStatus] of [
     ["#make-horizontal-action", "M 10 10 L 30 10 L 30 40 L 10 40 Z", "Line made horizontal. Save when ready."],

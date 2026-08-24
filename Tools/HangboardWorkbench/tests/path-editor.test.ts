@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   addInflectionPoint,
   addVertex,
+  bendSegmentToPoint,
   constrainedOutlineModel,
   createOutlineShapePath,
   deleteVertex,
@@ -94,6 +95,25 @@ test("makeSegmentBendable converts a closing edge while retaining one final clos
   assert.equal(commands.filter((command) => command.type === "M").length, 1);
   assert.equal(commands.filter((command) => command.type === "Z").length, 1);
   assert.equal(commands.at(-1)?.type, "Z");
+});
+
+test("bendSegmentToPoint pulls a bendable cubic through the pointer while preserving anchors", () => {
+  const commands = parsePath("M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z");
+
+  assert.equal(bendSegmentToPoint(commands, 0, { x: 20, y: 20 }), true);
+  assert.equal(serializePath(commands), "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+});
+
+test("bendSegmentToPoint leaves straight and quadratic segments unchanged", () => {
+  for (const path of [
+    "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+    "M 10 10 Q 20 20 30 10 L 30 30 L 10 30 Z",
+  ]) {
+    const commands = parsePath(path);
+
+    assert.equal(bendSegmentToPoint(commands, 0, { x: 20, y: 20 }), false, path);
+    assert.equal(serializePath(commands), path);
+  }
 });
 
 test("makeSegmentStraight replaces quadratic and cubic segments with lines to their existing endpoints", () => {

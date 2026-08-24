@@ -216,6 +216,7 @@ export interface PathEditor {
   isInflectionVertex(commands: readonly PathCommand[], index: number): boolean;
   roundVertex(commands: PathCommand[], index: number): boolean;
   makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean;
+  bendSegmentToPoint(commands: PathCommand[], afterIndex: number, point: Point): boolean;
   makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean;
   snapSegmentHorizontal(commands: PathCommand[], afterIndex: number): boolean;
   snapSegmentVertical(commands: PathCommand[], afterIndex: number): boolean;
