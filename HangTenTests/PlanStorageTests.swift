@@ -21,7 +21,10 @@ final class PlanStorageTests: XCTestCase {
             "source does not prescribe",
             "source gives no",
             "guided default",
-            "adaptation"
+            "adaptation",
+            "semantic",
+            "app choices",
+            "app uses"
         ]
 
         XCTAssertEqual(
