@@ -963,6 +963,15 @@ private struct BoardPackageShapeConstraintDocument: Decodable {
             )
         }
     }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(command, forKey: .command)
+        try container.encodeIfPresent(to, forKey: .to)
+        try container.encodeIfPresent(control, forKey: .control)
+        try container.encodeIfPresent(control1, forKey: .control1)
+        try container.encodeIfPresent(control2, forKey: .control2)
+    }
 }
 
 private struct BoardPackageMillimeterRangeDocument: Decodable {

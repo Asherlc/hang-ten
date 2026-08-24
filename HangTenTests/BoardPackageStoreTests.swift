@@ -796,6 +796,25 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(hold.geometry[0].frame, CGRect(x: 0.05, y: 0.2, width: 0.1, height: 0.3))
     }
 
+    func testBendableCurveMetadataDoesNotChangeEncodedRuntimeDocument() throws {
+        let document = try JSONDecoder().decode(
+            BoardGeometryPathCommandDocument.self,
+            from: Data(
+                """
+                {"command":"curve","control1":[0,0],"control2":[1,0],"to":[1,1],"bendable":true}
+                """.utf8
+            )
+        )
+
+        let encoded = try JSONEncoder().encode(document)
+        let object = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+
+        XCTAssertEqual(object["command"] as? String, "curve")
+        XCTAssertNil(object["bendable"])
+    }
+
     func testStoreRejectsBendableMetadataOnLineCommand() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
