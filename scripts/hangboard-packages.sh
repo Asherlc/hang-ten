@@ -55,7 +55,8 @@ if [[ -x "$environment_root/bin/python" ]] && \
 fi
 
 if [[ "$environment_has_package" != true || \
-      ! -x "$environment_root/bin/hangboard-packages" ]]; then
+      ! -x "$environment_root/bin/hangboard-packages" || \
+      "$tool_root/pyproject.toml" -nt "$environment_root/bin/hangboard-packages" ]]; then
     "$python_command" -m venv "$environment_root"
     "$environment_root/bin/python" -m pip install --disable-pip-version-check -e "$tool_root"
 fi

@@ -37,9 +37,9 @@ the preceding reviewed correction.
 | `yy-verticalboard-one` | `(887, 500)` **new** | centre handle opening |
 | `yy-penta-evo` | `(145, 595)`, `(1385, 595)`, `(180, 720)`, `(1355, 720)` | both circular and both lower slot openings |
 
-The test fixture pairs every seed with a retained physical-surface pixel, so
-removing a map entry or allowing a fill to cross onto the named surface fails
-the focused regression.
+The test fixture pairs every configured seed with a retained physical-surface
+pixel, so a broken configured fill or one that crosses onto the named surface
+fails the focused regression.
 
 ## Visual evidence and 44-board review
 

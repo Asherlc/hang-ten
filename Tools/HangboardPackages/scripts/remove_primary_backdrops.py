@@ -7,6 +7,7 @@ import argparse
 from collections import deque
 from contextlib import contextmanager
 import os
+import stat
 import tempfile
 from pathlib import Path
 from typing import Any, NamedTuple
@@ -131,7 +132,11 @@ def _clear_known_enclosed_backgrounds(
                 (x, y - 1),
                 (x, y + 1),
             ):
-                if 0 <= neighbor_x < width and 0 <= neighbor_y < height:
+                if (
+                    0 <= neighbor_x < width
+                    and 0 <= neighbor_y < height
+                    and (neighbor_x, neighbor_y) not in visited
+                ):
                     pending.append((neighbor_x, neighbor_y))
     return Image.frombytes("L", source.size, bytes(alpha))
 
@@ -149,6 +154,7 @@ def process_png(
     if session is None:
         session = _rembg_session(model_name, model_root)
 
+    original_mode = stat.S_IMODE(path.stat().st_mode)
     output_path: Path | None = None
     try:
         with Image.open(path) as source_image:
@@ -177,6 +183,7 @@ def process_png(
             ) as temporary:
                 output_path = Path(temporary.name)
             source.save(output_path, format="PNG", compress_level=9, optimize=False)
+        output_path.chmod(original_mode)
         os.replace(output_path, path)
         output_path = None
     finally:
@@ -203,6 +210,15 @@ def main(argv: list[str] | None = None) -> int:
     assets = _primary_assets(args.root)
     if not assets:
         parser.error(f"no primary PNGs found beneath {args.root}")
+    processed_packages = {path.parent.parent.name for path in assets}
+    missing_seed_packages = sorted(
+        set(_ENCLOSED_BACKGROUND_SEEDS) - processed_packages
+    )
+    if missing_seed_packages:
+        parser.error(
+            "seed packages not processed by this invocation: "
+            + ", ".join(missing_seed_packages)
+        )
     session = _rembg_session(args.model_name, args.model_root)
     for path in assets:
         result = process_png(

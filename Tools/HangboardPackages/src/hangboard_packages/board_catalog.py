@@ -964,7 +964,10 @@ def load_board_package(package_root: Path) -> BoardPackage:
 
 
 def is_primary_only_draft(root: Path) -> bool:
-    """Return whether *root* has exactly ``assets/primary.png`` and no manifest."""
+    """Return whether *root* has exactly ``assets/primary.png`` and no manifest.
+
+    Raises ``ValueError`` when the sole primary PNG is malformed or fully opaque.
+    """
     _require_no_symlinks(root)
     if {item.name for item in root.iterdir()} != {"assets"}:
         return False

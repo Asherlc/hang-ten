@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import stat
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -82,7 +83,7 @@ def test_process_png_uses_rembg_mask_and_preserves_source_rgb(
     with Image.open(path) as source_image:
         source = source_image.convert("RGB")
         source_size = source.size
-        source_pixels = source.load()
+        source_rgb = source.tobytes()
 
     calls = []
 
@@ -110,10 +111,25 @@ def test_process_png_uses_rembg_mask_and_preserves_source_rgb(
         output = output_image.convert("RGBA")
         assert output.size == source_size
         assert output.getchannel("A").getextrema()[0] == 0
-        for y in range(output.height):
-            for x in range(output.width):
-                red, green, blue, _ = output.getpixel((x, y))
-                assert (red, green, blue) == source_pixels[x, y]
+        assert output.convert("RGB").tobytes() == source_rgb
+
+
+def test_process_png_preserves_primary_file_mode(tmp_path: Path, monkeypatch) -> None:
+    module = _load_script()
+    path = tmp_path / "primary.png"
+    path.write_bytes(CONTACT_BOUNDARY_FIXTURE.read_bytes())
+    path.chmod(0o640)
+
+    def remove_background(source: Image.Image, *, session: object) -> Image.Image:
+        mask = Image.new("L", source.size, color=255)
+        mask.putpixel((0, 0), 0)
+        return mask
+
+    monkeypatch.setattr(module, "_remove_background", remove_background)
+
+    module.process_png(path, model_root=tmp_path / "models", session=object())
+
+    assert stat.S_IMODE(path.stat().st_mode) == 0o640
 
 
 def test_process_png_resegments_an_existing_alpha_source(
@@ -161,7 +177,7 @@ def test_process_png_keeps_onnx_session_artifacts_out_of_the_repository_root(
     model_root = tmp_path / "model-cache"
 
     def remove_background(source: Image.Image, *, session: object) -> Image.Image:
-        assert Path.cwd() == model_root
+        assert Path.cwd().resolve() == model_root.resolve()
         (model_root / ":memory:.ses").write_text("session", encoding="utf-8")
         (tmp_path / ":memory:.ses").write_text("late-session", encoding="utf-8")
         mask = Image.new("L", source.size, color=255)
@@ -193,3 +209,28 @@ def test_rembg_session_disables_onnx_telemetry_before_initialization(
     module._rembg_session("u2net", tmp_path / "model-cache")
 
     assert seen == [("u2net", "1")]
+
+
+def test_main_rejects_seed_packages_missing_from_the_invocation(
+    tmp_path: Path, monkeypatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    module = _load_script()
+    root = tmp_path / "Hangboards"
+    primary = root / "included" / "assets" / "primary.png"
+    primary.parent.mkdir(parents=True)
+    Image.new("RGB", (2, 2), color="white").save(primary, format="PNG")
+    monkeypatch.setattr(
+        module,
+        "_ENCLOSED_BACKGROUND_SEEDS",
+        {"included": ((0, 0),), "omitted": ((0, 0),)},
+    )
+
+    def reject_session_creation(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("seed coverage must be checked before model initialization")
+
+    monkeypatch.setattr(module, "_rembg_session", reject_session_creation)
+
+    with pytest.raises(SystemExit, match="2"):
+        module.main(["--root", str(root)])
+
+    assert "seed packages not processed by this invocation: omitted" in capsys.readouterr().err

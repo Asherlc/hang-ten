@@ -181,7 +181,7 @@ def test_primary_transparency_validation_uses_the_streaming_zlib_api(
     module = load_board_catalog_module()
     write_board_package(tmp_path / "fixture-model")
 
-    def prohibit_full_decompression(*_args, **_kwargs):
+    def prohibit_full_decompression(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("the one-shot zlib API must not be used")
 
     monkeypatch.setattr(module.zlib, "decompress", prohibit_full_decompression)
@@ -220,7 +220,7 @@ def test_primary_transparency_validation_checks_later_filters_without_unfilterin
     original = module._unfilter_png_row
     calls = 0
 
-    def count_rows(*args, **kwargs):
+    def count_rows(*args: object, **kwargs: object) -> bytes:
         nonlocal calls
         calls += 1
         return original(*args, **kwargs)

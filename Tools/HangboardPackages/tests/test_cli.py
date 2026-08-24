@@ -80,3 +80,52 @@ def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None
     assert result.stderr == (
         "Hangboard package validation requires Python 3.11.4 or newer.\n"
     )
+
+
+def test_wrapper_reinstalls_when_pyproject_is_newer_than_entry_point(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    script = repository / "scripts" / "hangboard-packages.sh"
+    script.parent.mkdir(parents=True)
+    script.write_bytes(SCRIPT_PATH.read_bytes())
+    script.chmod(0o755)
+
+    pyproject = repository / "Tools" / "HangboardPackages" / "pyproject.toml"
+    pyproject.parent.mkdir(parents=True)
+    pyproject.write_text("[project]\nname = 'fixture'\n", encoding="utf-8")
+
+    environment_bin = repository / ".context" / "hangboard-packages-venv" / "bin"
+    environment_bin.mkdir(parents=True)
+    python = environment_bin / "python"
+    python.write_text(
+        "#!/bin/sh\n"
+        "if [ \"$1\" = '-m' ] && [ \"$2\" = 'pip' ]; then\n"
+        "  printf '%s\\n' \"$*\" >> \"$FAKE_PIP_LOG\"\n"
+        "fi\n"
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    python.chmod(0o755)
+    entry_point = environment_bin / "hangboard-packages"
+    entry_point.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    entry_point.chmod(0o755)
+    os.utime(entry_point, (1, 1))
+
+    pip_log = tmp_path / "pip.log"
+    result = subprocess.run(
+        [str(script), "status"],
+        text=True,
+        capture_output=True,
+        check=False,
+        env={
+            **os.environ,
+            "FAKE_PIP_LOG": str(pip_log),
+            "HANGBOARD_PYTHON": str(python),
+        },
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "-m pip install --disable-pip-version-check -e" in pip_log.read_text(
+        encoding="utf-8"
+    )
