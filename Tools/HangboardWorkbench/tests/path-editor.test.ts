@@ -20,6 +20,15 @@ import {
   snapSegmentHorizontal,
   snapSegmentVertical,
 } from "../src/path-editor.ts";
+import {
+  cloneEditablePath,
+  createEditablePath,
+  deleteEditableAnchor,
+  insertEditableVertex,
+  moveEditableAnchor,
+  serializeEditablePath,
+} from "../src/editable-path.ts";
+import type { EditablePath } from "../src/editable-path.ts";
 import { validateEditorDocument } from "../src/workbench-controller.ts";
 import type {
   Bounds,
@@ -27,8 +36,38 @@ import type {
   OutlinePreset,
   PathCommand,
   Point,
+  PathEditor,
   ShapeConstraint,
 } from "../src/types.ts";
+
+const pathEditor: PathEditor = {
+  parsePath,
+  serializePath,
+  pathBounds: () => {
+    throw new Error("not used by editable path tests");
+  },
+  createOutlineShapePath: () => {
+    throw new Error("not used by editable path tests");
+  },
+  constrainedOutlineModel: () => {
+    throw new Error("not used by editable path tests");
+  },
+  resizeConstrainedOutline: () => {
+    throw new Error("not used by editable path tests");
+  },
+  moveVertex,
+  addVertex,
+  addInflectionPoint,
+  deleteVertex,
+  isInflectionVertex,
+  roundVertex,
+  makeSegmentBendable,
+  bendSegmentToPoint,
+  makeSegmentStraight,
+  snapSegmentHorizontal,
+  snapSegmentVertical,
+  rotatePath,
+};
 
 function assertPoint(actual: Point, expected: Point): void {
   assert.ok(Math.abs(actual.x - expected.x) < 1e-6, `expected x=${expected.x}, got ${actual.x}`);
@@ -77,6 +116,89 @@ test("serializePath handles integer coordinates cleanly", () => {
     { type: "Z", points: [], controls: [] },
   ];
   assert.equal(serializePath(commands), "M 0 0 L 100 0 L 50 80 Z");
+});
+
+test("editable paths assign deterministic local IDs and serialize only canonical geometry", () => {
+  const editable = createEditablePath("hold-a-piece-0", "M 0 0 Q 5 10 10 0 L 10 10 Z", pathEditor);
+  const typedEditable: EditablePath = editable;
+
+  assert.deepEqual(typedEditable.segments.map((segment) => segment.id), [
+    "hold-a-piece-0:segment:0", "hold-a-piece-0:segment:1", "hold-a-piece-0:segment:2",
+  ]);
+  assert.equal(editable.segments[1]?.anchor.id, "hold-a-piece-0:anchor:1");
+  assert.equal(editable.segments[1]?.controls[0]?.id, "hold-a-piece-0:control:1:0");
+  assert.equal(serializeEditablePath(editable, pathEditor), "M 0 0 Q 5 10 10 0 L 10 10 Z");
+  assert.equal(JSON.stringify(editable).includes("displayPath"), false);
+});
+
+test("moving an anchor preserves existing IDs while insertion allocates monotonic local IDs", () => {
+  const editable = createEditablePath("hold-a-piece-0", "M 0 0 L 10 0 L 10 10 Z", pathEditor);
+  const existingIDs = new Set(editable.segments.flatMap((segment) => [
+    segment.id,
+    segment.anchor.id,
+    ...segment.controls.map((control) => control.id),
+  ]));
+  const retainedAnchorID = editable.segments[1]!.anchor.id;
+  const highestExistingOrdinal = Math.max(...editable.segments.map((segment) => Number(
+    segment.anchor.id.slice(segment.anchor.id.lastIndexOf(":") + 1),
+  )));
+
+  moveEditableAnchor(editable, retainedAnchorID, 2, 3);
+  assert.equal(editable.segments[1]!.anchor.id, retainedAnchorID);
+
+  insertEditableVertex(editable, editable.segments[0]!.id, { x: 5, y: 0 }, pathEditor);
+
+  const allIDs = editable.segments.flatMap((segment) => [
+    segment.id,
+    segment.anchor.id,
+    ...segment.controls.map((control) => control.id),
+  ]);
+  const insertedIDs = allIDs.filter((id) => !existingIDs.has(id));
+  const insertedAnchor = editable.segments.find((segment) => !existingIDs.has(segment.anchor.id))?.anchor;
+
+  for (const existingID of existingIDs) {
+    assert.ok(allIDs.includes(existingID), `unaffected local ID ${existingID} should remain stable`);
+  }
+  assert.equal(insertedAnchor?.id.startsWith("hold-a-piece-0:anchor:"), true);
+  assert.ok(Number(insertedAnchor?.id.slice(insertedAnchor.id.lastIndexOf(":") + 1)) > highestExistingOrdinal);
+  assert.equal(editable.segments.find((segment) => segment.anchor.id === retainedAnchorID)?.anchor.id, retainedAnchorID);
+  assert.deepEqual(insertedIDs.sort(), [
+    insertedAnchor!.id.replace(":anchor:", ":segment:"),
+    insertedAnchor!.id,
+  ].sort());
+});
+
+test("deleting the start vertex preserves the promoted anchor identity and start role", () => {
+  const editable = createEditablePath("hold-a-piece-0", "M 0 0 L 10 0 L 10 10 L 0 10 Z", pathEditor);
+  const deletedID = editable.segments[0]!.anchor.id;
+  const promotedID = editable.segments[1]!.anchor.id;
+
+  assert.equal(deleteEditableAnchor(editable, deletedID, pathEditor), true);
+  assert.equal(editable.segments[0]?.anchor.id, promotedID);
+  assert.equal(editable.segments[0]?.anchor.isStart, true);
+});
+
+test("cloning after deletion preserves the session allocator high-water mark", () => {
+  const editable = createEditablePath(
+    "hold-a-piece-0",
+    "M 0 0 L 10 0 L 10 10 L 0 10 Z",
+    pathEditor,
+  );
+  const deletedAnchorID = editable.segments[3]!.anchor.id;
+  const afterDeletion = cloneEditablePath(editable);
+  assert.equal(deleteEditableAnchor(afterDeletion, deletedAnchorID, pathEditor), true);
+
+  const continuedSession = cloneEditablePath(afterDeletion);
+  assert.equal(insertEditableVertex(
+    continuedSession,
+    continuedSession.segments[0]!.id,
+    { x: 5, y: 0 },
+    pathEditor,
+  ), true);
+
+  const anchorIDs = continuedSession.segments.map((segment) => segment.anchor.id);
+  assert.equal(anchorIDs.includes(deletedAnchorID), false);
+  assert.equal(new Set(anchorIDs).size, anchorIDs.length);
 });
 
 test("makeSegmentBendable replaces a straight segment with a geometrically identical cubic", () => {

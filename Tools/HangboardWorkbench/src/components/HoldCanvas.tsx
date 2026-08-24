@@ -204,6 +204,7 @@ export function HoldCanvas({
     };
   }, [document]);
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
+  const selectedEditablePath = selectedHold?.shapeConstraint ? null : editor.editablePath;
   let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {
     try {
@@ -465,39 +466,38 @@ export function HoldCanvas({
                     strokeWidth="1.5"
                   />
                 ))}
-              </> : selectedCommands.map((command, commandIndex) => {
-                if (command.type === "Z") return null;
-                const endpoint = command.points.at(-1);
-                if (!endpoint) return null;
-                const previous = commandIndex > 0 ? selectedCommands[commandIndex - 1] : null;
+              </> : selectedEditablePath?.segments.map((segment, segmentIndex) => {
+                const { anchor } = segment;
+                const previous = segmentIndex > 0 ? selectedEditablePath.segments[segmentIndex - 1] : null;
                 return (
-                  <g key={`${selectedHold?.key ?? "selected"}-${commandIndex}`}>
+                  <g key={segment.id}>
                     <circle
-                      className={`path-editor-vertex${editor.selectedVertexIndex === commandIndex ? " selected" : ""}`}
-                      data-index={commandIndex}
-                      cx={endpoint.x}
-                      cy={endpoint.y}
+                      className={`path-editor-vertex${editor.selectedAnchorID === anchor.id ? " selected" : ""}`}
+                      data-anchor-id={anchor.id}
+                      data-index={segmentIndex}
+                      cx={anchor.x}
+                      cy={anchor.y}
                       r="6"
                       fill={selectedColor}
                       stroke="#fff7dc"
                       strokeWidth="1.5"
                       role="button"
                       tabIndex={busy ? -1 : 0}
-                      aria-label={commandIndex === 0 ? "Start vertex" : `Vertex ${commandIndex + 1}`}
-                      aria-pressed={editor.selectedVertexIndex === commandIndex}
-                      onFocus={() => editor.selectVertex(commandIndex)}
+                      aria-label={anchor.isStart ? "Start vertex" : `Vertex ${segmentIndex + 1}`}
+                      aria-pressed={editor.selectedAnchorID === anchor.id}
+                      onFocus={() => editor.selectAnchor(anchor.id)}
                       onKeyDown={(event) => {
                         if (busy || (event.key !== "Enter" && event.key !== " ")) return;
                         if (event.key === " ") event.preventDefault();
-                        editor.selectVertex(commandIndex);
+                        editor.selectAnchor(anchor.id);
                       }}
                     />
-                    {command.controls.map((control, controlIndex) => {
+                    {segment.controls.map((control, controlIndex) => {
                       const anchor = controlIndex === 0
-                        ? previous && previous.type !== "Z" ? previous.points.at(-1) : command.points[0]
-                        : command.points[0];
+                        ? previous?.anchor ?? segment.anchor
+                        : segment.anchor;
                       return (
-                        <g key={`${commandIndex}-${controlIndex}`}>
+                        <g key={control.id}>
                           {anchor && <line
                             className="path-editor-line"
                             x1={anchor.x}
@@ -510,7 +510,8 @@ export function HoldCanvas({
                           />}
                           <circle
                             className="path-editor-control"
-                            data-index={commandIndex}
+                            data-control-id={control.id}
+                            data-index={segmentIndex}
                             data-control={controlIndex}
                             cx={control.x}
                             cy={control.y}
@@ -568,7 +569,7 @@ export function HoldCanvas({
               editor.dismissVertexMenu(true);
             }}
           >
-            {editor.selectedVertexIndex !== null && <button
+            {editor.selectedAnchorID !== null && <button
               type="button"
               role="menuitem"
               disabled={!editor.canDeleteSelectedVertex}
