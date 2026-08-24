@@ -1478,6 +1478,43 @@ test("the second cubic control stays independently draggable after Make bendable
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("controls stay uniquely addressable after converting two segments to bendable curves", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 30, clientY: 20 });
+    await app.click("#make-bendable-action");
+
+    const controls = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-control")];
+    const controlIDs = controls.map((control) => control.dataset.controlId);
+    assert.ok(controlIDs.every((id): id is string => id !== undefined));
+    assert.equal(new Set(controlIDs).size, controlIDs.length);
+
+    const secondCurveControl = app.document.querySelector<SVGCircleElement>(
+      '.path-editor-control[data-index="2"][data-control="1"]',
+    );
+    const controlID = secondCurveControl?.dataset.controlId;
+    const startX = Number(secondCurveControl?.getAttribute("cx"));
+    const startY = Number(secondCurveControl?.getAttribute("cy"));
+    assert.ok(controlID && Number.isFinite(startX) && Number.isFinite(startY));
+    const before = pathEditor.parsePath(paths(app)[0]!);
+    const firstCurveControls = before[1]?.controls;
+    const secondCurveControls = before[2]?.controls;
+
+    await drag(app, `.path-editor-control[data-control-id="${controlID}"]`, [
+      { x: startX, y: startY },
+      { x: startX + 4, y: startY + 3 },
+    ]);
+
+    const after = pathEditor.parsePath(paths(app)[0]!);
+    assert.deepEqual(after[1]?.controls, firstCurveControls);
+    assert.notDeepEqual(after[2]?.controls, secondCurveControls);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("line menu snaps a diagonal custom-outline segment to the chosen axis", async () => {
   for (const [action, expectedPath, expectedStatus] of [
     ["#make-horizontal-action", "M 10 10 L 30 10 L 30 40 L 10 40 Z", "Line made horizontal. Save when ready."],

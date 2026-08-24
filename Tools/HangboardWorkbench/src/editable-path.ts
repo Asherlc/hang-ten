@@ -51,12 +51,25 @@ function createSegment(regionKey: string, command: PathCommand, ordinal: number)
   };
 }
 
+function allocatedOrdinal(regionKey: string, id: string, kind: "segment" | "anchor" | "control"): number | null {
+  const prefix = `${regionKey}:${kind}:`;
+  if (!id.startsWith(prefix)) return null;
+  const ordinal = Number(id.slice(prefix.length).split(":", 1)[0]);
+  return Number.isInteger(ordinal) && ordinal >= 0 ? ordinal : null;
+}
+
 function allocatorFor(path: EditablePath): IdentityAllocator {
   const existing = allocators.get(path);
   if (existing) return existing;
-  const nextOrdinal = path.segments.reduce((highest, segment) => (
-    Math.max(highest, segment.anchor.ordinal + 1)
-  ), 0);
+  const highestOrdinal = path.segments.reduce((highest, segment) => {
+    const segmentOrdinal = allocatedOrdinal(path.regionKey, segment.id, "segment");
+    const anchorOrdinal = allocatedOrdinal(path.regionKey, segment.anchor.id, "anchor");
+    return segment.controls.reduce((controlHighest, control) => {
+      const controlOrdinal = allocatedOrdinal(path.regionKey, control.id, "control");
+      return Math.max(controlHighest, controlOrdinal ?? -1);
+    }, Math.max(highest, segment.anchor.ordinal, segmentOrdinal ?? -1, anchorOrdinal ?? -1));
+  }, -1);
+  const nextOrdinal = highestOrdinal + 1;
   const allocator = { nextOrdinal };
   allocators.set(path, allocator);
   return allocator;
