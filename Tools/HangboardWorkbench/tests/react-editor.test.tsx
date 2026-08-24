@@ -58,10 +58,14 @@ function gitStatus(): GitStatus {
   return { ok: true, currentBranch: "main", branches: ["main"], dirty: false, statusLines: [] };
 }
 
-function clientFixture(boards: readonly Board[]): WorkbenchClient {
+function clientFixture(boards: readonly Board[]): WorkbenchClient & {
+  saveCalls: Array<{ boardId: string; document: EditorDocument }>;
+} {
   const firstBoard = boards[0];
   if (!firstBoard) throw new Error("At least one board fixture is required");
+  const saveCalls: Array<{ boardId: string; document: EditorDocument }> = [];
   return {
+    saveCalls,
     async listBoards(): Promise<BoardSummary[]> {
       return boards.map((board) => ({
         boardId: board.boardId,
@@ -76,6 +80,7 @@ function clientFixture(boards: readonly Board[]): WorkbenchClient {
       return board;
     },
     async saveBoard(boardId, document): Promise<Board> {
+      saveCalls.push({ boardId, document: structuredClone(document) });
       const board = boards.find((candidate) => candidate.boardId === boardId) ?? firstBoard;
       return { ...board, document };
     },
@@ -1163,6 +1168,29 @@ test("a freeform anchor keeps its local target ID while it is dragged", async ()
     assert.equal(moved?.getAttribute("cx"), "14");
     assert.equal(moved?.getAttribute("cy"), "12");
   });
+});
+
+test("saving a stable editable path sends no local geometry IDs", async () => {
+  const document = documentFixture([{
+    id: 1,
+    key: "stable-piece-0",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 Z",
+  }]);
+  const board = boardFixture(document);
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="stable-piece-0"]');
+    await drag(app, ".path-editor-vertex", [{ x: 10, y: 10 }, { x: 12, y: 12 }]);
+    await app.click("#save-button");
+
+    const saved = JSON.stringify(client.saveCalls[0]?.document);
+    assert.equal(saved.includes(":anchor:"), false);
+    assert.equal(saved.includes(":control:"), false);
+    assert.equal(saved.includes(":segment:"), false);
+  }, dependenciesFixture(board, { client }));
 });
 
 test("insertion retains unrelated local target IDs while undo and redo keep canonical paths", async () => {
