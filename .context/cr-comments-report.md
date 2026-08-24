@@ -57,3 +57,45 @@ exit 0
 
 The ONNX session sidecar created by a direct version-import check was removed,
 and its absence was verified before committing.
+
+## Round 1 follow-up
+
+Implementation commit: `ddd5b2030866245fe3465cc56e8e1e0a9a4a2c21`
+
+The focused queue instrumentation regression ran against the prior
+implementation and observed duplicate enqueue counts:
+
+```text
+FAILED test_enclosed_background_fill_enqueues_each_coordinate_once
+  assert {1, 2} == {1}
+1 failed, 1 passed in 1.09s
+```
+
+After introducing an enqueue-time `discovered` set, the same regression, all
+19 configured-seed cases, and both wrapper freshness boundaries passed:
+
+```text
+22 passed in 6.15s
+```
+
+Full verification for the follow-up produced:
+
+```text
+python -m pytest Tools/HangboardPackages/tests -q
+148 passed in 29.77s
+
+scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+44 boards; 0 drafts; exit 0
+
+scripts/hangboard-packages.sh status --root Hangboards
+44 boards; 0 drafts; exit 0
+
+bash -n scripts/hangboard-packages.sh
+exit 0
+
+python -m py_compile Tools/HangboardPackages/scripts/remove_primary_backdrops.py
+exit 0
+
+git diff --check
+exit 0
+```
