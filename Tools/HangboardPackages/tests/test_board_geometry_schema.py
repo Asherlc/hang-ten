@@ -13,6 +13,10 @@ def _line(x: float, y: float) -> dict:
     return {"command": "line", "to": [x, y]}
 
 
+def _quad(control: tuple[float, float], x: float, y: float) -> dict:
+    return {"command": "quad", "control": list(control), "to": [x, y]}
+
+
 def _close() -> dict:
     return {"command": "close"}
 
@@ -55,6 +59,23 @@ def test_normalized_frame_rejects_invalid_coordinates_and_nonpositive_dimensions
 
 def _curve(control1: tuple[float, float], control2: tuple[float, float], x: float, y: float) -> dict:
     return {"command": "curve", "control1": list(control1), "control2": list(control2), "to": [x, y]}
+
+
+def test_curve_command_accepts_true_bendable_metadata() -> None:
+    command = PathCommand.from_json(
+        {"command": "curve", "control1": [0.2, 0.2], "control2": [0.8, 0.2], "to": [1, 0], "bendable": True},
+        "commands[1]",
+    )
+
+    assert command.bendable is True
+
+
+@pytest.mark.parametrize("command", [_move(0, 0), _line(1, 0), _quad((0.5, 1), 1, 0), _close()])
+def test_non_curve_commands_reject_bendable_metadata(command: dict) -> None:
+    command["bendable"] = True
+
+    with pytest.raises(ValueError, match="unknown keys"):
+        PathCommand.from_json(command, "commands[0]")
 
 
 def test_path_command_allows_a_control_point_outside_the_normalized_canvas() -> None:
