@@ -31,6 +31,56 @@ final class ForceSensorModelsTests: XCTestCase {
         )
     }
 
+    func testConnectionGuidanceUsesTheSelectedProfileInsteadOfMotherboard() {
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.detail(for: .idle, profile: .automatic),
+            "Connect a supported sensor automatically to see live force while you train."
+        )
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.detail(for: .scanning, profile: .progressor),
+            "Looking nearby for your Tindeq Progressor."
+        )
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.detail(for: .connecting, profile: .pitchSix),
+            "Connecting to your PitchSix Force Board."
+        )
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.detail(for: .failed, profile: .genericProgressor),
+            "Try connecting again. If the Generic Progressor-compatible sensor is connected to another app, release it there first, then retry."
+        )
+    }
+
+    func testConnectionGuidanceFallsBackToAutomaticForUnsupportedStoredProfiles() {
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.detail(for: .scanning, profile: .genericWHC06),
+            "Looking nearby for a supported sensor automatically."
+        )
+    }
+
+    func testDisplayedConnectionErrorUsesTheActiveSupportedProfile() {
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.lastError(
+                "Motherboard scan timed out. Move the sensor closer and try again.",
+                profile: .progressor
+            ),
+            "Tindeq Progressor scan timed out. Move the sensor closer and try again."
+        )
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.lastError(
+                "Motherboard scan timed out. Move the sensor closer and try again.",
+                profile: .whC06
+            ),
+            "A supported sensor scan timed out. Move the sensor closer and try again."
+        )
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.lastError(
+                "Generic WH-C06-compatible is not available yet.",
+                profile: .genericWHC06
+            ),
+            "A supported sensor is not available yet."
+        )
+    }
+
     func testRegistryResolvesBLEAdaptersAndKeepsAdvertisementOnlyProfilesOutOfConnectionFlow() throws {
         let progressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .progressor))
         let pitchSix = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .pitchSix))

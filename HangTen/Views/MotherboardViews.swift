@@ -26,7 +26,12 @@ struct MotherboardCard: View {
                         Pill(title: service.state.label, tint: stateTint, fill: stateTint.opacity(0.12))
                     }
 
-                    Text(service.state.detail)
+                    Text(
+                        ForceSensorConnectionCopy.detail(
+                            for: service.state,
+                            profile: service.connectedProfile ?? settings.forceSensorProfile
+                        )
+                    )
                         .font(.system(size: 13, weight: .medium, design: .rounded))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
@@ -47,7 +52,14 @@ struct MotherboardCard: View {
             HStack {
                 sensorValue(title: "Battery", value: batteryText)
                 Spacer()
-                sensorValue(title: "Last error", value: service.lastError ?? "None", alignment: .trailing)
+                sensorValue(
+                    title: "Last error",
+                    value: ForceSensorConnectionCopy.lastError(
+                        service.lastError,
+                        profile: service.connectedProfile ?? settings.forceSensorProfile
+                    ),
+                    alignment: .trailing
+                )
             }
 
             if service.state.requiresAppSettings {
@@ -490,6 +502,69 @@ enum MotherboardUserVisibleFormatting {
     }
 }
 
+enum ForceSensorConnectionCopy {
+    static func detail(for state: MotherboardConnectionState, profile: ForceSensorProfile) -> String {
+        let displayProfile = displayProfile(for: profile)
+
+        return switch state {
+        case .bluetoothUnavailable:
+            "Turn on Bluetooth, then check Hang Ten’s Bluetooth access in Settings."
+        case .unauthorized:
+            "Allow Bluetooth access for Hang Ten in Settings to connect \(sensorDescription(for: displayProfile))."
+        case .idle, .disconnected:
+            "Connect \(sensorDescription(for: displayProfile)) to see live force while you train."
+        case .scanning:
+            "Looking nearby for \(sensorDescription(for: displayProfile))."
+        case .connecting:
+            "Connecting to \(sensorDescription(for: displayProfile))."
+        case .calibrating:
+            "Preparing the sensor for live force readings."
+        case .streaming:
+            "Live force readings are ready."
+        case .failed:
+            "Try connecting again. If \(failureSensorDescription(for: displayProfile)) is connected to another app, release it there first, then retry."
+        }
+    }
+
+    static func lastError(_ error: String?, profile: ForceSensorProfile) -> String {
+        guard let error else { return "None" }
+
+        let displayProfile = displayProfile(for: profile)
+        if !ForceSensorProfile.connectableCases.contains(profile),
+           error.hasSuffix(" is not available yet.") {
+            return "\(errorSensorDescription(for: displayProfile)) is not available yet."
+        }
+
+        return error.replacingOccurrences(
+            of: "Motherboard",
+            with: errorSensorDescription(for: displayProfile)
+        )
+    }
+
+    private static func displayProfile(for profile: ForceSensorProfile) -> ForceSensorProfile {
+        ForceSensorProfile.connectableCases.contains(profile) ? profile : .automatic
+    }
+
+    private static func sensorDescription(for profile: ForceSensorProfile) -> String {
+        profile == .automatic ? "a supported sensor automatically" : "your \(profile.label)"
+    }
+
+    private static func failureSensorDescription(for profile: ForceSensorProfile) -> String {
+        switch profile {
+        case .automatic:
+            "the supported sensor"
+        case .genericProgressor:
+            "the \(profile.label) sensor"
+        default:
+            "the \(profile.label)"
+        }
+    }
+
+    private static func errorSensorDescription(for profile: ForceSensorProfile) -> String {
+        profile == .automatic ? "A supported sensor" : profile.label
+    }
+}
+
 private extension MotherboardConnectionState {
     var label: String {
         switch self {
@@ -502,27 +577,6 @@ private extension MotherboardConnectionState {
         case .streaming: "Streaming"
         case .disconnected: "Disconnected"
         case .failed: "Connection failed"
-        }
-    }
-
-    var detail: String {
-        switch self {
-        case .bluetoothUnavailable:
-            "Turn on Bluetooth, then check Hang Ten’s Bluetooth access in Settings."
-        case .unauthorized:
-            "Allow Bluetooth access for Hang Ten in Settings to connect your Motherboard."
-        case .idle, .disconnected:
-            "Connect a Motherboard to see live force while you train."
-        case .scanning:
-            "Looking nearby for your Motherboard."
-        case .connecting:
-            "Connecting to your Motherboard."
-        case .calibrating:
-            "Preparing the sensor for live force readings."
-        case .streaming:
-            "Live force readings are ready."
-        case .failed:
-            "Try connecting again. If the Motherboard is connected to another app, release it there first, then retry."
         }
     }
 
