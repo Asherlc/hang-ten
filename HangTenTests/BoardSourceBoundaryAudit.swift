@@ -12,6 +12,24 @@ enum BoardSourceBoundaryAudit {
         "primary"
     ]
 
+    static func bundledBoardDocumentURLs(at repositoryRoot: URL) throws -> [URL] {
+        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
+        let packageURLs = try FileManager.default.contentsOfDirectory(
+            at: hangboardsURL,
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey]
+        )
+
+        return try packageURLs.compactMap { packageURL in
+            let values = try packageURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+            guard values.isDirectory == true, values.isSymbolicLink != true else {
+                return nil
+            }
+            let boardURL = packageURL.appendingPathComponent("board.json")
+            return FileManager.default.fileExists(atPath: boardURL.path) ? boardURL : nil
+        }
+        .sorted { $0.path < $1.path }
+    }
+
     static func findings(
         relativePath: String,
         source: String,

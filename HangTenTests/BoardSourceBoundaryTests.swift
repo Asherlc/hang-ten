@@ -84,6 +84,34 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
+    func testBundledContentDoesNotContainSchemaVersion() throws {
+        let repositoryRoot = repositoryRootURL()
+        let boardURLs = try BoardSourceBoundaryAudit.bundledBoardDocumentURLs(
+            at: repositoryRoot
+        )
+
+        XCTAssertFalse(boardURLs.isEmpty)
+        for boardURL in boardURLs {
+            let boardDocument = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
+            )
+            XCTAssertNil(
+                boardDocument["schemaVersion"],
+                "Remove schemaVersion from \(boardURL.path)."
+            )
+        }
+
+        let planURL = repositoryRoot
+            .appendingPathComponent("HangTen/Resources/PlanLibrary.json")
+        let planDocument = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(contentsOf: planURL)) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(planDocument["metadata"] as? [String: Any])
+
+        XCTAssertNil(planDocument["schemaVersion"])
+        XCTAssertNil(metadata["version"])
+    }
+
     func testEveryBuiltInPlanTargetResolvesOnItsPackageBoard() {
         for plan in PlanCatalog.all {
             let board = BoardCatalog.board(for: plan.boardID)
