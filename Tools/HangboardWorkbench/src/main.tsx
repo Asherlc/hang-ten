@@ -25,11 +25,19 @@ const dialogs: Dialogs = {
   prompt: (message, defaultValue) => browser.prompt(message, defaultValue),
 };
 const imageLoader = (): HTMLImageElement => new browser.Image();
+let storage: Storage | undefined;
+try {
+  storage = typeof browser.document === "undefined" ? undefined : browser.localStorage;
+} catch {
+  // Storage may be unavailable in private browsing or embedded webviews.
+  storage = undefined;
+}
 const runtime: BrowserRuntime = {
   fetch: (input, init) => browser.fetch(input, init),
   location: {
     assign: (url) => browser.location.assign(url),
   },
+  storage,
   postDiagnostic: (diagnostic) => {
     postNativeDiagnostic(browser, diagnostic);
   },

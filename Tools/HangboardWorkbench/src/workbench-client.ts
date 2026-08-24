@@ -27,6 +27,25 @@ function isOptionalString(value: unknown): value is string | undefined {
   return value === undefined || typeof value === "string";
 }
 
+function isFingerCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 4;
+}
+
+function isMillimeterRange(value: unknown): value is { lowerBound: number; upperBound: number } {
+  if (!isRecord(value)) return false;
+  const { lowerBound, upperBound } = value;
+  return Number.isInteger(lowerBound)
+    && Number.isInteger(upperBound)
+    && typeof lowerBound === "number"
+    && typeof upperBound === "number"
+    && lowerBound > 0
+    && upperBound >= lowerBound;
+}
+
+function isHandCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 2;
+}
+
 function isHoldRegion(value: unknown): value is EditorDocument["regions"][number] {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -34,6 +53,9 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && isOptionalString(value.type)
+    && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
+    && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
+    && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"
@@ -55,7 +77,8 @@ function isBoardSummary(value: unknown): value is BoardSummary {
     && typeof value.boardId === "string"
     && typeof value.displayName === "string"
     && typeof value.holdCount === "number"
-    && isOptionalString(value.href);
+    && isOptionalString(value.href)
+    && typeof value.imageUrl === "string";
 }
 
 function isEditorDocumentPayload(value: unknown): value is EditorDocument {
@@ -283,11 +306,7 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
   }
 
   async function getAuthStatus(): Promise<AuthStatus> {
-    try {
-      return await request("/api/auth/status", parseAuthStatus);
-    } catch {
-      return { ok: true, authenticated: false };
-    }
+    return request("/api/auth/status", parseAuthStatus);
   }
 
   async function listBranches(): Promise<GitStatus> {

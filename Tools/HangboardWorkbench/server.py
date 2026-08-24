@@ -175,6 +175,7 @@ def _board_payload(
         "displayName": _display_name(package),
         "holdCount": len(package.hold_ids),
         "href": f"/api/boards/{board_id}",
+        "imageUrl": f"/api/boards/{board_id}/image",
     }
     if include_document:
         presentation = package.presentation(presentation_id)
@@ -357,15 +358,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             if self.server.allow_remote:
                 session = self._github_session()
                 store = self._github_board_store()
-                package = store.open_package(
-                    session.token, session.branch, unquote(board_path)
-                )
-                saved, commit_sha = store.save_editor_document(
+                saved, commit_sha = store.save_board_editor_document(
                     session.token,
                     session.branch,
-                    package.slug,
+                    unquote(board_path),
                     document,
-                    expected_board_id=unquote(board_path),
                 )
                 self._send_json(
                     HTTPStatus.OK,
@@ -1284,9 +1281,22 @@ def _argument_parser() -> ArgumentParser:
     return parser
 
 
-def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = EDITOR_ROOT) -> tuple[WorkbenchHTTPServer, None]:
+def _server_from_cli(
+    arguments: list[str] | None = None,
+    *,
+    editor_root: Path = EDITOR_ROOT,
+    local_checkout: bool = False,
+) -> tuple[WorkbenchHTTPServer, None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
+    if local_checkout:
+        if parsed.allow_remote:
+            parser.error("local checkout mode does not support --allow-remote")
+    elif not parsed.allow_remote:
+        parser.error(
+            "browser-hosted Workbench requires --allow-remote; "
+            "local checkout mode is available only in the packaged macOS app"
+        )
     if parsed.allow_remote and (
         not parsed.github_client_id
         or not parsed.github_client_secret

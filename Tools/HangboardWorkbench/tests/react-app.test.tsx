@@ -40,6 +40,22 @@ function deferred<T>(): {
   };
 }
 
+function wait(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => { setTimeout(resolve, milliseconds); });
+}
+
+function storageFixture(initial: Record<string, string> = {}): Pick<Storage, "getItem" | "setItem"> {
+  const values = new Map(Object.entries(initial));
+  return {
+    getItem(key) {
+      return values.get(key) ?? null;
+    },
+    setItem(key, value) {
+      values.set(key, value);
+    },
+  };
+}
+
 function editorDocument(path = "M 1 1 L 20 1 L 20 20 Z"): EditorDocument {
   return {
     schemaVersion: 1,
@@ -121,7 +137,12 @@ function clientFixture(overrides: Partial<WorkbenchClient> = {}): WorkbenchClien
   const board = boardFixture();
   return {
     async listBoards(): Promise<BoardSummary[]> {
-      return [{ boardId: board.boardId, displayName: board.displayName, holdCount: board.holdCount }];
+      return [{
+        boardId: board.boardId,
+        displayName: board.displayName,
+        holdCount: board.holdCount,
+        imageUrl: board.imageUrl,
+      }];
     },
     async getBoard(): Promise<Board> { return board; },
     async saveBoard(_boardId, document): Promise<Board> { return { ...board, document }; },
@@ -229,6 +250,8 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
     assert.equal(app.text("#board-status"), "Choose a board to edit its holds.");
     assert.equal(app.text("#git-status"), "Repository status");
     assert.equal(app.text("#save-state"), "No board selected");
+    const autosave = app.document.querySelector<HTMLInputElement>("#autosave-toggle");
+    assert.equal(autosave?.checked, true);
     assert.equal(app.text("#board-name"), "No board selected");
     assert.equal(app.text("#empty-state"), "Select a boardIts image and holds load together.");
     assert.equal(app.text("#hold-heading"), "No selection");
@@ -247,6 +270,127 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
     const login = app.document.querySelector<HTMLAnchorElement>("#git-auth-status a");
     assert.equal(login?.textContent, "Log in with GitHub");
     assert.equal(login?.getAttribute("href"), "/auth/login");
+  });
+});
+
+test("mobile canvas controls open the board drawer, repository sheet, and hold inspector explicitly", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(boardId, document) {
+        saves += 1;
+        return boardFixture(boardId, document);
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+
+    for (const id of [
+      "mobile-boards-button", "mobile-menu-button", "mobile-save-button",
+      "mobile-zoom-out-button", "mobile-zoom-in-button", "mobile-add-hold-button", "mobile-open-hold-sheet-button",
+    ]) assert.ok(app.document.getElementById(id), `missing #${id}`);
+
+    await app.click("#mobile-boards-button");
+    assert.equal(app.document.querySelector(".workspace-grid")?.classList.contains("mobile-boards-open"), true);
+    await app.click("#mobile-menu-button");
+    assert.equal(app.document.querySelector(".topbar")?.classList.contains("mobile-menu-open"), true);
+
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    assert.equal(app.document.querySelector(".workspace-grid")?.classList.contains("mobile-boards-open"), false);
+    assert.equal(app.disabled("#mobile-open-hold-sheet-button"), true);
+    await app.click("#hold-overlay path");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
+    assert.equal(app.disabled("#mobile-open-hold-sheet-button"), false);
+    await app.click("#mobile-open-hold-sheet-button");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+
+    await app.click("#mobile-zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    await app.click("#mobile-add-hold-button");
+    assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 2);
+    await app.click("#mobile-save-button");
+    assert.equal(saves, 1);
+  });
+});
+
+test("collapsing the mobile hold sheet retains the selected hold", async () => {
+  const image = imageFixture();
+  await withApp(dependenciesFixture({ runtime: image.runtime }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
+    assert.equal(app.text("#hold-heading"), "hold-1");
+
+    await app.click("#mobile-open-hold-sheet-button");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+
+    await app.click("#mobile-collapse-hold-sheet-button");
+
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
+    assert.equal(app.text("#hold-heading"), "hold-1");
+  });
+});
+
+test("selecting a hold on another board does not reopen an explicitly opened mobile sheet", async () => {
+  const image = imageFixture();
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async listBoards() {
+        return [
+          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image" },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image" },
+        ];
+      },
+      async getBoard(boardId) { return boardFixture(boardId); },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button:first-child");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+    await app.click("#mobile-open-hold-sheet-button");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), true);
+
+    await app.click("#board-list button:nth-child(2)");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+
+    assert.equal(app.text("#board-name"), "Board B");
+    assert.equal(app.document.querySelector(".inspector-panel")?.classList.contains("mobile-sheet-open"), false);
+  });
+});
+
+test("autosave restores the saved browser preference", async () => {
+  const image = imageFixture();
+  const storage = storageFixture({ "hangboard-workbench:autosave-enabled": "false" });
+  const runtime = { ...image.runtime, storage } as BrowserRuntime;
+  await withApp(dependenciesFixture({ runtime }), async (app) => {
+    const autosave = app.document.querySelector<HTMLInputElement>("#autosave-toggle");
+    assert.equal(autosave?.checked, false);
+  });
+});
+
+test("changing autosave persists the preference for a future app mount", async () => {
+  const image = imageFixture();
+  const storage = storageFixture();
+  const runtime = { ...image.runtime, storage } as BrowserRuntime;
+  const dependencies = dependenciesFixture({ runtime });
+
+  await withApp(dependencies, async (app) => {
+    await app.click("#autosave-toggle");
+    assert.equal(storage.getItem("hangboard-workbench:autosave-enabled"), "false");
+  });
+
+  await withApp(dependencies, async (app) => {
+    const autosave = app.document.querySelector<HTMLInputElement>("#autosave-toggle");
+    assert.equal(autosave?.checked, false);
   });
 });
 
@@ -284,7 +428,7 @@ test("state-dependent actions observe updates dispatched earlier in the same tas
   });
 });
 
-test("validation renders angle-bracket error text without interpreting an image node", async () => {
+test("API errors render angle-bracket text without interpreting an image node", async () => {
   const malicious = '<img src=x onerror="globalThis.pwned=true">';
   await withApp(dependenciesFixture({
     client: {
@@ -293,8 +437,53 @@ test("validation renders angle-bracket error text without interpreting an image 
     },
   }), async (app) => {
     await app.flush();
-    assert.equal(app.text("#validation-list"), malicious);
-    assert.equal(app.document.querySelector("#validation-list img"), null);
+    assert.equal(app.text("#api-error-alert"), malicious);
+    assert.equal(app.document.querySelector("#api-error-alert img"), null);
+  });
+});
+
+test("startup API failures appear in the dedicated editor error alert", async () => {
+  await withApp(dependenciesFixture({
+    client: {
+      async getAuthStatus() { throw new Error("Authentication service is unavailable"); },
+      async listBoards() { return []; },
+    },
+  }), async (app) => {
+    await app.flush();
+
+    const alert = app.document.querySelector<HTMLElement>("#api-error-alert");
+    assert.equal(alert?.getAttribute("role"), "alert");
+    assert.equal(alert?.textContent, "Authentication service is unavailable");
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
+  });
+});
+
+test("a failed save preserves its API message in the editor error alert", async () => {
+  const image = imageFixture();
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard() { throw new Error("Remote save rejected this board"); },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+
+    await app.click("#save-button");
+
+    assert.equal(app.text("#api-error-alert"), "Remote save rejected this board");
+    assert.equal(app.document.querySelector("#validation-panel")?.classList.contains("hidden"), true);
+  });
+});
+
+test("successful API startup does not show an editor API error", async () => {
+  await withApp(dependenciesFixture({
+    client: { async listBoards() { return []; } },
+  }), async (app) => {
+    await app.flush();
+
+    assert.equal(app.document.querySelector("#api-error-alert")?.classList.contains("hidden"), true);
   });
 });
 
@@ -330,8 +519,8 @@ test("board selection locks board and Git actions and commits image plus documen
     client: {
       async listBoards() {
         return [
-          { boardId: "board-a", displayName: "Board A", holdCount: 1 },
-          { boardId: "board-b", displayName: "Board B", holdCount: 1 },
+          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image" },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image" },
         ];
       },
       async getBoard() { return board; },
@@ -349,6 +538,38 @@ test("board selection locks board and Git actions and commits image plus documen
     await app.flush(() => image.images.succeed());
     assert.equal(app.text("#board-name"), "Board A");
     assert.equal(app.document.querySelectorAll("#hold-overlay path").length, 1);
+  });
+});
+
+test("selecting a listed board starts its image request before board details settle", async () => {
+  const image = imageFixture();
+  const board = deferred<Board>();
+  const listedBoards = [{
+    boardId: "board-a",
+    displayName: "Board A",
+    holdCount: 1,
+    imageUrl: "/api/boards/board-a/image",
+  }];
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async listBoards(): Promise<BoardSummary[]> { return listedBoards; },
+      getBoard() { return board.promise; },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+
+    assert.equal(image.images.pending.length, 1);
+    assert.equal(result().state.board, null);
+
+    await harness.flush(async () => {
+      board.resolve(boardFixture());
+      image.images.succeed();
+      await load;
+    });
+    assert.equal(result().state.board?.boardId, "board-a");
   });
 });
 
@@ -555,6 +776,138 @@ test("an old delayed save cannot overwrite a newer document identity", async () 
     });
     assert.equal(result().state.document?.regions[0]?.displayPath, "M 9 9 L 29 9 L 29 29 Z");
     assert.equal(result().state.dirty, true);
+  });
+});
+
+test("autosave waits for a quiet 750ms window and saves the latest valid document once", async () => {
+  const image = imageFixture();
+  const savedDocuments: EditorDocument[] = [];
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(_boardId, document) {
+        savedDocuments.push(document);
+        return boardFixture("board-a", document);
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await load;
+    });
+
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 2 2 L 22 2 L 22 22 Z"),
+      "First edit.",
+    ));
+    await harness.flush(() => wait(500));
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 8 8 L 28 8 L 28 28 Z"),
+      "Latest edit.",
+    ));
+    await harness.flush(() => wait(500));
+    assert.equal(savedDocuments.length, 0);
+
+    await harness.flush(() => wait(300));
+    assert.equal(savedDocuments.length, 1);
+    assert.equal(savedDocuments[0]?.regions[0]?.displayPath, "M 8 8 L 28 8 L 28 28 Z");
+    assert.equal(result().state.dirty, false);
+  });
+});
+
+test("a failed autosave waits for another document change before trying again", async () => {
+  const image = imageFixture();
+  const failedSave = deferred<Board>();
+  let saves = 0;
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard() {
+        saves += 1;
+        return failedSave.promise;
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await load;
+    });
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 7 7 L 27 7 L 27 27 Z"),
+      "Edited.",
+    ));
+
+    await harness.flush(() => wait(800));
+    assert.equal(saves, 1);
+    await harness.flush(() => failedSave.reject(new Error("storage unavailable")));
+    await harness.flush(() => wait(800));
+    assert.equal(saves, 1);
+  });
+});
+
+test("a failed manual save waits for another document change before autosaving", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withHook(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard() {
+        saves += 1;
+        throw new Error("storage unavailable");
+      },
+    },
+  }), async (result, harness) => {
+    await harness.flush();
+    let load!: Promise<void>;
+    await harness.flush(() => { load = result().actions.selectBoard("board-a"); });
+    await harness.flush(async () => {
+      image.images.succeed();
+      await load;
+    });
+    await harness.flush(() => result().actions.updateDocument(
+      editorDocument("M 7 7 L 27 7 L 27 27 Z"),
+      "Edited.",
+    ));
+
+    await harness.flush(() => result().actions.saveBoard());
+    assert.equal(saves, 1);
+    await harness.flush(() => wait(800));
+    assert.equal(saves, 1);
+    assert.equal(result().state.dirty, true);
+  });
+});
+
+test("turning autosave off cancels pending work and leaves later edits for manual save", async () => {
+  const image = imageFixture();
+  let saves = 0;
+  await withApp(dependenciesFixture({
+    runtime: image.runtime,
+    client: {
+      async saveBoard(_boardId, document) {
+        saves += 1;
+        return boardFixture("board-a", document);
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+    await app.click("#board-list button");
+    await app.flush(() => image.images.succeed());
+    await app.click("#hold-overlay path");
+    await app.change("#hold-type-select", "pinch");
+    await app.click("#autosave-toggle");
+    await app.flush(() => wait(800));
+    assert.equal(saves, 0);
+
+    await app.change("#hold-type-select", "sloper");
+    await app.flush(() => wait(800));
+    assert.equal(saves, 0);
+    assert.equal(app.text("#save-state"), "Unsaved changes");
   });
 });
 
@@ -838,7 +1191,7 @@ test("successful switch and create retain success when status refresh fails and 
     await app.change("#git-branch-select", "feature");
     await app.click("#git-switch-button");
     assert.equal(app.text("#editor-status"), "Switched to feature. Repository status unavailable.");
-    assert.match(app.text("#validation-list"), /status backend unavailable/);
+    assert.match(app.text("#api-error-alert"), /status backend unavailable/);
   });
 
   let createStatusCalls = 0;
@@ -857,7 +1210,7 @@ test("successful switch and create retain success when status refresh fails and 
     await app.click("#git-new-branch-button");
     assert.equal(app.documentValue("#git-new-branch-name"), "");
     assert.equal(app.text("#editor-status"), "Created new-work. Repository status unavailable.");
-    assert.match(app.text("#validation-list"), /create status backend unavailable/);
+    assert.match(app.text("#api-error-alert"), /create status backend unavailable/);
   });
 });
 

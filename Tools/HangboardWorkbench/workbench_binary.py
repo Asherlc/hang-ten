@@ -61,6 +61,17 @@ def _packaged_arguments(arguments: list[str]) -> tuple[bool, bool, list[str]]:
     return packaged.no_open, packaged.version, forwarded
 
 
+def _packaged_server_factory(
+    arguments: list[str], *, editor_root: Path
+) -> tuple[WorkbenchHTTPServer, None]:
+    """Start the packaged app's explicitly local checkout backend."""
+    return _server_from_cli(
+        arguments,
+        editor_root=editor_root,
+        local_checkout=True,
+    )
+
+
 def _run(
     arguments: list[str],
     *,
@@ -109,7 +120,7 @@ def main(arguments: list[str] | None = None) -> int:
     try:
         return _run(
             list(sys.argv[1:] if arguments is None else arguments),
-            server_factory=_server_from_cli,
+            server_factory=_packaged_server_factory,
         )
     except (PackagedWorkbenchError, ServerBindError, StaticAssetError) as error:
         print(f"Hangboard Workbench: {error}", file=sys.stderr)

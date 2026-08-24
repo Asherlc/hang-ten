@@ -139,11 +139,9 @@ Each package contains exactly `board.json` and
 `scripts/stage-board-packages.py`, which bundles the validated packages without
 rewriting their geometry or presentation bytes.
 
-Use the Hangboard Workbench for direct visual editing:
-
-```sh
-rtk python Tools/HangboardWorkbench/server.py
-```
+Use the packaged macOS Hangboard Workbench for direct local visual editing.
+Browser-hosted Workbench deployments must use the GitHub-backed
+`--allow-remote` server mode.
 
 Workbench edits are explicit operator changes to canonical package geometry;
 the saved paths remain the exact rendering and hit-testing source of truth.

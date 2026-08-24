@@ -42,6 +42,7 @@ final class BoardStorageTests: XCTestCase {
         XCTAssertNil(hold.depthRangeMillimeters)
         XCTAssertNil(hold.gripType)
         XCTAssertNil(hold.fingerCapacity)
+        XCTAssertNil(hold.handCapacity)
         XCTAssertNil(hold.features)
     }
 
@@ -199,6 +200,33 @@ final class BoardStorageTests: XCTestCase {
                 "hold fixture.capacity has an invalid finger capacity"
             )
         }
+    }
+
+    func testBoardLibraryPreservesOptionalHandCapacityAndRejectsInvalidValues() throws {
+        let data = try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            holds[0]["handCapacity"] = 2
+            board["holds"] = holds
+            boards[0] = board
+            document["boards"] = boards
+        }
+
+        let hold = try XCTUnwrap(BoardLibraryStore(data: data).boards.first?.holds.first)
+        XCTAssertEqual(hold.handCapacity, 2)
+
+        let issues = validationIssues(for: try fixtureData { document in
+            var boards = try XCTUnwrap(document["boards"] as? [[String: Any]])
+            var board = try XCTUnwrap(boards.first)
+            var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+            holds[0]["handCapacity"] = 3
+            board["holds"] = holds
+            boards[0] = board
+            document["boards"] = boards
+        })
+
+        XCTAssertTrue(issues.contains { $0.path == "boards[0].holds[0].handCapacity" && $0.message.contains("1...2") })
     }
 
     func testBoardLibraryAcceptsEveryPhysicalHoldKindDuringDecoding() throws {

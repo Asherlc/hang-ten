@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -168,6 +170,18 @@ def test_parses_a_hold_whose_contour_falls_outside_the_canvas() -> None:
     assert path.data == "M -20 20 L 120 20 L 120 80 L -20 80 Z"
 
 
+def test_parses_and_round_trips_a_symmetric_self_crossing_hold_contour() -> None:
+    path = parse_closed_path(
+        "M 10 10 L 90 90 L 10 90 L 90 10 Z", 100, 100
+    )
+
+    assert path.data == "M 10 10 L 90 90 L 10 90 L 90 10 Z"
+    frame, shape = shape_for_path(path, 100, 100)
+    assert display_path_for_shape(
+        frame.to_json(), shape, 100, 100, label="hold"
+    ).data == path.data
+
+
 def test_parses_a_pill_shaped_rounded_rectangle() -> None:
     path = display_path_for_shape(
         {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.8},
@@ -187,15 +201,103 @@ def test_parses_a_pill_shaped_rounded_rectangle() -> None:
             "M 10 10 L 30 10 L 30 30 L 10 30 Z M 50 50 L 70 50 L 70 70 L 50 70 Z",
             "exactly one closed contour",
         ),
-        (
-            "M 10 10 L 70 70 L 10 70 L 70 10 Z",
-            "self-intersect",
-        ),
     ],
 )
 def test_rejects_invalid_hold_geometry(display_path: str, message: str) -> None:
     with pytest.raises(GeometryError, match=message):
         parse_closed_path(display_path, 100, 100)
+
+
+def test_rejects_large_translated_non_collinear_fully_backtracked_contour() -> None:
+    with pytest.raises(GeometryError, match="enclose area"):
+        parse_closed_path(
+            "M 10000000.7 10000000.7 "
+            "L 10000000.2 10000000.6 "
+            "L 10000000.7 10000000.5 "
+            "L 10000000.2 10000000.6 "
+            "L 10000000.7 10000000.7 Z",
+            100,
+            100,
+        )
+
+
+def test_rejects_a_contour_with_more_than_1024_flattened_segments() -> None:
+    vertex_count = 1025
+    vertices = [
+        (
+            50 + 40 * math.cos(2 * math.pi * index / vertex_count),
+            50 + 40 * math.sin(2 * math.pi * index / vertex_count),
+        )
+        for index in range(vertex_count)
+    ]
+    display_path = " ".join(
+        [f"M {vertices[0][0]} {vertices[0][1]}"]
+        + [f"L {x} {y}" for x, y in vertices[1:]]
+        + ["Z"]
+    )
+
+    with pytest.raises(
+        GeometryError,
+        match="must contain no more than 1024 flattened segments",
+    ):
+        parse_closed_path(display_path, 100, 100)
+
+
+def test_rejects_excessive_curves_before_parsing_a_later_incomplete_command() -> None:
+    display_path = " ".join(
+        ["M 0 0"]
+        + ["C 0 0 1 1 0 0"] * 33
+        + ["L 1", "Z"]
+    )
+
+    with pytest.raises(
+        GeometryError,
+        match="must contain no more than 1024 flattened segments",
+    ):
+        parse_closed_path(display_path, 100, 100)
+
+
+def test_rejects_finite_coordinates_that_overflow_canonicalization_safely() -> None:
+    with pytest.raises(
+        GeometryError,
+        match="coordinates are too large to represent",
+    ):
+        parse_closed_path(
+            "M -1e308 -1e308 L 1e308 -1e308 L 1e308 1e308 Z",
+            100,
+            100,
+        )
+
+
+def test_rejects_a_maximum_size_exactly_retraced_contour_quickly() -> None:
+    vertex_count = 256
+    step = vertex_count // 2 - 1
+    order: list[int] = []
+    visited: set[int] = set()
+    index = 0
+    while index not in visited:
+        visited.add(index)
+        order.append(index)
+        index = (index + step) % vertex_count
+    vertices = [
+        (
+            50 + 40 * math.cos(2 * math.pi * index / vertex_count),
+            50 + 40 * math.sin(2 * math.pi * index / vertex_count),
+        )
+        for index in order
+    ]
+    display_path = " ".join(
+        [f"M {vertices[0][0]} {vertices[0][1]}"]
+        + [f"L {x} {y}" for x, y in vertices[1:]]
+        + [f"L {x} {y}" for x, y in reversed(vertices[:-1])]
+        + ["Z"]
+    )
+
+    started = time.perf_counter()
+    with pytest.raises(GeometryError, match="must enclose area"):
+        parse_closed_path(display_path, 100, 100)
+
+    assert time.perf_counter() - started < 1.0
 
 
 @pytest.mark.parametrize(
@@ -217,3 +319,22 @@ def test_rejects_shared_malformed_package_path_shapes(
             100,
             label=str(fixture["name"]),
         )
+
+
+@pytest.mark.parametrize(
+    "fixture",
+    VALIDATION_FIXTURES["selfCrossingPathShapes"],
+    ids=lambda fixture: fixture["name"],
+)
+def test_accepts_shared_self_crossing_package_path_shapes(
+    fixture: dict[str, object],
+) -> None:
+    path = display_path_for_shape(
+        {"x": 0, "y": 0, "width": 1, "height": 1},
+        {"type": "path", "commands": fixture["commands"]},
+        100,
+        100,
+        label=str(fixture["name"]),
+    )
+
+    assert path.data.endswith(" Z")

@@ -9,6 +9,7 @@ import { HoldCanvas, type Guide, type GuideAxis } from "./components/HoldCanvas.
 import { HoldInspector } from "./components/HoldInspector.tsx";
 import { RepositoryToolbar } from "./components/RepositoryToolbar.tsx";
 import { ValidationPanel } from "./components/ValidationPanel.tsx";
+import { ApiErrorAlert } from "./components/ApiErrorAlert.tsx";
 
 export interface WorkbenchAppProps {
   dependencies: WorkbenchDependencies;
@@ -17,18 +18,43 @@ export interface WorkbenchAppProps {
 const MIN_CANVAS_ZOOM = 50;
 const MAX_CANVAS_ZOOM = 300;
 const CANVAS_ZOOM_STEP = 25;
+const CANVAS_PINCH_ZOOM_STEP = 10;
 
 export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const { state, actions } = useWorkbench(dependencies);
   const [canvasZoom, setCanvasZoom] = React.useState(100);
+  const canvasZoomRef = React.useRef(canvasZoom);
   const [guides, setGuides] = React.useState<Guide[]>([]);
+  const [mobileBoardsOpen, setMobileBoardsOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileHoldSheetOpen, setMobileHoldSheetOpen] = React.useState(false);
   const nextGuideId = React.useRef(1);
-  const changeCanvasZoom = React.useCallback((direction: number) => {
-    setCanvasZoom((zoom) => Math.min(
-      MAX_CANVAS_ZOOM,
-      Math.max(MIN_CANVAS_ZOOM, zoom + Math.sign(direction) * CANVAS_ZOOM_STEP),
-    ));
+  const nextCanvasZoom = React.useCallback((direction: number, stepSize: number): number => {
+    const step = Math.sign(direction) * stepSize;
+    return Math.max(MIN_CANVAS_ZOOM, Math.min(MAX_CANVAS_ZOOM, canvasZoomRef.current + step));
   }, []);
+  const canCanvasZoomChange = React.useCallback((direction: number, stepSize: number): boolean => {
+    return nextCanvasZoom(direction, stepSize) !== canvasZoomRef.current;
+  }, [nextCanvasZoom]);
+  const changeCanvasZoomBy = React.useCallback((direction: number, stepSize: number): boolean => {
+    const nextZoom = nextCanvasZoom(direction, stepSize);
+    if (!canCanvasZoomChange(direction, stepSize)) return false;
+    canvasZoomRef.current = nextZoom;
+    setCanvasZoom(nextZoom);
+    return true;
+  }, [canCanvasZoomChange, nextCanvasZoom]);
+  const canZoomChange = React.useCallback((direction: number): boolean => (
+    canCanvasZoomChange(direction, CANVAS_ZOOM_STEP)
+  ), [canCanvasZoomChange]);
+  const changeCanvasZoom = React.useCallback((direction: number): boolean => (
+    changeCanvasZoomBy(direction, CANVAS_ZOOM_STEP)
+  ), [changeCanvasZoomBy]);
+  const canPinchZoomChange = React.useCallback((direction: number): boolean => (
+    canCanvasZoomChange(direction, CANVAS_PINCH_ZOOM_STEP)
+  ), [canCanvasZoomChange]);
+  const changeCanvasPinchZoom = React.useCallback((direction: number): boolean => (
+    changeCanvasZoomBy(direction, CANVAS_PINCH_ZOOM_STEP)
+  ), [changeCanvasZoomBy]);
   const busy = state.busyBoard || state.busyGit;
   const editorBusy = state.busyGit || (state.busyBoard && !state.savingBoard);
   const selectedHold: HoldRegion | null = state.document?.regions.find(
@@ -39,6 +65,9 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     : null;
   React.useEffect(() => {
     setGuides([]);
+  }, [state.board?.boardId, state.board?.selectedPresentationID]);
+  React.useEffect(() => {
+    setMobileHoldSheetOpen(false);
   }, [state.board?.boardId, state.board?.selectedPresentationID]);
   const addGuide = React.useCallback((axis: GuideAxis): void => {
     if (!selectedHoldCenter) return;
@@ -81,14 +110,20 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
       const editable = (target instanceof HTMLElement && target.isContentEditable)
         || target?.getAttribute("contenteditable") === "true"
         || tag === "input" || tag === "select" || tag === "textarea";
-      if (editable || !(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
+      if (editable) return;
+      if (event.metaKey && (event.key === "+" || event.key === "-")) {
+        if (!state.document || busy) return;
+        if (changeCanvasZoom(event.key === "+" ? 1 : -1)) event.preventDefault();
+        return;
+      }
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s") return;
       if (busy || !state.board) return;
       event.preventDefault();
       saveFromShortcut();
     };
     window.document.addEventListener("keydown", onKeyDown);
     return () => window.document.removeEventListener("keydown", onKeyDown);
-  }, [busy, saveFromShortcut, state.board]);
+  }, [busy, changeCanvasZoom, saveFromShortcut, state.board, state.document]);
   const branchStatus = !state.initialized && !state.gitStatusKnown
     ? "Choose a board to edit its holds."
     : state.currentBranch
@@ -106,7 +141,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
 
   return (
     <main className="app-shell direct-workbench">
-      <header className="topbar">
+      <header className={`topbar${mobileMenuOpen ? " mobile-menu-open" : ""}`}>
         <div className="brand-block">
           <div className="brand-mark">H</div>
           <div>
@@ -118,17 +153,37 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           <button className="tool-button" id="refresh-boards-button" type="button" disabled={busy} onClick={() => void actions.refreshBoards()}>Boards</button>
           <span className="save-state" id="save-state" aria-live="polite">{saveState}</span>
           <button className="tool-button accent" id="save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
+          <label className="tool-button" htmlFor="autosave-toggle">
+            <input
+              id="autosave-toggle"
+              type="checkbox"
+              checked={state.autosaveEnabled}
+              onChange={(event) => actions.setAutosaveEnabled(event.currentTarget.checked)}
+            />
+            Autosave
+          </label>
+          <span className="save-state" id="autosave-state" aria-live="polite">
+            {state.autosaveEnabled ? "Autosave on" : "Autosave off"}
+          </span>
+        </div>
+        <div className="mobile-toolbar" aria-label="Mobile board tools">
+          <button className="tool-button" id="mobile-boards-button" type="button" aria-expanded={mobileBoardsOpen} onClick={() => setMobileBoardsOpen((open) => !open)}>Boards</button>
+          <button className="tool-button" id="mobile-menu-button" type="button" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((open) => !open)}>Menu</button>
+          <button className="tool-button accent" id="mobile-save-button" type="button" disabled={!state.board || busy} onClick={saveFromShortcut}>Save</button>
         </div>
         <RepositoryToolbar state={state} actions={actions} />
       </header>
 
-      <section className="workspace-grid">
+      <section className={`workspace-grid${mobileBoardsOpen ? " mobile-boards-open" : ""}`}>
         <BoardLibrary
           boards={state.boards}
           selectedBoardId={state.board?.boardId ?? null}
           busy={busy}
           error={state.boardsError}
-          onSelectBoard={(boardId) => void actions.selectBoard(boardId)}
+          onSelectBoard={(boardId) => {
+            setMobileBoardsOpen(false);
+            void actions.selectBoard(boardId);
+          }}
         />
 
         <section className="canvas-column" aria-label="Hold editor">
@@ -186,14 +241,20 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             selectedKey={state.selectedKey}
             selectedKeys={state.selectedKeys}
             busy={editorBusy}
-            onSelectHold={actions.selectHold}
+            onSelectHold={(key, toggle) => {
+              actions.selectHold(key, toggle);
+            }}
             pathEditor={dependencies.pathEditor}
             editor={editor}
             zoomPercent={canvasZoom}
             onZoomChange={changeCanvasZoom}
+            canZoomChange={canZoomChange}
+            onPinchZoomChange={changeCanvasPinchZoom}
+            canPinchZoomChange={canPinchZoomChange}
             guides={guides}
             onMoveGuide={moveGuide}
           />
+          <ApiErrorAlert error={state.apiError} />
           <ValidationPanel validation={state.validation} />
           <footer className="statusbar">
             <span id="editor-status">
@@ -201,19 +262,31 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
               {state.saveLoginUrl && <>{" "}<a href={state.saveLoginUrl} target="_blank" rel="noopener noreferrer">Reauthenticate</a></>}
             </span>
           </footer>
+          <div className="mobile-canvas-controls" aria-label="Mobile canvas controls">
+            <button className="tool-button" id="mobile-zoom-out-button" type="button" aria-label="Zoom out" disabled={!state.document || canvasZoom <= MIN_CANVAS_ZOOM} onClick={() => changeCanvasZoom(-1)}>−</button>
+            <button className="tool-button" id="mobile-zoom-in-button" type="button" aria-label="Zoom in" disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM} onClick={() => changeCanvasZoom(1)}>+</button>
+            <button className="tool-button" id="mobile-open-hold-sheet-button" type="button" disabled={!selectedHold} onClick={() => setMobileHoldSheetOpen(true)}>Edit hold</button>
+            <button className="tool-button accent" id="mobile-add-hold-button" type="button" disabled={!state.document || editorBusy} onClick={editor.addHold}>Add hold</button>
+          </div>
         </section>
 
         <HoldInspector
+          className={selectedHold && mobileHoldSheetOpen ? "mobile-sheet-open" : ""}
           hold={selectedHold}
           selectedCount={state.selectedKeys.length}
           busy={editorBusy}
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}
           onTypeChange={editor.changeHoldType}
+          onFingerCapacityChange={editor.changeFingerCapacity}
+          onDepthRangeChange={editor.changeHoldDepthRange}
+          onHandCapacityChange={editor.changeHandCapacity}
           onOutlineShapeChange={editor.changeOutlineShape}
           onRotate={(direction, shiftKey) => editor.rotateHold(direction * (shiftKey ? 45 : 15))}
           onApplyRotation={editor.applyRotation}
+          onDuplicateAndMirror={editor.duplicateAndMirrorHold}
           onDelete={editor.deleteHold}
+          onMobileCollapse={() => setMobileHoldSheetOpen(false)}
         />
       </section>
     </main>

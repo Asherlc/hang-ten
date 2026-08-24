@@ -11,6 +11,25 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isFingerCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 4;
+}
+
+function isMillimeterRange(value: unknown): value is { lowerBound: number; upperBound: number } {
+  if (!isRecord(value)) return false;
+  const { lowerBound, upperBound } = value;
+  return Number.isInteger(lowerBound)
+    && Number.isInteger(upperBound)
+    && typeof lowerBound === "number"
+    && typeof upperBound === "number"
+    && lowerBound > 0
+    && upperBound >= lowerBound;
+}
+
+function isHandCapacity(value: unknown): value is number {
+  return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 2;
+}
+
 function isHoldRegion(value: unknown): value is HoldRegion {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -18,6 +37,9 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
+    && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
+    && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
+    && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
     && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)
@@ -56,6 +78,9 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     throw new Error("Hold document needs a valid presentation");
   }
   const keys = new Set<string>();
+  const fingerCapacityByHoldId = new Map<string, number | undefined>();
+  const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
+  const handCapacityByHoldId = new Map<string, number | undefined>();
   for (const region of document.regions) {
     if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
       throw new Error("Every hold needs a key");
@@ -69,11 +94,44 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     if (Object.hasOwn(region, "shapeConstraint")) {
       validateShapeConstraint(region.shapeConstraint, `Hold ${region.key} shape constraint`);
     }
+    if (Object.hasOwn(region, "fingerCapacity")
+      && !isFingerCapacity(region.fingerCapacity)) {
+      throw new Error(`Hold ${region.key} finger capacity must be between 1 and 4`);
+    }
+    if (Object.hasOwn(region, "depthRangeMillimeters")
+      && !isMillimeterRange(region.depthRangeMillimeters)) {
+      throw new Error(`Hold ${region.key} depth range must be positive and ordered`);
+    }
+    if (Object.hasOwn(region, "handCapacity")
+      && !isHandCapacity(region.handCapacity)) {
+      throw new Error(`Hold ${region.key} hand capacity must be between 1 and 2`);
+    }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);
     }
     if (presentationID && region.metadata?.presentationID !== presentationID) {
       throw new Error(`Hold ${region.key} must belong to the selected presentation`);
+    }
+    if (region.metadata) {
+      const { holdID } = region.metadata;
+      if (fingerCapacityByHoldId.has(holdID)
+        && fingerCapacityByHoldId.get(holdID) !== region.fingerCapacity) {
+        throw new Error(`Hold ${holdID} pieces must share one finger capacity`);
+      }
+      fingerCapacityByHoldId.set(holdID, region.fingerCapacity);
+      const depthRange = region.depthRangeMillimeters;
+      const existingDepthRange = depthRangeByHoldId.get(holdID);
+      if (depthRangeByHoldId.has(holdID)
+        && (existingDepthRange?.lowerBound !== depthRange?.lowerBound
+          || existingDepthRange?.upperBound !== depthRange?.upperBound)) {
+        throw new Error(`Hold ${holdID} pieces must share one depth range`);
+      }
+      depthRangeByHoldId.set(holdID, depthRange);
+      if (handCapacityByHoldId.has(holdID)
+        && handCapacityByHoldId.get(holdID) !== region.handCapacity) {
+        throw new Error(`Hold ${holdID} pieces must share one hand capacity`);
+      }
+      handCapacityByHoldId.set(holdID, region.handCapacity);
     }
   }
   if (!isEditorDocument(document)) {
@@ -86,10 +144,18 @@ export async function loadBoardAtomically<ImageType>(options: {
   boardId: string;
   getBoard(boardId: string): Promise<import("./types.ts").Board>;
   loadImage(href: string): Promise<ImageType>;
+  preloadedImage?: {
+    href: string;
+    promise: Promise<ImageType>;
+  };
   commit(value: LoadedBoard<ImageType>): void;
 }): Promise<LoadedBoard<ImageType>> {
-  const { boardId, getBoard, loadImage, commit } = options;
+  const { boardId, getBoard, loadImage, preloadedImage, commit } = options;
   if (!boardId) throw new TypeError("Board ID is required");
+  const preparedPreloadedImage = preloadedImage && Promise.resolve(preloadedImage.promise).then(
+    (image) => ({ image }),
+    (error: unknown) => ({ error }),
+  );
   const board = await getBoard(boardId);
   if (!board || board.boardId !== boardId || !board.imageUrl) {
     throw new Error("Workbench returned an invalid board");
@@ -99,7 +165,14 @@ export async function loadBoardAtomically<ImageType>(options: {
     throw new Error("Workbench returned a mismatched presentation");
   }
   validateEditorDocument(board.document);
-  const image = await loadImage(board.imageUrl);
+  let image: ImageType;
+  if (preloadedImage?.href === board.imageUrl && preparedPreloadedImage !== undefined) {
+    const preparedImage = await preparedPreloadedImage;
+    if ("error" in preparedImage) throw preparedImage.error;
+    image = preparedImage.image;
+  } else {
+    image = await loadImage(board.imageUrl);
+  }
   if (!image) throw new Error("Board image is unavailable");
   const loaded = Object.freeze({ board, image, document: board.document });
   commit(loaded);

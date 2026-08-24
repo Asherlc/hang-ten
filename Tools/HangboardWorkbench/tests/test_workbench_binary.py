@@ -85,6 +85,28 @@ def test_run_starts_and_closes_backend_without_browser(monkeypatch, tmp_path, ca
     assert capsys.readouterr().out == "Hangboard Workbench: http://127.0.0.1:4317/\n"
 
 
+def test_packaged_server_factory_selects_local_checkout_storage(monkeypatch, tmp_path):
+    captured: dict[str, object] = {}
+
+    def server_factory(arguments, *, editor_root, local_checkout):
+        captured.update(
+            arguments=arguments,
+            editor_root=editor_root,
+            local_checkout=local_checkout,
+        )
+        return object(), None
+
+    monkeypatch.setattr(workbench_binary, "_server_from_cli", server_factory)
+
+    workbench_binary._packaged_server_factory(["--port", "0"], editor_root=tmp_path)
+
+    assert captured == {
+        "arguments": ["--port", "0"],
+        "editor_root": tmp_path,
+        "local_checkout": True,
+    }
+
+
 @pytest.mark.filterwarnings(
     "ignore:urllib3 .* doesn't match a supported version!"
 )

@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { HoldRegion } from "../types.ts";
+import type { HoldRegion, MillimeterRange } from "../types.ts";
 
 const HOLD_TYPES = ["jug", "sloper", "edge", "pocket", "pinch"] as const;
 const OUTLINE_SHAPES = [
@@ -19,10 +19,16 @@ export interface HoldInspectorProps {
   rotationDegrees: string;
   onRotationDegreesChange(value: string): void;
   onTypeChange(type: string): void;
+  onFingerCapacityChange(capacity: number | undefined): void;
+  onDepthRangeChange(depthRange: MillimeterRange | undefined): void;
+  onHandCapacityChange(capacity: number | undefined): void;
   onOutlineShapeChange(shape: string): void;
   onRotate(direction: -1 | 1, shiftKey: boolean): void;
   onApplyRotation(): void;
+  onDuplicateAndMirror(): void;
   onDelete(): void;
+  onMobileCollapse(): void;
+  className?: string;
 }
 
 export function HoldInspector({
@@ -32,19 +38,32 @@ export function HoldInspector({
   rotationDegrees,
   onRotationDegreesChange,
   onTypeChange,
+  onFingerCapacityChange,
+  onDepthRangeChange,
+  onHandCapacityChange,
   onOutlineShapeChange,
   onRotate,
   onApplyRotation,
+  onDuplicateAndMirror,
   onDelete,
+  onMobileCollapse,
+  className = "",
 }: HoldInspectorProps) {
   return (
-    <aside className="panel inspector-panel" aria-labelledby="hold-heading">
+    <aside className={`panel inspector-panel ${className}`.trim()} aria-labelledby="hold-heading">
       <div className="panel-heading">
         <div>
           <span className="eyebrow">Hold</span>
           <h2 id="hold-heading">{hold?.key ?? "No selection"}</h2>
           {selectedCount > 1 && <span id="selected-hold-count">{selectedCount} selected</span>}
         </div>
+        <button
+          className="tool-button mobile-sheet-collapse"
+          id="mobile-collapse-hold-sheet-button"
+          type="button"
+          aria-label="Collapse hold editor"
+          onClick={onMobileCollapse}
+        >Collapse</button>
       </div>
       <div className={`inspector-empty${hold ? " hidden" : ""}`} id="hold-empty">Select a hold to edit its closed contour.</div>
       <form className={`inspector-form${hold ? "" : " hidden"}`} id="hold-form">
@@ -55,6 +74,77 @@ export function HoldInspector({
             {hold?.type && !HOLD_TYPES.includes(hold.type as typeof HOLD_TYPES[number])
               && <option value={hold.type}>{hold.type}</option>}
             {HOLD_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+        </label>
+        <label>Finger capacity
+          <select
+            id="finger-capacity-select"
+            disabled={busy}
+            value={hold?.fingerCapacity?.toString() ?? ""}
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              onFingerCapacityChange(value ? Number(value) : undefined);
+            }}
+          >
+            <option value="">Unset</option>
+            {[1, 2, 3, 4].map((capacity) => <option key={capacity} value={capacity}>{capacity}</option>)}
+          </select>
+        </label>
+        <fieldset className="depth-range-inputs">
+          <legend>Depth range (mm)</legend>
+          <label>Minimum
+            <input
+              id="depth-range-lower-input"
+              type="number"
+              min="1"
+              step="1"
+              disabled={busy}
+              value={hold?.depthRangeMillimeters?.lowerBound ?? ""}
+              onChange={(event) => {
+                const value = event.currentTarget.value;
+                if (!value) {
+                  onDepthRangeChange(undefined);
+                  return;
+                }
+                const lowerBound = Number(value);
+                const upperBound = Math.max(hold?.depthRangeMillimeters?.upperBound ?? lowerBound, lowerBound);
+                onDepthRangeChange({ lowerBound, upperBound });
+              }}
+            />
+          </label>
+          <label>Maximum
+            <input
+              id="depth-range-upper-input"
+              type="number"
+              min="1"
+              step="1"
+              disabled={busy}
+              value={hold?.depthRangeMillimeters?.upperBound ?? ""}
+              onChange={(event) => {
+                const value = event.currentTarget.value;
+                if (!value) {
+                  onDepthRangeChange(undefined);
+                  return;
+                }
+                const upperBound = Number(value);
+                const lowerBound = Math.min(hold?.depthRangeMillimeters?.lowerBound ?? upperBound, upperBound);
+                onDepthRangeChange({ lowerBound, upperBound });
+              }}
+            />
+          </label>
+        </fieldset>
+        <label>Hand capacity
+          <select
+            id="hand-capacity-select"
+            disabled={busy}
+            value={hold?.handCapacity?.toString() ?? ""}
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              onHandCapacityChange(value ? Number(value) : undefined);
+            }}
+          >
+            <option value="">Unset</option>
+            {[1, 2].map((capacity) => <option key={capacity} value={capacity}>{capacity}</option>)}
           </select>
         </label>
         <label>Outline shape
@@ -79,6 +169,7 @@ export function HoldInspector({
             <button type="button" id="rotate-by-apply-button" className="tool-button" disabled={busy} onClick={onApplyRotation}>Apply</button>
           </span>
         </div>
+        <button type="button" id="duplicate-mirror-hold-button" className="tool-button" disabled={busy} onClick={onDuplicateAndMirror}>Duplicate & mirror</button>
         <button type="button" id="delete-hold-button" className="tool-button danger" disabled={busy} onClick={onDelete}>Delete hold</button>
       </form>
     </aside>

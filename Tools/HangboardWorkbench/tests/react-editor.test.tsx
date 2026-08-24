@@ -3,6 +3,7 @@ import test from "node:test";
 import React from "react";
 
 import { WorkbenchApp } from "../src/WorkbenchApp.tsx";
+import { HoldCanvas } from "../src/components/HoldCanvas.tsx";
 import {
   holdCentroid,
   holdSiblings,
@@ -14,6 +15,7 @@ import {
 } from "../src/editor-model.ts";
 import * as pathEditor from "../src/path-editor.ts";
 import * as controller from "../src/workbench-controller.ts";
+import type { HoldEditorActions } from "../src/useHoldEditor.ts";
 import type {
   AuthStatus,
   Board,
@@ -65,6 +67,7 @@ function clientFixture(boards: readonly Board[]): WorkbenchClient {
         boardId: board.boardId,
         displayName: board.displayName,
         holdCount: board.holdCount,
+        imageUrl: board.imageUrl,
       }));
     },
     async getBoard(boardId): Promise<Board> {
@@ -138,6 +141,24 @@ async function withEditor(
 function paths(app: ReactHarness): string[] {
   return [...app.document.querySelectorAll<SVGPathElement>("#hold-overlay .region-shape")]
     .map((path) => path.getAttribute("d") ?? "");
+}
+
+async function touchCanvas(
+  app: ReactHarness,
+  type: "touchstart" | "touchmove" | "touchend",
+  touches: readonly { clientX: number; clientY: number }[],
+): Promise<boolean> {
+  let defaultPrevented = false;
+  await app.flush(() => {
+    const viewport = app.document.querySelector<HTMLElement>("#canvas-viewport");
+    const windowValue = app.document.defaultView;
+    if (!viewport || !windowValue) throw new Error("Missing canvas viewport test environment");
+    const event = new windowValue.Event(type, { bubbles: true, cancelable: true });
+    Object.defineProperty(event, "touches", { configurable: true, value: touches });
+    viewport.dispatchEvent(event);
+    defaultPrevented = event.defaultPrevented;
+  });
+  return defaultPrevented;
 }
 
 function rotate(path: string, degrees: number, pivot: { x: number; y: number }): string {
@@ -327,6 +348,45 @@ test("canvas zoom controls and Alt-wheel adjust a bounded zoom while preserving 
   });
 });
 
+test("Command plus and minus shortcuts zoom only an open board outside editable targets", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.keyDown("body", "+", { metaKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await app.keyDown("body", "-", { metaKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    assert.equal(await app.keyDown("body", "+", { ctrlKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    const input = app.document.createElement("input");
+    input.id = "native-zoom-input";
+    app.document.body.append(input);
+    assert.equal(await app.keyDown("#native-zoom-input", "+", { metaKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    for (let index = 0; index < 8; index += 1) {
+      assert.equal(await app.keyDown("body", "+", { metaKey: true }), true);
+    }
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+    assert.equal(await app.keyDown("body", "+", { metaKey: true }), false);
+
+    for (let index = 0; index < 10; index += 1) {
+      assert.equal(await app.keyDown("body", "-", { metaKey: true }), true);
+    }
+    assert.equal(app.text("#canvas-zoom-level"), "50%");
+    assert.equal(await app.keyDown("body", "-", { metaKey: true }), false);
+  });
+
+  const app = await renderReact(<WorkbenchApp dependencies={dependenciesFixture()} />);
+  try {
+    await app.flush();
+    assert.equal(await app.keyDown("body", "+", { metaKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+  } finally {
+    await app.cleanup();
+  }
+});
+
 test("Alt-wheel zoom accepts a horizontal-only wheel delta", async () => {
   await withEditor(async (app) => {
     assert.equal(await app.wheel("#canvas-viewport", { deltaX: -1, deltaY: 0, altKey: true }), true);
@@ -334,10 +394,233 @@ test("Alt-wheel zoom accepts a horizontal-only wheel delta", async () => {
   });
 });
 
-test("Ctrl-wheel pinch zoom adjusts the canvas zoom", async () => {
+test("Ctrl-wheel pinch zoom accumulates small deltas without changing Alt-wheel sensitivity", async () => {
   await withEditor(async (app) => {
-    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, ctrlKey: true }), true);
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -20, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -30, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -60, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "110%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "135%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -40, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "135%");
+  });
+});
+
+test("Ctrl-wheel pinch uses 10 percent steps and preserves excess delta for later steps", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -350, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "130%");
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -50, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "140%");
+  });
+});
+
+test("standard zoom controls reach bounds from pinch-created zoom levels", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1900, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "290%");
+    await app.click("#zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+    assert.equal(app.disabled("#zoom-in-button"), true);
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: 2400, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "60%");
+    await app.click("#zoom-out-button");
+    assert.equal(app.text("#canvas-zoom-level"), "50%");
+    assert.equal(app.disabled("#zoom-out-button"), true);
+  });
+});
+
+test("Alt-wheel resets pending Ctrl-pinch deltas before its immediate zoom", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -40, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
     assert.equal(app.text("#canvas-zoom-level"), "125%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -60, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "125%");
+  });
+});
+
+test("ordinary wheel resets pending Ctrl-pinch deltas before the next pinch", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -40, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1 }), false);
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -60, ctrlKey: true }), true);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+  });
+});
+
+test("rapid Ctrl-pinch events consume browser zoom while advancing canvas zoom only within bounds", async () => {
+  await withEditor(async (app) => {
+    const events: WheelEvent[] = [];
+    await app.flush(() => {
+      const viewport = app.document.querySelector<HTMLElement>("#canvas-viewport");
+      if (!viewport) throw new Error("Missing canvas viewport");
+      const windowValue = app.document.defaultView;
+      if (!windowValue) throw new Error("Missing test document window");
+      for (let index = 0; index < 20; index += 1) {
+        const event = new windowValue.WheelEvent("wheel", {
+          bubbles: true,
+          cancelable: true,
+          deltaY: -100,
+          ctrlKey: true,
+        });
+        viewport.dispatchEvent(event);
+        events.push(event);
+      }
+    });
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+    assert.ok(events.every((event) => event.defaultPrevented));
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, ctrlKey: true }), false);
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, altKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+  });
+});
+
+test("Ctrl-pinch does not consume a sub-threshold event when canvas zoom is at its bound", async () => {
+  await withEditor(async (app) => {
+    for (let index = 0; index < 8; index += 1) await app.click("#zoom-in-button");
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -20, ctrlKey: true }), false);
+    assert.equal(app.text("#canvas-zoom-level"), "300%");
+  });
+});
+
+test("wheel zoom uses callbacks from the latest render", async () => {
+  const inertEditor = { cancelActiveEdit: () => false } as HoldEditorActions;
+  function WheelZoomHarness() {
+    const [useCurrentCallbacks, setUseCurrentCallbacks] = React.useState(false);
+    const [zoom, setZoom] = React.useState(100);
+    const canvasDocument = React.useMemo(() => documentFixture(), []);
+    const onZoomChange = useCurrentCallbacks
+      ? (direction: number) => {
+        setZoom((current) => current + direction * 25);
+        return true;
+      }
+      : () => false;
+    const canZoomChange = useCurrentCallbacks ? () => true : () => false;
+    const onPinchZoomChange = useCurrentCallbacks
+      ? (direction: number) => {
+        setZoom((current) => current + direction * 10);
+        return true;
+      }
+      : () => false;
+    const canPinchZoomChange = useCurrentCallbacks ? () => true : () => false;
+    return <>
+      <button id="use-current-wheel-callbacks" type="button" onClick={() => setUseCurrentCallbacks(true)}>Use current callbacks</button>
+      <output id="wheel-harness-zoom">{zoom}%</output>
+      <HoldCanvas
+        board={null}
+        document={canvasDocument}
+        selectedKey={null}
+        selectedKeys={[]}
+        busy={false}
+        onSelectHold={() => {}}
+        pathEditor={pathEditor}
+        editor={inertEditor}
+        zoomPercent={100}
+        onZoomChange={onZoomChange}
+        canZoomChange={canZoomChange}
+        onPinchZoomChange={onPinchZoomChange}
+        canPinchZoomChange={canPinchZoomChange}
+        guides={[]}
+        onMoveGuide={() => {}}
+      />
+    </>;
+  }
+
+  const app = await renderReact(<WheelZoomHarness />);
+  try {
+    await app.click("#use-current-wheel-callbacks");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -1, altKey: true }), true);
+    assert.equal(app.text("#wheel-harness-zoom"), "125%");
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -100, ctrlKey: true }), true);
+    assert.equal(app.text("#wheel-harness-zoom"), "135%");
+  } finally {
+    await app.cleanup();
+  }
+});
+
+test("Ctrl-pinch retains multiple thresholds when a pinch callback updates zoom without returning a value", async () => {
+  const inertEditor = { cancelActiveEdit: () => false } as HoldEditorActions;
+  function VoidPinchZoomHarness() {
+    const [zoom, setZoom] = React.useState(100);
+    const canvasDocument = React.useMemo(() => documentFixture(), []);
+    return <>
+      <output id="void-pinch-harness-zoom">{zoom}%</output>
+      <HoldCanvas
+        board={null}
+        document={canvasDocument}
+        selectedKey={null}
+        selectedKeys={[]}
+        busy={false}
+        onSelectHold={() => {}}
+        pathEditor={pathEditor}
+        editor={inertEditor}
+        zoomPercent={100}
+        onZoomChange={() => {}}
+        canZoomChange={() => false}
+        onPinchZoomChange={(direction) => { setZoom((current) => current + direction * 10); }}
+        canPinchZoomChange={() => true}
+        guides={[]}
+        onMoveGuide={() => {}}
+      />
+    </>;
+  }
+
+  const app = await renderReact(<VoidPinchZoomHarness />);
+  try {
+    assert.equal(await app.wheel("#canvas-viewport", { deltaY: -200, ctrlKey: true }), true);
+    assert.equal(app.text("#void-pinch-harness-zoom"), "120%");
+  } finally {
+    await app.cleanup();
+  }
+});
+
+test("two-finger touch pinch continues zooming across rerenders without intercepting one-finger touches", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await touchCanvas(app, "touchstart", [{ clientX: 20, clientY: 20 }]), false);
+    assert.equal(await touchCanvas(app, "touchmove", [{ clientX: 35, clientY: 20 }]), false);
+    assert.equal(app.text("#canvas-zoom-level"), "100%");
+
+    assert.equal(await touchCanvas(app, "touchstart", [
+      { clientX: 20, clientY: 20 },
+      { clientX: 80, clientY: 20 },
+    ]), true);
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 10, clientY: 20 },
+      { clientX: 90, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "130%");
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 0, clientY: 20 },
+      { clientX: 100, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "150%");
+    assert.equal(await touchCanvas(app, "touchend", []), false);
+  });
+});
+
+test("two-finger touch pinch advances through every 10 percent threshold crossed in one move", async () => {
+  await withEditor(async (app) => {
+    assert.equal(await touchCanvas(app, "touchstart", [
+      { clientX: 0, clientY: 20 },
+      { clientX: 100, clientY: 20 },
+    ]), true);
+    assert.equal(await touchCanvas(app, "touchmove", [
+      { clientX: 0, clientY: 20 },
+      { clientX: 150, clientY: 20 },
+    ]), true);
+    assert.equal(app.text("#canvas-zoom-level"), "140%");
   });
 });
 
@@ -516,6 +799,129 @@ test("delete and type changes apply to every piece sharing holdID", async () => 
   });
 });
 
+test("duplicate and mirror reflects every selected physical hold with fresh hold identities", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 10 Q 15 5 20 10 L 20 20 Z", metadata: { holdID: "a", pieceIndex: 0 }, shapeConstraint: { shape: "oval", rotationDegrees: 15 } },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: "M 30 10 L 40 10 L 40 20 Z", metadata: { holdID: "a", pieceIndex: 1 } },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: "M 70 10 L 80 10 L 80 20 Z", metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+
+    assert.equal(app.text("#hold-heading"), "hold-3-piece-0");
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.document.querySelector('[data-hold-key="hold-3-piece-0"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(app.document.querySelector('[data-hold-key="hold-3-piece-1"]')?.getAttribute("aria-pressed"), "true");
+    assert.deepEqual(paths(app).slice(3), [
+      "M 90 10 Q 85 5 80 10 L 80 20 Z",
+      "M 70 10 L 60 10 L 60 20 Z",
+    ]);
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.slice(3), [
+      {
+        id: 4,
+        key: "hold-3-piece-0",
+        type: "jug",
+        displayPath: "M 90 10 Q 85 5 80 10 L 80 20 Z",
+        metadata: { holdID: "hold-3", pieceIndex: 0 },
+        shapeConstraint: { shape: "oval", rotationDegrees: -15 },
+      },
+      {
+        id: 5,
+        key: "hold-3-piece-1",
+        type: "jug",
+        displayPath: "M 70 10 L 60 10 L 60 20 Z",
+        metadata: { holdID: "hold-3", pieceIndex: 1 },
+      },
+    ]);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("finger capacity loads in the inspector, applies to every physical piece, and new holds are unset", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, fingerCapacity: 2 },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, fingerCapacity: 2 },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.documentValue("#finger-capacity-select"), "2");
+    await app.change("#finger-capacity-select", "4");
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.slice(0, 2).map((region) => region.fingerCapacity), [4, 4]);
+    assert.equal(Object.hasOwn(saved[0]?.regions[2] ?? {}, "fingerCapacity"), false);
+
+    await app.click("#add-hold-button");
+    assert.equal(app.documentValue("#finger-capacity-select"), "");
+  }, dependenciesFixture(board, { client }));
+});
+
+test("depth range loads in the inspector and saves across every physical piece", async () => {
+  const board = boardFixture(documentFixture([
+    {
+      id: 1,
+      key: "a-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "a", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+    },
+    {
+      id: 2,
+      key: "a-piece-1",
+      type: "jug",
+      displayPath: SECOND_PATH,
+      metadata: { holdID: "a", pieceIndex: 1 },
+      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+    },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.documentValue("#depth-range-lower-input"), "9");
+    assert.equal(app.documentValue("#depth-range-upper-input"), "10");
+    await app.change("#depth-range-lower-input", "12");
+    await app.change("#depth-range-upper-input", "16");
+    await app.click("#save-button");
+    assert.deepEqual(
+      saved[0]?.regions.slice(0, 2).map((region) => region.depthRangeMillimeters),
+      [{ lowerBound: 12, upperBound: 16 }, { lowerBound: 12, upperBound: 16 }],
+    );
+
+    await app.click("#add-hold-button");
+    assert.equal(app.documentValue("#depth-range-lower-input"), "");
+    assert.equal(app.documentValue("#depth-range-upper-input"), "");
+  }, dependenciesFixture(board, { client }));
+});
+
 test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavior", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
@@ -529,6 +935,34 @@ test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavio
     assert.equal(await app.keyDown("#native-degree-input", "ArrowUp"), false);
     assert.equal(paths(app)[0], "M 11 20 L 21 20 L 21 30 Z");
   });
+});
+
+test("hand capacity loads in the inspector, applies to every physical piece, and new holds are unset", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, handCapacity: 1 },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, handCapacity: 1 },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.documentValue("#hand-capacity-select"), "1");
+    await app.change("#hand-capacity-select", "2");
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.slice(0, 2).map((region) => region.handCapacity), [2, 2]);
+    assert.equal(Object.hasOwn(saved[0]?.regions[2] ?? {}, "handCapacity"), false);
+
+    await app.click("#add-hold-button");
+    assert.equal(app.documentValue("#hand-capacity-select"), "");
+  }, dependenciesFixture(board, { client }));
 });
 
 test("command/control undo and redo reverse document edits and preserve native input behavior", async () => {
@@ -740,7 +1174,7 @@ test("guide controls create horizontal and vertical guides at the selected hold 
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("whole-path dragging snaps its center to nearby horizontal and vertical guides", async () => {
+test("whole-path dragging snaps its horizontal and vertical bounds edges to nearby guides", async () => {
   const document = documentFixture([
     { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
     { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
@@ -753,9 +1187,26 @@ test("whole-path dragging snaps its center to nearby horizontal and vertical gui
     await app.click('[data-hold-key="snap-target"]');
     await drag(app, '[data-hold-key="snap-target"]', [{ x: 30, y: 30 }, { x: 14, y: 14 }]);
 
-    assert.equal(paths(app)[1], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(paths(app)[1], "M 20 20 L 40 20 L 40 40 L 20 40 Z");
     assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
     assert.equal(paths(app)[1], "M 30 30 L 50 30 L 50 50 L 30 50 Z");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("whole-path dragging does not snap when only its center is near a guide", async () => {
+  const document = documentFixture([
+    { id: 1, key: "guide-source", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+    { id: 2, key: "snap-target", type: "edge", displayPath: "M 30 30 L 50 30 L 50 50 L 30 50 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="guide-source"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.click("#add-vertical-guide-button");
+    await app.click('[data-hold-key="snap-target"]');
+    await drag(app, '[data-hold-key="snap-target"]', [{ x: 30, y: 30 }, { x: 13, y: 13 }]);
+
+    assert.equal(paths(app)[1], "M 13 13 L 33 13 L 33 33 L 13 33 Z");
   }, dependenciesFixture(boardFixture(document)));
 });
 
@@ -806,6 +1257,30 @@ test("guides drag on their own axis and clear without changing the document", as
     assert.equal(app.document.querySelectorAll("[data-guide-axis]").length, 0);
     assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
     assert.equal(app.text("#save-state"), "Saved");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("starting a touch pinch stops an active guide drag", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 100 } });
+    await app.click('[data-hold-key="square"]');
+    await app.click("#add-horizontal-guide-button");
+    await app.pointer('[data-guide-axis="horizontal"]', "pointerdown", { pointerId: 17, clientX: 50, clientY: 20 });
+    assert.equal(app.capturedPointerId("#editor-svg"), 17);
+    assert.equal(await touchCanvas(app, "touchstart", [
+      { clientX: 20, clientY: 20 },
+      { clientX: 80, clientY: 20 },
+    ]), true);
+    assert.equal(app.capturedPointerId("#editor-svg"), null);
+    await app.pointer("#editor-svg", "pointermove", { pointerId: 17, clientX: 50, clientY: 56 });
+
+    assert.equal(app.document.querySelector('[data-guide-axis="horizontal"]')?.getAttribute("y1"), "20");
   }, dependenciesFixture(boardFixture(square)));
 });
 
@@ -914,7 +1389,7 @@ test("vertex menu rounds a corner as a persisted quadratic", async () => {
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("straight-segment menu converts a segment to a bendable quadratic", async () => {
+test("straight-segment menu converts a segment to a bendable curve with controls at both endpoints", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
@@ -930,10 +1405,59 @@ test("straight-segment menu converts a segment to a bendable quadratic", async (
 
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
     await app.click("#make-bendable-action");
-    assert.equal(paths(app)[0], "M 10 10 Q 20 10 30 10 L 30 30 L 10 30 Z");
+    assert.equal(paths(app)[0], "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z");
     assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="0"]'));
+    assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="1"]'));
     assert.equal(app.document.querySelector('[role="menu"]'), null);
   }, dependenciesFixture(boardFixture(square)));
+});
+
+test("the second cubic control stays independently draggable after Make bendable", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    const secondControl = app.document.querySelector<SVGCircleElement>(
+      '.path-editor-control[data-index="1"][data-control="1"]',
+    );
+    const startX = Number(secondControl?.getAttribute("cx"));
+    const startY = Number(secondControl?.getAttribute("cy"));
+    assert.ok(Number.isFinite(startX) && Number.isFinite(startY));
+
+    await drag(app, '.path-editor-control[data-index="1"][data-control="1"]', [
+      { x: startX, y: startY },
+      { x: startX + 20 / 3, y: startY + 5 },
+    ]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 16.666667 10 30 15 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("line menu snaps a diagonal custom-outline segment to the chosen axis", async () => {
+  for (const [action, expectedPath, expectedStatus] of [
+    ["#make-horizontal-action", "M 10 10 L 30 10 L 30 40 L 10 40 Z", "Line made horizontal. Save when ready."],
+    ["#make-vertical-action", "M 10 10 L 10 20 L 30 40 L 10 40 Z", "Line made vertical. Save when ready."],
+  ] as const) {
+    const diagonal = documentFixture([
+      { id: 1, key: "diagonal", type: "jug", displayPath: "M 10 10 L 30 20 L 30 40 L 10 40 Z" },
+    ]);
+    await withEditor(async (app) => {
+      app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+      await app.click('[data-hold-key="diagonal"]');
+      await app.mouse('[data-hold-key="diagonal"]', "contextmenu", { button: 2, clientX: 20, clientY: 15 });
+
+      assert.equal(app.document.querySelector('[role="menu"]')?.getAttribute("aria-label"), "Line actions");
+      assert.equal(app.document.querySelector(action)?.textContent, action === "#make-horizontal-action" ? "Make horizontal" : "Make vertical");
+      await app.click(action);
+      assert.equal(paths(app)[0], expectedPath);
+      assert.equal(app.text("#editor-status"), expectedStatus);
+      assert.equal(app.document.querySelector('[role="menu"]'), null);
+      assert.equal(app.document.querySelector(".path-editor-vertex.selected"), null);
+    }, dependenciesFixture(boardFixture(diagonal)));
+  }
 });
 
 test("curved-segment menu makes a quadratic segment straight and removes its control", async () => {
@@ -952,6 +1476,52 @@ test("curved-segment menu makes a quadratic segment straight and removes its con
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("curved-segment menu adds an inflection point at the right-click location and labels its reversible removal", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 Q 10 50 50 50 L 50 10 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 12.5, clientY: 27.5 });
+
+    assert.equal(app.text("#add-inflection-point-action"), "Add inflection point");
+    await app.click("#add-inflection-point-action");
+    assert.match(paths(app)[0]!, /^M 10 10 Q 10 20(?:\.\d+)? 12\.5 27\.5/);
+
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: 12.5, clientY: 27.5 });
+    assert.equal(app.text('[role="menuitem"]'), "Remove inflection point");
+    await app.click('[role="menuitem"]');
+    assert.equal(paths(app)[0], "M 10 10 Q 10 50 50 50 L 50 10 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("a serialized and dragged quadratic inflection point remains removable", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 0 0 Q 37.1234567 98.7654321 123.4567891 4.5678912 L 0 100 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 200, height: 150 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 6.456789, clientY: 17.654321 });
+    await app.click("#add-inflection-point-action");
+
+    const vertex = app.document.querySelector<SVGCircleElement>('.path-editor-vertex[data-index="1"]');
+    const x = Number(vertex?.getAttribute("cx"));
+    const y = Number(vertex?.getAttribute("cy"));
+    assert.ok(Number.isFinite(x) && Number.isFinite(y));
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: x, clientY: y });
+    assert.equal(app.text('[role="menuitem"]'), "Remove inflection point");
+    await app.keyDown('[role="menuitem"]', "Escape");
+
+    await drag(app, '.path-editor-vertex[data-index="1"]', [{ x, y }, { x: x + 8, y: y - 5 }]);
+    await app.mouse('.path-editor-vertex[data-index="1"]', "contextmenu", { button: 2, clientX: x + 8, clientY: y - 5 });
+    assert.equal(app.text('[role="menuitem"]'), "Remove inflection point");
+    await app.click('[role="menuitem"]');
+    assert.equal(pathEditor.parsePath(paths(app)[0]!)[1]?.type, "Q");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("straight-segment context menu chooses the closest eligible edge", async () => {
   const path = "M 10 10 L 30 10 L 30 30 L 10 30 Z";
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: path }]);
@@ -962,7 +1532,7 @@ test("straight-segment context menu chooses the closest eligible edge", async ()
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 28, clientY: 15 });
     await app.click("#make-bendable-action");
 
-    assert.equal(paths(app)[0], "M 10 10 L 30 10 Q 30 20 30 30 L 10 30 Z");
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 C 30 16.666667 30 23.333333 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
 });
 

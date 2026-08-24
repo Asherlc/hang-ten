@@ -60,14 +60,12 @@ class NormalizedFrame:
     def from_json(cls, value: Any, label: str = "frame") -> "NormalizedFrame":
         payload = _mapping(value, label)
         _closed(payload, label, required={"x", "y", "width", "height"})
-        x = _float(payload["x"], label=f"{label}.x", minimum=0)
-        y = _float(payload["y"], label=f"{label}.y", minimum=0)
+        x = _float(payload["x"], label=f"{label}.x")
+        y = _float(payload["y"], label=f"{label}.y")
         width = _float(payload["width"], label=f"{label}.width", minimum=0)
         height = _float(payload["height"], label=f"{label}.height", minimum=0)
         if width <= 0 or height <= 0:
             raise ValueError(f"{label}.width and {label}.height must be positive")
-        if x + width > 1 or y + height > 1:
-            raise ValueError(f"{label} must be inside the normalized canvas")
         return cls(x, y, width, height)
 
 

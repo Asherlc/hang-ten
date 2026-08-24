@@ -23,6 +23,7 @@
 		AA0000000000000000000068 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
+		AA0000000000000000000093 /* CountdownAudioScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000093 /* CountdownAudioScheduler.swift */; };
 		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
 		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* MotherboardModelsTests.swift */; };
@@ -121,6 +122,7 @@
 		BB0000000000000000000011 /* HangTen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = HangTen.entitlements; sourceTree = "<group>"; };
 		BB0000000000000000000012 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000015 /* WorkoutAudioCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAudioCoach.swift; sourceTree = "<group>"; };
+		BB0000000000000000000093 /* CountdownAudioScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownAudioScheduler.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
 		BB0000000000000000000018 /* TestTargetSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTargetSmokeTests.swift; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 				BB0000000000000000000003 /* TrainingModels.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
+				BB0000000000000000000093 /* CountdownAudioScheduler.swift */,
 				BB0000000000000000000075 /* ForceSensorModels.swift */,
 				BB0000000000000000000077 /* ProgressorProtocol.swift */,
 				BB0000000000000000000079 /* PitchSixProtocol.swift */,
@@ -616,6 +619,7 @@
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,
 				AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */,
+				AA0000000000000000000093 /* CountdownAudioScheduler.swift in Sources */,
 				AA0000000000000000000075 /* ForceSensorModels.swift in Sources */,
 				AA0000000000000000000077 /* ProgressorProtocol.swift in Sources */,
 				AA0000000000000000000079 /* PitchSixProtocol.swift in Sources */,

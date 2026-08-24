@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  addInflectionPoint,
   addVertex,
   constrainedOutlineModel,
   createOutlineShapePath,
   deleteVertex,
+  isInflectionVertex,
   makeSegmentBendable,
   makeSegmentStraight,
   moveVertex,
@@ -14,6 +16,8 @@ import {
   resizeConstrainedOutline,
   rotatePath,
   serializePath,
+  snapSegmentHorizontal,
+  snapSegmentVertical,
 } from "../src/path-editor.ts";
 import { validateEditorDocument } from "../src/workbench-controller.ts";
 import type {
@@ -74,11 +78,11 @@ test("serializePath handles integer coordinates cleanly", () => {
   assert.equal(serializePath(commands), "M 0 0 L 100 0 L 50 80 Z");
 });
 
-test("makeSegmentBendable replaces a straight segment with a geometrically identical quadratic", () => {
+test("makeSegmentBendable replaces a straight segment with a geometrically identical cubic", () => {
   const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
 
   assert.equal(makeSegmentBendable(commands, 0), true);
-  assert.equal(serializePath(commands), "M 0 0 Q 5 0 10 0 L 10 10 Z");
+  assert.equal(serializePath(commands), "M 0 0 C 3.333333 0 6.666667 0 10 0 L 10 10 Z");
   assert.equal(makeSegmentBendable(commands, 0), false, "curves cannot be converted twice");
 });
 
@@ -86,7 +90,7 @@ test("makeSegmentBendable converts a closing edge while retaining one final clos
   const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
 
   assert.equal(makeSegmentBendable(commands, 2), true);
-  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 Q 5 5 0 0 Z");
+  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 10 10 C 6.666667 6.666667 3.333333 3.333333 0 0 Z");
   assert.equal(commands.filter((command) => command.type === "M").length, 1);
   assert.equal(commands.filter((command) => command.type === "Z").length, 1);
   assert.equal(commands.at(-1)?.type, "Z");
@@ -113,6 +117,49 @@ test("makeSegmentStraight replaces a closing curve while retaining one final clo
   assert.equal(commands.filter((command) => command.type === "M").length, 1);
   assert.equal(commands.filter((command) => command.type === "Z").length, 1);
   assert.equal(commands.at(-1)?.type, "Z");
+});
+
+test("snapSegmentHorizontal preserves a straight segment start while aligning its endpoint", () => {
+  const commands = parsePath("M 0 0 L 10 5 L 20 10 Z");
+
+  assert.equal(snapSegmentHorizontal(commands, 0), true);
+  assert.equal(serializePath(commands), "M 0 0 L 10 0 L 20 10 Z");
+});
+
+test("snapSegmentVertical preserves a straight segment start while aligning its endpoint", () => {
+  const commands = parsePath("M 0 0 L 10 5 L 20 10 Z");
+
+  assert.equal(snapSegmentVertical(commands, 0), true);
+  assert.equal(serializePath(commands), "M 0 0 L 0 5 L 20 10 Z");
+});
+
+test("axis snapping materializes an aligned closing edge while retaining one final close command", () => {
+  for (const [snap, expected] of [
+    [snapSegmentHorizontal, "M 0 0 L 10 0 L 10 10 L 2 8 L 0 8 Z"],
+    [snapSegmentVertical, "M 0 0 L 10 0 L 10 10 L 2 8 L 2 0 Z"],
+  ] as const) {
+    const commands = parsePath("M 0 0 L 10 0 L 10 10 L 2 8 Z");
+
+    assert.equal(snap(commands, 3), true, expected);
+    assert.equal(serializePath(commands), expected);
+    assert.equal(commands.filter((command) => command.type === "M").length, 1);
+    assert.equal(commands.filter((command) => command.type === "Z").length, 1);
+    assert.equal(commands.at(-1)?.type, "Z");
+  }
+});
+
+test("axis snapping leaves curves and already aligned straight segments unchanged", () => {
+  for (const [snap, path, afterIndex] of [
+    [snapSegmentHorizontal, "M 0 0 L 10 0 L 10 10 Z", 0],
+    [snapSegmentVertical, "M 0 0 L 0 10 L 10 10 Z", 0],
+    [snapSegmentHorizontal, "M 0 0 Q 5 10 10 0 L 10 10 Z", 0],
+    [snapSegmentVertical, "M 0 0 Q 5 10 10 0 L 10 10 Z", 0],
+  ] as const) {
+    const commands = parsePath(path);
+
+    assert.equal(snap(commands, afterIndex), false, path);
+    assert.equal(serializePath(commands), path);
+  }
 });
 
 test("roundVertex trims adjacent straight segments and retains the sharp point as the quadratic control", () => {
@@ -516,6 +563,108 @@ test("addVertex on a C segment subdivides the cubic bezier", () => {
   assert.equal(commands.length, 4);
   assert.equal(commands[1]?.type, "C");
   assert.equal(commands[2]?.type, "C");
+});
+
+test("addInflectionPoint subdivides a quadratic at the selected non-midpoint location and delete restores it", () => {
+  const originalPath = "M 0 0 Q 100 100 100 0 L 0 100 Z";
+  const commands = parsePath(originalPath);
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 43.75, y: 37.5 }), true);
+  assert.equal(commands[1]?.type, "Q");
+  assert.equal(commands[2]?.type, "Q");
+  assertPoint(commands[1]?.points[0]!, { x: 43.75, y: 37.5 });
+  assertPoint(commands[1]?.controls[0]!, { x: 25, y: 25 });
+  assertPoint(commands[2]?.controls[0]!, { x: 100, y: 75 });
+  assert.equal(isInflectionVertex(commands, 1), true);
+
+  deleteVertex(commands, 1);
+  assert.equal(serializePath(commands), originalPath);
+});
+
+test("addInflectionPoint subdivides a cubic at the selected location without changing its curve", () => {
+  const commands = parsePath("M 0 0 C 0 100 100 100 100 0 L 0 100 Z");
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 15.625, y: 56.25 }), true);
+  assert.equal(commands[1]?.type, "C");
+  assert.equal(commands[2]?.type, "C");
+  assertPoint(commands[1]?.points[0]!, { x: 15.625, y: 56.25 });
+  assertPoint(commands[1]?.controls[0]!, { x: 0, y: 25 });
+  assertPoint(commands[1]?.controls[1]!, { x: 6.25, y: 43.75 });
+  assertPoint(commands[2]?.controls[0]!, { x: 43.75, y: 93.75 });
+  assertPoint(commands[2]?.controls[1]!, { x: 100, y: 75 });
+  assert.equal(isInflectionVertex(commands, 1), true);
+});
+
+test("serialized inflection points remain removable curve vertices", () => {
+  const cases = [
+    ["M 0 0 Q 37.1234567 98.7654321 123.4567891 4.5678912 L 0 100 Z", "Q"],
+    ["M 0 0 C 19.8765432 123.4567891 99.1234567 87.654321 123.4567891 4.5678912 L 0 100 Z", "C"],
+  ] as const;
+
+  for (const [path, type] of cases) {
+    const commands = parsePath(path);
+    assert.equal(addInflectionPoint(commands, 0, { x: 6.456789, y: 17.654321 }), true);
+    const roundTripped = parsePath(serializePath(commands));
+
+    assert.equal(isInflectionVertex(roundTripped, 1), true, `${type} inflection point is removable after serialization`);
+    deleteVertex(roundTripped, 1);
+    assert.equal(roundTripped[1]?.type, type, `${type} deletion keeps the segment bendable`);
+  }
+});
+
+test("dragged inflection points remain removable curve vertices", () => {
+  const cases = [
+    ["M 0 0 Q 100 100 100 0 L 0 100 Z", "Q"],
+    ["M 0 0 C 0 100 100 100 100 0 L 0 100 Z", "C"],
+  ] as const;
+
+  for (const [path, type] of cases) {
+    const commands = parsePath(path);
+    assert.equal(addInflectionPoint(commands, 0, { x: 43.75, y: 37.5 }), true);
+    moveVertex(commands, 1, 8, -5);
+
+    assert.equal(isInflectionVertex(commands, 1), true, `${type} inflection point is removable after dragging`);
+    deleteVertex(commands, 1);
+    assert.equal(commands[1]?.type, type, `${type} deletion keeps the segment bendable`);
+  }
+});
+
+test("removing a quadratic inflection point remains finite when its drag reaches the outgoing control", () => {
+  const commands = parsePath("M 0 0 Q 100 100 100 0 L 0 100 Z");
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 75, y: 50 }), true);
+  moveVertex(commands, 1, 25, 0);
+  assert.equal(isInflectionVertex(commands, 1), true);
+  deleteVertex(commands, 1);
+
+  assert.equal(commands[1]?.type, "Q");
+  assert.ok(commands[1]?.controls.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y)));
+  assert.doesNotThrow(() => validateEditorDocument({
+    schemaVersion: 1,
+    canvas: { width: 100, height: 100 },
+    regions: [{ key: "hold-1", displayPath: serializePath(commands) }],
+  }));
+});
+
+test("removing a cubic inflection point remains finite when its drag nearly reaches the outgoing control", () => {
+  const commands = parsePath("M 0 0 C 0 100 100 100 100 0 L 0 100 Z");
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 50, y: 75 }), true);
+  moveVertex(commands, 1, 24.999999999, 0);
+  assert.equal(isInflectionVertex(commands, 1), true);
+  deleteVertex(commands, 1);
+
+  assert.equal(commands[1]?.type, "C");
+  assert.ok(commands[1]?.controls.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y)));
+  assert.ok(
+    commands[1]?.controls.every((point) => Math.max(Math.abs(point.x), Math.abs(point.y)) <= 1_000),
+    "near-overlap removal must not amplify controls far beyond the surrounding geometry",
+  );
+  assert.doesNotThrow(() => validateEditorDocument({
+    schemaVersion: 1,
+    canvas: { width: 100, height: 100 },
+    regions: [{ key: "hold-1", displayPath: serializePath(commands) }],
+  }));
 });
 
 test("addVertex inserts on the segment after afterIndex, not before it", () => {

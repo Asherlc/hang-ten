@@ -16,7 +16,7 @@ Collect primary manufacturer evidence before naming or classifying holds:
 4. A manufacturer hold-depth diagram, numbered guide, or manual when one exists.
 5. Source URLs, review date, and field mappings in a source-audit document.
 
-Do not infer measurements, finger capacity, or grip posture when the source does
+Do not infer measurements, finger capacity, hand capacity, or grip posture when the source does
 not establish them. Omit unknown optional fields instead of supplying defaults.
 
 ## 2. Freeze the physical hold inventory
@@ -26,7 +26,7 @@ are one logical hold even when they require multiple disconnected geometry
 pieces. Separate physical contacts are separate holds. Use stable descriptive
 IDs and conservative `jug`, `edge`, `pocket`, `pinch`, or `sloper` kinds.
 
-Do not infer measurements, finger capacity, grip posture, feature tags, or
+Do not infer measurements, finger capacity, hand capacity, grip posture, feature tags, or
 coaching semantics from a picture. Omit an optional field when the source does
 not establish it. Record any app-specific semantic adaptation outside the board
 package and label it as an adaptation.
@@ -55,7 +55,7 @@ directory, generated draft, or duplicate geometry.
 `id`, `name`, one of `jug`, `edge`, `pocket`, `pinch`, or `sloper`, and a
 nonempty `geometry` array. Each geometry piece contains a normalized `frame`, a
 closed supported `shape`, and optional physical treatment. Measurements, depth
-ranges, finger capacity, grip posture, and feature tags are optional.
+ranges, finger capacity, hand capacity, grip posture, and feature tags are optional.
 
 Set `presentation.assetPath` to exactly `assets/primary.png`. Any other value is
 rejected by the loader.

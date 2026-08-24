@@ -496,6 +496,18 @@ def contact_sheet_entries(path: Path) -> tuple[str, ...]:
     return tuple(entries)
 
 
+def _capture_server_command(repository_root: Path, port: int) -> list[str]:
+    """Launch the capture-only local backend, never the hosted server CLI."""
+    return [
+        "python3",
+        str(repository_root / "Tools" / "HangboardWorkbench" / "capture_server.py"),
+        "--repository-root",
+        str(repository_root),
+        "--port",
+        str(port),
+    ]
+
+
 def capture_catalog(
     repository_root: Path, output_root: Path, chrome_path: Path, port: int
 ) -> CaptureManifest:
@@ -512,10 +524,9 @@ def capture_catalog(
     output_root.mkdir(parents=True, exist_ok=True)
     base_url = f"http://127.0.0.1:{port}"
     debug_port = _available_port()
-    server_path = repository_root / "Tools" / "HangboardWorkbench" / "server.py"
     with tempfile.TemporaryDirectory(prefix="hang-ten-capture-") as profile:
         with _managed_process(
-            ["python3", str(server_path), "--repository-root", str(repository_root), "--port", str(port)],
+            _capture_server_command(repository_root, port),
             stage="server",
         ) as server_process:
             _wait_for_server(base_url, server_process)

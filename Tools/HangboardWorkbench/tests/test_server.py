@@ -184,20 +184,20 @@ def _github_files() -> dict[str, bytes]:
 
 
 class _HostedSaveIdentityRaceClient(FakeGitHubClient):
-    """Replace a slug after PUT resolves its ID but before the save reload."""
+    """Replace a slug after it opens but before its conditional write."""
 
     def __init__(self, files: dict[str, bytes]) -> None:
         super().__init__(
             {"main": files, HOSTED_BRANCH: files, "feature": files},
             default_branch=HOSTED_BRANCH,
         )
-        self._head_reads = 0
+        self._raced = False
 
-    def get_branch_head_sha(self, token: str, branch: str) -> str:
-        self._head_reads += 1
-        if self._head_reads == 3:
+    def put_file(self, token, path, branch, content, message, sha):
+        if not self._raced:
+            self._raced = True
             path = "Hangboards/fixture-board/board.json"
-            content = (
+            replacement = (
                 json.dumps(board_document("different.board"), indent=2) + "\n"
             ).encode("utf-8")
             current_sha = self._branches[branch][path][1]
@@ -205,11 +205,11 @@ class _HostedSaveIdentityRaceClient(FakeGitHubClient):
                 token,
                 path,
                 branch,
-                content,
+                replacement,
                 "Concurrent board replacement",
                 current_sha,
             )
-        return super().get_branch_head_sha(token, branch)
+        return super().put_file(token, path, branch, content, message, sha)
 
 
 class _ConcurrentHostedBlobClient(FakeGitHubClient):
@@ -365,6 +365,7 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }
@@ -471,14 +472,17 @@ def test_invalid_save_leaves_board_json_and_inventory_unchanged(tmp_path: Path) 
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 10 10 L 90 90 L 10 90 L 90 10 Z"
+            "M 10 10 L 90 90 L 10 90 L 90 10"
         )
         status, result = request_json(
             base, "PUT", "/api/boards/fixture.board", document
         )
 
     assert status == 400
-    assert result == {"ok": False, "error": "hold hold-left-piece-0 must not self-intersect"}
+    assert result == {
+        "ok": False,
+        "error": "hold hold-left-piece-0 must be exactly one closed contour",
+    }
     after = {
         path.relative_to(package).as_posix(): path.read_bytes()
         for path in package.rglob("*")
@@ -954,6 +958,61 @@ def test_remote_cli_requires_a_session_secret(
     assert "--session-secret" in capsys.readouterr().err
 
 
+def test_browser_server_cli_rejects_local_checkout_mode(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Fails if a browser-hosted server can silently use local Git storage."""
+    monkeypatch.setattr(
+        server_module,
+        "create_server",
+        lambda *_args, **_kwargs: pytest.fail("local browser server must not start"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            ["--repository-root", str(REPOSITORY_ROOT), "--port", "0"]
+        )
+
+    assert error.value.code == 2
+    assert "--allow-remote" in capsys.readouterr().err
+
+
+def test_packaged_cli_rejects_hosted_storage_mode(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Fails if the packaged local app can be redirected to hosted storage."""
+    monkeypatch.setattr(
+        server_module,
+        "create_server",
+        lambda *_args, **_kwargs: pytest.fail("packaged server must stay local"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            [
+                "--repository-root",
+                str(REPOSITORY_ROOT),
+                "--port",
+                "0",
+                "--allow-remote",
+                "--github-client-id",
+                "test-client-id",
+                "--github-client-secret",
+                "test-client-secret",
+                "--session-secret",
+                "test-session-secret",
+                "--github-owner",
+                "fixture-owner",
+                "--github-repo",
+                "fixture-repo",
+            ],
+            local_checkout=True,
+        )
+
+    assert error.value.code == 2
+    assert "local checkout" in capsys.readouterr().err
+
+
 def test_root_without_session_redirects_to_login(tmp_path: Path) -> None:
     checkout = _git_checkout(tmp_path)
 
@@ -1107,6 +1166,7 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }
@@ -1132,8 +1192,43 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
     } == {HOSTED_TOKEN}
 
 
+def test_hosted_board_catalog_reads_metadata_without_primary_image_blobs() -> None:
+    """Fails if GET /api/boards downloads primary images before a board is selected."""
+    files: dict[str, bytes] = {}
+    for index in range(33):
+        slug = f"board-{index:02d}"
+        board = board_document(f"{slug}.id")
+        board["name"] = slug
+        primary_image = PRIMARY_IMAGE.read_bytes() + slug.encode("utf-8")
+        files.update(
+            {
+                f"Hangboards/{slug}/board.json": (
+                    json.dumps(board, indent=2) + "\n"
+                ).encode("utf-8"),
+                f"Hangboards/{slug}/assets/primary.png": primary_image,
+            }
+        )
+    image_shas = {
+        FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.endswith("/assets/primary.png")
+    }
+
+    with running_server_with_github_backend(files) as (base, client, session):
+        status, payload, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+
+    assert status == 200
+    assert len(payload["boards"]) == 33
+    assert {
+        call.args[1] for call in client.calls_named("get_blob")
+    }.isdisjoint(image_shas)
+    assert len(client.calls_named("get_blob")) == 33
+
+
 def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
-    """Fails if list, open, and image repeatedly fetch the same GitHub tree/blobs."""
+    """Fails if opening a listed board re-downloads immutable board metadata."""
     with running_server_with_github_backend(_github_files()) as (
         base,
         client,
@@ -1155,7 +1250,7 @@ def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     assert image == PRIMARY_IMAGE.read_bytes()
     assert len(client.calls_named("get_branch_head_sha")) == 3
     assert len(client.calls_named("get_tree")) == 1
-    assert len(client.calls_named("get_blob")) == 4
+    assert len(client.calls_named("get_blob")) == 2
 
 
 def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
@@ -1195,8 +1290,8 @@ def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
     assert len(client.calls_named("get_tree")) == 3
 
 
-def test_simultaneous_hosted_catalog_reads_share_one_bounded_upstream_load() -> None:
-    """Fails if concurrent cold routes duplicate catalog reads or worker pools."""
+def test_simultaneous_hosted_catalog_reads_share_one_metadata_load() -> None:
+    """Fails if concurrent cold routes duplicate one catalog's board JSON reads."""
     files: dict[str, bytes] = {}
     for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
         board = board_document(f"{slug}.board")
@@ -1234,7 +1329,7 @@ def test_simultaneous_hosted_catalog_reads_share_one_bounded_upstream_load() -> 
 
     assert [status for status, _body, _headers in results] == [200, 200]
     assert len(client.calls_named("get_tree")) == 1
-    assert len(client.calls_named("get_blob")) == 12
+    assert len(client.calls_named("get_blob")) == 6
     assert client.max_active_blob_reads <= 4
 
 
@@ -1463,7 +1558,8 @@ def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> N
     assert status == 409
     assert payload["ok"] is False
     assert [call.args[4] for call in client.calls_named("put_file")] == [
-        "Concurrent board replacement"
+        "Concurrent board replacement",
+        "Update fixture.board",
     ]
 
 

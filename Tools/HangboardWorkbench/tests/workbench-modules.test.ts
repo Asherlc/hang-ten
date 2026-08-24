@@ -81,7 +81,12 @@ test("the browser client lists and opens direct boards", async () => {
     if (request === "/api/boards") {
       return response({
         ok: true,
-        boards: [{ boardId: "compact", displayName: "Compact", holdCount: 10 }],
+        boards: [{
+          boardId: "compact",
+          displayName: "Compact",
+          holdCount: 10,
+          imageUrl: "/api/boards/compact/image",
+        }],
       });
     }
     return response({ ok: true, board: boardFixture({ holdCount: 10 }) });
@@ -89,7 +94,12 @@ test("the browser client lists and opens direct boards", async () => {
   const client: WorkbenchClient = createWorkbenchClient(runtime);
 
   assert.deepEqual(await client.listBoards(), [
-    { boardId: "compact", displayName: "Compact", holdCount: 10 },
+    {
+      boardId: "compact",
+      displayName: "Compact",
+      holdCount: 10,
+      imageUrl: "/api/boards/compact/image",
+    },
   ]);
   assert.equal((await client.getBoard("compact")).boardId, "compact");
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
@@ -258,6 +268,18 @@ test("the browser client navigates to login when an API request is unauthenticat
   await assert.rejects(client.getGitStatus(), /authentication required/);
 
   assert.deepEqual(assignedUrls, ["/auth/login"]);
+});
+
+test("the browser client preserves an auth-status API failure", async () => {
+  const { runtime } = runtimeFixture(async () => response(
+    { ok: false, error: "Authentication service is unavailable" },
+    { ok: false, status: 503 },
+  ));
+
+  await assert.rejects(
+    createWorkbenchClient(runtime).getAuthStatus(),
+    /Authentication service is unavailable/,
+  );
 });
 
 test("the browser client keeps the current tab on an unauthenticated save and exposes the login URL", async () => {
@@ -461,6 +483,47 @@ test("direct board loading commits image and holds together and preserves the pr
   assert.deepEqual(committed, [success]);
 });
 
+test("direct board loading uses a matching preloaded image promise", async () => {
+  const candidate = boardFixture({
+    document: editorDocument([
+      { key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    ]),
+  });
+  const image = { href: candidate.imageUrl, naturalWidth: 100, naturalHeight: 50 };
+
+  const loaded = await loadBoardAtomically({
+    boardId: candidate.boardId,
+    getBoard: async () => candidate,
+    loadImage: async () => { throw new Error("Image loader should not run"); },
+    preloadedImage: { href: candidate.imageUrl, promise: Promise.resolve(image) },
+    commit() {},
+  });
+
+  assert.equal(loaded.image, image);
+});
+
+test("direct board loading ignores a preloaded image from a different URL", async () => {
+  const candidate = boardFixture({
+    document: editorDocument([
+      { key: "hold-1", displayPath: "M 1 1 L 2 1 L 2 2 Z" },
+    ]),
+  });
+  const expectedImage = { href: candidate.imageUrl, naturalWidth: 100, naturalHeight: 50 };
+
+  const loaded = await loadBoardAtomically({
+    boardId: candidate.boardId,
+    getBoard: async () => candidate,
+    loadImage: async () => expectedImage,
+    preloadedImage: {
+      href: "/api/boards/previous/image",
+      promise: Promise.resolve({ href: "/api/boards/previous/image" }),
+    },
+    commit() {},
+  });
+
+  assert.equal(loaded.image, expectedImage);
+});
+
 test("direct board loading rejects malformed shape constraints before image loading or commit", async () => {
   const malformedConstraints: unknown[] = [
     { shape: "rectangle", rotationDegrees: 180 },
@@ -545,6 +608,68 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
       /valid hold fields/,
     );
   }
+});
+
+test("the direct editor model rejects inconsistent finger capacities for one physical hold", () => {
+  assert.throws(
+    () => validateEditorDocument({
+      schemaVersion: 1,
+      canvas: { width: 100, height: 50 },
+      regions: [
+        {
+          key: "hold-1-piece-0",
+          displayPath: "M 1 1 L 20 1 L 20 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 0 },
+          fingerCapacity: 2,
+        },
+        {
+          key: "hold-1-piece-1",
+          displayPath: "M 30 1 L 40 1 L 40 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 1 },
+          fingerCapacity: 3,
+        },
+      ],
+    }),
+    /finger capacity/i,
+  );
+});
+
+test("the direct editor model rejects invalid and inconsistent hand capacities", () => {
+  assert.throws(
+    () => validateEditorDocument({
+      schemaVersion: 1,
+      canvas: { width: 100, height: 50 },
+      regions: [{
+        key: "hold-1-piece-0",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 0 },
+        handCapacity: 3,
+      }],
+    }),
+    /hand capacity/i,
+  );
+
+  assert.throws(
+    () => validateEditorDocument({
+      schemaVersion: 1,
+      canvas: { width: 100, height: 50 },
+      regions: [
+        {
+          key: "hold-1-piece-0",
+          displayPath: "M 1 1 L 20 1 L 20 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 0 },
+          handCapacity: 1,
+        },
+        {
+          key: "hold-1-piece-1",
+          displayPath: "M 30 1 L 40 1 L 40 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 1 },
+          handCapacity: 2,
+        },
+      ],
+    }),
+    /hand capacity/i,
+  );
 });
 
 test("a rejected save keeps the editor document untouched", async () => {

@@ -18,9 +18,11 @@ import {
 import { isConstrainedHandle, isConstrainedShape } from "./shape-constraints.ts";
 import type {
   Dialogs,
+  Bounds,
   ConstrainedHandle,
   EditorDocument,
   HoldRegion,
+  MillimeterRange,
   PathCommand,
   PathEditor,
   Point,
@@ -49,7 +51,7 @@ interface DragState {
   lastAngle: number;
   totalAngle: number;
   pointerId: number | null;
-  pathCenter: Point | null;
+  pathBounds: Bounds | null;
 }
 
 interface VertexSelection {
@@ -64,6 +66,7 @@ interface VertexMenuState {
   y: number;
   kind: "vertex" | "segment";
   segmentAfterIndex: number | null;
+  segmentPoint: Point | null;
   invoker: Element;
 }
 
@@ -87,7 +90,7 @@ const EMPTY_DRAG: DragState = {
   lastAngle: 0,
   totalAngle: 0,
   pointerId: null,
-  pathCenter: null,
+  pathBounds: null,
 };
 
 const GUIDE_SNAP_TOLERANCE = 6;
@@ -113,18 +116,29 @@ export interface HoldEditorActions {
   selectedVertexIndex: number | null;
   vertexMenu: { x: number; y: number; kind: "vertex" | "segment" } | null;
   canDeleteSelectedVertex: boolean;
+  selectedVertexIsInflection: boolean;
   canRoundSelectedVertex: boolean;
+  canAddInflectionPoint: boolean;
   canMakeSelectedSegmentBendable: boolean;
   canMakeSelectedSegmentStraight: boolean;
+  canMakeSelectedSegmentHorizontal: boolean;
+  canMakeSelectedSegmentVertical: boolean;
   addHold(): void;
+  duplicateAndMirrorHold(): void;
   deleteHold(): void;
   selectVertex(index: number): void;
   deleteSelectedVertex(): void;
   roundSelectedVertex(): void;
+  addInflectionPoint(): void;
   makeSelectedSegmentBendable(): void;
   makeSelectedSegmentStraight(): void;
+  makeSelectedSegmentHorizontal(): void;
+  makeSelectedSegmentVertical(): void;
   dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
+  changeFingerCapacity(capacity: number | undefined): void;
+  changeHoldDepthRange(depthRange: MillimeterRange | undefined): void;
+  changeHandCapacity(capacity: number | undefined): void;
   changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
   applyRotation(): void;
@@ -163,6 +177,22 @@ function nearbyGuideCoordinate(coordinates: readonly number[], value: number): n
     if (closest === null || Math.abs(coordinate - value) < Math.abs(closest - value)) closest = coordinate;
   }
   return closest;
+}
+
+function nearbyGuideEdgeOffset(
+  coordinates: readonly number[],
+  minimum: number,
+  maximum: number,
+  delta: number,
+): number {
+  let closestOffset: number | null = null;
+  for (const edge of [minimum, maximum]) {
+    const coordinate = nearbyGuideCoordinate(coordinates, edge + delta);
+    if (coordinate === null) continue;
+    const offset = coordinate - (edge + delta);
+    if (closestOffset === null || Math.abs(offset) < Math.abs(closestOffset)) closestOffset = offset;
+  }
+  return closestOffset ?? 0;
 }
 
 function closestPointOnLine(start: Point, end: Point, point: Point): Point {
@@ -291,6 +321,21 @@ function selectedPhysicalHolds(document: EditorDocument, selectedKeys: readonly 
   return [...groups.values()];
 }
 
+function mirroredPath(path: string, canvasWidth: number, pathEditor: PathEditor): string {
+  const commands = pathEditor.parsePath(path);
+  for (const command of commands) {
+    for (const point of [...command.points, ...command.controls]) point.x = canvasWidth - point.x;
+  }
+  return pathEditor.serializePath(commands);
+}
+
+function uniqueRegionKey(document: EditorDocument, baseKey: string): string {
+  if (!document.regions.some((region) => region.key === baseKey)) return baseKey;
+  let suffix = 2;
+  while (document.regions.some((region) => region.key === `${baseKey}-${suffix}`)) suffix += 1;
+  return `${baseKey}-${suffix}`;
+}
+
 function hasVertex(commands: readonly PathCommand[], index: number): boolean {
   const command = commands[index];
   return !!command && command.type !== "Z" && command.points.length > 0;
@@ -353,9 +398,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   let selectionIsCurrent = false;
   let canDeleteSelectedVertex = false;
+  let selectedVertexIsInflection = false;
   let canRoundSelectedVertex = false;
+  let canAddInflectionPoint = false;
   let canMakeSelectedSegmentBendable = false;
   let canMakeSelectedSegmentStraight = false;
+  let canMakeSelectedSegmentHorizontal = false;
+  let canMakeSelectedSegmentVertical = false;
   if (!busy && document && selectedHold && !selectedHold.shapeConstraint) {
     try {
       const commands = pathEditor.parsePath(selectedHold.displayPath);
@@ -363,6 +412,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         selectionIsCurrent = hasVertex(commands, vertexSelection.commandIndex);
         canDeleteSelectedVertex = selectionIsCurrent
           && canDeleteVertex(commands, vertexSelection.commandIndex);
+        selectedVertexIsInflection = selectionIsCurrent
+          && pathEditor.isInflectionVertex(commands, vertexSelection.commandIndex);
       }
       if (selectionIsCurrent && vertexSelection) {
         const candidate = cloneCommands(commands);
@@ -371,6 +422,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       if (vertexMenuState?.document === document
         && vertexMenuState.holdKey === selectedHold.key
         && vertexMenuState.segmentAfterIndex !== null) {
+        const inflectionCandidate = cloneCommands(commands);
+        canAddInflectionPoint = vertexMenuState.segmentPoint !== null
+          && pathEditor.addInflectionPoint(
+            inflectionCandidate,
+            vertexMenuState.segmentAfterIndex,
+            vertexMenuState.segmentPoint,
+          );
         const candidate = cloneCommands(commands);
         canMakeSelectedSegmentBendable = pathEditor.makeSegmentBendable(
           candidate,
@@ -381,13 +439,27 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           straightCandidate,
           vertexMenuState.segmentAfterIndex,
         );
+        const horizontalCandidate = cloneCommands(commands);
+        canMakeSelectedSegmentHorizontal = pathEditor.snapSegmentHorizontal(
+          horizontalCandidate,
+          vertexMenuState.segmentAfterIndex,
+        );
+        const verticalCandidate = cloneCommands(commands);
+        canMakeSelectedSegmentVertical = pathEditor.snapSegmentVertical(
+          verticalCandidate,
+          vertexMenuState.segmentAfterIndex,
+        );
       }
     } catch {
       selectionIsCurrent = false;
       canDeleteSelectedVertex = false;
+      selectedVertexIsInflection = false;
       canRoundSelectedVertex = false;
+      canAddInflectionPoint = false;
       canMakeSelectedSegmentBendable = false;
       canMakeSelectedSegmentStraight = false;
+      canMakeSelectedSegmentHorizontal = false;
+      canMakeSelectedSegmentVertical = false;
     }
   }
   const selectedVertexIndex = selectionIsCurrent ? vertexSelection!.commandIndex : null;
@@ -457,6 +529,36 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     }
   }, [actions, canRoundSelectedVertex, document, pathEditor, reportInvalidPath, selectedHold, selectedVertexIndex, vertexMenuState]);
 
+  const addInflectionPoint = useCallback((): void => {
+    const afterIndex = vertexMenuState?.segmentAfterIndex;
+    const point = vertexMenuState?.segmentPoint;
+    if (!canAddInflectionPoint || !document || !selectedHold || !point
+      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    try {
+      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      if (!pathEditor.addInflectionPoint(commands, afterIndex, point)) return;
+      const nextPath = pathEditor.serializePath(commands);
+      const edited = actions.editDocument((candidate) => {
+        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+      }, { status: "Inflection point added. Save when ready." });
+      if (!edited) return;
+      setVertexSelection(null);
+      setVertexMenuState(null);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
+    }
+  }, [
+    actions,
+    canAddInflectionPoint,
+    document,
+    pathEditor,
+    reportInvalidPath,
+    selectedHold,
+    vertexMenuState?.segmentAfterIndex,
+    vertexMenuState?.segmentPoint,
+  ]);
+
   const makeSelectedSegmentBendable = useCallback((): void => {
     const afterIndex = vertexMenuState?.segmentAfterIndex;
     if (!canMakeSelectedSegmentBendable || !document || !selectedHold
@@ -512,6 +614,49 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     selectedHold,
     vertexMenuState?.segmentAfterIndex,
   ]);
+
+  const snapSelectedSegment = useCallback((axis: "horizontal" | "vertical"): void => {
+    const afterIndex = vertexMenuState?.segmentAfterIndex;
+    const canSnap = axis === "horizontal"
+      ? canMakeSelectedSegmentHorizontal
+      : canMakeSelectedSegmentVertical;
+    if (!canSnap || !document || !selectedHold
+      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    try {
+      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const snapped = axis === "horizontal"
+        ? pathEditor.snapSegmentHorizontal(commands, afterIndex)
+        : pathEditor.snapSegmentVertical(commands, afterIndex);
+      if (!snapped) return;
+      const nextPath = pathEditor.serializePath(commands);
+      const edited = actions.editDocument((candidate) => {
+        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+      }, { status: `Line made ${axis}. Save when ready.` });
+      if (!edited) return;
+      setVertexSelection(null);
+      setVertexMenuState(null);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
+    }
+  }, [
+    actions,
+    canMakeSelectedSegmentHorizontal,
+    canMakeSelectedSegmentVertical,
+    document,
+    pathEditor,
+    reportInvalidPath,
+    selectedHold,
+    vertexMenuState?.segmentAfterIndex,
+  ]);
+
+  const makeSelectedSegmentHorizontal = useCallback((): void => {
+    snapSelectedSegment("horizontal");
+  }, [snapSelectedSegment]);
+
+  const makeSelectedSegmentVertical = useCallback((): void => {
+    snapSelectedSegment("vertical");
+  }, [snapSelectedSegment]);
 
   const dismissVertexMenu = useCallback((restoreFocus = false): void => {
     setVertexMenuState((current) => {
@@ -577,6 +722,53 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     });
   }, [actions, busy, document, reservedHoldIDs]);
 
+  const duplicateAndMirrorHold = useCallback((): void => {
+    if (busy || !document || !selectedHold) return;
+    const holds = selectedPhysicalHolds(document, selectedKeys);
+    const planningDocument = cloneEditorDocument(document);
+    const duplicates: Array<{ source: HoldRegion; id: number; key: string; holdId: string; pieceIndex: number }> = [];
+    const duplicateKeyBySourceKey = new Map<string, string>();
+    for (const hold of holds) {
+      const holdId = nextHoldId(planningDocument);
+      for (let index = 0; index < hold.length; index += 1) {
+        const source = hold[index]!;
+        const pieceIndex = source.metadata?.pieceIndex ?? index;
+        const key = uniqueRegionKey(planningDocument, `${holdId}-piece-${pieceIndex}`);
+        const id = nextRegionId(planningDocument);
+        planningDocument.regions.push({ ...source, id, key, metadata: { holdID: holdId, pieceIndex } });
+        duplicates.push({ source, id, key, holdId, pieceIndex });
+        duplicateKeyBySourceKey.set(source.key, key);
+      }
+    }
+    const duplicateKeys = duplicates.map((duplicate) => duplicate.key);
+    const edited = actions.editDocument((candidate) => {
+      for (const duplicate of duplicates) {
+        const { source, id, key, holdId, pieceIndex } = duplicate;
+        candidate.regions.push({
+          ...source,
+          id,
+          key,
+          displayPath: mirroredPath(source.displayPath, candidate.canvas.width, pathEditor),
+          metadata: { holdID: holdId, pieceIndex },
+          ...(source.shapeConstraint ? {
+            shapeConstraint: {
+              ...source.shapeConstraint,
+              rotationDegrees: normalizedConstraintRotation(-source.shapeConstraint.rotationDegrees),
+            },
+          } : {}),
+        });
+      }
+    }, {
+      selectedKey: duplicateKeyBySourceKey.get(selectedHold.key) ?? duplicateKeys[0] ?? null,
+      selectedKeys: duplicateKeys,
+      status: "Hold duplicated and mirrored. Save when ready.",
+      failureStatus: "Duplicate reverted — contour is invalid.",
+    });
+    if (!edited) return;
+    setVertexSelection(null);
+    setVertexMenuState(null);
+  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
+
   const deleteHold = useCallback((): void => {
     if (busy || !document || !selectedHold) return;
     const holds = selectedPhysicalHolds(document, selectedKeys);
@@ -605,6 +797,56 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     }, {
       status: "Hold recategorized. Save when ready.",
       failureMessage: "Hold type is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
+  const changeFingerCapacity = useCallback((capacity: number | undefined): void => {
+    if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 4))) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        if (capacity === undefined) delete region.fingerCapacity;
+        else region.fingerCapacity = capacity;
+      }
+    }, {
+      status: "Finger capacity changed. Save when ready.",
+      failureMessage: "Finger capacity is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
+  const changeHoldDepthRange = useCallback((depthRange: MillimeterRange | undefined): void => {
+    if (busy || !document || !selectedHold
+      || (depthRange !== undefined
+        && (!Number.isInteger(depthRange.lowerBound)
+          || !Number.isInteger(depthRange.upperBound)
+          || depthRange.lowerBound <= 0
+          || depthRange.upperBound < depthRange.lowerBound))) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        if (depthRange === undefined) delete region.depthRangeMillimeters;
+        else region.depthRangeMillimeters = { ...depthRange };
+      }
+    }, {
+      status: "Depth range changed. Save when ready.",
+      failureMessage: "Depth range is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
+  const changeHandCapacity = useCallback((capacity: number | undefined): void => {
+    if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 2))) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        if (capacity === undefined) delete region.handCapacity;
+        else region.handCapacity = capacity;
+      }
+    }, {
+      status: "Hand capacity changed. Save when ready.",
+      failureMessage: "Hand capacity is invalid.",
     });
   }, [actions, busy, document, selectedHold, selectedKeys]);
 
@@ -817,8 +1059,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
         originalDirty: dirty,
         pointerId: event.pointerId,
-        pathCenter: target.classList.contains("region-shape")
-          ? holdCentroid([selectedHold], pathEditor)
+        pathBounds: target.classList.contains("region-shape")
+          ? pathEditor.pathBounds(commands)
           : null,
       };
     }
@@ -905,11 +1147,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           control.y += deltaY;
         }
       } else if (drag.type === "path") {
-        if (!event.altKey && drag.pathCenter) {
-          const snappedX = nearbyGuideCoordinate(verticalGuideXs, drag.pathCenter.x + deltaX);
-          const snappedY = nearbyGuideCoordinate(horizontalGuideYs, drag.pathCenter.y + deltaY);
-          if (snappedX !== null) deltaX += snappedX - (drag.pathCenter.x + deltaX);
-          if (snappedY !== null) deltaY += snappedY - (drag.pathCenter.y + deltaY);
+        if (!event.altKey && drag.pathBounds) {
+          deltaX += nearbyGuideEdgeOffset(
+            verticalGuideXs,
+            drag.pathBounds.minX,
+            drag.pathBounds.maxX,
+            deltaX,
+          );
+          deltaY += nearbyGuideEdgeOffset(
+            horizontalGuideYs,
+            drag.pathBounds.minY,
+            drag.pathBounds.maxY,
+            deltaY,
+          );
         }
         translateCommands(commands, deltaX, deltaY);
       }
@@ -1038,6 +1288,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         y: event.clientY,
         kind: "vertex",
         segmentAfterIndex: null,
+        segmentPoint: null,
         invoker: target,
       });
       return;
@@ -1045,12 +1296,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!target.classList.contains("region-shape") || target.getAttribute("data-hold-key") !== selectedHold.key) return;
     try {
       const commands = pathEditor.parsePath(selectedHold.displayPath);
-      const afterIndex = closestEditableSegmentIndex(commands, svgPoint(event.currentTarget, event));
+      const point = svgPoint(event.currentTarget, event);
+      const afterIndex = closestEditableSegmentIndex(commands, point);
       if (afterIndex === null) return;
+      const inflectionCandidate = cloneCommands(commands);
       const bendableCandidate = cloneCommands(commands);
       const straightCandidate = cloneCommands(commands);
-      if (!pathEditor.makeSegmentBendable(bendableCandidate, afterIndex)
-        && !pathEditor.makeSegmentStraight(straightCandidate, afterIndex)) return;
+      const horizontalCandidate = cloneCommands(commands);
+      const verticalCandidate = cloneCommands(commands);
+      if (!pathEditor.addInflectionPoint(inflectionCandidate, afterIndex, point)
+        && !pathEditor.makeSegmentBendable(bendableCandidate, afterIndex)
+        && !pathEditor.makeSegmentStraight(straightCandidate, afterIndex)
+        && !pathEditor.snapSegmentHorizontal(horizontalCandidate, afterIndex)
+        && !pathEditor.snapSegmentVertical(verticalCandidate, afterIndex)) return;
       event.preventDefault();
       setVertexSelection(null);
       setVertexMenuState({
@@ -1060,6 +1318,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         y: event.clientY,
         kind: "segment",
         segmentAfterIndex: afterIndex,
+        segmentPoint: point,
         invoker: target,
       });
     } catch (error: unknown) {
@@ -1146,18 +1405,29 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     selectedVertexIndex,
     vertexMenu,
     canDeleteSelectedVertex,
+    selectedVertexIsInflection,
     canRoundSelectedVertex,
+    canAddInflectionPoint,
     canMakeSelectedSegmentBendable,
     canMakeSelectedSegmentStraight,
+    canMakeSelectedSegmentHorizontal,
+    canMakeSelectedSegmentVertical,
     addHold,
+    duplicateAndMirrorHold,
     deleteHold,
     selectVertex,
     deleteSelectedVertex,
     roundSelectedVertex,
+    addInflectionPoint,
     makeSelectedSegmentBendable,
     makeSelectedSegmentStraight,
+    makeSelectedSegmentHorizontal,
+    makeSelectedSegmentVertical,
     dismissVertexMenu,
     changeHoldType,
+    changeFingerCapacity,
+    changeHoldDepthRange,
+    changeHandCapacity,
     changeOutlineShape,
     rotateHold,
     applyRotation,

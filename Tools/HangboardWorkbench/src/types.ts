@@ -18,6 +18,11 @@ export interface ShapeConstraint {
   rotationDegrees: number;
 }
 
+export interface MillimeterRange {
+  lowerBound: number;
+  upperBound: number;
+}
+
 export type OutlinePreset = Exclude<ShapeConstraintShape, "roundedRectangle"> | "rounded-rectangle";
 export type ConstrainedHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
@@ -50,6 +55,9 @@ export interface HoldRegion {
     pieceIndex: number;
     presentationID?: string;
   };
+  fingerCapacity?: number;
+  depthRangeMillimeters?: MillimeterRange;
+  handCapacity?: number;
   shapeConstraint?: ShapeConstraint;
 }
 
@@ -75,6 +83,7 @@ export interface BoardSummary {
   displayName: string;
   holdCount: number;
   href?: string;
+  imageUrl: string;
 }
 
 export interface Board extends BoardSummary {
@@ -170,6 +179,10 @@ export interface WorkbenchController {
     boardId: string;
     getBoard(boardId: string): Promise<Board>;
     loadImage(href: string): Promise<ImageType>;
+    preloadedImage?: {
+      href: string;
+      promise: Promise<ImageType>;
+    };
     commit(value: LoadedBoard<ImageType>): void;
   }): Promise<LoadedBoard<ImageType>>;
   saveBoardAtomically(options: {
@@ -186,6 +199,7 @@ export interface WorkbenchController {
 export interface PathEditor {
   parsePath(pathString: string): PathCommand[];
   serializePath(commands: readonly PathCommand[]): string;
+  pathBounds(commands: readonly PathCommand[]): Bounds;
   createOutlineShapePath(pathString: string, preset: OutlinePreset): string;
   constrainedOutlineModel(pathString: string, constraint: unknown): ConstrainedOutlineModel;
   resizeConstrainedOutline(
@@ -197,10 +211,14 @@ export interface PathEditor {
   ): ConstrainedResizeResult;
   moveVertex(commands: PathCommand[], index: number, dx: number, dy: number): void;
   addVertex(commands: PathCommand[], afterIndex: number, x: number, y: number): void;
+  addInflectionPoint(commands: PathCommand[], afterIndex: number, point: Point): boolean;
   deleteVertex(commands: PathCommand[], index: number): void;
+  isInflectionVertex(commands: readonly PathCommand[], index: number): boolean;
   roundVertex(commands: PathCommand[], index: number): boolean;
   makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean;
   makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean;
+  snapSegmentHorizontal(commands: PathCommand[], afterIndex: number): boolean;
+  snapSegmentVertical(commands: PathCommand[], afterIndex: number): boolean;
   rotatePath(commands: PathCommand[], angleRadians: number, pivot: Point): void;
 }
 
@@ -216,11 +234,17 @@ export interface Dialogs {
   prompt(message: string, defaultValue?: string): string | null;
 }
 
+export interface BrowserStorage {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
 export interface BrowserRuntime extends Dialogs {
   fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
   location: {
     assign(url: string): void;
   };
+  storage?: BrowserStorage;
   postDiagnostic?(diagnostic: RequestDiagnostic): void;
   createImage(): HTMLImageElement;
 }
@@ -246,6 +270,7 @@ export interface WorkbenchState {
   gitStatusKnown: boolean;
   hasUncommittedChanges: boolean;
   dirty: boolean;
+  autosaveEnabled: boolean;
   busyBoard: boolean;
   savingBoard: boolean;
   busyGit: boolean;
@@ -256,6 +281,8 @@ export interface WorkbenchState {
   commitMessage: string;
   rotationDegrees: string;
   validation: string;
+  apiError: string;
+  apiErrorOperation: string | null;
   status: string;
   saveLoginUrl: string | null;
   boardsError: string;
@@ -276,6 +303,7 @@ export interface WorkbenchActions {
   refreshBoards(): Promise<void>;
   selectBoard(boardId: string): Promise<void>;
   saveBoard(): Promise<void>;
+  setAutosaveEnabled(enabled: boolean): void;
   refreshGit(): Promise<void>;
   setSelectedBranch(branchName: string): void;
   switchBranch(branchName?: string): Promise<void>;

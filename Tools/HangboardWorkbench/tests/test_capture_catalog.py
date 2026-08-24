@@ -160,3 +160,16 @@ def test_capture_command_accepts_explicit_repository_output_and_chrome_paths() -
     assert arguments.output_root == Path("/captures")
     assert arguments.chrome_path.name == "Google Chrome"
     assert arguments.port == 4183
+
+
+def test_capture_uses_its_dedicated_local_only_server_launcher() -> None:
+    repository_root = Path("/checkout")
+
+    assert capture_catalog._capture_server_command(repository_root, 4183) == [
+        "python3",
+        "/checkout/Tools/HangboardWorkbench/capture_server.py",
+        "--repository-root",
+        "/checkout",
+        "--port",
+        "4183",
+    ]
