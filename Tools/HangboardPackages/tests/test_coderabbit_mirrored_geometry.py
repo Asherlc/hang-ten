@@ -47,9 +47,23 @@ MIRRORED_PAIRS = {
         ("front-middle-2", "front-middle-8"),
         ("hold-26", "hold-27"),
     ),
+    "moon-armstrong": (
+        ("edge-20-left", "edge-20-right"),
+        ("edge-10-left", "edge-10-right"),
+    ),
+    "nature-stoak-board-iii": (
+        ("gradient-edge-left", "gradient-edge-right"),
+    ),
     "escape-beta-22": tuple(
         (f"hold-{family:02d}-left", f"hold-{family:02d}-right")
         for family in range(1, 9)
+    ),
+    "yy-verticalboard-evo": (
+        ("edge-inclined-30-left", "edge-inclined-30-right"),
+        ("edge-18-left", "edge-18-right"),
+    ),
+    "yy-verticalboard-first": (
+        ("edge-45-left", "edge-45-right"),
     ),
 }
 
