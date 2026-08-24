@@ -58,7 +58,8 @@ function isHoldRegion(value: unknown): value is HoldRegion {
 
 function isEditorDocument(value: unknown): value is EditorDocument {
   return isRecord(value)
-    && typeof value.schemaVersion === "number"
+    && Object.keys(value).every((key) => key === "presentationID" || key === "canvas" || key === "regions")
+    && (value.presentationID === undefined || typeof value.presentationID === "string")
     && isRecord(value.canvas)
     && typeof value.canvas.width === "number"
     && typeof value.canvas.height === "number"
@@ -70,6 +71,10 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   if (!isRecord(document)) {
     throw new TypeError("Hold document is required");
   }
+  const unknownKey = Object.keys(document).find(
+    (key) => key !== "presentationID" && key !== "canvas" && key !== "regions",
+  );
+  if (unknownKey) throw new Error(`Hold document has unknown field ${unknownKey}`);
   const canvas = document.canvas;
   if (!isRecord(canvas)
     || !Number.isFinite(canvas.width)

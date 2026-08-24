@@ -4,6 +4,64 @@ import SwiftUI
 import UIKit
 @testable import HangTen
 
+final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
+    func testSelectsBestQualityAmongExactLocaleCandidates() {
+        let cases: [(name: String, candidates: [WorkoutSpeechVoiceCandidate], expected: String?)] = [
+            (
+                "off-locale premium is ignored",
+                [
+                    WorkoutSpeechVoiceCandidate(identifier: "exact-default", language: "en-US", quality: .default),
+                    WorkoutSpeechVoiceCandidate(identifier: "off-locale-premium", language: "en-GB", quality: .premium)
+                ],
+                "exact-default"
+            ),
+            (
+                "enhanced wins without premium",
+                [
+                    WorkoutSpeechVoiceCandidate(identifier: "exact-default", language: "en-US", quality: .default),
+                    WorkoutSpeechVoiceCandidate(identifier: "exact-enhanced", language: "en-US", quality: .enhanced)
+                ],
+                "exact-enhanced"
+            ),
+            (
+                "premium wins across all quality tiers",
+                [
+                    WorkoutSpeechVoiceCandidate(identifier: "exact-default", language: "en-US", quality: .default),
+                    WorkoutSpeechVoiceCandidate(identifier: "exact-enhanced", language: "en-US", quality: .enhanced),
+                    WorkoutSpeechVoiceCandidate(identifier: "exact-premium", language: "en-US", quality: .premium)
+                ],
+                "exact-premium"
+            ),
+            (
+                "default is the sole exact-locale voice",
+                [
+                    WorkoutSpeechVoiceCandidate(identifier: "exact-default", language: "en-US", quality: .default),
+                    WorkoutSpeechVoiceCandidate(identifier: "off-locale-premium", language: "en-GB", quality: .premium)
+                ],
+                "exact-default"
+            ),
+            (
+                "no exact-locale candidate",
+                [
+                    WorkoutSpeechVoiceCandidate(identifier: "off-locale-premium", language: "en-GB", quality: .premium)
+                ],
+                nil
+            )
+        ]
+
+        for testCase in cases {
+            XCTAssertEqual(
+                WorkoutSpeechVoiceSelector.bestCandidate(
+                    from: testCase.candidates,
+                    preferredLanguage: "en-US"
+                )?.identifier,
+                testCase.expected,
+                testCase.name
+            )
+        }
+    }
+}
+
 final class WorkoutTimelineTests: XCTestCase {
     func testHoldCuePrefersSingleTargetStepGripOverride() {
         let hold = BoardHold(
@@ -2093,8 +2151,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
             XCTAssertEqual(plan.duration, 600)
             XCTAssertEqual(plan.provenance, .adapted)
             XCTAssertEqual(plan.sourceURL, sourceURL)
-            XCTAssertTrue(plan.subtitle.contains("guided task timing"))
-            XCTAssertTrue(plan.subtitle.contains("5 seconds"))
+            XCTAssertEqual(plan.subtitle, "Ten 60-second hangboard sequences.")
             XCTAssertEqual(plan.steps.map(\.number), Array(1...plan.steps.count))
             XCTAssertEqual(Set(plan.steps.map(\.id)).count, plan.steps.count)
         }

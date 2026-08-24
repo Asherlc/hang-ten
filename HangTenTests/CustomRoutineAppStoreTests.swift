@@ -106,6 +106,54 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
+    func testSavedForceFeedbackDuplicateRemainsUnavailableToStart() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let source = try XCTUnwrap(
+            store.plans.first { $0.id == "research.force-feedback-f80" }
+        )
+
+        let duplicate = try store.duplicateRoutine(source)
+        try store.saveCustomRoutine(duplicate)
+        let reconstitutedPlan = try XCTUnwrap(
+            store.plans.first { $0.id == duplicate.id }
+        )
+
+        XCTAssertEqual(
+            PlanStartAvailabilityPolicy.availability(
+                for: reconstitutedPlan,
+                metadata: store.metadata(for: reconstitutedPlan)
+            ),
+            .unavailable(
+                requirement: "Requires real-time force feedback from an instrumented 12 mm edge."
+            )
+        )
+    }
+
+    func testSavedOrdinaryDuplicateRemainsAvailableToStart() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let source = try XCTUnwrap(
+            store.plans.first { $0.id == "research.max-hangs" }
+        )
+
+        let duplicate = try store.duplicateRoutine(source)
+        try store.saveCustomRoutine(duplicate)
+        let reconstitutedPlan = try XCTUnwrap(
+            store.plans.first { $0.id == duplicate.id }
+        )
+
+        XCTAssertEqual(
+            PlanStartAvailabilityPolicy.availability(
+                for: reconstitutedPlan,
+                metadata: store.metadata(for: reconstitutedPlan)
+            ),
+            .available
+        )
+    }
+
     func testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }

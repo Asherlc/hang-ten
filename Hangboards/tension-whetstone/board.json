@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "tension.whetstone",
   "manufacturer": "Tension Climbing",
   "name": "Whetstone",
@@ -7,9 +6,6 @@
   "productURL": "https://tensionclimbing.com/products/whetstone",
   "dimensions": "25 \u00d7 6 \u00d7 2 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "top-ergo-jug",
@@ -281,7 +277,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-40-left",
@@ -387,7 +384,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-40-right",
@@ -493,7 +491,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-40-30-left",
@@ -615,7 +614,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-40-30-right",
@@ -737,7 +737,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-40-center",
@@ -846,7 +847,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-20-left",
@@ -968,7 +970,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-20-right",
@@ -1090,7 +1093,17 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
     }
   ]
 }

@@ -21,7 +21,11 @@ import board_package
 import github_board_store
 from fake_github_client import FakeGitHubClient
 from github_client import GitHubForbiddenError, GitHubNotFoundError
-from workbench_fixtures import PRIMARY_IMAGE, board_document, board_document_v2
+from workbench_fixtures import (
+    PRIMARY_IMAGE,
+    board_document,
+    multi_presentation_board_document,
+)
 
 TOKEN = "test-token"
 BRANCH = "main"
@@ -300,6 +304,77 @@ def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     assert opened.board_id == "fixture.board"
     assert image == PRIMARY_IMAGE.read_bytes()
     assert len(client.calls_named("get_blob")) == 2
+
+
+def test_hosted_catalog_lists_unversioned_boards_without_loading_presentation_images() -> None:
+    """Fails if catalog validation rejects metadata or fetches image assets."""
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+
+    listings = store.discover_packages(TOKEN, BRANCH)
+
+    assert [(listing.slug, listing.board_id) for listing in listings] == [
+        ("fixture-v2", "fixture.multi")
+    ]
+    assert len(client.calls_named("get_blob")) == 1
+
+
+def test_hosted_catalog_rejects_hold_with_unknown_presentation_id() -> None:
+    """Fails if catalog listing accepts a hold outside the declared presentations."""
+    board = multi_presentation_board_document("fixture.multi")
+    hold = board["holds"][0]
+    assert isinstance(hold, dict)
+    hold["presentationID"] = "missing"
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(board_package.BoardPackageError, match="presentationID is unknown"):
+        store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_blob")) == 1
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (
+            lambda board: board.__setitem__(
+                "presentation", {"assetPath": "assets/primary.png"}
+            ),
+            "unknown keys",
+        ),
+        (lambda board: board.pop("presentations"), "missing keys"),
+        (
+            lambda board: board["holds"][0].pop("presentationID"),
+            "presentationID",
+        ),
+    ],
+    ids=[
+        "schema-version",
+        "legacy-presentation",
+        "missing-presentations",
+        "missing-hold-presentation-id",
+    ],
+)
+def test_hosted_catalog_rejects_legacy_or_incomplete_presentation_shape(
+    mutation, message: str
+) -> None:
+    """Catalog metadata validation must stop before fetching presentation assets."""
+    board = board_document("fixture.board")
+    mutation(board)
+    client = _client(("fixture-board", board))
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(board_package.BoardPackageError, match=message):
+        store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_blob")) == 1
 
 
 def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() -> None:
@@ -761,7 +836,7 @@ def test_discovery_rejects_a_completed_package_with_extra_remote_files() -> None
 
     with pytest.raises(
         board_package.BoardPackageError,
-        match="only board.json and assets/primary.png",
+        match="only board.json and assets/",
     ):
         github_board_store.discover_packages(client, TOKEN, BRANCH)
 
@@ -903,12 +978,12 @@ def test_changed_hosted_save_persists_a_bendable_curve_marker() -> None:
     assert "bendableCommandIndexes" not in json.dumps(stored)
 
 
-def test_v2_hosted_save_preserves_unselected_holds_and_presentation_assets() -> None:
-    board = board_document_v2("fixture.v2")
+def test_hosted_save_preserves_unselected_holds_and_presentation_assets() -> None:
+    board = multi_presentation_board_document("fixture.multi")
     files = _complete_package("fixture-v2", board)
     files["Hangboards/fixture-v2/assets/back.png"] = PRIMARY_IMAGE.read_bytes()
     client = FakeGitHubClient({BRANCH: files})
-    opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.v2")
+    opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.multi")
     document = board_package.editor_document(opened, "front")
     back_before = copy.deepcopy(opened.board["holds"][1])
     assets_before = {
@@ -927,7 +1002,7 @@ def test_v2_hosted_save_preserves_unselected_holds_and_presentation_assets() -> 
 
     assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
     assert github_board_store.presentation_image_bytes(
-        client, TOKEN, BRANCH, "fixture.v2", "back"
+        client, TOKEN, BRANCH, "fixture.multi", "back"
     ) == assets_before["Hangboards/fixture-v2/assets/back.png"]
     assert {
         path: client.file_bytes(BRANCH, path) for path in assets_before

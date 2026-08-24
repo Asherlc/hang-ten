@@ -91,7 +91,8 @@ function isBoardSummary(value: unknown): value is BoardSummary {
 
 function isEditorDocumentPayload(value: unknown): value is EditorDocument {
   return isRecord(value)
-    && typeof value.schemaVersion === "number"
+    && Object.keys(value).every((key) => key === "presentationID" || key === "canvas" || key === "regions")
+    && (value.presentationID === undefined || typeof value.presentationID === "string")
     && isRecord(value.canvas)
     && typeof value.canvas.width === "number"
     && typeof value.canvas.height === "number"

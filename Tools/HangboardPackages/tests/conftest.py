@@ -44,7 +44,6 @@ def board_document(
     name: str = "Fixture Board",
 ) -> dict[str, Any]:
     return {
-        "schemaVersion": 1,
         "id": board_id,
         "manufacturer": manufacturer,
         "name": name,
@@ -52,12 +51,21 @@ def board_document(
         "productURL": f"https://example.com/{board_id}",
         "dimensions": "20 x 10 cm",
         "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
-        "presentation": {"assetPath": "assets/primary.png"},
+        "presentations": [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
+                "default": True,
+            }
+        ],
         "holds": [
             {
                 "id": "hold-left",
                 "name": "Left hold",
                 "kind": "jug",
+                "presentationID": "primary",
                 "geometry": [
                     {
                         "frame": {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.4},
@@ -75,10 +83,8 @@ def multi_presentation_board_document(
     manufacturer: str = "Fixture Maker",
     name: str = "Fixture Board",
 ) -> dict[str, Any]:
-    """Return a schema-v2 fixture with one hold on each declared surface."""
+    """Return a fixture with one hold on each declared presentation."""
     document = board_document(board_id, manufacturer=manufacturer, name=name)
-    document["schemaVersion"] = 2
-    document.pop("presentation")
     document["presentations"] = [
         {
             "id": "front",
@@ -138,7 +144,7 @@ def write_multi_presentation_board_package(
     manufacturer: str = "Fixture Maker",
     name: str = "Fixture Board",
 ) -> Path:
-    """Write a complete schema-v2 package with its declared presentation assets."""
+    """Write a complete package with its declared presentation assets."""
     assets = root / "assets"
     assets.mkdir(parents=True)
     (assets / "primary.png").write_bytes(PRIMARY_PNG_BYTES)

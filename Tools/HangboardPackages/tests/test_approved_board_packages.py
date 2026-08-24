@@ -264,6 +264,21 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
     assert not (HANGBOARDS_ROOT / "catalog.json").exists()
 
 
+def test_every_approved_board_uses_the_unversioned_presentation_shape() -> None:
+    for board_path in HANGBOARDS_ROOT.glob("*/board.json"):
+        document = json.loads(board_path.read_text(encoding="utf-8"))
+
+        assert "schemaVersion" not in document
+        assert "presentation" not in document
+
+        presentations = document["presentations"]
+        assert sum(presentation.get("default") is True for presentation in presentations) == 1
+        presentation_ids = {presentation["id"] for presentation in presentations}
+        assert all(
+            hold["presentationID"] in presentation_ids for hold in document["holds"]
+        )
+
+
 def test_approved_packages_declare_their_complete_presentation_asset_set() -> None:
     inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
 
@@ -274,22 +289,17 @@ def test_approved_packages_declare_their_complete_presentation_asset_set() -> No
             for path in (package.root / "assets").rglob("*")
             if path.is_file()
         }
-        if document["schemaVersion"] == 1:
-            assert document.get("presentation") == {"assetPath": "assets/primary.png"}
-            assert actual_assets == {"assets/primary.png"}
-        elif document["schemaVersion"] == 2:
-            assert "presentation" not in document
-            assert all(
-                isinstance(presentation["aspectRatio"], (int, float))
-                and not isinstance(presentation["aspectRatio"], bool)
-                and presentation["aspectRatio"] > 0
-                for presentation in document["presentations"]
-            )
-            assert actual_assets == {
-                presentation["assetPath"] for presentation in document["presentations"]
-            }
-        else:  # The loader is responsible for rejecting unsupported schemas.
-            raise AssertionError(f"unexpected schemaVersion: {document['schemaVersion']}")
+        assert "schemaVersion" not in document
+        assert "presentation" not in document
+        assert all(
+            isinstance(presentation["aspectRatio"], (int, float))
+            and not isinstance(presentation["aspectRatio"], bool)
+            and presentation["aspectRatio"] > 0
+            for presentation in document["presentations"]
+        )
+        assert actual_assets == {
+            presentation["assetPath"] for presentation in document["presentations"]
+        }
 
 
 def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -> None:
@@ -304,7 +314,6 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
 def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
     board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "metolius.foundry"
     assert board["presentations"] == [
         {
@@ -371,7 +380,6 @@ def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
 def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
     board = json.loads((PRIME_RIB_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "metolius.prime-rib"
     assert board["dimensions"] == "20 × 4.2 × 1.5 in"
     assert board["presentations"] == [
@@ -403,7 +411,6 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
 def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "tension.flash-board"
     assert board["dimensions"] == "Not published by manufacturer"
     assert board["presentations"] == [
@@ -462,7 +469,6 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
     board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "metolius.light-rail-2"
     assert board["dimensions"] == "18 × 3 × 1.5 in"
     assert board["presentations"] == [
@@ -530,7 +536,6 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
 def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
     board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "metolius.rock-rings-3d"
     assert board["dimensions"] == "184 × 146 × 57 mm"
     assert board["presentations"] == [
@@ -647,7 +652,6 @@ def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
 def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
     board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "metolius.wood-grips-deluxe-ii"
     assert board["dimensions"] == "24 × 8.5 in"
     assert board["presentations"] == [
@@ -758,6 +762,7 @@ def test_compact_hold_records_keep_sourced_physical_facts_and_app_routing() -> N
         "handCapacity",
         "gripType",
         "features",
+        "presentationID",
     }
 
     assert all(not (set(hold) & retired_fields) for hold in holds)
@@ -833,7 +838,6 @@ def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
 def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
     board = json.loads((YY_TRAVELBOARD_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "yy.travelboard"
     assert board["dimensions"] == "34 × 10 × 3 cm"
     assert [(item["id"], item["assetPath"]) for item in board["presentations"]] == [
@@ -862,7 +866,6 @@ def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
 def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
     board = json.loads((YY_BAGUETTE_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "yy.baguette"
     assert board["dimensions"] == "47 × 4 × 4 cm"
     assert board["presentations"] == [
@@ -905,7 +908,6 @@ def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
 def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> None:
     board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "yy.baguette-evo"
     assert board["dimensions"] == "52 × 5 × 5 cm"
     assert board["presentations"] == [
@@ -1018,7 +1020,6 @@ def test_yy_baguette_evo_explicit_pairs_use_exact_horizontal_path_mirrors() -> N
 def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
     board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
 
-    assert board["schemaVersion"] == 2
     assert board["id"] == "yy.penta-evo"
     assert board["dimensions"] == "Not published by YY Vertical"
     assert len(board["presentations"]) == 1

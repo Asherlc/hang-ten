@@ -290,7 +290,6 @@ test("createOutlineShapePath generates every preset as a valid closed contour", 
     assert.equal(displayPath, expectedPath, preset);
     assert.equal(parsePath(displayPath).at(-1)?.type, "Z", preset);
     assert.doesNotThrow(() => validateEditorDocument({
-      schemaVersion: 1,
       canvas: { width: 100, height: 50 },
       regions: [{ key: "hold-1", displayPath }],
     }), preset);
@@ -701,7 +700,6 @@ test("removing a quadratic inflection point remains finite when its drag reaches
   assert.equal(commands[1]?.type, "Q");
   assert.ok(commands[1]?.controls.every((point) => Number.isFinite(point.x) && Number.isFinite(point.y)));
   assert.doesNotThrow(() => validateEditorDocument({
-    schemaVersion: 1,
     canvas: { width: 100, height: 100 },
     regions: [{ key: "hold-1", displayPath: serializePath(commands) }],
   }));
@@ -722,7 +720,6 @@ test("removing a cubic inflection point remains finite when its drag nearly reac
     "near-overlap removal must not amplify controls far beyond the surrounding geometry",
   );
   assert.doesNotThrow(() => validateEditorDocument({
-    schemaVersion: 1,
     canvas: { width: 100, height: 100 },
     regions: [{ key: "hold-1", displayPath: serializePath(commands) }],
   }));

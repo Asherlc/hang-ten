@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "metolius.project",
   "manufacturer": "Metolius",
   "name": "Project",
@@ -7,9 +6,6 @@
   "productURL": "https://www.metoliusclimbing.com/products/project-training-board",
   "dimensions": "24.5 \u00d7 6 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-1-left",
@@ -68,7 +64,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "round-sloper-8-center",
@@ -149,7 +146,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-1-right",
@@ -208,7 +206,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-3-left",
@@ -318,7 +317,8 @@
             "rotationDegrees": -10.273428369156363
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-4-left",
@@ -427,7 +427,8 @@
             "rotationDegrees": -7.065186398611786
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-5-left",
@@ -537,7 +538,8 @@
             "rotationDegrees": -8.208031653197963
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-6-left",
@@ -647,7 +649,8 @@
             "rotationDegrees": -4.894987933022662
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-7-left",
@@ -757,7 +760,8 @@
             "rotationDegrees": -4.82695928377143
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-9-center",
@@ -880,7 +884,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-10-center",
@@ -1003,7 +1008,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-7-right",
@@ -1113,7 +1119,8 @@
             "rotationDegrees": -4.82695928377143
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-6-right",
@@ -1223,7 +1230,8 @@
             "rotationDegrees": -4.894987933022662
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-5-right",
@@ -1333,7 +1341,8 @@
             "rotationDegrees": -8.208031653197963
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-4-right",
@@ -1442,7 +1451,8 @@
             "rotationDegrees": -7.065186398611786
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-3-right",
@@ -1552,7 +1562,17 @@
             "rotationDegrees": -10.273428369156363
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

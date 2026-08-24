@@ -1,5 +1,35 @@
 import Foundation
 
+private struct CustomRoutineCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        intValue = nil
+    }
+
+    init?(intValue: Int) {
+        stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}
+
+private extension Decoder {
+    func rejectFormerCustomRoutineKeys(_ keys: Set<String>) throws {
+        let container = try container(keyedBy: CustomRoutineCodingKey.self)
+        guard let key = container.allKeys.first(where: { keys.contains($0.stringValue) }) else {
+            return
+        }
+
+        throw DecodingError.dataCorruptedError(
+            forKey: key,
+            in: container,
+            debugDescription: "Former custom-routine field \(key.stringValue) is not supported."
+        )
+    }
+}
+
 enum CustomRoutineTargetMode: Hashable, Codable {
     case boardSpecific(boardID: String)
     case generic
@@ -79,31 +109,16 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
 }
 
 struct CustomRoutineLibrary: Codable, Hashable {
-    static let currentSchemaVersion = 1
-
-    let schemaVersion: Int
     let routines: [CustomRoutineDefinition]
 
-    private enum CodingKeys: String, CodingKey {
-        case schemaVersion
-        case routines
-    }
-
-    init(schemaVersion: Int = Self.currentSchemaVersion, routines: [CustomRoutineDefinition]) {
-        self.schemaVersion = schemaVersion
+    init(routines: [CustomRoutineDefinition]) {
         self.routines = routines
     }
 
     init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
-        routines = try container.decode([CustomRoutineDefinition].self, forKey: .routines)
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(schemaVersion, forKey: .schemaVersion)
-        try container.encode(routines, forKey: .routines)
+        try decoder.rejectFormerCustomRoutineKeys(["schemaVersion"])
+        let container = try decoder.container(keyedBy: CustomRoutineCodingKey.self)
+        routines = try container.decode([CustomRoutineDefinition].self, forKey: CustomRoutineCodingKey(stringValue: "routines")!)
     }
 }
 
@@ -378,20 +393,17 @@ enum CustomRoutineValidator {
 
 enum CustomRoutineStoreError: LocalizedError {
     case validationFailed([CustomRoutineValidationIssue])
-    case unsupportedSchema(Int)
 
     var errorDescription: String? {
         switch self {
         case let .validationFailed(issues):
             return "Custom routine validation failed: \(issues)"
-        case let .unsupportedSchema(version):
-            return "Unsupported custom routine schema version \(version)."
         }
     }
 }
 
 final class CustomRoutineStore: CustomRoutineStoring {
-    static let defaultKey = "HangTen.customRoutines.v1"
+    static let defaultKey = "HangTen.customRoutines"
 
     private let defaults: UserDefaults
     private let key: String
@@ -471,7 +483,6 @@ final class CustomRoutineStore: CustomRoutineStoring {
         let library = PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
                 id: "hang-ten.custom-routine",
-                version: "1",
                 title: "Custom routine",
                 generatedAt: "local"
             ),
@@ -524,9 +535,6 @@ final class CustomRoutineStore: CustomRoutineStoring {
         guard let data = defaults.data(forKey: key) else { return }
         do {
             let library = try JSONDecoder().decode(CustomRoutineLibrary.self, from: data)
-            guard library.schemaVersion == CustomRoutineLibrary.currentSchemaVersion else {
-                throw CustomRoutineStoreError.unsupportedSchema(library.schemaVersion)
-            }
             var loadedRoutineIDs = Set<String>()
             let validRoutines = library.routines.filter { routine in
                 CustomRoutineValidator.idIssues(for: routine.id).isEmpty &&

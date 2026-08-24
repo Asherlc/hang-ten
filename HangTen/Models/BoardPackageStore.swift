@@ -2,10 +2,6 @@ import Foundation
 import ImageIO
 import UniformTypeIdentifiers
 
-extension BoardPresentation {
-    static let legacyPrimaryID = "primary"
-}
-
 private struct BoardPackageAnyCodingKey: CodingKey {
     let stringValue: String
     let intValue: Int?
@@ -145,7 +141,6 @@ struct BoardPackageStore {
                 from: boardURL,
                 resource: "\(resourcePrefix)/board.json"
             )
-            try Self.validateSchema(boardDocument.schemaVersion, resource: "\(resourcePrefix)/board.json")
             try Self.validateMetadata(boardDocument: boardDocument)
             let presentations = try Self.validatePresentations(
                 in: boardDocument,
@@ -156,26 +151,26 @@ struct BoardPackageStore {
                 boardID: boardDocument.id,
                 declaredAssetPaths: Set(presentations.map(\.assetPath))
             )
-            if boardDocument.schemaVersion == 2 {
-                for presentation in presentations {
-                    guard let imageSize = presentationSizes[presentation.assetPath] else {
-                        throw BoardPackageStoreError.missingPresentationAsset(
-                            boardID: boardDocument.id,
-                            path: presentation.assetPath
-                        )
-                    }
-                    try Self.validatePresentationAspectRatio(
-                        presentation.aspectRatio,
-                        imageWidth: imageSize.width,
-                        imageHeight: imageSize.height,
-                        boardID: boardDocument.id
+            for presentation in presentations {
+                guard let imageSize = presentationSizes[presentation.assetPath] else {
+                    throw BoardPackageStoreError.missingPresentationAsset(
+                        boardID: boardDocument.id,
+                        path: presentation.assetPath
                     )
                 }
-            } else if let primarySize = presentationSizes["assets/primary.png"] {
+                try Self.validatePresentationAspectRatio(
+                    presentation.aspectRatio,
+                    imageWidth: imageSize.width,
+                    imageHeight: imageSize.height,
+                    boardID: boardDocument.id
+                )
+            }
+            if let defaultPresentation = presentations.first(where: \.isDefault),
+               let defaultImageSize = presentationSizes[defaultPresentation.assetPath] {
                 try Self.validatePresentationAspectRatio(
                     boardDocument.aspectRatio,
-                    imageWidth: primarySize.width,
-                    imageHeight: primarySize.height,
+                    imageWidth: defaultImageSize.width,
+                    imageHeight: defaultImageSize.height,
                     boardID: boardDocument.id
                 )
             }
@@ -499,12 +494,6 @@ struct BoardPackageStore {
         return false
     }
 
-    private static func validateSchema(_ schemaVersion: Int, resource: String) throws {
-        guard schemaVersion == 1 || schemaVersion == 2 else {
-            throw BoardPackageStoreError.malformedJSON(resource: resource)
-        }
-    }
-
     private static func validateMetadata(
         boardDocument: BoardPackageBoardDocument
     ) throws {
@@ -541,7 +530,7 @@ struct BoardPackageStore {
         in document: BoardPackageBoardDocument,
         packageURL: URL
     ) throws -> [BoardPackagePresentationDocument] {
-        let presentations = document.presentationDocuments
+        let presentations = document.presentations
         guard !presentations.isEmpty else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
@@ -577,13 +566,6 @@ struct BoardPackageStore {
                 boardID: document.id,
                 in: packageURL
             )
-            if document.schemaVersion == 1,
-               presentation.assetPath != "assets/primary.png" {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "presentation.assetPath must be assets/primary.png"
-                )
-            }
         }
         guard defaultCount == 1 else {
             throw BoardPackageStoreError.invalidPackage(
@@ -650,24 +632,11 @@ struct BoardPackageStore {
                     holdID: hold.id
                 )
             }
-            let presentationID: String
-            if document.schemaVersion == 1 {
-                guard !hold.hasPresentationIDKey else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "schema version 1 holds cannot declare presentationID"
-                    )
-                }
-                presentationID = BoardPresentation.legacyPrimaryID
-            } else {
-                guard let declaredPresentationID = hold.presentationID,
-                      presentationIDs.contains(declaredPresentationID) else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "hold \(hold.id) has an unknown presentationID"
-                    )
-                }
-                presentationID = declaredPresentationID
+            guard presentationIDs.contains(hold.presentationID) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has an unknown presentationID"
+                )
             }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
@@ -710,10 +679,7 @@ struct BoardPackageStore {
                 )
             }
             holds.append(
-                try hold.trainingBoardHold(
-                    geometryPieces: geometryPieces,
-                    presentationID: presentationID
-                )
+                try hold.trainingBoardHold(geometryPieces: geometryPieces)
             )
             if let size = hold.sizeMillimeters, size <= 0 {
                 throw BoardPackageStoreError.invalidPackage(
@@ -750,7 +716,6 @@ struct BoardPackageStore {
 }
 
 private struct BoardPackageBoardDocument: Decodable {
-    let schemaVersion: Int
     let id: String
     let manufacturer: String
     let name: String
@@ -758,12 +723,10 @@ private struct BoardPackageBoardDocument: Decodable {
     let productURL: URL
     let dimensions: String
     let aspectRatio: Double
-    let legacyPresentation: BoardPackageLegacyPresentationDocument?
-    let presentations: [BoardPackagePresentationDocument]?
+    let presentations: [BoardPackagePresentationDocument]
     let holds: [BoardPackageHoldDocument]
 
     private enum CodingKeys: String, CodingKey {
-        case schemaVersion
         case id
         case manufacturer
         case name
@@ -771,30 +734,16 @@ private struct BoardPackageBoardDocument: Decodable {
         case productURL
         case dimensions
         case aspectRatio
-        case presentation
         case presentations
         case holds
     }
 
     init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys([
+            "id", "manufacturer", "name", "subtitle", "productURL", "dimensions",
+            "aspectRatio", "presentations", "holds"
+        ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
-        if schemaVersion == 1 {
-            try decoder.rejectUnknownKeys([
-                "schemaVersion", "id", "manufacturer", "name", "subtitle", "productURL",
-                "dimensions", "aspectRatio", "presentation", "holds"
-            ])
-        } else if schemaVersion == 2 {
-            try decoder.rejectUnknownKeys([
-                "schemaVersion", "id", "manufacturer", "name", "subtitle", "productURL",
-                "dimensions", "aspectRatio", "presentations", "holds"
-            ])
-        } else {
-            try decoder.rejectUnknownKeys([
-                "schemaVersion", "id", "manufacturer", "name", "subtitle", "productURL",
-                "dimensions", "aspectRatio", "presentation", "presentations", "holds"
-            ])
-        }
         id = try container.decode(String.self, forKey: .id)
         manufacturer = try container.decode(String.self, forKey: .manufacturer)
         name = try container.decode(String.self, forKey: .name)
@@ -802,43 +751,11 @@ private struct BoardPackageBoardDocument: Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decode(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        legacyPresentation = if container.contains(.presentation) {
-            try container.decode(
-                BoardPackageLegacyPresentationDocument.self,
-                forKey: .presentation
-            )
-        } else {
-            nil
-        }
-        presentations = try container.decodeIfPresent(
+        presentations = try container.decode(
             [BoardPackagePresentationDocument].self,
             forKey: .presentations
         )
-        if schemaVersion == 2, presentations == nil {
-            throw DecodingError.keyNotFound(
-                CodingKeys.presentations,
-                .init(
-                    codingPath: container.codingPath,
-                    debugDescription: "schema version 2 requires presentations"
-                )
-            )
-        }
         holds = try container.decode([BoardPackageHoldDocument].self, forKey: .holds)
-    }
-
-    var presentationDocuments: [BoardPackagePresentationDocument] {
-        if schemaVersion == 1 {
-            return [
-                BoardPackagePresentationDocument(
-                    id: BoardPresentation.legacyPrimaryID,
-                    name: "Primary",
-                    assetPath: legacyPresentation?.assetPath ?? "assets/primary.png",
-                    aspectRatio: aspectRatio,
-                    isDefault: true
-                )
-            ]
-        }
-        return presentations ?? []
     }
 
     func trainingBoard(
@@ -868,20 +785,6 @@ private struct BoardPackageBoardDocument: Decodable {
     }
 }
 
-private struct BoardPackageLegacyPresentationDocument: Decodable {
-    let assetPath: String
-
-    private enum CodingKeys: String, CodingKey {
-        case assetPath
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["assetPath"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        assetPath = try container.decode(String.self, forKey: .assetPath)
-    }
-}
-
 private struct BoardPackagePresentationDocument: Decodable {
     let id: String
     let name: String
@@ -895,20 +798,6 @@ private struct BoardPackagePresentationDocument: Decodable {
         case assetPath
         case aspectRatio
         case isDefault = "default"
-    }
-
-    init(
-        id: String,
-        name: String,
-        assetPath: String,
-        aspectRatio: Double,
-        isDefault: Bool
-    ) {
-        self.id = id
-        self.name = name
-        self.assetPath = assetPath
-        self.aspectRatio = aspectRatio
-        self.isDefault = isDefault
     }
 
     init(from decoder: Decoder) throws {
@@ -942,8 +831,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let fingerCapacity: Int?
     let handCapacity: Int?
     let features: [HoldFeature]?
-    let presentationID: String?
-    let hasPresentationIDKey: Bool
+    let presentationID: String
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -979,27 +867,10 @@ private struct BoardPackageHoldDocument: Decodable {
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
-        hasPresentationIDKey = container.contains(.presentationID)
-        presentationID = try container.decodeIfPresent(String.self, forKey: .presentationID)
+        presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 
-    func trainingBoardHold() throws -> BoardHold {
-        guard !geometry.isEmpty else {
-            throw BoardGeometryAdaptationError.invalid(
-                "hold \(id) geometry must include at least one piece"
-            )
-        }
-        return try trainingBoardHold(
-            geometryPieces: geometry.enumerated().map { index, document in
-                try document.boardHoldPiece(id: "\(id)-piece-\(index)", holdID: id)
-            }
-        )
-    }
-
-    func trainingBoardHold(
-        geometryPieces: [BoardHoldPiece],
-        presentationID: String? = nil
-    ) throws -> BoardHold {
+    func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardHold {
         guard !geometryPieces.isEmpty else {
             throw BoardGeometryAdaptationError.invalid(
                 "hold \(id) geometry must include at least one piece"
@@ -1018,7 +889,7 @@ private struct BoardPackageHoldDocument: Decodable {
                 $0.lowerBound...$0.upperBound
             },
             features: features.map(Set.init),
-            presentationID: presentationID ?? self.presentationID ?? BoardPresentation.legacyPrimaryID
+            presentationID: presentationID
         )
     }
 }
