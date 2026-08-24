@@ -339,6 +339,44 @@ def test_hosted_catalog_rejects_hold_with_unknown_presentation_id() -> None:
     assert len(client.calls_named("get_blob")) == 1
 
 
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (
+            lambda board: board.__setitem__(
+                "presentation", {"assetPath": "assets/primary.png"}
+            ),
+            "unknown keys",
+        ),
+        (lambda board: board.pop("presentations"), "missing keys"),
+        (
+            lambda board: board["holds"][0].pop("presentationID"),
+            "presentationID",
+        ),
+    ],
+    ids=[
+        "schema-version",
+        "legacy-presentation",
+        "missing-presentations",
+        "missing-hold-presentation-id",
+    ],
+)
+def test_hosted_catalog_rejects_legacy_or_incomplete_presentation_shape(
+    mutation, message: str
+) -> None:
+    """Catalog metadata validation must stop before fetching presentation assets."""
+    board = board_document("fixture.board")
+    mutation(board)
+    client = _client(("fixture-board", board))
+    store = github_board_store.GitHubBoardStore(client)
+
+    with pytest.raises(board_package.BoardPackageError, match=message):
+        store.discover_packages(TOKEN, BRANCH)
+
+    assert len(client.calls_named("get_blob")) == 1
+
+
 def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() -> None:
     """Fails if catalog loading serializes independent package blob reads."""
     client = _OverlappingBlobClient(
