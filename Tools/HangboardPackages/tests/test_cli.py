@@ -82,9 +82,9 @@ def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None
     )
 
 
-def test_wrapper_reinstalls_when_pyproject_is_newer_than_entry_point(
+def _write_wrapper_fixture(
     tmp_path: Path,
-) -> None:
+) -> tuple[Path, Path, Path, Path, dict[str, str]]:
     repository = tmp_path / "repository"
     script = repository / "scripts" / "hangboard-packages.sh"
     script.parent.mkdir(parents=True)
@@ -110,22 +110,50 @@ def test_wrapper_reinstalls_when_pyproject_is_newer_than_entry_point(
     entry_point = environment_bin / "hangboard-packages"
     entry_point.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
     entry_point.chmod(0o755)
+    pip_log = tmp_path / "pip.log"
+    environment = {
+        **os.environ,
+        "FAKE_PIP_LOG": str(pip_log),
+        "HANGBOARD_PYTHON": str(python),
+    }
+    return script, pyproject, entry_point, pip_log, environment
+
+
+def test_wrapper_reinstalls_when_pyproject_is_newer_than_entry_point(
+    tmp_path: Path,
+) -> None:
+    script, _, entry_point, pip_log, environment = _write_wrapper_fixture(tmp_path)
     os.utime(entry_point, (1, 1))
 
-    pip_log = tmp_path / "pip.log"
     result = subprocess.run(
         [str(script), "status"],
         text=True,
         capture_output=True,
         check=False,
-        env={
-            **os.environ,
-            "FAKE_PIP_LOG": str(pip_log),
-            "HANGBOARD_PYTHON": str(python),
-        },
+        env=environment,
     )
 
     assert result.returncode == 0, result.stderr
     assert "-m pip install --disable-pip-version-check -e" in pip_log.read_text(
         encoding="utf-8"
     )
+
+
+def test_wrapper_keeps_install_when_pyproject_is_not_newer_than_entry_point(
+    tmp_path: Path,
+) -> None:
+    script, pyproject, entry_point, pip_log, environment = _write_wrapper_fixture(
+        tmp_path
+    )
+    os.utime(pyproject, ns=(entry_point.stat().st_mtime_ns,) * 2)
+
+    result = subprocess.run(
+        [str(script), "status"],
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not pip_log.exists()

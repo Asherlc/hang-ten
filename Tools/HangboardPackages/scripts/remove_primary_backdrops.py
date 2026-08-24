@@ -113,6 +113,7 @@ def _clear_known_enclosed_backgrounds(
             raise ValueError(f"enclosed-background seed is outside {package_name}")
         seed_color = pixels[seed_x, seed_y]
         pending = deque([(seed_x, seed_y)])
+        discovered = {(seed_x, seed_y)}
         visited: set[tuple[int, int]] = set()
         while pending:
             x, y = pending.popleft()
@@ -135,8 +136,9 @@ def _clear_known_enclosed_backgrounds(
                 if (
                     0 <= neighbor_x < width
                     and 0 <= neighbor_y < height
-                    and (neighbor_x, neighbor_y) not in visited
+                    and (neighbor_x, neighbor_y) not in discovered
                 ):
+                    discovered.add((neighbor_x, neighbor_y))
                     pending.append((neighbor_x, neighbor_y))
     return Image.frombytes("L", source.size, bytes(alpha))
 

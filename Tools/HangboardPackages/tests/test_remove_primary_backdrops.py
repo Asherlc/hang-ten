@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter, deque
 import importlib.util
 import os
 import stat
@@ -7,6 +8,7 @@ import sys
 from pathlib import Path
 from types import ModuleType
 from types import SimpleNamespace
+from typing import Iterable
 
 from PIL import Image
 import pytest
@@ -61,6 +63,40 @@ def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
 
     assert corrected.getpixel(hole) == 0
     assert corrected.getpixel(preserved) == 255
+
+
+def test_enclosed_background_fill_enqueues_each_coordinate_once(monkeypatch) -> None:
+    module = _load_script()
+    enqueue_counts: Counter[tuple[int, int]] = Counter()
+
+    class CountingQueue:
+        def __init__(self, coordinates: Iterable[tuple[int, int]]) -> None:
+            self._coordinates: deque[tuple[int, int]] = deque()
+            for coordinate in coordinates:
+                self.append(coordinate)
+
+        def append(self, coordinate: tuple[int, int]) -> None:
+            enqueue_counts[coordinate] += 1
+            self._coordinates.append(coordinate)
+
+        def popleft(self) -> tuple[int, int]:
+            return self._coordinates.popleft()
+
+        def __bool__(self) -> bool:
+            return bool(self._coordinates)
+
+    monkeypatch.setattr(module, "deque", CountingQueue)
+    monkeypatch.setattr(module, "_ENCLOSED_BACKGROUND_SEEDS", {"fixture": ((2, 2),)})
+    source = Image.new("RGB", (5, 5), color=(240, 240, 240))
+    opaque_mask = Image.new("L", source.size, color=255)
+
+    corrected = module._clear_known_enclosed_backgrounds(
+        source, opaque_mask, "fixture"
+    )
+
+    assert corrected.getextrema() == (0, 0)
+    assert len(enqueue_counts) == 25
+    assert set(enqueue_counts.values()) == {1}
 
 
 def _load_script() -> ModuleType:
