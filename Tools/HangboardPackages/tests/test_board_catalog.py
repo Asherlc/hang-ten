@@ -92,6 +92,15 @@ def test_final_inventory_rejects_a_primary_only_draft(tmp_path: Path) -> None:
         module.discover_board_packages(tmp_path, require_complete_inventory=True)
 
 
+def test_discovery_rejects_an_opaque_primary_only_draft(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    draft = write_primary_only_draft(tmp_path / "draft-model")
+    (draft / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="fully transparent pixel"):
+        module.discover_board_packages(tmp_path)
+
+
 def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     write_board_package(tmp_path / "first-model", board_id="duplicate.board")
@@ -164,6 +173,43 @@ def test_completed_package_accepts_a_primary_png_with_actual_alpha_zero(
     inventory = module.discover_board_packages(tmp_path)
 
     assert [item.root.name for item in inventory.packages] == ["fixture-model"]
+
+
+def test_primary_transparency_validation_does_not_decompress_the_whole_image(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_board_catalog_module()
+    write_board_package(tmp_path / "fixture-model")
+
+    def prohibit_full_decompression(*_args, **_kwargs):
+        raise AssertionError("full-image decompression must not be used")
+
+    monkeypatch.setattr(module.zlib, "decompress", prohibit_full_decompression)
+
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [item.root.name for item in inventory.packages] == ["fixture-model"]
+
+
+def test_primary_transparency_validation_stops_unfiltering_after_alpha_zero(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Large already-transparent primaries must not pay Python row work in full."""
+    module = load_board_catalog_module()
+    write_board_package(tmp_path / "fixture-model")
+    original = module._unfilter_png_row
+    calls = 0
+
+    def count_rows(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(module, "_unfilter_png_row", count_rows)
+
+    module.discover_board_packages(tmp_path)
+
+    assert calls == 1
 
 
 def test_discovery_rejects_malformed_completed_package(tmp_path: Path) -> None:

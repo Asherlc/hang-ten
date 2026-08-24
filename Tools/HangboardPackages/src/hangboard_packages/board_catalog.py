@@ -778,34 +778,84 @@ def _png_has_alpha_zero(
     bits_per_pixel = channels * bit_depth
     stride = (width * bits_per_pixel + 7) // 8
     filter_bytes_per_pixel = max(1, (bits_per_pixel + 7) // 8)
+    expected_size = height * (stride + 1)
+    decompressor = zlib.decompressobj()
+    pending = bytearray()
+    previous = bytes(stride)
+    row_count = 0
+    decoded_size = 0
+    transparent_pixel_found = False
+
+    def consume(decoded: bytes) -> None:
+        nonlocal decoded_size, pending, previous, row_count, transparent_pixel_found
+        decoded_size += len(decoded)
+        if transparent_pixel_found:
+            return
+        pending.extend(decoded)
+        offset = 0
+        while len(pending) - offset >= stride + 1:
+            if row_count >= height:
+                raise ValueError(f"{asset_path} has malformed image data")
+            filter_type = pending[offset]
+            row_start = offset + 1
+            row_end = row_start + stride
+            row = _unfilter_png_row(
+                bytes(pending[row_start:row_end]),
+                previous,
+                filter_type,
+                filter_bytes_per_pixel,
+                asset_path,
+            )
+            transparent_pixel_found = transparent_pixel_found or _row_has_alpha_zero(
+                row=row,
+                width=width,
+                bit_depth=bit_depth,
+                color_type=color_type,
+                transparency=transparency,
+            )
+            previous = row
+            row_count += 1
+            offset = row_end
+            if transparent_pixel_found:
+                pending.clear()
+                return
+        if offset:
+            del pending[:offset]
+
     try:
-        encoded = zlib.decompress(b"".join(idat_parts))
+        for idat_part in idat_parts:
+            consume(decompressor.decompress(idat_part))
+        consume(decompressor.flush())
     except zlib.error as error:
         raise ValueError(f"{asset_path} must contain decodable image data") from error
-    expected_size = height * (stride + 1)
-    if len(encoded) != expected_size:
-        raise ValueError(f"{asset_path} has malformed image data")
 
-    rows: list[bytes] = []
-    previous = bytes(stride)
-    offset = 0
-    for _ in range(height):
-        filter_type = encoded[offset]
-        filtered = encoded[offset + 1 : offset + 1 + stride]
-        row = _unfilter_png_row(
-            filtered, previous, filter_type, filter_bytes_per_pixel, asset_path
+    if (
+        not decompressor.eof
+        or decompressor.unused_data
+        or decoded_size != expected_size
+        or (
+            not transparent_pixel_found
+            and (row_count != height or pending)
         )
-        rows.append(row)
-        previous = row
-        offset += stride + 1
+    ):
+        raise ValueError(f"{asset_path} has malformed image data")
+    return transparent_pixel_found
 
+
+def _row_has_alpha_zero(
+    *,
+    row: bytes,
+    width: int,
+    bit_depth: int,
+    color_type: int,
+    transparency: bytes | None,
+) -> bool:
     if color_type == 6:
         sample_bytes = bit_depth // 8
         pixel_bytes = 4 * sample_bytes
         alpha_offset = 3 * sample_bytes
         return any(
             all(row[index + alpha_offset + byte] == 0 for byte in range(sample_bytes))
-            for row in rows
             for index in range(0, len(row), pixel_bytes)
         )
     if color_type == 4:
@@ -814,7 +864,6 @@ def _png_has_alpha_zero(
         alpha_offset = sample_bytes
         return any(
             all(row[index + alpha_offset + byte] == 0 for byte in range(sample_bytes))
-            for row in rows
             for index in range(0, len(row), pixel_bytes)
         )
     if transparency is None:
@@ -825,14 +874,12 @@ def _png_has_alpha_zero(
         }
         return any(
             sample in transparent_indices
-            for row in rows
             for sample in _unpack_png_samples(row, bit_depth, width)
         )
     if color_type == 0 and len(transparency) == 2:
         (transparent_gray,) = struct.unpack(">H", transparency)
         return any(
             sample == transparent_gray
-            for row in rows
             for sample in _unpack_png_samples(row, bit_depth, width)
         )
     if color_type == 2 and len(transparency) == 6:
@@ -840,11 +887,13 @@ def _png_has_alpha_zero(
         sample_bytes = bit_depth // 8
         return any(
             tuple(
-                int.from_bytes(row[index + channel * sample_bytes : index + (channel + 1) * sample_bytes], "big")
+                int.from_bytes(
+                    row[index + channel * sample_bytes : index + (channel + 1) * sample_bytes],
+                    "big",
+                )
                 for channel in range(3)
             )
             == transparent_rgb
-            for row in rows
             for index in range(0, len(row), 3 * sample_bytes)
         )
     return False
@@ -929,7 +978,10 @@ def is_primary_only_draft(root: Path) -> bool:
     if {item.name for item in assets.iterdir()} != {"primary.png"}:
         return False
     primary = assets / "primary.png"
-    return primary.is_file() and not primary.is_symlink()
+    if not primary.is_file() or primary.is_symlink():
+        return False
+    _validate_png_structure(primary, "assets/primary.png")
+    return True
 
 
 def _sort_key(package: BoardPackage) -> tuple[str, str, str, str, str, str]:

@@ -10,6 +10,7 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["Pillow>=12.3.0", "pytest>=9.1.1", "PyYAML>=6.0.2"]
+backdrop = ["rembg[cpu]==2.0.67"]
 
 [project.scripts]
 hangboard-packages = "hangboard_packages.cli:main"

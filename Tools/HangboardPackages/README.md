@@ -26,26 +26,25 @@ the bare build-time interpreter does not need Pillow.
 
 ## Removing white source backdrops
 
-The maintained macOS migration tool uses Apple's on-device
-`VNGenerateForegroundInstanceMaskRequest` to segment each opaque primary PNG.
-It writes the Vision mask into the alpha channel while retaining every decoded
-source RGB sample and the original pixel dimensions. Primaries that already
-contain an alpha-zero pixel are left byte-for-byte unchanged.
+The maintained migration tool uses the pinned `rembg` U-2-Net model to segment
+every primary PNG, including primaries that already have alpha. It writes only
+the model's mask into the alpha channel while retaining every decoded source
+RGB sample and the original pixel dimensions. The first run downloads the
+checksum-verified model into `.context/hangboard-rembg-models`; later runs
+reuse it and create one model session for the complete sorted inventory.
 
-Install the development dependencies, then run the tool from the repository
-root on macOS 14 or newer with Xcode's command-line tools available:
+Install the backdrop-removal dependency, then run the tool from the repository
+root:
 
 ```sh
 .context/hangboard-packages-venv/bin/python -m pip install \
-  -e 'Tools/HangboardPackages[dev]'
+  -e 'Tools/HangboardPackages[backdrop]'
 .context/hangboard-packages-venv/bin/python \
   Tools/HangboardPackages/scripts/remove_primary_backdrops.py --root Hangboards
 ```
 
-The script compiles its checked-in Swift helper once under
-`.context/hangboard-vision-segmentation`, reuses that binary for the complete
-sorted inventory, and fails rather than writing an all-opaque or all-transparent
-result. Generated masks and output files are temporary and atomically replaced.
+The script fails rather than writing an all-opaque or all-transparent result.
+Generated output files are temporary and atomically replaced.
 
 Direct discovery sorts complete packages by manufacturer, board name, board
 ID, and package path. Exact primary-only directories are reported separately
