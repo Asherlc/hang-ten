@@ -643,6 +643,9 @@ def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
     seen_ihdr = False
     seen_idat = False
     width = height = None
+    bit_depth = color_type = interlace_method = None
+    idat_parts: list[bytes] = []
+    transparency: bytes | None = None
     try:
         while offset < len(data):
             if offset + 8 > len(data):
@@ -663,10 +666,21 @@ def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
                     raise ValueError(f"{asset_path} must start with an IHDR chunk")
                 if len(body) != 13:
                     raise ValueError(f"{asset_path} has a malformed IHDR chunk")
-                width, height = struct.unpack_from(">II", body, 0)
+                (
+                    width,
+                    height,
+                    bit_depth,
+                    color_type,
+                    _compression_method,
+                    _filter_method,
+                    interlace_method,
+                ) = struct.unpack(">IIBBBBB", body)
                 seen_ihdr = True
             if chunk_type == b"IDAT":
                 seen_idat = True
+                idat_parts.append(body)
+            if chunk_type == b"tRNS":
+                transparency = body
             if chunk_type == b"IEND":
                 if body:
                     raise ValueError(f"{asset_path} has a malformed IEND chunk")
@@ -676,12 +690,226 @@ def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
                     raise ValueError(f"{asset_path} has trailing data after IEND")
                 if width is None or height is None or width <= 0 or height <= 0:
                     raise ValueError(f"{asset_path} must declare positive dimensions")
+                if asset_path == "assets/primary.png" and not _png_has_alpha_zero(
+                    width=width,
+                    height=height,
+                    bit_depth=bit_depth,
+                    color_type=color_type,
+                    interlace_method=interlace_method,
+                    idat_parts=idat_parts,
+                    transparency=transparency,
+                    asset_path=asset_path,
+                ):
+                    raise ValueError(
+                        f"{asset_path} must contain at least one fully transparent pixel"
+                    )
                 return width, height
             offset = crc_end
     except struct.error as error:
         raise ValueError(f"{asset_path} must be a decodable PNG image") from error
 
     raise ValueError(f"{asset_path} is missing its IEND chunk")
+
+
+def _png_has_alpha_zero(
+    *,
+    width: int,
+    height: int,
+    bit_depth: int | None,
+    color_type: int | None,
+    interlace_method: int | None,
+    idat_parts: list[bytes],
+    transparency: bytes | None,
+    asset_path: str,
+) -> bool:
+    """Inspect decoded PNG samples for alpha zero using only the stdlib."""
+    channels_by_color_type = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
+    channels = channels_by_color_type.get(color_type)
+    if channels is None or bit_depth not in {1, 2, 4, 8, 16}:
+        raise ValueError(f"{asset_path} has an unsupported PNG color format")
+    if color_type in {2, 4, 6} and bit_depth not in {8, 16}:
+        raise ValueError(f"{asset_path} has an unsupported PNG bit depth")
+    if interlace_method != 0:
+        raise ValueError(
+            f"{asset_path} must be non-interlaced for transparency validation"
+        )
+
+    bits_per_pixel = channels * bit_depth
+    stride = (width * bits_per_pixel + 7) // 8
+    filter_bytes_per_pixel = max(1, (bits_per_pixel + 7) // 8)
+    expected_size = height * (stride + 1)
+    decompressor = zlib.decompressobj()
+    pending = bytearray()
+    previous = bytes(stride)
+    row_count = 0
+    decoded_size = 0
+    transparent_pixel_found = False
+
+    def consume(decoded: bytes) -> None:
+        nonlocal decoded_size, pending, previous, row_count, transparent_pixel_found
+        decoded_size += len(decoded)
+        pending.extend(decoded)
+        offset = 0
+        while len(pending) - offset >= stride + 1:
+            if row_count >= height:
+                raise ValueError(f"{asset_path} has malformed image data")
+            filter_type = pending[offset]
+            row_start = offset + 1
+            row_end = row_start + stride
+            if filter_type not in {0, 1, 2, 3, 4}:
+                raise ValueError(f"{asset_path} has an invalid PNG row filter")
+            if not transparent_pixel_found:
+                row = _unfilter_png_row(
+                    bytes(pending[row_start:row_end]),
+                    previous,
+                    filter_type,
+                    filter_bytes_per_pixel,
+                    asset_path,
+                )
+                transparent_pixel_found = _row_has_alpha_zero(
+                    row=row,
+                    width=width,
+                    bit_depth=bit_depth,
+                    color_type=color_type,
+                    transparency=transparency,
+                )
+                previous = row
+            row_count += 1
+            offset = row_end
+        if offset:
+            del pending[:offset]
+
+    try:
+        for idat_part in idat_parts:
+            consume(decompressor.decompress(idat_part))
+        consume(decompressor.flush())
+    except zlib.error as error:
+        raise ValueError(f"{asset_path} must contain decodable image data") from error
+
+    if (
+        not decompressor.eof
+        or decompressor.unused_data
+        or decoded_size != expected_size
+        or row_count != height
+        or pending
+    ):
+        raise ValueError(f"{asset_path} has malformed image data")
+    return transparent_pixel_found
+
+
+def _row_has_alpha_zero(
+    *,
+    row: bytes,
+    width: int,
+    bit_depth: int,
+    color_type: int,
+    transparency: bytes | None,
+) -> bool:
+    if color_type == 6:
+        sample_bytes = bit_depth // 8
+        pixel_bytes = 4 * sample_bytes
+        alpha_offset = 3 * sample_bytes
+        return any(
+            all(row[index + alpha_offset + byte] == 0 for byte in range(sample_bytes))
+            for index in range(0, len(row), pixel_bytes)
+        )
+    if color_type == 4:
+        sample_bytes = bit_depth // 8
+        pixel_bytes = 2 * sample_bytes
+        alpha_offset = sample_bytes
+        return any(
+            all(row[index + alpha_offset + byte] == 0 for byte in range(sample_bytes))
+            for index in range(0, len(row), pixel_bytes)
+        )
+    if transparency is None:
+        return False
+    if color_type == 3:
+        transparent_indices = {
+            index for index, alpha in enumerate(transparency) if alpha == 0
+        }
+        return any(
+            sample in transparent_indices
+            for sample in _unpack_png_samples(row, bit_depth, width)
+        )
+    if color_type == 0 and len(transparency) == 2:
+        (transparent_gray,) = struct.unpack(">H", transparency)
+        return any(
+            sample == transparent_gray
+            for sample in _unpack_png_samples(row, bit_depth, width)
+        )
+    if color_type == 2 and len(transparency) == 6:
+        transparent_rgb = struct.unpack(">HHH", transparency)
+        sample_bytes = bit_depth // 8
+        return any(
+            tuple(
+                int.from_bytes(
+                    row[index + channel * sample_bytes : index + (channel + 1) * sample_bytes],
+                    "big",
+                )
+                for channel in range(3)
+            )
+            == transparent_rgb
+            for index in range(0, len(row), 3 * sample_bytes)
+        )
+    return False
+
+
+def _unfilter_png_row(
+    filtered: bytes,
+    previous: bytes,
+    filter_type: int,
+    bytes_per_pixel: int,
+    asset_path: str,
+) -> bytes:
+    row = bytearray(len(filtered))
+    for index, value in enumerate(filtered):
+        left = row[index - bytes_per_pixel] if index >= bytes_per_pixel else 0
+        above = previous[index]
+        upper_left = (
+            previous[index - bytes_per_pixel] if index >= bytes_per_pixel else 0
+        )
+        if filter_type == 0:
+            predictor = 0
+        elif filter_type == 1:
+            predictor = left
+        elif filter_type == 2:
+            predictor = above
+        elif filter_type == 3:
+            predictor = (left + above) // 2
+        elif filter_type == 4:
+            predictor = _paeth_predictor(left, above, upper_left)
+        else:
+            raise ValueError(f"{asset_path} has an invalid PNG row filter")
+        row[index] = (value + predictor) & 0xFF
+    return bytes(row)
+
+
+def _paeth_predictor(left: int, above: int, upper_left: int) -> int:
+    estimate = left + above - upper_left
+    left_distance = abs(estimate - left)
+    above_distance = abs(estimate - above)
+    upper_left_distance = abs(estimate - upper_left)
+    if left_distance <= above_distance and left_distance <= upper_left_distance:
+        return left
+    if above_distance <= upper_left_distance:
+        return above
+    return upper_left
+
+
+def _unpack_png_samples(row: bytes, bit_depth: int, width: int) -> tuple[int, ...]:
+    if bit_depth == 8:
+        return tuple(row[:width])
+    if bit_depth == 16:
+        return tuple(
+            int.from_bytes(row[index : index + 2], "big")
+            for index in range(0, width * 2, 2)
+        )
+    mask = (1 << bit_depth) - 1
+    return tuple(
+        (row[(index * bit_depth) // 8] >> (8 - bit_depth - (index * bit_depth) % 8))
+        & mask
+        for index in range(width)
+    )
 
 
 def load_board_package(package_root: Path) -> BoardPackage:
@@ -695,7 +923,10 @@ def load_board_package(package_root: Path) -> BoardPackage:
 
 
 def is_primary_only_draft(root: Path) -> bool:
-    """Return whether *root* has exactly ``assets/primary.png`` and no manifest."""
+    """Return whether *root* has exactly ``assets/primary.png`` and no manifest.
+
+    Raises ``ValueError`` when the sole primary PNG is malformed or fully opaque.
+    """
     _require_no_symlinks(root)
     if {item.name for item in root.iterdir()} != {"assets"}:
         return False
@@ -705,7 +936,10 @@ def is_primary_only_draft(root: Path) -> bool:
     if {item.name for item in assets.iterdir()} != {"primary.png"}:
         return False
     primary = assets / "primary.png"
-    return primary.is_file() and not primary.is_symlink()
+    if not primary.is_file() or primary.is_symlink():
+        return False
+    _validate_png_structure(primary, "assets/primary.png")
+    return True
 
 
 def _sort_key(package: BoardPackage) -> tuple[str, str, str, str, str, str]:

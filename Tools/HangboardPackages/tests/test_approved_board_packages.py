@@ -832,7 +832,7 @@ def test_compact_screwless_asset_is_the_single_generated_presentation() -> None:
     repaired = Image.open(repaired_path).convert("RGB")
 
     assert repaired.size == (1774, 457)
-    assert hashlib.sha256(repaired_path.read_bytes()).hexdigest() == "7e39c41e0e3bfb3d61d2ba0c331281bc04c06e98817ecc0fa8e3180f7923216e"
+    assert hashlib.sha256(repaired_path.read_bytes()).hexdigest() == "87ba30f259840deeb0559dd1d7e4cb3f18be3ee16e85f81f5be985557791e13e"
 
 
 def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
