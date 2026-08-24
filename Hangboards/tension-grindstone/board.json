@@ -197,7 +197,7 @@
     {
       "id": "edge-10-8-left",
       "name": "Left 10/8 mm stepped edge",
-      "kind": "edge",
+      "kind": "pocket",
       "geometry": [
         {
           "frame": {
