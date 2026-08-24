@@ -5,23 +5,234 @@
   "name": "Basic Training Board (Long)",
   "subtitle": "Resin training board developed with Kilter.",
   "productURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
-  "dimensions": "79 × 16 × 6 cm",
+  "dimensions": "79 \u00d7 16 \u00d7 6 cm",
   "aspectRatio": 1.5024437927663734,
   "presentation": {
     "assetPath": "assets/primary.png"
   },
   "holds": [
-    { "id": "jug-rounded", "name": "Rounded jug", "kind": "jug", "geometry": [
-      { "frame": {"x": 0.06, "y": 0.39, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
-    ]},
-    { "id": "edge-20", "name": "20 mm rounded edge", "kind": "edge", "sizeMillimeters": 20, "geometry": [
-      { "frame": {"x": 0.06, "y": 0.45, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
-    ]},
-    { "id": "edge-15", "name": "15 mm rounded edge", "kind": "edge", "sizeMillimeters": 15, "geometry": [
-      { "frame": {"x": 0.06, "y": 0.51, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
-    ]},
-    { "id": "edge-10", "name": "10 mm rounded edge", "kind": "edge", "sizeMillimeters": 10, "geometry": [
-      { "frame": {"x": 0.06, "y": 0.565, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0} }
-    ]}
+    {
+      "id": "jug-rounded",
+      "name": "Rounded jug",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.057709642811,
+            "y": 0.39,
+            "width": 0.882290357189,
+            "height": 0.045
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-20",
+      "name": "20 mm rounded edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.060234439818,
+            "y": 0.500722533724,
+            "width": 0.882236279766,
+            "height": 0.038172128055
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-15",
+      "name": "15 mm rounded edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.062885482759,
+            "y": 0.560874478006,
+            "width": 0.879224551074,
+            "height": 0.035852546432
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-10",
+      "name": "10 mm rounded edge",
+      "kind": "edge",
+      "sizeMillimeters": 10,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.062037866623,
+            "y": 0.617774965787,
+            "width": 0.881154223162,
+            "height": 0.037203515152
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    }
   ]
 }

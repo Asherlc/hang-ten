@@ -103,31 +103,54 @@ enum RootTab: Hashable, CaseIterable {
     }
 }
 
+enum RootReviewDestination: Equatable {
+    case workout
+
+    static func initial(environment: [String: String]) -> Self? {
+        #if DEBUG
+        if environment["HANGTEN_REVIEW_WORKOUT"] == "1" {
+            return .workout
+        }
+        #endif
+        return nil
+    }
+}
+
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
 	@StateObject private var workoutAudioCoach = WorkoutAudioCoach()
     @State private var selectedTab = RootTab.initial(
         environment: ProcessInfo.processInfo.environment
     )
+    private let reviewDestination = RootReviewDestination.initial(
+        environment: ProcessInfo.processInfo.environment
+    )
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            TrainView { selectedTab = .plans }
-                .tabItem { Label("Train", systemImage: "figure.climbing") }
-                .tag(RootTab.train)
+		Group {
+			if reviewDestination == .workout,
+			   let plan = store.featuredPlan {
+				WorkoutView(plan: plan)
+			} else {
+				TabView(selection: $selectedTab) {
+					TrainView { selectedTab = .plans }
+						.tabItem { Label("Train", systemImage: "figure.climbing") }
+						.tag(RootTab.train)
 
-            PlansView()
-                .tabItem {
-                    Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
-                }
-                .tag(RootTab.plans)
+					PlansView()
+						.tabItem {
+							Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
+						}
+						.tag(RootTab.plans)
 
-            HistoryView()
-                .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
-                .tag(RootTab.history)
+					HistoryView()
+						.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+						.tag(RootTab.history)
+				}
+				.tint(.hangGreenDark)
 			}
-			.tint(.hangGreenDark)
-			.environmentObject(workoutAudioCoach)
+		}
+		.environmentObject(workoutAudioCoach)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
 			RootViewSessionPersistenceCoordinator(application: UIApplication.shared).flush(store: store)
 		}

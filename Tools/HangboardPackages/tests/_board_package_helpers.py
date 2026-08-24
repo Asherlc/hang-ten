@@ -13,3 +13,28 @@ def presentation_frame(
         frame.width * width,
         frame.height * height,
     )
+
+
+def serialize_geometry(hold: object) -> tuple[dict[str, object], ...]:
+    return tuple(serialize_piece(piece) for piece in hold.geometry)
+
+
+def serialize_piece(piece: object) -> dict[str, object]:
+    return {
+        "frame": {
+            "x": piece.frame.x,
+            "y": piece.frame.y,
+            "width": piece.frame.width,
+            "height": piece.frame.height,
+        },
+        "commands": tuple(serialize_command(command) for command in piece.shape.commands),
+    }
+
+
+def serialize_command(command: object) -> dict[str, object]:
+    serialized: dict[str, object] = {"command": command.command}
+    for key in ("to", "control", "control1", "control2"):
+        value = getattr(command, key)
+        if value is not None:
+            serialized[key] = tuple(value)
+    return serialized
