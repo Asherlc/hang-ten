@@ -558,6 +558,23 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testAppStoreResolutionSelectsOneThreeFingerPocketPerHand() {
+        let defaults = makeDefaults()
+        let store = AppStore(
+            healthKitService: HealthWorkoutSavingSpy(),
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        XCTAssertEqual(
+            store.holdIDs(
+                for: step(targets: [.feature(.pocket, fingerCapacity: 3)]),
+                on: BoardCatalog.defaultBoard
+            ),
+            ["pocket-29-three-left", "pocket-29-three-right"]
+        )
+    }
+
     func testSevenThreeRepeatersResolveExpectedLeftRightEdgePairs() throws {
         let defaults = makeDefaults()
         let store = AppStore(
