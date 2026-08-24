@@ -50,6 +50,30 @@ final class ForceSensorModelsTests: XCTestCase {
         )
     }
 
+    func testConnectionGuidanceFallsBackToAutomaticForUnsupportedStoredProfiles() {
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.detail(for: .scanning, profile: .genericWHC06),
+            "Looking nearby for a supported sensor automatically."
+        )
+    }
+
+    func testDisplayedConnectionErrorUsesTheActiveSupportedProfile() {
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.lastError(
+                "Motherboard scan timed out. Move the sensor closer and try again.",
+                profile: .progressor
+            ),
+            "Tindeq Progressor scan timed out. Move the sensor closer and try again."
+        )
+        XCTAssertEqual(
+            ForceSensorConnectionCopy.lastError(
+                "Motherboard scan timed out. Move the sensor closer and try again.",
+                profile: .whC06
+            ),
+            "A supported sensor scan timed out. Move the sensor closer and try again."
+        )
+    }
+
     func testRegistryResolvesBLEAdaptersAndKeepsAdvertisementOnlyProfilesOutOfConnectionFlow() throws {
         let progressor = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .progressor))
         let pitchSix = try XCTUnwrap(ForceSensorAdapterRegistry.adapter(for: .pitchSix))

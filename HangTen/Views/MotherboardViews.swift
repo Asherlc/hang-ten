@@ -52,7 +52,14 @@ struct MotherboardCard: View {
             HStack {
                 sensorValue(title: "Battery", value: batteryText)
                 Spacer()
-                sensorValue(title: "Last error", value: service.lastError ?? "None", alignment: .trailing)
+                sensorValue(
+                    title: "Last error",
+                    value: ForceSensorConnectionCopy.lastError(
+                        service.lastError,
+                        profile: service.connectedProfile ?? settings.forceSensorProfile
+                    ),
+                    alignment: .trailing
+                )
             }
 
             if service.state.requiresAppSettings {
@@ -497,24 +504,40 @@ enum MotherboardUserVisibleFormatting {
 
 enum ForceSensorConnectionCopy {
     static func detail(for state: MotherboardConnectionState, profile: ForceSensorProfile) -> String {
-        switch state {
+        let displayProfile = displayProfile(for: profile)
+
+        return switch state {
         case .bluetoothUnavailable:
             "Turn on Bluetooth, then check Hang Ten’s Bluetooth access in Settings."
         case .unauthorized:
-            "Allow Bluetooth access for Hang Ten in Settings to connect \(sensorDescription(for: profile))."
+            "Allow Bluetooth access for Hang Ten in Settings to connect \(sensorDescription(for: displayProfile))."
         case .idle, .disconnected:
-            "Connect \(sensorDescription(for: profile)) to see live force while you train."
+            "Connect \(sensorDescription(for: displayProfile)) to see live force while you train."
         case .scanning:
-            "Looking nearby for \(sensorDescription(for: profile))."
+            "Looking nearby for \(sensorDescription(for: displayProfile))."
         case .connecting:
-            "Connecting to \(sensorDescription(for: profile))."
+            "Connecting to \(sensorDescription(for: displayProfile))."
         case .calibrating:
             "Preparing the sensor for live force readings."
         case .streaming:
             "Live force readings are ready."
         case .failed:
-            "Try connecting again. If \(failureSensorDescription(for: profile)) is connected to another app, release it there first, then retry."
+            "Try connecting again. If \(failureSensorDescription(for: displayProfile)) is connected to another app, release it there first, then retry."
         }
+    }
+
+    static func lastError(_ error: String?, profile: ForceSensorProfile) -> String {
+        guard let error else { return "None" }
+
+        let displayProfile = displayProfile(for: profile)
+        return error.replacingOccurrences(
+            of: "Motherboard",
+            with: errorSensorDescription(for: displayProfile)
+        )
+    }
+
+    private static func displayProfile(for profile: ForceSensorProfile) -> ForceSensorProfile {
+        ForceSensorProfile.connectableCases.contains(profile) ? profile : .automatic
     }
 
     private static func sensorDescription(for profile: ForceSensorProfile) -> String {
@@ -523,6 +546,10 @@ enum ForceSensorConnectionCopy {
 
     private static func failureSensorDescription(for profile: ForceSensorProfile) -> String {
         profile == .automatic ? "the supported sensor" : "the \(profile.label)"
+    }
+
+    private static func errorSensorDescription(for profile: ForceSensorProfile) -> String {
+        profile == .automatic ? "A supported sensor" : profile.label
     }
 }
 
