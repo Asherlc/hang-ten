@@ -1572,7 +1572,7 @@ enum LegacyPlanSeedCatalog {
                         hangStep(
                             id: "f80-set-\(set)-rep-\(rep)",
                             title: "F80 · set \(set), rep \(rep)",
-                            instruction: "Hang with both hands at 80% MFSi on the study hold for 10 seconds; rest 6 seconds between repetitions.",
+                            instruction: "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: set == 3 && rep == 12 ? 0 : 6,
@@ -1642,7 +1642,7 @@ enum LegacyPlanSeedCatalog {
     static let evaIntHangs = TrainingPlan(
         id: "research.eva-int-hangs",
         title: "Eva Intermittent Dead-Hangs",
-        subtitle: "Intermittent dead-hang comparison protocol.",
+        subtitle: "Intermittent dead-hangs with 10-second hangs and 5-second rests.",
         level: "Intermediate+",
         sourceLabel: "Eva López hangboard comparison",
         sourceURL: URL(string: "https://pubmed.ncbi.nlm.nih.gov/30988852/")!,
@@ -2074,7 +2074,7 @@ enum LegacyPlanSeedCatalog {
                         hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-right", title: "Round 2 · single-arm recruitment pull", instruction: "Repeat the 5-second single-arm recruitment pull on the right hand. Do not lift off the ground.", accessory: "5s right · rep \(rep) of 5", active: 5, rest: 0, targets: [.feature(.smallEdge)], gripType: .halfCrimp)
                     ])
                 }
-                steps.append(conditioningTask(id: "hoopers-intro-round-2-set-\(set)-kicks", title: "Round 2 · flutter and scissor kicks", instruction: "Perform 20–30 flutter kicks and 20–30 scissor kicks.", accessory: "20–30 each", duration: 90))
+                steps.append(conditioningTask(id: "hoopers-intro-round-2-set-\(set)-kicks", title: "Round 2 · flutter and scissor kicks", instruction: "Perform 20–30 flutter kicks and 20–30 scissor kicks. Protect your lower back and neck.", accessory: "20–30 each", duration: 90))
             }
 
             for set in 1...3 {

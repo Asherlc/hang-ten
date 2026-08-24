@@ -34,17 +34,37 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testRuntimePresentationDoesNotEmitGenericCoaching() {
+    func testInstructionAccessoryContentPreservesSourceBackedPlanText() {
         let rows = InstructionAccessoryCardContent.rows(
-            instruction: "Get into position for the next hang.",
-            accessory: "Cool down, then log how your fingers feel."
+            instruction: "Nice work on the prescribed 7-second hang.",
+            accessory: "Step off and shake out for the prescribed 3-minute recovery."
         )
 
-        XCTAssertEqual(rows, [])
+        XCTAssertEqual(
+            rows,
+            [
+                InstructionAccessoryCardRow(kind: .instruction, text: "Nice work on the prescribed 7-second hang."),
+                InstructionAccessoryCardRow(kind: .accessory, text: "Step off and shake out for the prescribed 3-minute recovery.")
+            ]
+        )
     }
 
     func testAdaptedProvenanceDetailIsNotCustomerFacingAuditNarration() {
         XCTAssertEqual(RoutineProvenance.adapted.detail, "")
+    }
+
+    func testWorkoutPresentationUsesOnlyStepContentOrNeutralState() {
+        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "", duration: 10, phase: .hang, targets: [])
+        XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: false), "Source title")
+        XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: true), "Session complete")
+        XCTAssertEqual(WorkoutPresentationContent.instruction(step: step, countdown: 0, isComplete: false), "Source instruction")
+        XCTAssertNil(WorkoutPresentationContent.instruction(step: step, countdown: 3, isComplete: false))
+        XCTAssertNil(WorkoutPresentationContent.instruction(step: step, countdown: 0, isComplete: true))
+    }
+
+    func testPlanSourcePresentationContainsOnlySourceName() {
+        let plan = LegacyPlanSeedCatalog.maxHangs
+        XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Lattice max hang protocol")
     }
 
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {

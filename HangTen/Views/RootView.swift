@@ -59,14 +59,6 @@ struct InstructionAccessoryCardRow: Equatable {
 }
 
 enum InstructionAccessoryCardContent {
-    private static let genericRuntimeCoaching = [
-        "get into position",
-        "cool down, then log",
-        "take a few easy minutes",
-        "nice work",
-        "step off and shake out"
-    ]
-
     static func rows(instruction: String, accessory: String) -> [InstructionAccessoryCardRow] {
         [
             row(kind: .instruction, text: instruction),
@@ -87,11 +79,27 @@ enum InstructionAccessoryCardContent {
         text: String
     ) -> InstructionAccessoryCardRow? {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty,
-              !genericRuntimeCoaching.contains(where: { trimmed.localizedCaseInsensitiveContains($0) }) else {
+        guard !trimmed.isEmpty else {
             return nil
         }
         return InstructionAccessoryCardRow(kind: kind, text: trimmed)
+    }
+}
+
+enum WorkoutPresentationContent {
+    static func title(step: WorkoutStep, isComplete: Bool) -> String {
+        isComplete ? "Session complete" : step.title
+    }
+
+    static func instruction(step: WorkoutStep, countdown: Int, isComplete: Bool) -> String? {
+        guard !isComplete, countdown == 0 else { return nil }
+        return InstructionAccessoryCardContent.instructionText(step.instruction)
+    }
+}
+
+enum PlanSourcePresentationContent {
+    static func label(for plan: TrainingPlan) -> String {
+        "Source: \(plan.sourceLabel)"
     }
 }
 
@@ -930,7 +938,7 @@ struct PlanDetailView: View {
                     .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(Color.hangGreenDark)
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("Source: \(currentPlan.sourceLabel)")
+                    Text(PlanSourcePresentationContent.label(for: currentPlan))
                         .font(.system(size: 14, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
                 }
@@ -2048,7 +2056,7 @@ struct WorkoutView: View {
 							? "Get ready"
 							: "Step \(step.number) of \(plan.steps.count)"
 				)
-				Text(isComplete ? "Session complete" : step.title)
+				Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
 					.font(.system(size: 22, weight: .bold, design: .rounded))
 					.foregroundStyle(Color.hangInk)
 					.lineLimit(1)
@@ -2092,7 +2100,7 @@ struct WorkoutView: View {
 		isComplete: Bool,
 		showsHoldPreview: Bool
 	) -> some View {
-        let instructionText = InstructionAccessoryCardContent.instructionText(step.instruction)
+        let instructionText = WorkoutPresentationContent.instruction(step: step, countdown: countdown, isComplete: isComplete)
         let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
 		return VStack(alignment: .leading, spacing: 5) {
 			SectionLabel(title: isComplete ? "Complete" : countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions")
@@ -2151,7 +2159,7 @@ struct WorkoutView: View {
             .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
             .accessibilityIdentifier("workout.routinePicker")
 
-            Text(isComplete ? "Session complete" : step.title)
+            Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
 
@@ -2191,7 +2199,7 @@ struct WorkoutView: View {
 		isComplete: Bool,
 		showsHoldPreview: Bool
     ) -> some View {
-        let instructionText = InstructionAccessoryCardContent.instructionText(step.instruction)
+        let instructionText = WorkoutPresentationContent.instruction(step: step, countdown: countdown, isComplete: isComplete)
         let accessoryText = InstructionAccessoryCardContent.accessoryText(step.accessory)
         return VStack(alignment: .leading, spacing: 11) {
             HStack {
