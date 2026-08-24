@@ -1175,7 +1175,7 @@ test("saving a stable editable path sends no local geometry IDs", async () => {
     id: 1,
     key: "stable-piece-0",
     type: "jug",
-    displayPath: "M 10 10 L 30 10 L 30 30 Z",
+    displayPath: "M 10 10 Q 20 5 30 10 L 30 30 Z",
   }]);
   const board = boardFixture(document);
   const client = clientFixture([board]);
@@ -1184,6 +1184,15 @@ test("saving a stable editable path sends no local geometry IDs", async () => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-hold-key="stable-piece-0"]');
     await drag(app, ".path-editor-vertex", [{ x: 10, y: 10 }, { x: 12, y: 12 }]);
+    const control = app.document.querySelector<SVGCircleElement>(".path-editor-control[data-control-id]");
+    const controlID = control?.dataset.controlId;
+    const controlX = Number(control?.getAttribute("cx"));
+    const controlY = Number(control?.getAttribute("cy"));
+    assert.ok(controlID && Number.isFinite(controlX) && Number.isFinite(controlY));
+    await drag(app, `.path-editor-control[data-control-id="${controlID}"]`, [
+      { x: controlX, y: controlY },
+      { x: controlX + 2, y: controlY + 2 },
+    ]);
     await app.click("#save-button");
 
     const saved = JSON.stringify(client.saveCalls[0]?.document);
