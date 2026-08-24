@@ -24,7 +24,7 @@ measurement/feedback—the semantic target only highlights a suitable board
 feature and does not reproduce the study protocol. F100 retains its alternating
 right/left instruction without inventing board-side mappings.
 
-## Field decisions for all 18 built-in plans
+## Field decisions for all 17 built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
@@ -41,7 +41,6 @@ right/left instruction without inventing board-side mappings.
 | `coach.bechtel-three-six-nine` | coach | [Steve Bechtel 3–6–9 ladder protocol](https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/) | title, instruction, duration: 3/6/9 sequence and source loading cue | subtitle, accessory, target, count, interval: three rounds and exact rest values selected from source ranges, plus generic `largeEdge` target | warmUp, cooldown, gripType, fingerConfiguration |
 | `coach.density-hangs` | coach | [Tyler Nelson density hang protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) | title, instruction: source ranges and 2:1 relationship remain identifiable | subtitle, accessory, target, count, duration, interval: 30/15, three reps, three-minute recoveries, set count, and generic `largeEdge`/factual four-finger-pocket targets are app choices within the published ranges | warmUp, cooldown, gripType, fingerConfiguration |
 | `device.zlagboard-sixty-sixty` | device | [Zlagboard endurance protocol](https://strengthclimbing.com/zlagboard-forearm-endurance-workout/) | title, instruction, accessory, count, duration, interval: ten 60/60 sets | subtitle, target: generic `largeEdge` target | warmUp, cooldown, gripType, fingerConfiguration; unsupported feet-supported copy was removed |
-| `lattice.lite-home-adaptations` | coach | [Lattice Training · Lite Guide to Home Adaptations](https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf) | title and the source sample week's named tasks and frequencies | subtitle, instruction, accessory, target, count, duration, interval, gripType: app rows, preview durations, semantic board targets, and structured grip cues are not presented as source prescriptions | warmUp, cooldown, fingerConfiguration |
 | `hoopers-beta.introductory-home-hangboard` | coach | [Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS](https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine) | title and identifiable routine order, counts, ranges, durations, and qualifiers | subtitle, instruction, accessory, target, count, duration, interval, gripType: the app splits the source routine into guided rows and semantic targets | warmUp, cooldown, fingerConfiguration |
 | `method.intermediate-hangboarding.repeaters` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable five-round 5–7-second repeater ranges | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects range endpoints, expands rows, and supplies semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 | `method.intermediate-hangboarding.emom` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, target, count, duration, interval, gripType: app defaults untimed counted work and maps source holds to semantic targets/cues | warmUp, cooldown, fingerConfiguration |
@@ -83,7 +82,6 @@ grip/finger cue.
     {"planID":"coach.bechtel-three-six-nine","sourceType":"coach","sourceLabel":"Steve Bechtel 3–6–9 ladder protocol","sourceURL":"https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/"},
     {"planID":"coach.density-hangs","sourceType":"coach","sourceLabel":"Tyler Nelson density hang protocol","sourceURL":"https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/"},
     {"planID":"device.zlagboard-sixty-sixty","sourceType":"device","sourceLabel":"Zlagboard endurance protocol","sourceURL":"https://strengthclimbing.com/zlagboard-forearm-endurance-workout/"},
-    {"planID":"lattice.lite-home-adaptations","sourceType":"coach","sourceLabel":"Lattice Training · Lite Guide to Home Adaptations","sourceURL":"https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf"},
     {"planID":"hoopers-beta.introductory-home-hangboard","sourceType":"coach","sourceLabel":"Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS","sourceURL":"https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine"},
     {"planID":"method.intermediate-hangboarding.repeaters","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"method.intermediate-hangboarding.emom","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
@@ -147,12 +145,6 @@ grip/finger cue.
     {"planID":"device.zlagboard-sixty-sixty","fields":["title","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
     {"planID":"device.zlagboard-sixty-sixty","fields":["subtitle","target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
     {"planID":"device.zlagboard-sixty-sixty","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-
-    {"planID":"lattice.lite-home-adaptations","fields":["title"],"decision":"keep","sourcePrescription":true},
-    {"planID":"lattice.lite-home-adaptations","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
-    {"planID":"lattice.lite-home-adaptations","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
-    {"planID":"lattice.lite-home-adaptations","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
-    {"planID":"lattice.lite-home-adaptations","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"hoopers-beta.introductory-home-hangboard","fields":["title"],"decision":"keep","sourcePrescription":true},
     {"planID":"hoopers-beta.introductory-home-hangboard","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
@@ -220,9 +212,6 @@ grip/finger cue.
     {"planID":"device.zlagboard-sixty-sixty","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
     {"planID":"device.zlagboard-sixty-sixty","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true},
 
-    {"planID":"lattice.lite-home-adaptations","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
-    {"planID":"lattice.lite-home-adaptations","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
-    {"planID":"lattice.lite-home-adaptations","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"hoopers-beta.introductory-home-hangboard","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"hoopers-beta.introductory-home-hangboard","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"hoopers-beta.introductory-home-hangboard","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},

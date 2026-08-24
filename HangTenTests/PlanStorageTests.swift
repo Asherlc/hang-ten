@@ -1197,9 +1197,15 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
     }
 
+    func testLatticeLiteHomeAdaptationsIsNotAvailableFromBuiltInCatalog() {
+        let removedPlanID = "lattice.lite-home-adaptations"
+
+        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
+    }
+
     func testRequestedSourcePlansAreSeededAndResolved() throws {
         let expectedIDs = [
-            "lattice.lite-home-adaptations",
             "hoopers-beta.introductory-home-hangboard",
             "method.intermediate-hangboarding.repeaters",
             "method.intermediate-hangboarding.emom",
@@ -1211,7 +1217,7 @@ final class PlanStorageTests: XCTestCase {
         })
         XCTAssertEqual(
             expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
-            ["coach", "coach", "coach", "coach", "retailer"]
+            ["coach", "coach", "coach", "retailer"]
         )
     }
 

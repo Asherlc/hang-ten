@@ -2051,28 +2051,6 @@ enum LegacyPlanSeedCatalog {
         )
     }
 
-    static let latticeLiteHomeAdaptations = TrainingPlan(
-        id: "lattice.lite-home-adaptations",
-        title: "Lattice Lite Guide · Home Adaptations",
-        subtitle: "Faithful weekly template with app-guided rows where the PDF gives no task timer.",
-        level: "Intermediate",
-        sourceLabel: "Lattice Training · Lite Guide to Home Adaptations",
-        sourceURL: URL(string: "https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf")!,
-        provenance: .adapted,
-        boardID: nil,
-        steps: numbered([
-            guidedTask(id: "lattice-lite-max-hang", title: "Max hang · 2× weekly", instruction: "Schedule the source max-hang session twice this week. The source sample week gives frequency but no task duration; use a coach or stopwatch.", accessory: "Weekly frequency · 2×", phase: .hang, targets: [.feature(.smallEdge)], gripType: .halfCrimp),
-            guidedTask(id: "lattice-lite-f80-repeaters", title: "80% repeaters · 1× weekly", instruction: "Schedule the source 80% repeater session once this week. Preserve the 80% effort target; the source sample week gives no timer here.", accessory: "Weekly frequency · 1×", phase: .hang, targets: [.feature(.mediumEdge)], gripType: .halfCrimp),
-            guidedTask(id: "lattice-lite-753-forty", title: "7:3s at 40% · 1× weekly", instruction: "Schedule the source 7:3-second repeater session at 40% once this week. The source names the format and frequency, not a full app protocol.", accessory: "Weekly frequency · 1×", phase: .hang, targets: [.feature(.mediumEdge)], gripType: .openHand),
-            guidedTask(id: "lattice-lite-on-the-minute-pull-ups", title: "On-the-minute pull-ups · 1.5× weekly", instruction: "Schedule the source on-the-minute pull-up work one and a half times this week. Preserve the unusual 1.5× sample-week frequency; use the source/coach timing rather than an invented count.", accessory: "Weekly frequency · 1.5×", phase: .pull, targets: [.feature(.jug)]),
-            guidedTask(id: "lattice-lite-weighted-pull-ups", title: "Weighted pull-ups · 1× weekly", instruction: "Schedule weighted pull-ups once this week. The source sample week does not prescribe repetitions or duration in this template.", accessory: "Weekly frequency · 1×", phase: .pull, targets: [.feature(.jug)]),
-            conditioningTask(id: "lattice-lite-floor-core", title: "Floor core · 1× weekly", instruction: "Schedule floor-core work once this week. Use the source's floor-core exercises; this row intentionally does not invent counts or timing.", accessory: "Weekly frequency · 1×"),
-            conditioningTask(id: "lattice-lite-stabilizer", title: "Stabilizer conditioning · 2× weekly", instruction: "Schedule stabilizer conditioning twice this week. Follow the source/coach prescription; no count or duration is supplied by the weekly sample.", accessory: "Weekly frequency · 2×"),
-            conditioningTask(id: "lattice-lite-hip-flexibility", title: "Hip flexibility · 2× weekly", instruction: "Schedule hip-flexibility work twice this week. Use the source guidance and a coach-led or stopwatch-led mobility block.", accessory: "Weekly frequency · 2×"),
-            conditioningTask(id: "lattice-lite-upper-body-flexibility", title: "Upper-body flexibility · 1× weekly", instruction: "Schedule upper-body flexibility once this week. The source names the task and frequency but does not prescribe a duration.", accessory: "Weekly frequency · 1×")
-        ])
-    )
-
     static let hoopersBetaIntroductory = TrainingPlan(
         id: "hoopers-beta.introductory-home-hangboard",
         title: "Hooper's Beta · Introductory Home Hangboard",
@@ -2237,7 +2215,6 @@ enum LegacyPlanSeedCatalog {
             ladders,
             densityHangs,
             zlagboardEndurance,
-            latticeLiteHomeAdaptations,
             hoopersBetaIntroductory,
             methodRepeaters,
             methodEMOM,

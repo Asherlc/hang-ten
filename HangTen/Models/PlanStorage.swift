@@ -1519,7 +1519,6 @@ enum BuiltInPlanLibraryDefinition {
         } else if plan.id.hasPrefix("device.") {
             category = "device"
         } else if [
-            LegacyPlanSeedCatalog.latticeLiteHomeAdaptations.id,
             LegacyPlanSeedCatalog.hoopersBetaIntroductory.id,
             LegacyPlanSeedCatalog.methodRepeaters.id,
             LegacyPlanSeedCatalog.methodEMOM.id
@@ -1536,11 +1535,6 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.latticeLiteHomeAdaptations.id {
-            notes = [
-                "Weekly-template frequencies are preserved exactly from the source sample week.",
-                "The app uses 60-second manual/coach-guided preview rows because the source template does not prescribe task durations or counts."
             ]
         } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
             notes = [
@@ -1724,7 +1718,6 @@ enum PlanCatalog {
     static let ladders = required("coach.bechtel-three-six-nine")
     static let densityHangs = required("coach.density-hangs")
     static let zlagboardEndurance = required("device.zlagboard-sixty-sixty")
-    static let latticeLiteHomeAdaptations = required("lattice.lite-home-adaptations")
     static let hoopersBetaIntroductory = required("hoopers-beta.introductory-home-hangboard")
     static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
