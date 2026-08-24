@@ -1374,11 +1374,6 @@ def _non_empty_string(value: object, label: str) -> str:
     return value
 
 
-def _schema_version_one(value: object, label: str) -> None:
-    if isinstance(value, bool) or not isinstance(value, int) or value != 1:
-        raise BoardPackageError(f"{label} must be 1")
-
-
 def _positive_number(value: object, label: str) -> float:
     if (
         isinstance(value, bool)
