@@ -2,6 +2,59 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testPlanLibraryStoreRejectsFormerSchemaVersionField() throws {
+        let data = Data(
+            #"""
+            {
+              "schemaVersion": 3,
+              "metadata": {
+                "id": "legacy.plan-library",
+                "title": "Legacy plan library",
+                "generatedAt": "2026-08-24",
+                "notes": []
+              },
+              "boardMappings": [],
+              "blocks": [],
+              "plans": []
+            }
+            """#.utf8
+        )
+
+        XCTAssertThrowsError(try PlanLibraryStore(data: data))
+    }
+
+    func testPlanLibraryStoreRejectsFormerMetadataVersionField() throws {
+        let data = Data(
+            #"""
+            {
+              "metadata": {
+                "id": "legacy.plan-library",
+                "version": "3.0.0",
+                "title": "Legacy plan library",
+                "generatedAt": "2026-08-24",
+                "notes": []
+              },
+              "boardMappings": [],
+              "blocks": [],
+              "plans": []
+            }
+            """#.utf8
+        )
+
+        XCTAssertThrowsError(try PlanLibraryStore(data: data))
+    }
+
+    func testPlanLibraryStoreEncodingOmitsFormerVersionFields() throws {
+        let store = try PlanLibraryStore(definition: makeLibrary(steps: []))
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: try store.encodedData()) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(document["metadata"] as? [String: Any])
+
+        XCTAssertNil(document["schemaVersion"])
+        XCTAssertNil(metadata["version"])
+    }
+
     func testBundledPlanLibraryContainsNoVersionFields() throws {
         let document = try XCTUnwrap(
             JSONSerialization.jsonObject(with: bundledPlanLibraryData()) as? [String: Any]
@@ -160,7 +213,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testVersionThreeDefinitionsResolveOrderedSegmentTimingModes() throws {
+    func testUnversionedDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
             target: .feature(.mediumEdge, fallbacks: []),
@@ -238,10 +291,8 @@ final class PlanStorageTests: XCTestCase {
         let data = Data(
             #"""
             {
-              "schemaVersion": 3,
               "metadata": {
                 "id": "segment.fixture",
-                "version": "3.0.0",
                 "title": "Segment fixture",
                 "generatedAt": "2026-08-03",
                 "notes": []
@@ -325,14 +376,12 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(persistedSegments[1].target, .feature(.mediumEdge, fallbacks: []))
     }
 
-    func testSchemaTwoDefinitionsWithoutSegmentsMigrateWithCompatibilitySegments() throws {
+    func testUnversionedDefinitionsWithExplicitSegmentsResolveCompatibilityTiming() throws {
         let data = Data(
             #"""
             {
-              "schemaVersion": 2,
               "metadata": {
                 "id": "legacy.fixture",
-                "version": "2.0.0",
                 "title": "Legacy fixture",
                 "generatedAt": "2026-08-02",
                 "notes": []
@@ -349,7 +398,12 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "30s",
                     "duration": 30,
                     "phase": "rest",
-                    "targets": []
+                    "targets": [],
+                    "segments": [{
+                      "kind": "rest",
+                      "timing": "fixed",
+                      "duration": 30
+                    }]
                   },
                   {
                     "id": "timed",
@@ -359,7 +413,19 @@ final class PlanStorageTests: XCTestCase {
                     "duration": 30,
                     "phase": "hang",
                     "targets": [{ "kind": "edge" }],
-                    "activeDuration": 10
+                    "segments": [
+                      {
+                        "kind": "work",
+                        "target": { "kind": "edge" },
+                        "timing": "fixed",
+                        "duration": 10
+                      },
+                      {
+                        "kind": "rest",
+                        "timing": "fixed",
+                        "duration": 20
+                      }
+                    ]
                   },
                   {
                     "id": "untimed",
@@ -368,7 +434,12 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "Repetitions",
                     "duration": 60,
                     "phase": "pull",
-                    "targets": [{ "kind": "jug" }]
+                    "targets": [{ "kind": "jug" }],
+                    "segments": [{
+                      "kind": "work",
+                      "target": { "kind": "jug" },
+                      "timing": "undefined"
+                    }]
                   }
                 ]
               }],
@@ -395,7 +466,6 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(data: data)
         let steps = try XCTUnwrap(store.plan(id: "legacy.plan")).steps
 
-        XCTAssertEqual(store.definition.schemaVersion, PlanDefinitionSchema.currentVersion)
         XCTAssertEqual(steps.map(\.id), ["rest", "timed.segment-1", "timed.segment-2", "untimed"])
         XCTAssertEqual(steps.map(\.number), [1, 2, 3, 4])
         XCTAssertEqual(
@@ -1504,10 +1574,8 @@ final class PlanStorageTests: XCTestCase {
         boardMappings: [BoardMappingDefinition] = []
     ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
-            schemaVersion: 3,
             metadata: PlanLibraryMetadata(
                 id: "test.library",
-                version: "3.0.0",
                 title: "Test library",
                 generatedAt: "2026-08-02"
             ),
