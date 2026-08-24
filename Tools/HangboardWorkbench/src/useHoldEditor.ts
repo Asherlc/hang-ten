@@ -15,12 +15,30 @@ import {
   normalizedRotationDegrees,
   svgPoint,
 } from "./editor-model.ts";
+import {
+  createEditablePath,
+  deleteEditableAnchor,
+  editablePathAnchor,
+  editablePathAnchorIsInflection,
+  insertEditableInflectionPoint,
+  insertEditableVertex,
+  makeEditableSegmentBendable,
+  makeEditableSegmentStraight,
+  moveEditableAnchor,
+  moveEditableControl,
+  roundEditableAnchor,
+  serializeEditablePath,
+  snapEditableSegmentHorizontal,
+  snapEditableSegmentVertical,
+  translateEditablePath,
+} from "./editable-path.ts";
 import { isConstrainedHandle, isConstrainedShape } from "./shape-constraints.ts";
 import type {
   Dialogs,
   Bounds,
   ConstrainedHandle,
   EditorDocument,
+  EditablePath,
   HoldRegion,
   MillimeterRange,
   PathCommand,
@@ -35,11 +53,11 @@ interface DragState {
   active: boolean;
   type: "vertex" | "control" | "path" | "rotation" | "constrained-resize" | null;
   holdKey: string | null;
-  commandIndex: number;
-  controlIndex: number;
+  anchorID: string | null;
+  controlID: string | null;
   startX: number;
   startY: number;
-  commands: PathCommand[] | null;
+  editablePath: EditablePath | null;
   originalPath: string | null;
   originalPaths: Array<{ key: string; path: string; pivot?: Point; shapeConstraint?: ShapeConstraint }> | null;
   originalConstraint: ShapeConstraint | null;
@@ -56,7 +74,7 @@ interface DragState {
 
 interface VertexSelection {
   holdKey: string;
-  commandIndex: number;
+  anchorID: string;
 }
 
 interface VertexMenuState {
@@ -65,20 +83,27 @@ interface VertexMenuState {
   x: number;
   y: number;
   kind: "vertex" | "segment";
-  segmentAfterIndex: number | null;
+  segmentID: string | null;
   segmentPoint: Point | null;
   invoker: Element;
+}
+
+interface EditablePathState {
+  document: EditorDocument;
+  holdKey: string;
+  displayPath: string;
+  path: EditablePath;
 }
 
 const EMPTY_DRAG: DragState = {
   active: false,
   type: null,
   holdKey: null,
-  commandIndex: -1,
-  controlIndex: -1,
+  anchorID: null,
+  controlID: null,
   startX: 0,
   startY: 0,
-  commands: null,
+  editablePath: null,
   originalPath: null,
   originalPaths: null,
   originalConstraint: null,
@@ -113,7 +138,8 @@ export interface UseHoldEditorOptions {
 }
 
 export interface HoldEditorActions {
-  selectedVertexIndex: number | null;
+  editablePath: EditablePath | null;
+  selectedAnchorID: string | null;
   vertexMenu: { x: number; y: number; kind: "vertex" | "segment" } | null;
   canDeleteSelectedVertex: boolean;
   selectedVertexIsInflection: boolean;
@@ -126,7 +152,7 @@ export interface HoldEditorActions {
   addHold(): void;
   duplicateAndMirrorHold(): void;
   deleteHold(): void;
-  selectVertex(index: number): void;
+  selectAnchor(anchorID: string): void;
   deleteSelectedVertex(): void;
   roundSelectedVertex(): void;
   addInflectionPoint(): void;
@@ -152,12 +178,16 @@ export interface HoldEditorActions {
   onContextMenu(event: ReactMouseEvent<SVGSVGElement>): void;
 }
 
-function cloneCommands(commands: readonly PathCommand[]): PathCommand[] {
-  return commands.map((command) => ({
-    ...command,
-    points: command.points.map((point) => ({ ...point })),
-    controls: command.controls.map((point) => ({ ...point })),
-  }));
+function cloneEditablePath(path: EditablePath): EditablePath {
+  return {
+    regionKey: path.regionKey,
+    closed: path.closed,
+    segments: path.segments.map((segment) => ({
+      ...segment,
+      anchor: { ...segment.anchor },
+      controls: segment.controls.map((control) => ({ ...control })),
+    })),
+  };
 }
 
 function translateCommands(commands: PathCommand[], deltaX: number, deltaY: number): void {
@@ -304,10 +334,8 @@ function outlinePreset(shape: ShapeConstraintShape): "oval" | "circle" | "pill" 
   return shape === "roundedRectangle" ? "rounded-rectangle" : shape;
 }
 
-function canDeleteVertex(commands: readonly PathCommand[], index: number): boolean {
-  const command = commands[index];
-  if (!command || command.type === "Z" || (command.type === "M" && index !== 0)) return false;
-  return commands.filter((candidate) => candidate.type !== "Z" && candidate.points.length > 0).length > 3;
+function canDeleteEditableAnchor(path: EditablePath, anchorID: string): boolean {
+  return path.segments.length > 3 && editablePathAnchor(path, anchorID) !== undefined;
 }
 
 function selectedPhysicalHolds(document: EditorDocument, selectedKeys: readonly string[]): HoldRegion[][] {
@@ -336,34 +364,44 @@ function uniqueRegionKey(document: EditorDocument, baseKey: string): string {
   return `${baseKey}-${suffix}`;
 }
 
-function hasVertex(commands: readonly PathCommand[], index: number): boolean {
-  const command = commands[index];
-  return !!command && command.type !== "Z" && command.points.length > 0;
-}
-
-function closestEditableSegmentIndex(
-  commands: readonly PathCommand[],
+function closestEditableSegmentID(
+  path: EditablePath,
   point: Point,
   maximumDistance = 15,
-): number | null {
-  let closestIndex: number | null = null;
+): string | null {
+  let closestID: string | null = null;
   let closestDistance = maximumDistance;
-  for (let index = 0; index + 1 < commands.length; index += 1) {
-    const start = commands[index]?.points.at(-1);
-    const next = commands[index + 1];
-    const segment: PathCommand | undefined = next?.type === "Z"
-      && index + 1 === commands.length - 1
-      && commands[0]?.type === "M"
-      ? { type: "L", points: [commands[0].points[0]!], controls: [] }
-      : next?.type === "L" || next?.type === "Q" || next?.type === "C" ? next : undefined;
-    if (!start || !segment) continue;
+  for (let index = 0; index < path.segments.length; index += 1) {
+    const candidate = editableSegmentAfter(path, path.segments[index]!.id);
+    if (!candidate) continue;
+    const { start, command: segment } = candidate;
     const distance = closestDistanceOnSegment(start, segment, point);
     if (distance < closestDistance) {
       closestDistance = distance;
-      closestIndex = index;
+      closestID = path.segments[index]!.id;
     }
   }
-  return closestIndex;
+  return closestID;
+}
+
+function editableSegmentAfter(
+  path: EditablePath,
+  segmentID: string,
+): { start: Point; command: PathCommand } | null {
+  const index = path.segments.findIndex((segment) => segment.id === segmentID);
+  const start = path.segments[index]?.anchor;
+  const next = path.segments[index + 1] ?? (path.closed ? path.segments[0] : undefined);
+  if (!start || !next) return null;
+  return {
+    start,
+    command: index + 1 === path.segments.length
+      ? { type: "L", points: [{ ...next.anchor }], controls: [] }
+      : {
+        type: next.type === "M" ? "L" : next.type,
+        points: [{ ...next.anchor }],
+        controls: next.controls.map((control) => ({ ...control })),
+      },
+  };
 }
 
 export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions {
@@ -387,8 +425,41 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const previewDocumentRef = useRef<EditorDocument | null>(null);
   const pendingPreviewRef = useRef<EditorDocument | null>(null);
   const dragSvgRef = useRef<SVGSVGElement | null>(null);
+  const editablePathRef = useRef<EditablePathState | null>(null);
+  const locallyUpdatedEditablePathRef = useRef(false);
   const [vertexSelection, setVertexSelection] = useState<VertexSelection | null>(null);
   const [vertexMenuState, setVertexMenuState] = useState<VertexMenuState | null>(null);
+  let editablePath: EditablePath | null = null;
+  if (document && selectedHold && !selectedHold.shapeConstraint) {
+    const current = editablePathRef.current;
+    try {
+      const matchesSelection = current?.holdKey === selectedHold.key
+        && current.displayPath === selectedHold.displayPath;
+      const localUpdate = locallyUpdatedEditablePathRef.current;
+      if (matchesSelection && (current.document === document || localUpdate || dragRef.current.active)) {
+        editablePath = current.path;
+        if (localUpdate) {
+          current.document = document;
+          locallyUpdatedEditablePathRef.current = false;
+        }
+      } else {
+        editablePath = createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+        editablePathRef.current = {
+          document,
+          holdKey: selectedHold.key,
+          displayPath: selectedHold.displayPath,
+          path: editablePath,
+        };
+        locallyUpdatedEditablePathRef.current = false;
+      }
+    } catch {
+      editablePathRef.current = null;
+      locallyUpdatedEditablePathRef.current = false;
+    }
+  } else {
+    editablePathRef.current = null;
+    locallyUpdatedEditablePathRef.current = false;
+  }
   const reportInvalidPath = useCallback((error: unknown): void => {
     actions.editDocument(() => { throw error; }, {
       failureStatus: "Could not edit — selected hold has an invalid path.",
@@ -405,249 +476,197 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   let canMakeSelectedSegmentStraight = false;
   let canMakeSelectedSegmentHorizontal = false;
   let canMakeSelectedSegmentVertical = false;
-  if (!busy && document && selectedHold && !selectedHold.shapeConstraint) {
-    try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
-      if (vertexSelection?.holdKey === selectedHold.key) {
-        selectionIsCurrent = hasVertex(commands, vertexSelection.commandIndex);
-        canDeleteSelectedVertex = selectionIsCurrent
-          && canDeleteVertex(commands, vertexSelection.commandIndex);
-        selectedVertexIsInflection = selectionIsCurrent
-          && pathEditor.isInflectionVertex(commands, vertexSelection.commandIndex);
-      }
-      if (selectionIsCurrent && vertexSelection) {
-        const candidate = cloneCommands(commands);
-        canRoundSelectedVertex = pathEditor.roundVertex(candidate, vertexSelection.commandIndex);
-      }
-      if (vertexMenuState?.document === document
-        && vertexMenuState.holdKey === selectedHold.key
-        && vertexMenuState.segmentAfterIndex !== null) {
-        const inflectionCandidate = cloneCommands(commands);
-        canAddInflectionPoint = vertexMenuState.segmentPoint !== null
-          && pathEditor.addInflectionPoint(
-            inflectionCandidate,
-            vertexMenuState.segmentAfterIndex,
-            vertexMenuState.segmentPoint,
-          );
-        const candidate = cloneCommands(commands);
-        canMakeSelectedSegmentBendable = pathEditor.makeSegmentBendable(
-          candidate,
-          vertexMenuState.segmentAfterIndex,
-        );
-        const straightCandidate = cloneCommands(commands);
-        canMakeSelectedSegmentStraight = pathEditor.makeSegmentStraight(
-          straightCandidate,
-          vertexMenuState.segmentAfterIndex,
-        );
-        const horizontalCandidate = cloneCommands(commands);
-        canMakeSelectedSegmentHorizontal = pathEditor.snapSegmentHorizontal(
-          horizontalCandidate,
-          vertexMenuState.segmentAfterIndex,
-        );
-        const verticalCandidate = cloneCommands(commands);
-        canMakeSelectedSegmentVertical = pathEditor.snapSegmentVertical(
-          verticalCandidate,
-          vertexMenuState.segmentAfterIndex,
-        );
-      }
-    } catch {
-      selectionIsCurrent = false;
-      canDeleteSelectedVertex = false;
-      selectedVertexIsInflection = false;
-      canRoundSelectedVertex = false;
-      canAddInflectionPoint = false;
-      canMakeSelectedSegmentBendable = false;
-      canMakeSelectedSegmentStraight = false;
-      canMakeSelectedSegmentHorizontal = false;
-      canMakeSelectedSegmentVertical = false;
+  if (!busy && document && selectedHold && !selectedHold.shapeConstraint && editablePath) {
+    if (vertexSelection?.holdKey === selectedHold.key) {
+      selectionIsCurrent = editablePathAnchor(editablePath, vertexSelection.anchorID) !== undefined;
+      canDeleteSelectedVertex = selectionIsCurrent
+        && canDeleteEditableAnchor(editablePath, vertexSelection.anchorID);
+      selectedVertexIsInflection = selectionIsCurrent
+        && editablePathAnchorIsInflection(editablePath, vertexSelection.anchorID, pathEditor);
+    }
+    if (selectionIsCurrent && vertexSelection) {
+      const candidate = cloneEditablePath(editablePath);
+      canRoundSelectedVertex = roundEditableAnchor(candidate, vertexSelection.anchorID, pathEditor);
+    }
+    if (vertexMenuState?.document === document
+      && vertexMenuState.holdKey === selectedHold.key
+      && vertexMenuState.segmentID !== null) {
+      const { segmentID, segmentPoint } = vertexMenuState;
+      const inflectionCandidate = cloneEditablePath(editablePath);
+      canAddInflectionPoint = segmentPoint !== null
+        && insertEditableInflectionPoint(inflectionCandidate, segmentID, segmentPoint, pathEditor);
+      const bendableCandidate = cloneEditablePath(editablePath);
+      canMakeSelectedSegmentBendable = makeEditableSegmentBendable(bendableCandidate, segmentID, pathEditor);
+      const straightCandidate = cloneEditablePath(editablePath);
+      canMakeSelectedSegmentStraight = makeEditableSegmentStraight(straightCandidate, segmentID, pathEditor);
+      const horizontalCandidate = cloneEditablePath(editablePath);
+      canMakeSelectedSegmentHorizontal = snapEditableSegmentHorizontal(horizontalCandidate, segmentID, pathEditor);
+      const verticalCandidate = cloneEditablePath(editablePath);
+      canMakeSelectedSegmentVertical = snapEditableSegmentVertical(verticalCandidate, segmentID, pathEditor);
     }
   }
-  const selectedVertexIndex = selectionIsCurrent ? vertexSelection!.commandIndex : null;
+  const selectedAnchorID = selectionIsCurrent ? vertexSelection!.anchorID : null;
   const menuIsCurrent = vertexMenuState?.document === document
     && vertexMenuState.holdKey === selectedHold?.key
-    && (selectionIsCurrent || vertexMenuState.segmentAfterIndex !== null);
+    && (selectionIsCurrent || vertexMenuState.segmentID !== null);
   const vertexMenu = menuIsCurrent
     ? { x: vertexMenuState.x, y: vertexMenuState.y, kind: vertexMenuState.kind }
     : null;
 
-  const selectVertex = useCallback((index: number): void => {
-    if (busy || !selectedHold || selectedHold.shapeConstraint || !Number.isInteger(index) || index < 0) return;
-    try {
-      if (!hasVertex(pathEditor.parsePath(selectedHold.displayPath), index)) return;
-      setVertexSelection({ holdKey: selectedHold.key, commandIndex: index });
-      setVertexMenuState(null);
-    } catch {
-      // Invalid paths do not render selectable vertices.
-    }
-  }, [busy, pathEditor, selectedHold]);
+  const selectAnchor = useCallback((anchorID: string): void => {
+    if (busy || !selectedHold || selectedHold.shapeConstraint || !editablePath) return;
+    if (editablePathAnchor(editablePath, anchorID) === undefined) return;
+    setVertexSelection({ holdKey: selectedHold.key, anchorID });
+    setVertexMenuState(null);
+  }, [busy, editablePath, selectedHold]);
+
+  const commitEditablePath = useCallback((path: EditablePath, displayPath: string, nextStatus: string): boolean => {
+    if (!document || !selectedHold) return false;
+    const edited = actions.editDocument((candidate) => {
+      const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+      if (hold && !hold.shapeConstraint) hold.displayPath = displayPath;
+    }, { status: nextStatus });
+    if (!edited) return false;
+    editablePathRef.current = { document, holdKey: selectedHold.key, displayPath, path };
+    locallyUpdatedEditablePathRef.current = true;
+    return true;
+  }, [actions, document, selectedHold]);
 
   const deleteSelectedVertex = useCallback((): void => {
-    if (!canDeleteSelectedVertex || !document || !selectedHold || selectedVertexIndex === null) return;
+    if (!canDeleteSelectedVertex || !editablePath || selectedAnchorID === null) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
-      if (!canDeleteVertex(commands, selectedVertexIndex)) return;
-      pathEditor.deleteVertex(commands, selectedVertexIndex);
-      const nextPath = pathEditor.serializePath(commands);
-      if (nextPath === selectedHold.displayPath) return;
-      const edited = actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
-      }, { status });
-      if (!edited) return;
+      const candidate = cloneEditablePath(editablePath);
+      if (!deleteEditableAnchor(candidate, selectedAnchorID, pathEditor)) return;
+      const nextPath = serializeEditablePath(candidate, pathEditor);
+      if (!commitEditablePath(candidate, nextPath, status)) return;
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
   }, [
-    actions,
     canDeleteSelectedVertex,
-    document,
+    commitEditablePath,
+    editablePath,
     pathEditor,
     reportInvalidPath,
-    selectedHold,
-    selectedVertexIndex,
+    selectedAnchorID,
     status,
   ]);
 
   const roundSelectedVertex = useCallback((): void => {
-    if (!canRoundSelectedVertex || !document || !selectedHold || selectedVertexIndex === null
-      || vertexMenuState?.holdKey !== selectedHold.key || vertexMenuState.segmentAfterIndex !== null) return;
+    if (!canRoundSelectedVertex || !editablePath || selectedAnchorID === null || !selectedHold
+      || vertexMenuState?.holdKey !== selectedHold.key || vertexMenuState.segmentID !== null) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
-      if (!pathEditor.roundVertex(commands, selectedVertexIndex)) return;
-      const nextPath = pathEditor.serializePath(commands);
-      const edited = actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
-      }, { status: "Corner rounded. Save when ready." });
-      if (!edited) return;
+      const candidate = cloneEditablePath(editablePath);
+      if (!roundEditableAnchor(candidate, selectedAnchorID, pathEditor)) return;
+      if (!commitEditablePath(candidate, serializeEditablePath(candidate, pathEditor), "Corner rounded. Save when ready.")) return;
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
-  }, [actions, canRoundSelectedVertex, document, pathEditor, reportInvalidPath, selectedHold, selectedVertexIndex, vertexMenuState]);
+  }, [canRoundSelectedVertex, commitEditablePath, editablePath, pathEditor, reportInvalidPath, selectedAnchorID, selectedHold, vertexMenuState]);
 
   const addInflectionPoint = useCallback((): void => {
-    const afterIndex = vertexMenuState?.segmentAfterIndex;
+    const segmentID = vertexMenuState?.segmentID;
     const point = vertexMenuState?.segmentPoint;
-    if (!canAddInflectionPoint || !document || !selectedHold || !point
-      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    if (!canAddInflectionPoint || !editablePath || !selectedHold || !point
+      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
-      if (!pathEditor.addInflectionPoint(commands, afterIndex, point)) return;
-      const nextPath = pathEditor.serializePath(commands);
-      const edited = actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
-      }, { status: "Inflection point added. Save when ready." });
-      if (!edited) return;
+      const candidate = cloneEditablePath(editablePath);
+      if (!insertEditableInflectionPoint(candidate, segmentID, point, pathEditor)) return;
+      if (!commitEditablePath(candidate, serializeEditablePath(candidate, pathEditor), "Inflection point added. Save when ready.")) return;
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
   }, [
-    actions,
     canAddInflectionPoint,
-    document,
+    commitEditablePath,
+    editablePath,
     pathEditor,
     reportInvalidPath,
     selectedHold,
-    vertexMenuState?.segmentAfterIndex,
+    vertexMenuState?.segmentID,
     vertexMenuState?.segmentPoint,
   ]);
 
   const makeSelectedSegmentBendable = useCallback((): void => {
-    const afterIndex = vertexMenuState?.segmentAfterIndex;
-    if (!canMakeSelectedSegmentBendable || !document || !selectedHold
-      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    const segmentID = vertexMenuState?.segmentID;
+    if (!canMakeSelectedSegmentBendable || !editablePath || !selectedHold
+      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
-      if (!pathEditor.makeSegmentBendable(commands, afterIndex)) return;
-      const nextPath = pathEditor.serializePath(commands);
-      const edited = actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
-      }, { status: "Line converted to a bendable curve. Save when ready." });
-      if (!edited) return;
+      const candidate = cloneEditablePath(editablePath);
+      if (!makeEditableSegmentBendable(candidate, segmentID, pathEditor)) return;
+      if (!commitEditablePath(candidate, serializeEditablePath(candidate, pathEditor), "Line converted to a bendable curve. Save when ready.")) return;
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
   }, [
-    actions,
     canMakeSelectedSegmentBendable,
-    document,
+    commitEditablePath,
+    editablePath,
     pathEditor,
     reportInvalidPath,
     selectedHold,
-    vertexMenuState?.segmentAfterIndex,
+    vertexMenuState?.segmentID,
   ]);
 
   const makeSelectedSegmentStraight = useCallback((): void => {
-    const afterIndex = vertexMenuState?.segmentAfterIndex;
-    if (!canMakeSelectedSegmentStraight || !document || !selectedHold
-      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    const segmentID = vertexMenuState?.segmentID;
+    if (!canMakeSelectedSegmentStraight || !editablePath || !selectedHold
+      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
-      if (!pathEditor.makeSegmentStraight(commands, afterIndex)) return;
-      const nextPath = pathEditor.serializePath(commands);
-      const edited = actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
-      }, { status: "Curve made straight. Save when ready." });
-      if (!edited) return;
+      const candidate = cloneEditablePath(editablePath);
+      if (!makeEditableSegmentStraight(candidate, segmentID, pathEditor)) return;
+      if (!commitEditablePath(candidate, serializeEditablePath(candidate, pathEditor), "Curve made straight. Save when ready.")) return;
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
   }, [
-    actions,
     canMakeSelectedSegmentStraight,
-    document,
+    commitEditablePath,
+    editablePath,
     pathEditor,
     reportInvalidPath,
     selectedHold,
-    vertexMenuState?.segmentAfterIndex,
+    vertexMenuState?.segmentID,
   ]);
 
   const snapSelectedSegment = useCallback((axis: "horizontal" | "vertical"): void => {
-    const afterIndex = vertexMenuState?.segmentAfterIndex;
+    const segmentID = vertexMenuState?.segmentID;
     const canSnap = axis === "horizontal"
       ? canMakeSelectedSegmentHorizontal
       : canMakeSelectedSegmentVertical;
-    if (!canSnap || !document || !selectedHold
-      || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
+    if (!canSnap || !editablePath || !selectedHold
+      || vertexMenuState?.holdKey !== selectedHold.key || segmentID === null || segmentID === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const candidate = cloneEditablePath(editablePath);
       const snapped = axis === "horizontal"
-        ? pathEditor.snapSegmentHorizontal(commands, afterIndex)
-        : pathEditor.snapSegmentVertical(commands, afterIndex);
+        ? snapEditableSegmentHorizontal(candidate, segmentID, pathEditor)
+        : snapEditableSegmentVertical(candidate, segmentID, pathEditor);
       if (!snapped) return;
-      const nextPath = pathEditor.serializePath(commands);
-      const edited = actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
-      }, { status: `Line made ${axis}. Save when ready.` });
-      if (!edited) return;
+      if (!commitEditablePath(candidate, serializeEditablePath(candidate, pathEditor), `Line made ${axis}. Save when ready.`)) return;
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
   }, [
-    actions,
     canMakeSelectedSegmentHorizontal,
     canMakeSelectedSegmentVertical,
-    document,
+    commitEditablePath,
+    editablePath,
     pathEditor,
     reportInvalidPath,
     selectedHold,
-    vertexMenuState?.segmentAfterIndex,
+    vertexMenuState?.segmentID,
   ]);
 
   const makeSelectedSegmentHorizontal = useCallback((): void => {
@@ -908,6 +927,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         else delete region.shapeConstraint;
       }
     }
+    editablePathRef.current = null;
+    locallyUpdatedEditablePathRef.current = false;
     previewDocumentRef.current = restored;
     actions.replaceDocument(restored, { dirty: drag.originalDirty, validation, status });
   }, [actions, document]);
@@ -980,6 +1001,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     else drag.pointerId = null;
     dragRef.current = { ...EMPTY_DRAG };
     dragSvgRef.current = null;
+    editablePathRef.current = null;
+    locallyUpdatedEditablePathRef.current = false;
     previewDocumentRef.current = document;
     pendingPreviewRef.current = null;
   }, [document, releasePointer]);
@@ -990,9 +1013,18 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const target = targetElement(event);
     if (!target) return;
     if (event.button !== 0) return;
+    if (!selectedHold.shapeConstraint) {
+      try {
+        createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+      } catch (error: unknown) {
+        reportInvalidPath(error);
+        return;
+      }
+    }
     if (target.classList.contains("path-editor-vertex") && !selectedHold.shapeConstraint) {
-      const index = Number(target.getAttribute("data-index"));
-      selectVertex(index);
+      const anchorID = target.getAttribute("data-anchor-id");
+      if (!anchorID) return;
+      selectAnchor(anchorID);
     }
     const point = svgPoint(event.currentTarget, event);
     let next: DragState | null = null;
@@ -1036,13 +1068,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } else if (target.classList.contains("path-editor-vertex")
       || target.classList.contains("path-editor-control")
       || (target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key)) {
-      let commands: PathCommand[];
-      try {
-        commands = pathEditor.parsePath(selectedHold.displayPath);
-      } catch (error: unknown) {
-        reportInvalidPath(error);
+      if (!editablePath) {
+        try {
+          createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+        } catch (error: unknown) {
+          reportInvalidPath(error);
+        }
         return;
       }
+      const anchorID = target.getAttribute("data-anchor-id");
+      const controlID = target.getAttribute("data-control-id");
+      if (target.classList.contains("path-editor-vertex") && !anchorID) return;
+      if (target.classList.contains("path-editor-control") && !controlID) return;
+      const originalEditablePath = cloneEditablePath(editablePath);
       next = {
         ...EMPTY_DRAG,
         active: true,
@@ -1050,17 +1088,17 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           ? "vertex"
           : target.classList.contains("path-editor-control") ? "control" : "path",
         holdKey: selectedHold.key,
-        commandIndex: Number(target.getAttribute("data-index") ?? -1),
-        controlIndex: Number(target.getAttribute("data-control") ?? -1),
+        anchorID,
+        controlID,
         startX: point.x,
         startY: point.y,
-        commands,
+        editablePath: originalEditablePath,
         originalPath: selectedHold.displayPath,
         originalConstraint: cloneConstraint(selectedHold.shapeConstraint) ?? null,
         originalDirty: dirty,
         pointerId: event.pointerId,
         pathBounds: target.classList.contains("region-shape")
-          ? pathEditor.pathBounds(commands)
+          ? pathEditor.pathBounds(pathEditor.parsePath(serializeEditablePath(originalEditablePath, pathEditor)))
           : null,
       };
     }
@@ -1076,7 +1114,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } catch {
       // Tests and older browsers may not implement pointer capture.
     }
-  }, [busy, dirty, document, pathEditor, reportInvalidPath, selectVertex, selectedHold, selectedKeys]);
+  }, [busy, dirty, document, editablePath, pathEditor, reportInvalidPath, selectAnchor, selectedHold, selectedKeys]);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -1134,18 +1172,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         );
         return;
       }
-    } else if (drag.commands) {
-      const commands = cloneCommands(drag.commands);
+    } else if (drag.editablePath) {
+      const editable = cloneEditablePath(drag.editablePath);
       let deltaX = point.x - drag.startX;
       let deltaY = point.y - drag.startY;
       if (drag.type === "vertex") {
-        pathEditor.moveVertex(commands, drag.commandIndex, deltaX, deltaY);
+        if (!drag.anchorID || !moveEditableAnchor(editable, drag.anchorID, deltaX, deltaY)) return;
       } else if (drag.type === "control") {
-        const control = commands[drag.commandIndex]?.controls[drag.controlIndex];
-        if (control) {
-          control.x += deltaX;
-          control.y += deltaY;
-        }
+        if (!drag.controlID || !moveEditableControl(editable, drag.controlID, deltaX, deltaY)) return;
       } else if (drag.type === "path") {
         if (!event.altKey && drag.pathBounds) {
           deltaX += nearbyGuideEdgeOffset(
@@ -1161,9 +1195,16 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             deltaY,
           );
         }
-        translateCommands(commands, deltaX, deltaY);
+        translateEditablePath(editable, deltaX, deltaY);
       }
-      hold.displayPath = pathEditor.serializePath(commands);
+      hold.displayPath = serializeEditablePath(editable, pathEditor);
+      editablePathRef.current = {
+        document: candidate,
+        holdKey: drag.holdKey ?? selectedHold?.key ?? "",
+        displayPath: hold.displayPath,
+        path: editable,
+      };
+      locallyUpdatedEditablePathRef.current = true;
     }
     drag.changed = !dragMatchesOriginal(drag, candidate);
     if (draggedRegionsMatch(drag, preview, candidate)) return;
@@ -1171,7 +1212,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     pendingPreviewRef.current = actions.replaceDocument(candidate, {
       dirty: drag.originalDirty || drag.changed,
     });
-  }, [actions, document, horizontalGuideYs, pathEditor, releasePointer, restoreDrag, verticalGuideXs]);
+  }, [actions, document, horizontalGuideYs, pathEditor, releasePointer, restoreDrag, selectedHold, verticalGuideXs]);
 
   const completeDrag = useCallback((event: ReactPointerEvent<SVGSVGElement>): void => {
     const drag = dragRef.current;
@@ -1235,59 +1276,58 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const onDoubleClick = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
-    if (busy || !document || !selectedHold || selectedHold.shapeConstraint || !target
-      || target.classList.contains("path-editor-vertex")
-      || target.classList.contains("path-editor-control")) return;
-    const point = svgPoint(event.currentTarget, event);
-    let commands: PathCommand[];
+    if (busy || !document || !selectedHold || selectedHold.shapeConstraint || !target) return;
     try {
-      commands = pathEditor.parsePath(selectedHold.displayPath);
+      createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
     } catch (error: unknown) {
       reportInvalidPath(error);
       return;
     }
-    for (let index = 0; index < commands.length; index += 1) {
-      const command = commands[index]!;
-      if (command.type === "Z") continue;
-      const nextIndex = (index + 1) % commands.length;
-      const next = commands[nextIndex]!;
-      if (next.type === "Z" && command.type === "M") continue;
-      const start = command.points.at(-1)!;
-      const segment: PathCommand = next.type === "Z"
-        ? { type: "L", points: [{ ...commands[0]!.points[0]! }], controls: [] }
-        : next;
-      if (closestDistanceOnSegment(start, segment, point) >= 15) continue;
-      const insert = segment.type === "L" ? closestPointOnLine(start, segment.points[0]!, point) : point;
-      const edited = actions.editDocument((candidate) => {
-        const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (!hold) return;
-        const edited = pathEditor.parsePath(hold.displayPath);
-        pathEditor.addVertex(edited, index, insert.x, insert.y);
-        hold.displayPath = pathEditor.serializePath(edited);
-      }, { status });
-      if (edited) {
-        setVertexSelection(null);
-        setVertexMenuState(null);
-      }
-      return;
+    if (target.classList.contains("path-editor-vertex")
+      || target.classList.contains("path-editor-control") || !editablePath) return;
+    const point = svgPoint(event.currentTarget, event);
+    const segmentID = closestEditableSegmentID(editablePath, point);
+    if (!segmentID) return;
+    const segment = editableSegmentAfter(editablePath, segmentID);
+    if (!segment) return;
+    try {
+      const insert = segment.command.type === "L"
+        ? closestPointOnLine(segment.start, segment.command.points[0]!, point)
+        : point;
+      const candidate = cloneEditablePath(editablePath);
+      if (!insertEditableVertex(candidate, segmentID, insert, pathEditor)) return;
+      if (!commitEditablePath(candidate, serializeEditablePath(candidate, pathEditor), status)) return;
+      setVertexSelection(null);
+      setVertexMenuState(null);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
     }
-  }, [actions, busy, document, pathEditor, reportInvalidPath, selectedHold, status]);
+  }, [busy, commitEditablePath, document, editablePath, pathEditor, reportInvalidPath, selectedHold, status]);
 
   const onContextMenu = useCallback((event: ReactMouseEvent<SVGSVGElement>): void => {
     const target = targetElement(event);
     if (busy || !document || !selectedHold || selectedHold.shapeConstraint || !target) return;
+    try {
+      createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+    } catch (error: unknown) {
+      reportInvalidPath(error);
+      return;
+    }
+    if (!editablePath) {
+      return;
+    }
     if (target.classList.contains("path-editor-vertex")) {
-      const index = Number(target.getAttribute("data-index"));
-      if (!Number.isInteger(index) || index < 0) return;
+      const anchorID = target.getAttribute("data-anchor-id");
+      if (!anchorID) return;
       event.preventDefault();
-      selectVertex(index);
+      selectAnchor(anchorID);
       setVertexMenuState({
         document,
         holdKey: selectedHold.key,
         x: event.clientX,
         y: event.clientY,
         kind: "vertex",
-        segmentAfterIndex: null,
+        segmentID: null,
         segmentPoint: null,
         invoker: target,
       });
@@ -1295,20 +1335,19 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     }
     if (!target.classList.contains("region-shape") || target.getAttribute("data-hold-key") !== selectedHold.key) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
       const point = svgPoint(event.currentTarget, event);
-      const afterIndex = closestEditableSegmentIndex(commands, point);
-      if (afterIndex === null) return;
-      const inflectionCandidate = cloneCommands(commands);
-      const bendableCandidate = cloneCommands(commands);
-      const straightCandidate = cloneCommands(commands);
-      const horizontalCandidate = cloneCommands(commands);
-      const verticalCandidate = cloneCommands(commands);
-      if (!pathEditor.addInflectionPoint(inflectionCandidate, afterIndex, point)
-        && !pathEditor.makeSegmentBendable(bendableCandidate, afterIndex)
-        && !pathEditor.makeSegmentStraight(straightCandidate, afterIndex)
-        && !pathEditor.snapSegmentHorizontal(horizontalCandidate, afterIndex)
-        && !pathEditor.snapSegmentVertical(verticalCandidate, afterIndex)) return;
+      const segmentID = closestEditableSegmentID(editablePath, point);
+      if (segmentID === null) return;
+      const inflectionCandidate = cloneEditablePath(editablePath);
+      const bendableCandidate = cloneEditablePath(editablePath);
+      const straightCandidate = cloneEditablePath(editablePath);
+      const horizontalCandidate = cloneEditablePath(editablePath);
+      const verticalCandidate = cloneEditablePath(editablePath);
+      if (!insertEditableInflectionPoint(inflectionCandidate, segmentID, point, pathEditor)
+        && !makeEditableSegmentBendable(bendableCandidate, segmentID, pathEditor)
+        && !makeEditableSegmentStraight(straightCandidate, segmentID, pathEditor)
+        && !snapEditableSegmentHorizontal(horizontalCandidate, segmentID, pathEditor)
+        && !snapEditableSegmentVertical(verticalCandidate, segmentID, pathEditor)) return;
       event.preventDefault();
       setVertexSelection(null);
       setVertexMenuState({
@@ -1317,14 +1356,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         x: event.clientX,
         y: event.clientY,
         kind: "segment",
-        segmentAfterIndex: afterIndex,
+        segmentID,
         segmentPoint: point,
         invoker: target,
       });
     } catch (error: unknown) {
       reportInvalidPath(error);
     }
-  }, [busy, document, pathEditor, reportInvalidPath, selectVertex, selectedHold]);
+  }, [busy, document, editablePath, pathEditor, reportInvalidPath, selectAnchor, selectedHold]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
@@ -1355,7 +1394,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         dismissVertexMenu(true);
         return;
       }
-      if ((event.key === "Delete" || event.key === "Backspace") && selectedVertexIndex !== null) {
+      if ((event.key === "Delete" || event.key === "Backspace") && selectedAnchorID !== null) {
         if (!canDeleteSelectedVertex) return;
         event.preventDefault();
         deleteSelectedVertex();
@@ -1373,6 +1412,23 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       const step = event.shiftKey ? 10 : 1;
       const deltaX = event.key === "ArrowRight" ? step : event.key === "ArrowLeft" ? -step : 0;
       const deltaY = event.key === "ArrowDown" ? step : event.key === "ArrowUp" ? -step : 0;
+      if (editablePath) {
+        const next = cloneEditablePath(editablePath);
+        translateEditablePath(next, deltaX, deltaY);
+        const nextPath = serializeEditablePath(next, pathEditor);
+        const edited = actions.editDocument((candidate) => {
+          const hold = candidate.regions.find((region) => region.key === selectedHold.key);
+          if (hold) hold.displayPath = nextPath;
+        }, {
+          status: "Hold nudged. Save when ready.",
+          failureStatus: "Nudge reverted — contour is invalid.",
+        });
+        if (edited) {
+          editablePathRef.current = { document, holdKey: selectedHold.key, displayPath: nextPath, path: next };
+          locallyUpdatedEditablePathRef.current = true;
+        }
+        return;
+      }
       actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
         if (!hold) return;
@@ -1394,15 +1450,17 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     deleteSelectedVertex,
     dismissVertexMenu,
     document,
+    editablePath,
     pathEditor,
     rotateHold,
     selectedHold,
-    selectedVertexIndex,
+    selectedAnchorID,
     vertexMenu,
   ]);
 
   return {
-    selectedVertexIndex,
+    editablePath,
+    selectedAnchorID,
     vertexMenu,
     canDeleteSelectedVertex,
     selectedVertexIsInflection,
@@ -1415,7 +1473,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     addHold,
     duplicateAndMirrorHold,
     deleteHold,
-    selectVertex,
+    selectAnchor,
     deleteSelectedVertex,
     roundSelectedVertex,
     addInflectionPoint,

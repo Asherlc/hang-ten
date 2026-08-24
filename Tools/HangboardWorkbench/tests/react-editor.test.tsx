@@ -1149,6 +1149,50 @@ async function drag(
   await app.pointer("#editor-svg", end, { pointerId: 7, clientX: last.x, clientY: last.y });
 }
 
+test("a freeform anchor keeps its local target ID while it is dragged", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    const anchor = app.document.querySelector<SVGCircleElement>(".path-editor-vertex");
+    const id = anchor?.dataset.anchorId;
+    assert.ok(id);
+
+    await drag(app, `.path-editor-vertex[data-anchor-id="${id}"]`, [{ x: 10, y: 10 }, { x: 14, y: 12 }]);
+
+    const moved = app.document.querySelector<SVGCircleElement>(`.path-editor-vertex[data-anchor-id="${id}"]`);
+    assert.equal(moved?.getAttribute("cx"), "14");
+    assert.equal(moved?.getAttribute("cy"), "12");
+  });
+});
+
+test("insertion retains unrelated local target IDs while undo and redo keep canonical paths", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    const originalPath = paths(app)[0];
+    const unrelated = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-vertex")]
+      .find((anchor) => anchor.getAttribute("cx") === "30" && anchor.getAttribute("cy") === "30");
+    const unrelatedID = unrelated?.dataset.anchorId;
+    assert.ok(unrelatedID);
+
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+    const insertedPath = paths(app)[0];
+    assert.equal(insertedPath, "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.ok(app.document.querySelector(`.path-editor-vertex[data-anchor-id="${unrelatedID}"]`));
+
+    assert.equal(await app.keyDown("body", "z", { metaKey: true }), true);
+    assert.equal(paths(app)[0], originalPath);
+    assert.equal(await app.keyDown("body", "z", { metaKey: true, shiftKey: true }), true);
+    assert.equal(paths(app)[0], insertedPath);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("guide controls create horizontal and vertical guides at the selected hold center", async () => {
   const square = documentFixture([{
     id: 1,
