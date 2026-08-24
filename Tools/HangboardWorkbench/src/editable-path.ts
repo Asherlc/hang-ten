@@ -177,6 +177,20 @@ export function createEditablePath(
   return path;
 }
 
+export function cloneEditablePath(path: EditablePath): EditablePath {
+  const clone: EditablePath = {
+    regionKey: path.regionKey,
+    closed: path.closed,
+    segments: path.segments.map((segment) => ({
+      ...segment,
+      anchor: { ...segment.anchor },
+      controls: segment.controls.map((control) => ({ ...control })),
+    })),
+  };
+  allocators.set(clone, { nextOrdinal: allocatorFor(path).nextOrdinal });
+  return clone;
+}
+
 export function serializeEditablePath(path: EditablePath, pathEditor: PathEditor): string {
   return pathEditor.serializePath(toPathCommands(path));
 }

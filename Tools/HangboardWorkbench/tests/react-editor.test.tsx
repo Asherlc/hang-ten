@@ -1230,6 +1230,101 @@ test("insertion retains unrelated local target IDs while undo and redo keep cano
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("an inserted vertex stays selected through drag and rotation so Delete removes that vertex", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+
+    const inserted = app.document.querySelector<SVGCircleElement>('.path-editor-vertex[data-index="1"]');
+    const insertedID = inserted?.dataset.anchorId;
+    assert.ok(insertedID);
+    await drag(app, `.path-editor-vertex[data-anchor-id="${insertedID}"]`, [
+      { x: 20, y: 10 },
+      { x: 20, y: 12 },
+    ]);
+    assert.equal(
+      app.document.querySelector('.path-editor-vertex.selected')?.getAttribute("data-anchor-id"),
+      insertedID,
+    );
+
+    await app.click("#rotate-cw-button");
+    const rotatedSelection = app.document.querySelector<SVGCircleElement>(
+      `.path-editor-vertex[data-anchor-id="${insertedID}"]`,
+    );
+    assert.equal(rotatedSelection?.classList.contains("selected"), true);
+    assert.equal(rotatedSelection?.getAttribute("data-index"), "1");
+
+    const expectedCommands = pathEditor.parsePath(paths(app)[0]!);
+    pathEditor.deleteVertex(expectedCommands, 1);
+    const expectedPath = pathEditor.serializePath(expectedCommands);
+    assert.equal(await app.keyDown("body", "Delete"), true);
+    assert.equal(paths(app)[0], expectedPath);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("deleting then inserting in one edit session never reuses a local vertex ID", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    const deletedID = app.document.querySelector<SVGCircleElement>(
+      '.path-editor-vertex[data-index="3"]',
+    )?.dataset.anchorId;
+    assert.ok(deletedID);
+
+    await app.pointer(`.path-editor-vertex[data-anchor-id="${deletedID}"]`, "pointerdown", {
+      button: 0,
+      pointerId: 31,
+      clientX: 10,
+      clientY: 30,
+    });
+    await app.pointer("#editor-svg", "pointerup", {
+      button: 0,
+      pointerId: 31,
+      clientX: 10,
+      clientY: 30,
+    });
+    assert.equal(await app.keyDown("body", "Delete"), true);
+    assert.equal(app.document.querySelector(`[data-anchor-id="${deletedID}"]`), null);
+
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+    const currentIDs = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-vertex")]
+      .map((anchor) => anchor.dataset.anchorId);
+    assert.equal(currentIDs.includes(deletedID), false);
+    assert.equal(new Set(currentIDs).size, currentIDs.length);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("vertex accessibility labels follow current rendered order after insertion", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+
+    const labels = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-vertex")]
+      .map((anchor) => anchor.getAttribute("aria-label"));
+    assert.deepEqual(labels, ["Start vertex", "Vertex 2", "Vertex 3", "Vertex 4", "Vertex 5"]);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("guide controls create horizontal and vertical guides at the selected hold center", async () => {
   const square = documentFixture([{
     id: 1,

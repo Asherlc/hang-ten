@@ -483,7 +483,7 @@ export function HoldCanvas({
                       strokeWidth="1.5"
                       role="button"
                       tabIndex={busy ? -1 : 0}
-                      aria-label={anchor.isStart ? "Start vertex" : `Vertex ${anchor.ordinal + 1}`}
+                      aria-label={anchor.isStart ? "Start vertex" : `Vertex ${segmentIndex + 1}`}
                       aria-pressed={editor.selectedAnchorID === anchor.id}
                       onFocus={() => editor.selectAnchor(anchor.id)}
                       onKeyDown={(event) => {

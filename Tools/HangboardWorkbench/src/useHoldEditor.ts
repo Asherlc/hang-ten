@@ -16,6 +16,7 @@ import {
   svgPoint,
 } from "./editor-model.ts";
 import {
+  cloneEditablePath,
   createEditablePath,
   deleteEditableAnchor,
   editablePathAnchor,
@@ -27,6 +28,7 @@ import {
   moveEditableAnchor,
   moveEditableControl,
   roundEditableAnchor,
+  rotateEditablePath,
   serializeEditablePath,
   snapEditableSegmentHorizontal,
   snapEditableSegmentVertical,
@@ -176,18 +178,6 @@ export interface HoldEditorActions {
   onLostPointerCapture(event: ReactPointerEvent<SVGSVGElement>): void;
   onDoubleClick(event: ReactMouseEvent<SVGSVGElement>): void;
   onContextMenu(event: ReactMouseEvent<SVGSVGElement>): void;
-}
-
-function cloneEditablePath(path: EditablePath): EditablePath {
-  return {
-    regionKey: path.regionKey,
-    closed: path.closed,
-    segments: path.segments.map((segment) => ({
-      ...segment,
-      anchor: { ...segment.anchor },
-      controls: segment.controls.map((control) => ({ ...control })),
-    })),
-  };
 }
 
 function translateCommands(commands: PathCommand[], deltaX: number, deltaY: number): void {
@@ -690,15 +680,37 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const rotateHold = useCallback((degrees: number): void => {
     if (busy || !document || !selectedHold) return;
     const holds = selectedPhysicalHolds(document, selectedKeys);
-    actions.editDocument((candidate) => {
+    const angleRadians = ((degrees % 360) * Math.PI) / 180;
+    const selectedPhysicalHold = holds.find((hold) => (
+      hold.some((region) => region.key === selectedHold.key)
+    ));
+    const rotatedEditablePath = editablePath && selectedPhysicalHold
+      ? cloneEditablePath(editablePath)
+      : null;
+    if (rotatedEditablePath && selectedPhysicalHold) {
+      rotateEditablePath(
+        rotatedEditablePath,
+        angleRadians,
+        holdCentroid(selectedPhysicalHold, pathEditor),
+        pathEditor,
+      );
+    }
+    const rotatedDisplayPath = rotatedEditablePath
+      ? serializeEditablePath(rotatedEditablePath, pathEditor)
+      : null;
+    const edited = actions.editDocument((candidate) => {
       for (const hold of holds) {
         const siblingKeys = new Set(hold.map((region) => region.key));
         const pivot = holdCentroid(hold, pathEditor);
         for (const region of candidate.regions) {
           if (!siblingKeys.has(region.key)) continue;
-          const commands = pathEditor.parsePath(region.displayPath);
-          pathEditor.rotatePath(commands, ((degrees % 360) * Math.PI) / 180, pivot);
-          region.displayPath = pathEditor.serializePath(commands);
+          if (region.key === selectedHold.key && rotatedDisplayPath !== null) {
+            region.displayPath = rotatedDisplayPath;
+          } else {
+            const commands = pathEditor.parsePath(region.displayPath);
+            pathEditor.rotatePath(commands, angleRadians, pivot);
+            region.displayPath = pathEditor.serializePath(commands);
+          }
           if (region.shapeConstraint) {
             region.shapeConstraint = {
               ...region.shapeConstraint,
@@ -711,7 +723,16 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       status: "Hold rotated. Save when ready.",
       failureStatus: "Rotation reverted — contour is invalid.",
     });
-  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
+    if (edited && rotatedEditablePath && rotatedDisplayPath !== null) {
+      editablePathRef.current = {
+        document,
+        holdKey: selectedHold.key,
+        displayPath: rotatedDisplayPath,
+        path: rotatedEditablePath,
+      };
+      locallyUpdatedEditablePathRef.current = true;
+    }
+  }, [actions, busy, document, editablePath, pathEditor, selectedHold, selectedKeys]);
 
   const addHold = useCallback((): void => {
     if (busy || !document) return;
@@ -1046,6 +1067,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
           }));
         }),
+        editablePath: editablePath ? cloneEditablePath(editablePath) : null,
         originalDirty: dirty,
         pivot,
         lastAngle: Math.atan2(point.y - pivot.y, point.x - pivot.x),
@@ -1140,9 +1162,27 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       for (const original of drag.originalPaths) {
         const region = candidate.regions.find((value) => value.key === original.key);
         if (!region) continue;
-        const commands = pathEditor.parsePath(original.path);
-        pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
-        region.displayPath = pathEditor.serializePath(commands);
+        if (original.key === drag.holdKey && drag.editablePath && !original.shapeConstraint) {
+          const rotatedEditablePath = cloneEditablePath(drag.editablePath);
+          rotateEditablePath(
+            rotatedEditablePath,
+            drag.totalAngle,
+            original.pivot ?? drag.pivot,
+            pathEditor,
+          );
+          region.displayPath = serializeEditablePath(rotatedEditablePath, pathEditor);
+          editablePathRef.current = {
+            document: candidate,
+            holdKey: original.key,
+            displayPath: region.displayPath,
+            path: rotatedEditablePath,
+          };
+          locallyUpdatedEditablePathRef.current = true;
+        } else {
+          const commands = pathEditor.parsePath(original.path);
+          pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
+          region.displayPath = pathEditor.serializePath(commands);
+        }
         if (original.shapeConstraint) {
           region.shapeConstraint = {
             ...original.shapeConstraint,
@@ -1235,7 +1275,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         }
       }
       validateEditorDocument(candidate);
-      actions.replaceDocument(candidate, {
+      const committedDocument = actions.replaceDocument(candidate, {
         dirty: true,
         historySnapshot: drag.originalDocument ?? undefined,
         validation: "",
@@ -1243,6 +1283,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           ? "Hold rotated. Save when ready."
           : "Contour updated. Save when ready.",
       });
+      const currentEditablePath = editablePathRef.current;
+      const committedHold = committedDocument.regions.find((region) => region.key === drag.holdKey);
+      if (currentEditablePath && committedHold
+        && currentEditablePath.holdKey === committedHold.key
+        && currentEditablePath.displayPath === committedHold.displayPath) {
+        currentEditablePath.document = committedDocument;
+        locallyUpdatedEditablePathRef.current = false;
+      }
     } catch (error: unknown) {
       restoreDrag(
         drag.type === "rotation"

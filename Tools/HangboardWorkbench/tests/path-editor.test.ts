@@ -20,6 +20,7 @@ import {
   snapSegmentVertical,
 } from "../src/path-editor.ts";
 import {
+  cloneEditablePath,
   createEditablePath,
   deleteEditableAnchor,
   insertEditableVertex,
@@ -173,6 +174,29 @@ test("deleting the start vertex preserves the promoted anchor identity and start
   assert.equal(deleteEditableAnchor(editable, deletedID, pathEditor), true);
   assert.equal(editable.segments[0]?.anchor.id, promotedID);
   assert.equal(editable.segments[0]?.anchor.isStart, true);
+});
+
+test("cloning after deletion preserves the session allocator high-water mark", () => {
+  const editable = createEditablePath(
+    "hold-a-piece-0",
+    "M 0 0 L 10 0 L 10 10 L 0 10 Z",
+    pathEditor,
+  );
+  const deletedAnchorID = editable.segments[3]!.anchor.id;
+  const afterDeletion = cloneEditablePath(editable);
+  assert.equal(deleteEditableAnchor(afterDeletion, deletedAnchorID, pathEditor), true);
+
+  const continuedSession = cloneEditablePath(afterDeletion);
+  assert.equal(insertEditableVertex(
+    continuedSession,
+    continuedSession.segments[0]!.id,
+    { x: 5, y: 0 },
+    pathEditor,
+  ), true);
+
+  const anchorIDs = continuedSession.segments.map((segment) => segment.anchor.id);
+  assert.equal(anchorIDs.includes(deletedAnchorID), false);
+  assert.equal(new Set(anchorIDs).size, anchorIDs.length);
 });
 
 test("makeSegmentBendable replaces a straight segment with a geometrically identical cubic", () => {
