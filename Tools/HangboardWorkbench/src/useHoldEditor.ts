@@ -97,6 +97,7 @@ const GUIDE_SNAP_TOLERANCE = 6;
 
 export interface UseHoldEditorOptions {
   document: EditorDocument | null;
+  documentIdentity?: string;
   selectedHold: HoldRegion | null;
   selectedKeys: readonly string[];
   dirty: boolean;
@@ -158,6 +159,10 @@ function cloneCommands(commands: readonly PathCommand[]): PathCommand[] {
     points: command.points.map((point) => ({ ...point })),
     controls: command.controls.map((point) => ({ ...point })),
   }));
+}
+
+function bendableSegmentKey(holdKey: string, afterIndex: number): string {
+  return `${holdKey}:${afterIndex}`;
 }
 
 function translateCommands(commands: PathCommand[], deltaX: number, deltaY: number): void {
@@ -369,6 +374,7 @@ function closestEditableSegmentIndex(
 export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions {
   const {
     document,
+    documentIdentity,
     selectedHold,
     selectedKeys,
     dirty,
@@ -384,11 +390,15 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     reservedHoldIDs = [],
   } = options;
   const dragRef = useRef<DragState>({ ...EMPTY_DRAG });
+  const bendableSegmentsRef = useRef(new Set<string>());
   const previewDocumentRef = useRef<EditorDocument | null>(null);
   const pendingPreviewRef = useRef<EditorDocument | null>(null);
   const dragSvgRef = useRef<SVGSVGElement | null>(null);
   const [vertexSelection, setVertexSelection] = useState<VertexSelection | null>(null);
   const [vertexMenuState, setVertexMenuState] = useState<VertexMenuState | null>(null);
+  useEffect(() => {
+    bendableSegmentsRef.current.clear();
+  }, [documentIdentity]);
   const reportInvalidPath = useCallback((error: unknown): void => {
     actions.editDocument(() => { throw error; }, {
       failureStatus: "Could not edit — selected hold has an invalid path.",
@@ -572,6 +582,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
       }, { status: "Line converted to a bendable curve. Save when ready." });
       if (!edited) return;
+      bendableSegmentsRef.current.add(bendableSegmentKey(selectedHold.key, afterIndex));
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
@@ -1047,6 +1058,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         ? closestEditableSegmentIndex(commands, point)
         : null;
       const bendsSegment = bendableSegmentAfterIndex !== null
+        && !selectedHold.shapeConstraint
+        && bendableSegmentsRef.current.has(bendableSegmentKey(selectedHold.key, bendableSegmentAfterIndex))
         && commands[bendableSegmentAfterIndex + 1]?.type === "C";
       next = {
         ...EMPTY_DRAG,

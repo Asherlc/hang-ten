@@ -84,6 +84,9 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   }, []);
   const editor = useHoldEditor({
     document: state.document,
+    documentIdentity: state.board
+      ? `${state.board.boardId}:${state.board.selectedPresentationID ?? "default"}`
+      : undefined,
     selectedHold,
     selectedKeys: state.selectedKeys,
     dirty: state.dirty,

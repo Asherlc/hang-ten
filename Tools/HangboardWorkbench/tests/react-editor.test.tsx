@@ -1436,18 +1436,74 @@ test("the second cubic control stays independently draggable after Make bendable
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("dragging a bendable cubic pulls its midpoint to the pointer without moving anchors", async () => {
+test("dragging a cubic made bendable by its menu action pulls its midpoint to the pointer", async () => {
   const square = documentFixture([
-    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z" },
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
   ]);
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
     await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
 
     await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
 
     assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
+});
+
+test("a bendable segment remains opt-in after undo and redo", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), true);
+
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("dragging a constrained cubic moves its whole path instead of bending it", async () => {
+  const oval = documentFixture([
+    {
+      id: 1,
+      key: "oval",
+      type: "jug",
+      displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+      shapeConstraint: { shape: "oval", rotationDegrees: 0 },
+    },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="oval"]');
+
+    await drag(app, '[data-hold-key="oval"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 20 C 16.666667 20 23.333333 20 30 20 L 30 40 L 10 40 Z");
+  }, dependenciesFixture(boardFixture(oval)));
+});
+
+test("dragging an imported custom cubic moves its whole path instead of bending it", async () => {
+  const custom = documentFixture([
+    { id: 1, key: "custom", type: "jug", displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="custom"]');
+
+    await drag(app, '[data-hold-key="custom"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 20 C 16.666667 20 23.333333 20 30 20 L 30 40 L 10 40 Z");
+  }, dependenciesFixture(boardFixture(custom)));
 });
 
 test("line menu snaps a diagonal custom-outline segment to the chosen axis", async () => {
