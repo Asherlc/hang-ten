@@ -105,7 +105,9 @@ def _assert_mirrored_piece(left: dict[str, object], right: dict[str, object]) ->
 
 @pytest.mark.parametrize("board_id", MIRRORED_PAIRS)
 def test_coderabbit_flagged_pairs_are_exact_mirrors(board_id: str) -> None:
-    board = json.loads((REPO_ROOT / "Hangboards" / board_id / "board.json").read_text())
+    board = json.loads(
+        (REPO_ROOT / "Hangboards" / board_id / "board.json").read_text(encoding="utf-8")
+    )
     holds = {hold["id"]: hold for hold in board["holds"]}
     for left_id, right_id in MIRRORED_PAIRS[board_id]:
         left_geometry = holds[left_id]["geometry"]
