@@ -87,6 +87,47 @@ test("makeSegmentBendable replaces a straight segment with a geometrically ident
   assert.equal(makeSegmentBendable(commands, 0), false, "curves cannot be converted twice");
 });
 
+test("makeSegmentBendable marks its replacement cubic", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
+
+  makeSegmentBendable(commands, 0);
+
+  assert.equal(commands[1]?.bendable, true);
+});
+
+test("splitting a bendable cubic preserves bendability on both descendants", () => {
+  const commands = parsePath("M 0 0 C 3 0 7 0 10 0 L 10 10 Z");
+  commands[1]!.bendable = true;
+
+  addVertex(commands, 0, 5, 0);
+
+  assert.equal(commands[1]?.bendable, true);
+  assert.equal(commands[2]?.bendable, true);
+});
+
+test("adding an inflection point to a bendable cubic preserves both descendant markers", () => {
+  const commands = parsePath("M 0 0 C 3 0 7 0 10 0 L 10 10 Z");
+  commands[1]!.bendable = true;
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 4, y: 0 }), true);
+
+  assert.equal(commands[1]?.bendable, true);
+  assert.equal(commands[2]?.bendable, true);
+});
+
+test("straightening or deleting a bendable cubic removes its marker", () => {
+  const straightened = parsePath("M 0 0 C 3 0 7 0 10 0 L 10 10 Z");
+  straightened[1]!.bendable = true;
+  assert.equal(makeSegmentStraight(straightened, 0), true);
+  assert.equal(straightened[1]?.type, "L");
+  assert.equal(straightened[1]?.bendable, undefined);
+
+  const deleted = parsePath("M 0 0 L 10 0 C 13 0 17 0 20 0 L 20 10 L 0 10 Z");
+  deleted[2]!.bendable = true;
+  deleteVertex(deleted, 1);
+  assert.equal(deleted.some((command) => command.bendable === true), false);
+});
+
 test("makeSegmentBendable converts a closing edge while retaining one final close command", () => {
   const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
 

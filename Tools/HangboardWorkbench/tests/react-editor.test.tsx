@@ -1452,6 +1452,85 @@ test("dragging a cubic made bendable by its menu action pulls its midpoint to th
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("a saved bendable segment reloads as pullable with unchanged endpoint anchors", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  let persistedBoard = boardFixture(square);
+  const client: WorkbenchClient = {
+    ...clientFixture([persistedBoard]),
+    async getBoard(): Promise<Board> {
+      return structuredClone(persistedBoard);
+    },
+    async saveBoard(_boardId, document): Promise<Board> {
+      persistedBoard = { ...persistedBoard, document: structuredClone(document) };
+      return structuredClone(persistedBoard);
+    },
+  };
+  const dependencies = dependenciesFixture(persistedBoard, { client });
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+    await app.click("#save-button");
+    await app.flush();
+    await app.flush();
+  }, dependencies);
+
+  assert.deepEqual(persistedBoard.document.regions[0]?.bendableCommandIndexes, [1]);
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependencies);
+});
+
+test("splitting a marked cubic leaves either descendant pullable", async () => {
+  const markedCurve = documentFixture([{
+    id: 1,
+    key: "curve",
+    type: "jug",
+    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+    bendableCommandIndexes: [1],
+  }]);
+  for (const { start, end, commandIndex, expectedControl } of [
+    {
+      start: { x: 15, y: 10 },
+      end: { x: 15, y: 20 },
+      commandIndex: 1,
+      expectedControl: { x: 15, y: 23.333333 },
+    },
+    {
+      start: { x: 25, y: 10 },
+      end: { x: 25, y: 20 },
+      commandIndex: 2,
+      expectedControl: { x: 25, y: 23.333333 },
+    },
+  ]) {
+    await withEditor(async (app) => {
+      app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+      await app.click('[data-hold-key="curve"]');
+      await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+      await drag(app, '[data-hold-key="curve"]', [start, end]);
+
+      const commands = pathEditor.parsePath(paths(app)[0]!);
+      assert.deepEqual(commands[commandIndex]?.controls, [expectedControl, expectedControl]);
+      assert.deepEqual(commands.flatMap((command) => command.points), [
+        { x: 10, y: 10 },
+        { x: 20, y: 10 },
+        { x: 30, y: 10 },
+        { x: 30, y: 30 },
+        { x: 10, y: 30 },
+      ]);
+    }, dependenciesFixture(boardFixture(markedCurve)));
+  }
+});
+
 test("a bendable segment remains opt-in after undo and redo", async () => {
   const square = documentFixture([
     { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
@@ -1480,6 +1559,7 @@ test("dragging a constrained cubic moves its whole path instead of bending it", 
       type: "jug",
       displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
       shapeConstraint: { shape: "oval", rotationDegrees: 0 },
+      bendableCommandIndexes: [1],
     },
   ]);
   await withEditor(async (app) => {

@@ -9,6 +9,7 @@ export interface PathCommand {
   type: PathCommandType;
   points: Point[];
   controls: Point[];
+  bendable?: boolean;
 }
 
 export type ShapeConstraintShape = "oval" | "circle" | "pill" | "roundedRectangle" | "rectangle";

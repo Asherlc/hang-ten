@@ -41,7 +41,13 @@ interface DragState {
   startY: number;
   commands: PathCommand[] | null;
   originalPath: string | null;
-  originalPaths: Array<{ key: string; path: string; pivot?: Point; shapeConstraint?: ShapeConstraint }> | null;
+  originalPaths: Array<{
+    key: string;
+    path: string;
+    pivot?: Point;
+    shapeConstraint?: ShapeConstraint;
+    bendableCommandIndexes?: number[];
+  }> | null;
   originalConstraint: ShapeConstraint | null;
   originalDocument: EditorDocument | null;
   resizeHandle: ConstrainedHandle | null;
@@ -97,7 +103,6 @@ const GUIDE_SNAP_TOLERANCE = 6;
 
 export interface UseHoldEditorOptions {
   document: EditorDocument | null;
-  documentIdentity?: string;
   selectedHold: HoldRegion | null;
   selectedKeys: readonly string[];
   dirty: boolean;
@@ -161,8 +166,22 @@ function cloneCommands(commands: readonly PathCommand[]): PathCommand[] {
   }));
 }
 
-function bendableSegmentKey(holdKey: string, afterIndex: number): string {
-  return `${holdKey}:${afterIndex}`;
+function parseHoldPath(region: Pick<HoldRegion, "displayPath" | "bendableCommandIndexes">, pathEditor: PathEditor): PathCommand[] {
+  const commands = pathEditor.parsePath(region.displayPath);
+  for (const index of region.bendableCommandIndexes ?? []) {
+    const command = commands[index];
+    if (command?.type === "C") command.bendable = true;
+  }
+  return commands;
+}
+
+function writeHoldPath(region: HoldRegion, commands: readonly PathCommand[], pathEditor: PathEditor): void {
+  region.displayPath = pathEditor.serializePath(commands);
+  const bendableCommandIndexes = commands.flatMap((command, index) => (
+    command.type === "C" && command.bendable === true ? [index] : []
+  ));
+  if (bendableCommandIndexes.length > 0) region.bendableCommandIndexes = bendableCommandIndexes;
+  else delete region.bendableCommandIndexes;
 }
 
 function translateCommands(commands: PathCommand[], deltaX: number, deltaY: number): void {
@@ -374,7 +393,6 @@ function closestEditableSegmentIndex(
 export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions {
   const {
     document,
-    documentIdentity,
     selectedHold,
     selectedKeys,
     dirty,
@@ -390,15 +408,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     reservedHoldIDs = [],
   } = options;
   const dragRef = useRef<DragState>({ ...EMPTY_DRAG });
-  const bendableSegmentsRef = useRef(new Set<string>());
   const previewDocumentRef = useRef<EditorDocument | null>(null);
   const pendingPreviewRef = useRef<EditorDocument | null>(null);
   const dragSvgRef = useRef<SVGSVGElement | null>(null);
   const [vertexSelection, setVertexSelection] = useState<VertexSelection | null>(null);
   const [vertexMenuState, setVertexMenuState] = useState<VertexMenuState | null>(null);
-  useEffect(() => {
-    bendableSegmentsRef.current.clear();
-  }, [documentIdentity]);
   const reportInvalidPath = useCallback((error: unknown): void => {
     actions.editDocument(() => { throw error; }, {
       failureStatus: "Could not edit — selected hold has an invalid path.",
@@ -417,7 +431,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   let canMakeSelectedSegmentVertical = false;
   if (!busy && document && selectedHold && !selectedHold.shapeConstraint) {
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       if (vertexSelection?.holdKey === selectedHold.key) {
         selectionIsCurrent = hasVertex(commands, vertexSelection.commandIndex);
         canDeleteSelectedVertex = selectionIsCurrent
@@ -483,7 +497,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const selectVertex = useCallback((index: number): void => {
     if (busy || !selectedHold || selectedHold.shapeConstraint || !Number.isInteger(index) || index < 0) return;
     try {
-      if (!hasVertex(pathEditor.parsePath(selectedHold.displayPath), index)) return;
+      if (!hasVertex(parseHoldPath(selectedHold, pathEditor), index)) return;
       setVertexSelection({ holdKey: selectedHold.key, commandIndex: index });
       setVertexMenuState(null);
     } catch {
@@ -494,14 +508,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const deleteSelectedVertex = useCallback((): void => {
     if (!canDeleteSelectedVertex || !document || !selectedHold || selectedVertexIndex === null) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       if (!canDeleteVertex(commands, selectedVertexIndex)) return;
       pathEditor.deleteVertex(commands, selectedVertexIndex);
       const nextPath = pathEditor.serializePath(commands);
       if (nextPath === selectedHold.displayPath) return;
       const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+        if (hold && !hold.shapeConstraint) writeHoldPath(hold, commands, pathEditor);
       }, { status });
       if (!edited) return;
       setVertexSelection(null);
@@ -524,12 +538,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!canRoundSelectedVertex || !document || !selectedHold || selectedVertexIndex === null
       || vertexMenuState?.holdKey !== selectedHold.key || vertexMenuState.segmentAfterIndex !== null) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       if (!pathEditor.roundVertex(commands, selectedVertexIndex)) return;
-      const nextPath = pathEditor.serializePath(commands);
       const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+        if (hold && !hold.shapeConstraint) writeHoldPath(hold, commands, pathEditor);
       }, { status: "Corner rounded. Save when ready." });
       if (!edited) return;
       setVertexSelection(null);
@@ -545,12 +558,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!canAddInflectionPoint || !document || !selectedHold || !point
       || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       if (!pathEditor.addInflectionPoint(commands, afterIndex, point)) return;
-      const nextPath = pathEditor.serializePath(commands);
       const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+        if (hold && !hold.shapeConstraint) writeHoldPath(hold, commands, pathEditor);
       }, { status: "Inflection point added. Save when ready." });
       if (!edited) return;
       setVertexSelection(null);
@@ -574,15 +586,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!canMakeSelectedSegmentBendable || !document || !selectedHold
       || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       if (!pathEditor.makeSegmentBendable(commands, afterIndex)) return;
-      const nextPath = pathEditor.serializePath(commands);
       const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+        if (hold && !hold.shapeConstraint) writeHoldPath(hold, commands, pathEditor);
       }, { status: "Line converted to a bendable curve. Save when ready." });
       if (!edited) return;
-      bendableSegmentsRef.current.add(bendableSegmentKey(selectedHold.key, afterIndex));
       setVertexSelection(null);
       setVertexMenuState(null);
     } catch (error: unknown) {
@@ -603,12 +613,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!canMakeSelectedSegmentStraight || !document || !selectedHold
       || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       if (!pathEditor.makeSegmentStraight(commands, afterIndex)) return;
-      const nextPath = pathEditor.serializePath(commands);
       const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+        if (hold && !hold.shapeConstraint) writeHoldPath(hold, commands, pathEditor);
       }, { status: "Curve made straight. Save when ready." });
       if (!edited) return;
       setVertexSelection(null);
@@ -634,15 +643,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!canSnap || !document || !selectedHold
       || vertexMenuState?.holdKey !== selectedHold.key || afterIndex === null || afterIndex === undefined) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       const snapped = axis === "horizontal"
         ? pathEditor.snapSegmentHorizontal(commands, afterIndex)
         : pathEditor.snapSegmentVertical(commands, afterIndex);
       if (!snapped) return;
-      const nextPath = pathEditor.serializePath(commands);
       const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-        if (hold && !hold.shapeConstraint) hold.displayPath = nextPath;
+        if (hold && !hold.shapeConstraint) writeHoldPath(hold, commands, pathEditor);
       }, { status: `Line made ${axis}. Save when ready.` });
       if (!edited) return;
       setVertexSelection(null);
@@ -688,9 +696,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const pivot = holdCentroid(hold, pathEditor);
         for (const region of candidate.regions) {
           if (!siblingKeys.has(region.key)) continue;
-          const commands = pathEditor.parsePath(region.displayPath);
+          const commands = parseHoldPath(region, pathEditor);
           pathEditor.rotatePath(commands, ((degrees % 360) * Math.PI) / 180, pivot);
-          region.displayPath = pathEditor.serializePath(commands);
+          writeHoldPath(region, commands, pathEditor);
           if (region.shapeConstraint) {
             region.shapeConstraint = {
               ...region.shapeConstraint,
@@ -872,6 +880,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           delete hold.shapeConstraint;
         } else {
           hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
+          delete hold.bendableCommandIndexes;
           hold.shapeConstraint = { shape, rotationDegrees: 0 };
         }
       }
@@ -907,6 +916,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const region = restored.regions.find((candidate) => candidate.key === original.key);
         if (region) {
           region.displayPath = original.path;
+          if (original.bendableCommandIndexes) {
+            region.bendableCommandIndexes = [...original.bendableCommandIndexes];
+          } else {
+            delete region.bendableCommandIndexes;
+          }
           if (original.shapeConstraint) region.shapeConstraint = { ...original.shapeConstraint };
           else delete region.shapeConstraint;
         }
@@ -914,7 +928,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } else {
       const region = restored.regions.find((candidate) => candidate.key === drag.holdKey);
       if (region && drag.originalPath !== null) {
+        const originalRegion = drag.originalDocument?.regions.find((candidate) => candidate.key === drag.holdKey);
         region.displayPath = drag.originalPath;
+        if (originalRegion?.bendableCommandIndexes) {
+          region.bendableCommandIndexes = [...originalRegion.bendableCommandIndexes];
+        } else {
+          delete region.bendableCommandIndexes;
+        }
         if (drag.originalConstraint) region.shapeConstraint = { ...drag.originalConstraint };
         else delete region.shapeConstraint;
       }
@@ -1023,6 +1043,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             path: region.displayPath,
             pivot: holdPivot,
             ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
+            ...(region.bendableCommandIndexes ? {
+              bendableCommandIndexes: [...region.bendableCommandIndexes],
+            } : {}),
           }));
         }),
         originalDirty: dirty,
@@ -1049,7 +1072,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       || (target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key)) {
       let commands: PathCommand[];
       try {
-        commands = pathEditor.parsePath(selectedHold.displayPath);
+        commands = parseHoldPath(selectedHold, pathEditor);
       } catch (error: unknown) {
         reportInvalidPath(error);
         return;
@@ -1059,8 +1082,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         : null;
       const bendsSegment = bendableSegmentAfterIndex !== null
         && !selectedHold.shapeConstraint
-        && bendableSegmentsRef.current.has(bendableSegmentKey(selectedHold.key, bendableSegmentAfterIndex))
-        && commands[bendableSegmentAfterIndex + 1]?.type === "C";
+        && commands[bendableSegmentAfterIndex + 1]?.type === "C"
+        && commands[bendableSegmentAfterIndex + 1]?.bendable === true;
       next = {
         ...EMPTY_DRAG,
         active: true,
@@ -1120,9 +1143,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       for (const original of drag.originalPaths) {
         const region = candidate.regions.find((value) => value.key === original.key);
         if (!region) continue;
-        const commands = pathEditor.parsePath(original.path);
+        const commands = parseHoldPath({
+          displayPath: original.path,
+          bendableCommandIndexes: original.bendableCommandIndexes,
+        }, pathEditor);
         pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
-        region.displayPath = pathEditor.serializePath(commands);
+        writeHoldPath(region, commands, pathEditor);
         if (original.shapeConstraint) {
           region.shapeConstraint = {
             ...original.shapeConstraint,
@@ -1144,6 +1170,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           point,
         );
         hold.displayPath = resized.displayPath;
+        delete hold.bendableCommandIndexes;
         hold.shapeConstraint = resized.shapeConstraint;
       } catch (error: unknown) {
         restoreDrag(
@@ -1183,7 +1210,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         }
         translateCommands(commands, deltaX, deltaY);
       }
-      hold.displayPath = pathEditor.serializePath(commands);
+      writeHoldPath(hold, commands, pathEditor);
     }
     drag.changed = !dragMatchesOriginal(drag, candidate);
     if (draggedRegionsMatch(drag, preview, candidate)) return;
@@ -1261,7 +1288,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const point = svgPoint(event.currentTarget, event);
     let commands: PathCommand[];
     try {
-      commands = pathEditor.parsePath(selectedHold.displayPath);
+      commands = parseHoldPath(selectedHold, pathEditor);
     } catch (error: unknown) {
       reportInvalidPath(error);
       return;
@@ -1281,9 +1308,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       const edited = actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
         if (!hold) return;
-        const edited = pathEditor.parsePath(hold.displayPath);
+        const edited = parseHoldPath(hold, pathEditor);
         pathEditor.addVertex(edited, index, insert.x, insert.y);
-        hold.displayPath = pathEditor.serializePath(edited);
+        writeHoldPath(hold, edited, pathEditor);
       }, { status });
       if (edited) {
         setVertexSelection(null);
@@ -1315,7 +1342,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     }
     if (!target.classList.contains("region-shape") || target.getAttribute("data-hold-key") !== selectedHold.key) return;
     try {
-      const commands = pathEditor.parsePath(selectedHold.displayPath);
+      const commands = parseHoldPath(selectedHold, pathEditor);
       const point = svgPoint(event.currentTarget, event);
       const afterIndex = closestEditableSegmentIndex(commands, point);
       if (afterIndex === null) return;
@@ -1396,9 +1423,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
         if (!hold) return;
-        const commands = pathEditor.parsePath(hold.displayPath);
+        const commands = parseHoldPath(hold, pathEditor);
         translateCommands(commands, deltaX, deltaY);
-        hold.displayPath = pathEditor.serializePath(commands);
+        writeHoldPath(hold, commands, pathEditor);
       }, {
         status: "Hold nudged. Save when ready.",
         failureStatus: "Nudge reverted — contour is invalid.",
