@@ -345,12 +345,17 @@ function selectedPhysicalHolds(document: EditorDocument, selectedKeys: readonly 
   return [...groups.values()];
 }
 
-function mirroredPath(path: string, canvasWidth: number, pathEditor: PathEditor): string {
-  const commands = pathEditor.parsePath(path);
+function mirrorHoldPath(
+  source: HoldRegion,
+  target: HoldRegion,
+  canvasWidth: number,
+  pathEditor: PathEditor,
+): void {
+  const commands = parseHoldPath(source, pathEditor);
   for (const command of commands) {
     for (const point of [...command.points, ...command.controls]) point.x = canvasWidth - point.x;
   }
-  return pathEditor.serializePath(commands);
+  writeHoldPath(target, commands, pathEditor);
 }
 
 function uniqueRegionKey(document: EditorDocument, baseKey: string): string {
@@ -763,11 +768,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const edited = actions.editDocument((candidate) => {
       for (const duplicate of duplicates) {
         const { source, id, key, holdId, pieceIndex } = duplicate;
-        candidate.regions.push({
+        const mirrored: HoldRegion = {
           ...source,
           id,
           key,
-          displayPath: mirroredPath(source.displayPath, candidate.canvas.width, pathEditor),
           metadata: { holdID: holdId, pieceIndex },
           ...(source.shapeConstraint ? {
             shapeConstraint: {
@@ -775,7 +779,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
               rotationDegrees: normalizedConstraintRotation(-source.shapeConstraint.rotationDegrees),
             },
           } : {}),
-        });
+        };
+        mirrorHoldPath(source, mirrored, candidate.canvas.width, pathEditor);
+        candidate.regions.push(mirrored);
       }
     }, {
       selectedKey: duplicateKeyBySourceKey.get(selectedHold.key) ?? duplicateKeys[0] ?? null,

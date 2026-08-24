@@ -847,6 +847,36 @@ test("duplicate and mirror reflects every selected physical hold with fresh hold
   }, dependenciesFixture(board, { client }));
 });
 
+test("duplicate and mirror regenerates bendable indexes from mirrored cubic commands", async () => {
+  const board = boardFixture(documentFixture([{
+    id: 1,
+    key: "curve-piece-0",
+    type: "jug",
+    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+    metadata: { holdID: "curve", pieceIndex: 0 },
+    bendableCommandIndexes: [1, 2],
+  }]));
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="curve-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+    await app.click("#save-button");
+    await app.flush();
+
+    const duplicate = saved[0]?.regions.find((region) => region.metadata?.holdID !== "curve");
+    assert.equal(duplicate?.displayPath, "M 90 10 C 83.333333 10 76.666667 10 70 10 L 70 30 L 90 30 Z");
+    assert.deepEqual(duplicate?.bendableCommandIndexes, [1]);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("finger capacity loads in the inspector, applies to every physical piece, and new holds are unset", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, fingerCapacity: 2 },
