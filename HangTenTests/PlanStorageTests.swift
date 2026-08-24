@@ -1361,61 +1361,41 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testPlanMappingsOverrideBoardLoadedSemanticMappings() throws {
-        let boardStore = try BoardLibraryStore(data: Data(
-            #"""
-            {
-              "metadata": {
-                "id": "fixture.board-library",
-                "title": "Fixture board library",
-                "generatedAt": "2026-08-10",
-                "notes": []
-              },
-              "boards": [{
-                "id": "fixture.board",
-                "manufacturer": "Fixture Maker",
-                "name": "Fixture Board",
-                "subtitle": "A test board.",
-                "dimensions": "10 × 5",
-                "aspectRatio": 2,
-                "holds": [
-                  {
-                    "id": "fixture.edge",
-                    "name": "Fixture edge",
-                    "kind": "edge",
-                    "geometry": [{
-                      "frame": { "x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4 },
-                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0 }
-                    }]
-                  },
-                  {
-                    "id": "fixture.pinch",
-                    "name": "Fixture pinch",
-                    "kind": "pinch",
-                    "geometry": [{
-                      "frame": { "x": 0.4, "y": 0.2, "width": 0.2, "height": 0.4 },
-                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0 }
-                    }]
-                  },
-                  {
-                    "id": "fixture.jug",
-                    "name": "Fixture jug",
-                    "kind": "jug",
-                    "geometry": [{
-                      "frame": { "x": 0.7, "y": 0.2, "width": 0.2, "height": 0.4 },
-                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0 }
-                    }]
-                  }
-                ],
-                "semanticHolds": {
-                  "fixture-target": { "holdIDs": ["fixture.edge"] },
-                  "fixture-fallback": { "kind": "pinch" }
-                },
-                "productURL": "https://example.com/fixture-board"
-              }]
-            }
-            """#.utf8
-        ))
-        let board = try XCTUnwrap(boardStore.boards.first)
+        func hold(id: String, name: String, kind: HoldKind, x: CGFloat) -> BoardHold {
+            BoardHold(
+                id: id,
+                name: name,
+                kind: kind,
+                geometry: [
+                    BoardHoldPiece(
+                        id: "\(id)-piece",
+                        holdID: id,
+                        frame: CGRect(x: x, y: 0.2, width: 0.2, height: 0.4),
+                        shape: .roundedRect(cornerRadiusFraction: 0),
+                        treatment: .surface
+                    )
+                ]
+            )
+        }
+        let board = TrainingBoard(
+            id: "fixture.board",
+            manufacturer: "Fixture Maker",
+            name: "Fixture Board",
+            subtitle: "A test board.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                hold(id: "fixture.edge", name: "Fixture edge", kind: .edge, x: 0.1),
+                hold(id: "fixture.pinch", name: "Fixture pinch", kind: .pinch, x: 0.4),
+                hold(id: "fixture.jug", name: "Fixture jug", kind: .jug, x: 0.7)
+            ],
+            semanticHolds: [
+                "fixture-target": SemanticHoldMappingDefinition(holdIDs: ["fixture.edge"]),
+                "fixture-fallback": SemanticHoldMappingDefinition(kind: .pinch)
+            ],
+            productURL: URL(string: "https://example.com/fixture-board")!,
+            photoAssetName: nil
+        )
         let step = makeStep(
             id: "semantic-target",
             duration: 10,
@@ -1433,7 +1413,7 @@ final class PlanStorageTests: XCTestCase {
             SemanticHoldMappingDefinition(kind: .pinch)
         )
         XCTAssertTrue(
-            boardOnlyLibrary.validationIssues(availableBoards: boardStore.boards).contains {
+            boardOnlyLibrary.validationIssues(availableBoards: [board]).contains {
                 $0.message == "Missing board mapping for \"fixture.board\"."
             }
         )
@@ -1452,11 +1432,11 @@ final class PlanStorageTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(planMappingLibrary.validationIssues(availableBoards: boardStore.boards), [])
+        XCTAssertEqual(planMappingLibrary.validationIssues(availableBoards: [board]), [])
 
         let planMappingStore = try PlanLibraryStore(
             definition: planMappingLibrary,
-            availableBoards: boardStore.boards
+            availableBoards: [board]
         )
         let planMappingTargets = try XCTUnwrap(
             planMappingStore.plan(id: "test.plan")?.steps.first?.targets
