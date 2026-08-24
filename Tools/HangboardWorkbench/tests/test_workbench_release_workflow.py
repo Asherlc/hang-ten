@@ -1172,7 +1172,7 @@ def test_release_rebuilds_with_one_matching_identity_and_signs_inside_out():
     dependencies = _step(release, "Install workbench release dependencies")["run"]
     assert "-e 'Tools/HangboardWorkbench[dev]'" in dependencies
     assert "pyinstaller==" not in dependencies
-    assert "pyinstaller==6.22.0" in (EDITOR_ROOT / "pyproject.toml").read_text(
+    assert "pyinstaller==6.22.2" in (EDITOR_ROOT / "pyproject.toml").read_text(
         encoding="utf-8"
     )
 
