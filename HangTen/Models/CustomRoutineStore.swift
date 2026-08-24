@@ -403,7 +403,7 @@ enum CustomRoutineStoreError: LocalizedError {
 }
 
 final class CustomRoutineStore: CustomRoutineStoring {
-    static let defaultKey = "HangTen.customRoutines.v1"
+    static let defaultKey = "HangTen.customRoutines"
 
     private let defaults: UserDefaults
     private let key: String
