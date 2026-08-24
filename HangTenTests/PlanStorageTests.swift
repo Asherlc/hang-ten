@@ -52,8 +52,39 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testAdaptedProvenanceDetailIsNotCustomerFacingAuditNarration() {
-        XCTAssertEqual(RoutineProvenance.adapted.detail, "")
+    func testBundledF80PreservesForceFeedbackAndStopRule() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f80"))
+        let hangSteps = plan.steps.filter { $0.id.hasPrefix("f80-set-") }
+
+        XCTAssertEqual(hangSteps.count, 36)
+        XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 10 })
+        XCTAssertTrue(plan.subtitle.lowercased().contains("three sets"))
+        XCTAssertTrue(plan.subtitle.contains("12"))
+        XCTAssertTrue(plan.subtitle.contains("80% MFSi"))
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("real-time force feedback") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("Stop the set if force falls below 70% MFSi.") })
+    }
+
+    func testBundledF100PreservesForceFeedbackProtocolFacts() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f100"))
+        let hangSteps = plan.steps.filter { $0.id.hasPrefix("f100-set-") }
+
+        XCTAssertEqual(hangSteps.count, 24)
+        XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 6 })
+        XCTAssertTrue(plan.subtitle.lowercased().contains("two sets"))
+        XCTAssertTrue(plan.subtitle.contains("six per hand"))
+        XCTAssertTrue(plan.subtitle.contains("6-second"))
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("real-time force feedback") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
     }
 
     func testWorkoutPresentationUsesOnlyStepContentOrNeutralState() {

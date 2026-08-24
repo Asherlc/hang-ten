@@ -836,9 +836,6 @@ enum RoutineProvenance: String, Codable, Hashable {
         }
     }
 
-    var detail: String {
-        ""
-    }
 }
 
 struct TrainingPlan: Identifiable, Hashable {
@@ -1558,7 +1555,7 @@ enum LegacyPlanSeedCatalog {
     static let forceF80 = TrainingPlan(
         id: "research.force-feedback-f80",
         title: "F80 Force Board",
-        subtitle: "Twelve 80% MFSi repeaters with 10-second hangs and 6-second rests.",
+        subtitle: "Three sets of up to 12 10-second hangs at 80% MFSi with real-time force feedback on an instrumented 12 mm edge.",
         level: "Advanced",
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
@@ -1572,7 +1569,7 @@ enum LegacyPlanSeedCatalog {
                         hangStep(
                             id: "f80-set-\(set)-rep-\(rep)",
                             title: "F80 · set \(set), rep \(rep)",
-                            instruction: "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+                            instruction: "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: set == 3 && rep == 12 ? 0 : 6,
@@ -1599,7 +1596,7 @@ enum LegacyPlanSeedCatalog {
     static let forceF100 = TrainingPlan(
         id: "research.force-feedback-f100",
         title: "F100 Force Board",
-        subtitle: "Alternating 6-second maximal-hand hangs with force measurement.",
+        subtitle: "Two sets of six 6-second hangs per hand with real-time force feedback on an instrumented 12 mm edge.",
         level: "Expert",
         sourceLabel: "Frontiers force-feedback hangboard study",
         sourceURL: URL(string: "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full")!,
@@ -1613,7 +1610,7 @@ enum LegacyPlanSeedCatalog {
                         hangStep(
                             id: "f100-set-\(set)-round-\(round)-right",
                             title: "F100 · right hand",
-                            instruction: "Apply maximal force with the right hand for 6 seconds.",
+                            instruction: "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
                             accessory: "6s max",
                             active: 6,
                             rest: 0,
@@ -1625,7 +1622,7 @@ enum LegacyPlanSeedCatalog {
                         hangStep(
                             id: "f100-set-\(set)-round-\(round)-left",
                             title: "F100 · left hand",
-                            instruction: "Apply maximal force with the left hand for 6 seconds.",
+                            instruction: "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
                             accessory: "6s max",
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,

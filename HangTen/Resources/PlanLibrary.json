@@ -1971,7 +1971,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-1",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2018,7 +2018,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-2",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2059,7 +2059,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-3",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2100,7 +2100,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-4",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2141,7 +2141,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-5",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2182,7 +2182,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-6",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2223,7 +2223,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-7",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2264,7 +2264,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-8",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2305,7 +2305,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-9",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2346,7 +2346,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-10",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2387,7 +2387,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-11",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2428,7 +2428,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-1-rep-12",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2487,7 +2487,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-1",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2528,7 +2528,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-2",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2569,7 +2569,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-3",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2610,7 +2610,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-4",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2651,7 +2651,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-5",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2692,7 +2692,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-6",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2733,7 +2733,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-7",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2774,7 +2774,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-8",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2815,7 +2815,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-9",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2856,7 +2856,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-10",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2897,7 +2897,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-11",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2938,7 +2938,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-2-rep-12",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2997,7 +2997,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-1",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3038,7 +3038,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-2",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3079,7 +3079,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-3",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3120,7 +3120,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-4",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3161,7 +3161,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-5",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3202,7 +3202,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-6",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3243,7 +3243,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-7",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3284,7 +3284,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-8",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3325,7 +3325,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-9",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3366,7 +3366,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-10",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3407,7 +3407,7 @@
           "activeDuration" : 10,
           "duration" : 16,
           "id" : "f80-set-3-rep-11",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3448,7 +3448,7 @@
           "activeDuration" : 10,
           "duration" : 10,
           "id" : "f80-set-3-rep-12",
-          "instruction" : "Hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions.",
+          "instruction" : "Use real-time force feedback to hang with both hands at 80% MFSi on an instrumented 12 mm edge for 10 seconds; rest 6 seconds between repetitions. Stop the set if force falls below 70% MFSi.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3490,7 +3490,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-1-round-1-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3532,7 +3532,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-1-round-1-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3573,7 +3573,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-1-round-2-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3609,7 +3609,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-1-round-2-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3650,7 +3650,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-1-round-3-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3686,7 +3686,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-1-round-3-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3727,7 +3727,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-1-round-4-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3763,7 +3763,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-1-round-4-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3804,7 +3804,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-1-round-5-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3840,7 +3840,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-1-round-5-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3881,7 +3881,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-1-round-6-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3917,7 +3917,7 @@
           "activeDuration" : 6,
           "duration" : 306,
           "id" : "f100-set-1-round-6-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3958,7 +3958,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-2-round-1-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3994,7 +3994,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-2-round-1-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4035,7 +4035,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-2-round-2-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4071,7 +4071,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-2-round-2-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4112,7 +4112,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-2-round-3-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4148,7 +4148,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-2-round-3-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4189,7 +4189,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-2-round-4-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4225,7 +4225,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-2-round-4-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4266,7 +4266,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-2-round-5-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4302,7 +4302,7 @@
           "activeDuration" : 6,
           "duration" : 174,
           "id" : "f100-set-2-round-5-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4343,7 +4343,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-2-round-6-right",
-          "instruction" : "Apply maximal force with the right hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the right hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -4379,7 +4379,7 @@
           "activeDuration" : 6,
           "duration" : 6,
           "id" : "f100-set-2-round-6-left",
-          "instruction" : "Apply maximal force with the left hand for 6 seconds.",
+          "instruction" : "Use real-time force feedback to apply maximal force with the left hand on an instrumented 12 mm edge for 6 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -14698,7 +14698,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Frontiers force-feedback hangboard study",
         "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.862782\/full",
-        "subtitle" : "Twelve 80% MFSi repeaters with 10-second hangs and 6-second rests.",
+        "subtitle" : "Three sets of up to 12 10-second hangs at 80% MFSi with real-time force feedback on an instrumented 12 mm edge.",
         "tags" : [
           "built-in",
           "research"
@@ -14728,7 +14728,7 @@
         "provenance" : "adapted",
         "sourceLabel" : "Frontiers force-feedback hangboard study",
         "sourceURL" : "https:\/\/www.frontiersin.org\/journals\/sports-and-active-living\/articles\/10.3389\/fspor.2022.862782\/full",
-        "subtitle" : "Alternating 6-second maximal-hand hangs with force measurement.",
+        "subtitle" : "Two sets of six 6-second hangs per hand with real-time force feedback on an instrumented 12 mm edge.",
         "tags" : [
           "built-in",
           "research"

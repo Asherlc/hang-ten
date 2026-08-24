@@ -103,6 +103,24 @@ enum PlanSourcePresentationContent {
     }
 }
 
+enum PlanFilterPresentationContent {
+    enum Facet: Hashable {
+        case difficulty
+        case category
+        case tags
+        case equipment
+    }
+
+    static func visibleFacets(for options: PlanFilterOptions) -> [Facet] {
+        [
+            options.levels.isEmpty ? nil : .difficulty,
+            options.categories.isEmpty ? nil : .category,
+            options.tags.isEmpty ? nil : .tags,
+            options.equipment.isEmpty ? nil : .equipment
+        ].compactMap { $0 }
+    }
+}
+
 enum RootTab: Hashable, CaseIterable {
     case train
     case plans
@@ -377,9 +395,11 @@ struct PlansView: View {
     }
 
     private func filterBar(options: PlanFilterOptions) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        let visibleFacets = PlanFilterPresentationContent.visibleFacets(for: options)
+
+        return ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                if !options.levels.isEmpty {
+                if visibleFacets.contains(.difficulty) {
                     Menu {
                         filterAllButton(isSelected: filters.levels.isEmpty) {
                             filters.levels.removeAll()
@@ -403,31 +423,7 @@ struct PlansView: View {
                     ))
                 }
 
-                if !options.provenances.isEmpty {
-                    Menu {
-                        filterAllButton(isSelected: filters.provenances.isEmpty) {
-                            filters.provenances.removeAll()
-                        }
-                        ForEach(options.provenances, id: \.self) { value in
-                            filterValueButton(value.label, isSelected: filters.provenances.contains(value)) {
-                                filters.toggle(provenance: value)
-                            }
-                        }
-                    } label: {
-                        filterMenuLabel(
-                            title: "Type",
-                            selectionCount: filters.provenances.count,
-                            singleSelection: filters.provenances.first?.label
-                        )
-                    }
-                    .accessibilityLabel("Filter by type")
-                    .accessibilityValue(filterMenuAccessibilityValue(
-                        selectionCount: filters.provenances.count,
-                        singleSelection: filters.provenances.first?.label
-                    ))
-                }
-
-                if !options.categories.isEmpty {
+                if visibleFacets.contains(.category) {
                     Menu {
                         filterAllButton(isSelected: filters.categories.isEmpty) {
                             filters.categories.removeAll()
@@ -451,7 +447,7 @@ struct PlansView: View {
                     ))
                 }
 
-                if !options.tags.isEmpty {
+                if visibleFacets.contains(.tags) {
                     Menu {
                         filterAllButton(isSelected: filters.tags.isEmpty) {
                             filters.tags.removeAll()
@@ -475,7 +471,7 @@ struct PlansView: View {
                     ))
                 }
 
-                if !options.equipment.isEmpty {
+                if visibleFacets.contains(.equipment) {
                     Menu {
                         filterAllButton(isSelected: filters.equipment.isEmpty) {
                             filters.equipment.removeAll()
