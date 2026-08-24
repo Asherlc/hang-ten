@@ -1555,6 +1555,11 @@ enum BuiltInPlanLibraryDefinition {
             notes = ["Preserved from the original Hang Ten routine catalog."]
         }
 
+        var tags = ["built-in", category]
+        if plan.id == LegacyPlanSeedCatalog.forceF80.id || plan.id == LegacyPlanSeedCatalog.forceF100.id {
+            tags.append("requires-instrumented-12mm-force-feedback")
+        }
+
         let metadata = PlanMetadata(
             title: plan.title,
             subtitle: plan.subtitle,
@@ -1563,7 +1568,7 @@ enum BuiltInPlanLibraryDefinition {
             sourceURL: plan.sourceURL,
             provenance: plan.provenance,
             category: category,
-            tags: ["built-in", category],
+            tags: tags,
             equipment: ["hangboard"],
             notes: notes
         )

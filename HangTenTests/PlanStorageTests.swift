@@ -88,12 +88,15 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testWorkoutCueCardShowsSourceInstructionDuringCountdown() {
-        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "", duration: 10, phase: .hang, targets: [])
+        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "Source accessory", duration: 10, phase: .hang, targets: [])
 
         XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: false), "Source title")
         XCTAssertEqual(
             WorkoutPresentationContent.cueCardRows(step: step, countdown: 3, isComplete: false),
-            [InstructionAccessoryCardRow(kind: .instruction, text: "Source instruction")]
+            [
+                InstructionAccessoryCardRow(kind: .instruction, text: "Source instruction"),
+                InstructionAccessoryCardRow(kind: .accessory, text: "Source accessory")
+            ]
         )
     }
 

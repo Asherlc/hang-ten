@@ -14701,7 +14701,8 @@
         "subtitle" : "Three sets of up to 12 10-second hangs at 80% MFSi with real-time force feedback on an instrumented 12 mm edge.",
         "tags" : [
           "built-in",
-          "research"
+          "research",
+          "requires-instrumented-12mm-force-feedback"
         ],
         "title" : "F80 Force Board"
       }
@@ -14731,7 +14732,8 @@
         "subtitle" : "Two sets of six 6-second hangs per hand with real-time force feedback on an instrumented 12 mm edge.",
         "tags" : [
           "built-in",
-          "research"
+          "research",
+          "requires-instrumented-12mm-force-feedback"
         ],
         "title" : "F100 Force Board"
       }

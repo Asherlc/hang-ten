@@ -711,13 +711,19 @@ enum PlanStartAvailability: Equatable {
 }
 
 enum PlanStartAvailabilityPolicy {
+    private static let forceFeedbackRequirementTag = "requires-instrumented-12mm-force-feedback"
     private static let forceFeedbackPlanIDs: Set<String> = [
         "research.force-feedback-f80",
         "research.force-feedback-f100"
     ]
 
-    static func availability(for plan: TrainingPlan) -> PlanStartAvailability {
-        guard forceFeedbackPlanIDs.contains(plan.id) else { return .available }
+    static func availability(
+        for plan: TrainingPlan,
+        metadata: PlanMetadata? = nil
+    ) -> PlanStartAvailability {
+        let requiresForceFeedback = forceFeedbackPlanIDs.contains(plan.id) ||
+            metadata?.tags.contains(forceFeedbackRequirementTag) == true
+        guard requiresForceFeedback else { return .available }
         return .unavailable(
             requirement: "Requires real-time force feedback from an instrumented 12 mm edge."
         )
@@ -846,7 +852,10 @@ struct PlanDetailView: View {
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
 
-            switch PlanStartAvailabilityPolicy.availability(for: currentPlan) {
+            switch PlanStartAvailabilityPolicy.availability(
+                for: currentPlan,
+                metadata: store.metadata(for: currentPlan)
+            ) {
             case .available:
                 NavigationLink(destination: WorkoutView(plan: currentPlan, startsImmediately: true)) {
                     startRoutineLabel(for: currentPlan)
