@@ -11,6 +11,32 @@ export interface PathCommand {
   controls: Point[];
 }
 
+/** Editor-session identity for a path endpoint. Never persisted in board geometry. */
+export interface EditableAnchor extends Point {
+  readonly id: string;
+  readonly ordinal: number;
+  readonly isStart: boolean;
+}
+
+/** Editor-session identity for a Bézier control point. Never persisted in board geometry. */
+export interface EditableControl extends Point {
+  readonly id: string;
+}
+
+export interface EditableSegment {
+  readonly id: string;
+  type: Exclude<PathCommandType, "Z">;
+  anchor: EditableAnchor;
+  controls: EditableControl[];
+}
+
+/** A disposable, editor-only projection of canonical SVG path geometry. */
+export interface EditablePath {
+  readonly regionKey: string;
+  readonly segments: EditableSegment[];
+  readonly closed: boolean;
+}
+
 export type ShapeConstraintShape = "oval" | "circle" | "pill" | "roundedRectangle" | "rectangle";
 
 export interface ShapeConstraint {
