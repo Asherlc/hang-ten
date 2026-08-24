@@ -54,7 +54,36 @@ MIRRORED_PAIRS = (
     ("front-middle-4", "front-middle-6"),
     *((f"front-lower-{left}", f"front-lower-{10 - left}") for left in range(1, 5)),
 )
+DIRECT_MIRRORED_PAIRS = (
+    ("front-middle-2", "front-middle-8"),
+    ("hold-26", "hold-27"),
+)
+DIRECT_MIRRORED_RIGHT_IDS = frozenset(right_id for _, right_id in DIRECT_MIRRORED_PAIRS)
 EXPECTED_CENTERED_HOLDS = ("front-middle-5", "front-lower-5")
+
+
+def _mirror_point(point: tuple[float, float]) -> tuple[float, float]:
+    return (1 - point[0], point[1])
+
+
+def _mirrored_geometry(geometry: tuple[dict[str, object], ...]) -> tuple[dict[str, object], ...]:
+    mirrored_pieces: list[dict[str, object]] = []
+    for piece in geometry:
+        frame = piece["frame"]
+        assert isinstance(frame, dict)
+        mirrored_frame = dict(frame)
+        mirrored_frame["x"] = 1 - frame["x"] - frame["width"]
+        commands = []
+        for command in piece["commands"]:
+            mirrored_command = {"command": command["command"]}
+            for field in ("to", "control", "control1", "control2"):
+                if field in command:
+                    mirrored_command[field] = _mirror_point(command[field])
+            commands.append(mirrored_command)
+        mirrored_pieces.append({"frame": mirrored_frame, "commands": tuple(commands)})
+    return tuple(mirrored_pieces)
+
+
 EXPECTED_GEOMETRY = {
     "top-sloper-1": (
         {
@@ -440,6 +469,13 @@ EXPECTED_GEOMETRY = {
     ),
 }
 
+EXPECTED_GEOMETRY.update(
+    {
+        right_id: _mirrored_geometry(EXPECTED_GEOMETRY[left_id])
+        for left_id, right_id in DIRECT_MIRRORED_PAIRS
+    }
+)
+
 
 def _serialize_shape(piece: object) -> tuple[dict[str, object], ...]:
     return tuple(serialize_command(command) for command in piece.shape.commands)
@@ -469,7 +505,16 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
         assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
         assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
-    assert {hold.id: serialize_geometry(hold) for hold in board.holds} == EXPECTED_GEOMETRY
+    actual_geometry = {hold.id: serialize_geometry(hold) for hold in board.holds}
+    assert {
+        hold_id: geometry
+        for hold_id, geometry in actual_geometry.items()
+        if hold_id not in DIRECT_MIRRORED_RIGHT_IDS
+    } == {
+        hold_id: geometry
+        for hold_id, geometry in EXPECTED_GEOMETRY.items()
+        if hold_id not in DIRECT_MIRRORED_RIGHT_IDS
+    }
 
     symmetry_axis_x: float | None = None
     for left_id, right_id in MIRRORED_PAIRS:

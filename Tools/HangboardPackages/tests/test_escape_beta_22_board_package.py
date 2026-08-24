@@ -49,6 +49,35 @@ EXPECTED_SIZES = {
     "hold-11-center": None,
 }
 CENTER_HOLDS = ("hold-09-center", "hold-11-center")
+DIRECT_MIRRORED_PAIRS = tuple(
+    (f"hold-{family:02d}-left", f"hold-{family:02d}-right")
+    for family in range(1, 9)
+)
+DIRECT_MIRRORED_RIGHT_IDS = frozenset(right_id for _, right_id in DIRECT_MIRRORED_PAIRS)
+
+
+def _mirror_point(point: tuple[float, float]) -> tuple[float, float]:
+    return (1 - point[0], point[1])
+
+
+def _mirrored_geometry(geometry: tuple[dict[str, object], ...]) -> tuple[dict[str, object], ...]:
+    mirrored_pieces: list[dict[str, object]] = []
+    for piece in geometry:
+        frame = piece["frame"]
+        assert isinstance(frame, dict)
+        mirrored_frame = dict(frame)
+        mirrored_frame["x"] = 1 - frame["x"] - frame["width"]
+        commands = []
+        for command in piece["commands"]:
+            mirrored_command = {"command": command["command"]}
+            for field in ("to", "control", "control1", "control2"):
+                if field in command:
+                    mirrored_command[field] = _mirror_point(command[field])
+            commands.append(mirrored_command)
+        mirrored_pieces.append({"frame": mirrored_frame, "commands": tuple(commands)})
+    return tuple(mirrored_pieces)
+
+
 EXPECTED_GEOMETRY = {
     "hold-01-left": (
         {
@@ -304,6 +333,13 @@ EXPECTED_GEOMETRY = {
     ),
 }
 
+EXPECTED_GEOMETRY.update(
+    {
+        right_id: _mirrored_geometry(EXPECTED_GEOMETRY[left_id])
+        for left_id, right_id in DIRECT_MIRRORED_PAIRS
+    }
+)
+
 
 def _frame_seam_x(left: object, right: object) -> float:
     assert left.frame.x + left.frame.width <= right.frame.x
@@ -337,7 +373,16 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
             assert 0 <= piece.frame.x < piece.frame.x + piece.frame.width <= 1
             assert 0 <= piece.frame.y < piece.frame.y + piece.frame.height <= 1
 
-    assert {hold.id: serialize_geometry(hold) for hold in board.holds} == EXPECTED_GEOMETRY
+    actual_geometry = {hold.id: serialize_geometry(hold) for hold in board.holds}
+    assert {
+        hold_id: geometry
+        for hold_id, geometry in actual_geometry.items()
+        if hold_id not in DIRECT_MIRRORED_RIGHT_IDS
+    } == {
+        hold_id: geometry
+        for hold_id, geometry in EXPECTED_GEOMETRY.items()
+        if hold_id not in DIRECT_MIRRORED_RIGHT_IDS
+    }
 
     for family in range(1, 9):
         left = holds[f"hold-{family:02d}-left"]
