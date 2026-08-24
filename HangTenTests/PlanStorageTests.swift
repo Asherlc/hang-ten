@@ -58,7 +58,9 @@ final class PlanStorageTests: XCTestCase {
             packageStore: BoardCatalog.packageStore
         )
         let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f80"))
-        let hangSteps = plan.steps.filter { $0.id.hasPrefix("f80-set-") }
+        let hangSteps = plan.steps.filter {
+            $0.id.hasPrefix("f80-set-") && $0.phase == .hang
+        }
 
         XCTAssertEqual(hangSteps.count, 36)
         XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 10 })
@@ -76,7 +78,9 @@ final class PlanStorageTests: XCTestCase {
             packageStore: BoardCatalog.packageStore
         )
         let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f100"))
-        let hangSteps = plan.steps.filter { $0.id.hasPrefix("f100-set-") }
+        let hangSteps = plan.steps.filter {
+            $0.id.hasPrefix("f100-set-") && $0.phase == .hang
+        }
 
         XCTAssertEqual(hangSteps.count, 24)
         XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 6 })
@@ -1770,8 +1774,6 @@ final class PlanStorageTests: XCTestCase {
             return ["subtitle", "accessory", "duration", "interval"]
         case "research.max-hangs":
             return ["subtitle", "accessory", "count", "duration", "interval"]
-        case "research.force-feedback-f100":
-            return ["instruction", "count", "interval"]
         case "research.eva-int-hangs":
             return ["subtitle", "instruction", "accessory", "count", "duration", "interval"]
         case "research.abrahangs":
