@@ -249,6 +249,20 @@ def test_save_changes_only_the_selected_presentation_and_preserves_assets(
     assert after["assets/back.png"] == before["assets/back.png"]
 
 
+def test_save_rejects_the_removed_editor_document_schema_version(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["schemaVersion"] = 1
+
+    with pytest.raises(BoardPackageError, match="unknown keys.*schemaVersion"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
 def test_canonical_package_has_the_exact_single_file_inventory() -> None:
     assert {path.name for path in CANONICAL_PACKAGE.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (CANONICAL_PACKAGE / "assets").iterdir()} == {

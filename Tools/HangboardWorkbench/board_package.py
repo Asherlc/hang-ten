@@ -386,7 +386,6 @@ def editor_document(
             regions.append(region)
             region_id += 1
     return {
-        "schemaVersion": 1,
         "presentationID": presentation.id,
         "canvas": {"width": width, "height": height},
         "regions": regions,
@@ -1111,11 +1110,10 @@ def _validate_editor_document(
         raise BoardPackageError("editor document must be an object")
     _required_and_allowed_keys(
         document,
-        {"schemaVersion", "canvas", "regions"},
-        {"schemaVersion", "presentationID", "canvas", "regions"},
+        {"canvas", "regions"},
+        {"presentationID", "canvas", "regions"},
         "editor document",
     )
-    _schema_version_one(document.get("schemaVersion"), "editor document.schemaVersion")
     document_presentation_id = document.get("presentationID")
     if document_presentation_id is not None:
         document_presentation_id = _identifier(

@@ -62,7 +62,6 @@ export interface HoldRegion {
 }
 
 export interface EditorDocument {
-  schemaVersion: number;
   presentationID?: string;
   canvas: {
     width: number;
