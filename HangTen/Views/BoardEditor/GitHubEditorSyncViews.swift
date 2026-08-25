@@ -33,7 +33,7 @@ final class GitHubSyncSession: ObservableObject {
     private let sleep: (UInt64) async throws -> Void
     private var authorizationTask: Task<Void, Never>?
     private var activeDeviceSignInTaskID: UUID?
-    private(set) var isDeviceSignInTaskActive = false
+    @Published private(set) var isDeviceSignInTaskActive = false
 
     init(
         tokenStore: any GitHubTokenStoring = GitHubTokenStore(),
@@ -201,8 +201,8 @@ struct GitHubSignInView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(syncSession.isSigningIn ? "Cancel sign-in" : "Cancel") {
-                        if syncSession.isSigningIn {
+                    Button(syncSession.isDeviceSignInTaskActive ? "Cancel sign-in" : "Cancel") {
+                        if syncSession.isDeviceSignInTaskActive {
                             syncSession.cancelDeviceSignIn()
                         } else {
                             dismiss()
@@ -211,7 +211,7 @@ struct GitHubSignInView: View {
                 }
             }
         }
-        .interactiveDismissDisabled(syncSession.isSigningIn)
+        .interactiveDismissDisabled(syncSession.isDeviceSignInTaskActive)
         .onChange(of: syncSession.isAuthenticated) { _, isAuthenticated in
             if isAuthenticated {
                 dismiss()
