@@ -102,6 +102,25 @@ fi
 EOF
 chmod +x "$fake_bin/curl"
 
+cat > "$fake_bin/mv" <<'EOF'
+#!/bin/zsh
+set -euo pipefail
+
+destination=${@: -1}
+if [[ ${FAKE_MV_FAILURE_DESTINATION:-} == "$destination" && ! -e ${FAKE_MV_FAILURE_MARKER:?} ]]; then
+  : > "$FAKE_MV_FAILURE_MARKER"
+  exit 1
+fi
+if [[ ${FAKE_MV_INTERRUPT_DESTINATION:-} == "$destination" && ! -e ${FAKE_MV_INTERRUPT_MARKER:?} ]]; then
+  : > "$FAKE_MV_INTERRUPT_MARKER"
+  kill -TERM "$PPID"
+  exit 1
+fi
+
+exec /bin/mv "$@"
+EOF
+chmod +x "$fake_bin/mv"
+
 set +e
 missing_output=$(PATH="$fake_bin:$PATH" FAKE_CURL_LOG="$request_log" \
   ELEVENLABS_VOICE_ID=test-voice ELEVENLABS_OUTPUT_DIRECTORY="$workspace/output" \
@@ -156,6 +175,37 @@ set -e
 [[ "$failure_output" != *other-secret* && "$failure_output" != *test-key%2Dderived* ]] || fail 'HTTP failure diagnostics exposed provider credentials'
 [[ "$failure_output" != *xi-api-key* && "$failure_output" != *https://api.elevenlabs.io* ]] || fail 'HTTP failure diagnostics exposed request metadata'
 [[ "$pack_before_failure" == "$(cd "$output_directory" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)" ]] || fail 'HTTP failure replaced the existing audio pack'
+
+pack_before_install_failure=$(cd "$output_directory" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)
+install_failure_marker="$workspace/install-failure-marker"
+set +e
+install_failure_output=$(PATH="$fake_bin:$PATH" FAKE_CURL_LOG="$request_log" \
+  FAKE_MV_FAILURE_DESTINATION="$output_directory/countdown-2.mp3" \
+  FAKE_MV_FAILURE_MARKER="$install_failure_marker" \
+  ELEVENLABS_API_KEY=test-key ELEVENLABS_VOICE_ID=test-voice ELEVENLABS_MODEL_ID=second-model \
+  ELEVENLABS_OUTPUT_DIRECTORY="$output_directory" zsh "$generator" 2>&1)
+install_failure_status=$?
+set -e
+
+(( install_failure_status != 0 )) || fail 'install failure unexpectedly succeeded'
+[[ "$install_failure_output" == *'Failed to install the ElevenLabs countdown audio pack.'* ]] || fail 'install failure was not reported'
+[[ -e "$install_failure_marker" ]] || fail 'install failure did not occur after replacement started'
+[[ "$pack_before_install_failure" == "$(cd "$output_directory" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)" ]] || fail 'install failure left a mixed audio pack'
+
+pack_before_interrupt=$(cd "$output_directory" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)
+interrupt_marker="$workspace/install-interrupt-marker"
+set +e
+interrupt_output=$(PATH="$fake_bin:$PATH" FAKE_CURL_LOG="$request_log" \
+  FAKE_MV_INTERRUPT_DESTINATION="$output_directory/countdown-2.mp3" \
+  FAKE_MV_INTERRUPT_MARKER="$interrupt_marker" \
+  ELEVENLABS_API_KEY=test-key ELEVENLABS_VOICE_ID=test-voice ELEVENLABS_MODEL_ID=third-model \
+  ELEVENLABS_OUTPUT_DIRECTORY="$output_directory" zsh "$generator" 2>&1)
+interrupt_status=$?
+set -e
+
+(( interrupt_status != 0 )) || fail 'install interruption unexpectedly succeeded'
+[[ -e "$interrupt_marker" ]] || fail 'install interruption did not occur after replacement started'
+[[ "$pack_before_interrupt" == "$(cd "$output_directory" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)" ]] || fail 'install interruption left a mixed audio pack'
 
 foreign_output_directory="$workspace/foreign-output"
 mkdir -p "$foreign_output_directory"

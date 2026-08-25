@@ -45,11 +45,42 @@ else
 fi
 
 temporary_directory=$(mktemp -d "$output_parent/.CountdownAudio.XXXXXX")
+rollback_directory="$temporary_directory/previous-pack"
+typeset -A previous_file_exists
+replaced_filenames=()
+installation_in_progress=0
+
+restore_previous_pack() {
+  local filename
+  local restore_failed=0
+
+  (( installation_in_progress )) || return 0
+
+  for filename in "${replaced_filenames[@]}"; do
+    if [[ ${previous_file_exists[$filename]:-0} == 1 ]]; then
+      mv -f -- "$rollback_directory/$filename" "$output_directory/$filename" || restore_failed=1
+    else
+      rm -f -- "$output_directory/$filename" || restore_failed=1
+    fi
+  done
+
+  installation_in_progress=0
+  return $restore_failed
+}
 
 cleanup() {
+  local exit_status=${1:-$?}
+
+  trap - EXIT HUP INT TERM
+  if ! restore_previous_pack; then
+    print -u2 -- 'Failed to restore the previous ElevenLabs countdown audio pack.'
+    exit_status=1
+  fi
   [[ -n ${temporary_directory:-} && -d "$temporary_directory" ]] && rm -rf -- "$temporary_directory"
+  exit $exit_status
 }
 trap cleanup EXIT
+trap 'cleanup 1' HUP INT TERM
 
 json_string() {
   python3 - "$1" <<'PY'
@@ -128,11 +159,25 @@ for filename in "${pack_filenames[@]}"; do
   }
 done
 
+mkdir -- "$rollback_directory"
 for filename in "${pack_filenames[@]}"; do
+  if [[ -e "$output_directory/$filename" ]]; then
+    cp -p -- "$output_directory/$filename" "$rollback_directory/$filename"
+    previous_file_exists[$filename]=1
+  else
+    previous_file_exists[$filename]=0
+  fi
+done
+
+installation_in_progress=1
+for filename in "${pack_filenames[@]}"; do
+  replaced_filenames+=("$filename")
   if ! mv -f -- "$temporary_directory/$filename" "$output_directory/$filename"; then
+    restore_previous_pack || print -u2 -- 'Failed to restore the previous ElevenLabs countdown audio pack.'
     print -u2 -- 'Failed to install the ElevenLabs countdown audio pack.'
     exit 1
   fi
 done
+installation_in_progress=0
 
 print -- "Generated countdown audio pack in $output_directory"
