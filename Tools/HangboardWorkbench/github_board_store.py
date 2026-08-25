@@ -855,6 +855,7 @@ def _save_loaded_editor_document(
         shape_constraint,
         bendable_command_indexes,
         finger_capacity,
+        size_millimeters,
         depth_range,
         hand_capacity,
     ) in parsed_regions.values():
@@ -866,6 +867,7 @@ def _save_loaded_editor_document(
                 shape_constraint,
                 bendable_command_indexes,
                 finger_capacity,
+                size_millimeters,
                 depth_range,
                 hand_capacity,
             )

@@ -323,7 +323,19 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
     )
     pieces_by_hold: dict[
         str,
-        list[tuple[int, str, object, object, tuple[int, ...], int | None, dict[str, int] | None, int | None]],
+        list[
+            tuple[
+                int,
+                str,
+                object,
+                object,
+                tuple[int, ...],
+                int | None,
+                int | float | None,
+                dict[str, int | float] | None,
+                int | None,
+            ]
+        ],
     ] = {}
     for (
         hold_id,
@@ -333,6 +345,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         shape_constraint,
         bendable_command_indexes,
         finger_capacity,
+        size_millimeters,
         depth_range,
         hand_capacity,
     ) in parsed.values():
@@ -344,6 +357,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 shape_constraint,
                 bendable_command_indexes,
                 finger_capacity,
+                size_millimeters,
                 depth_range,
                 hand_capacity,
             )
@@ -361,6 +375,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         first_piece[5],
         first_piece[6],
         first_piece[7],
+        first_piece[8],
     )
     original = copy.deepcopy(package.board)
 
@@ -1442,10 +1457,28 @@ def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_hold(
     } == {(("lowerBound", 12), ("upperBound", 16))}
 
 
-def test_opening_and_saving_preserves_fractional_hold_measurements(
+def test_opening_and_saving_preserves_fractional_fixed_hold_measurement(
     tmp_path: Path,
 ) -> None:
-    """Rejects a regression that treats source-backed half-millimeter values as invalid."""
+    """Rejects a regression that treats a source-backed fractional fixed depth as invalid."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0].update(sizeMillimeters=7.5),
+    )
+
+    opened = board_package.open_package(library, "fixture.board")
+    document = board_package.editor_document(opened)
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert saved.board["holds"][0]["sizeMillimeters"] == 7.5
+    assert "depthRangeMillimeters" not in saved.board["holds"][0]
+    assert _read_board(package_root)["holds"][0]["sizeMillimeters"] == 7.5
+
+
+def test_opening_rejects_hold_with_fixed_and_variable_depths(tmp_path: Path) -> None:
+    """Removing depth-form exclusivity would accept an ambiguous package hold."""
     library = _library(tmp_path)
     package_root = _write_finished_package(library, "fixture-board", "fixture.board")
     _mutate_board(
@@ -1456,20 +1489,63 @@ def test_opening_and_saving_preserves_fractional_hold_measurements(
         ),
     )
 
-    opened = board_package.open_package(library, "fixture.board")
-    document = board_package.editor_document(opened)
-    saved = board_package.save_editor_document(library, "fixture-board", document)
+    with pytest.raises(BoardPackageError, match="must not specify both"):
+        board_package.open_package(library, "fixture.board")
 
-    assert saved.board["holds"][0]["sizeMillimeters"] == 7.5
-    assert saved.board["holds"][0]["depthRangeMillimeters"] == {
-        "lowerBound": 7.5,
-        "upperBound": 12.5,
-    }
-    assert _read_board(package_root)["holds"][0]["sizeMillimeters"] == 7.5
-    assert {
-        tuple(region["depthRangeMillimeters"].items())
-        for region in board_package.editor_document(saved)["regions"]
-    } == {(("lowerBound", 7.5), ("upperBound", 12.5))}
+
+@pytest.mark.parametrize(
+    "size",
+    [0, -1, math.nan, math.inf, True, "7.5", None],
+)
+def test_save_rejects_malformed_or_non_positive_fixed_depth(
+    tmp_path: Path, size: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    for region in document["regions"]:
+        region["sizeMillimeters"] = size
+
+    with pytest.raises(BoardPackageError, match="positive finite number"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_rejects_fixed_and_variable_depth_on_one_piece(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    for region in document["regions"]:
+        region["sizeMillimeters"] = 8.5
+        region["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 12.5}
+
+    with pytest.raises(BoardPackageError, match="must not specify both"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+@pytest.mark.parametrize(
+    ("second_piece_depth", "message"),
+    [
+        ({"sizeMillimeters": 9.5}, "share one fixed depth"),
+        (
+            {"depthRangeMillimeters": {"lowerBound": 7.5, "upperBound": 12.5}},
+            "share one depth representation",
+        ),
+        ({}, "share one depth representation"),
+    ],
+)
+def test_save_rejects_inconsistent_depth_across_physical_pieces(
+    tmp_path: Path,
+    second_piece_depth: dict[str, object],
+    message: str,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["sizeMillimeters"] = 8.5
+    document["regions"][1].update(second_piece_depth)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 @pytest.mark.parametrize(

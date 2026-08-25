@@ -285,6 +285,8 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           onRotationDegreesChange={actions.setRotationDegrees}
           onTypeChange={editor.changeHoldType}
           onFingerCapacityChange={editor.changeFingerCapacity}
+          onDepthMeasurementChange={editor.changeHoldDepthMeasurement}
+          onSizeMillimetersChange={editor.changeHoldSizeMillimeters}
           onDepthRangeChange={editor.changeHoldDepthRange}
           onHandCapacityChange={editor.changeHandCapacity}
           onOutlineShapeChange={editor.changeOutlineShape}

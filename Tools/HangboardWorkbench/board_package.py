@@ -183,6 +183,7 @@ _EditorPiece = tuple[
     dict[str, object] | None,
     tuple[int, ...],
     int | None,
+    int | float | None,
     dict[str, int | float] | None,
     int | None,
 ]
@@ -385,6 +386,8 @@ def editor_document(
                 region["bendableCommandIndexes"] = bendable_command_indexes
             if "fingerCapacity" in hold:
                 region["fingerCapacity"] = hold["fingerCapacity"]
+            if "sizeMillimeters" in hold:
+                region["sizeMillimeters"] = hold["sizeMillimeters"]
             if "depthRangeMillimeters" in hold:
                 region["depthRangeMillimeters"] = dict(hold["depthRangeMillimeters"])
             if "handCapacity" in hold:
@@ -437,6 +440,7 @@ def save_editor_document(
             shape_constraint,
             bendable_command_indexes,
             finger_capacity,
+            size_millimeters,
             depth_range,
             hand_capacity,
         ) in parsed_regions.values():
@@ -448,6 +452,7 @@ def save_editor_document(
                     shape_constraint,
                     bendable_command_indexes,
                     finger_capacity,
+                    size_millimeters,
                     depth_range,
                     hand_capacity,
                 )
@@ -527,6 +532,7 @@ def _apply_editor_document(
             shape_constraint,
             bendable_command_indexes,
             _finger_capacity,
+            _size_millimeters,
             _depth_range,
             _hand_capacity,
         ) in pieces:
@@ -565,13 +571,19 @@ def _apply_editor_document(
         else:
             hold_json["fingerCapacity"] = pieces[0][5]
         if pieces[0][6] is None:
+            hold_json.pop("sizeMillimeters", None)
+        else:
+            hold_json["sizeMillimeters"] = pieces[0][6]
+            hold_json.pop("depthRangeMillimeters", None)
+        if pieces[0][7] is None:
             hold_json.pop("depthRangeMillimeters", None)
         else:
-            hold_json["depthRangeMillimeters"] = dict(pieces[0][6])
-        if pieces[0][7] is None:
+            hold_json["depthRangeMillimeters"] = dict(pieces[0][7])
+            hold_json.pop("sizeMillimeters", None)
+        if pieces[0][8] is None:
             hold_json.pop("handCapacity", None)
         else:
-            hold_json["handCapacity"] = pieces[0][7]
+            hold_json["handCapacity"] = pieces[0][8]
         hold_json["geometry"] = geometry
         if presentation_id is not None:
             hold_json["presentationID"] = presentation_id
@@ -618,6 +630,7 @@ def _current_display_paths(
             _shape_constraint,
             _bendable_command_indexes,
             _finger_capacity,
+            _size_millimeters,
             _depth_range,
             _hand_capacity,
         ) in pieces:
@@ -644,8 +657,9 @@ def _editor_document_is_dirty(
         if (hold.get("kind") != pieces[0][1]
             or len(hold["geometry"]) != len(pieces)
             or hold.get("fingerCapacity") != pieces[0][5]
-            or hold.get("depthRangeMillimeters") != pieces[0][6]
-            or hold.get("handCapacity") != pieces[0][7]):
+            or hold.get("sizeMillimeters") != pieces[0][6]
+            or hold.get("depthRangeMillimeters") != pieces[0][7]
+            or hold.get("handCapacity") != pieces[0][8]):
             return True
         for (
             piece_index,
@@ -654,6 +668,7 @@ def _editor_document_is_dirty(
             shape_constraint,
             bendable_command_indexes,
             _finger_capacity,
+            _size_millimeters,
             _depth_range,
             _hand_capacity,
         ) in pieces:
@@ -1028,6 +1043,10 @@ def _validate_hold(
             f"{label}.geometry[{piece_index}]",
             validate_geometry=validate_geometry,
         )
+    if "sizeMillimeters" in hold and "depthRangeMillimeters" in hold:
+        raise BoardPackageError(
+            f"{label} must not specify both a size and depth range"
+        )
     if "sizeMillimeters" in hold:
         _positive_number(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
     if "depthRangeMillimeters" in hold:
@@ -1166,14 +1185,15 @@ def _validate_editor_document(
         dict[str, object] | None,
         tuple[int, ...],
         int | None,
-        dict[str, int] | None,
+        int | float | None,
+        dict[str, int | float] | None,
         int | None,
     ],
 ]:
     """Parse and cross-validate an editor document, allowing added/removed/
     recategorized holds. Returns key -> (holdID, pieceIndex, kind, parsed path,
-    shape constraint, bendable command indexes, finger capacity, depth range,
-    hand capacity)."""
+    shape constraint, bendable command indexes, finger capacity, fixed depth,
+    depth range, hand capacity)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
     _required_and_allowed_keys(
@@ -1205,6 +1225,7 @@ def _validate_editor_document(
             dict[str, object] | None,
             tuple[int, ...],
             int | None,
+            int | float | None,
             dict[str, int | float] | None,
             int | None,
         ],
@@ -1212,7 +1233,9 @@ def _validate_editor_document(
     pieces_by_hold: dict[str, dict[int, str]] = {}
     kind_by_hold: dict[str, str | None] = {}
     finger_capacity_by_hold: dict[str, int | None] = {}
+    size_millimeters_by_hold: dict[str, int | float | None] = {}
     depth_range_by_hold: dict[str, dict[str, int | float] | None] = {}
+    depth_representation_by_hold: dict[str, str] = {}
     hand_capacity_by_hold: dict[str, int | None] = {}
     for region in regions:
         if not isinstance(region, Mapping):
@@ -1229,6 +1252,7 @@ def _validate_editor_document(
                 "shapeConstraint",
                 "bendableCommandIndexes",
                 "fingerCapacity",
+                "sizeMillimeters",
                 "depthRangeMillimeters",
                 "handCapacity",
             },
@@ -1313,6 +1337,22 @@ def _validate_editor_document(
                 )
         else:
             finger_capacity = None
+        if "sizeMillimeters" in region and "depthRangeMillimeters" in region:
+            raise BoardPackageError(
+                f"editor region {key} must not specify both a size and depth range"
+            )
+        if "sizeMillimeters" in region:
+            _positive_number(
+                region["sizeMillimeters"],
+                f"editor region {key}.sizeMillimeters",
+            )
+            size_millimeters = region["sizeMillimeters"]
+            depth_representation = "fixed"
+        else:
+            size_millimeters = None
+            depth_representation = (
+                "variable" if "depthRangeMillimeters" in region else "unset"
+            )
         if "depthRangeMillimeters" in region:
             _millimeter_range(
                 region["depthRangeMillimeters"],
@@ -1347,6 +1387,16 @@ def _validate_editor_document(
         if hold_id in finger_capacity_by_hold and finger_capacity_by_hold[hold_id] != finger_capacity:
             raise BoardPackageError(f"hold {hold_id} pieces must share one finger capacity")
         finger_capacity_by_hold[hold_id] = finger_capacity
+        if (hold_id in depth_representation_by_hold
+            and depth_representation_by_hold[hold_id] != depth_representation):
+            raise BoardPackageError(
+                f"hold {hold_id} pieces must share one depth representation"
+            )
+        depth_representation_by_hold[hold_id] = depth_representation
+        if (hold_id in size_millimeters_by_hold
+            and size_millimeters_by_hold[hold_id] != size_millimeters):
+            raise BoardPackageError(f"hold {hold_id} pieces must share one fixed depth")
+        size_millimeters_by_hold[hold_id] = size_millimeters
         if hold_id in depth_range_by_hold and depth_range_by_hold[hold_id] != depth_range:
             raise BoardPackageError(f"hold {hold_id} pieces must share one depth range")
         depth_range_by_hold[hold_id] = depth_range
@@ -1361,6 +1411,7 @@ def _validate_editor_document(
             shape_constraint,
             bendable_command_indexes,
             finger_capacity,
+            size_millimeters,
             depth_range,
             hand_capacity,
         )

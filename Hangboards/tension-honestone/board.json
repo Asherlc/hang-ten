@@ -422,254 +422,6 @@
       "presentationID": "primary"
     },
     {
-      "id": "edge-20-15-left",
-      "name": "Left 20/15 mm stepped edge",
-      "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 15, "upperBound": 20 },
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.131170812799,
-            "y": 0.458199829968,
-            "width": 0.246,
-            "height": 0.055
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.044715447154,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.955284552846,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.979980212102,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.08954303932
-                ],
-                "to": [
-                  1.0,
-                  0.2
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.8
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.910456941358
-                ],
-                "control2": [
-                  0.979980212102,
-                  1.0
-                ],
-                "to": [
-                  0.955284552846,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.044715447154,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.020019785467,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.910456941358
-                ],
-                "to": [
-                  0.0,
-                  0.8
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.2
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.08954303932
-                ],
-                "control2": [
-                  0.020019785467,
-                  0.0
-                ],
-                "to": [
-                  0.044715447154,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0.0
-          }
-        }
-      ],
-      "presentationID": "primary"
-    },
-    {
-      "id": "edge-20-15-right",
-      "name": "Right 20/15 mm stepped edge",
-      "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 15, "upperBound": 20 },
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.624487562201,
-            "y": 0.459673157279,
-            "width": 0.246,
-            "height": 0.055
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.044715447154,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.955284552846,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.979980212102,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.089543058642
-                ],
-                "to": [
-                  1.0,
-                  0.2
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.8
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.91045696068
-                ],
-                "control2": [
-                  0.979980212102,
-                  1.0
-                ],
-                "to": [
-                  0.955284552846,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.044715447154,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.020019787898,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.91045696068
-                ],
-                "to": [
-                  0.0,
-                  0.8
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.2
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.089543058642
-                ],
-                "control2": [
-                  0.020019787898,
-                  0.0
-                ],
-                "to": [
-                  0.044715447154,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0.0
-          }
-        }
-      ],
-      "presentationID": "primary"
-    },
-    {
       "id": "edge-25-center",
       "name": "25 mm center incut edge",
       "kind": "edge",
@@ -780,17 +532,17 @@
       "presentationID": "primary"
     },
     {
-      "id": "edge-10-8-left",
-      "name": "Left 10/8 mm stepped edge",
+      "id": "edge-20-left",
+      "name": "Left 20 mm edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 8, "upperBound": 10 },
+      "sizeMillimeters": 20,
       "geometry": [
         {
           "frame": {
-            "x": 0.136975124402,
-            "y": 0.589872987248,
-            "width": 0.246,
-            "height": 0.064
+            "x": 0.130980861244,
+            "y": 0.458023379384,
+            "width": 0.126794258373,
+            "height": 0.055260361318
           },
           "shape": {
             "type": "path",
@@ -798,95 +550,65 @@
               {
                 "command": "move",
                 "to": [
-                  0.052032520325,
+                  0.075471698113,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.947967479675,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.976704246411,
-                  0.0
-                ],
-                "control2": [
                   1.0,
-                  0.089543055925
-                ],
-                "to": [
-                  1.0,
-                  0.2
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   1.0,
-                  0.8
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.910456944075
-                ],
-                "control2": [
-                  0.976704246411,
-                  1.0
-                ],
-                "to": [
-                  0.947967479675,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.052032520325,
+                  0.075471698113,
                   1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.023295753589,
+                  0.033018867925,
                   1.0
                 ],
                 "control2": [
                   0.0,
-                  0.910456944075
+                  0.865384615385
                 ],
                 "to": [
                   0.0,
-                  0.8
+                  0.692307692308
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.0,
-                  0.2
+                  0.307692307692
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   0.0,
-                  0.089543055925
+                  0.134615384615
                 ],
                 "control2": [
-                  0.023295753589,
+                  0.033018867925,
                   0.0
                 ],
                 "to": [
-                  0.052032520325,
+                  0.075471698113,
                   0.0
                 ]
               },
@@ -894,27 +616,23 @@
                 "command": "close"
               }
             ]
-          },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0.0
           }
         }
       ],
       "presentationID": "primary"
     },
     {
-      "id": "edge-10-8-right",
-      "name": "Right 10/8 mm stepped edge",
+      "id": "edge-15-left",
+      "name": "Left 15 mm edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 8, "upperBound": 10 },
+      "sizeMillimeters": 15,
       "geometry": [
         {
           "frame": {
-            "x": 0.617024875598,
-            "y": 0.595766297556,
-            "width": 0.246,
-            "height": 0.064
+            "x": 0.257775119617,
+            "y": 0.458023379384,
+            "width": 0.11961722488,
+            "height": 0.055260361318
           },
           "shape": {
             "type": "path",
@@ -922,95 +640,148 @@
               {
                 "command": "move",
                 "to": [
-                  0.052032520325,
+                  0.0,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.947967479675,
+                  0.92,
                   0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.976704246411,
+                  0.965,
                   0.0
                 ],
                 "control2": [
                   1.0,
-                  0.089543055925
+                  0.134615384615
                 ],
                 "to": [
                   1.0,
-                  0.2
+                  0.307692307692
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   1.0,
-                  0.8
+                  0.692307692308
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   1.0,
-                  0.910456944075
+                  0.865384615385
                 ],
                 "control2": [
-                  0.976704246411,
+                  0.965,
                   1.0
                 ],
                 "to": [
-                  0.947967479675,
+                  0.92,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.052032520325,
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-15-right",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.622607655502,
+            "y": 0.458023379384,
+            "width": 0.11961722488,
+            "height": 0.055260361318
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.08,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.08,
                   1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.023295753589,
+                  0.035,
                   1.0
                 ],
                 "control2": [
                   0.0,
-                  0.910456944075
+                  0.865384615385
                 ],
                 "to": [
                   0.0,
-                  0.8
+                  0.692307692308
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.0,
-                  0.2
+                  0.307692307692
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   0.0,
-                  0.089543055925
+                  0.134615384615
                 ],
                 "control2": [
-                  0.023295753589,
+                  0.035,
                   0.0
                 ],
                 "to": [
-                  0.052032520325,
+                  0.08,
                   0.0
                 ]
               },
@@ -1018,10 +789,435 @@
                 "command": "close"
               }
             ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-20-right",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.742224880383,
+            "y": 0.458023379384,
+            "width": 0.126794258373,
+            "height": 0.055260361318
           },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0.0
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.924528301887,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.966981132075,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.134615384615
+                ],
+                "to": [
+                  1.0,
+                  0.307692307692
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.692307692308
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.865384615385
+                ],
+                "control2": [
+                  0.966981132075,
+                  1.0
+                ],
+                "to": [
+                  0.924528301887,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-10-left",
+      "name": "Left 10 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 10,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.136961722488,
+            "y": 0.589798087141,
+            "width": 0.120813397129,
+            "height": 0.063761955367
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.079207920792,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.079207920792,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.034653465347,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.883333333333
+                ],
+                "to": [
+                  0.0,
+                  0.733333333333
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.266666666667
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.116666666667
+                ],
+                "control2": [
+                  0.034653465347,
+                  0.0
+                ],
+                "to": [
+                  0.079207920792,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-8-left",
+      "name": "Left 8 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 8,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.257775119617,
+            "y": 0.589798087141,
+            "width": 0.125,
+            "height": 0.063761955367
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.923444976077,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.966507177033,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.116666666667
+                ],
+                "to": [
+                  1.0,
+                  0.266666666667
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.733333333333
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.883333333333
+                ],
+                "control2": [
+                  0.966507177033,
+                  1.0
+                ],
+                "to": [
+                  0.923444976077,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-8-right",
+      "name": "Right 8 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 8,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.617224880383,
+            "y": 0.589798087141,
+            "width": 0.125,
+            "height": 0.063761955367
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.076555023923,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.076555023923,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.033492822967,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.883333333333
+                ],
+                "to": [
+                  0.0,
+                  0.733333333333
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.266666666667
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.116666666667
+                ],
+                "control2": [
+                  0.033492822967,
+                  0.0
+                ],
+                "to": [
+                  0.076555023923,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-10-right",
+      "name": "Right 10 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 10,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.742224880383,
+            "y": 0.589798087141,
+            "width": 0.120813397129,
+            "height": 0.063761955367
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.920792079208,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.965346534653,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.116666666667
+                ],
+                "to": [
+                  1.0,
+                  0.266666666667
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.733333333333
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.883333333333
+                ],
+                "control2": [
+                  0.965346534653,
+                  1.0
+                ],
+                "to": [
+                  0.920792079208,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           }
         }
       ],
