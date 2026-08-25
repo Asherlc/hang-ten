@@ -1,8 +1,9 @@
 name: Release to App Store Connect
 
-# A successful CI run on main is the only release trigger. There is deliberately
-# no manual or pull-request trigger, so every uploaded build has passed CI.
+# Automatic releases require a successful CI run on main. Authorized maintainers
+# can also manually release the selected workflow revision.
 on:
+  workflow_dispatch:
   workflow_run:
     workflows:
       - CI
@@ -21,9 +22,12 @@ concurrency:
 jobs:
   release:
     if: >-
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.head_branch == 'main'
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main'
+      )
     name: Archive, sign, and upload
     runs-on: macos-26
     timeout-minutes: 60
@@ -32,13 +36,13 @@ jobs:
       url: https://appstoreconnect.apple.com/
 
     steps:
-      # Check out the exact commit whose CI run succeeded, not whichever commit
-      # happens to be at the tip of main when this workflow starts.
+      # Automatic runs check out the exact commit whose CI run succeeded, while
+      # manual runs check out the revision selected for workflow dispatch.
       # actions/checkout v4.2.2
       - name: Check out tested commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
           fetch-depth: 1
           persist-credentials: false
 
