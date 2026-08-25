@@ -21,6 +21,7 @@ set -euo pipefail
 
 log_file=${FAKE_CURL_LOG:?}
 output_file=''
+write_out=''
 method=''
 url=''
 headers=()
@@ -44,6 +45,10 @@ while (( $# > 0 )); do
       output_file=$2
       shift 2
       ;;
+    --write-out)
+      write_out=$2
+      shift 2
+      ;;
     *)
       url=$1
       shift
@@ -58,7 +63,19 @@ done
 print -r -- "body=$body" >> "$log_file"
 print -r -- "url=$url" >> "$log_file"
 print -r -- '---' >> "$log_file"
+
+if [[ ${FAKE_CURL_FAILURE:-} == 1 ]]; then
+  print -n -- '{"detail":{"code":"quota_exceeded","message":"Insufficient credits for test-key."}}' > "$output_file"
+  if [[ "$write_out" == *http_code* ]]; then
+    print -n -- '402'
+  fi
+  exit 0
+fi
+
 print -n -- "audio-for-${body}" > "$output_file"
+if [[ "$write_out" == *http_code* ]]; then
+  print -n -- '200'
+fi
 EOF
 chmod +x "$fake_bin/curl"
 
@@ -91,6 +108,22 @@ done
 [[ $(rg -c '^url=https://api\.elevenlabs\.io/v1/text-to-speech/test-voice\?output_format=mp3_22050_32$' "$request_log") == 3 ]] || fail 'voice URL or default output format was wrong'
 [[ "$success_output" != *test-key* ]] || fail 'generator diagnostics exposed the API key'
 ! rg -q -- 'test-key' "$workspace/output/metadata.json" || fail 'metadata exposed the API key'
+
+pack_before_failure=$(cd "$workspace/output" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)
+set +e
+failure_output=$(PATH="$fake_bin:$PATH" FAKE_CURL_LOG="$request_log" FAKE_CURL_FAILURE=1 \
+  ELEVENLABS_API_KEY=test-key ELEVENLABS_VOICE_ID=test-voice \
+  ELEVENLABS_OUTPUT_DIRECTORY="$workspace/output" zsh "$generator" 2>&1)
+failure_status=$?
+set -e
+
+(( failure_status != 0 )) || fail 'HTTP failure unexpectedly succeeded'
+[[ "$failure_output" == *'HTTP 402'* ]] || fail 'HTTP failure status was not reported'
+[[ "$failure_output" == *quota_exceeded* ]] || fail 'ElevenLabs error code was not reported'
+[[ "$failure_output" == *'Insufficient credits for [REDACTED].'* ]] || fail 'ElevenLabs error message was not sanitized'
+[[ "$failure_output" != *test-key* ]] || fail 'HTTP failure diagnostics exposed the API key'
+[[ "$failure_output" != *xi-api-key* && "$failure_output" != *https://api.elevenlabs.io* ]] || fail 'HTTP failure diagnostics exposed request metadata'
+[[ "$pack_before_failure" == "$(cd "$workspace/output" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)" ]] || fail 'HTTP failure replaced the existing audio pack'
 
 rg -q 'CountdownAudio' "$repo_root/HangTen.xcodeproj/project.pbxproj" || fail 'CountdownAudio is not registered as an app resource'
 
