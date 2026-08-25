@@ -231,7 +231,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         )
     }
 
-    init(
+    convenience init(
         synthesizer: any WorkoutSpeechSynthesizing,
         audioSession: any WorkoutAudioSessionManaging,
         countdownScheduler: any CountdownAudioScheduling,
