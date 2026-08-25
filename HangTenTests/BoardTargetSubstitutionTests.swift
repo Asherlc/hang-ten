@@ -352,6 +352,34 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
+    func testMultiTargetCrimpStepRetainsNonCrimpTargetAndRemainsCompatible() throws {
+        let board = board(holds: [
+            hold(id: "medium-edge", feature: .mediumEdge),
+            hold(id: "jug", kind: .jug, feature: .jug)
+        ])
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let methodPlan = LegacyPlanSeedCatalog.methodEMOM
+        let step = try XCTUnwrap(methodPlan.steps.first { $0.id == "method-emom-minute-3" })
+        let plan = TrainingPlan(
+            id: methodPlan.id,
+            title: methodPlan.title,
+            subtitle: methodPlan.subtitle,
+            level: methodPlan.level,
+            sourceLabel: methodPlan.sourceLabel,
+            sourceURL: methodPlan.sourceURL,
+            provenance: methodPlan.provenance,
+            boardID: methodPlan.boardID,
+            steps: [step]
+        )
+
+        XCTAssertEqual(store.holdIDs(for: step, on: board), ["medium-edge", "jug"])
+        XCTAssertFalse(store.isIncompatible(plan, on: board))
+    }
+
+    @MainActor
     func testBeastmaker1000IsIncompatibleWithUnsupportedREIPinchRoutine() throws {
         let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"

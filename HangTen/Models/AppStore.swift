@@ -266,14 +266,16 @@ final class AppStore: ObservableObject {
     }
 
     func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
+        let gripType = step.targets.count == 1 ? step.gripType : nil
         let ids = step.targets.flatMap {
-            BoardTargetResolver.substituteHoldIDs(for: $0, on: board, gripType: step.gripType)
+            BoardTargetResolver.substituteHoldIDs(for: $0, on: board, gripType: gripType)
         }
         return Set(ids)
     }
 
     func usesFallbackMapping(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
         plan.steps.contains { step in
+            let gripType = step.targets.count == 1 ? step.gripType : nil
             step.targets.contains { target in
                 guard let feature = target.feature,
                       !target.fallbackFeatures.isEmpty else { return false }
@@ -281,7 +283,7 @@ final class AppStore: ObservableObject {
                 return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(
                     for: target,
                     on: board,
-                    gripType: step.gripType
+                    gripType: gripType
                 ).isEmpty
             }
         }
@@ -289,11 +291,12 @@ final class AppStore: ObservableObject {
 
     func isIncompatible(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
         plan.steps.contains { step in
+            let gripType = step.targets.count == 1 ? step.gripType : nil
             step.targets.contains { target in
                 BoardTargetResolver.substituteHoldIDs(
                     for: target,
                     on: board,
-                    gripType: step.gripType
+                    gripType: gripType
                 ).isEmpty
             }
         }
