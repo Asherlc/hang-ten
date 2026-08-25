@@ -235,6 +235,29 @@ def test_rejects_incomplete_reviewed_board(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.parametrize("schema_version", [True, 1.0])
+def test_parser_requires_schema_version_to_be_json_integer_one(
+    tmp_path: Path, schema_version: object
+) -> None:
+    ledger = _write_ledger(tmp_path, _complete_records("fixture.board", "hold-left"))
+    document = json.loads(ledger.read_text(encoding="utf-8"))
+    document["schemaVersion"] = schema_version
+    ledger.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(MetadataAuditError, match="schemaVersion must be 1"):
+        load_metadata_ledger(ledger)
+
+
+def test_parser_rejects_https_url_without_a_hostname(tmp_path: Path) -> None:
+    ledger = _write_ledger(tmp_path, _complete_records("fixture.board", "hold-left"))
+    document = json.loads(ledger.read_text(encoding="utf-8"))
+    document["records"][0]["source"]["url"] = "https://@/source"
+    ledger.write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(MetadataAuditError, match="source.url must be an HTTPS URL"):
+        load_metadata_ledger(ledger)
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [

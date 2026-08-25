@@ -151,7 +151,7 @@ def _load_source(value: Any, source: str) -> MetadataSource:
         raise MetadataAuditError(f"{source}.kind must be manufacturer")
     url = _nonempty_string(payload["url"], f"{source}.url")
     parsed = urlsplit(url)
-    if parsed.scheme != "https" or not parsed.netloc:
+    if parsed.scheme != "https" or not parsed.hostname:
         raise MetadataAuditError(f"{source}.url must be an HTTPS URL")
     return MetadataSource(
         kind="manufacturer",
@@ -257,7 +257,11 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
     except json.JSONDecodeError as error:
         raise MetadataAuditError(f"metadata ledger is invalid JSON: {ledger_path}") from error
     _closed(payload, {"schemaVersion", "reviewedBoardIDs", "records"}, "metadata ledger")
-    if payload["schemaVersion"] != 1:
+    if (
+        isinstance(payload["schemaVersion"], bool)
+        or not isinstance(payload["schemaVersion"], int)
+        or payload["schemaVersion"] != 1
+    ):
         raise MetadataAuditError("metadata ledger.schemaVersion must be 1")
     reviewed_value = payload["reviewedBoardIDs"]
     if not isinstance(reviewed_value, list) or not reviewed_value:
