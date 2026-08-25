@@ -136,7 +136,7 @@
     {
       "id": "tray",
       "name": "Tray",
-      "kind": "jug",
+      "kind": "pocket",
       "presentationID": "stepped-face",
       "geometry": [
         {
