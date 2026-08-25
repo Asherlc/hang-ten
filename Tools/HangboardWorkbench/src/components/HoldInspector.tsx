@@ -96,7 +96,7 @@ export function HoldInspector({
             <input
               id="depth-range-lower-input"
               type="number"
-              min="0"
+              min={Number.MIN_VALUE}
               step="any"
               disabled={busy}
               value={hold?.depthRangeMillimeters?.lowerBound ?? ""}
@@ -107,6 +107,12 @@ export function HoldInspector({
                   return;
                 }
                 const lowerBound = Number(value);
+                if (!Number.isFinite(lowerBound) || lowerBound <= 0) {
+                  event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+                  event.currentTarget.reportValidity();
+                  return;
+                }
+                event.currentTarget.setCustomValidity("");
                 const upperBound = Math.max(hold?.depthRangeMillimeters?.upperBound ?? lowerBound, lowerBound);
                 onDepthRangeChange({ lowerBound, upperBound });
               }}
@@ -116,7 +122,7 @@ export function HoldInspector({
             <input
               id="depth-range-upper-input"
               type="number"
-              min="0"
+              min={Number.MIN_VALUE}
               step="any"
               disabled={busy}
               value={hold?.depthRangeMillimeters?.upperBound ?? ""}
@@ -127,6 +133,12 @@ export function HoldInspector({
                   return;
                 }
                 const upperBound = Number(value);
+                if (!Number.isFinite(upperBound) || upperBound <= 0) {
+                  event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+                  event.currentTarget.reportValidity();
+                  return;
+                }
+                event.currentTarget.setCustomValidity("");
                 const lowerBound = Math.min(hold?.depthRangeMillimeters?.lowerBound ?? upperBound, upperBound);
                 onDepthRangeChange({ lowerBound, upperBound });
               }}

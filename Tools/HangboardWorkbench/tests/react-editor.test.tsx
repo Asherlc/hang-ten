@@ -994,6 +994,30 @@ test("fractional depth range loads in the inspector and saves across every physi
   }, dependenciesFixture(board, { client }));
 });
 
+test("zero depth is visibly invalid in the inspector", async () => {
+  const board = boardFixture(documentFixture([
+    {
+      id: 1,
+      key: "a-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "a", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
+    },
+  ]));
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#depth-range-lower-input", "0");
+
+    const input = app.document.querySelector<HTMLInputElement>("#depth-range-lower-input");
+    assert.ok(input);
+    assert.equal(input.min, Number.MIN_VALUE.toString());
+    assert.equal(input.checkValidity(), false);
+    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+  }, dependenciesFixture(board));
+});
+
 test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavior", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
