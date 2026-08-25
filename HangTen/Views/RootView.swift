@@ -148,11 +148,15 @@ enum RootTab: Hashable, CaseIterable {
 
 enum RootReviewDestination: Equatable {
     case workout
+    case boardEditor
 
     static func initial(environment: [String: String]) -> Self? {
         #if DEBUG
         if environment["HANGTEN_REVIEW_WORKOUT"] == "1" {
             return .workout
+        }
+        if environment["HANGTEN_REVIEW_BOARD_EDITOR"] == "1" {
+            return .boardEditor
         }
         #endif
         return nil
@@ -174,6 +178,10 @@ struct RootView: View {
 			if reviewDestination == .workout,
 			   let plan = store.featuredPlan {
 				WorkoutView(plan: plan)
+			} else if reviewDestination == .boardEditor {
+				NavigationStack {
+					BoardEditorListView()
+				}
 			} else {
 				TabView(selection: $selectedTab) {
 					TrainView { selectedTab = .plans }

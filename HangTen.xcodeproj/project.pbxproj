@@ -110,6 +110,7 @@
 		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
+		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
 		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
 		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
@@ -119,6 +120,7 @@
 		AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C2 /* BoardPackageWriterTests.swift */; };
 		AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C3 /* BoardEditorStoreTests.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
+		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -154,6 +156,7 @@
 		BB0000000000000000000021 /* MotherboardModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModelsTests.swift; sourceTree = "<group>"; };
 		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
@@ -233,6 +236,7 @@
 		BB00000000000000000000C2 /* BoardPackageWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriterTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C3 /* BoardEditorStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStoreTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -430,6 +434,7 @@
 				BB00000000000000000000C3 /* BoardEditorStoreTests.swift */,
 				BB0000000000000000000100 /* BoardEditorSessionTests.swift */,
 				BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */,
+				BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
@@ -443,6 +448,7 @@
 			isa = PBXGroup;
 			children = (
 				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
+				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -751,6 +757,7 @@
 				AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */,
 				AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */,
 				AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */,
+				AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */,
 				AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
@@ -766,6 +773,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
+				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -922,9 +930,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HangTen/Info.plist;
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
+				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
@@ -959,9 +969,11 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "$(HANGTEN_DEVELOPMENT_TEAM)";
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HangTen/Info.plist;
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
+				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
