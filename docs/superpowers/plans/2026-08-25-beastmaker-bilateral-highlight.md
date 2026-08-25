@@ -206,3 +206,39 @@ Expected: both commands exit 0.
 git add HangTen/Models/WorkoutActivityRecording.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
 git commit -m "Compile bilateral edge fallback"
 ```
+
+### Task 5: Update the Beastmaker package inventory expectation
+
+**Files:**
+- Modify: `Tools/HangboardPackages/tests/test_beastmaker_2000_board_package.py:45,492-496`
+- Modify: `docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md`
+
+**Interfaces:**
+- Consumes: the Beastmaker 2000 package's canonical `kind` metadata.
+- Produces: the package test's exact expected map and count for the two mirrored outer lower edges.
+
+- [ ] **Step 1: Verify the existing test fails**
+
+Run: `python -m pytest tests/test_beastmaker_2000_board_package.py::test_beastmaker_2000_inventory_shapes_and_symmetry -q`
+
+Expected: FAIL because `front-lower-9` is still expected as a pocket and the count still expects one edge / 21 pockets.
+
+- [ ] **Step 2: Apply the minimal expectation correction**
+
+Change only the expected kind for `front-lower-9` to `edge`, and update the matching expected kind counts to five slopers, two edges, and 20 pockets. Do not change package geometry, production code, or unrelated fixture values.
+
+- [ ] **Step 3: Verify focused and full Python suites**
+
+Run: `python -m pytest tests/test_beastmaker_2000_board_package.py::test_beastmaker_2000_inventory_shapes_and_symmetry -q`
+
+Run: `python -m pytest tests -q`
+
+Expected: both commands exit 0.
+
+- [ ] **Step 4: Commit and push**
+
+```bash
+git add Tools/HangboardPackages/tests/test_beastmaker_2000_board_package.py docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
+git commit -m "Update Beastmaker edge inventory test"
+git push
+```
