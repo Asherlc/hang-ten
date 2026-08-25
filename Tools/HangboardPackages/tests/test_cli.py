@@ -32,6 +32,45 @@ def _json_output(output: str) -> dict[str, object]:
     return json.loads(output[output.find("{") :])
 
 
+def _write_audit_ledger(
+    path: Path, *, hold_id: str = "hold-left"
+) -> Path:
+    ledger = path / "metadata-ledger.json"
+    ledger.write_text(
+        json.dumps(
+            {
+                "schemaVersion": 1,
+                "reviewedBoardIDs": ["fixture.board"],
+                "records": [
+                    {
+                        "boardID": "fixture.board",
+                        "holdIDs": [hold_id],
+                        "field": field,
+                        "outcome": "unavailable",
+                        "reviewedAt": "2026-08-25",
+                        "source": {
+                            "kind": "manufacturer",
+                            "url": "https://example.com/fixture-source",
+                            "label": "Fixture manufacturer source",
+                        },
+                        "reason": "The manufacturer source does not establish this value.",
+                    }
+                    for field in (
+                        "sizeMillimeters",
+                        "depthRangeMillimeters",
+                        "fingerCapacity",
+                        "handCapacity",
+                        "gripType",
+                        "features",
+                    )
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return ledger
+
+
 def test_package_cli_reports_directly_discovered_boards_and_drafts(tmp_path: Path) -> None:
     write_board_package(tmp_path / "package-board", board_id="fixture.board")
     write_primary_only_draft(tmp_path / "draft-board")
@@ -57,6 +96,56 @@ def test_package_cli_final_inventory_rejects_drafts(tmp_path: Path) -> None:
 
     assert result.returncode == 1
     assert "missing board.json" in result.stderr
+
+
+def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
+    packages = tmp_path / "packages"
+    write_board_package(packages / "package-board", board_id="fixture.board")
+    ledger = _write_audit_ledger(tmp_path)
+
+    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+
+    assert result.returncode == 0, result.stderr
+    assert _json_output(result.stdout) == {
+        "reviewedBoardIDs": ["fixture.board"],
+        "fields": {
+            field: {
+                "populated": 0,
+                "verified": 0,
+                "unavailable": 1,
+                "notApplicable": 0,
+            }
+            for field in (
+                "sizeMillimeters",
+                "depthRangeMillimeters",
+                "fingerCapacity",
+                "handCapacity",
+                "gripType",
+                "features",
+            )
+        },
+        "boards": [
+            {
+                "boardID": "fixture.board",
+                "populated": 0,
+                "verified": 0,
+                "unavailable": 6,
+                "notApplicable": 0,
+                "unaccountedFields": 0,
+            }
+        ],
+    }
+
+
+def test_package_cli_audit_metadata_rejects_unknown_hold(tmp_path: Path) -> None:
+    packages = tmp_path / "packages"
+    write_board_package(packages / "package-board", board_id="fixture.board")
+    ledger = _write_audit_ledger(tmp_path, hold_id="unknown-hold")
+
+    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+
+    assert result.returncode == 1
+    assert result.stderr == "error: unknown hold ID: unknown-hold\n"
 
 
 def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None:
