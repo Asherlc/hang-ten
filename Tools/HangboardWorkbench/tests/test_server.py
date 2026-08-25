@@ -394,6 +394,128 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
             assert response.read(8) == b"\x89PNG\r\n\x1a\n"
 
 
+def test_opening_a_board_exposes_fractional_fixed_depth_on_every_piece(
+    tmp_path: Path,
+) -> None:
+    """Dropping fixed depth from the GET payload makes the inspector show Unset."""
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    board = board_document("fixture.board")
+    board["holds"][0]["sizeMillimeters"] = 7.5
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+
+    assert status == 200
+    assert [
+        region["sizeMillimeters"]
+        for region in opened["board"]["document"]["regions"]
+    ] == [7.5, 7.5]
+
+
+def test_saving_and_clearing_fractional_fixed_depth_round_trips_through_the_server(
+    tmp_path: Path,
+) -> None:
+    """A fixed-depth edit must persist, reopen, and clear through the HTTP API."""
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+
+    with running_server(library) as base:
+        _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+        document = opened["board"]["document"]
+        for region in document["regions"]:
+            region["sizeMillimeters"] = 7.25
+
+        status, fixed = request_json(
+            base, "PUT", "/api/boards/fixture.board", document
+        )
+        assert status == 200
+        assert [
+            region["sizeMillimeters"]
+            for region in fixed["board"]["document"]["regions"]
+        ] == [7.25, 7.25]
+
+        cleared_document = fixed["board"]["document"]
+        for region in cleared_document["regions"]:
+            del region["sizeMillimeters"]
+        status, cleared = request_json(
+            base, "PUT", "/api/boards/fixture.board", cleared_document
+        )
+
+    assert status == 200
+    assert all(
+        "sizeMillimeters" not in region
+        and "depthRangeMillimeters" not in region
+        for region in cleared["board"]["document"]["regions"]
+    )
+    stored_hold = json.loads(
+        (package / "board.json").read_text(encoding="utf-8")
+    )["holds"][0]
+    assert "sizeMillimeters" not in stored_hold
+    assert "depthRangeMillimeters" not in stored_hold
+
+
+def test_saving_switches_atomically_between_variable_and_fixed_depth(
+    tmp_path: Path,
+) -> None:
+    """Switching modes must remove the opposite canonical depth representation."""
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    board = board_document("fixture.board")
+    board["holds"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 7.5,
+        "upperBound": 12.5,
+    }
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+        document = opened["board"]["document"]
+        for region in document["regions"]:
+            del region["depthRangeMillimeters"]
+            region["sizeMillimeters"] = 8.75
+
+        status, fixed = request_json(
+            base, "PUT", "/api/boards/fixture.board", document
+        )
+        assert status == 200
+        stored_fixed = json.loads(
+            (package / "board.json").read_text(encoding="utf-8")
+        )["holds"][0]
+        assert stored_fixed["sizeMillimeters"] == 8.75
+        assert "depthRangeMillimeters" not in stored_fixed
+
+        variable_document = fixed["board"]["document"]
+        for region in variable_document["regions"]:
+            del region["sizeMillimeters"]
+            region["depthRangeMillimeters"] = {
+                "lowerBound": 9.5,
+                "upperBound": 14.25,
+            }
+        status, variable = request_json(
+            base, "PUT", "/api/boards/fixture.board", variable_document
+        )
+
+    assert status == 200
+    stored_variable = json.loads(
+        (package / "board.json").read_text(encoding="utf-8")
+    )["holds"][0]
+    assert stored_variable["depthRangeMillimeters"] == {
+        "lowerBound": 9.5,
+        "upperBound": 14.25,
+    }
+    assert "sizeMillimeters" not in stored_variable
+    assert all(
+        region["depthRangeMillimeters"] == {
+            "lowerBound": 9.5,
+            "upperBound": 14.25,
+        }
+        and "sizeMillimeters" not in region
+        for region in variable["board"]["document"]["regions"]
+    )
+
+
 def test_board_list_marks_only_edge_and_pocket_holds_without_depth_for_attention(
     tmp_path: Path,
 ) -> None:
@@ -1556,6 +1678,36 @@ def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
         put_call = client.calls_named("put_file")[-1]
         assert put_call.args[0] == HOSTED_TOKEN
         assert put_call.args[2] == HOSTED_BRANCH
+
+
+def test_hosted_save_round_trips_fractional_fixed_depth() -> None:
+    """Hosted persistence must carry fixed depth through its tuple adapter."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        _status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.board"
+        )
+        document = opened["board"]["document"]
+        for region in document["regions"]:
+            region["sizeMillimeters"] = 7.25
+
+        status, saved, _headers = hosted_request_json(
+            base, session, "PUT", "/api/boards/fixture.board", document
+        )
+
+    assert status == 200
+    assert {
+        region["sizeMillimeters"]
+        for region in saved["board"]["document"]["regions"]
+    } == {7.25}
+    stored = json.loads(
+        client.file_bytes(HOSTED_BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert stored["holds"][0]["sizeMillimeters"] == 7.25
+    assert "depthRangeMillimeters" not in stored["holds"][0]
 
 
 def test_hosted_save_auth_failure_instructs_editor_to_reauthenticate() -> None:

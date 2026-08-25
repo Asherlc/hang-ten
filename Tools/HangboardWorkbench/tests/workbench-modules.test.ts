@@ -267,6 +267,110 @@ test("the browser client rejects invalid optional hold-region fields", async (co
   }
 });
 
+test("the browser client preserves a fractional fixed depth", async () => {
+  const document = editorDocument([{
+    key: "hold-1-piece-0",
+    displayPath: "M 1 1 L 20 1 L 20 20 Z",
+    metadata: { holdID: "hold-1", pieceIndex: 0 },
+    sizeMillimeters: 7.25,
+  }]);
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({ holdCount: 1, document }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.equal(board.document.regions[0]?.sizeMillimeters, 7.25);
+});
+
+test("the browser client rejects invalid or ambiguous fixed-depth payloads", async (context) => {
+  const invalidRegionSets: Array<{ name: string; regions: unknown[] }> = [
+    {
+      name: "zero fixed depth",
+      regions: [{
+        key: "hold-1-piece-0",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 0 },
+        sizeMillimeters: 0,
+      }],
+    },
+    {
+      name: "non-finite fixed depth",
+      regions: [{
+        key: "hold-1-piece-0",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 0 },
+        sizeMillimeters: Number.POSITIVE_INFINITY,
+      }],
+    },
+    {
+      name: "fixed and variable depth",
+      regions: [{
+        key: "hold-1-piece-0",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 0 },
+        sizeMillimeters: 8.5,
+        depthRangeMillimeters: { lowerBound: 7.5, upperBound: 12.5 },
+      }],
+    },
+    {
+      name: "different sibling fixed depths",
+      regions: [
+        {
+          key: "hold-1-piece-0",
+          displayPath: "M 1 1 L 20 1 L 20 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 0 },
+          sizeMillimeters: 8.5,
+        },
+        {
+          key: "hold-1-piece-1",
+          displayPath: "M 30 1 L 40 1 L 40 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 1 },
+          sizeMillimeters: 9.5,
+        },
+      ],
+    },
+    {
+      name: "mixed sibling depth representations",
+      regions: [
+        {
+          key: "hold-1-piece-0",
+          displayPath: "M 1 1 L 20 1 L 20 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 0 },
+          sizeMillimeters: 8.5,
+        },
+        {
+          key: "hold-1-piece-1",
+          displayPath: "M 30 1 L 40 1 L 40 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 1 },
+          depthRangeMillimeters: { lowerBound: 7.5, upperBound: 12.5 },
+        },
+      ],
+    },
+  ];
+
+  for (const fixture of invalidRegionSets) {
+    await context.test(fixture.name, async () => {
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          holdCount: fixture.regions.length,
+          document: {
+            canvas: { width: 100, height: 50 },
+            regions: fixture.regions,
+          } as EditorDocument,
+        }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
+});
+
 test("the browser client navigates to login when an API request is unauthenticated", async () => {
   const { runtime, assignedUrls } = runtimeFixture(async () => response(
     { ok: false, error: "authentication required", login_url: "/auth/login" },
@@ -691,6 +795,68 @@ test("the direct editor model accepts positive finite fractional depth ranges", 
       depthRangeMillimeters: { lowerBound: 7.5, upperBound: 12.5 },
     }],
   }));
+});
+
+test("the direct editor model accepts positive finite fractional fixed depth", () => {
+  assert.doesNotThrow(() => validateEditorDocument({
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      key: "hold-1-piece-0",
+      displayPath: "M 1 1 L 20 1 L 20 20 Z",
+      metadata: { holdID: "hold-1", pieceIndex: 0 },
+      sizeMillimeters: 7.25,
+    }],
+  }));
+});
+
+test("the direct editor model rejects invalid or ambiguous fixed depth", () => {
+  for (const region of [
+    { sizeMillimeters: 0 },
+    { sizeMillimeters: -1 },
+    { sizeMillimeters: Number.NaN },
+    { sizeMillimeters: Number.POSITIVE_INFINITY },
+    { sizeMillimeters: "7.5" },
+    {
+      sizeMillimeters: 8.5,
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 12.5 },
+    },
+  ]) {
+    assert.throws(
+      () => validateEditorDocument(editorDocument([{
+        key: "hold-1-piece-0",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 0 },
+        ...region,
+      }] as EditorDocument["regions"])),
+      /fixed depth|depth representation/i,
+    );
+  }
+});
+
+test("the direct editor model rejects inconsistent sibling fixed-depth representation", () => {
+  for (const secondPiece of [
+    { sizeMillimeters: 9.5 },
+    { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 12.5 } },
+    {},
+  ]) {
+    assert.throws(
+      () => validateEditorDocument(editorDocument([
+        {
+          key: "hold-1-piece-0",
+          displayPath: "M 1 1 L 20 1 L 20 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 0 },
+          sizeMillimeters: 8.5,
+        },
+        {
+          key: "hold-1-piece-1",
+          displayPath: "M 30 1 L 40 1 L 40 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 1 },
+          ...secondPiece,
+        },
+      ])),
+      /fixed depth|depth representation/i,
+    );
+  }
 });
 
 test("the direct editor model rejects malformed, non-finite, and unordered depth ranges", () => {
