@@ -17,7 +17,7 @@
 - Never infer a value from a photo, hold width, board-level measurement list, another model, or existing geometry.
 - Never change or generate canonical geometry as part of this project. Hold-ID overlays render existing paths solely for human review.
 - Keep all generated screenshots in `.context/hangboard-metadata-backfill-${CONDUCTOR_WORKSPACE_NAME}/`; do not commit them.
-- Use `rtk` for shell commands. Run `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory` for every batch.
+- Use `rtk` for shell commands. Run package pytest through `rtk uv run --with pytest --with Pillow python -m pytest`; run `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory` for every batch.
 - Commit and push every completed task. Each batch handoff and PR description must state evidence, fields added, before/after coverage, overlay root, and supported remaining blanks.
 
 ---
@@ -52,7 +52,7 @@
 
 - [ ] **Step 2: Run the focused test and verify RED.**
 
-  Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py`
+  Run: `rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py`
 
   Expected: FAIL because `metadata_audit` does not exist.
 
@@ -64,7 +64,7 @@
 
 - [ ] **Step 4: Run focused tests and verify GREEN.**
 
-  Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py`
+  Run: `rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py`
 
   Expected: PASS, including the scalar/range exact-match and complete-coverage cases.
 
@@ -101,7 +101,7 @@
 
 - [ ] **Step 2: Run the focused CLI test and verify RED.**
 
-  Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_cli.py -k audit_metadata`
+  Run: `rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_cli.py -k audit_metadata`
 
   Expected: FAIL because `audit-metadata` is not an accepted command.
 
@@ -111,7 +111,7 @@
 
 - [ ] **Step 4: Run focused and package tests.**
 
-  Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_cli.py Tools/HangboardPackages/tests/test_metadata_audit.py`
+  Run: `rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_cli.py Tools/HangboardPackages/tests/test_metadata_audit.py`
 
   Expected: PASS.
 
@@ -210,7 +210,7 @@
 
 - [ ] **Step 3: Run the assertion and verify RED.**
 
-  Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py -k metolius`
+  Run: `rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py -k metolius`
 
   Expected: FAIL because no catalog ledger exists.
 
@@ -223,7 +223,7 @@
   Run:
 
   ```sh
-  rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py
+  rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py
   rtk scripts/hangboard-packages.sh audit-metadata --root Hangboards --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
   rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
   ```
@@ -380,7 +380,7 @@
 
 - [ ] **Step 2: Run it and verify RED if any package escaped a batch.**
 
-  Run: `rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py -k complete_catalog`
+  Run: `rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py -k complete_catalog`
 
   Expected: FAIL until all six batches have populated the ledger.
 
@@ -393,7 +393,7 @@
   Run:
 
   ```sh
-  rtk uv run --with pytest python -m pytest -q Tools/HangboardPackages/tests
+  rtk uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests
   rtk scripts/hangboard-packages.sh audit-metadata --root Hangboards --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
   rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
   rtk git diff --check
