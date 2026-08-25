@@ -607,10 +607,6 @@
           },
           "treatment": {
             "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0.0
           }
         }
       ]
