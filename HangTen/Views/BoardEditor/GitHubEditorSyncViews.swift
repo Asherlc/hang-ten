@@ -70,13 +70,6 @@ final class GitHubSyncSession: ObservableObject {
         }
     }
 
-    func signIn(token: String) async throws -> String {
-        let login = try await syncService.authenticatedUser(token: token)
-        try tokenStore.save(token)
-        username = login
-        return login
-    }
-
     func signOut() {
         do {
             try tokenStore.delete()
@@ -161,53 +154,45 @@ final class GitHubSyncSession: ObservableObject {
 struct GitHubSignInView: View {
     @ObservedObject private var syncSession = GitHubSyncSession.shared
     @Environment(\.dismiss) private var dismiss
-    @State private var token = ""
-    @State private var isSigningIn = false
-    @State private var errorText: String?
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
                     SectionLabel(title: "GitHub access")
-                    Text(
-                        "Create a fine-grained personal access token for hang-ten with Contents read-and-write and Pull requests read-and-write permissions. The token stays in this device's Keychain."
-                    )
+                    Text("Approve Hang Ten in GitHub to connect your account.")
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
+                    .accessibilityIdentifier("github.device-flow.description")
 
-                    SecureField("Personal access token", text: $token)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .font(.system(size: 14, design: .monospaced))
-                        .padding(12)
-                        .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .accessibilityIdentifier("github.token")
+                    if let challenge = syncSession.deviceChallenge {
+                        Text(challenge.userCode)
+                            .font(.system(size: 28, weight: .bold, design: .monospaced))
+                            .accessibilityIdentifier("github.device-code")
+                        Button("Open GitHub") { openURL(challenge.verificationURL) }
+                            .accessibilityIdentifier("github.open-verification")
+                        Button("Cancel sign-in") { syncSession.cancelDeviceSignIn() }
+                            .accessibilityIdentifier("github.cancel")
+                    } else {
+                        Button("Connect GitHub") { syncSession.startDeviceSignIn() }
+                            .accessibilityIdentifier("github.connect")
+                    }
 
-                    if let errorText {
-                        Text(errorText)
+                    if let lastError = syncSession.lastError {
+                        Text(lastError)
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.holdActiveDeep)
+
+                        if syncSession.deviceChallenge != nil {
+                            Button("Connect GitHub") { syncSession.startDeviceSignIn() }
+                                .accessibilityIdentifier("github.connect")
+                        }
                     }
 
-                    Button {
-                        signIn()
-                    } label: {
-                        HStack {
-                            if isSigningIn {
-                                ProgressView().tint(Color.hangGreenDark)
-                            } else {
-                                Text("Connect")
-                                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 46)
-                        .background(Color.hangGreen.opacity(0.25), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-                        .foregroundStyle(Color.hangGreenDark)
+                    if syncSession.isSigningIn {
+                        ProgressView().tint(Color.hangGreenDark)
                     }
-                    .disabled(token.trimmingCharacters(in: .whitespaces).isEmpty || isSigningIn)
-                    .accessibilityIdentifier("github.connect")
                 }
                 .padding(18)
             }
@@ -220,19 +205,9 @@ struct GitHubSignInView: View {
                 }
             }
         }
-    }
-
-    private func signIn() {
-        isSigningIn = true
-        errorText = nil
-        let trimmed = token.trimmingCharacters(in: .whitespaces)
-        Task {
-            defer { isSigningIn = false }
-            do {
-                _ = try await syncSession.signIn(token: trimmed)
+        .onChange(of: syncSession.isAuthenticated) { _, isAuthenticated in
+            if isAuthenticated {
                 dismiss()
-            } catch {
-                errorText = error.localizedDescription
             }
         }
     }

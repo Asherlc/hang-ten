@@ -59,6 +59,15 @@ rtk xcodebuild -project HangTen.xcodeproj \
 All Conductor/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
 
+## GitHub Device Flow release setup
+
+Before distributing a build with board-package GitHub sync, enable Device Flow
+in the existing GitHub OAuth App. Configure that app's public
+`GITHUB_OAUTH_CLIENT_ID` in the CI and local Xcode configuration used for the
+build. Never distribute `GITHUB_CLIENT_SECRET`: Device Flow for this iOS app
+uses only the public client ID. The app requests `repo read:org` and no longer
+accepts personal access tokens.
+
 ## Maintainer-generated countdown audio
 
 Hang Ten ships reviewed audio files and never stores an ElevenLabs API key or

@@ -36,6 +36,9 @@ struct BoardEditorListView: View {
                let reviewSlug = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_EDITOR_SLUG"] {
                 openSlug = SlugRoute(slug: reviewSlug)
             }
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GITHUB_SIGN_IN"] == "1" {
+                showsGitHubSheet = true
+            }
             #endif
         }
         .navigationDestination(item: $openSlug) { route in
@@ -208,4 +211,3 @@ struct SlugRoute: Identifiable, Hashable {
     let slug: String
     var id: String { slug }
 }
-
