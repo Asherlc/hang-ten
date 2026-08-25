@@ -155,6 +155,21 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["first-edge"])
     }
 
+    func testMetadataLightEdgeFallbackSelectsOneEdgePerBoardHalf() {
+        let board = board(holds: [
+            hold(id: "left-edge", x: 0.1),
+            hold(id: "left-extra", x: 0.3),
+            hold(id: "right-edge", x: 0.8)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.largeEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["left-edge", "right-edge"])
+    }
+
     /// A 20 mm medium-edge target must prefer a documented 20/15 mm
     /// continuous contact over shallower and deeper metadata-light edges.
     func testMetadataLightMediumEdgeFallbackPrefersNearestDocumentedDepthRange() {
@@ -332,6 +347,28 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertTrue(
             store.holdIDs(for: try XCTUnwrap(PlanCatalog.maxHangs.steps.first), on: board).isEmpty
         )
+    }
+
+    @MainActor
+    func testBeastmaker2000OpenHandLargeEdgeHighlightsMirroredOuterEdges() throws {
+        let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let step = WorkoutStep(
+            id: "open-hand-29-mm",
+            number: 1,
+            title: "29 mm open edge",
+            instruction: "",
+            accessory: "",
+            duration: 7,
+            phase: .hang,
+            targets: [.feature(.largeEdge)],
+            gripType: .openHand
+        )
+
+        XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-lower-1", "front-lower-9"])
     }
 
     @MainActor

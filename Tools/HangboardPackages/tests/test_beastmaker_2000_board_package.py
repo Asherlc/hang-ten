@@ -42,7 +42,7 @@ EXPECTED_KINDS = {
     "front-lower-6": "pocket",
     "front-lower-7": "pocket",
     "front-lower-8": "pocket",
-    "front-lower-9": "pocket",
+    "front-lower-9": "edge",
     "hold-26": "pocket",
     "hold-27": "pocket",
     "hold-28": "sloper",
@@ -491,8 +491,8 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     assert {hold_id: hold.kind for hold_id, hold in holds.items()} == EXPECTED_KINDS
     assert Counter(hold.kind for hold in holds.values()) == {
         "sloper": 5,
-        "edge": 1,
-        "pocket": 21,
+        "edge": 2,
+        "pocket": 20,
     }
 
     for hold in holds.values():
