@@ -336,7 +336,7 @@
           "frame": {
             "x": 0.411486500564,
             "y": 0.305230514092,
-            "width": 0.16376,
+            "width": 0.193761058625,
             "height": 0.038
           },
           "shape": {
@@ -371,19 +371,16 @@
                 ]
               },
               {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.0
-                ]
-              },
-              {
                 "command": "close"
               }
             ]
           },
           "treatment": {
             "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
           }
         }
       ],
