@@ -213,8 +213,12 @@ internal enum BoardTargetResolver {
         let sameKind = board.holds.filter { $0.kind == feature.holdKind }
         let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
         // Untagged holds are only a physical-kind fallback, so they cannot
-        // identify every same-kind hold as the source-prescribed target.
-        return preferredSameKind.first.map { [$0.id] } ?? []
+        // identify every same-kind hold as the source-prescribed target. When
+        // the plan feature has a source-backed depth adaptation, prefer the
+        // nearest documented measurement before falling back to board order.
+        return preferredSameKind
+            .min { depthDistance(of: $0, from: feature) < depthDistance(of: $1, from: feature) }
+            .map { [$0.id] } ?? []
     }
 
     /// When the target specifies a finger count, prefer candidates that
@@ -224,6 +228,31 @@ internal enum BoardTargetResolver {
         guard let capacity = target.fingerCapacity else { return holds }
         let matching = holds.filter { $0.fingerCapacity == capacity }
         return matching.isEmpty ? holds : matching
+    }
+
+    /// These are semantic-plan adaptations documented in
+    /// `docs/source-audits/2026-08-10-plan-cue-provenance.md`, not inferred
+    /// board metadata. Features without a documented measurement stay order
+    /// based so unknown source facts are never fabricated.
+    private static func targetDepthMillimeters(for feature: HoldFeature) -> Int? {
+        switch feature {
+        case .largeEdge: 29
+        case .mediumEdge: 20
+        case .smallEdge: 12
+        default: nil
+        }
+    }
+
+    private static func depthDistance(of hold: BoardHold, from feature: HoldFeature) -> Int {
+        guard let targetDepth = targetDepthMillimeters(for: feature) else { return .max }
+        if let range = hold.depthRangeMillimeters {
+            if range.contains(targetDepth) { return 0 }
+            return min(abs(range.lowerBound - targetDepth), abs(range.upperBound - targetDepth))
+        }
+        if let size = hold.sizeMillimeters {
+            return abs(size - targetDepth)
+        }
+        return .max
     }
 
     private static func crossKindPockets(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {

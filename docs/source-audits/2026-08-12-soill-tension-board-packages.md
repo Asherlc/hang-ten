@@ -71,7 +71,10 @@ an input.
   view establish exactly eight physical contacts under the continuous-contact
   rule: one full-width bar-style top jug, one 50 mm center one-arm edge, and
   mirrored continuous 30/25, 20/15, and 10/8 mm stepped edges. Only the center
-  contact receives a scalar `sizeMillimeters` value.
+  contact receives a scalar `sizeMillimeters` value. The six named stepped
+  contacts map to `depthRangeMillimeters` ranges of 25...30, 15...20, and
+  8...10 respectively; their two documented depths remain a range because
+  each pair is one continuous physical contact.
 
 ### `tension-honestone`
 
