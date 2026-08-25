@@ -194,7 +194,7 @@ def test_metolius_contract_verified_kind_must_match_package(tmp_path: Path) -> N
         )
 
 
-def test_metolius_catalog_ledger_has_complete_seven_field_coverage() -> None:
+def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     ledger_path = (
         repository_root
@@ -217,6 +217,13 @@ def test_metolius_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "metolius.simulator-3d",
         "metolius.wood-grips-compact-ii",
         "metolius.wood-grips-deluxe-ii",
+        "soill.iron-palm-2",
+        "soill.split-palm",
+        "soill.training-tiles",
+        "tension.flash-board",
+        "tension.grindstone",
+        "tension.honestone",
+        "tension.whetstone",
     )
     assert all(board.unaccounted_fields == 0 for board in report.boards)
 
