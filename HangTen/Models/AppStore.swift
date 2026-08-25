@@ -276,7 +276,7 @@ final class AppStore: ObservableObject {
     func usesFallbackMapping(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
         plan.steps.contains { step in
             let gripType = step.targets.count == 1 ? step.gripType : nil
-            step.targets.contains { target in
+            return step.targets.contains { target in
                 guard let feature = target.feature,
                       !target.fallbackFeatures.isEmpty else { return false }
                 let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
@@ -292,7 +292,7 @@ final class AppStore: ObservableObject {
     func isIncompatible(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
         plan.steps.contains { step in
             let gripType = step.targets.count == 1 ? step.gripType : nil
-            step.targets.contains { target in
+            return step.targets.contains { target in
                 BoardTargetResolver.substituteHoldIDs(
                     for: target,
                     on: board,
