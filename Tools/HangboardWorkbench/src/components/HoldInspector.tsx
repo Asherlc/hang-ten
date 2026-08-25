@@ -49,6 +49,18 @@ export function HoldInspector({
   onMobileCollapse,
   className = "",
 }: HoldInspectorProps) {
+  const lowerDepthInputRef = React.useRef<HTMLInputElement>(null);
+  const upperDepthInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    lowerDepthInputRef.current?.setCustomValidity("");
+    upperDepthInputRef.current?.setCustomValidity("");
+  }, [
+    hold?.key,
+    hold?.depthRangeMillimeters?.lowerBound,
+    hold?.depthRangeMillimeters?.upperBound,
+  ]);
+
   return (
     <aside className={`panel inspector-panel ${className}`.trim()} aria-labelledby="hold-heading">
       <div className="panel-heading">
@@ -99,10 +111,12 @@ export function HoldInspector({
               min={Number.MIN_VALUE}
               step="any"
               disabled={busy}
+              ref={lowerDepthInputRef}
               value={hold?.depthRangeMillimeters?.lowerBound ?? ""}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 if (!value) {
+                  event.currentTarget.setCustomValidity("");
                   onDepthRangeChange(undefined);
                   return;
                 }
@@ -125,10 +139,12 @@ export function HoldInspector({
               min={Number.MIN_VALUE}
               step="any"
               disabled={busy}
+              ref={upperDepthInputRef}
               value={hold?.depthRangeMillimeters?.upperBound ?? ""}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 if (!value) {
+                  event.currentTarget.setCustomValidity("");
                   onDepthRangeChange(undefined);
                   return;
                 }
