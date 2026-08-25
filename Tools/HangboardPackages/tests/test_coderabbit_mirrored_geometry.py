@@ -45,6 +45,7 @@ MIRRORED_PAIRS = {
     ),
     "beastmaker-2000": (
         ("front-middle-2", "front-middle-8"),
+        ("front-middle-3", "front-middle-7"),
         ("hold-26", "hold-27"),
     ),
     "moon-armstrong": (
