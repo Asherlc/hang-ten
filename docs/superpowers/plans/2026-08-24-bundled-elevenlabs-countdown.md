@@ -27,6 +27,7 @@
 - Create: `scripts/test-generate-elevenlabs-countdown-audio.sh`
 - Create: `HangTen/Resources/CountdownAudio/README.md`
 - Create: `HangTen/Resources/CountdownAudio/.gitkeep`
+- Modify: `HangTen.xcodeproj/project.pbxproj`
 - Modify: `README.md`
 
 **Interfaces:**
@@ -47,6 +48,8 @@ Expected: FAIL because the generator script does not yet exist.
 
 Create an executable zsh script that uses `set -euo pipefail`, validates the required nonempty key and voice ID before calling `curl`, creates a temporary sibling directory with `mktemp -d`, and installs an EXIT trap that removes only that exact temporary directory. For each phrase in `1 2 3`, post the JSON body `{"text":"<phrase>","model_id":"<model>"}` to `https://api.elevenlabs.io/v1/text-to-speech/<voice-id>?output_format=<format>` with the API key only in the `xi-api-key` header. Write response bytes to the temporary directory, create metadata without the key, validate all four temporary files are nonempty, then atomically replace the exact output directory contents. On any curl failure, preserve the previous pack and print only sanitized diagnostics. Keep the committed resource directory empty except for `.gitkeep` and its README; real generated files are deliberately created only by an authorized maintainer. Document the required command and that the generated pack must be reviewed and committed explicitly before it can ship.
 
+Register `HangTen/Resources/CountdownAudio` as a resource folder in the app target's existing `Resources` group and Resources build phase, so generated `countdown-*.mp3` files are copied into `Bundle.main` without needing per-file project edits.
+
 - [ ] **Step 4: Run the generator contract test to verify green.**
 
 Run: `rtk zsh scripts/test-generate-elevenlabs-countdown-audio.sh`
@@ -58,7 +61,7 @@ Expected: PASS, including both missing-credential and successful fake-curl cases
 Run:
 
 ```sh
-rtk git add scripts/generate-elevenlabs-countdown-audio.sh scripts/test-generate-elevenlabs-countdown-audio.sh HangTen/Resources/CountdownAudio README.md
+rtk git add scripts/generate-elevenlabs-countdown-audio.sh scripts/test-generate-elevenlabs-countdown-audio.sh HangTen/Resources/CountdownAudio HangTen.xcodeproj/project.pbxproj README.md
 rtk git commit -m "feat: add ElevenLabs countdown pack generator"
 ```
 
