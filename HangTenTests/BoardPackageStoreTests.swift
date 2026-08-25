@@ -2,6 +2,123 @@ import XCTest
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
+    func testStoreRejectsInvertedFractionalDepthRange() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["depthRangeMillimeters"] = [
+                    "lowerBound": 12.5,
+                    "upperBound": 7.5,
+                ]
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "hold hold-left has an invalid depth range"
+                )
+            )
+        }
+    }
+
+    func testStoreRejectsNonPositiveFractionalMillimeterMeasurements() throws {
+        let invalidMeasurements: [(name: String, field: String, value: Any, reason: String)] = [
+            ("zero size", "sizeMillimeters", 0.0, "hold hold-left has a non-positive size"),
+            ("negative size", "sizeMillimeters", -7.5, "hold hold-left has a non-positive size"),
+            (
+                "zero depth",
+                "depthRangeMillimeters",
+                ["lowerBound": 0.0, "upperBound": 7.5],
+                "hold hold-left has an invalid depth range"
+            ),
+            (
+                "negative depth",
+                "depthRangeMillimeters",
+                ["lowerBound": -7.5, "upperBound": 7.5],
+                "hold hold-left has an invalid depth range"
+            ),
+        ]
+
+        for measurement in invalidMeasurements {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    holds[0][measurement.field] = measurement.value
+                    board["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), measurement.name) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .invalidPackage(boardID: "fixture.board", reason: measurement.reason)
+                )
+            }
+        }
+    }
+
+    func testStoreRejectsNonFiniteMillimeterMeasurementJSON() throws {
+        let invalidMeasurements: [
+            (name: String, finiteValue: String, nonFiniteValue: String)
+        ] = [
+            (
+                "size",
+                "\"sizeMillimeters\":7.5",
+                "\"sizeMillimeters\":1e999"
+            ),
+            (
+                "depth lower bound",
+                "\"lowerBound\":7.5",
+                "\"lowerBound\":1e999"
+            ),
+            (
+                "depth upper bound",
+                "\"upperBound\":12.5",
+                "\"upperBound\":1e999"
+            ),
+        ]
+
+        for measurement in invalidMeasurements {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                let boardURL = hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                try self.mutateBoard(at: boardURL) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    holds[0]["sizeMillimeters"] = 7.5
+                    holds[0]["depthRangeMillimeters"] = [
+                        "lowerBound": 7.5,
+                        "upperBound": 12.5,
+                    ]
+                    board["holds"] = holds
+                }
+                let finiteJSON = try XCTUnwrap(String(data: Data(contentsOf: boardURL), encoding: .utf8))
+                let nonFiniteJSON = finiteJSON.replacingOccurrences(
+                    of: measurement.finiteValue,
+                    with: measurement.nonFiniteValue
+                )
+                XCTAssertNotEqual(nonFiniteJSON, finiteJSON)
+                try Data(nonFiniteJSON.utf8).write(to: boardURL)
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), measurement.name) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+                )
+            }
+        }
+    }
+
     func testStoreAcceptsFractionalMillimeterMeasurements() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(

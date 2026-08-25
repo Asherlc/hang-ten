@@ -652,6 +652,23 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has an invalid hand capacity"
                 )
             }
+            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has a non-positive size"
+                )
+            }
+            if let depthRange = hold.depthRangeMillimeters,
+               !depthRange.lowerBound.isFinite ||
+               !depthRange.upperBound.isFinite ||
+               depthRange.lowerBound <= 0 ||
+               depthRange.upperBound <= 0 ||
+               depthRange.lowerBound > depthRange.upperBound {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has an invalid depth range"
+                )
+            }
             let geometryValidation = BoardHoldGeometryValidator.validate(
                 hold.geometry.map(\.holdPieceDocument),
                 holdID: hold.id,
@@ -681,23 +698,6 @@ struct BoardPackageStore {
             holds.append(
                 try hold.trainingBoardHold(geometryPieces: geometryPieces)
             )
-            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has a non-positive size"
-                )
-            }
-            if let depthRange = hold.depthRangeMillimeters,
-               !depthRange.lowerBound.isFinite ||
-               !depthRange.upperBound.isFinite ||
-               depthRange.lowerBound <= 0 ||
-               depthRange.upperBound <= 0 ||
-               depthRange.lowerBound > depthRange.upperBound {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid depth range"
-                )
-            }
             if let features = hold.features,
                Set(features).count != features.count {
                 throw BoardPackageStoreError.invalidPackage(
