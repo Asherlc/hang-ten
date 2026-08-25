@@ -201,10 +201,17 @@ struct GitHubSignInView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Cancel") { dismiss() }
+                    Button(syncSession.isSigningIn ? "Cancel sign-in" : "Cancel") {
+                        if syncSession.isSigningIn {
+                            syncSession.cancelDeviceSignIn()
+                        } else {
+                            dismiss()
+                        }
+                    }
                 }
             }
         }
+        .interactiveDismissDisabled(syncSession.isSigningIn)
         .onChange(of: syncSession.isAuthenticated) { _, isAuthenticated in
             if isAuthenticated {
                 dismiss()
