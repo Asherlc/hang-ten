@@ -2,6 +2,7 @@ HangTen.xcodeproj/project.pbxproj
 HangTen/Config/PostHog.local.xcconfig.example
 HangTen/Config/PostHog.xcconfig
 HangTen/HangTen.entitlements
+HangTen/Info.plist
 HangTen/HangTenApp.swift
 HangTen/Models/AppStore.swift
 HangTen/Models/BoardEditorStore.swift

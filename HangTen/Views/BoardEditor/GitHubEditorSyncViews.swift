@@ -20,17 +20,29 @@ extension GitHubBoardSyncService: GitHubDeviceServicing {}
 
 @MainActor
 final class GitHubSyncSession: ObservableObject {
-    static let shared = GitHubSyncSession()
+    static let shared: GitHubSyncSession = {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GITHUB_DEVICE_CHALLENGE"] == "1" {
+            return GitHubSyncSession(
+                syncService: GitHubReviewDeviceService(),
+                clientID: "review-client"
+            )
+        }
+        #endif
+        return GitHubSyncSession()
+    }()
 
     @Published private(set) var username: String?
     @Published var lastError: String?
     @Published private(set) var deviceChallenge: GitHubDeviceChallenge?
     @Published private(set) var isSigningIn = false
+    @Published private(set) var lastSuccessfulDeviceSignInID: UUID?
 
     private let tokenStore: any GitHubTokenStoring
     private let syncService: any GitHubDeviceServicing
     private let clientID: String
     private let sleep: (UInt64) async throws -> Void
+    private let now: () -> Date
     private var authorizationTask: Task<Void, Never>?
     private var activeDeviceSignInTaskID: UUID?
     @Published private(set) var isDeviceSignInTaskActive = false
@@ -41,12 +53,14 @@ final class GitHubSyncSession: ObservableObject {
         clientID: String = Bundle.main.object(forInfoDictionaryKey: "GITHUB_OAUTH_CLIENT_ID") as? String ?? "",
         sleep: @escaping (UInt64) async throws -> Void = { nanoseconds in
             try await Task.sleep(nanoseconds: nanoseconds)
-        }
+        },
+        now: @escaping () -> Date = Date.init
     ) {
         self.tokenStore = tokenStore
         self.syncService = syncService
         self.clientID = clientID.trimmingCharacters(in: .whitespacesAndNewlines)
         self.sleep = sleep
+        self.now = now
     }
 
     var token: String? {
@@ -81,12 +95,13 @@ final class GitHubSyncSession: ObservableObject {
     }
 
     func startDeviceSignIn() {
+        authorizationTask?.cancel()
+        deviceChallenge = nil
+        lastError = nil
         guard !clientID.isEmpty else {
             lastError = "GitHub sign-in is not configured."
             return
         }
-        authorizationTask?.cancel()
-        lastError = nil
         isSigningIn = true
         let taskID = UUID()
         activeDeviceSignInTaskID = taskID
@@ -98,34 +113,46 @@ final class GitHubSyncSession: ObservableObject {
 
     func cancelDeviceSignIn() {
         authorizationTask?.cancel()
-        authorizationTask = nil
         deviceChallenge = nil
         isSigningIn = false
     }
 
     private func completeDeviceSignIn(taskID: UUID) async {
+        var completedSuccessfully = false
         defer {
-            if activeDeviceSignInTaskID == taskID {
-                isSigningIn = false
-                isDeviceSignInTaskActive = false
-                activeDeviceSignInTaskID = nil
-                authorizationTask = nil
-            }
+            finishDeviceSignIn(
+                taskID: taskID,
+                completedSuccessfully: completedSuccessfully
+            )
         }
         do {
             let challenge = try await syncService.requestDeviceChallenge(clientID: clientID)
-            guard !Task.isCancelled else { return }
+            guard canPublishDeviceSignInState(taskID: taskID) else { return }
             deviceChallenge = challenge
             var interval = challenge.pollingInterval
-            let deadline = Date().addingTimeInterval(challenge.expiresIn)
-            while !Task.isCancelled && Date() < deadline {
-                try await sleep(UInt64(interval * 1_000_000_000))
-                guard !Task.isCancelled else { return }
+            let deadline = now().addingTimeInterval(challenge.expiresIn)
+            while canPublishDeviceSignInState(taskID: taskID) {
+                let remainingLifetime = deadline.timeIntervalSince(now())
+                guard remainingLifetime > 0 else {
+                    publishDeviceSignInExpiry(taskID: taskID)
+                    return
+                }
+                let delay = min(interval, remainingLifetime)
+                try await sleep(try GitHubDeviceChallenge.sleepNanoseconds(for: delay))
+                guard canPublishDeviceSignInState(taskID: taskID) else { return }
+                guard now() < deadline else {
+                    publishDeviceSignInExpiry(taskID: taskID)
+                    return
+                }
                 let authorization = try await syncService.pollDeviceAuthorization(
                     clientID: clientID,
                     deviceCode: challenge.deviceCode
                 )
-                guard !Task.isCancelled else { return }
+                guard canPublishDeviceSignInState(taskID: taskID) else { return }
+                guard now() < deadline else {
+                    publishDeviceSignInExpiry(taskID: taskID)
+                    return
+                }
                 switch authorization {
                 case .authorizationPending:
                     continue
@@ -133,23 +160,75 @@ final class GitHubSyncSession: ObservableObject {
                     interval += 5
                 case .authorized(let token):
                     let login = try await syncService.authenticatedUser(token: token)
-                    guard !Task.isCancelled else { return }
+                    guard canPublishDeviceSignInState(taskID: taskID) else { return }
                     try tokenStore.save(token)
+                    guard canPublishDeviceSignInState(taskID: taskID) else { return }
                     username = login
                     deviceChallenge = nil
+                    completedSuccessfully = true
                     return
                 }
-            }
-            if !Task.isCancelled {
-                lastError = "GitHub authorization expired. Please try again."
             }
         } catch is CancellationError {
             // Cancellation is initiated by the user and must not change credentials.
         } catch {
+            guard canPublishDeviceSignInState(taskID: taskID) else { return }
+            deviceChallenge = nil
             lastError = error.localizedDescription
         }
     }
+
+    private func canPublishDeviceSignInState(taskID: UUID) -> Bool {
+        activeDeviceSignInTaskID == taskID && !Task.isCancelled
+    }
+
+    private func publishDeviceSignInExpiry(taskID: UUID) {
+        guard canPublishDeviceSignInState(taskID: taskID) else { return }
+        deviceChallenge = nil
+        lastError = "GitHub authorization expired. Please try again."
+    }
+
+    private func finishDeviceSignIn(
+        taskID: UUID,
+        completedSuccessfully: Bool
+    ) {
+        guard activeDeviceSignInTaskID == taskID else { return }
+        let shouldPublishSuccess = completedSuccessfully && !Task.isCancelled
+        isSigningIn = false
+        isDeviceSignInTaskActive = false
+        activeDeviceSignInTaskID = nil
+        authorizationTask = nil
+        if shouldPublishSuccess {
+            lastSuccessfulDeviceSignInID = taskID
+        }
+    }
 }
+
+#if DEBUG
+private struct GitHubReviewDeviceService: GitHubDeviceServicing {
+    func authenticatedUser(token: String) async throws -> String {
+        "review-user"
+    }
+
+    func requestDeviceChallenge(clientID: String) async throws -> GitHubDeviceChallenge {
+        GitHubDeviceChallenge(
+            deviceCode: "review-device-code",
+            userCode: "ABCD-EFGH",
+            verificationURL: URL(string: "https://github.com/login/device")!,
+            expiresIn: 900,
+            pollingInterval: 60
+        )
+    }
+
+    func pollDeviceAuthorization(
+        clientID: String,
+        deviceCode: String
+    ) async throws -> GitHubDeviceAuthorizationResult {
+        try await Task.sleep(nanoseconds: 60_000_000_000)
+        return .authorizationPending
+    }
+}
+#endif
 
 struct GitHubSignInView: View {
     @ObservedObject private var syncSession = GitHubSyncSession.shared
@@ -212,9 +291,14 @@ struct GitHubSignInView: View {
             }
         }
         .interactiveDismissDisabled(syncSession.isDeviceSignInTaskActive)
-        .onChange(of: syncSession.isAuthenticated) { _, isAuthenticated in
-            if isAuthenticated {
+        .onChange(of: syncSession.lastSuccessfulDeviceSignInID) { _, successfulTaskID in
+            if successfulTaskID != nil {
                 dismiss()
+            }
+        }
+        .onDisappear {
+            if syncSession.isDeviceSignInTaskActive {
+                syncSession.cancelDeviceSignIn()
             }
         }
     }

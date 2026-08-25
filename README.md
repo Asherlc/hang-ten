@@ -62,11 +62,21 @@ indexes and build output disappear with the workspace.
 ## GitHub Device Flow release setup
 
 Before distributing a build with board-package GitHub sync, enable Device Flow
-in the existing GitHub OAuth App. Configure that app's public
-`GITHUB_OAUTH_CLIENT_ID` in the CI and local Xcode configuration used for the
-build. Never distribute `GITHUB_CLIENT_SECRET`: Device Flow for this iOS app
-uses only the public client ID. The app requests `repo read:org` and no longer
-accepts personal access tokens.
+in the existing GitHub OAuth App. Add its public client ID as the
+`HANGTEN_GITHUB_OAUTH_CLIENT_ID` variable in the `app-store-connect` GitHub
+Actions environment (a repository variable with the same name may also supply
+trusted non-release workflows). GitHub reserves the `GITHUB_` prefix for its
+own configuration-variable names, so the release job maps that value to the
+iOS `GITHUB_OAUTH_CLIENT_ID` build setting. It writes the setting to its
+temporary mode-`0600` xcconfig and verifies that the archived app's Info.plist
+contains a nonempty client ID.
+
+For local Xcode builds, copy `HangTen/Config/PostHog.local.xcconfig.example` to
+the ignored `HangTen/Config/PostHog.local.xcconfig` file and set
+`GITHUB_OAUTH_CLIENT_ID` there. Never create a `GITHUB_CLIENT_SECRET` build
+setting, Actions secret, or bundled Info.plist value: Device Flow for the iOS
+app uses only the public client ID. The app requests `repo read:org` and no
+longer accepts personal access tokens.
 
 ## Maintainer-generated countdown audio
 
@@ -97,6 +107,10 @@ Add these environment variables:
 - `APPLE_TEAM_ID`: the 10-character Apple Developer Team ID.
 - `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
 - `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
+- `HANGTEN_GITHUB_OAUTH_CLIENT_ID`: the existing GitHub OAuth App's public
+  client ID; its Device Flow option must be enabled. The workflow maps it to
+  the app's `GITHUB_OAUTH_CLIENT_ID` build setting. Do not configure a client
+  secret.
 ## PostHog CI configuration
 
 The app runs without telemetry when its PostHog client token is absent. This is

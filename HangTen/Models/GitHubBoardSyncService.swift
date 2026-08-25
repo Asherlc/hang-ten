@@ -41,6 +41,19 @@ struct GitHubDeviceChallenge: Equatable {
     let verificationURL: URL
     let expiresIn: TimeInterval
     let pollingInterval: TimeInterval
+
+    static func sleepNanoseconds(for interval: TimeInterval) throws -> UInt64 {
+        let nanoseconds = interval * 1_000_000_000
+        guard interval.isFinite,
+              interval > 0,
+              nanoseconds.isFinite,
+              nanoseconds < Double(UInt64.max) else {
+            throw GitHubSyncError.invalidResponse(
+                "GitHub returned invalid device authorization data"
+            )
+        }
+        return UInt64(nanoseconds.rounded(.up))
+    }
 }
 
 enum GitHubDeviceAuthorizationResult: Equatable {
@@ -133,7 +146,8 @@ struct GitHubBoardSyncService {
               verificationURL.scheme?.lowercased() == "https",
               verificationURL.host != nil,
               let expiresIn = Self.positiveFiniteNumber(fields["expires_in"]),
-              let interval = Self.positiveFiniteNumber(fields["interval"]) else {
+              let interval = Self.positiveFiniteNumber(fields["interval"]),
+              (try? GitHubDeviceChallenge.sleepNanoseconds(for: interval)) != nil else {
             throw GitHubSyncError.invalidResponse("GitHub returned invalid device authorization data")
         }
         return GitHubDeviceChallenge(
@@ -459,6 +473,10 @@ struct GitHubBoardSyncService {
             }
             data = responseData
             httpResponse = http
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let error as URLError where error.code == .cancelled {
+            throw CancellationError()
         } catch let error as GitHubSyncError {
             throw error
         } catch {
@@ -522,6 +540,10 @@ struct GitHubBoardSyncService {
                 throw GitHubSyncError.invalidResponse("GitHub returned invalid device authorization data")
             }
             return JSONValue(any: decoded)
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch let error as URLError where error.code == .cancelled {
+            throw CancellationError()
         } catch let error as GitHubSyncError {
             throw error
         } catch {

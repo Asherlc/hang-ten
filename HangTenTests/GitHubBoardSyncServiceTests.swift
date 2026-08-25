@@ -548,6 +548,7 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
             ["user_code": "ABCD-EFGH", "verification_uri": "https://github.com/login/device", "expires_in": 900, "interval": 5],
             ["device_code": "device-secret", "user_code": "ABCD-EFGH", "verification_uri": "http://github.com/login/device", "expires_in": 900, "interval": 5],
             ["device_code": "device-secret", "user_code": "ABCD-EFGH", "verification_uri": "https://github.com/login/device", "expires_in": 900, "interval": 0],
+            ["device_code": "device-secret", "user_code": "ABCD-EFGH", "verification_uri": "https://github.com/login/device", "expires_in": 900, "interval": 1e20],
         ]
         for payload in invalidPayloads {
             StubState.handler = { [self] request in try response(request, data: json(payload)) }
@@ -573,6 +574,46 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
             } catch let error as GitHubSyncError {
                 XCTAssertEqual(error, .unauthorized(message))
             }
+        }
+    }
+
+    func testDeviceAuthorizationPreservesCancellation() async throws {
+        StubState.handler = { _ in throw CancellationError() }
+
+        do {
+            _ = try await makeService().requestDeviceChallenge(clientID: "client-public")
+            XCTFail("cancellation must propagate")
+        } catch {
+            XCTAssertTrue(error is CancellationError, "unexpected error: \(error)")
+        }
+    }
+
+    func testDeviceAuthorizationMapsTransportAndMalformedResponses() async throws {
+        StubState.handler = { _ in throw URLError(.notConnectedToInternet) }
+        do {
+            _ = try await makeService().requestDeviceChallenge(clientID: "client-public")
+            XCTFail("transport failure must fail")
+        } catch let error as GitHubSyncError {
+            guard case .transport = error else {
+                return XCTFail("unexpected error: \(error)")
+            }
+        }
+
+        StubState.reset()
+        StubState.handler = { [self] request in
+            try response(request, data: Data("<html>".utf8))
+        }
+        do {
+            _ = try await makeService().pollDeviceAuthorization(
+                clientID: "client-public",
+                deviceCode: "device-secret"
+            )
+            XCTFail("malformed response must fail")
+        } catch let error as GitHubSyncError {
+            XCTAssertEqual(
+                error,
+                .invalidResponse("GitHub returned invalid device authorization data")
+            )
         }
     }
 }
