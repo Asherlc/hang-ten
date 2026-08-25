@@ -3143,8 +3143,150 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-31",
-      "name": "Hold 31",
+      "id": "round-sloper-3-left",
+      "name": "Left #3 63 mm round sloper",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.258,
+            "y": 0.19,
+            "width": 0.126,
+            "height": 0.09
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.97,
+                  0.36
+                ],
+                "control2": [
+                  0.76,
+                  0.02
+                ],
+                "to": [
+                  0.44,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.21,
+                  0.02
+                ],
+                "control2": [
+                  0.04,
+                  0.29
+                ],
+                "to": [
+                  0.0,
+                  0.86
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "round-sloper-3-right",
+      "name": "Right #3 63 mm round sloper",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.616,
+            "y": 0.19,
+            "width": 0.126,
+            "height": 0.09
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.03,
+                  0.36
+                ],
+                "control2": [
+                  0.24,
+                  0.02
+                ],
+                "to": [
+                  0.56,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.79,
+                  0.02
+                ],
+                "control2": [
+                  0.96,
+                  0.29
+                ],
+                "to": [
+                  1.0,
+                  0.86
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "jug-right",
+      "name": "Right outer jug",
       "kind": "jug",
       "geometry": [
         {
@@ -3203,8 +3345,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-32",
-      "name": "Hold 32",
+      "id": "pinch-right",
+      "name": "Right variable-width pinch",
       "kind": "pinch",
       "geometry": [
         {
