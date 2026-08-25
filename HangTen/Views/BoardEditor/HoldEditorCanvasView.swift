@@ -204,12 +204,9 @@ final class HoldEditorCanvasUIView: UIView {
     @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {
         switch gesture.state {
         case .began:
-            pinchStartZoom = zoom
+            beginViewportZoom()
         case .changed:
-            zoom = min(max(pinchStartZoom * gesture.scale, 0.6), 24)
-            clampViewport()
-            updateMetadataWarningAccessibility()
-            setNeedsDisplay()
+            updateViewportZoom(scale: gesture.scale)
         default:
             break
         }
@@ -244,9 +241,36 @@ final class HoldEditorCanvasUIView: UIView {
         }
     }
 
+    func beginViewportPan() {
+        dragState = .viewport(startCenter: viewportCenter)
+    }
+
+    func updateViewportPan(translation: CGPoint) {
+        guard case .viewport(let startCenter) = dragState else { return }
+        let s = scale(for: bounds)
+        viewportCenter = CGPoint(
+            x: startCenter.x - translation.x / s,
+            y: startCenter.y - translation.y / s
+        )
+        clampViewport()
+        updateMetadataWarningAccessibility()
+        setNeedsDisplay()
+    }
+
+    func beginViewportZoom() {
+        pinchStartZoom = zoom
+    }
+
+    func updateViewportZoom(scale: CGFloat) {
+        zoom = min(max(pinchStartZoom * scale, 0.6), 24)
+        clampViewport()
+        updateMetadataWarningAccessibility()
+        setNeedsDisplay()
+    }
+
     private func beginDrag(at location: CGPoint, touches: Int, session: BoardEditorSession) {
         if session.tool == .pan || touches >= 2 {
-            dragState = .viewport(startCenter: viewportCenter)
+            beginViewportPan()
             return
         }
         if let handle = hitTestHandle(at: location), beginHandleDrag(handle, at: location) {
@@ -269,7 +293,7 @@ final class HoldEditorCanvasUIView: UIView {
             dragState = .translatePiece(startPath: startPath, startPoint: boardPoint(fromScreen: location, bounds: bounds))
             return
         }
-        dragState = .viewport(startCenter: viewportCenter)
+        beginViewportPan()
     }
 
     private func beginHandleDrag(_ handle: BoardEditorSession.HandleTarget, at location: CGPoint) -> Bool {
@@ -314,15 +338,8 @@ final class HoldEditorCanvasUIView: UIView {
         switch dragState {
         case .idle:
             break
-        case .viewport(let startCenter):
-            let s = scale(for: bounds)
-            viewportCenter = CGPoint(
-                x: startCenter.x - translation.x / s,
-                y: startCenter.y - translation.y / s
-            )
-            clampViewport()
-            updateMetadataWarningAccessibility()
-            setNeedsDisplay()
+        case .viewport:
+            updateViewportPan(translation: translation)
         case .translatePiece(let startPath, let startPoint):
             let current = boardPoint(fromScreen: location, bounds: bounds)
             let deltaX = current.x - startPoint.x

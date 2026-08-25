@@ -117,7 +117,7 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.height, 0)
     }
 
-    func testViewportGesturesRefreshIncompleteHoldAccessibilityFrame() throws {
+    func testViewportOperationsRefreshIncompleteHoldAccessibilityFrame() throws {
         _ = try store.startEditing(slug: "zlagboard-pro")
         let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
         var document = loadedPackage.document
@@ -139,39 +139,16 @@ final class BoardEditorSessionTests: XCTestCase {
             (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
         ).accessibilityFrameInContainerSpace
 
-        session.tool = .pan
-        let pan = try XCTUnwrap(
-            canvas.gestureRecognizers?.first { $0 is UIPanGestureRecognizer }
-                as? UIPanGestureRecognizer
-        )
-        pan.setValue(UIGestureRecognizer.State.began.rawValue, forKey: "state")
-        UIApplication.shared.sendAction(
-            Selector(("handlePan:")), to: canvas, from: pan, for: nil
-        )
-        pan.setTranslation(CGPoint(x: 48, y: 16), in: canvas)
-        pan.setValue(UIGestureRecognizer.State.changed.rawValue, forKey: "state")
-        UIApplication.shared.sendAction(
-            Selector(("handlePan:")), to: canvas, from: pan, for: nil
-        )
+        canvas.beginViewportPan()
+        canvas.updateViewportPan(translation: CGPoint(x: 48, y: 16))
 
         let frameAfterPan = try XCTUnwrap(
             (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
         ).accessibilityFrameInContainerSpace
         XCTAssertNotEqual(frameAfterPan, frameBeforePan)
 
-        let pinch = try XCTUnwrap(
-            canvas.gestureRecognizers?.first { $0 is UIPinchGestureRecognizer }
-                as? UIPinchGestureRecognizer
-        )
-        pinch.setValue(UIGestureRecognizer.State.began.rawValue, forKey: "state")
-        UIApplication.shared.sendAction(
-            Selector(("handlePinch:")), to: canvas, from: pinch, for: nil
-        )
-        pinch.scale = 1.5
-        pinch.setValue(UIGestureRecognizer.State.changed.rawValue, forKey: "state")
-        UIApplication.shared.sendAction(
-            Selector(("handlePinch:")), to: canvas, from: pinch, for: nil
-        )
+        canvas.beginViewportZoom()
+        canvas.updateViewportZoom(scale: 1.5)
 
         let frameAfterPinch = try XCTUnwrap(
             (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
