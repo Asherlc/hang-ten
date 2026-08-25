@@ -1390,6 +1390,12 @@ enum WorkoutSessionPolicy {
         preparationState == .preparing
     }
 
+    static func shouldStartPendingCountdownVisibly(
+        afterPreparationState preparationState: CountdownAudioPreparationState
+    ) -> Bool {
+        preparationState == .failed
+    }
+
     static func countdownAudioArmLead(environment: [String: String]) -> TimeInterval {
         #if DEBUG
         if environment["HANGTEN_REVIEW_COUNTDOWN_CAPTURE"] == "1" {
@@ -1895,6 +1901,13 @@ struct WorkoutView: View {
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
 			guard state != .preparing, let pendingCountdownStart else { return }
 			self.pendingCountdownStart = nil
+			if WorkoutSessionPolicy.shouldStartPendingCountdownVisibly(
+				afterPreparationState: state
+			) {
+				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+				return
+			}
+
 			requestCountdownStart(pendingCountdownStart)
 		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in

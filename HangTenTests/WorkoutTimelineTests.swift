@@ -2022,6 +2022,20 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
     }
 
+    // Catches a failed prewarm retrying the same pending countdown instead of starting it visibly.
+    func testFailedPreparationStartsPendingCountdownVisibly() {
+        XCTAssertTrue(
+            WorkoutSessionPolicy.shouldStartPendingCountdownVisibly(
+                afterPreparationState: .failed
+            )
+        )
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldStartPendingCountdownVisibly(
+                afterPreparationState: .ready
+            )
+        )
+    }
+
     func testCountdownDurationsKeepInitialAndSkipStartAtThree() {
         let now = Date(timeIntervalSinceReferenceDate: 2_000)
 
