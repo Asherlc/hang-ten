@@ -24,6 +24,13 @@
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
 		AA0000000000000000000093 /* CountdownAudioScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000093 /* CountdownAudioScheduler.swift */; };
+		AA0000000000000000000094 /* BoardEditorSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000094 /* BoardEditorSession.swift */; };
+		AA0000000000000000000095 /* HoldEditorCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000095 /* HoldEditorCanvasView.swift */; };
+		AA0000000000000000000096 /* BoardEditorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000096 /* BoardEditorScreen.swift */; };
+		AA0000000000000000000097 /* HoldInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000097 /* HoldInspectorView.swift */; };
+		AA0000000000000000000098 /* BoardEditorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000098 /* BoardEditorListView.swift */; };
+		AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000099 /* GitHubEditorSyncViews.swift */; };
+		AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000100 /* BoardEditorSessionTests.swift */; };
 		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
 		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* MotherboardModelsTests.swift */; };
@@ -103,6 +110,14 @@
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
 		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
+		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
+		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
+		AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B3 /* BoardEditorStore.swift */; };
+		AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B4 /* GitHubBoardSyncService.swift */; };
+		AA00000000000000000000C1 /* HoldPathEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C1 /* HoldPathEngineTests.swift */; };
+		AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C2 /* BoardPackageWriterTests.swift */; };
+		AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C3 /* BoardEditorStoreTests.swift */; };
+		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,6 +137,13 @@
 		BB0000000000000000000012 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000015 /* WorkoutAudioCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAudioCoach.swift; sourceTree = "<group>"; };
 		BB0000000000000000000093 /* CountdownAudioScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownAudioScheduler.swift; sourceTree = "<group>"; };
+		BB0000000000000000000094 /* BoardEditorSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSession.swift; path = BoardEditor/BoardEditorSession.swift; sourceTree = "<group>"; };
+		BB0000000000000000000095 /* HoldEditorCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldEditorCanvasView.swift; path = BoardEditor/HoldEditorCanvasView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000096 /* BoardEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorScreen.swift; path = BoardEditor/BoardEditorScreen.swift; sourceTree = "<group>"; };
+		BB0000000000000000000097 /* HoldInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldInspectorView.swift; path = BoardEditor/HoldInspectorView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000098 /* BoardEditorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorListView.swift; path = BoardEditor/BoardEditorListView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000099 /* GitHubEditorSyncViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitHubEditorSyncViews.swift; path = BoardEditor/GitHubEditorSyncViews.swift; sourceTree = "<group>"; };
+		BB0000000000000000000100 /* BoardEditorSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSessionTests.swift; path = BoardEditorSessionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
 		BB0000000000000000000018 /* TestTargetSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTargetSmokeTests.swift; sourceTree = "<group>"; };
@@ -201,6 +223,14 @@
 		AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTelemetryDiagnostics.swift; sourceTree = "<group>"; };
 		AC0000000000000000000004 /* PostHog.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.xcconfig; sourceTree = "<group>"; };
 		AC0000000000000000000005 /* PostHog.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.local.xcconfig.example; sourceTree = "<group>"; };
+		BB00000000000000000000B1 /* HoldPathEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngine.swift; sourceTree = "<group>"; };
+		BB00000000000000000000B2 /* BoardPackageWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriter.swift; sourceTree = "<group>"; };
+		BB00000000000000000000B3 /* BoardEditorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStore.swift; sourceTree = "<group>"; };
+		BB00000000000000000000B4 /* GitHubBoardSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncService.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C1 /* HoldPathEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngineTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C2 /* BoardPackageWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriterTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C3 /* BoardEditorStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStoreTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +333,10 @@
 				BB0000000000000000000064 /* CustomRoutineDraft.swift */,
 				BB0000000000000000000071 /* BoardStorage.swift */,
 				BB0000000000000000000086 /* BoardPackageStore.swift */,
+				BB00000000000000000000B1 /* HoldPathEngine.swift */,
+				BB00000000000000000000B2 /* BoardPackageWriter.swift */,
+				BB00000000000000000000B3 /* BoardEditorStore.swift */,
+				BB00000000000000000000B4 /* GitHubBoardSyncService.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* PostHogTelemetry.swift */,
 				AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */,
@@ -326,6 +360,12 @@
 				BB0000000000000000000005 /* BoardMapView.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
+				BB0000000000000000000094 /* BoardEditorSession.swift */,
+				BB0000000000000000000095 /* HoldEditorCanvasView.swift */,
+				BB0000000000000000000096 /* BoardEditorScreen.swift */,
+				BB0000000000000000000097 /* HoldInspectorView.swift */,
+				BB0000000000000000000098 /* BoardEditorListView.swift */,
+				BB0000000000000000000099 /* GitHubEditorSyncViews.swift */,
 				BB0000000000000000000092 /* AppSettingsView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
 				BB0000000000000000000032 /* MotherboardViews.swift */,
@@ -382,6 +422,11 @@
 				BB0000000000000000000063 /* CustomRoutineAppStoreTests.swift */,
 				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
 				BB0000000000000000000087 /* BoardPackageStoreTests.swift */,
+				BB00000000000000000000C1 /* HoldPathEngineTests.swift */,
+				BB00000000000000000000C2 /* BoardPackageWriterTests.swift */,
+				BB00000000000000000000C3 /* BoardEditorStoreTests.swift */,
+				BB0000000000000000000100 /* BoardEditorSessionTests.swift */,
+				BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
@@ -646,6 +691,16 @@
 				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
 				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
 				AA0000000000000000000086 /* BoardPackageStore.swift in Sources */,
+				AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */,
+				AA0000000000000000000094 /* BoardEditorSession.swift in Sources */,
+				AA0000000000000000000095 /* HoldEditorCanvasView.swift in Sources */,
+				AA0000000000000000000096 /* BoardEditorScreen.swift in Sources */,
+				AA0000000000000000000097 /* HoldInspectorView.swift in Sources */,
+				AA0000000000000000000098 /* BoardEditorListView.swift in Sources */,
+				AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */,
+				AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */,
+				AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */,
+				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
 				AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */,
 				AB0000000000000000000003 /* OpenTelemetryDiagnostics.swift in Sources */,
@@ -688,6 +743,11 @@
 				AA0000000000000000000063 /* CustomRoutineAppStoreTests.swift in Sources */,
 				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
 				AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */,
+				AA00000000000000000000C1 /* HoldPathEngineTests.swift in Sources */,
+				AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */,
+				AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */,
+				AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */,
+				AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
