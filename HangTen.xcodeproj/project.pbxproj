@@ -119,6 +119,7 @@
 		AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C2 /* BoardPackageWriterTests.swift */; };
 		AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C3 /* BoardEditorStoreTests.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
+		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -233,6 +234,7 @@
 		BB00000000000000000000C2 /* BoardPackageWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriterTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C3 /* BoardEditorStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStoreTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -430,6 +432,7 @@
 				BB00000000000000000000C3 /* BoardEditorStoreTests.swift */,
 				BB0000000000000000000100 /* BoardEditorSessionTests.swift */,
 				BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */,
+				BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
@@ -751,6 +754,7 @@
 				AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */,
 				AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */,
 				AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */,
+				AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */,
 				AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,

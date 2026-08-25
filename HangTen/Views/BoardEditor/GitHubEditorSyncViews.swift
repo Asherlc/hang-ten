@@ -1,14 +1,51 @@
 import SwiftUI
 
+protocol GitHubTokenStoring {
+    func save(_ token: String) throws
+    func load() -> String?
+    func delete() throws
+}
+
+protocol GitHubDeviceServicing {
+    func authenticatedUser(token: String) async throws -> String
+    func requestDeviceChallenge(clientID: String) async throws -> GitHubDeviceChallenge
+    func pollDeviceAuthorization(
+        clientID: String,
+        deviceCode: String
+    ) async throws -> GitHubDeviceAuthorizationResult
+}
+
+extension GitHubTokenStore: GitHubTokenStoring {}
+extension GitHubBoardSyncService: GitHubDeviceServicing {}
+
 @MainActor
 final class GitHubSyncSession: ObservableObject {
     static let shared = GitHubSyncSession()
 
     @Published private(set) var username: String?
     @Published var lastError: String?
+    @Published private(set) var deviceChallenge: GitHubDeviceChallenge?
+    @Published private(set) var isSigningIn = false
 
-    private let tokenStore = GitHubTokenStore()
-    private let syncService = GitHubBoardSyncService()
+    private let tokenStore: any GitHubTokenStoring
+    private let syncService: any GitHubDeviceServicing
+    private let clientID: String
+    private let sleep: (UInt64) async throws -> Void
+    private var authorizationTask: Task<Void, Never>?
+
+    init(
+        tokenStore: any GitHubTokenStoring = GitHubTokenStore(),
+        syncService: any GitHubDeviceServicing = GitHubBoardSyncService(),
+        clientID: String = Bundle.main.object(forInfoDictionaryKey: "GITHUB_OAUTH_CLIENT_ID") as? String ?? "",
+        sleep: @escaping (UInt64) async throws -> Void = { nanoseconds in
+            try await Task.sleep(nanoseconds: nanoseconds)
+        }
+    ) {
+        self.tokenStore = tokenStore
+        self.syncService = syncService
+        self.clientID = clientID.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.sleep = sleep
+    }
 
     var token: String? {
         tokenStore.load()
@@ -43,6 +80,62 @@ final class GitHubSyncSession: ObservableObject {
             try tokenStore.delete()
             username = nil
             lastError = nil
+        } catch {
+            lastError = error.localizedDescription
+        }
+    }
+
+    func startDeviceSignIn() {
+        guard !clientID.isEmpty else {
+            lastError = "GitHub sign-in is not configured."
+            return
+        }
+        authorizationTask?.cancel()
+        lastError = nil
+        isSigningIn = true
+        authorizationTask = Task { [weak self] in
+            await self?.completeDeviceSignIn()
+        }
+    }
+
+    func cancelDeviceSignIn() {
+        authorizationTask?.cancel()
+        authorizationTask = nil
+        deviceChallenge = nil
+        isSigningIn = false
+    }
+
+    private func completeDeviceSignIn() async {
+        defer { isSigningIn = false }
+        do {
+            let challenge = try await syncService.requestDeviceChallenge(clientID: clientID)
+            guard !Task.isCancelled else { return }
+            deviceChallenge = challenge
+            var interval = challenge.pollingInterval
+            let deadline = Date().addingTimeInterval(challenge.expiresIn)
+            while !Task.isCancelled && Date() < deadline {
+                try await sleep(UInt64(interval * 1_000_000_000))
+                switch try await syncService.pollDeviceAuthorization(
+                    clientID: clientID,
+                    deviceCode: challenge.deviceCode
+                ) {
+                case .authorizationPending:
+                    continue
+                case .slowDown:
+                    interval += 5
+                case .authorized(let token):
+                    let login = try await syncService.authenticatedUser(token: token)
+                    try tokenStore.save(token)
+                    username = login
+                    deviceChallenge = nil
+                    return
+                }
+            }
+            if !Task.isCancelled {
+                lastError = "GitHub authorization expired. Please try again."
+            }
+        } catch is CancellationError {
+            // Cancellation is initiated by the user and must not change credentials.
         } catch {
             lastError = error.localizedDescription
         }
