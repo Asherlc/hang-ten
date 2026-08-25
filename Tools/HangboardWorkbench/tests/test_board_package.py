@@ -757,15 +757,33 @@ def test_accepts_exact_physical_hold_kind_enum(tmp_path: Path) -> None:
     )
 
 
+def test_editor_round_trips_missing_physical_kind_without_inventing_a_type(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, lambda board: board["holds"][0].pop("kind"))
+
+    loaded = board_package.load_board_package(package_root)
+    document = board_package.editor_document(loaded)
+
+    assert "type" not in document["regions"][0]
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    reloaded = board_package.load_board_package(package_root)
+
+    assert "kind" not in saved.board["holds"][0]
+    assert "kind" not in reloaded.board["holds"][0]
+    assert "type" not in board_package.editor_document(reloaded)["regions"][0]
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (lambda hold: hold.pop("kind"), "kind"),
         (lambda hold: hold.__setitem__("kind", "crimp"), "kind must be one of"),
         (lambda hold: hold.__setitem__("geometry", []), "geometry must be non-empty"),
     ],
 )
-def test_requires_physical_kind_and_nonempty_geometry(
+def test_rejects_invalid_physical_kind_and_nonempty_geometry(
     mutation, message: str, tmp_path: Path
 ) -> None:
     library = _library(tmp_path)
