@@ -7,7 +7,7 @@ ElevenLabs requests at runtime.
 An authorized maintainer may generate a pack locally from the repository root:
 
 ```sh
-ELEVENLABS_API_KEY='…' ELEVENLABS_VOICE_ID='…' \\
+ELEVENLABS_API_KEY='…' ELEVENLABS_VOICE_ID='…' \
   rtk zsh scripts/generate-elevenlabs-countdown-audio.sh
 ```
 

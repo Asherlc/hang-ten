@@ -722,6 +722,20 @@ final class WorkoutClockTests: XCTestCase {
 }
 
 final class CountdownAudioSchedulerTests: XCTestCase {
+    // A one-second cadence needs each bundled spoken number to leave a gap before the next slot.
+    func testBundledCountdownBuffersMustFitWithinOneSecondSlots() {
+        XCTAssertTrue(
+            BundledCountdownAudioBufferSource.fitsWithinCountdownSlot(
+                makeCountdownPCMBuffer(duration: 0.99)
+            )
+        )
+        XCTAssertFalse(
+            BundledCountdownAudioBufferSource.fitsWithinCountdownSlot(
+                makeCountdownPCMBuffer(duration: 1)
+            )
+        )
+    }
+
     // Catches a complete bundled pack unnecessarily constructing or using Apple synthesis.
     func testCompleteBundledPackIsSelectedWithoutConstructingAppleRenderer() {
         let expectedBuffers = [

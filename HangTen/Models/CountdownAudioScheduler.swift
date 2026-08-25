@@ -145,6 +145,11 @@ final class BundledCountdownAudioBufferSource: CountdownAudioBufferSource {
         self.bundle = bundle
     }
 
+    static func fitsWithinCountdownSlot(_ buffer: AVAudioPCMBuffer) -> Bool {
+        let sampleRate = buffer.format.sampleRate
+        return sampleRate > 0 && Double(buffer.frameLength) < sampleRate
+    }
+
     func buffers(for phrases: Set<String>) -> [String: [AVAudioPCMBuffer]]? {
         guard !phrases.isEmpty else { return nil }
 
@@ -175,7 +180,8 @@ final class BundledCountdownAudioBufferSource: CountdownAudioBufferSource {
 
                 try file.read(into: buffer)
                 guard buffer.frameLength > 0,
-                      buffer.frameLength == buffer.frameCapacity else {
+                      buffer.frameLength == buffer.frameCapacity,
+                      Self.fitsWithinCountdownSlot(buffer) else {
                     return nil
                 }
 

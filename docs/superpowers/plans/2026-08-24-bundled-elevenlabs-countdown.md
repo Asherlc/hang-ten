@@ -1,6 +1,6 @@
 # Bundled ElevenLabs Countdown Voice Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** For every implementation or configuration task, use a fresh subagent and obtain a review checkpoint before starting the next task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Prefer bundled, development-generated ElevenLabs clips for the `1`, `2`, `3` countdown while retaining the current Apple renderer as an all-or-nothing fallback.
 
