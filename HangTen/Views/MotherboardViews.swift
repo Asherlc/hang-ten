@@ -286,6 +286,13 @@ struct MotherboardMeterView: View {
             }
             .font(.system(size: 11, weight: .bold, design: .rounded))
 
+            MotherboardForceRockerView(
+                state: MotherboardForceRocker.state(
+                    loadKGF: measurement?.aggregateLoadKGF,
+                    thresholdKGF: thresholdKGF
+                )
+            )
+
             balanceContent
 
             Text(bodyweightFeedbackText)
@@ -388,6 +395,41 @@ struct MotherboardMeterView: View {
 
     private func formattedPercentage(_ percentage: Double) -> String? {
         MotherboardUserVisibleFormatting.percentage(percentage)
+    }
+}
+
+private struct MotherboardForceRockerView: View {
+    let state: MotherboardForceRocker.State
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                .fill(tint)
+                .frame(width: 112, height: 12)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .stroke(Color.hangInk.opacity(0.12), lineWidth: 1)
+                }
+                .rotationEffect(.degrees(state.tiltFraction * 16))
+
+            Circle()
+                .fill(Color.hangCream)
+                .frame(width: 18, height: 18)
+                .overlay {
+                    Circle()
+                        .stroke(Color.hangInk.opacity(0.28), lineWidth: 2)
+                }
+        }
+        .frame(maxWidth: .infinity, minHeight: 46)
+        .animation(.spring(response: 0.2, dampingFraction: 0.72), value: state)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Force rocker")
+        .accessibilityValue(state.accessibilityValue)
+        .accessibilityIdentifier("motherboard.forceRocker")
+    }
+
+    private var tint: Color {
+        state.isAtOrAboveThreshold ? .hangGreenDark : .hangMuted
     }
 }
 

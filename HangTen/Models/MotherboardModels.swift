@@ -130,6 +130,66 @@ enum MotherboardConnectionState: Equatable {
     }
 }
 
+enum MotherboardForceRocker {
+    enum State: Equatable {
+        case unavailable
+        case underTarget(tiltFraction: Double)
+        case centered
+        case overTarget(tiltFraction: Double)
+
+        var tiltFraction: Double {
+            switch self {
+            case .unavailable, .centered:
+                0
+            case let .underTarget(tiltFraction), let .overTarget(tiltFraction):
+                tiltFraction
+            }
+        }
+
+        var accessibilityValue: String {
+            switch self {
+            case .unavailable: "Unavailable"
+            case .underTarget: "Below threshold"
+            case .centered: "At threshold"
+            case .overTarget: "Above threshold"
+            }
+        }
+
+        var isAtOrAboveThreshold: Bool {
+            switch self {
+            case .centered, .overTarget:
+                true
+            case .unavailable, .underTarget:
+                false
+            }
+        }
+    }
+
+    static func state(loadKGF: Double?, thresholdKGF: Double) -> State {
+        guard let loadKGF,
+              loadKGF.isFinite,
+              loadKGF >= 0,
+              thresholdKGF.isFinite,
+              thresholdKGF > 0 else {
+            return .unavailable
+        }
+
+        if loadKGF == thresholdKGF {
+            return .centered
+        }
+
+        if loadKGF < thresholdKGF {
+            return .underTarget(tiltFraction: max(loadKGF / thresholdKGF - 1, -1))
+        }
+
+        let thresholdRatio = thresholdKGF / loadKGF
+        guard thresholdRatio > 0.5 else {
+            return .overTarget(tiltFraction: 1)
+        }
+        return .overTarget(tiltFraction: 1 / thresholdRatio - 1)
+    }
+}
+
 struct MotherboardDetectionConfiguration: Codable, Equatable {
     var thresholdKGF: Double = 2.5
     var releaseRatio: Double = 0.8
