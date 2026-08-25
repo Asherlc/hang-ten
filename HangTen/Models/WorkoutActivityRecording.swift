@@ -246,9 +246,9 @@ internal enum BoardTargetResolver {
         // identify every same-kind hold as the source-prescribed target. When
         // the plan feature has a source-backed depth adaptation, prefer the
         // nearest documented measurement before falling back to board order.
-        guard let representative = preferredSameKind
+        let rankedRepresentative = preferredSameKind
             .min { depthDistance(of: $0, from: feature) < depthDistance(of: $1, from: feature) }
-        else { return [] }
+        guard let representative = rankedRepresentative else { return [] }
 
         if feature.holdKind == .edge {
             let pairedEdges = oneHoldPerHand(from: preferredSameKind)

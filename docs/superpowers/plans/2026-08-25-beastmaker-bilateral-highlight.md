@@ -171,3 +171,38 @@ git add HangTen/Models/WorkoutActivityRecording.swift docs/superpowers/plans/202
 git rm .superpowers/sdd/2026-08-25-beastmaker-bilateral-highlight/task-2-report.md
 git commit -m "Fix generalized bilateral hold helper"
 ```
+
+### Task 4: Compile the ranked bilateral fallback binding
+
+**Files:**
+- Modify: `HangTen/Models/WorkoutActivityRecording.swift:248-251`
+- Modify: `docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md`
+
+**Interfaces:**
+- Consumes: `preferredSameKind.min(by:) -> BoardHold?`.
+- Produces: the same optional representative used by the existing one-sided fallback, in valid Swift syntax.
+
+- [ ] **Step 1: Verify the failing compile**
+
+Run: `rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`
+
+Expected: FAIL at the `guard` binding because the `min` trailing closure is parsed as outside the guard condition.
+
+- [ ] **Step 2: Apply the minimal syntax correction**
+
+Bind the `min(by:)` result to a local optional before the `guard`, then unwrap that local in the `guard`. Keep the comparison closure, depth ranking, bilateral-pair branch, and test assertions identical.
+
+- [ ] **Step 3: Verify build and package contract**
+
+Run: `rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`
+
+Run: `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`
+
+Expected: both commands exit 0.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add HangTen/Models/WorkoutActivityRecording.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
+git commit -m "Compile bilateral edge fallback"
+```
