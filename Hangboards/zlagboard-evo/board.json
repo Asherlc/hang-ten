@@ -146,7 +146,7 @@
             "x": 0.275771566074,
             "y": 0.255008643709,
             "width": 0.107296066795,
-            "height": 0.07839604106
+            "height": 0.07157577351
           },
           "shape": {
             "type": "path",
@@ -169,7 +169,7 @@
                 "command": "line",
                 "to": [
                   0.0,
-                  0.913002398367
+                  1.0
                 ]
               },
               {
@@ -1863,6 +1863,58 @@
                   0.0
                 ],
                 "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "hold-20",
+      "name": "Hold 20",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.727748101394,
+            "y": 0.256003270199,
+            "width": 0.115232574724,
+            "height": 0.10832872053
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.93112617723,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.008983545001,
+                  1.0
+                ]
               },
               {
                 "command": "close"
