@@ -86,6 +86,21 @@ def test_whetstone_discrete_steps_are_individual_scalar_depth_holds() -> None:
     assert all("depthRangeMillimeters" not in hold for hold in board["holds"])
 
 
+def test_whetstone_source_side_shelves_have_independently_authored_paths() -> None:
+    holds = {hold["id"]: hold for hold in _board("tension-whetstone")["holds"]}
+    source_side_shapes = {
+        json.dumps(holds[hold_id]["geometry"][0]["shape"], sort_keys=True)
+        for hold_id in (
+            "edge-40-left",
+            "edge-30-left",
+            "edge-25-left",
+            "edge-20-left",
+        )
+    }
+
+    assert len(source_side_shapes) == 4
+
+
 def test_megalith_discrete_steps_are_individual_scalar_depth_holds() -> None:
     board = _board("frictitious-megalith")
 
@@ -126,11 +141,19 @@ def test_continuously_variable_forge_and_pivot_rails_remain_ranges() -> None:
         "lowerBound": 7,
         "upperBound": 20,
     }
-    assert pivot["variable-edge-left"]["depthRangeMillimeters"] == {
-        "lowerBound": 16,
-        "upperBound": 31,
-    }
-    assert pivot["variable-edge-right"]["depthRangeMillimeters"] == {
-        "lowerBound": 16,
-        "upperBound": 31,
+    assert {
+        hold_id: hold["depthRangeMillimeters"]
+        for hold_id, hold in pivot.items()
+        if "depthRangeMillimeters" in hold
+    } == {
+        "variable-edge-left": {"lowerBound": 16, "upperBound": 31},
+        "variable-edge-right": {"lowerBound": 16, "upperBound": 31},
+        "medium-crimp-left": {"lowerBound": 9, "upperBound": 10},
+        "medium-crimp-right": {"lowerBound": 9, "upperBound": 10},
+        "large-crimp-left": {"lowerBound": 11, "upperBound": 12},
+        "large-crimp-right": {"lowerBound": 11, "upperBound": 12},
+        "two-finger-pocket-left": {"lowerBound": 28, "upperBound": 32},
+        "two-finger-pocket-right": {"lowerBound": 28, "upperBound": 32},
+        "three-finger-pocket-left": {"lowerBound": 17, "upperBound": 28},
+        "three-finger-pocket-right": {"lowerBound": 17, "upperBound": 28},
     }
