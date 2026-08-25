@@ -151,10 +151,63 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
         let result = BoardTargetResolver.substituteHoldIDs(
             for: .feature(.smallEdge),
-            on: board
+            on: board,
+            gripType: .openHand
         )
 
         XCTAssertEqual(result, ["pocket"])
+    }
+
+    @MainActor
+    func testCrimpStepsRejectJugsOpenHandRailsAndPockets() throws {
+        let incompatibleBoard = board(holds: [
+            hold(id: "jug", kind: .jug, feature: .jug),
+            hold(id: "open-hand-rail", feature: .largeOpenHandRail),
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+
+        for gripType in [GripType.halfCrimp, .fullCrimp] {
+            let step = WorkoutStep(
+                id: "crimp-step",
+                number: 1,
+                title: "Crimp step",
+                instruction: "Crimp an edge.",
+                accessory: "",
+                duration: 7,
+                phase: .hang,
+                targets: [.feature(.mediumEdge, fallback: .largeOpenHandRail, .jug)],
+                gripType: gripType
+            )
+
+            XCTAssertTrue(store.holdIDs(for: step, on: incompatibleBoard).isEmpty)
+        }
+    }
+
+    func testCrimpResolverRejectsJugsOpenHandRailsAndPockets() {
+        let incompatibleBoard = board(holds: [
+            hold(id: "jug", kind: .jug, feature: .jug),
+            hold(id: "open-hand-rail", feature: .largeOpenHandRail),
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+        let target = HoldTarget.feature(
+            .mediumEdge,
+            fallback: .largeOpenHandRail,
+            .jug
+        )
+
+        for gripType in [GripType.halfCrimp, .fullCrimp] {
+            XCTAssertTrue(
+                BoardTargetResolver.substituteHoldIDs(
+                    for: target,
+                    on: incompatibleBoard,
+                    gripType: gripType
+                ).isEmpty
+            )
+        }
     }
 
     func testEdgeFeatureFallbackSelectsOnePocketPerHandWhenCapacityIsUnspecified() {
@@ -214,15 +267,17 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
-    func testBeastmaker1000IsIncompatibleWithMaxHangsButSupportsGenericEdgeRoutine() throws {
+    func testBeastmaker1000IsIncompatibleWithRuntimeMaxHangs() throws {
         let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
 
-        XCTAssertTrue(store.isIncompatible(LegacyPlanSeedCatalog.maxHangs, on: board))
-        XCTAssertFalse(store.isIncompatible(LegacyPlanSeedCatalog.methodRepeaters, on: board))
+        XCTAssertTrue(store.isIncompatible(PlanCatalog.maxHangs, on: board))
+        XCTAssertTrue(
+            store.holdIDs(for: try XCTUnwrap(PlanCatalog.maxHangs.steps.first), on: board).isEmpty
+        )
     }
 
     @MainActor
@@ -235,7 +290,11 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
 
-        XCTAssertFalse(store.isIncompatible(LegacyPlanSeedCatalog.maxHangs, on: board))
+        XCTAssertFalse(store.isIncompatible(PlanCatalog.maxHangs, on: board))
+        XCTAssertEqual(
+            store.holdIDs(for: try XCTUnwrap(PlanCatalog.maxHangs.steps.first), on: board),
+            ["large-edge"]
+        )
     }
 
     @MainActor

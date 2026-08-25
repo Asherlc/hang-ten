@@ -1533,7 +1533,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1544,7 +1544,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1555,7 +1555,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1566,7 +1566,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1577,7 +1577,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · half crimp",
                 active: 7,
                 rest: 0,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
