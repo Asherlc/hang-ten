@@ -43,9 +43,8 @@ mirrored pair.
 
 The depth guide maps the variable rail to `7–20 mm`, MR deep to `25 mm`, and MR
 shallow to `15 mm`; those values are retained. The guide maps the closed crimp
-to `7.5 mm`, which the integer-only `sizeMillimeters` field cannot represent, so
-the sourced value appears only in its name. It assigns an aggregate `19–31 mm`
-range to the IMR area rather than separately mapping the visible deep and
+to `7.5 mm`, which is recorded exactly in `sizeMillimeters`. It assigns an
+aggregate `19–31 mm` range to the IMR area rather than separately mapping the visible deep and
 shallow lobes; those two holds therefore omit measurements. `MR` and `IM` names
 are retained only where Trango's chart explicitly labels them. No grip posture,
 feature tags, or app routing metadata is added.

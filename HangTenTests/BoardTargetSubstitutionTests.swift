@@ -7,8 +7,8 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         kind: HoldKind = .edge,
         feature: HoldFeature? = nil,
         fingerCapacity: Int? = nil,
-        sizeMillimeters: Int? = nil,
-        depthRangeMillimeters: ClosedRange<Int>? = nil,
+        sizeMillimeters: Double? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
         x: Double = 0
     ) -> BoardHold {
         BoardHold(

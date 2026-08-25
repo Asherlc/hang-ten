@@ -82,6 +82,10 @@ Each physical hold has one identifier and one or more geometry pieces embedded
 in `board.json`; each piece has one closed, contiguous contour. The editor
 exposes each piece under a stable `<hold-id>-piece-<index>` key, and runtime
 bounds are the union of all pieces belonging to the physical hold.
+Optional `sizeMillimeters` and `depthRangeMillimeters` values are positive
+finite millimeter measurements, so source-backed fractional values such as
+`7.5` are preserved. A depth range's lower bound must not exceed its upper
+bound.
 `aspectRatio` is the primary PNG's pixel width divided by height and must match
 the decoded image within 0.1% relative error.
 

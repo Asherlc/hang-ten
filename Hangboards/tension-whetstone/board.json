@@ -498,6 +498,7 @@
       "id": "edge-40-30-left",
       "name": "Left 40/30 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 30, "upperBound": 40 },
       "geometry": [
         {
           "frame": {
@@ -621,6 +622,7 @@
       "id": "edge-40-30-right",
       "name": "Right 40/30 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 30, "upperBound": 40 },
       "geometry": [
         {
           "frame": {
@@ -854,6 +856,7 @@
       "id": "edge-25-20-left",
       "name": "Left 25/20 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 20, "upperBound": 25 },
       "geometry": [
         {
           "frame": {
@@ -977,6 +980,7 @@
       "id": "edge-25-20-right",
       "name": "Right 25/20 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 20, "upperBound": 25 },
       "geometry": [
         {
           "frame": {

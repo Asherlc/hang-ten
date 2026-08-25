@@ -917,8 +917,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
   const changeHoldDepthRange = useCallback((depthRange: MillimeterRange | undefined): void => {
     if (busy || !document || !selectedHold
       || (depthRange !== undefined
-        && (!Number.isInteger(depthRange.lowerBound)
-          || !Number.isInteger(depthRange.upperBound)
+        && (!Number.isFinite(depthRange.lowerBound)
+          || !Number.isFinite(depthRange.upperBound)
           || depthRange.lowerBound <= 0
           || depthRange.upperBound < depthRange.lowerBound))) return;
     const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
