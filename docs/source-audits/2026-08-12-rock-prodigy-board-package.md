@@ -34,10 +34,11 @@ disconnected lobes, giving 24 logical holds and 28 geometry pieces.
 The guide's deep two-finger, shallow three-finger, and small semi-closed-crimp
 terms describe selected training positions, but it does not provide a
 one-to-one location/depth map for every visible cavity. The package therefore
-uses conservative spatial names for all cavities and omits depth, capacity,
-posture, and feature metadata. “More than 30 grip positions” describes variable
-locations and grip combinations on the continuous rails and pockets; it is not
-a count of separately selectable physical contacts.
+keeps its stable historical IDs as identity only and omits depth, capacity,
+posture, and feature metadata from every individual cavity. The IDs' legacy
+finger-pair words are not treated as evidence. “More than 30 grip positions”
+describes variable locations and grip combinations on the continuous rails and
+pockets; it is not a count of separately selectable physical contacts.
 
 The product page establishes `12.1 × 9.1 in` per side and says the design is
 perfectly symmetric. The official square JPEG was converted to PNG without
@@ -48,3 +49,31 @@ the sculpted rails, compound pockets, and contact surfaces remain freeform.
 All six constrained pieces pass the production `+1 px` resize invariants. A
 zero-distance save can reserialize decimal precision, so they are verified for
 oval consistency and no visible snap rather than claimed as byte-exact.
+
+## 2026-08-25 per-contact metadata ledger
+
+The stable-ID capture at
+`.context/hangboard-metadata-backfill-icky-cow/trango/trango.rock-prodigy-training-center--54f0d57dd133.png`
+was reviewed against the current first-party product image and both pages of
+the use guide. The 24 logical contacts / 28 geometry pieces still reconcile;
+no geometry or identity changed.
+
+All 24 `kind` values are source-verified. Only four unique source-to-contact
+optional mappings remain populated on each mirrored side:
+
+- `sloper-*` uses the exact `sloper` posture;
+- `jug-*` uses the literal `jug` feature;
+- `edge-large-vder-*` maps “Large Open-Hand Edge” plus the product page's
+  variable-edge-rail wording to `openHand` and `largeOpenHandRail`;
+- `pinch-wide-*` uses the literal `widePinch` feature.
+
+The use guide has no positional hold diagram. Consequently its generic “Deep
+2 Finger Pocket” and “Shallow 3 Finger Pocket” exercises cannot be assigned to
+any of the five physical pocket contacts on a half. All ten pocket
+`fingerCapacity`, `gripType`, and `features` values were removed and recorded
+as unavailable. The same evidence gap leaves `thinCrimp` and `mediumPinch`
+features blank: Trango says “small semi-closed crimp” and “wide pinch,” not
+that those schema tags apply to the corresponding stable IDs. Trango publishes
+no per-contact depths or maximum simultaneous hand capacities, so all such
+fields remain blank with exact reasons in
+`2026-08-25-hangboard-metadata-ledger.json`.

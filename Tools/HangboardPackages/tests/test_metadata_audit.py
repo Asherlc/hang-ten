@@ -231,6 +231,10 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "tension.honestone",
         "tension.whetstone",
         "the-hangboard.the-hangboard",
+        "trango.rock-prodigy-forge",
+        "trango.rock-prodigy-natural",
+        "trango.rock-prodigy-pivot",
+        "trango.rock-prodigy-training-center",
     )
     assert all(board.unaccounted_fields == 0 for board in report.boards)
 
@@ -331,6 +335,89 @@ def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:
     assert next(
         board for board in report.boards if board.board_id == "soill.training-tiles"
     ).populated == 18
+
+
+def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    inventory = discover_board_packages(repository_root / "Hangboards")
+    packages = {package.board.id: package.board for package in inventory.packages}
+
+    forge = packages["trango.rock-prodigy-forge"]
+    assert {
+        hold.id: hold.grip_type
+        for hold in forge.holds
+        if hold.kind == "pocket"
+    } == {
+        f"{fingers}-{depth}-{side}": "twoFingerPocket"
+        for fingers in ("mr", "im")
+        for depth in ("deep", "shallow")
+        for side in ("left", "right")
+    }
+    assert {
+        hold.id: hold.grip_type
+        for hold in forge.holds
+        if hold.kind == "sloper"
+    } == {
+        f"sloper-{angle}-{side}": "sloper"
+        for angle in (30, 40)
+        for side in ("left", "right")
+    }
+    assert next(
+        hold for hold in forge.holds if hold.id == "large-flat-edge-left"
+    ).features == ("largeEdge", "flatEdge")
+
+    natural = packages["trango.rock-prodigy-natural"]
+    assert all(hold.finger_capacity == 4 for hold in natural.holds[:8])
+    assert {
+        hold.id: (hold.finger_capacity, hold.grip_type, hold.size_millimeters)
+        for hold in natural.holds
+        if hold.kind == "pocket"
+    } == {
+        "upper-pocket-left": (3, "threeFingerPocket", 38),
+        "upper-pocket-right": (3, "threeFingerPocket", 38),
+        "center-lower-pocket-left": (2, "twoFingerPocket", None),
+        "center-lower-pocket-right": (2, "twoFingerPocket", None),
+        "outer-supported-pocket-left": (3, "threeFingerPocket", None),
+        "outer-supported-pocket-right": (3, "threeFingerPocket", None),
+    }
+    assert all(
+        hold.grip_type == "fullCrimp"
+        for hold in natural.holds
+        if hold.id.startswith("closed-crimp-")
+    )
+
+    pivot = packages["trango.rock-prodigy-pivot"]
+    assert all(hold.finger_capacity is not None for hold in pivot.holds)
+    assert {
+        hold.id: hold.size_millimeters
+        for hold in pivot.holds
+        if hold.id.startswith(("upper-sloped-crimp-", "outer-sloped-crimp-"))
+    } == {
+        "upper-sloped-crimp-left": 12.5,
+        "upper-sloped-crimp-right": 12.5,
+        "outer-sloped-crimp-left": 11.5,
+        "outer-sloped-crimp-right": 11.5,
+    }
+    assert {
+        hold.id: hold.grip_type for hold in pivot.holds if hold.kind == "pocket"
+    } == {
+        "two-finger-pocket-left": "twoFingerPocket",
+        "two-finger-pocket-right": "twoFingerPocket",
+        "three-finger-pocket-left": "threeFingerPocket",
+        "three-finger-pocket-right": "threeFingerPocket",
+    }
+
+    training_center = packages["trango.rock-prodigy-training-center"]
+    assert all(
+        hold.finger_capacity is None
+        and hold.grip_type is None
+        and hold.features is None
+        for hold in training_center.holds
+        if hold.kind == "pocket"
+    )
+    assert next(
+        hold for hold in training_center.holds if hold.id == "pinch-medium-left"
+    ).features is None
 
 
 def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:

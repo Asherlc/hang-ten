@@ -965,9 +965,6 @@
       "id": "edge-thin-crimp-left",
       "name": "Left thin crimp",
       "kind": "edge",
-      "features": [
-        "thinCrimp"
-      ],
       "geometry": [
         {
           "frame": {
@@ -988,9 +985,6 @@
       "id": "edge-thin-crimp-right",
       "name": "Right thin crimp",
       "kind": "edge",
-      "features": [
-        "thinCrimp"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1011,11 +1005,6 @@
       "id": "pocket-three-finger-slot-left",
       "name": "Left shallow three-finger slot",
       "kind": "pocket",
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1137,11 +1126,6 @@
       "id": "pocket-three-finger-slot-right",
       "name": "Right shallow three-finger slot",
       "kind": "pocket",
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1263,11 +1247,6 @@
       "id": "pocket-index-middle-deep-left",
       "name": "Left index-middle deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1288,11 +1267,6 @@
       "id": "pocket-index-middle-deep-right",
       "name": "Right index-middle deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1313,11 +1287,6 @@
       "id": "pocket-middle-ring-deep-left",
       "name": "Left middle-ring deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1338,11 +1307,6 @@
       "id": "pocket-middle-ring-deep-right",
       "name": "Right middle-ring deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1363,11 +1327,6 @@
       "id": "pocket-index-middle-medium-shallow-left",
       "name": "Left index-middle medium/shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1388,11 +1347,6 @@
       "id": "pocket-index-middle-medium-shallow-right",
       "name": "Right index-middle medium/shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1413,11 +1367,6 @@
       "id": "pocket-middle-ring-shallow-left",
       "name": "Left middle-ring shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1438,11 +1387,6 @@
       "id": "pocket-middle-ring-shallow-right",
       "name": "Right middle-ring shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1463,9 +1407,6 @@
       "id": "pinch-medium-left",
       "name": "Left medium pinch",
       "kind": "pinch",
-      "features": [
-        "mediumPinch"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1675,9 +1616,6 @@
       "id": "pinch-medium-right",
       "name": "Right medium pinch",
       "kind": "pinch",
-      "features": [
-        "mediumPinch"
-      ],
       "geometry": [
         {
           "frame": {
