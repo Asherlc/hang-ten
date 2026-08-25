@@ -155,6 +155,21 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["first-edge"])
     }
 
+    func testMetadataLightEdgeFallbackSelectsOneEdgePerBoardHalf() {
+        let board = board(holds: [
+            hold(id: "left-edge", x: 0.1),
+            hold(id: "left-extra", x: 0.3),
+            hold(id: "right-edge", x: 0.8)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.largeEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["left-edge", "right-edge"])
+    }
+
     /// A 20 mm medium-edge target must prefer a documented 20/15 mm
     /// continuous contact over shallower and deeper metadata-light edges.
     func testMetadataLightMediumEdgeFallbackPrefersNearestDocumentedDepthRange() {

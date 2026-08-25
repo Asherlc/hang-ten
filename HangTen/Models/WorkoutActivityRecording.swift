@@ -246,9 +246,16 @@ internal enum BoardTargetResolver {
         // identify every same-kind hold as the source-prescribed target. When
         // the plan feature has a source-backed depth adaptation, prefer the
         // nearest documented measurement before falling back to board order.
-        return preferredSameKind
+        guard let representative = preferredSameKind
             .min { depthDistance(of: $0, from: feature) < depthDistance(of: $1, from: feature) }
-            .map { [$0.id] } ?? []
+        else { return [] }
+
+        if feature.holdKind == .edge {
+            let pairedEdges = oneHoldPerHand(from: preferredSameKind)
+            if pairedEdges.count == 2 { return pairedEdges.map(\.id) }
+        }
+
+        return [representative.id]
     }
 
     /// When the target specifies a finger count, prefer candidates that
@@ -289,16 +296,16 @@ internal enum BoardTargetResolver {
     private static func crossKindPockets(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
         let pockets = holds.filter { $0.kind == .pocket }
         guard let capacity = target.fingerCapacity else {
-            return onePocketPerHand(from: pockets)
+            return oneHoldPerHand(from: pockets)
         }
         return pockets.filter { $0.fingerCapacity == capacity }
     }
 
-    /// A bilateral pocket target represents a two-handed hang, so highlight
-    /// one pocket on each half of the board rather than every eligible pocket.
-    private static func onePocketPerHand(from pockets: [BoardHold]) -> [BoardHold] {
-        let left = pockets.first { $0.frame.x + $0.frame.width / 2 < 0.5 }
-        let right = pockets.first { $0.frame.x + $0.frame.width / 2 >= 0.5 }
+    /// A bilateral target represents a two-handed hang, so highlight one
+    /// eligible hold on each half of the board rather than every candidate.
+    private static func oneHoldPerHand(from holds: [BoardHold]) -> [BoardHold] {
+        let left = holds.first { $0.frame.x + $0.frame.width / 2 < 0.5 }
+        let right = holds.first { $0.frame.x + $0.frame.width / 2 >= 0.5 }
         return [left, right].compactMap { $0 }
     }
 }

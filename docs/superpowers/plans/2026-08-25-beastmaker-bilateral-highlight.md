@@ -4,7 +4,7 @@
 
 **Goal:** Highlight both mirrored outer lower Beastmaker 2000 edges for the 29 mm open-hand cue.
 
-**Architecture:** The board-preview renderer already receives all resolved IDs. Correct the physical inventory so the existing target resolver recognizes the mirrored right outer lower contact as an edge, then protect that resolution with an app-store regression test. Preserve all canonical geometry.
+**Architecture:** The board-preview renderer already receives all resolved IDs. Correct the physical inventory so the target resolver recognizes the mirrored right outer lower contact as an edge, then preserve a bounded bilateral selection when a metadata-light edge fallback has one candidate on each board half. Protect the app-store result with a regression test. Preserve all canonical geometry.
 
 **Tech Stack:** Swift/XCTest, JSON board packages, Hang Ten package validator.
 
@@ -77,4 +77,60 @@ Expected: all commands exit 0.
 ```bash
 git add Hangboards/beastmaker-2000/board.json docs/source-audits/2026-08-25-all-board-hold-audit.md HangTenTests/BoardTargetSubstitutionTests.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
 git commit -m "Fix Beastmaker bilateral edge highlighting"
+```
+
+### Task 2: Preserve a bounded two-hand fallback for paired edges
+
+**Files:**
+- Modify: `HangTen/Models/WorkoutActivityRecording.swift:294-312`
+- Test: `HangTenTests/BoardTargetSubstitutionTests.swift`
+
+**Interfaces:**
+- Consumes: the metadata-light same-kind candidate list in `BoardTargetResolver.sameKindOrGroup(_:target:among:)`.
+- Produces: at most one eligible edge from each half of the board for an untagged edge fallback; leaves a one-sided or positionless candidate set as one representative.
+
+- [ ] **Step 1: Write the failing resolver test**
+
+```swift
+func testMetadataLightEdgeFallbackSelectsOneEdgePerBoardHalf() {
+    let board = board(holds: [
+        hold(id: "left-edge", x: 0.1),
+        hold(id: "left-extra", x: 0.3),
+        hold(id: "right-edge", x: 0.8)
+    ])
+
+    let result = BoardTargetResolver.substituteHoldIDs(
+        for: .feature(.largeEdge),
+        on: board
+    )
+
+    XCTAssertEqual(result, ["left-edge", "right-edge"])
+}
+```
+
+The production change this test must catch is choosing only one representative after the package correctly identifies a left/right pair of physical edges.
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardTargetSubstitutionTests/testMetadataLightEdgeFallbackSelectsOneEdgePerBoardHalf`
+
+Expected: FAIL because the resolver returns only `left-edge`.
+
+- [ ] **Step 3: Apply the minimal resolver correction**
+
+When the same-kind edge fallback has eligible holds on both sides of the board, return the first hold from each side in board order. Keep the existing depth-ranking behavior, cap the output at one hold per side, and retain the existing one-representative behavior when no right-side hold exists. Generalize the helper name and pocket-specific comment so the same tested one-per-side behavior serves both pockets and untagged edges.
+
+- [ ] **Step 4: Run resolver and package validations**
+
+Run: `rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardTargetSubstitutionTests`
+
+Run: `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`
+
+Expected: all commands exit 0.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add HangTen/Models/WorkoutActivityRecording.swift HangTenTests/BoardTargetSubstitutionTests.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
+git commit -m "Resolve paired metadata-light edges per hand"
 ```
