@@ -14,8 +14,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.002,
-            "y": 0.365,
+            "x": 0.030157350312,
+            "y": 0.237171992053,
             "width": 0.127,
             "height": 0.156
           },
@@ -25,7 +25,7 @@
               {
                 "command": "move",
                 "to": [
-                  0,
+                  0.0,
                   0.55
                 ]
               },
@@ -37,24 +37,24 @@
                 ],
                 "control2": [
                   0.24,
-                  0
+                  0.0
                 ],
                 "to": [
                   0.44,
-                  0
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  1,
+                  1.0,
                   0.05
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  1,
+                  1.0,
                   0.55
                 ]
               },
@@ -69,8 +69,8 @@
                   0.85
                 ],
                 "to": [
-                  0,
-                  1
+                  0.0,
+                  1.0
                 ]
               },
               {
@@ -164,8 +164,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.129,
-            "y": 0.4,
+            "x": 0.152188406055,
+            "y": 0.218910321854,
             "width": 0.128,
             "height": 0.128
           },
@@ -175,8 +175,8 @@
               {
                 "command": "move",
                 "to": [
-                  1,
-                  0
+                  1.0,
+                  0.0
                 ]
               },
               {
@@ -190,14 +190,14 @@
                   0.04
                 ],
                 "to": [
-                  0,
-                  0
+                  0.0,
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0,
+                  0.0,
                   0.72
                 ]
               },
@@ -209,11 +209,11 @@
                 ],
                 "control2": [
                   0.72,
-                  1
+                  1.0
                 ],
                 "to": [
-                  1,
-                  1
+                  1.0,
+                  1.0
                 ]
               },
               {
@@ -300,8 +300,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.257,
-            "y": 0.403,
+            "x": 0.264729468525,
+            "y": 0.218866797351,
             "width": 0.128,
             "height": 0.125
           },
@@ -311,8 +311,8 @@
               {
                 "command": "move",
                 "to": [
-                  1,
-                  0
+                  1.0,
+                  0.0
                 ]
               },
               {
@@ -326,14 +326,14 @@
                   0.02
                 ],
                 "to": [
-                  0,
-                  0
+                  0.0,
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0,
+                  0.0,
                   0.74
                 ]
               },
@@ -345,11 +345,11 @@
                 ],
                 "control2": [
                   0.74,
-                  1
+                  1.0
                 ],
                 "to": [
-                  1,
-                  1
+                  1.0,
+                  1.0
                 ]
               },
               {
@@ -601,7 +601,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -711,7 +711,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -821,7 +821,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -931,7 +931,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1041,7 +1041,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1151,7 +1151,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1261,7 +1261,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1371,7 +1371,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1481,7 +1481,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1591,7 +1591,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1701,7 +1701,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1811,7 +1811,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1921,7 +1921,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -2031,7 +2031,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
