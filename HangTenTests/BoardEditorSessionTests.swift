@@ -117,6 +117,37 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.height, 0)
     }
 
+    func testZoomToFitRefreshesIncompleteHoldAccessibilityFrame() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        document.holds = [document.holds[0]]
+        document.holds[0].fingerCapacity = nil
+        document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+        document.holds[0].handCapacity = 1
+
+        let session = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+        canvas.session = session
+        let frameBeforeZoomToFit = try XCTUnwrap(
+            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
+        ).accessibilityFrameInContainerSpace
+
+        canvas.bounds = CGRect(x: 0, y: 0, width: 640, height: 160)
+        canvas.zoomToFit()
+
+        let frameAfterZoomToFit = try XCTUnwrap(
+            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
+        ).accessibilityFrameInContainerSpace
+        XCTAssertNotEqual(frameAfterZoomToFit, frameBeforeZoomToFit)
+    }
+
     func testIncompleteMetadataRequiresKindFingerDepthAndHandButNotSizeOrFeatures() throws {
         _ = try store.startEditing(slug: "zlagboard-pro")
         let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")

@@ -90,7 +90,6 @@ final class HoldEditorCanvasUIView: UIView {
                 warning.accessibilityTraits = .image
                 warning.accessibilityLabel = "Incomplete hold metadata: \(hold.id)"
                 warning.accessibilityValue = "Missing: \(session.missingRequiredMetadata(for: hold).joined(separator: ", "))"
-                warning.accessibilityHint = "Complete this hold's required metadata in the inspector."
                 warning.accessibilityFrameInContainerSpace = accessibilityFrame(for: hold)
                 elements.append(warning)
             }
@@ -180,6 +179,7 @@ final class HoldEditorCanvasUIView: UIView {
     func zoomToFit() {
         zoom = 1
         viewportCenter = CGPoint(x: 0.5, y: 0.5)
+        updateMetadataWarningAccessibility()
         setNeedsDisplay()
     }
 
@@ -208,6 +208,7 @@ final class HoldEditorCanvasUIView: UIView {
         case .changed:
             zoom = min(max(pinchStartZoom * gesture.scale, 0.6), 24)
             clampViewport()
+            updateMetadataWarningAccessibility()
             setNeedsDisplay()
         default:
             break
@@ -320,6 +321,7 @@ final class HoldEditorCanvasUIView: UIView {
                 y: startCenter.y - translation.y / s
             )
             clampViewport()
+            updateMetadataWarningAccessibility()
             setNeedsDisplay()
         case .translatePiece(let startPath, let startPoint):
             let current = boardPoint(fromScreen: location, bounds: bounds)
