@@ -298,6 +298,187 @@
       "presentationID": "primary"
     },
     {
+      "id": "top-sloper-20-right",
+      "name": "Right 20-degree top sloper",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.616932367131,
+            "y": 0.255008643709,
+            "width": 0.107296066795,
+            "height": 0.07157577351
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.009648038097,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "top-sloper-32-right",
+      "name": "Right 32-degree top sloper",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.727748101393,
+            "y": 0.256003270199,
+            "width": 0.115232574724,
+            "height": 0.10832872053
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.93112617723,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.008983545001,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "top-jug-right",
+      "name": "Right top jug",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.835596272946,
+            "y": 0.249536307285,
+            "width": 0.137006901009,
+            "height": 0.09721321457
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.58710013313,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.086277221342,
+                  0.311198323581
+                ],
+                "control2": [
+                  0.086277221342,
+                  0.311198323581
+                ],
+                "to": [
+                  0.055409195006,
+                  1.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.888807314136,
+                  0.180749498028
+                ],
+                "control2": [
+                  0.888807314136,
+                  0.180749498028
+                ],
+                "to": [
+                  0.58710013313,
+                  0.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
       "id": "edge-30-left",
       "name": "Left 30 mm edge",
       "kind": "edge",
@@ -1832,187 +2013,6 @@
           "shapeConstraint": {
             "shape": "pill",
             "rotationDegrees": 0.0
-          }
-        }
-      ],
-      "presentationID": "primary"
-    },
-    {
-      "id": "hold-19",
-      "name": "Hold 19",
-      "kind": "jug",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.83697653532,
-            "y": 0.249536307285,
-            "width": 0.137006901009,
-            "height": 0.09721321457
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.58710013313,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.106426018569,
-                  0.311198323581
-                ],
-                "control2": [
-                  0.106426018569,
-                  0.311198323581
-                ],
-                "to": [
-                  0.075557992233,
-                  1.0
-                ],
-                "bendable": true
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.888807314136,
-                  0.180749498028
-                ],
-                "control2": [
-                  0.888807314136,
-                  0.180749498028
-                ],
-                "to": [
-                  0.58710013313,
-                  0.0
-                ],
-                "bendable": true
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        }
-      ],
-      "presentationID": "primary"
-    },
-    {
-      "id": "hold-20",
-      "name": "Hold 20",
-      "kind": "sloper",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.739825395963,
-            "y": 0.25885657351,
-            "width": 0.104190476694,
-            "height": 0.105475417219
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.97019314817,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.016559361103,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        }
-      ],
-      "presentationID": "primary"
-    },
-    {
-      "id": "hold-21",
-      "name": "Hold 21",
-      "kind": "sloper",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.632115251321,
-            "y": 0.254057543046,
-            "width": 0.093493444978,
-            "height": 0.069673570861
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.0,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.985236800567,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.036907993442,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
           }
         }
       ],
