@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 @testable import HangTen
 
@@ -282,7 +283,10 @@ final class GitHubSyncSessionTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) async {
-        for _ in 0..<100 where !predicate() {
+        for _ in 0..<100 {
+            if predicate() {
+                break
+            }
             await Task.yield()
         }
         XCTAssertTrue(predicate(), file: file, line: line)
@@ -313,16 +317,32 @@ private final class FakeGitHubTokenStore: GitHubTokenStoring {
 
 private final class FakeGitHubDeviceService: GitHubDeviceServicing {
     let challenge: GitHubDeviceChallenge
-    var pollOutcomes: [Result<GitHubDeviceAuthorizationResult, Error>]
     let authenticatedUserResult: String
     let suspendsPolling: Bool
     let authenticatedUserError: Error?
-    var beforePollReturn: (() -> Void)?
-    private(set) var challengeRequestCount = 0
-    private(set) var pollRequestCount = 0
-    private(set) var isPolling = false
-    private(set) var suspendedPollCount = 0
-    private var pollContinuation: CheckedContinuation<GitHubDeviceAuthorizationResult, Error>?
+    private let lock = NSLock()
+    private var pollOutcomesStorage: [Result<GitHubDeviceAuthorizationResult, Error>]
+    private var beforePollReturnStorage: (() -> Void)?
+    private var challengeRequestCountStorage = 0
+    private var pollRequestCountStorage = 0
+    private var isPollingStorage = false
+    private var suspendedPollCountStorage = 0
+    private var pollContinuationStorage: CheckedContinuation<GitHubDeviceAuthorizationResult, Error>?
+
+    var pollOutcomes: [Result<GitHubDeviceAuthorizationResult, Error>] {
+        get { withLock { pollOutcomesStorage } }
+        set { withLock { pollOutcomesStorage = newValue } }
+    }
+
+    var beforePollReturn: (() -> Void)? {
+        get { withLock { beforePollReturnStorage } }
+        set { withLock { beforePollReturnStorage = newValue } }
+    }
+
+    var challengeRequestCount: Int { withLock { challengeRequestCountStorage } }
+    var pollRequestCount: Int { withLock { pollRequestCountStorage } }
+    var isPolling: Bool { withLock { isPollingStorage } }
+    var suspendedPollCount: Int { withLock { suspendedPollCountStorage } }
 
     init(
         challenge: GitHubDeviceChallenge,
@@ -332,7 +352,7 @@ private final class FakeGitHubDeviceService: GitHubDeviceServicing {
         authenticatedUserError: Error? = nil
     ) {
         self.challenge = challenge
-        pollOutcomes = results.map(Result.success)
+        pollOutcomesStorage = results.map(Result.success)
         authenticatedUserResult = authenticatedUser
         self.suspendsPolling = suspendsPolling
         self.authenticatedUserError = authenticatedUserError
@@ -344,7 +364,7 @@ private final class FakeGitHubDeviceService: GitHubDeviceServicing {
     }
 
     func requestDeviceChallenge(clientID: String) async throws -> GitHubDeviceChallenge {
-        challengeRequestCount += 1
+        withLock { challengeRequestCountStorage += 1 }
         return challenge
     }
 
@@ -352,32 +372,53 @@ private final class FakeGitHubDeviceService: GitHubDeviceServicing {
         clientID: String,
         deviceCode: String
     ) async throws -> GitHubDeviceAuthorizationResult {
-        pollRequestCount += 1
-        if suspendsPolling && pollRequestCount == 1 {
-            isPolling = true
-            suspendedPollCount += 1
+        let shouldSuspend = withLock { () -> Bool in
+            pollRequestCountStorage += 1
+            return suspendsPolling && pollRequestCountStorage == 1
+        }
+        if shouldSuspend {
             return try await withCheckedThrowingContinuation { continuation in
-                pollContinuation = continuation
+                withLock {
+                    isPollingStorage = true
+                    suspendedPollCountStorage += 1
+                    pollContinuationStorage = continuation
+                }
             }
         }
-        guard !pollOutcomes.isEmpty else {
+        let outcomeAndClosure = withLock { () -> (Result<GitHubDeviceAuthorizationResult, Error>, (() -> Void)?)? in
+            guard !pollOutcomesStorage.isEmpty else { return nil }
+            return (pollOutcomesStorage.removeFirst(), beforePollReturnStorage)
+        }
+        guard let (outcome, beforePollReturn) = outcomeAndClosure else {
             throw CancellationError()
         }
-        let result = try pollOutcomes.removeFirst().get()
+        let result = try outcome.get()
         beforePollReturn?()
         return result
     }
 
     func finishPolling(with result: GitHubDeviceAuthorizationResult) {
-        isPolling = false
-        pollContinuation?.resume(returning: result)
-        pollContinuation = nil
+        let continuation = withLock { () -> CheckedContinuation<GitHubDeviceAuthorizationResult, Error>? in
+            isPollingStorage = false
+            defer { pollContinuationStorage = nil }
+            return pollContinuationStorage
+        }
+        continuation?.resume(returning: result)
     }
 
     func finishPolling(throwing error: Error) {
-        isPolling = false
-        pollContinuation?.resume(throwing: error)
-        pollContinuation = nil
+        let continuation = withLock { () -> CheckedContinuation<GitHubDeviceAuthorizationResult, Error>? in
+            isPollingStorage = false
+            defer { pollContinuationStorage = nil }
+            return pollContinuationStorage
+        }
+        continuation?.resume(throwing: error)
+    }
+
+    private func withLock<T>(_ body: () -> T) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        return body()
     }
 }
 

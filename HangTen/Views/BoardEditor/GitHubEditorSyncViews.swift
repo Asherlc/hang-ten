@@ -262,11 +262,6 @@ struct GitHubSignInView: View {
                         Text(lastError)
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.holdActiveDeep)
-
-                        if syncSession.deviceChallenge != nil {
-                            Button("Connect GitHub") { syncSession.startDeviceSignIn() }
-                                .accessibilityIdentifier("github.connect")
-                        }
                     }
 
                     if syncSession.isSigningIn {

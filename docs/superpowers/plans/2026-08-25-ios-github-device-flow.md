@@ -346,7 +346,7 @@ private func completeDeviceSignIn() async {
 }
 ```
 
-Map cancellation and elapsed challenge time to retryable error text without deleting an existing token. `cancelDeviceSignIn()` must cancel the owned task, clear the displayed challenge, and avoid modifying stored credentials. A failed `/user` validation must not write the new token.
+Treat intentional user cancellation as silent: it must not set `lastError` or modify stored credentials. Expiry, authorization denial, and transport failures must clear the displayed challenge and surface retryable `lastError` text without deleting an existing token. `cancelDeviceSignIn()` must cancel the owned task and clear the displayed challenge. A failed `/user` validation must not write the new token.
 
 - [ ] **Step 4: Run focused session tests and verify green**
 
@@ -437,7 +437,7 @@ Extend `RootReviewDestination` with `.boardEditor`, render it in a navigation st
 
 - [ ] **Step 5: Document release setup**
 
-Add a README section that directs the maintainer to enable Device Flow in the existing GitHub OAuth App, configure the public `GITHUB_OAUTH_CLIENT_ID` in CI/local Xcode configuration, and never distribute `GITHUB_CLIENT_SECRET`. State that the app requests `repo read:org` and no longer accepts personal access tokens.
+Add a README section that directs the maintainer to enable Device Flow in the existing GitHub OAuth App, configure the public `HANGTEN_GITHUB_OAUTH_CLIENT_ID` in CI and `GITHUB_OAUTH_CLIENT_ID` in local Xcode configuration, and never distribute `GITHUB_CLIENT_SECRET` through the iOS target or `app-store-connect` environment. The hosted Workbench browser flow remains a separate server-side configuration and retains its own hosted secret. State that the app requests `repo read:org` and no longer accepts personal access tokens.
 
 - [ ] **Step 6: Run UI test and focused unit suite to verify green**
 

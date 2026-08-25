@@ -577,6 +577,27 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
         }
     }
 
+    func testPollDeviceAuthorizationPreservesUnknownErrorCode() async throws {
+        StubState.handler = { [self] request in
+            try response(request, data: json(["error": "temporarily_unavailable"]))
+        }
+
+        do {
+            _ = try await makeService().pollDeviceAuthorization(
+                clientID: "client-public",
+                deviceCode: "device-secret"
+            )
+            XCTFail("unknown device authorization errors must fail")
+        } catch let error as GitHubSyncError {
+            XCTAssertEqual(
+                error,
+                .invalidResponse(
+                    "GitHub returned invalid device authorization data: temporarily_unavailable"
+                )
+            )
+        }
+    }
+
     func testDeviceAuthorizationPreservesCancellation() async throws {
         StubState.handler = { _ in throw URLError(.cancelled) }
 

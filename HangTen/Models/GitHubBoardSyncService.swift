@@ -177,7 +177,8 @@ struct GitHubBoardSyncService {
         if let token = Self.nonEmptyString(fields["access_token"]) {
             return .authorized(token)
         }
-        switch Self.nonEmptyString(fields["error"]) {
+        let errorCode = Self.nonEmptyString(fields["error"])
+        switch errorCode {
         case "authorization_pending":
             return .authorizationPending
         case "slow_down":
@@ -187,7 +188,10 @@ struct GitHubBoardSyncService {
         case "expired_token":
             throw GitHubSyncError.unauthorized("GitHub authorization expired. Please try again.")
         default:
-            throw GitHubSyncError.invalidResponse("GitHub returned invalid device authorization data")
+            let detail = errorCode.map { ": \($0)" } ?? ""
+            throw GitHubSyncError.invalidResponse(
+                "GitHub returned invalid device authorization data\(detail)"
+            )
         }
     }
 
