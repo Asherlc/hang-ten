@@ -541,7 +541,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -665,7 +665,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -789,7 +789,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -913,7 +913,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1037,7 +1037,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1161,7 +1161,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1175,8 +1175,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.438,
-            "y": 0.504,
+            "x": 0.4331690823,
+            "y": 0.538506556933,
             "width": 0.124,
             "height": 0.044
           },
@@ -1187,81 +1187,81 @@
                 "command": "move",
                 "to": [
                   0.177419354839,
-                  0
+                  0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.822580645161,
-                  0
+                  0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.920566649164,
-                  0
+                  0.92056664818,
+                  0.0
                 ],
                 "control2": [
-                  1,
-                  0.223857625085
+                  1.0,
+                  0.223857615046
                 ],
                 "to": [
-                  1,
+                  1.0,
                   0.5
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  1,
-                  0.776142374915
+                  1.0,
+                  0.776142384954
                 ],
                 "control2": [
-                  0.920566649164,
-                  1
+                  0.92056664818,
+                  1.0
                 ],
                 "to": [
                   0.822580645161,
-                  1
+                  1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.177419354839,
-                  1
+                  1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.079433350836,
-                  1
+                  0.079433347274,
+                  1.0
                 ],
                 "control2": [
-                  0,
-                  0.776142374915
+                  0.0,
+                  0.776142384954
                 ],
                 "to": [
-                  0,
+                  0.0,
                   0.5
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0,
-                  0.223857625085
+                  0.0,
+                  0.223857615046
                 ],
                 "control2": [
-                  0.079433350836,
-                  0
+                  0.079433347274,
+                  0.0
                 ],
                 "to": [
                   0.177419354839,
-                  0
+                  0.0
                 ]
               },
               {
@@ -1271,7 +1271,7 @@
           },
           "shapeConstraint": {
             "shape": "pill",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
