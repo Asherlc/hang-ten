@@ -8,6 +8,34 @@ interface CanvasSize {
   height: number;
 }
 
+export interface HoldMetadataWarnings {
+  count: number;
+  incompleteRegionKeys: ReadonlySet<string>;
+}
+
+function regionHasMissingRequiredMetadata(region: HoldRegion): boolean {
+  return region.type === undefined
+    || region.fingerCapacity === undefined
+    || region.depthRangeMillimeters === undefined
+    || region.handCapacity === undefined;
+}
+
+/** Groups multi-piece holds while retaining every canvas region to mark. */
+export function holdMetadataWarnings(document: EditorDocument): HoldMetadataWarnings {
+  const incompleteHoldKeys = new Set<string>();
+  for (const region of document.regions) {
+    if (regionHasMissingRequiredMetadata(region)) {
+      incompleteHoldKeys.add(region.metadata?.holdID ?? region.key);
+    }
+  }
+  return {
+    count: incompleteHoldKeys.size,
+    incompleteRegionKeys: new Set(document.regions
+      .filter((region) => incompleteHoldKeys.has(region.metadata?.holdID ?? region.key))
+      .map((region) => region.key)),
+  };
+}
+
 interface SvgCoordinateSpace {
   getAttribute(name: string): string | null;
   getBoundingClientRect(): Pick<DOMRect, "left" | "top" | "width" | "height">;

@@ -67,6 +67,33 @@ final class BoardEditorSessionTests: XCTestCase {
         })
     }
 
+    func testCanvasAnnouncesIncompleteHoldMetadataWithoutRequiringOptionalFields() throws {
+        var package = try store.loadDocument(slug: "zlagboard-pro")
+        XCTAssertGreaterThanOrEqual(package.document.holds.count, 2)
+        for index in package.document.holds.indices {
+            package.document.holds[index].fingerCapacity = 1
+            package.document.holds[index].depthRangeMillimeters = BoardEditableMillimeterRange(
+                lowerBound: 10,
+                upperBound: 12
+            )
+            package.document.holds[index].handCapacity = 1
+        }
+        let incompleteHoldID = package.document.holds[0].id
+        package.document.holds[0].fingerCapacity = nil
+        package.document.holds[1].sizeMillimeters = nil
+        package.document.holds[1].features = nil
+
+        let session = BoardEditorSession(package: package, store: store)
+        let canvas = HoldEditorCanvasUIView()
+        canvas.session = session
+
+        XCTAssertEqual(
+            canvas.accessibilityLabel,
+            "Hangboard hold editor. 1 hold is missing required metadata."
+        )
+        XCTAssertEqual(canvas.accessibilityValue, "Incomplete hold: \(incompleteHoldID)")
+    }
+
     func testTranslateMovesFrameAndKeepsCommandsNormalized() throws {
         var session = try makeSession(slug: "lattice-triple-rung")
         let target = try selectFirstPathPiece(&session)

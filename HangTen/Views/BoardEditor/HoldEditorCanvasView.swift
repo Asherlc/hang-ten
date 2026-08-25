@@ -16,6 +16,7 @@ struct HoldEditorCanvasView: UIViewRepresentable {
 
     func updateUIView(_ uiView: HoldEditorCanvasUIView, context: Context) {
         uiView.session = session
+        uiView.updateMetadataWarningAccessibility()
         if uiView.boardImage !== image {
             uiView.boardImage = image
         }
@@ -26,7 +27,10 @@ struct HoldEditorCanvasView: UIViewRepresentable {
 @MainActor
 final class HoldEditorCanvasUIView: UIView {
     weak var session: BoardEditorSession? {
-        didSet { setNeedsDisplay() }
+        didSet {
+            updateMetadataWarningAccessibility()
+            setNeedsDisplay()
+        }
     }
 
     var boardImage: UIImage? {
@@ -70,6 +74,13 @@ final class HoldEditorCanvasUIView: UIView {
 
     var boardAspectRatio: CGFloat {
         session?.document.aspectRatio ?? 2
+    }
+
+    func updateMetadataWarningAccessibility() {
+        isAccessibilityElement = true
+        accessibilityTraits = .image
+        accessibilityLabel = session?.metadataWarningAccessibilityLabel ?? "Hangboard hold editor"
+        accessibilityValue = session?.metadataWarningAccessibilityValue
     }
 
     // MARK: - Transform
@@ -530,12 +541,22 @@ final class HoldEditorCanvasUIView: UIView {
 
         let selectedHoldID = session.selectedPiece?.holdID
         let selectedPieceIndex = session.selectedPiece?.pieceIndex
+        let incompleteHoldIDs = Set(session.incompleteMetadataHoldIDs)
 
         for hold in session.document.holds {
             for (pieceIndex, piece) in hold.geometry.enumerated() {
                 let isSelected = hold.id == selectedHoldID && pieceIndex == selectedPieceIndex
+                let isMetadataIncomplete = incompleteHoldIDs.contains(hold.id)
                 guard let commands = try? session.boardCommands(for: piece) else { continue }
                 let path = bezierPath(commands: commands)
+                if isMetadataIncomplete {
+                    context.setStrokeColor(UIColor.systemOrange.cgColor)
+                    context.setLineWidth(isSelected ? 5 : 3)
+                    context.setLineDash(phase: 0, lengths: [6, 4])
+                    context.addPath(path.cgPath)
+                    context.strokePath()
+                    context.setLineDash(phase: 0, lengths: [])
+                }
                 if isSelected {
                     context.setFillColor(UIColor(Color.holdOrange).withAlphaComponent(0.16).cgColor)
                     context.addPath(path.cgPath)

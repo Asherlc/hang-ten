@@ -129,6 +129,17 @@ struct BoardEditorScreen: View {
 
             VStack(spacing: 0) {
                 HStack(spacing: 12) {
+                    if let metadataWarningText = session.metadataWarningText {
+                        Label(metadataWarningText, systemImage: "exclamationmark.triangle.fill")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.holdOrange)
+                            .padding(.horizontal, 10)
+                            .frame(height: 34)
+                            .background(Color.hangCream.opacity(0.9), in: Capsule())
+                            .accessibilityLabel("Warning: \(metadataWarningText)")
+                            .accessibilityIdentifier("boardEditor.metadataWarning")
+                    }
+
                     Picker("Tool", selection: $session.tool) {
                         ForEach(BoardEditorSession.Tool.allCases, id: \.self) { tool in
                             Image(systemName: tool == .pan ? "hand.draw" : "cursorarrow.rays")

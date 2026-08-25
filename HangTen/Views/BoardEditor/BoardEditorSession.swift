@@ -84,6 +84,36 @@ final class BoardEditorSession: ObservableObject {
         return hold(id: selectedPiece.holdID)
     }
 
+    /// `kind` is required by the package schema, so an editable hold needs
+    /// the remaining required metadata before it is considered complete.
+    var incompleteMetadataHoldIDs: [String] {
+        document.holds.compactMap { hold in
+            hold.fingerCapacity == nil
+                || hold.depthRangeMillimeters == nil
+                || hold.handCapacity == nil
+                ? hold.id
+                : nil
+        }
+    }
+
+    var metadataWarningText: String? {
+        let count = incompleteMetadataHoldIDs.count
+        guard count > 0 else { return nil }
+        return "\(count) \(count == 1 ? "hold needs" : "holds need") metadata"
+    }
+
+    var metadataWarningAccessibilityLabel: String {
+        let count = incompleteMetadataHoldIDs.count
+        guard count > 0 else { return "Hangboard hold editor" }
+        return "Hangboard hold editor. \(count) \(count == 1 ? "hold is" : "holds are") missing required metadata."
+    }
+
+    var metadataWarningAccessibilityValue: String? {
+        let ids = incompleteMetadataHoldIDs
+        guard !ids.isEmpty else { return nil }
+        return "Incomplete \(ids.count == 1 ? "hold" : "holds"): \(ids.joined(separator: ", "))"
+    }
+
     var selectedPieceDocument: BoardEditablePiece? {
         guard let selectedPiece,
               let selectedHold,
