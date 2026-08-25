@@ -188,6 +188,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
     private var ownsCountdownSchedule = false
+    private var countdownPreparationGeneration = 0
     private var deactivationRetryTask: Task<Void, Never>?
     private var speechOwnership = WorkoutSpeechOwnership()
 
@@ -333,6 +334,9 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         isSpeaking = false
         synthesizer.stopSpeaking(at: .immediate)
         deactivateAudioSessionIfSpeechStopped()
+        if countdownPreparationState == .preparing {
+            countdownPreparationGeneration += 1
+        }
         countdownPreparationState = .idle
     }
 
@@ -377,16 +381,20 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     private func beginCountdownPrewarm() {
         countdownPreparationState = .preparing
+        countdownPreparationGeneration += 1
+        let preparationGeneration = countdownPreparationGeneration
         let countdownScheduler = countdownSchedulerIfNeeded()
         countdownScheduler.prewarm { [weak self] succeeded in
             if Thread.isMainThread {
                 MainActor.assumeIsolated {
-                    guard self?.countdownPreparationState == .preparing else { return }
+                    guard self?.countdownPreparationState == .preparing,
+                          self?.countdownPreparationGeneration == preparationGeneration else { return }
                     self?.countdownPreparationState = succeeded ? .ready : .failed
                 }
             } else {
                 Task { @MainActor in
-                    guard self?.countdownPreparationState == .preparing else { return }
+                    guard self?.countdownPreparationState == .preparing,
+                          self?.countdownPreparationGeneration == preparationGeneration else { return }
                     self?.countdownPreparationState = succeeded ? .ready : .failed
                 }
             }

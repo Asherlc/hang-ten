@@ -2430,7 +2430,8 @@ struct WorkoutView: View {
     }
 
 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
-		if audioCuesEnabled, audioCoach.countdownPreparationState == .idle {
+		if audioCuesEnabled,
+		   audioCoach.countdownPreparationState == .idle || audioCoach.countdownPreparationState == .failed {
 			audioCoach.prepareCountdownAudio()
 		}
 		if audioCuesEnabled,

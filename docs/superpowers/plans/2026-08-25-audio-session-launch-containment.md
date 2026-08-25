@@ -1,6 +1,6 @@
 # Audio Session Launch Containment Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for every implementation or configuration task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Keep other-app audio untouched during Hang Ten launch by deferring countdown audio-engine prewarm until an athlete starts an audio-enabled countdown.
 

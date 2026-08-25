@@ -1394,6 +1394,33 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertEqual(coach.countdownPreparationState, .ready)
     }
 
+    // Catches a cancelled prewarm completion changing the state of a later preparation.
+    func testStalePrewarmCompletionCannotChangeLaterPreparation() async {
+        let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: RecordingWorkoutAudioSession(),
+            countdownScheduler: scheduler
+        )
+
+        coach.prepareCountdownAudio()
+        coach.stop()
+        coach.prepareCountdownAudio()
+
+        XCTAssertEqual(coach.countdownPreparationState, .preparing)
+        XCTAssertEqual(scheduler.prewarmCallCount, 2)
+
+        scheduler.completePrewarm(at: 0, succeeded: false)
+        await Task.yield()
+
+        XCTAssertEqual(coach.countdownPreparationState, .preparing)
+
+        scheduler.completePrewarm(at: 0, succeeded: true)
+        await Task.yield()
+
+        XCTAssertEqual(coach.countdownPreparationState, .ready)
+    }
+
     // Catches completion restarting the countdown engine after its scheduled playback ends.
     func testCountdownCompletionReturnsPreparationToIdleWithoutPrewarming() async {
         let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
@@ -1793,7 +1820,7 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
     private let onStop: () -> Void
     private let scheduleResult: Bool
     private let automaticallyCompletesPrewarm: Bool
-    private var prewarmCompletion: ((Bool) -> Void)?
+    private var prewarmCompletions: [(Bool) -> Void] = []
     private(set) var prewarmCallCount = 0
 
     var startedSequences: [[String]] {
@@ -1823,14 +1850,18 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
         if automaticallyCompletesPrewarm {
             completion(true)
         } else {
-            prewarmCompletion = completion
+            prewarmCompletions.append(completion)
         }
     }
 
     func completePrewarm(succeeded: Bool) {
-        let completion = prewarmCompletion
-        prewarmCompletion = nil
-        completion?(succeeded)
+        completePrewarm(at: 0, succeeded: succeeded)
+    }
+
+    func completePrewarm(at index: Int, succeeded: Bool) {
+        guard prewarmCompletions.indices.contains(index) else { return }
+        let completion = prewarmCompletions.remove(at: index)
+        completion(succeeded)
     }
 
     func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
