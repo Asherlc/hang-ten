@@ -73,12 +73,13 @@ contains a nonempty client ID.
 
 For local Xcode builds, copy `HangTen/Config/PostHog.local.xcconfig.example` to
 the ignored `HangTen/Config/PostHog.local.xcconfig` file and set
-`GITHUB_OAUTH_CLIENT_ID` there. Never create a `GITHUB_CLIENT_SECRET` build
-setting, `app-store-connect` Actions secret, or bundled Info.plist value for
-the iOS app: Device Flow uses only the public client ID. This restriction does
-not apply to the browser-hosted Workbench, whose server-side OAuth flow retains
-its separately hosted `GITHUB_CLIENT_SECRET` configuration. The app requests
-`repo read:org` and no longer accepts personal access tokens.
+`GITHUB_OAUTH_CLIENT_ID` there. Do not create a `GITHUB_CLIENT_SECRET` iOS app
+build setting, `app-store-connect` Actions secret, or bundled Info.plist key:
+Device Flow uses only the public client ID. Keep the public
+`GITHUB_OAUTH_CLIENT_ID` in the iOS app's Info.plist. This iOS-only restriction
+does not apply to the browser-hosted Workbench, whose server-side OAuth flow
+retains its separately hosted `GITHUB_CLIENT_SECRET` configuration. The app
+requests `repo read:org` and no longer accepts personal access tokens.
 
 ## Maintainer-generated countdown audio
 
