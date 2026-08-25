@@ -171,7 +171,9 @@ struct BoardEditableHold: Equatable, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
-        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
+        kind = container.contains(.kind)
+            ? try container.decode(HoldKind.self, forKey: .kind)
+            : nil
         geometry = try container.decode([BoardEditablePiece].self, forKey: .geometry)
         sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(

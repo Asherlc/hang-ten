@@ -514,4 +514,17 @@ final class BoardPackageWriterTests: XCTestCase {
         let redecoded = try BoardEditableDocument(data: constrainedBytes)
         XCTAssertEqual(redecoded.holds[0].geometry[0].shapeConstraint?.rotationDegrees, -179.5)
     }
+
+    func testEditorDecoderPreservesOmittedKindButRejectsNullKind() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        let source = String(decoding: encoded, as: UTF8.self)
+        let kind = "      \"kind\": \"jug\",\n"
+
+        let omittedKind = source.replacingOccurrences(of: kind, with: "")
+        let decoded = try BoardEditableDocument(data: Data(omittedKind.utf8))
+        XCTAssertNil(decoded.holds[0].kind)
+
+        let nullKind = source.replacingOccurrences(of: kind, with: "      \"kind\": null,\n")
+        XCTAssertThrowsError(try BoardEditableDocument(data: Data(nullKind.utf8)))
+    }
 }
