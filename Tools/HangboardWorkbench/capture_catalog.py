@@ -49,6 +49,25 @@ class CatalogBoard:
 
 
 @dataclass(frozen=True)
+class RegionBounds:
+    """One rendered editor-region bounding box paired with its API hold identity."""
+
+    region_key: str
+    hold_id: str | None
+    x: float
+    y: float
+    width: float
+    height: float
+
+
+@dataclass(frozen=True)
+class HoldIDLabel:
+    hold_id: str
+    x: float
+    y: float
+
+
+@dataclass(frozen=True)
 class CaptureEntry:
     board_id: str
     display_name: str
@@ -140,6 +159,40 @@ def _board_capture_target(base_url: str, board_id: str) -> tuple[str, int]:
     if not isinstance(regions, list):
         raise CaptureError("board", "board document is missing regions", board_id=board_id)
     return _absolute_url(base_url, image_url), len(regions)
+
+
+def _board_document(base_url: str, board_id: str) -> dict[str, Any]:
+    encoded_id = urllib.parse.quote(board_id, safe="")
+    payload = _request_json(f"{base_url}/api/boards/{encoded_id}")
+    board = payload.get("board")
+    document = board.get("document") if isinstance(board, dict) else None
+    if payload.get("ok") is not True or not isinstance(document, dict):
+        raise CaptureError("board", "Workbench returned an invalid board document", board_id=board_id)
+    return document
+
+
+def hold_id_label_positions(regions: tuple[RegionBounds, ...]) -> tuple[HoldIDLabel, ...]:
+    """Place one review label at the union center of every logical editor hold."""
+    bounds_by_hold: dict[str, tuple[float, float, float, float]] = {}
+    for region in regions:
+        if not isinstance(region.hold_id, str) or not region.hold_id:
+            raise CaptureError("capture", f"region {region.region_key} is missing metadata.holdID")
+        minimum_x, minimum_y = region.x, region.y
+        maximum_x, maximum_y = region.x + region.width, region.y + region.height
+        existing = bounds_by_hold.get(region.hold_id)
+        if existing is None:
+            bounds_by_hold[region.hold_id] = (minimum_x, minimum_y, maximum_x, maximum_y)
+        else:
+            bounds_by_hold[region.hold_id] = (
+                min(existing[0], minimum_x),
+                min(existing[1], minimum_y),
+                max(existing[2], maximum_x),
+                max(existing[3], maximum_y),
+            )
+    return tuple(
+        HoldIDLabel(hold_id, (bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2)
+        for hold_id, bounds in bounds_by_hold.items()
+    )
 
 
 def capture_is_ready(
@@ -428,6 +481,94 @@ def _canvas_clip(connection: _DevToolsConnection) -> dict[str, float]:
     return {key: float(value[key]) for key in ("x", "y", "width", "height")} | {"scale": 1.0}
 
 
+def _rendered_region_bounds(
+    connection: _DevToolsConnection, document: dict[str, Any], *, board_id: str
+) -> tuple[RegionBounds, ...]:
+    regions = document.get("regions")
+    if not isinstance(regions, list):
+        raise CaptureError("board", "board document is missing regions", board_id=board_id)
+    value = _evaluate(
+        connection,
+        f"""(() => {{
+          const apiRegions = {json.dumps(regions)};
+          const paths = [...document.querySelectorAll('#hold-overlay path.region-shape')];
+          return apiRegions.map((region) => {{
+            const path = paths.find((candidate) => candidate.dataset.holdKey === region.key);
+            if (!path) return {{ regionKey: region.key, missingPath: true }};
+            const bounds = path.getBBox();
+            return {{
+              regionKey: region.key,
+              holdID: region.metadata?.holdID,
+              x: bounds.x,
+              y: bounds.y,
+              width: bounds.width,
+              height: bounds.height,
+            }};
+          }});
+        }})()""",
+    )
+    if not isinstance(value, list):
+        raise CaptureError("capture", "page returned invalid rendered region bounds", board_id=board_id)
+    result: list[RegionBounds] = []
+    for region in value:
+        if not isinstance(region, dict):
+            raise CaptureError("capture", "page returned invalid rendered region bounds", board_id=board_id)
+        region_key = region.get("regionKey")
+        if region.get("missingPath") is True or not isinstance(region_key, str):
+            raise CaptureError("capture", "editor is missing a rendered region path", board_id=board_id)
+        bounds = tuple(region.get(key) for key in ("x", "y", "width", "height"))
+        if not all(isinstance(item, (int, float)) for item in bounds):
+            raise CaptureError("capture", f"region {region_key} has invalid rendered bounds", board_id=board_id)
+        x, y, width, height = bounds
+        result.append(RegionBounds(region_key, region.get("holdID"), float(x), float(y), float(width), float(height)))
+    return tuple(result)
+
+
+def _inject_hold_id_labels(
+    connection: _DevToolsConnection, labels: tuple[HoldIDLabel, ...]
+) -> None:
+    value = _evaluate(
+        connection,
+        f"""(() => {{
+          const svg = document.getElementById('editor-svg');
+          if (!(svg instanceof SVGSVGElement)) return false;
+          for (const label of {json.dumps([asdict(label) for label in labels])}) {{
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('data-audit-hold-id', label.hold_id);
+            text.setAttribute('x', String(label.x));
+            text.setAttribute('y', String(label.y));
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('dominant-baseline', 'middle');
+            text.setAttribute('font-size', '14');
+            text.setAttribute('font-weight', '700');
+            text.setAttribute('fill', '#ffffff');
+            text.setAttribute('stroke', '#111111');
+            text.setAttribute('stroke-width', '3.5');
+            text.setAttribute('paint-order', 'stroke');
+            text.setAttribute('pointer-events', 'none');
+            text.setAttribute('aria-hidden', 'true');
+            text.textContent = label.hold_id;
+            svg.appendChild(text);
+          }}
+          return true;
+        }})()""",
+    )
+    if value is not True:
+        raise CaptureError("capture", "editor SVG is unavailable for hold ID labels")
+
+
+def _remove_hold_id_labels(connection: _DevToolsConnection) -> None:
+    value = _evaluate(
+        connection,
+        """(() => {
+          document.querySelectorAll('#editor-svg text[data-audit-hold-id]').forEach((label) => label.remove());
+          return true;
+        })()""",
+    )
+    if value is not True:
+        raise CaptureError("capture", "editor SVG is unavailable while removing hold ID labels")
+
+
 def _write_labeled_capture(raw_png: bytes, output_path: Path, label: str) -> None:
     try:
         from PIL import Image, ImageDraw, ImageFont
@@ -509,7 +650,12 @@ def _capture_server_command(repository_root: Path, port: int) -> list[str]:
 
 
 def capture_catalog(
-    repository_root: Path, output_root: Path, chrome_path: Path, port: int
+    repository_root: Path,
+    output_root: Path,
+    chrome_path: Path,
+    port: int,
+    *,
+    hold_id_labels: bool = False,
 ) -> CaptureManifest:
     """Capture all completed boards in API order through one Chrome DevTools page."""
     repository_root = Path(repository_root).resolve()
@@ -570,9 +716,24 @@ def capture_catalog(
                             expected_region_count=regions,
                             board_id=board.board_id,
                         )
-                        screenshot = connection.call(
-                            "Page.captureScreenshot", format="png", clip=_canvas_clip(connection)
-                        ).get("data")
+                        labels_injected = False
+                        if hold_id_labels:
+                            labels = hold_id_label_positions(
+                                _rendered_region_bounds(
+                                    connection,
+                                    _board_document(base_url, board.board_id),
+                                    board_id=board.board_id,
+                                )
+                            )
+                            _inject_hold_id_labels(connection, labels)
+                            labels_injected = True
+                        try:
+                            screenshot = connection.call(
+                                "Page.captureScreenshot", format="png", clip=_canvas_clip(connection)
+                            ).get("data")
+                        finally:
+                            if labels_injected:
+                                _remove_hold_id_labels(connection)
                         if not isinstance(screenshot, str):
                             raise CaptureError("capture", "Chrome returned no PNG data", board_id=board.board_id)
                         filename = capture_filename(board.board_id)
@@ -597,13 +758,22 @@ def argument_parser() -> ArgumentParser:
     parser.add_argument("--output-root", type=Path, required=True, help="Directory for labeled PNG evidence")
     parser.add_argument("--chrome-path", type=Path, required=True, help="Google Chrome executable")
     parser.add_argument("--port", type=int, default=4173, help="Loopback Workbench server port (default: 4173)")
+    parser.add_argument(
+        "--hold-id-labels",
+        action="store_true",
+        help="Overlay one review-only stable hold ID label per logical hold",
+    )
     return parser
 
 
 def main() -> None:
     arguments = argument_parser().parse_args()
     manifest = capture_catalog(
-        arguments.repository_root, arguments.output_root, arguments.chrome_path, arguments.port
+        arguments.repository_root,
+        arguments.output_root,
+        arguments.chrome_path,
+        arguments.port,
+        hold_id_labels=arguments.hold_id_labels,
     )
     print(json.dumps({"boards": len(manifest.entries), "output": str(arguments.output_root)}, sort_keys=True))
 
@@ -613,6 +783,8 @@ __all__ = [
     "CaptureError",
     "CaptureManifest",
     "CatalogBoard",
+    "HoldIDLabel",
+    "RegionBounds",
     "capture_catalog",
     "capture_filename",
     "capture_is_ready",
@@ -620,6 +792,7 @@ __all__ = [
     "contact_sheet_entries",
     "create_contact_sheet",
     "fetch_catalog",
+    "hold_id_label_positions",
     "argument_parser",
     "page_websocket_url",
 ]
