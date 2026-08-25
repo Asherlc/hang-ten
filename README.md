@@ -82,20 +82,12 @@ and restrict it to the `main` branch. Add these environment secrets:
 - `APPSTORE_CERTIFICATES_FILE_BASE64`: a base64-encoded Apple Distribution
   `.p12` containing its private key.
 - `APPSTORE_CERTIFICATES_PASSWORD`: the `.p12` password.
-- `ELEVENLABS_API_KEY`: authorizes the release-only generation of the bundled
-  countdown MP3s.
 
 Add these environment variables:
 
 - `APPLE_TEAM_ID`: the 10-character Apple Developer Team ID.
 - `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
 - `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
-- `ELEVENLABS_VOICE_ID`: the ElevenLabs voice used for the bundled countdown
-  MP3s.
-
-Only protected `app-store-connect` release builds generate the countdown
-audio, so local and pull-request/CI builds do not consume ElevenLabs credits.
-
 ## PostHog CI configuration
 
 The app runs without telemetry when its PostHog client token is absent. This is
