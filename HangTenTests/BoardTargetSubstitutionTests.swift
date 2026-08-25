@@ -214,14 +214,38 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
-    func testBeastmaker1000SupportsGenericEdgeRoutineButNotUnsupportedREIPinchRoutine() throws {
+    func testBeastmaker1000IsIncompatibleWithMaxHangsButSupportsGenericEdgeRoutine() throws {
         let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
 
+        XCTAssertTrue(store.isIncompatible(LegacyPlanSeedCatalog.maxHangs, on: board))
         XCTAssertFalse(store.isIncompatible(LegacyPlanSeedCatalog.methodRepeaters, on: board))
+    }
+
+    @MainActor
+    func testMaxHangsResolvesOnBoardWithCompatibleEdge() throws {
+        let board = board(holds: [
+            hold(id: "large-edge", feature: .largeEdge)
+        ])
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+
+        XCTAssertFalse(store.isIncompatible(LegacyPlanSeedCatalog.maxHangs, on: board))
+    }
+
+    @MainActor
+    func testBeastmaker1000IsIncompatibleWithUnsupportedREIPinchRoutine() throws {
+        let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+
         XCTAssertTrue(store.isIncompatible(LegacyPlanSeedCatalog.reiHangboardSample, on: board))
     }
 

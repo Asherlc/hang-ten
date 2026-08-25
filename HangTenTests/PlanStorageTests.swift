@@ -228,7 +228,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(packageStore.semantics(for: compactMapping.boardID), [:])
         XCTAssertEqual(
             store.plan(id: "research.max-hangs")?.steps.first?.targets,
-            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)]
+            [.feature(.mediumEdge, fallback: .largeEdge)]
         )
     }
 
@@ -1234,7 +1234,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug),
+                    target: .feature(.mediumEdge, fallback: .largeEdge),
                     timing: .fixed,
                     duration: 7
                 ),
@@ -1513,7 +1513,6 @@ final class PlanStorageTests: XCTestCase {
     @MainActor
     func testAuditedPlansAreBoardFlexibleAndSubstituteOnEveryRegisteredBoard() throws {
         let auditedPlanIDs: Set<String> = [
-            "research.max-hangs",
             "research.force-feedback-f80",
             "research.force-feedback-f100",
             "research.eva-int-hangs",
