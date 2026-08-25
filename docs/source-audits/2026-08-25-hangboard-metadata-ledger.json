@@ -14659,14 +14659,14 @@
         "pocket-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
+      "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
         "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
       },
-      "reason": "The official feature list publishes grouped family sizes without a numbered one-to-one mapping to these left/right stable IDs."
+      "value": 76.2
     },
     {
       "boardID": "soill.training-tiles",

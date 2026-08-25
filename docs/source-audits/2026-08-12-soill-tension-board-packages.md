@@ -191,6 +191,15 @@ presentations; the other six packages each use one presentation. The overlays
 are review aids only. They did not change geometry or establish a kind or
 measurement.
 
+The standard configured capture was refreshed for this correction. Its normal
+Training Tiles overlay has nearby labels around the upper pockets, so a second,
+review-only Workbench capture at
+`soill.training-tiles--pocket-depth-stable-ids.png` temporarily hid every
+non-pocket overlay in the browser before capture. It visibly and separately
+labels `pocket-left` and `pocket-right`; it did not change the saved paths,
+package, or source image. Together with the product page's `Pocket (3" depth),
+one per tile` text, this establishes the direct two-ID mapping.
+
 The tables below are the complete contact-by-contact type audit. Exact
 left/right pairs are grouped only after both visible stable IDs were compared
 with the named manufacturer source position. So iLL's terms `rail` and `crimp
@@ -242,7 +251,7 @@ No range was collapsed to a scalar value.
 | Split Palm | `Center Flat Rail: 1" (25.4mm)` (one per piece) | `flat-edge-25-left`, `flat-edge-25-right` | `edge` | `sizeMillimeters` 25.4 |
 | Split Palm | `Outer Crimp Rail: 1/2" (12.7mm)` (one per piece) | `outer-crimp-12-left`, `outer-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
 | Split Palm | `Bottom Center Sloping Crimp Rail - 1/2" (12.7mm)` (one per piece) | `bottom-sloping-crimp-12-left`, `bottom-sloping-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
-| Training Tiles | `Top: Pocket (3" depth)`, one per tile | `pocket-left`, `pocket-right` | `pocket` | none; no independent stable-ID value map or finger count |
+| Training Tiles | `Top: Pocket (3" depth)`, one per tile | `pocket-left`, `pocket-right` | `pocket` | `sizeMillimeters` 76.2; no finger count |
 | Training Tiles | `Top: Slopers: 25° - 54mm; 12° - 64mm`, two per tile | `outer-sloper-left`, `outer-sloper-right`, `inner-sloper-left`, `inner-sloper-right` | `sloper` | none; positions are not numbered |
 | Training Tiles | `Middle: Slightly Positive Edges: 44mm, 50mm`, two per tile | `middle-edge-upper-left`, `middle-edge-upper-right`, `middle-edge-lower-left`, `middle-edge-lower-right` | `edge` | none; positions are not numbered |
 | Training Tiles | `Bottom Flat Edge: 36mm, 31mm, 24mm`, three per tile | `bottom-edge-outer-left`, `bottom-edge-outer-right`, `bottom-edge-center-left`, `bottom-edge-center-right`, `bottom-edge-inner-left`, `bottom-edge-inner-right` | `edge` | none; positions are not numbered |
@@ -250,16 +259,19 @@ No range was collapsed to a scalar value.
 ### Field outcomes and retained package data
 
 All 69 holds have one verified ledger `kind` and an explicit outcome for each
-of the six optional fields. The refreshed evidence exactly matches the package
-values already present before this batch: 18 scalar sizes, 14 depth ranges,
-four finger capacities, and two `twoFingerPocket` grip enums. Consequently no
-`board.json` byte changed. In particular:
+of the six optional fields. The refreshed evidence supports 20 scalar sizes,
+14 depth ranges, four finger capacities, and two `twoFingerPocket` grip enums.
+The two Training Tiles pockets now receive the exact 76.2 mm conversion of the
+manufacturer's one-per-tile 3-inch depth; all other package values were
+already present before this batch. In particular:
 
 - the 14 Tension stepped-edge values remain ranges on continuous contacts;
 - Honestone's one-finger pockets retain size and capacity but no `gripType`,
   because the checked-in schema has no one-finger-pocket enum;
-- Training Tiles retains no scalar depth or finger capacity because its
-  grouped list does not number the left/right positions;
+- Training Tiles pockets receive their one-per-tile 3-inch (76.2 mm) depth;
+  its sloper and edge families remain blank because their grouped lists do not
+  number the left/right positions, and the pockets have no published finger
+  count;
 - Flash Board retains no scalar depth because the global size list is not
   mapped to its five recess IDs, and its small crimp value is only approximate
   on the separate overview page;

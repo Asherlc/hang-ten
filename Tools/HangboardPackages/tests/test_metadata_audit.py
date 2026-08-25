@@ -228,6 +228,30 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
     assert all(board.unaccounted_fields == 0 for board in report.boards)
 
 
+def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    ledger_path = (
+        repository_root
+        / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
+    )
+    inventory = discover_board_packages(repository_root / "Hangboards")
+    report = validate_metadata_ledger(load_metadata_ledger(ledger_path), inventory)
+    package = next(
+        package
+        for package in inventory.packages
+        if package.board.id == "soill.training-tiles"
+    )
+
+    assert {
+        hold.id: hold.size_millimeters
+        for hold in package.board.holds
+        if hold.id in {"pocket-left", "pocket-right"}
+    } == {"pocket-left": 76.2, "pocket-right": 76.2}
+    assert next(
+        board for board in report.boards if board.board_id == "soill.training-tiles"
+    ).populated == 18
+
+
 def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))

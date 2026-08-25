@@ -26,7 +26,10 @@ pages and manually reviewed all 69 stable IDs in
 `.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
 the workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset.
 Flash Board has separate labelled captures for its three-edge and two-edge
-presentations. No capture was used to create, adjust, or classify geometry.
+presentations. The focused
+`soill.training-tiles--pocket-depth-stable-ids.png` review capture visibly
+separates the two pocket IDs by temporarily hiding non-pocket overlays only in
+the browser. No capture was used to create, adjust, or classify geometry.
 
 The machine-readable ledger now covers 17 boards and 239 holds, up from 10
 boards and 170 holds. Every reviewed hold has seven accounted fields and a
@@ -35,24 +38,24 @@ verified manufacturer-backed `kind`:
 | Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
 | --- | ---: | ---: | ---: | ---: |
 | `kind` | 170 / 170 | 239 / 239 | 0 | 0 |
-| `sizeMillimeters` | 133 / 133 | 151 / 151 | 88 | 0 |
+| `sizeMillimeters` | 133 / 133 | 153 / 153 | 86 | 0 |
 | `depthRangeMillimeters` | 0 / 0 | 14 / 14 | 225 | 0 |
 | `fingerCapacity` | 87 / 87 | 91 / 91 | 2 | 146 |
 | `handCapacity` | 0 / 0 | 0 / 0 | 239 | 0 |
 | `gripType` | 87 / 87 | 89 / 89 | 150 | 0 |
 | `features` | 0 / 0 | 0 / 0 | 239 | 0 |
 
-The 107 additional populated/verified fields are 69 mandatory kinds, 18
+The 109 additional populated/verified fields are 69 mandatory kinds, 20
 scalar depths, 14 continuous-contact ranges, four finger capacities, and two
-two-finger-pocket grip enums. These values were already source-mapped in the
-seven package files, so the certification changes the ledger and audit trail
-without rewriting any `board.json`. The complete manufacturer-label to stable
-ID map and the source-term type audit are in the
+two-finger-pocket grip enums. The two additional scalar values are the Training
+Tiles' one-per-tile 3-inch pockets converted exactly to 76.2 mm; the remaining
+values were already source-mapped in the seven package files. The complete
+manufacturer-label to stable ID map and the source-term type audit are in the
 [So iLL/Tension audit](2026-08-12-soill-tension-board-packages.md#2026-08-25-source-audited-metadata-batch).
 
 Remaining batch blanks are deliberate: Flash Board depths are a global,
-unpositioned list; Training Tiles measurements are grouped without numbered
-left/right mappings and its pockets have no published finger count; Honestone
+unpositioned list; Training Tiles sloper/edge measurements are grouped without
+numbered left/right mappings and its pockets have no published finger count; Honestone
 has source-labelled one-finger pockets but the schema has no corresponding
 grip enum; width, angle, curvature, and radius are not contact depth; and no
 reviewed source publishes simultaneous hand capacity or an exact package
