@@ -1348,6 +1348,31 @@ final class WorkoutSpeechOwnershipTests: XCTestCase {
 
 @MainActor
 final class WorkoutAudioCoachTests: XCTestCase {
+    // Catches constructing the default scheduler and its audio backend before an athlete starts a countdown.
+    func testCountdownSchedulerFactoryWaitsForPreparationRequest() {
+        var factoryCallCount = 0
+        let scheduler = RecordingCountdownAudioScheduler()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: RecordingWorkoutAudioSession(),
+            countdownSchedulerFactory: {
+                factoryCallCount += 1
+                return scheduler
+            },
+            countdownCompletionScheduler: RecordingWorkoutCountdownCompletionScheduler()
+        )
+
+        XCTAssertEqual(factoryCallCount, 0)
+        coach.stop()
+        XCTAssertEqual(factoryCallCount, 0)
+        XCTAssertEqual(coach.countdownPreparationState, .idle)
+
+        coach.prepareCountdownAudio()
+
+        XCTAssertEqual(factoryCallCount, 1)
+        XCTAssertEqual(scheduler.prewarmCallCount, 1)
+    }
+
     // Catches app launch prewarming the countdown engine before an athlete requests it.
     func testCountdownAudioPreparationRemainsIdleUntilRequested() async {
         let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
@@ -1450,6 +1475,27 @@ final class WorkoutAudioCoachTests: XCTestCase {
         coach.stop()
 
         XCTAssertEqual(events, ["countdown.stop", "session.deactivate"])
+        XCTAssertEqual(coach.countdownPreparationState, .idle)
+        XCTAssertEqual(scheduler.prewarmCallCount, 1)
+    }
+
+    // Catches cancellation rebuilding a countdown backend while spoken cues take over.
+    func testSpeakingCancelsCountdownAndReturnsPreparationToIdleWithoutPrewarming() async {
+        let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: RecordingWorkoutAudioSession(),
+            countdownScheduler: scheduler
+        )
+        coach.prepareCountdownAudio()
+        scheduler.completePrewarm(succeeded: true)
+        await Task.yield()
+        XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
+
+        coach.speak("Pause")
+
+        XCTAssertEqual(coach.countdownPreparationState, .idle)
+        XCTAssertEqual(scheduler.prewarmCallCount, 1)
     }
 
     // Catches countdown ownership surviving after its final one-second slot.

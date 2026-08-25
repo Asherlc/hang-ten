@@ -182,7 +182,8 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     private let synthesizer: any WorkoutSpeechSynthesizing
     private let audioSession: any WorkoutAudioSessionManaging
-    private let countdownScheduler: any CountdownAudioScheduling
+    private let countdownSchedulerFactory: () -> any CountdownAudioScheduling
+    private var countdownScheduler: (any CountdownAudioScheduling)?
     private let countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
@@ -205,12 +206,15 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         self.init(
             synthesizer: synthesizer,
             audioSession: audioSession,
-            countdownScheduler: CountdownAudioScheduler(
-                preferredLanguageCode: Self.preferredLanguageCode,
-                rate: 0.50,
-                pitchMultiplier: 1.0,
-                volume: 1.0
-            )
+            countdownSchedulerFactory: {
+                CountdownAudioScheduler(
+                    preferredLanguageCode: Self.preferredLanguageCode,
+                    rate: 0.50,
+                    pitchMultiplier: 1.0,
+                    volume: 1.0
+                )
+            },
+            countdownCompletionScheduler: SystemWorkoutCountdownCompletionScheduler()
         )
     }
 
@@ -222,7 +226,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         self.init(
             synthesizer: synthesizer,
             audioSession: audioSession,
-            countdownScheduler: countdownScheduler,
+            countdownSchedulerFactory: { countdownScheduler },
             countdownCompletionScheduler: SystemWorkoutCountdownCompletionScheduler()
         )
     }
@@ -233,9 +237,23 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         countdownScheduler: any CountdownAudioScheduling,
         countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
     ) {
+        self.init(
+            synthesizer: synthesizer,
+            audioSession: audioSession,
+            countdownSchedulerFactory: { countdownScheduler },
+            countdownCompletionScheduler: countdownCompletionScheduler
+        )
+    }
+
+    init(
+        synthesizer: any WorkoutSpeechSynthesizing,
+        audioSession: any WorkoutAudioSessionManaging,
+        countdownSchedulerFactory: @escaping () -> any CountdownAudioScheduling,
+        countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
+    ) {
         self.synthesizer = synthesizer
         self.audioSession = audioSession
-        self.countdownScheduler = countdownScheduler
+        self.countdownSchedulerFactory = countdownSchedulerFactory
         self.countdownCompletionScheduler = countdownCompletionScheduler
         super.init()
         synthesizer.delegate = self
@@ -281,7 +299,9 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         _ schedule: CountdownAudioSchedule,
         startUptime: TimeInterval
     ) -> Bool {
-        guard !ownsCountdownSchedule, countdownPreparationState == .ready else { return false }
+        guard !ownsCountdownSchedule,
+              countdownPreparationState == .ready,
+              let countdownScheduler else { return false }
 
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
@@ -307,7 +327,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         countdownCompletionScheduler.cancel()
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
-        countdownScheduler.stop()
+        countdownScheduler?.stop()
         ownsCountdownSchedule = false
         speechOwnership.requestStop()
         isSpeaking = false
@@ -342,14 +362,14 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private func cancelOwnedCountdownSchedule() {
         guard ownsCountdownSchedule else { return }
         countdownCompletionScheduler.cancel()
-        countdownScheduler.stop()
+        countdownScheduler?.stop()
         ownsCountdownSchedule = false
         countdownPreparationState = .idle
     }
 
     private func finishOwnedCountdownSchedule() {
         guard ownsCountdownSchedule else { return }
-        countdownScheduler.stop()
+        countdownScheduler?.stop()
         ownsCountdownSchedule = false
         deactivateAudioSessionIfSpeechStopped()
         countdownPreparationState = .idle
@@ -357,6 +377,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     private func beginCountdownPrewarm() {
         countdownPreparationState = .preparing
+        let countdownScheduler = countdownSchedulerIfNeeded()
         countdownScheduler.prewarm { [weak self] succeeded in
             if Thread.isMainThread {
                 MainActor.assumeIsolated {
@@ -370,6 +391,16 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
                 }
             }
         }
+    }
+
+    private func countdownSchedulerIfNeeded() -> any CountdownAudioScheduling {
+        if let countdownScheduler {
+            return countdownScheduler
+        }
+
+        let countdownScheduler = countdownSchedulerFactory()
+        self.countdownScheduler = countdownScheduler
+        return countdownScheduler
     }
 
     private func deactivateAudioSessionIfSpeechStopped() {
