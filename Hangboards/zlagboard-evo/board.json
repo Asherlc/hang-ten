@@ -1827,6 +1827,83 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-19",
+      "name": "Hold 19",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.835596272946,
+            "y": 0.249536307285,
+            "width": 0.137006901009,
+            "height": 0.09721321457
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.58710013313,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.086277221342,
+                  0.311198323581
+                ],
+                "control2": [
+                  0.086277221342,
+                  0.311198323581
+                ],
+                "to": [
+                  0.055409195006,
+                  1.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.888807314136,
+                  0.180749498028
+                ],
+                "control2": [
+                  0.888807314136,
+                  0.180749498028
+                ],
+                "to": [
+                  0.58710013313,
+                  0.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
