@@ -84,6 +84,19 @@ def test_discovery_reads_direct_child_packages_without_a_catalog_and_sorts_them(
     assert not (tmp_path / "catalog.json").exists()
 
 
+def test_board_schema_accepts_fractional_millimeter_measurements() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    hold = document["holds"][0]
+    hold["sizeMillimeters"] = 7.5
+    hold["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 12.5}
+
+    board = module._load_board(document)
+
+    assert board.holds[0].size_millimeters == 7.5
+    assert board.holds[0].depth_range_millimeters == module.MillimeterRange(7.5, 12.5)
+
+
 def test_final_inventory_rejects_a_primary_only_draft(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     write_primary_only_draft(tmp_path / "draft-model")

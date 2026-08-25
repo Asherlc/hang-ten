@@ -607,7 +607,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         struct ProgressionCue {
             let targetIDs: [String]
-            let sizeMillimeters: Int
+            let sizeMillimeters: Double
             let features: Set<HoldFeature>
             let gripType: GripType
             let fingerConfiguration: FingerConfiguration?

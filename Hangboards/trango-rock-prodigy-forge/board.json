@@ -881,6 +881,7 @@
       "id": "closed-crimp-left",
       "name": "Left 7.5 mm closed crimp with thumb support",
       "kind": "edge",
+      "sizeMillimeters": 7.5,
       "geometry": [
         {
           "frame": {
@@ -971,6 +972,7 @@
       "id": "closed-crimp-right",
       "name": "Right 7.5 mm closed crimp with thumb support",
       "kind": "edge",
+      "sizeMillimeters": 7.5,
       "geometry": [
         {
           "frame": {

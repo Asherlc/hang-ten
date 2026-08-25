@@ -44,7 +44,25 @@ on Whetstone, and six on Megalith. `depthRangeMillimeters` records the bounds
 of a continuous physical surface; it does not assert that every point between
 the two published shelf depths is a separately calibrated hold.
 
-## Remaining unsupported or unrepresentable metadata
+### Fractional value recovery
+
+The package schema now accepts positive finite JSON numeric scalar and range
+values, retaining their `Double` precision through the app loader, editable
+document, writer, training model, and activity record. This releases the
+following primary-source mappings that were previously documented but could not
+be represented without rounding.
+
+| Package | Hold IDs | Exact `sizeMillimeters` | Evidence and mapping |
+| --- | --- | --- | --- |
+| `metolius.climbers-edge` | `edge-17-5-{left,right}`, `edge-12-5-{left,right}`, `edge-7-5-center` | 17.5, 12.5, 7.5 mm | [Metolius audit](2026-08-12-metolius-board-packages.md#climbers-edge--15-contacts) maps the manufacturer’s lower-row depths to these five contacts. |
+| `soill.split-palm` | `sloping-rail-38-{left,right}`, `flat-edge-25-{left,right}`, `outer-crimp-12-{left,right}`, `bottom-sloping-crimp-12-{left,right}` | 38.1, 25.4, 12.7, 12.7 mm | [So iLL/Tension audit](2026-08-12-soill-tension-board-packages.md#soill-split-palm) gives the seven per-piece contacts and their exact metric depths. |
+| `trango.rock-prodigy-forge` | `closed-crimp-{left,right}` | 7.5 mm | [Trango audit](2026-08-12-trango-board-packages.md) maps the manufacturer’s 7.5 mm closed crimp to the mirrored pair. |
+
+This resolves 15 formerly unrepresentable hold fields. The primary sources do
+not establish additional fractional per-contact depths among the remaining
+blank fields.
+
+## Remaining unsupported metadata
 
 The audit did not leave values blank merely because they were difficult to
 read. Each group below was checked against the indicated primary materials and
@@ -54,7 +72,6 @@ remains blank for a specific evidence reason.
 | --- | --- | --- |
 | `beastmaker-1000` pockets; `beastmaker-2000` unmapped pockets and edges; `dewoodstok-woodbord` pockets | Per-contact capacity and/or depth | Product pages give product or family facts but no numbered per-contact mapping. The prior catalog audit explicitly prohibits applying aggregate values to a pocket ID. |
 | `frictitious.doormount-pro-7` unnamed lower records and mixed contacts | Depth and capacity | [DoorMount Pro](https://frictitiousclimbing.com/products/doormount-pro) lists the 35/25/20/15/10 mm families and pockets, but its declared seven-hold inventory does not map those facts to this package's 13 current logical records. A fresh field assignment would be an inference; the inventory discrepancy needs a separate physical-contact reconciliation. |
-| `metolius.climbers-edge` lower edge row; `soill.split-palm` decimal rails; `trango.rock-prodigy-forge` 7.5 mm closed crimp | Scalar depth | The primary documents give 17.5/12.5/7.5 mm, 38.1/25.4/12.7 mm, or 7.5 mm respectively. The schema accepts only positive integer scalar/range bounds, so rounding would corrupt the manufacturer value. |
 | `soill.training-tiles`; `tension.flash-board`; `target10a.linebreaker-base`; `zlagboard.evo`; `zlagboard.pro` | Per-contact depth and, where applicable, pocket capacity | Manufacturers publish grouped size/family information or product views, not an individual ID-to-value guide. The front image establishes physical contact boundaries, not an exact value assignment. |
 | `trango.rock-prodigy-forge` IM pockets; `trango.rock-prodigy-natural` centre-lower and supported pockets; `trango.rock-prodigy-training-center` variable rails and pockets | Exact per-contact depth | Forge's official guide gives only an aggregate IMR range. Natural's official product markings and quick-start guide conflict on the affected values/capacities. The Training Center manual names only selected training grips and lacks a depth map for each physical package contact. |
 | `nature.stoak-board-iii` gradient/composite contacts; `frictitious.megalith` mono pockets | Exact depth | Manufacturer material identifies the board-level or named edge facts but does not establish individual endpoints/depths for these exact compound/mono contacts. |
@@ -62,5 +79,6 @@ remains blank for a specific evidence reason.
 
 Existing explicit capacities (mono, duo, three-finger, four-finger) and
 source-mapped scalar depths elsewhere in the 44 packages were rechecked and
-retained. No `kind`, `fingerCapacity`, or scalar `sizeMillimeters` change was
-justified by the additional evidence.
+retained. Apart from the fractional mappings above, no `kind`,
+`fingerCapacity`, or scalar `sizeMillimeters` change was justified by the
+additional evidence.

@@ -40,9 +40,9 @@ field is omitted.
   center 10 mm (`1`) contact.
 - Lower edge row: mirrored 17.5 mm (`6`) and 12.5 mm (`4`) contacts around one
   center 7.5 mm (`2`) contact.
-- The source publishes half-millimeter depths; the current package schema only
-  accepts positive integer `sizeMillimeters`, so 17.5, 12.5, and 7.5 remain in
-  the hold names and are not rounded into structured values.
+- The source publishes half-millimeter depths. The package records the exact
+  17.5 mm, 12.5 mm, and 7.5 mm values in `sizeMillimeters` for the mapped lower
+  edge contacts; no rounding is applied.
 
 ### Contact — 33 contacts
 

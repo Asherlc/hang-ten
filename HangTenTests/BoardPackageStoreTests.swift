@@ -2,6 +2,28 @@ import XCTest
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
+    func testStoreAcceptsFractionalMillimeterMeasurements() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["sizeMillimeters"] = 7.5
+                holds[0]["depthRangeMillimeters"] = [
+                    "lowerBound": 7.5,
+                    "upperBound": 12.5,
+                ]
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let hold = try XCTUnwrap(board.holds.first)
+        XCTAssertEqual(hold.sizeMillimeters, 7.5)
+        XCTAssertEqual(hold.depthRangeMillimeters, 7.5...12.5)
+    }
+
     func testStoreDiscoversDirectChildPackagesWithoutCatalogAndSortsThem() throws {
         let fixture = try makeFixtureBundle(
             packages: [

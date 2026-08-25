@@ -22,7 +22,7 @@ struct RecordedActivitySegment: Codable, Hashable {
     let kind: WorkoutSegmentKind
     let holdIDs: [String]
     let holdType: String?
-    let sizeMillimeters: Int?
+    let sizeMillimeters: Double?
     let durationSeconds: TimeInterval?
 
     enum CodingKeys: String, CodingKey { case stepID, stepNumber, kind, holdIDs, holdType, sizeMillimeters, durationSeconds }
@@ -291,7 +291,7 @@ struct WorkoutActivityRecorder {
                     )
                     continue
                 }
-                var groups: [(HoldKind, Int?, [String])] = []
+                var groups: [(HoldKind, Double?, [String])] = []
                 for hold in holds {
                     let descriptor = (hold.kind, hold.sizeMillimeters)
                     if let i = groups.firstIndex(where: { $0.0 == descriptor.0 && $0.1 == descriptor.1 }) { groups[i].2.append(hold.id) }

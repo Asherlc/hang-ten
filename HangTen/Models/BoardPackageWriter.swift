@@ -111,7 +111,7 @@ struct BoardEditableHold: Equatable, Decodable {
     var id: String
     var name: String
     var kind: HoldKind
-    var sizeMillimeters: Int?
+    var sizeMillimeters: Double?
     var depthRangeMillimeters: BoardEditableMillimeterRange?
     var gripType: GripType?
     var fingerCapacity: Int?
@@ -138,7 +138,7 @@ struct BoardEditableHold: Equatable, Decodable {
         id: String,
         name: String,
         kind: HoldKind,
-        sizeMillimeters: Int? = nil,
+        sizeMillimeters: Double? = nil,
         depthRangeMillimeters: BoardEditableMillimeterRange? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
@@ -171,7 +171,7 @@ struct BoardEditableHold: Equatable, Decodable {
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
         geometry = try container.decode([BoardEditablePiece].self, forKey: .geometry)
-        sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
+        sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
             BoardEditableMillimeterRange.self,
             forKey: .depthRangeMillimeters
@@ -185,15 +185,15 @@ struct BoardEditableHold: Equatable, Decodable {
 }
 
 struct BoardEditableMillimeterRange: Equatable, Decodable {
-    var lowerBound: Int
-    var upperBound: Int
+    var lowerBound: Double
+    var upperBound: Double
 
     private enum CodingKeys: String, CodingKey {
         case lowerBound
         case upperBound
     }
 
-    init(lowerBound: Int, upperBound: Int) {
+    init(lowerBound: Double, upperBound: Double) {
         self.lowerBound = lowerBound
         self.upperBound = upperBound
     }
@@ -201,8 +201,8 @@ struct BoardEditableMillimeterRange: Equatable, Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys(["lowerBound", "upperBound"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        lowerBound = try container.decode(Int.self, forKey: .lowerBound)
-        upperBound = try container.decode(Int.self, forKey: .upperBound)
+        lowerBound = try container.decode(Double.self, forKey: .lowerBound)
+        upperBound = try container.decode(Double.self, forKey: .upperBound)
     }
 }
 
@@ -387,10 +387,12 @@ enum BoardPackageWriter {
                !BoardHold.validHandCapacityRange.contains(handCapacity) {
                 throw invalid("hold \(hold.id) has an invalid hand capacity", document)
             }
-            if let size = hold.sizeMillimeters, size <= 0 {
+            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
                 throw invalid("hold \(hold.id) has a non-positive size", document)
             }
             if let depthRange = hold.depthRangeMillimeters,
+               !depthRange.lowerBound.isFinite ||
+               !depthRange.upperBound.isFinite ||
                depthRange.lowerBound <= 0 ||
                depthRange.upperBound <= 0 ||
                depthRange.lowerBound > depthRange.upperBound {
@@ -505,12 +507,12 @@ enum BoardPackageWriter {
             ("kind", .string(hold.kind.rawValue)),
         ]
         if let sizeMillimeters = hold.sizeMillimeters {
-            entries.append(("sizeMillimeters", .int(sizeMillimeters)))
+            entries.append(("sizeMillimeters", .double(sizeMillimeters)))
         }
         if let depthRange = hold.depthRangeMillimeters {
             entries.append(("depthRangeMillimeters", .object([
-                ("lowerBound", .int(depthRange.lowerBound)),
-                ("upperBound", .int(depthRange.upperBound)),
+                ("lowerBound", .double(depthRange.lowerBound)),
+                ("upperBound", .double(depthRange.upperBound)),
             ])))
         }
         if let gripType = hold.gripType {

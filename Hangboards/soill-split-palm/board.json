@@ -655,6 +655,7 @@
       "id": "sloping-rail-38-left",
       "name": "Left 38.1 mm sloping rail",
       "kind": "edge",
+      "sizeMillimeters": 38.1,
       "geometry": [
         {
           "frame": {
@@ -761,6 +762,7 @@
       "id": "sloping-rail-38-right",
       "name": "Right 38.1 mm sloping rail",
       "kind": "edge",
+      "sizeMillimeters": 38.1,
       "geometry": [
         {
           "frame": {
@@ -867,6 +869,7 @@
       "id": "flat-edge-25-left",
       "name": "Left 25.4 mm flat rail",
       "kind": "edge",
+      "sizeMillimeters": 25.4,
       "geometry": [
         {
           "frame": {
@@ -965,6 +968,7 @@
       "id": "flat-edge-25-right",
       "name": "Right 25.4 mm flat rail",
       "kind": "edge",
+      "sizeMillimeters": 25.4,
       "geometry": [
         {
           "frame": {
@@ -1063,6 +1067,7 @@
       "id": "outer-crimp-12-left",
       "name": "Left 12.7 mm outer crimp",
       "kind": "edge",
+      "sizeMillimeters": 12.7,
       "geometry": [
         {
           "frame": {
@@ -1161,6 +1166,7 @@
       "id": "outer-crimp-12-right",
       "name": "Right 12.7 mm outer crimp",
       "kind": "edge",
+      "sizeMillimeters": 12.7,
       "geometry": [
         {
           "frame": {
@@ -1259,6 +1265,7 @@
       "id": "bottom-sloping-crimp-12-left",
       "name": "Left 12.7 mm bottom sloping crimp",
       "kind": "edge",
+      "sizeMillimeters": 12.7,
       "geometry": [
         {
           "frame": {
@@ -1357,6 +1364,7 @@
       "id": "bottom-sloping-crimp-12-right",
       "name": "Right 12.7 mm bottom sloping crimp",
       "kind": "edge",
+      "sizeMillimeters": 12.7,
       "geometry": [
         {
           "frame": {

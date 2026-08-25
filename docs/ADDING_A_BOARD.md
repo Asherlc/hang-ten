@@ -56,6 +56,9 @@ directory, generated draft, or duplicate geometry.
 nonempty `geometry` array. Each geometry piece contains a normalized `frame`, a
 closed supported `shape`, and optional physical treatment. Measurements, depth
 ranges, finger capacity, hand capacity, grip posture, and feature tags are optional.
+When present, `sizeMillimeters` and both `depthRangeMillimeters` bounds must be
+positive finite JSON numbers; fractional millimetre values are preserved exactly.
+The lower depth bound must not exceed the upper bound.
 
 Set `presentation.assetPath` to exactly `assets/primary.png`. Any other value is
 rejected by the loader.

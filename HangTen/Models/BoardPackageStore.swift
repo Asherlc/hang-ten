@@ -681,13 +681,15 @@ struct BoardPackageStore {
             holds.append(
                 try hold.trainingBoardHold(geometryPieces: geometryPieces)
             )
-            if let size = hold.sizeMillimeters, size <= 0 {
+            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "hold \(hold.id) has a non-positive size"
                 )
             }
             if let depthRange = hold.depthRangeMillimeters,
+               !depthRange.lowerBound.isFinite ||
+               !depthRange.upperBound.isFinite ||
                depthRange.lowerBound <= 0 ||
                depthRange.upperBound <= 0 ||
                depthRange.lowerBound > depthRange.upperBound {
@@ -825,7 +827,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let name: String
     let kind: HoldKind
     let geometry: [BoardPackageGeometryDocument]
-    let sizeMillimeters: Int?
+    let sizeMillimeters: Double?
     let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
     let gripType: GripType?
     let fingerCapacity: Int?
@@ -858,7 +860,7 @@ private struct BoardPackageHoldDocument: Decodable {
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
         geometry = try container.decode([BoardPackageGeometryDocument].self, forKey: .geometry)
-        sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
+        sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
             BoardPackageMillimeterRangeDocument.self,
             forKey: .depthRangeMillimeters
@@ -967,8 +969,8 @@ private struct BoardPackageShapeConstraintDocument: Decodable {
 }
 
 private struct BoardPackageMillimeterRangeDocument: Decodable {
-    let lowerBound: Int
-    let upperBound: Int
+    let lowerBound: Double
+    let upperBound: Double
 
     private enum CodingKeys: String, CodingKey {
         case lowerBound
@@ -978,8 +980,8 @@ private struct BoardPackageMillimeterRangeDocument: Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys(["lowerBound", "upperBound"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        lowerBound = try container.decode(Int.self, forKey: .lowerBound)
-        upperBound = try container.decode(Int.self, forKey: .upperBound)
+        lowerBound = try container.decode(Double.self, forKey: .lowerBound)
+        upperBound = try container.decode(Double.self, forKey: .upperBound)
     }
 }
 

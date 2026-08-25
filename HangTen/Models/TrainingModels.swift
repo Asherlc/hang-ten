@@ -391,8 +391,8 @@ struct BoardHold: Identifiable, Hashable {
     let fingerCapacity: Int?
     let handCapacity: Int?
     let frame: HoldFrame
-    let sizeMillimeters: Int?
-    let depthRangeMillimeters: ClosedRange<Int>?
+    let sizeMillimeters: Double?
+    let depthRangeMillimeters: ClosedRange<Double>?
     let features: Set<HoldFeature>?
     let presentationID: String
 
@@ -404,11 +404,11 @@ struct BoardHold: Identifiable, Hashable {
         name: String,
         kind: HoldKind,
         geometry: [BoardHoldPiece],
-        sizeMillimeters: Int? = nil,
+        sizeMillimeters: Double? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
-        depthRangeMillimeters: ClosedRange<Int>? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
         features: Set<HoldFeature>? = nil,
         presentationID: String = BoardPresentation.primaryID
     ) {
@@ -457,12 +457,12 @@ struct BoardHold: Identifiable, Hashable {
         detail _: String,
         kind: HoldKind,
         frame: HoldFrame,
-        sizeMillimeters: Int? = nil,
+        sizeMillimeters: Double? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         cueStyle _: HoldCueStyle? = nil,
-        depthRangeMillimeters: ClosedRange<Int>? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
         self.init(
