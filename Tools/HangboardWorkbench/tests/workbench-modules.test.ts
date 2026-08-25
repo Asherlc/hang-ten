@@ -679,6 +679,41 @@ test("the direct editor model rejects inconsistent finger capacities for one phy
   );
 });
 
+test("the direct editor model accepts positive finite fractional depth ranges", () => {
+  assert.doesNotThrow(() => validateEditorDocument({
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      key: "hold-1-piece-0",
+      displayPath: "M 1 1 L 20 1 L 20 20 Z",
+      metadata: { holdID: "hold-1", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 12.5 },
+    }],
+  }));
+});
+
+test("the direct editor model rejects malformed, non-finite, and unordered depth ranges", () => {
+  for (const depthRangeMillimeters of [
+    {},
+    { lowerBound: 7.5 },
+    { lowerBound: Number.NaN, upperBound: 12.5 },
+    { lowerBound: 12.5, upperBound: Number.POSITIVE_INFINITY },
+    { lowerBound: 12.5, upperBound: 7.5 },
+  ]) {
+    assert.throws(
+      () => validateEditorDocument({
+        canvas: { width: 100, height: 50 },
+        regions: [{
+          key: "hold-1-piece-0",
+          displayPath: "M 1 1 L 20 1 L 20 20 Z",
+          metadata: { holdID: "hold-1", pieceIndex: 0 },
+          depthRangeMillimeters,
+        }],
+      }),
+      /depth range/i,
+    );
+  }
+});
+
 test("the direct editor model rejects invalid and inconsistent hand capacities", () => {
   assert.throws(
     () => validateEditorDocument({

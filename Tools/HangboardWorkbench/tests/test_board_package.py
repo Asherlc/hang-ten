@@ -5,6 +5,7 @@ import copy
 import errno
 import importlib.util
 import json
+import math
 import os
 import shutil
 import struct
@@ -1421,6 +1422,61 @@ def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_hold(
         tuple(region["depthRangeMillimeters"].items())
         for region in board_package.editor_document(saved)["regions"]
     } == {(("lowerBound", 12), ("upperBound", 16))}
+
+
+def test_opening_and_saving_preserves_fractional_hold_measurements(
+    tmp_path: Path,
+) -> None:
+    """Rejects a regression that treats source-backed half-millimeter values as invalid."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0].update(
+            sizeMillimeters=7.5,
+            depthRangeMillimeters={"lowerBound": 7.5, "upperBound": 12.5},
+        ),
+    )
+
+    opened = board_package.open_package(library, "fixture.board")
+    document = board_package.editor_document(opened)
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert saved.board["holds"][0]["sizeMillimeters"] == 7.5
+    assert saved.board["holds"][0]["depthRangeMillimeters"] == {
+        "lowerBound": 7.5,
+        "upperBound": 12.5,
+    }
+    assert _read_board(package_root)["holds"][0]["sizeMillimeters"] == 7.5
+    assert {
+        tuple(region["depthRangeMillimeters"].items())
+        for region in board_package.editor_document(saved)["regions"]
+    } == {(("lowerBound", 7.5), ("upperBound", 12.5))}
+
+
+@pytest.mark.parametrize(
+    ("measurement", "message"),
+    [
+        ({"sizeMillimeters": math.nan}, "positive finite number"),
+        (
+            {"depthRangeMillimeters": {"lowerBound": 0, "upperBound": 7.5}},
+            "positive finite number",
+        ),
+        (
+            {"depthRangeMillimeters": {"lowerBound": 12.5, "upperBound": 7.5}},
+            "must not exceed",
+        ),
+    ],
+)
+def test_opening_rejects_invalid_fractional_hold_measurements(
+    tmp_path: Path, measurement: dict[str, object], message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, lambda board: board["holds"][0].update(measurement))
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.open_package(library, "fixture.board")
 
 
 def test_save_round_trips_hand_capacity_and_depth_range_for_all_pieces(

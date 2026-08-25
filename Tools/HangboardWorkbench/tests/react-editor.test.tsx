@@ -947,7 +947,7 @@ test("finger capacity loads in the inspector, applies to every physical piece, a
   }, dependenciesFixture(board, { client }));
 });
 
-test("depth range loads in the inspector and saves across every physical piece", async () => {
+test("fractional depth range loads in the inspector and saves across every physical piece", async () => {
   const board = boardFixture(documentFixture([
     {
       id: 1,
@@ -955,7 +955,7 @@ test("depth range loads in the inspector and saves across every physical piece",
       type: "jug",
       displayPath: FIRST_PATH,
       metadata: { holdID: "a", pieceIndex: 0 },
-      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
     },
     {
       id: 2,
@@ -963,7 +963,7 @@ test("depth range loads in the inspector and saves across every physical piece",
       type: "jug",
       displayPath: SECOND_PATH,
       metadata: { holdID: "a", pieceIndex: 1 },
-      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
     },
     { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
   ]));
@@ -978,14 +978,14 @@ test("depth range loads in the inspector and saves across every physical piece",
 
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
-    assert.equal(app.documentValue("#depth-range-lower-input"), "9");
+    assert.equal(app.documentValue("#depth-range-lower-input"), "7.5");
     assert.equal(app.documentValue("#depth-range-upper-input"), "10");
-    await app.change("#depth-range-lower-input", "12");
-    await app.change("#depth-range-upper-input", "16");
+    await app.change("#depth-range-lower-input", "7.5");
+    await app.change("#depth-range-upper-input", "12.5");
     await app.click("#save-button");
     assert.deepEqual(
       saved[0]?.regions.slice(0, 2).map((region) => region.depthRangeMillimeters),
-      [{ lowerBound: 12, upperBound: 16 }, { lowerBound: 12, upperBound: 16 }],
+      [{ lowerBound: 7.5, upperBound: 12.5 }, { lowerBound: 7.5, upperBound: 12.5 }],
     );
 
     await app.click("#add-hold-button");

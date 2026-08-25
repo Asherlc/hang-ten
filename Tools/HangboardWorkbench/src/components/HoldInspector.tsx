@@ -96,8 +96,8 @@ export function HoldInspector({
             <input
               id="depth-range-lower-input"
               type="number"
-              min="1"
-              step="1"
+              min="0"
+              step="any"
               disabled={busy}
               value={hold?.depthRangeMillimeters?.lowerBound ?? ""}
               onChange={(event) => {
@@ -116,8 +116,8 @@ export function HoldInspector({
             <input
               id="depth-range-upper-input"
               type="number"
-              min="1"
-              step="1"
+              min="0"
+              step="any"
               disabled={busy}
               value={hold?.depthRangeMillimeters?.upperBound ?? ""}
               onChange={(event) => {
