@@ -264,6 +264,7 @@
       "id": "sloper-40-center",
       "name": "Center 40-degree sloper",
       "kind": "sloper",
+      "gripType": "openHand",
       "presentationID": "front",
       "geometry": [
         {
@@ -357,6 +358,7 @@
       "name": "Left 40 mm edge",
       "kind": "edge",
       "sizeMillimeters": 40,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -481,6 +483,7 @@
       "name": "Left 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -605,6 +608,7 @@
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -729,6 +733,7 @@
       "name": "Right 40 mm edge",
       "kind": "edge",
       "sizeMillimeters": 40,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -853,6 +858,7 @@
       "name": "Right 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -977,6 +983,7 @@
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -1101,6 +1108,7 @@
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -1225,6 +1233,7 @@
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -1349,6 +1358,7 @@
       "name": "Left 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -1473,6 +1483,7 @@
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -1597,6 +1608,7 @@
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {
@@ -1721,6 +1733,7 @@
       "name": "Right 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
+      "fingerCapacity": 4,
       "presentationID": "front",
       "geometry": [
         {

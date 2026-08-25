@@ -4,6 +4,7 @@
     "escape.unlimited",
     "evolv-kilter-basic-long",
     "frictitious.doormount-pro-7",
+    "lattice-triple-rung",
     "metolius.climbers-edge",
     "metolius.contact",
     "metolius.foundry",
@@ -14,13 +15,16 @@
     "metolius.simulator-3d",
     "metolius.wood-grips-compact-ii",
     "metolius.wood-grips-deluxe-ii",
+    "nature.stoak-board-iii",
     "soill.iron-palm-2",
     "soill.split-palm",
     "soill.training-tiles",
+    "target10a.linebreaker-base",
     "tension.flash-board",
     "tension.grindstone",
     "tension.honestone",
-    "tension.whetstone"
+    "tension.whetstone",
+    "the-hangboard.the-hangboard"
   ],
   "records": [
     {
@@ -16786,6 +16790,5163 @@
         "label": "10 mm rounded edge"
       },
       "reason": "The official wording is rounded edge, but the schema has no roundedEdge tag and no other exact supported tag is established."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-45"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 45 mm edge in the official upper/middle/lower layout"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-45"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 45 mm edge in the official upper/middle/lower layout"
+      },
+      "value": 45
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-45"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 45 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-45"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 45 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-45"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 45 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-45"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 45 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-45"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 45 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 10 mm edge in the official upper/middle/lower layout"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 10 mm edge in the official upper/middle/lower layout"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 10 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 10 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 10 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 10 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 10 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 20 mm edge in the official upper/middle/lower layout"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 20 mm edge in the official upper/middle/lower layout"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 20 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 20 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 20 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 20 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "lattice-triple-rung",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+        "label": "Triple Rung 20 mm edge in the official upper/middle/lower layout"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/products/stoak-board-iii",
+        "label": "Official Stoak Board III annotated contact map: Full-width top jug"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Full-width top jug"
+      },
+      "reason": "The 55 mm open-hand annotation does not establish a separate contact or fixed scalar depth for the full-width top jug."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Full-width top jug"
+      },
+      "reason": "The manufacturer source does not publish lower and upper depth bounds for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Full-width top jug"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Full-width top jug"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Full-width top jug"
+      },
+      "reason": "The open-hand annotation does not establish a second physical contact or prescribe one exact grip posture for the full-width jug."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Full-width top jug"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "edge-22-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/products/stoak-board-iii",
+        "label": "Official Stoak Board III annotated contact map: Center 22 mm edge"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "edge-22-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center 22 mm edge"
+      },
+      "value": 22
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "edge-22-center"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center 22 mm edge"
+      },
+      "reason": "The manufacturer source does not publish lower and upper depth bounds for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "edge-22-center"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center 22 mm edge"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "edge-22-center"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center 22 mm edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "edge-22-center"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center 22 mm edge"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "edge-22-center"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center 22 mm edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left gradient 10\u201325 mm edge"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer maps multiple exact depths across this continuous contact, so no single scalar applies."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left gradient 10\u201325 mm edge"
+      },
+      "value": {
+        "lowerBound": 10,
+        "upperBound": 25
+      }
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right gradient 10\u201325 mm edge"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer maps multiple exact depths across this continuous contact, so no single scalar applies."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right gradient 10\u201325 mm edge"
+      },
+      "value": {
+        "lowerBound": 10,
+        "upperBound": 25
+      }
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "gradient-edge-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right gradient 10\u201325 mm edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left continuous 30 mm wood / 20 mm granite contact"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer maps multiple exact depths across this continuous contact, so no single scalar applies."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left continuous 30 mm wood / 20 mm granite contact"
+      },
+      "value": {
+        "lowerBound": 20,
+        "upperBound": 30
+      }
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Left continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right continuous 30 mm wood / 20 mm granite contact"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer maps multiple exact depths across this continuous contact, so no single scalar applies."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right continuous 30 mm wood / 20 mm granite contact"
+      },
+      "value": {
+        "lowerBound": 20,
+        "upperBound": 30
+      }
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Right continuous 30 mm wood / 20 mm granite contact"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center continuous 30 mm granite / ergonomic wood contact"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center continuous 30 mm granite / ergonomic wood contact"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-center"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center continuous 30 mm granite / ergonomic wood contact"
+      },
+      "reason": "The manufacturer source does not publish lower and upper depth bounds for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-center"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center continuous 30 mm granite / ergonomic wood contact"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-center"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center continuous 30 mm granite / ergonomic wood contact"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-center"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center continuous 30 mm granite / ergonomic wood contact"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "nature.stoak-board-iii",
+      "holdIDs": [
+        "lower-composite-center"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786",
+        "label": "Official Stoak Board III annotated contact map: Center continuous 30 mm granite / ergonomic wood contact"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left jug"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left jug"
+      },
+      "reason": "The manufacturer source publishes no scalar depth for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left jug"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left jug"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left jug"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left jug"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left jug"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right jug"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right jug"
+      },
+      "reason": "The manufacturer source publishes no scalar depth for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right jug"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right jug"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right jug"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right jug"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right jug"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 32.5-degree sloper"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 32.5-degree sloper"
+      },
+      "reason": "The published sloper value is an angle, not a scalar contact depth."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 32.5-degree sloper"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 32.5-degree sloper"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 32.5-degree sloper"
+      },
+      "reason": "The published sloper value is an angle, not a scalar contact depth."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 32.5-degree sloper"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-32-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 32.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-22-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Center 22.5-degree sloper"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-22-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Center 22.5-degree sloper"
+      },
+      "reason": "The published sloper value is an angle, not a scalar contact depth."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-22-center"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Center 22.5-degree sloper"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-22-center"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-22-center"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-22-center"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-22-center"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 28 mm three-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 28 mm three-finger pocket"
+      },
+      "value": 28
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 28 mm three-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 28 mm three-finger pocket"
+      },
+      "value": 3
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 28 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-left"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 28 mm three-finger pocket"
+      },
+      "value": "threeFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 28 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 28 mm three-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 28 mm three-finger pocket"
+      },
+      "value": 28
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 28 mm three-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 28 mm three-finger pocket"
+      },
+      "value": 3
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 28 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 28 mm three-finger pocket"
+      },
+      "value": "threeFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-28-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 28 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 16 mm four-finger bar"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 16 mm four-finger bar"
+      },
+      "value": 16
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 16 mm four-finger bar"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 16 mm four-finger bar"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 16 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 16 mm four-finger bar"
+      },
+      "reason": "The finger-bar wording establishes capacity but the schema has no matching three- or four-finger edge posture enum."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 16 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 16 mm four-finger bar"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 16 mm four-finger bar"
+      },
+      "value": 16
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 16 mm four-finger bar"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 16 mm four-finger bar"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 16 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 16 mm four-finger bar"
+      },
+      "reason": "The finger-bar wording establishes capacity but the schema has no matching three- or four-finger edge posture enum."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-16-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 16 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 37 mm four-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 37 mm four-finger pocket"
+      },
+      "value": 37
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 37 mm four-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 37 mm four-finger pocket"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 37 mm four-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-left"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 37 mm four-finger pocket"
+      },
+      "value": "fourFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 37 mm four-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 37 mm four-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 37 mm four-finger pocket"
+      },
+      "value": 37
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 37 mm four-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 37 mm four-finger pocket"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 37 mm four-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 37 mm four-finger pocket"
+      },
+      "value": "fourFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-37-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 37 mm four-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 45 mm three-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 45 mm three-finger pocket"
+      },
+      "value": 45
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 45 mm three-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 45 mm three-finger pocket"
+      },
+      "value": 3
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 45 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-left"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 45 mm three-finger pocket"
+      },
+      "value": "threeFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 45 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 45 mm three-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 45 mm three-finger pocket"
+      },
+      "value": 45
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 45 mm three-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 45 mm three-finger pocket"
+      },
+      "value": 3
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 45 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 45 mm three-finger pocket"
+      },
+      "value": "threeFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-45-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 45 mm three-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 50 mm two-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 50 mm two-finger pocket"
+      },
+      "value": 50
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 50 mm two-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 50 mm two-finger pocket"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 50 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-left"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 50 mm two-finger pocket"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 50 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 50 mm two-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 50 mm two-finger pocket"
+      },
+      "value": 50
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 50 mm two-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 50 mm two-finger pocket"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 50 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 50 mm two-finger pocket"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-50-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 50 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-bar-35-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Center 35-degree, 35 mm sloper bar"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-bar-35-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Center 35-degree, 35 mm sloper bar"
+      },
+      "value": 35
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-bar-35-center"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Center 35-degree, 35 mm sloper bar"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-bar-35-center"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 35-degree, 35 mm sloper bar"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-bar-35-center"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 35-degree, 35 mm sloper bar"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-bar-35-center"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 35-degree, 35 mm sloper bar"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "sloper-bar-35-center"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Center 35-degree, 35 mm sloper bar"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 30 mm two-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 30 mm two-finger pocket"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 30 mm two-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 30 mm two-finger pocket"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 30 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-left"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 30 mm two-finger pocket"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 30 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 30 mm two-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 30 mm two-finger pocket"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 30 mm two-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 30 mm two-finger pocket"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 30 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 30 mm two-finger pocket"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-30-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 30 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 24 mm two-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 24 mm two-finger pocket"
+      },
+      "value": 24
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 24 mm two-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 24 mm two-finger pocket"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 24 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-left"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 24 mm two-finger pocket"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 24 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 24 mm two-finger pocket"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 24 mm two-finger pocket"
+      },
+      "value": 24
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 24 mm two-finger pocket"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 24 mm two-finger pocket"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 24 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 24 mm two-finger pocket"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "pocket-24-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 24 mm two-finger pocket"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 20 mm four-finger bar"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 20 mm four-finger bar"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 20 mm four-finger bar"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 20 mm four-finger bar"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 20 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 20 mm four-finger bar"
+      },
+      "reason": "The finger-bar wording establishes capacity but the schema has no matching three- or four-finger edge posture enum."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 20 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 20 mm four-finger bar"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 20 mm four-finger bar"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 20 mm four-finger bar"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 20 mm four-finger bar"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 20 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 20 mm four-finger bar"
+      },
+      "reason": "The finger-bar wording establishes capacity but the schema has no matching three- or four-finger edge posture enum."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 20 mm four-finger bar"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 18 mm three-finger bar"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 18 mm three-finger bar"
+      },
+      "value": 18
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Left 18 mm three-finger bar"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 18 mm three-finger bar"
+      },
+      "value": 3
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 18 mm three-finger bar"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 18 mm three-finger bar"
+      },
+      "reason": "The finger-bar wording establishes capacity but the schema has no matching three- or four-finger edge posture enum."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Left 18 mm three-finger bar"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 18 mm three-finger bar"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 18 mm three-finger bar"
+      },
+      "value": 18
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
+        "label": "Official Linebreaker BASE position map: Right 18 mm three-finger bar"
+      },
+      "reason": "The source publishes one fixed scalar depth, not lower and upper bounds for this contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 18 mm three-finger bar"
+      },
+      "value": 3
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 18 mm three-finger bar"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 18 mm three-finger bar"
+      },
+      "reason": "The finger-bar wording establishes capacity but the schema has no matching three- or four-finger edge posture enum."
+    },
+    {
+      "boardID": "target10a.linebreaker-base",
+      "holdIDs": [
+        "edge-18-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
+        "label": "Manufacturer inventory and exact map: Right 18 mm three-finger bar"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source publishes no scalar depth for this exact jug."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for this exact jug."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source publishes no scalar depth for this exact jug."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for this exact jug."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "jug-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled deep-jug profile and straight-on position"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "sloper-40-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled continuous 40-degree center sloper"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "sloper-40-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled continuous 40-degree center sloper"
+      },
+      "reason": "The published 40 degrees is an angle, not a scalar contact depth."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "sloper-40-center"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png",
+        "label": "Official labelled continuous 40-degree center sloper"
+      },
+      "reason": "The manufacturer source publishes no lower and upper depth bounds for the center sloper."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "sloper-40-center"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/",
+        "label": "Landing-page open-hand prescription for the 40-degree center sloper"
+      },
+      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "sloper-40-center"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/",
+        "label": "Landing-page open-hand prescription for the 40-degree center sloper"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "sloper-40-center"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/",
+        "label": "Landing-page open-hand prescription for the 40-degree center sloper"
+      },
+      "value": "openHand"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "sloper-40-center"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/",
+        "label": "Landing-page open-hand prescription for the 40-degree center sloper"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 40 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 40 mm four-finger edge at this position"
+      },
+      "value": 40
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 40 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 30 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 30 mm four-finger edge at this position"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 30 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 25 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 25 mm four-finger edge at this position"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 25 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 40 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 40 mm four-finger edge at this position"
+      },
+      "value": 40
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 40 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-40-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 40 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 30 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 30 mm four-finger edge at this position"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 30 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-30-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 30 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 25 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 25 mm four-finger edge at this position"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 25 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-25-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 25 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 20 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 20 mm four-finger edge at this position"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 20 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 15 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 15 mm four-finger edge at this position"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 15 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-left"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 10 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-left"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 10 mm four-finger edge at this position"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-left"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 10 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-left"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-left"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-left"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-left"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 20 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 20 mm four-finger edge at this position"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 20 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-20-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 20 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 15 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 15 mm four-finger edge at this position"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 15 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-15-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 15 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 10 mm four-finger edge at this position"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 10 mm four-finger edge at this position"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png",
+        "label": "Official asymmetric layout: 10 mm four-finger edge at this position"
+      },
+      "reason": "The source publishes one fixed scalar edge depth, not lower and upper bounds."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "value": 4
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "reason": "The source permits all grip types on the edges and therefore does not select one exact supported posture."
+    },
+    {
+      "boardID": "the-hangboard.the-hangboard",
+      "holdIDs": [
+        "edge-10-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
+        "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
+      },
+      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
     }
   ]
 }

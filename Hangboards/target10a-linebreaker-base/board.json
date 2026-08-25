@@ -530,6 +530,7 @@
       "kind": "pocket",
       "sizeMillimeters": 28,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -655,6 +656,7 @@
       "kind": "pocket",
       "sizeMillimeters": 28,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1014,6 +1016,7 @@
       "kind": "pocket",
       "sizeMillimeters": 45,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1125,6 +1128,7 @@
       "kind": "pocket",
       "sizeMillimeters": 45,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1250,6 +1254,7 @@
       "kind": "pocket",
       "sizeMillimeters": 50,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1361,6 +1366,7 @@
       "kind": "pocket",
       "sizeMillimeters": 50,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1610,6 +1616,7 @@
       "kind": "pocket",
       "sizeMillimeters": 30,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1721,6 +1728,7 @@
       "kind": "pocket",
       "sizeMillimeters": 30,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1846,6 +1854,7 @@
       "kind": "pocket",
       "sizeMillimeters": 24,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1957,6 +1966,7 @@
       "kind": "pocket",
       "sizeMillimeters": 24,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {

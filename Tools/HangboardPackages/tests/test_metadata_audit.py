@@ -210,6 +210,7 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "escape.unlimited",
         "evolv-kilter-basic-long",
         "frictitious.doormount-pro-7",
+        "lattice-triple-rung",
         "metolius.climbers-edge",
         "metolius.contact",
         "metolius.foundry",
@@ -220,15 +221,92 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "metolius.simulator-3d",
         "metolius.wood-grips-compact-ii",
         "metolius.wood-grips-deluxe-ii",
+        "nature.stoak-board-iii",
         "soill.iron-palm-2",
         "soill.split-palm",
         "soill.training-tiles",
+        "target10a.linebreaker-base",
         "tension.flash-board",
         "tension.grindstone",
         "tension.honestone",
         "tension.whetstone",
+        "the-hangboard.the-hangboard",
     )
     assert all(board.unaccounted_fields == 0 for board in report.boards)
+
+
+def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    inventory = discover_board_packages(repository_root / "Hangboards")
+    packages = {package.board.id: package.board for package in inventory.packages}
+
+    lattice = packages["lattice-triple-rung"]
+    assert {
+        hold.id: (hold.kind, hold.size_millimeters)
+        for hold in lattice.holds
+    } == {
+        "edge-45": ("edge", 45),
+        "edge-10": ("edge", 10),
+        "edge-20": ("edge", 20),
+    }
+
+    the_hangboard = packages["the-hangboard.the-hangboard"]
+    assert {
+        hold.id: hold.finger_capacity
+        for hold in the_hangboard.holds
+        if hold.kind == "edge"
+    } == {
+        f"edge-{depth}-{side}": 4
+        for depth in (40, 30, 25, 20, 15, 10)
+        for side in ("left", "right")
+    }
+    assert next(
+        hold for hold in the_hangboard.holds if hold.id == "sloper-40-center"
+    ).grip_type == "openHand"
+
+    target = packages["target10a.linebreaker-base"]
+    assert len(target.holds) == 24
+    assert {
+        hold.id: hold.grip_type
+        for hold in target.holds
+        if hold.kind == "pocket"
+    } == {
+        "pocket-28-left": "threeFingerPocket",
+        "pocket-28-right": "threeFingerPocket",
+        "pocket-37-left": "fourFingerPocket",
+        "pocket-37-right": "fourFingerPocket",
+        "pocket-45-left": "threeFingerPocket",
+        "pocket-45-right": "threeFingerPocket",
+        "pocket-50-left": "twoFingerPocket",
+        "pocket-50-right": "twoFingerPocket",
+        "pocket-30-left": "twoFingerPocket",
+        "pocket-30-right": "twoFingerPocket",
+        "pocket-24-left": "twoFingerPocket",
+        "pocket-24-right": "twoFingerPocket",
+    }
+
+    nature = packages["nature.stoak-board-iii"]
+    assert len(nature.holds) == 7
+    top_jug = next(hold for hold in nature.holds if hold.id == "top-jug")
+    assert top_jug.kind == "jug"
+    assert top_jug.size_millimeters is None
+    assert top_jug.grip_type is None
+    assert {
+        hold.id: (
+            hold.depth_range_millimeters.lower_bound,
+            hold.depth_range_millimeters.upper_bound,
+        )
+        for hold in nature.holds
+        if hold.depth_range_millimeters is not None
+    } == {
+        "gradient-edge-left": (10, 25),
+        "gradient-edge-right": (10, 25),
+        "lower-composite-left": (20, 30),
+        "lower-composite-right": (20, 30),
+    }
+    assert next(
+        hold for hold in nature.holds if hold.id == "lower-composite-center"
+    ).size_millimeters == 30
 
 
 def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:

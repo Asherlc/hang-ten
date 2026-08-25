@@ -236,6 +236,10 @@
       "id": "gradient-edge-left",
       "name": "Left gradient 10\u201325 mm edge",
       "kind": "edge",
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 25
+      },
       "geometry": [
         {
           "frame": {
@@ -314,6 +318,10 @@
       "id": "gradient-edge-right",
       "name": "Right gradient 10\u201325 mm edge",
       "kind": "edge",
+      "depthRangeMillimeters": {
+        "lowerBound": 10,
+        "upperBound": 25
+      },
       "geometry": [
         {
           "frame": {
@@ -392,6 +400,10 @@
       "id": "lower-composite-left",
       "name": "Left continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 30
+      },
       "geometry": [
         {
           "frame": {
@@ -511,6 +523,10 @@
       "id": "lower-composite-right",
       "name": "Right continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
+      "depthRangeMillimeters": {
+        "lowerBound": 20,
+        "upperBound": 30
+      },
       "geometry": [
         {
           "frame": {
@@ -630,6 +646,7 @@
       "id": "lower-composite-center",
       "name": "Center continuous 30 mm granite / ergonomic wood contact",
       "kind": "edge",
+      "sizeMillimeters": 30,
       "geometry": [
         {
           "frame": {

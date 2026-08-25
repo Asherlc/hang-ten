@@ -45,24 +45,39 @@ def _write_audit_ledger(
                     {
                         "boardID": "fixture.board",
                         "holdIDs": [hold_id],
-                        "field": field,
-                        "outcome": "unavailable",
+                        "field": "kind",
+                        "outcome": "verified",
                         "reviewedAt": "2026-08-25",
                         "source": {
                             "kind": "manufacturer",
                             "url": "https://example.com/fixture-source",
                             "label": "Fixture manufacturer source",
                         },
-                        "reason": "The manufacturer source does not establish this value.",
-                    }
-                    for field in (
-                        "sizeMillimeters",
-                        "depthRangeMillimeters",
-                        "fingerCapacity",
-                        "handCapacity",
-                        "gripType",
-                        "features",
-                    )
+                        "value": "jug",
+                    },
+                    *[
+                        {
+                            "boardID": "fixture.board",
+                            "holdIDs": [hold_id],
+                            "field": field,
+                            "outcome": "unavailable",
+                            "reviewedAt": "2026-08-25",
+                            "source": {
+                                "kind": "manufacturer",
+                                "url": "https://example.com/fixture-source",
+                                "label": "Fixture manufacturer source",
+                            },
+                            "reason": "The manufacturer source does not establish this value.",
+                        }
+                        for field in (
+                            "sizeMillimeters",
+                            "depthRangeMillimeters",
+                            "fingerCapacity",
+                            "handCapacity",
+                            "gripType",
+                            "features",
+                        )
+                    ],
                 ],
             }
         ),
@@ -109,26 +124,34 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
     assert _json_output(result.stdout) == {
         "reviewedBoardIDs": ["fixture.board"],
         "fields": {
-            field: {
-                "populated": 0,
-                "verified": 0,
-                "unavailable": 1,
+            "kind": {
+                "populated": 1,
+                "verified": 1,
+                "unavailable": 0,
                 "notApplicable": 0,
-            }
-            for field in (
-                "sizeMillimeters",
-                "depthRangeMillimeters",
-                "fingerCapacity",
-                "handCapacity",
-                "gripType",
-                "features",
-            )
+            },
+            **{
+                field: {
+                    "populated": 0,
+                    "verified": 0,
+                    "unavailable": 1,
+                    "notApplicable": 0,
+                }
+                for field in (
+                    "sizeMillimeters",
+                    "depthRangeMillimeters",
+                    "fingerCapacity",
+                    "handCapacity",
+                    "gripType",
+                    "features",
+                )
+            },
         },
         "boards": [
             {
                 "boardID": "fixture.board",
-                "populated": 0,
-                "verified": 0,
+                "populated": 1,
+                "verified": 1,
                 "unavailable": 6,
                 "notApplicable": 0,
                 "unaccountedFields": 0,

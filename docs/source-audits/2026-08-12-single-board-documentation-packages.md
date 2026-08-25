@@ -49,19 +49,22 @@ converted from JPEG to PNG without cropping or geometric alteration.
 | --- | --- | --- |
 | Product identity, dimensions, material, 22 mm edge, top jug, and configurable inserts | [Nature Climbing Stoak Board III Oak](https://natureclimbing.com/products/stoak-board-iii) | Nature lists `57 × 12 × 5.5 cm`, FSC-certified oak and granite, a 22 mm edge, a comfortable top jug, and four 5 mm inserts with the Oak version. |
 | Straight-on selected configuration | [Official front image](https://cdn.shopify.com/s/files/1/0657/7736/9334/files/6_2a2069e0-b45e-4eca-aa65-59febfe7c958.png?v=1763577563) | Establishes the exact visible region boundaries and the selected Oak/granite presentation. |
-| Contact map and depth/material assignment | [Official annotated image](https://cdn.shopify.com/s/files/1/0657/7736/9334/files/Comfortable_jug_1.png?v=1763986786) | Maps the comfortable jug, 22 mm center edge, 55 mm open-hand contact, mirrored gradient 10–25 mm edges, mirrored lower 30 mm wood / 20 mm granite contacts, and center lower 30 mm granite or ergonomic wood contact. |
+| Contact map and depth/material assignment | [Official annotated image](https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786) | Maps the comfortable full-width top jug, 22 mm center edge, mirrored gradient 10–25 mm edges, mirrored lower 30 mm wood / 20 mm granite contacts, and center lower 30 mm granite or ergonomic wood contact. Its 55 mm open-hand callout points into the same continuous top construction; it does not establish a second selectable contact or a fixed scalar depth/grip assignment for the full-width jug. |
 | Oblique corroboration | [Official oblique image](https://cdn.shopify.com/s/files/1/0657/7736/9334/files/4_671cc28f-ab91-4566-ad88-887bace217be.png?v=1764017417) | Confirms the continuity of the lower wood/granite contact surfaces and distinguishes contact faces from the board silhouette. |
 
 ### `nature-stoak-board-iii`
 
-**Frozen inventory:** eight physical contacts under the continuous-contact rule:
-top jug; 55 mm upper open-hand contact; center 22 mm edge; mirrored gradient
-10–25 mm contacts; mirrored lower continuous 30 mm wood / 20 mm granite
-contacts; and one center lower continuous 30 mm granite / ergonomic wood
-contact. Material transitions do not split a continuous contact into extra
-holds. The package depicts the official Oak gallery configuration. Magnetic
-inserts are product accessories/configuration facts and are not modeled as
-additional holds or as a fixed adjusted depth.
+**Corrected frozen inventory:** seven physical contacts under the
+continuous-contact rule: one full-width top jug; center 22 mm edge; mirrored
+gradient 10–25 mm contacts; mirrored lower continuous 30 mm wood / 20 mm
+granite contacts; and one center lower continuous 30 mm granite / ergonomic
+wood contact. The earlier eight-contact interpretation duplicated the top
+construction. The 55 mm/open-hand annotation is therefore not stored as a
+second hold, a scalar depth on `top-jug`, or a grip enum. Material transitions
+do not split a continuous contact into extra holds. The package depicts the
+official Oak gallery configuration. Magnetic inserts are product
+accessories/configuration facts and are not modeled as additional holds or as
+a fixed adjusted depth.
 
 ## target10a Linebreaker Base (`target10a.linebreaker-base`)
 
@@ -88,6 +91,59 @@ the upper and lower contact bands of the same long recessed footprint. Their
 canonical hit regions therefore partition that visible recess vertically in
 the map's stated order, rather than overlapping and making one contact
 unselectable.
+
+## 2026-08-25 resolved independent-board metadata certification
+
+This metadata-only pass reviewed 49 stable IDs across four packages. The
+visible-ID captures used only to map official labels to repository IDs are:
+
+- `.context/hangboard-metadata-backfill-icky-cow/metolius/lattice-triple-rung--98ec533951a6.png`
+- `.context/hangboard-metadata-backfill-icky-cow/metolius/the-hangboard.the-hangboard--44deddb30d2a.png`
+- `.context/hangboard-metadata-backfill-icky-cow/target10a-geometry-repair-icky-cow/target10a.linebreaker-base--3f10281c457e.png`
+- `.context/hangboard-metadata-backfill-icky-cow/nature-stoak-review-after/nature.stoak-board-iii--afe66b0ca50b.png`
+
+The corrected captures report 3, 15, 24, and 7 logical contacts respectively.
+They were not used to infer a kind, measurement, capacity, grip, feature, or
+path. No geometry changed in this certification.
+
+### Exact source-to-ID mappings
+
+| Package and stable IDs | Source-backed populated fields | Primary evidence |
+| --- | --- | --- |
+| `lattice-triple-rung`: `edge-45`, `edge-10`, `edge-20` | All three are `edge`; scalar depths are 45, 10, and 20 mm. | [Triple Rung product page](https://latticetraining.com/product/triple-rung-wooden-hangboard/) and [official template](https://latticetraining.com/app/uploads/2020/07/Triple-Run-Instructions-130x500mm-Folded-Print-Ready-PDF.pdf) establish the three named depths and upper/middle/lower order. |
+| `the-hangboard.the-hangboard`: `jug-{left,right}`; `sloper-40-center`; `edge-{40,30,25,20,15,10}-{left,right}` | Kinds for all 15; scalar depth and `fingerCapacity: 4` on all 12 edges; `openHand` only on the center sloper. | [Manufacturer landing page](https://thehangboard.com/), [four-finger edge comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000), [asymmetric edge guide](https://thehangboard.com/cdn/shop/t/7/assets/asymmetrical-nobg-text2.png), and [jug/sloper profile](https://thehangboard.com/cdn/shop/t/7/assets/sloper-jugs-info2.png). |
+| `target10a.linebreaker-base`: `jug-{left,right}`; `sloper-32-{left,right}`; `sloper-22-center`; `pocket-28-{left,right}`; `edge-16-{left,right}`; `pocket-37-{left,right}`; `pocket-45-{left,right}`; `pocket-50-{left,right}`; `sloper-bar-35-center`; `pocket-30-{left,right}`; `pocket-24-{left,right}`; `edge-20-{left,right}`; `edge-18-{left,right}` | Kinds for all 24; exact scalar values on 19 contacts; exact finger capacities on all 12 pockets and six finger bars; exact two-/three-/four-finger pocket grip enums on the 12 pockets. | [Manufacturer inventory](https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html), [manufacturer article](https://www.target10a.com/magazin/2017/01/01/linebreaker-base/), and [exact position map](https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg). The repaired split outer recesses provide the map's now-complete 24 stable IDs. |
+| `nature.stoak-board-iii`: `top-jug`; `edge-22-center`; `gradient-edge-{left,right}`; `lower-composite-{left,right,center}` | Kinds for all seven; 22 mm center edge; 10–25 mm ranges on both gradient edges; 20–30 mm ranges on both side composite contacts; 30 mm scalar on the lower center edge. | [Stoak Board III Oak page](https://natureclimbing.com/products/stoak-board-iii) and [annotated manufacturer contact map](https://natureclimbing.com/cdn/shop/files/Comfortable_jug_2_1600x.png?v=1763986786). |
+
+### Deliberate blanks
+
+Every hold has a source-verified mandatory `kind`. Optional fields remain
+absent when the exact source does not support them:
+
+- `handCapacity` and `features` remain blank on all 49 contacts because no
+  reviewed manufacturer source publishes exact per-contact values in the
+  package enums.
+- Fixed scalar contacts do not receive a manufactured range. Conversely,
+  Nature's gradient and side composite contacts receive source-published
+  ranges rather than an invented scalar.
+- Non-pocket contacts have no pocket finger capacity. target10a's three- and
+  four-finger bars retain exact capacities but no invented edge-specific grip
+  enum.
+- The Hangboard's edges are explicitly four-finger contacts, but “all grip
+  types” does not select one exact posture; only the separately prescribed
+  center-sloper open-hand value is populated.
+- Nature's full-width top contact is one `jug`. The 55 mm/open-hand callout
+  does not justify a second hold, a scalar `sizeMillimeters`, or a `gripType`
+  on that continuous jug.
+
+The machine-readable ledger accounts for all seven audited fields on all 49
+contacts: 132 populated/verified outcomes, 192 unavailable outcomes, 19
+not-applicable finger-capacity outcomes, and zero unaccounted fields. This
+certification intentionally excludes Beastmaker 1000, Beastmaker 2000, and
+Moon Armstrong. Beastmaker still lacks exact positioned manufacturer evidence
+for its complete recess inventory; Moon's package still lacks the two official
+22 mm one-finger pockets. Their board and ledger state remains unresolved and
+unchanged.
 
 ## Completion verification
 
