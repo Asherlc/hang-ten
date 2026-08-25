@@ -81,13 +81,21 @@ enum WorkoutActivityRecordingError: LocalizedError, Equatable {
 }
 
 internal enum BoardTargetResolver {
-    static func resolveHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
+    static func resolveHoldIDs(
+        for target: HoldTarget,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [String] {
+        resolveHoldIDs(for: target, among: compatibleHolds(on: board, gripType: gripType))
+    }
+
+    private static func resolveHoldIDs(for target: HoldTarget, among holds: [BoardHold]) -> [String] {
         if !target.holdIDs.isEmpty {
-            let available = Set(board.holds.map(\.id))
+            let available = Set(holds.map(\.id))
             return target.holdIDs.filter(available.contains)
         }
         if let feature = target.feature {
-            let exact = matching(feature, fingerCapacity: target.fingerCapacity, on: board)
+            let exact = matching(feature, fingerCapacity: target.fingerCapacity, among: holds)
             if !exact.isEmpty {
                 if feature.holdKind == .pocket, target.fingerCapacity != nil {
                     return onePocketPerHand(from: exact).map(\.id)
@@ -95,32 +103,41 @@ internal enum BoardTargetResolver {
                 return exact.map(\.id)
             }
             for fallback in target.fallbackFeatures {
-                let matches = matching(fallback, fingerCapacity: target.fingerCapacity, on: board)
+                let matches = matching(fallback, fingerCapacity: target.fingerCapacity, among: holds)
                 if !matches.isEmpty { return matches.map(\.id) }
 
                 // A fallback identifies a physically available substitute, not
                 // the source-prescribed finger capacity. Preserve capacity for
                 // the primary target, but do not reject an explicit fallback
                 // merely because that substitute has no matching capacity.
-                let capacityAgnosticMatches = matching(fallback, fingerCapacity: nil, on: board)
+                let capacityAgnosticMatches = matching(fallback, fingerCapacity: nil, among: holds)
                 if !capacityAgnosticMatches.isEmpty { return capacityAgnosticMatches.map(\.id) }
 
             }
             return []
         }
         guard let kind = target.kind else { return [] }
-        return board.holds.filter { $0.kind == kind }.map(\.id)
+        return holds.filter { $0.kind == kind }.map(\.id)
     }
 
-    static func resolveHolds(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
-        let ids = Set(resolveHoldIDs(for: target, on: board))
+    static func resolveHolds(
+        for target: HoldTarget,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [BoardHold] {
+        let ids = Set(resolveHoldIDs(for: target, on: board, gripType: gripType))
         return board.holds.filter { ids.contains($0.id) }
     }
 
-    static func substituteHoldIDs(for target: HoldTarget, on board: TrainingBoard) -> [String] {
-        let primary = resolveHoldIDs(for: target, on: board)
+    static func substituteHoldIDs(
+        for target: HoldTarget,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [String] {
+        let holds = compatibleHolds(on: board, gripType: gripType)
+        let primary = resolveHoldIDs(for: target, among: holds)
         if !primary.isEmpty { return primary }
-        let closestPrimary = closestMatch(for: target, on: board)
+        let closestPrimary = closestMatch(for: target, among: holds)
         if !closestPrimary.isEmpty { return closestPrimary }
         guard target.feature?.holdKind == .pocket else { return [] }
         for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
@@ -128,30 +145,43 @@ internal enum BoardTargetResolver {
                 fallback,
                 fingerCapacity: target.fingerCapacity
             )
-            let closestFallback = closestMatch(for: fallbackTarget, on: board)
+            let closestFallback = closestMatch(for: fallbackTarget, among: holds)
             if !closestFallback.isEmpty { return closestFallback }
         }
         return []
     }
 
-    static func substituteHolds(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
-        let ids = Set(substituteHoldIDs(for: target, on: board))
+    static func substituteHolds(
+        for target: HoldTarget,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [BoardHold] {
+        let ids = Set(substituteHoldIDs(for: target, on: board, gripType: gripType))
         return board.holds.filter { ids.contains($0.id) }
+    }
+
+    private static func compatibleHolds(on board: TrainingBoard, gripType: GripType?) -> [BoardHold] {
+        guard gripType == .halfCrimp || gripType == .fullCrimp else { return board.holds }
+        return board.holds.filter {
+            $0.kind == .edge
+                && $0.gripType != .openHand
+                && $0.features?.contains(.largeOpenHandRail) != true
+        }
     }
 
     /// A target's feature must match exactly; its finger count (when
     /// specified) must too, since `.pocket` alone no longer implies a count.
-    private static func matching(_ feature: HoldFeature, fingerCapacity: Int?, on board: TrainingBoard) -> [BoardHold] {
-        board.holds.filter { hold in
+    private static func matching(_ feature: HoldFeature, fingerCapacity: Int?, among holds: [BoardHold]) -> [BoardHold] {
+        holds.filter { hold in
             guard hold.features?.contains(feature) == true else { return false }
             guard let fingerCapacity else { return true }
             return hold.fingerCapacity == fingerCapacity
         }
     }
 
-    private static func closestMatch(for target: HoldTarget, on board: TrainingBoard) -> [String] {
+    private static func closestMatch(for target: HoldTarget, among holds: [BoardHold]) -> [String] {
         if let feature = target.feature {
-            let primary = byFeatureGroup(feature, target: target, on: board)
+            let primary = byFeatureGroup(feature, target: target, among: holds)
             if !primary.isEmpty { return primary }
             // resolveHoldIDs already tried each fallback as an exact tagged
             // match; a board missing that tagging (or the primary feature's
@@ -162,32 +192,32 @@ internal enum BoardTargetResolver {
             // specific fallback feature didn't ask for that fallback's
             // fallbacks too.
             for fallback in target.fallbackFeatures {
-                let matches = sameKindOrGroup(fallback, target: target, on: board)
+                let matches = sameKindOrGroup(fallback, target: target, among: holds)
                 if !matches.isEmpty { return matches }
             }
             return []
         }
         guard let kind = target.kind else { return [] }
         let sameKind = preferringFingerCapacity(
-            board.holds.filter { $0.kind == kind },
+            holds.filter { $0.kind == kind },
             target: target
         )
         if !sameKind.isEmpty { return sameKind.map(\.id) }
         guard kind == .edge else { return [] }
-        return crossKindPockets(for: target, on: board).map(\.id)
+        return crossKindPockets(for: target, among: holds).map(\.id)
     }
 
-    private static func byFeatureGroup(_ feature: HoldFeature, target: HoldTarget, on board: TrainingBoard) -> [String] {
-        let direct = sameKindOrGroup(feature, target: target, on: board)
+    private static func byFeatureGroup(_ feature: HoldFeature, target: HoldTarget, among holds: [BoardHold]) -> [String] {
+        let direct = sameKindOrGroup(feature, target: target, among: holds)
         if !direct.isEmpty { return direct }
 
         if feature.holdKind == .edge {
-            let pockets = crossKindPockets(for: target, on: board)
+            let pockets = crossKindPockets(for: target, among: holds)
             if !pockets.isEmpty { return pockets.map(\.id) }
         }
 
         if let capacity = target.fingerCapacity {
-            let crossKind = board.holds.filter { $0.fingerCapacity == capacity }
+            let crossKind = holds.filter { $0.fingerCapacity == capacity }
             if !crossKind.isEmpty { return crossKind.map(\.id) }
         }
 
@@ -198,11 +228,11 @@ internal enum BoardTargetResolver {
     /// tagging. Deliberately stops short of `byFeatureGroup`'s further
     /// cross-kind rescues, which exist for a target's own declared feature,
     /// not for stepping through a declared fallback's fallbacks.
-    private static func sameKindOrGroup(_ feature: HoldFeature, target: HoldTarget, on board: TrainingBoard) -> [String] {
+    private static func sameKindOrGroup(_ feature: HoldFeature, target: HoldTarget, among holds: [BoardHold]) -> [String] {
         let group = feature.featureGroup
         let groupFeatures = Set(HoldFeature.allCases.filter { $0.featureGroup == group })
 
-        let sameGroup = board.holds.filter { hold in
+        let sameGroup = holds.filter { hold in
             guard hold.kind == feature.holdKind,
                   let features = hold.features else { return false }
             return !features.isDisjoint(with: groupFeatures)
@@ -210,7 +240,7 @@ internal enum BoardTargetResolver {
         let preferredSameGroup = preferringFingerCapacity(sameGroup, target: target)
         if !preferredSameGroup.isEmpty { return preferredSameGroup.map(\.id) }
 
-        let sameKind = board.holds.filter { $0.kind == feature.holdKind }
+        let sameKind = holds.filter { $0.kind == feature.holdKind }
         let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
         // Untagged holds are only a physical-kind fallback, so they cannot
         // identify every same-kind hold as the source-prescribed target. When
@@ -256,8 +286,8 @@ internal enum BoardTargetResolver {
         return .infinity
     }
 
-    private static func crossKindPockets(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
-        let pockets = board.holds.filter { $0.kind == .pocket }
+    private static func crossKindPockets(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
+        let pockets = holds.filter { $0.kind == .pocket }
         guard let capacity = target.fingerCapacity else {
             return onePocketPerHand(from: pockets)
         }
@@ -304,7 +334,7 @@ struct WorkoutActivityRecorder {
                 }
                 guard !segment.targets.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holdsByTarget = segment.targets.map {
-                    BoardTargetResolver.substituteHolds(for: $0, on: board)
+                    BoardTargetResolver.substituteHolds(for: $0, on: board, gripType: step.gripType)
                 }
                 guard holdsByTarget.allSatisfy({ !$0.isEmpty }) else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holds = holdsByTarget.flatMap { $0 }
