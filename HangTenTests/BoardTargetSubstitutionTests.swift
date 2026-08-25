@@ -335,6 +335,28 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
+    func testBeastmaker2000OpenHandLargeEdgeHighlightsMirroredOuterEdges() throws {
+        let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let step = WorkoutStep(
+            id: "open-hand-29-mm",
+            number: 1,
+            title: "29 mm open edge",
+            instruction: "",
+            accessory: "",
+            duration: 7,
+            phase: .hang,
+            targets: [.feature(.largeEdge)],
+            gripType: .openHand
+        )
+
+        XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-lower-1", "front-lower-9"])
+    }
+
+    @MainActor
     func testMaxHangsResolvesOnBoardWithCompatibleEdge() throws {
         let board = board(holds: [
             hold(id: "large-edge", feature: .largeEdge)
