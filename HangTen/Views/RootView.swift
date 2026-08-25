@@ -1390,6 +1390,30 @@ enum WorkoutSessionPolicy {
         preparationState == .preparing
     }
 
+    enum PendingCountdownResolution: Equatable {
+        case none
+        case beginVisibly
+        case requestAudioCountdown
+    }
+
+    static func shouldPrepareCountdownAudio(
+        preparationState: CountdownAudioPreparationState
+    ) -> Bool {
+        preparationState == .idle || preparationState == .failed
+    }
+
+    static func consumePendingCountdown<Countdown>(
+        _ pendingCountdown: inout Countdown?,
+        afterPreparationState preparationState: CountdownAudioPreparationState
+    ) -> PendingCountdownResolution {
+        guard preparationState != .preparing, pendingCountdown != nil else {
+            return .none
+        }
+
+        pendingCountdown = nil
+        return preparationState == .failed ? .beginVisibly : .requestAudioCountdown
+    }
+
     static func countdownAudioArmLead(environment: [String: String]) -> TimeInterval {
         #if DEBUG
         if environment["HANGTEN_REVIEW_COUNTDOWN_CAPTURE"] == "1" {
@@ -1893,9 +1917,18 @@ struct WorkoutView: View {
 			pauseForInterruption()
 		}
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
-			guard state != .preparing, let pendingCountdownStart else { return }
-			self.pendingCountdownStart = nil
-			requestCountdownStart(pendingCountdownStart)
+			guard let pendingCountdownStart else { return }
+			switch WorkoutSessionPolicy.consumePendingCountdown(
+				&self.pendingCountdownStart,
+				afterPreparationState: state
+			) {
+			case .none:
+				return
+			case .beginVisibly:
+				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+			case .requestAudioCountdown:
+				requestCountdownStart(pendingCountdownStart)
+			}
 		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
 			let monotonicTime = WorkoutClock.monotonicTime
@@ -2430,6 +2463,12 @@ struct WorkoutView: View {
     }
 
 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
+		if audioCuesEnabled,
+		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+			preparationState: audioCoach.countdownPreparationState
+		   ) {
+			audioCoach.prepareCountdownAudio()
+		}
 		if audioCuesEnabled,
 		   WorkoutSessionPolicy.shouldDeferCountdownStart(
 			isFirstStart: countdown == .initial,
