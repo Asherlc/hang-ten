@@ -98,7 +98,7 @@ internal enum BoardTargetResolver {
             let exact = matching(feature, fingerCapacity: target.fingerCapacity, among: holds)
             if !exact.isEmpty {
                 if feature.holdKind == .pocket, target.fingerCapacity != nil {
-                    return onePocketPerHand(from: exact).map(\.id)
+                    return oneHoldPerHand(from: exact).map(\.id)
                 }
                 return exact.map(\.id)
             }

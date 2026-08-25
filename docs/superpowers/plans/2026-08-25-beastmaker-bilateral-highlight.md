@@ -134,3 +134,40 @@ Expected: all commands exit 0.
 git add HangTen/Models/WorkoutActivityRecording.swift HangTenTests/BoardTargetSubstitutionTests.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
 git commit -m "Resolve paired metadata-light edges per hand"
 ```
+
+### Task 3: Restore the generalized helper call and remove generated output
+
+**Files:**
+- Modify: `HangTen/Models/WorkoutActivityRecording.swift:101`
+- Delete: `.superpowers/sdd/2026-08-25-beastmaker-bilateral-highlight/task-2-report.md`
+- Modify: `docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md`
+
+**Interfaces:**
+- Consumes: `oneHoldPerHand(from:) -> [BoardHold]`.
+- Produces: all bilateral fallback branches compile against the one generalized helper.
+
+- [ ] **Step 1: Verify the compile failure**
+
+Run: `rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`
+
+Expected: FAIL with the unresolved `onePocketPerHand` call left by the helper rename.
+
+- [ ] **Step 2: Apply the minimal correction**
+
+Replace the stale `onePocketPerHand(from:)` call with `oneHoldPerHand(from:)`. Remove the accidentally committed SDD task report because it is generated execution output, not product documentation. Do not modify selection behavior or tests.
+
+- [ ] **Step 3: Verify the compile and package contract**
+
+Run: `rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'`
+
+Run: `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`
+
+Expected: both commands exit 0.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add HangTen/Models/WorkoutActivityRecording.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
+git rm .superpowers/sdd/2026-08-25-beastmaker-bilateral-highlight/task-2-report.md
+git commit -m "Fix generalized bilateral hold helper"
+```
