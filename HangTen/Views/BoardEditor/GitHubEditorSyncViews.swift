@@ -115,16 +115,20 @@ final class GitHubSyncSession: ObservableObject {
             let deadline = Date().addingTimeInterval(challenge.expiresIn)
             while !Task.isCancelled && Date() < deadline {
                 try await sleep(UInt64(interval * 1_000_000_000))
-                switch try await syncService.pollDeviceAuthorization(
+                guard !Task.isCancelled else { return }
+                let authorization = try await syncService.pollDeviceAuthorization(
                     clientID: clientID,
                     deviceCode: challenge.deviceCode
-                ) {
+                )
+                guard !Task.isCancelled else { return }
+                switch authorization {
                 case .authorizationPending:
                     continue
                 case .slowDown:
                     interval += 5
                 case .authorized(let token):
                     let login = try await syncService.authenticatedUser(token: token)
+                    guard !Task.isCancelled else { return }
                     try tokenStore.save(token)
                     username = login
                     deviceChallenge = nil

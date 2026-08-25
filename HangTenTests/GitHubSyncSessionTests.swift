@@ -49,6 +49,32 @@ final class GitHubSyncSessionTests: XCTestCase {
         XCTAssertFalse(session.isSigningIn)
     }
 
+    func testCancelledAuthorizedPollDoesNotReplaceExistingToken() async throws {
+        let tokenStore = FakeGitHubTokenStore(initialToken: "existing-token")
+        let service = FakeGitHubDeviceService(
+            challenge: .fixture,
+            results: [],
+            authenticatedUser: "octocat",
+            suspendsPolling: true
+        )
+        let session = GitHubSyncSession(
+            tokenStore: tokenStore,
+            syncService: service,
+            clientID: "client-public",
+            sleep: { _ in }
+        )
+
+        session.startDeviceSignIn()
+        await waitUntil { service.isPolling }
+        session.cancelDeviceSignIn()
+        service.finishPolling(with: .authorized("oauth-token"))
+        await waitUntil { session.isSigningIn == false }
+
+        XCTAssertEqual(tokenStore.loadedToken, "existing-token")
+        XCTAssertTrue(tokenStore.savedTokens.isEmpty)
+        XCTAssertNil(session.username)
+    }
+
     func testMissingConfiguredClientIDShowsConfigurationErrorWithoutRequestingGitHub() async throws {
         let service = FakeGitHubDeviceService(challenge: .fixture, results: [], authenticatedUser: "octocat")
         let session = GitHubSyncSession(
@@ -103,16 +129,21 @@ private final class FakeGitHubDeviceService: GitHubDeviceServicing {
     let challenge: GitHubDeviceChallenge
     var results: [GitHubDeviceAuthorizationResult]
     let authenticatedUserResult: String
+    let suspendsPolling: Bool
     private(set) var challengeRequestCount = 0
+    private(set) var isPolling = false
+    private var pollContinuation: CheckedContinuation<GitHubDeviceAuthorizationResult, Never>?
 
     init(
         challenge: GitHubDeviceChallenge,
         results: [GitHubDeviceAuthorizationResult],
-        authenticatedUser: String
+        authenticatedUser: String,
+        suspendsPolling: Bool = false
     ) {
         self.challenge = challenge
         self.results = results
         authenticatedUserResult = authenticatedUser
+        self.suspendsPolling = suspendsPolling
     }
 
     func authenticatedUser(token: String) async throws -> String {
@@ -128,10 +159,22 @@ private final class FakeGitHubDeviceService: GitHubDeviceServicing {
         clientID: String,
         deviceCode: String
     ) async throws -> GitHubDeviceAuthorizationResult {
+        if suspendsPolling {
+            isPolling = true
+            return await withCheckedContinuation { continuation in
+                pollContinuation = continuation
+            }
+        }
         guard !results.isEmpty else {
             throw CancellationError()
         }
         return results.removeFirst()
+    }
+
+    func finishPolling(with result: GitHubDeviceAuthorizationResult) {
+        isPolling = false
+        pollContinuation?.resume(returning: result)
+        pollContinuation = nil
     }
 }
 
