@@ -286,11 +286,20 @@
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [
+                  0.016357210518,
+                  0.666666660039
+                ],
+                "control2": [
+                  0.008178604185,
+                  0.333333339961
+                ],
                 "to": [
                   0.0,
                   0.0
-                ]
+                ],
+                "bendable": true
               },
               {
                 "command": "close"
