@@ -722,6 +722,74 @@ final class WorkoutClockTests: XCTestCase {
 }
 
 final class CountdownAudioSchedulerTests: XCTestCase {
+    // A one-second cadence needs each bundled spoken number to leave a gap before the next slot.
+    func testBundledCountdownBuffersMustFitWithinOneSecondSlots() {
+        XCTAssertTrue(
+            BundledCountdownAudioBufferSource.fitsWithinCountdownSlot(
+                makeCountdownPCMBuffer(duration: 0.99)
+            )
+        )
+        XCTAssertFalse(
+            BundledCountdownAudioBufferSource.fitsWithinCountdownSlot(
+                makeCountdownPCMBuffer(duration: 1)
+            )
+        )
+    }
+
+    // Catches a complete bundled pack unnecessarily constructing or using Apple synthesis.
+    func testCompleteBundledPackIsSelectedWithoutConstructingAppleRenderer() {
+        let expectedBuffers = [
+            "3": [makeCountdownPCMBuffer(duration: 0.5)],
+            "2": [makeCountdownPCMBuffer(duration: 0.5)],
+            "1": [makeCountdownPCMBuffer(duration: 0.5)]
+        ]
+        let source = RecordingCountdownAudioBufferSource(result: expectedBuffers)
+        let bundledBackend = RecordingCountdownAudioSchedulingBackend()
+        let appleFactory = RecordingAppleCountdownRendererFactory()
+        var bundledFactoryBuffers: [String: [AVAudioPCMBuffer]]?
+        let selector = CountdownAudioSchedulingBackendSelector(
+            bufferSource: source,
+            bundledBackendFactory: { buffers in
+                bundledFactoryBuffers = buffers
+                return bundledBackend
+            },
+            appleRendererFactory: appleFactory.makeBackend
+        )
+
+        let backend = selector.backend(for: ["1", "2", "3"])
+        backend.prewarm { _ in }
+
+        XCTAssertEqual(source.requestedPhraseSets, [["1", "2", "3"]])
+        XCTAssertEqual(Set(bundledFactoryBuffers?.keys.map { $0 } ?? []), ["1", "2", "3"])
+        XCTAssertTrue(bundledFactoryBuffers?["1"]?.first === expectedBuffers["1"]?.first)
+        XCTAssertEqual(bundledBackend.prewarmCallCount, 1)
+        XCTAssertEqual(appleFactory.callCount, 0)
+    }
+
+    // Catches a failed pack lookup contributing partial buffers to Apple preparation.
+    func testMissingBundledPackSelectsOnlyOneAppleRenderer() {
+        let source = RecordingCountdownAudioBufferSource(result: nil)
+        let appleBackend = RecordingCountdownAudioSchedulingBackend()
+        let appleFactory = RecordingAppleCountdownRendererFactory(backend: appleBackend)
+        var bundledFactoryCallCount = 0
+        let selector = CountdownAudioSchedulingBackendSelector(
+            bufferSource: source,
+            bundledBackendFactory: { _ in
+                bundledFactoryCallCount += 1
+                return RecordingCountdownAudioSchedulingBackend()
+            },
+            appleRendererFactory: appleFactory.makeBackend
+        )
+
+        let backend = selector.backend(for: ["1", "2", "3"])
+        backend.prewarm { _ in }
+
+        XCTAssertEqual(source.requestedPhraseSets, [["1", "2", "3"]])
+        XCTAssertEqual(bundledFactoryCallCount, 0)
+        XCTAssertEqual(appleFactory.callCount, 1)
+        XCTAssertEqual(appleBackend.prewarmCallCount, 1)
+    }
+
     func testEmptyColdRenderRetriesBeforeCountdownArming() {
         XCTAssertTrue(
             CountdownAudioRenderAttemptPolicy.shouldRetry(
@@ -1140,6 +1208,7 @@ private final class RecordingCountdownAudioSchedulingBackend: CountdownAudioSche
     }
 
     private(set) var schedules: [ScheduledSequence] = []
+    private(set) var prewarmCallCount = 0
     private let automaticallyCompletesPrewarm: Bool
     private let scheduleResult: Bool
     private var prewarmCompletion: ((Bool) -> Void)?
@@ -1153,6 +1222,7 @@ private final class RecordingCountdownAudioSchedulingBackend: CountdownAudioSche
     }
 
     func prewarm(completion: @escaping (Bool) -> Void) {
+        prewarmCallCount += 1
         if automaticallyCompletesPrewarm {
             completion(true)
         } else {
@@ -1173,6 +1243,34 @@ private final class RecordingCountdownAudioSchedulingBackend: CountdownAudioSche
     }
 
     func stop() {}
+}
+
+private final class RecordingCountdownAudioBufferSource: CountdownAudioBufferSource {
+    private let result: [String: [AVAudioPCMBuffer]]?
+    private(set) var requestedPhraseSets: [Set<String>] = []
+
+    init(result: [String: [AVAudioPCMBuffer]]?) {
+        self.result = result
+    }
+
+    func buffers(for phrases: Set<String>) -> [String: [AVAudioPCMBuffer]]? {
+        requestedPhraseSets.append(phrases)
+        return result
+    }
+}
+
+private final class RecordingAppleCountdownRendererFactory {
+    private let backend: RecordingCountdownAudioSchedulingBackend
+    private(set) var callCount = 0
+
+    init(backend: RecordingCountdownAudioSchedulingBackend = RecordingCountdownAudioSchedulingBackend()) {
+        self.backend = backend
+    }
+
+    func makeBackend() -> any CountdownAudioSchedulingBackend {
+        callCount += 1
+        return backend
+    }
 }
 
 private final class RecordingCountdownAudioLifecycleLogger: CountdownAudioLifecycleLogging {
