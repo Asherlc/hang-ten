@@ -1390,10 +1390,28 @@ enum WorkoutSessionPolicy {
         preparationState == .preparing
     }
 
-    static func shouldStartPendingCountdownVisibly(
-        afterPreparationState preparationState: CountdownAudioPreparationState
+    enum PendingCountdownResolution: Equatable {
+        case none
+        case beginVisibly
+        case requestAudioCountdown
+    }
+
+    static func shouldPrepareCountdownAudio(
+        preparationState: CountdownAudioPreparationState
     ) -> Bool {
-        preparationState == .failed
+        preparationState == .idle || preparationState == .failed
+    }
+
+    static func consumePendingCountdown<Countdown>(
+        _ pendingCountdown: inout Countdown?,
+        afterPreparationState preparationState: CountdownAudioPreparationState
+    ) -> PendingCountdownResolution {
+        guard preparationState != .preparing, pendingCountdown != nil else {
+            return .none
+        }
+
+        pendingCountdown = nil
+        return preparationState == .failed ? .beginVisibly : .requestAudioCountdown
     }
 
     static func countdownAudioArmLead(environment: [String: String]) -> TimeInterval {
@@ -1899,16 +1917,18 @@ struct WorkoutView: View {
 			pauseForInterruption()
 		}
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
-			guard state != .preparing, let pendingCountdownStart else { return }
-			self.pendingCountdownStart = nil
-			if WorkoutSessionPolicy.shouldStartPendingCountdownVisibly(
+			guard let pendingCountdownStart else { return }
+			switch WorkoutSessionPolicy.consumePendingCountdown(
+				&self.pendingCountdownStart,
 				afterPreparationState: state
 			) {
-				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+			case .none:
 				return
+			case .beginVisibly:
+				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+			case .requestAudioCountdown:
+				requestCountdownStart(pendingCountdownStart)
 			}
-
-			requestCountdownStart(pendingCountdownStart)
 		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
 			let monotonicTime = WorkoutClock.monotonicTime
@@ -2444,7 +2464,9 @@ struct WorkoutView: View {
 
 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
 		if audioCuesEnabled,
-		   audioCoach.countdownPreparationState == .idle || audioCoach.countdownPreparationState == .failed {
+		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+			preparationState: audioCoach.countdownPreparationState
+		   ) {
 			audioCoach.prepareCountdownAudio()
 		}
 		if audioCuesEnabled,

@@ -1421,6 +1421,32 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertEqual(coach.countdownPreparationState, .ready)
     }
 
+    // Catches a later countdown request leaving a failed prewarm permanently unavailable.
+    func testFailedPrewarmRetriesWhenCountdownIsRequestedAgain() async {
+        let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: RecordingWorkoutAudioSession(),
+            countdownScheduler: scheduler
+        )
+
+        coach.prepareCountdownAudio()
+        scheduler.completePrewarm(succeeded: false)
+        await Task.yield()
+
+        XCTAssertEqual(coach.countdownPreparationState, .failed)
+        XCTAssertTrue(
+            WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+                preparationState: coach.countdownPreparationState
+            )
+        )
+
+        coach.prepareCountdownAudio()
+
+        XCTAssertEqual(coach.countdownPreparationState, .preparing)
+        XCTAssertEqual(scheduler.prewarmCallCount, 2)
+    }
+
     // Catches completion restarting the countdown engine after its scheduled playback ends.
     func testCountdownCompletionReturnsPreparationToIdleWithoutPrewarming() async {
         let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
@@ -2022,18 +2048,35 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
     }
 
-    // Catches a failed prewarm retrying the same pending countdown instead of starting it visibly.
-    func testFailedPreparationStartsPendingCountdownVisibly() {
-        XCTAssertTrue(
-            WorkoutSessionPolicy.shouldStartPendingCountdownVisibly(
+    // Catches failed prewarm consuming the same pending countdown more than once or retrying it.
+    func testFailedPreparationConsumesPendingCountdownAndStartsItVisiblyOnce() {
+        var pendingCountdown: Int? = 42
+
+        XCTAssertEqual(
+            WorkoutSessionPolicy.consumePendingCountdown(
+                &pendingCountdown,
                 afterPreparationState: .failed
-            )
+            ),
+            .beginVisibly
         )
-        XCTAssertFalse(
-            WorkoutSessionPolicy.shouldStartPendingCountdownVisibly(
+        XCTAssertNil(pendingCountdown)
+        XCTAssertEqual(
+            WorkoutSessionPolicy.consumePendingCountdown(
+                &pendingCountdown,
+                afterPreparationState: .failed
+            ),
+            .none
+        )
+
+        var readyPendingCountdown: Int? = 42
+        XCTAssertEqual(
+            WorkoutSessionPolicy.consumePendingCountdown(
+                &readyPendingCountdown,
                 afterPreparationState: .ready
-            )
+            ),
+            .requestAudioCountdown
         )
+        XCTAssertNil(readyPendingCountdown)
     }
 
     func testCountdownDurationsKeepInitialAndSkipStartAtThree() {
