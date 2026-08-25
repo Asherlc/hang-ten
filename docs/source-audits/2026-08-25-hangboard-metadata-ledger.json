@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "reviewedBoardIDs": [
+    "escape.unlimited",
+    "evolv-kilter-basic-long",
+    "frictitious.doormount-pro-7",
     "metolius.climbers-edge",
     "metolius.contact",
     "metolius.foundry",
@@ -15139,6 +15142,1650 @@
         "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
       },
       "reason": "The official source does not publish an exact package feature-tag set for this contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "top-sloper-60"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Top tier: SLOPER, 60MM"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "top-sloper-60"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Top tier: SLOPER, 60MM"
+      },
+      "value": 60
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "top-sloper-60"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Top tier: SLOPER, 60MM"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "top-sloper-60"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Top tier: SLOPER, 60MM"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "top-sloper-60"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Top tier: SLOPER, 60MM"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "top-sloper-60"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Top tier: SLOPER, 60MM"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "top-sloper-60"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Top tier: SLOPER, 60MM"
+      },
+      "reason": "The schema has no exact sloper feature tag, and the official source establishes no other exact supported tag."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Upper split rung: 45MM"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Upper split rung: 45MM"
+      },
+      "value": 45
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Upper split rung: 45MM"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Upper split rung: 45MM"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Upper split rung: 45MM"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Upper split rung: 45MM"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Upper split rung: 45MM"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for this contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Middle split rung: 20MM"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Middle split rung: 20MM"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Middle split rung: 20MM"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Middle split rung: 20MM"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Middle split rung: 20MM"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Middle split rung: 20MM"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Middle split rung: 20MM"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for this contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Lower split rung: 15MM"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Lower split rung: 15MM"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Lower split rung: 15MM"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Lower split rung: 15MM"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Lower split rung: 15MM"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Lower split rung: 15MM"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "escape.unlimited",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445",
+        "label": "Lower split rung: 15MM"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for this contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Full-width pull-up jug"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Full-width pull-up jug"
+      },
+      "reason": "The official source publishes no scalar depth for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Full-width pull-up jug"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Full-width pull-up jug"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Full-width pull-up jug"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Full-width pull-up jug"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "top-jug"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Full-width pull-up jug"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "edge-35-left",
+        "edge-35-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Outer upper edge surfaces engraved 35"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "edge-35-left",
+        "edge-35-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Outer upper edge surfaces engraved 35"
+      },
+      "value": 35
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "edge-35-left",
+        "edge-35-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Outer upper edge surfaces engraved 35"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "edge-35-left",
+        "edge-35-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Outer upper edge surfaces engraved 35"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "edge-35-left",
+        "edge-35-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Outer upper edge surfaces engraved 35"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "edge-35-left",
+        "edge-35-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Outer upper edge surfaces engraved 35"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "edge-35-left",
+        "edge-35-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Outer upper edge surfaces engraved 35"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for this contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "mixed-25-pocket-left",
+        "mixed-25-pocket-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Inner upper edge surfaces engraved 25"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "mixed-25-pocket-left",
+        "mixed-25-pocket-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Inner upper edge surfaces engraved 25"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "mixed-25-pocket-left",
+        "mixed-25-pocket-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Inner upper edge surfaces engraved 25"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "mixed-25-pocket-left",
+        "mixed-25-pocket-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Inner upper edge surfaces engraved 25"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "mixed-25-pocket-left",
+        "mixed-25-pocket-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Inner upper edge surfaces engraved 25"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "mixed-25-pocket-left",
+        "mixed-25-pocket-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Inner upper edge surfaces engraved 25"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "mixed-25-pocket-left",
+        "mixed-25-pocket-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Inner upper edge surfaces engraved 25"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for the whole edge record."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-7",
+        "hold-6"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Left/right circular pockets beneath the 25 mm edges"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-7",
+        "hold-6"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Left/right circular pockets beneath the 25 mm edges"
+      },
+      "reason": "The official source publishes no scalar depth for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-7",
+        "hold-6"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Left/right circular pockets beneath the 25 mm edges"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-7",
+        "hold-6"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-Pockets.jpg?v=1779384260&width=3840",
+        "label": "Official DoorMount pocket-use image"
+      },
+      "reason": "The official pocket-use image shows two-finger use but does not establish a fixed maximum capacity for this contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-7",
+        "hold-6"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Left/right circular pockets beneath the 25 mm edges"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-7",
+        "hold-6"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Left/right circular pockets beneath the 25 mm edges"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-7",
+        "hold-6"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/doormount-pro",
+        "label": "Left/right circular pockets beneath the 25 mm edges"
+      },
+      "value": [
+        "pocket"
+      ]
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-12",
+        "hold-13"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right outer lower edge surfaces engraved 20"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-12",
+        "hold-13"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right outer lower edge surfaces engraved 20"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-12",
+        "hold-13"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right outer lower edge surfaces engraved 20"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-12",
+        "hold-13"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right outer lower edge surfaces engraved 20"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-12",
+        "hold-13"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right outer lower edge surfaces engraved 20"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-12",
+        "hold-13"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right outer lower edge surfaces engraved 20"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-12",
+        "hold-13"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right outer lower edge surfaces engraved 20"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for this contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-11",
+        "hold-8"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right middle lower edge surfaces engraved 15"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-11",
+        "hold-8"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right middle lower edge surfaces engraved 15"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-11",
+        "hold-8"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right middle lower edge surfaces engraved 15"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-11",
+        "hold-8"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right middle lower edge surfaces engraved 15"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-11",
+        "hold-8"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right middle lower edge surfaces engraved 15"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-11",
+        "hold-8"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right middle lower edge surfaces engraved 15"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-11",
+        "hold-8"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right middle lower edge surfaces engraved 15"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for this contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-10",
+        "hold-9"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right inner lower edge surfaces engraved 10"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-10",
+        "hold-9"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right inner lower edge surfaces engraved 10"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-10",
+        "hold-9"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right inner lower edge surfaces engraved 10"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-10",
+        "hold-9"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right inner lower edge surfaces engraved 10"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-10",
+        "hold-9"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right inner lower edge surfaces engraved 10"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-10",
+        "hold-9"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right inner lower edge surfaces engraved 10"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "holdIDs": [
+        "hold-10",
+        "hold-9"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+        "label": "Left/right inner lower edge surfaces engraved 10"
+      },
+      "reason": "The official source does not establish an exact supported feature-tag set for this contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "jug-rounded"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "Jug Rounded"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "jug-rounded"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "Jug Rounded"
+      },
+      "reason": "The official source publishes no scalar depth for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "jug-rounded"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "Jug Rounded"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "jug-rounded"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "Jug Rounded"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "jug-rounded"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "Jug Rounded"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "jug-rounded"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "Jug Rounded"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "jug-rounded"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "Jug Rounded"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "20 mm rounded edge"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "20 mm rounded edge"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "20 mm rounded edge"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "20 mm rounded edge"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "20 mm rounded edge"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "20 mm rounded edge"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "20 mm rounded edge"
+      },
+      "reason": "The official wording is rounded edge, but the schema has no roundedEdge tag and no other exact supported tag is established."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "15 mm rounded edge"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "15 mm rounded edge"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "15 mm rounded edge"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "15 mm rounded edge"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "15 mm rounded edge"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "15 mm rounded edge"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "15 mm rounded edge"
+      },
+      "reason": "The official wording is rounded edge, but the schema has no roundedEdge tag and no other exact supported tag is established."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "10 mm rounded edge"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "10 mm rounded edge"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "10 mm rounded edge"
+      },
+      "reason": "The official source publishes no lower/upper depth range for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "10 mm rounded edge"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "10 mm rounded edge"
+      },
+      "reason": "The official source does not state simultaneous hand capacity for this exact contact."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "10 mm rounded edge"
+      },
+      "reason": "The official source does not prescribe one exact per-contact package grip posture."
+    },
+    {
+      "boardID": "evolv-kilter-basic-long",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+        "label": "10 mm rounded edge"
+      },
+      "reason": "The official wording is rounded edge, but the schema has no roundedEdge tag and no other exact supported tag is established."
     }
   ]
 }

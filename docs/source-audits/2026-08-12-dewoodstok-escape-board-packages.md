@@ -58,3 +58,44 @@ The product-page pad wording and the millimetre graphics describe the same
 ordered tiers but are not identical unit conversions. The package records the
 graphic's explicit millimetre labels and does not derive new conversions. No
 capacity, posture, grip prescription, or training claim is inferred.
+
+## 2026-08-25 source-audited metadata: Escape Unlimited
+
+The current [Unlimited product page](https://escapeclimbing.com/products/ec72000),
+[official progression diagram](https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445),
+and [official straight-on view](https://escapeclimbing.com/cdn/shop/files/PDP_EC72000_UnlimitedBoard-01.png?v=1690380978&width=1445)
+were re-opened on 2026-08-25. A fresh stable-ID capture was manually reviewed
+under
+`.context/hangboard-metadata-backfill-icky-cow/escape-frictitious-evolv-dewoodstok/escape.unlimited--86fd62e22895.png`.
+The overlay is a review aid only and did not change geometry.
+
+| Official position | Stable hold ID(s) | Verified kind | Verified scalar depth |
+| --- | --- | --- | ---: |
+| Full-width top, `SLOPER`, `60MM` | `top-sloper-60` | `sloper` | 60 mm |
+| Upper split rung, `45MM` | `edge-45-left`, `edge-45-right` | `edge` | 45 mm |
+| Middle split rung, `20MM` | `edge-20-left`, `edge-20-right` | `edge` | 20 mm |
+| Lower split rung, `15MM` | `edge-15-left`, `edge-15-right` | `edge` | 15 mm |
+
+All seven existing stable IDs map one-to-one to the four labelled tiers and
+their physical split/continuous boundaries. The package already contained the
+seven exact scalar values, so this pass verified them without changing the
+package. The ledger now accounts for all 49 seven-field outcomes: 14 verified,
+28 unavailable, and 7 not applicable.
+
+The remaining blanks are deliberate. Escape publishes no lower/upper depth
+range, fixed simultaneous-hand capacity, or exact per-contact grip posture.
+Finger capacity is not applicable to the source-identified sloper and rungs.
+The schema has no exact sloper feature tag, and Escape establishes no exact
+supported feature-tag set for the edge tiers.
+
+### Deferred packages from this manufacturer batch
+
+- `escape-beta-22` remains outside `reviewedBoardIDs`. Escape's official
+  numbered breakdown shows 22 physical contacts, while the package combines
+  the left/right #9 and #11 contacts and has no #10 contacts. Metadata cannot
+  make that inventory one-to-one; it requires a separate reviewed inventory
+  and geometry reconciliation.
+- `dewoodstok.woodbord` remains outside `reviewedBoardIDs`. No current primary
+  DeWoodstok product page, manual, or labelled official view was retrievable,
+  so even the mandatory per-hold `kind` values cannot be source-verified.
+  Retailer lists were not substituted for manufacturer evidence.
