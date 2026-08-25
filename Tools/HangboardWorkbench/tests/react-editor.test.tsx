@@ -72,6 +72,7 @@ function clientFixture(boards: readonly Board[]): WorkbenchClient & {
         displayName: board.displayName,
         holdCount: board.holdCount,
         imageUrl: board.imageUrl,
+        needsAttention: false,
       }));
     },
     async getBoard(boardId): Promise<Board> {

@@ -86,6 +86,7 @@ test("the browser client lists and opens direct boards", async () => {
           boardId: "compact",
           displayName: "Compact",
           holdCount: 10,
+          needsAttention: false,
           imageUrl: "/api/boards/compact/image",
         }],
       });
@@ -99,6 +100,7 @@ test("the browser client lists and opens direct boards", async () => {
       boardId: "compact",
       displayName: "Compact",
       holdCount: 10,
+      needsAttention: false,
       imageUrl: "/api/boards/compact/image",
     },
   ]);

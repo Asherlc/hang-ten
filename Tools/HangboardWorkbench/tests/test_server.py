@@ -368,6 +368,7 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
                     "boardId": "fixture.board",
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
+                    "needsAttention": False,
                     "href": "/api/boards/fixture.board",
                     "imageUrl": "/api/boards/fixture.board/image",
                 }
@@ -391,6 +392,50 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
             assert response.status == 200
             assert response.headers["Content-Type"] == "image/png"
             assert response.read(8) == b"\x89PNG\r\n\x1a\n"
+
+
+def test_board_list_marks_only_edge_and_pocket_holds_without_depth_for_attention(
+    tmp_path: Path,
+) -> None:
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    board = board_document("fixture.board")
+    template_hold = board["holds"][0]
+    assert isinstance(template_hold, dict)
+
+    def hold(hold_id: str, kind: str, **depth: object) -> dict[str, object]:
+        return {**template_hold, "id": hold_id, "name": hold_id, "kind": kind, **depth}
+
+    board["holds"] = [
+        hold("jug", "jug"),
+        hold("sloper", "sloper"),
+        hold("pinch", "pinch"),
+        hold("edge", "edge"),
+        hold("pocket", "pocket"),
+    ]
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, listed = request_json(base, "GET", "/api/boards")
+        assert status == 200
+        assert listed["boards"][0]["needsAttention"] is True
+
+        board["holds"] = [
+            hold("jug", "jug"),
+            hold("sloper", "sloper"),
+            hold("pinch", "pinch"),
+            hold("edge", "edge", sizeMillimeters=20),
+            hold(
+                "pocket",
+                "pocket",
+                depthRangeMillimeters={"lowerBound": 10, "upperBound": 15},
+            ),
+        ]
+        (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+        status, listed = request_json(base, "GET", "/api/boards")
+        assert status == 200
+        assert listed["boards"][0]["needsAttention"] is False
 
 
 def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
@@ -1172,6 +1217,7 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
                     "boardId": "fixture.board",
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
+                    "needsAttention": False,
                     "href": "/api/boards/fixture.board",
                     "imageUrl": "/api/boards/fixture.board/image",
                 }

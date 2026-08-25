@@ -110,11 +110,16 @@ export interface BoardSummary {
   boardId: string;
   displayName: string;
   holdCount: number;
+  needsAttention: boolean;
   href?: string;
   imageUrl: string;
 }
 
-export interface Board extends BoardSummary {
+export interface Board {
+  boardId: string;
+  displayName: string;
+  holdCount: number;
+  href?: string;
   imageUrl: string;
   holdIDs?: string[];
   saveUrl?: string;

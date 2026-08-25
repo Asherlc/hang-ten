@@ -85,6 +85,7 @@ function isBoardSummary(value: unknown): value is BoardSummary {
     && typeof value.boardId === "string"
     && typeof value.displayName === "string"
     && typeof value.holdCount === "number"
+    && typeof value.needsAttention === "boolean"
     && isOptionalString(value.href)
     && typeof value.imageUrl === "string";
 }

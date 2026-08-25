@@ -141,6 +141,7 @@ function clientFixture(overrides: Partial<WorkbenchClient> = {}): WorkbenchClien
         displayName: board.displayName,
         holdCount: board.holdCount,
         imageUrl: board.imageUrl,
+        needsAttention: false,
       }];
     },
     async getBoard(): Promise<Board> { return board; },
@@ -272,6 +273,36 @@ test("the React shell preserves the direct-workbench DOM and renders logged-out 
   });
 });
 
+test("the board list shows an accessible attention status only for flagged boards", async () => {
+  await withApp(dependenciesFixture({
+    client: {
+      async listBoards() {
+        return [
+          {
+            boardId: "board-a",
+            displayName: "Board A",
+            holdCount: 1,
+            imageUrl: "/api/boards/board-a/image",
+            needsAttention: true,
+          },
+          {
+            boardId: "board-b",
+            displayName: "Board B",
+            holdCount: 1,
+            imageUrl: "/api/boards/board-b/image",
+            needsAttention: false,
+          },
+        ];
+      },
+    },
+  }), async (app) => {
+    await app.flush();
+
+    assert.equal(app.text("#board-list button:first-child"), "Board A1 holdsNeeds attention");
+    assert.equal(app.text("#board-list button:nth-child(2)"), "Board B1 holds");
+  });
+});
+
 test("mobile canvas controls open the board drawer, repository sheet, and hold inspector explicitly", async () => {
   const image = imageFixture();
   let saves = 0;
@@ -343,8 +374,8 @@ test("selecting a hold on another board does not reopen an explicitly opened mob
     client: {
       async listBoards() {
         return [
-          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image" },
-          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image" },
+          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image", needsAttention: false },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image", needsAttention: false },
         ];
       },
       async getBoard(boardId) { return boardFixture(boardId); },
@@ -518,8 +549,8 @@ test("board selection locks board and Git actions and commits image plus documen
     client: {
       async listBoards() {
         return [
-          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image" },
-          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image" },
+          { boardId: "board-a", displayName: "Board A", holdCount: 1, imageUrl: "/api/boards/board-a/image", needsAttention: false },
+          { boardId: "board-b", displayName: "Board B", holdCount: 1, imageUrl: "/api/boards/board-b/image", needsAttention: false },
         ];
       },
       async getBoard() { return board; },
@@ -548,6 +579,7 @@ test("selecting a listed board starts its image request before board details set
     displayName: "Board A",
     holdCount: 1,
     imageUrl: "/api/boards/board-a/image",
+    needsAttention: false,
   }];
   await withHook(dependenciesFixture({
     runtime: image.runtime,
