@@ -32,6 +32,8 @@ final class GitHubSyncSession: ObservableObject {
     private let clientID: String
     private let sleep: (UInt64) async throws -> Void
     private var authorizationTask: Task<Void, Never>?
+    private var activeDeviceSignInTaskID: UUID?
+    private(set) var isDeviceSignInTaskActive = false
 
     init(
         tokenStore: any GitHubTokenStoring = GitHubTokenStore(),
@@ -93,8 +95,11 @@ final class GitHubSyncSession: ObservableObject {
         authorizationTask?.cancel()
         lastError = nil
         isSigningIn = true
+        let taskID = UUID()
+        activeDeviceSignInTaskID = taskID
+        isDeviceSignInTaskActive = true
         authorizationTask = Task { [weak self] in
-            await self?.completeDeviceSignIn()
+            await self?.completeDeviceSignIn(taskID: taskID)
         }
     }
 
@@ -105,8 +110,15 @@ final class GitHubSyncSession: ObservableObject {
         isSigningIn = false
     }
 
-    private func completeDeviceSignIn() async {
-        defer { isSigningIn = false }
+    private func completeDeviceSignIn(taskID: UUID) async {
+        defer {
+            if activeDeviceSignInTaskID == taskID {
+                isSigningIn = false
+                isDeviceSignInTaskActive = false
+                activeDeviceSignInTaskID = nil
+                authorizationTask = nil
+            }
+        }
         do {
             let challenge = try await syncService.requestDeviceChallenge(clientID: clientID)
             guard !Task.isCancelled else { return }

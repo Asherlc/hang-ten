@@ -68,7 +68,7 @@ final class GitHubSyncSessionTests: XCTestCase {
         await waitUntil { service.isPolling }
         session.cancelDeviceSignIn()
         service.finishPolling(with: .authorized("oauth-token"))
-        await waitUntil { session.isSigningIn == false }
+        await waitUntil { session.isDeviceSignInTaskActive == false }
 
         XCTAssertEqual(tokenStore.loadedToken, "existing-token")
         XCTAssertTrue(tokenStore.savedTokens.isEmpty)
