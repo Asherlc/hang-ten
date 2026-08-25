@@ -963,6 +963,7 @@ private struct BoardPackageShapeConstraintDocument: Decodable {
             )
         }
     }
+
 }
 
 private struct BoardPackageMillimeterRangeDocument: Decodable {
@@ -1099,6 +1100,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case control
         case control1
         case control2
+        case bendable
     }
 
     init(from decoder: Decoder) throws {
@@ -1111,7 +1113,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case "quad":
             allowedKeys = ["command", "to", "control"]
         case "curve":
-            allowedKeys = ["command", "to", "control1", "control2"]
+            allowedKeys = ["command", "to", "control1", "control2", "bendable"]
         case "close":
             allowedKeys = ["command"]
         default:
@@ -1122,6 +1124,24 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         control = try container.decodeIfPresent([Double].self, forKey: .control)
         control1 = try container.decodeIfPresent([Double].self, forKey: .control1)
         control2 = try container.decodeIfPresent([Double].self, forKey: .control2)
+        if container.contains(.bendable) {
+            guard try container.decode(Bool.self, forKey: .bendable) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .bendable,
+                    in: container,
+                    debugDescription: "bendable must be true"
+                )
+            }
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(command, forKey: .command)
+        try container.encodeIfPresent(to, forKey: .to)
+        try container.encodeIfPresent(control, forKey: .control)
+        try container.encodeIfPresent(control1, forKey: .control1)
+        try container.encodeIfPresent(control2, forKey: .control2)
     }
 }
 

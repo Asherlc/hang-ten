@@ -9,6 +9,7 @@ export interface PathCommand {
   type: PathCommandType;
   points: Point[];
   controls: Point[];
+  bendable?: boolean;
 }
 
 /** Editor-session identity for a path endpoint. Never persisted in board geometry. */
@@ -26,6 +27,7 @@ export interface EditableControl extends Point {
 export interface EditableSegment {
   readonly id: string;
   type: Exclude<PathCommandType, "Z">;
+  bendable?: boolean;
   anchor: EditableAnchor;
   controls: EditableControl[];
 }
@@ -85,6 +87,7 @@ export interface HoldRegion {
   depthRangeMillimeters?: MillimeterRange;
   handCapacity?: number;
   shapeConstraint?: ShapeConstraint;
+  bendableCommandIndexes?: number[];
 }
 
 export interface EditorDocument {
@@ -241,6 +244,7 @@ export interface PathEditor {
   isInflectionVertex(commands: readonly PathCommand[], index: number): boolean;
   roundVertex(commands: PathCommand[], index: number): boolean;
   makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean;
+  bendSegmentToPoint(commands: PathCommand[], afterIndex: number, point: Point): boolean;
   makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean;
   snapSegmentHorizontal(commands: PathCommand[], afterIndex: number): boolean;
   snapSegmentVertical(commands: PathCommand[], afterIndex: number): boolean;

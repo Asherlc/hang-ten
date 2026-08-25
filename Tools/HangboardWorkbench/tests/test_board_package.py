@@ -322,7 +322,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
     )
     pieces_by_hold: dict[
         str,
-        list[tuple[int, str, object, object, int | None, dict[str, int] | None, int | None]],
+        list[tuple[int, str, object, object, tuple[int, ...], int | None, dict[str, int] | None, int | None]],
     ] = {}
     for (
         hold_id,
@@ -330,12 +330,22 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         kind,
         path,
         shape_constraint,
+        bendable_command_indexes,
         finger_capacity,
         depth_range,
         hand_capacity,
     ) in parsed.values():
         pieces_by_hold.setdefault(hold_id, []).append(
-            (piece_index, kind, path, shape_constraint, finger_capacity, depth_range, hand_capacity)
+            (
+                piece_index,
+                kind,
+                path,
+                shape_constraint,
+                bendable_command_indexes,
+                finger_capacity,
+                depth_range,
+                hand_capacity,
+            )
         )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])
@@ -349,6 +359,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         first_piece[4],
         first_piece[5],
         first_piece[6],
+        first_piece[7],
     )
     original = copy.deepcopy(package.board)
 
@@ -994,6 +1005,130 @@ def test_omitting_editor_shape_constraint_removes_stored_constraint(
 
     assert "shapeConstraint" not in saved.board["holds"][0]["geometry"][0]
     assert "shapeConstraint" not in _read_board(package_root)["holds"][0]["geometry"][0]
+
+
+def test_editor_document_projects_a_bendable_curve_command_index(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                        "bendable": True,
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+
+    assert document["regions"][0]["bendableCommandIndexes"] == [1]
+
+
+def test_save_editor_document_persists_only_selected_curve_indexes(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.25, 0.5],
+                        "to": [0.5, 0.5],
+                        "bendable": True,
+                    },
+                    {
+                        "command": "curve",
+                        "control1": [0.75, 0.5],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["bendableCommandIndexes"] = [2]
+
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    commands = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]["commands"]
+    assert "bendable" not in commands[1]
+    assert commands[2]["bendable"] is True
+    assert "bendableCommandIndexes" not in json.dumps(_read_board(package_root))
+
+
+@pytest.mark.parametrize("indexes", [[1, 1], [99], [0], None])
+def test_save_rejects_invalid_editor_bendable_curve_indexes(
+    tmp_path: Path, indexes: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["bendableCommandIndexes"] = indexes
+
+    with pytest.raises(BoardPackageError, match="bendableCommandIndexes"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_rejects_bendable_curve_indexes_for_a_constrained_piece(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["displayPath"] = (
+        "M 177.4 45.7 C 221.75 45.7 310.45 45.7 354.8 45.7 L 354.8 228.5 L 177.4 228.5 Z"
+    )
+    document["regions"][0]["shapeConstraint"] = {
+        "shape": "rectangle",
+        "rotationDegrees": 0,
+    }
+    document["regions"][0]["bendableCommandIndexes"] = [1]
+
+    with pytest.raises(BoardPackageError, match="bendableCommandIndexes"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 @pytest.mark.parametrize(

@@ -850,6 +850,36 @@ test("duplicate and mirror reflects every selected physical hold with fresh hold
   }, dependenciesFixture(board, { client }));
 });
 
+test("duplicate and mirror regenerates bendable indexes from mirrored cubic commands", async () => {
+  const board = boardFixture(documentFixture([{
+    id: 1,
+    key: "curve-piece-0",
+    type: "jug",
+    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+    metadata: { holdID: "curve", pieceIndex: 0 },
+    bendableCommandIndexes: [1, 2],
+  }]));
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="curve-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+    await app.click("#save-button");
+    await app.flush();
+
+    const duplicate = saved[0]?.regions.find((region) => region.metadata?.holdID !== "curve");
+    assert.equal(duplicate?.displayPath, "M 90 10 C 83.333333 10 76.666667 10 70 10 L 70 30 L 90 30 Z");
+    assert.deepEqual(duplicate?.bendableCommandIndexes, [1]);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("duplicate and mirror preserves the selected presentation on the new hold", async () => {
   const document: EditorDocument = {
     presentationID: "front",
@@ -1647,6 +1677,156 @@ test("the second cubic control stays independently draggable after Make bendable
 
     assert.equal(paths(app)[0], "M 10 10 C 16.666667 10 30 15 30 10 L 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
+});
+
+test("dragging a cubic made bendable by its menu action pulls its midpoint to the pointer", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("a saved bendable segment reloads as pullable with unchanged endpoint anchors", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  let persistedBoard = boardFixture(square);
+  const client: WorkbenchClient = {
+    ...clientFixture([persistedBoard]),
+    async getBoard(): Promise<Board> {
+      return structuredClone(persistedBoard);
+    },
+    async saveBoard(_boardId, document): Promise<Board> {
+      persistedBoard = { ...persistedBoard, document: structuredClone(document) };
+      return structuredClone(persistedBoard);
+    },
+  };
+  const dependencies = dependenciesFixture(persistedBoard, { client });
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+    await app.click("#save-button");
+    await app.flush();
+    await app.flush();
+  }, dependencies);
+
+  assert.deepEqual(persistedBoard.document.regions[0]?.bendableCommandIndexes, [1]);
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependencies);
+});
+
+test("splitting a marked cubic leaves either descendant pullable", async () => {
+  const markedCurve = documentFixture([{
+    id: 1,
+    key: "curve",
+    type: "jug",
+    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+    bendableCommandIndexes: [1],
+  }]);
+  for (const { start, end, commandIndex, expectedControl } of [
+    {
+      start: { x: 15, y: 10 },
+      end: { x: 15, y: 20 },
+      commandIndex: 1,
+      expectedControl: { x: 15, y: 23.333333 },
+    },
+    {
+      start: { x: 25, y: 10 },
+      end: { x: 25, y: 20 },
+      commandIndex: 2,
+      expectedControl: { x: 25, y: 23.333333 },
+    },
+  ]) {
+    await withEditor(async (app) => {
+      app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+      await app.click('[data-hold-key="curve"]');
+      await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+      await drag(app, '[data-hold-key="curve"]', [start, end]);
+
+      const commands = pathEditor.parsePath(paths(app)[0]!);
+      assert.deepEqual(commands[commandIndex]?.controls, [expectedControl, expectedControl]);
+      assert.deepEqual(commands.flatMap((command) => command.points), [
+        { x: 10, y: 10 },
+        { x: 20, y: 10 },
+        { x: 30, y: 10 },
+        { x: 30, y: 30 },
+        { x: 10, y: 30 },
+      ]);
+    }, dependenciesFixture(boardFixture(markedCurve)));
+  }
+});
+
+test("a bendable segment remains opt-in after undo and redo", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), true);
+
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("dragging a constrained cubic moves its whole path instead of bending it", async () => {
+  const oval = documentFixture([
+    {
+      id: 1,
+      key: "oval",
+      type: "jug",
+      displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+      shapeConstraint: { shape: "oval", rotationDegrees: 0 },
+      bendableCommandIndexes: [1],
+    },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="oval"]');
+
+    await drag(app, '[data-hold-key="oval"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 20 C 16.666667 20 23.333333 20 30 20 L 30 40 L 10 40 Z");
+  }, dependenciesFixture(boardFixture(oval)));
+});
+
+test("dragging an imported custom cubic moves its whole path instead of bending it", async () => {
+  const custom = documentFixture([
+    { id: 1, key: "custom", type: "jug", displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="custom"]');
+
+    await drag(app, '[data-hold-key="custom"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 20 C 16.666667 20 23.333333 20 30 20 L 30 40 L 10 40 Z");
+  }, dependenciesFixture(boardFixture(custom)));
 });
 
 test("controls stay uniquely addressable after converting two segments to bendable curves", async () => {

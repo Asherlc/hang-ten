@@ -8,6 +8,7 @@ import {
   validateEditorDocument,
 } from "../src/workbench-controller.ts";
 import { createWorkbenchClient } from "../src/workbench-client.ts";
+import { cloneEditorDocument } from "../src/editor-model.ts";
 import { postNativeDiagnostic } from "../src/native-bridge.ts";
 import * as pathEditor from "../src/path-editor.ts";
 import type {
@@ -228,6 +229,14 @@ test("the browser client rejects invalid optional hold-region fields", async (co
       name: "metadata pieceIndex",
       region: {
         metadata: { holdID: "hold-1", pieceIndex: "0" },
+        key: "hold-1",
+        displayPath: "M 1 1 L 2 1 L 2 2 Z",
+      },
+    },
+    {
+      name: "bendable command indexes",
+      region: {
+        bendableCommandIndexes: [1, 1],
         key: "hold-1",
         displayPath: "M 1 1 L 2 1 L 2 2 Z",
       },
@@ -604,6 +613,11 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
       key: "hold-1",
       displayPath: "M 1 1 L 2 1 L 2 2 Z",
     },
+    {
+      bendableCommandIndexes: [-1],
+      key: "hold-1",
+      displayPath: "M 1 1 L 2 1 L 2 2 Z",
+    },
   ];
 
   for (const region of invalidRegions) {
@@ -612,6 +626,31 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
         canvas: { width: 100, height: 50 },
         regions: [region],
       }),
+      /valid hold fields/,
+    );
+  }
+});
+
+test("the editor document clones and validates bendable curve command indexes", () => {
+  const document = editorDocument([{
+    key: "hold-1",
+    displayPath: "M 1 1 C 5 1 15 1 20 1 L 20 20 Z",
+    bendableCommandIndexes: [1],
+  }]);
+
+  assert.doesNotThrow(() => validateEditorDocument(document));
+  const cloned = cloneEditorDocument(document);
+  cloned.regions[0]?.bendableCommandIndexes?.push(2);
+
+  assert.deepEqual(document.regions[0]?.bendableCommandIndexes, [1]);
+  assert.deepEqual(cloned.regions[0]?.bendableCommandIndexes, [1, 2]);
+  for (const indexes of [[1, 1], [-1], [1.5]]) {
+    assert.throws(
+      () => validateEditorDocument(editorDocument([{
+        key: "hold-1",
+        displayPath: "M 1 1 L 2 1 L 2 2 Z",
+        bendableCommandIndexes: indexes,
+      }])),
       /valid hold fields/,
     );
   }

@@ -504,6 +504,10 @@ export function addVertex(
       next.controls[1]!,
       next.points[0]!,
     );
+    if (next.bendable === true) {
+      left.bendable = true;
+      right.bendable = true;
+    }
     commands.splice(nextIndex, 1, left, right);
     return;
   }
@@ -529,6 +533,10 @@ export function addInflectionPoint(
   const split = curve.type === "Q"
     ? subdivideQuadratic(start, curve.controls[0]!, curve.points[0]!, amount)
     : subdivideCubic(start, curve.controls[0]!, curve.controls[1]!, curve.points[0]!, amount);
+  if (curve.type === "C" && curve.bendable === true) {
+    split.left.bendable = true;
+    split.right.bendable = true;
+  }
   commands.splice(afterIndex + 1, 1, split.left, split.right);
   return true;
 }
@@ -585,12 +593,27 @@ export function makeSegmentBendable(commands: PathCommand[], afterIndex: number)
     type: "C",
     points: [{ ...end }],
     controls: [interpolate(start, end, 1 / 3), interpolate(start, end, 2 / 3)],
+    bendable: true,
   };
   if (closingEdge) {
     commands.splice(afterIndex + 1, 1, curve, { type: "Z", points: [], controls: [] });
   } else {
     commands[afterIndex + 1] = curve;
   }
+  return true;
+}
+
+export function bendSegmentToPoint(commands: PathCommand[], afterIndex: number, point: Point): boolean {
+  const start = commands[afterIndex]?.points.at(-1);
+  const curve = commands[afterIndex + 1];
+  if (!start || curve?.type !== "C") return false;
+  const end = curve.points[0];
+  if (!end || !Number.isFinite(point.x) || !Number.isFinite(point.y)) return false;
+  const control = {
+    x: (8 * point.x - start.x - end.x) / 6,
+    y: (8 * point.y - start.y - end.y) / 6,
+  };
+  curve.controls = [{ ...control }, { ...control }];
   return true;
 }
 

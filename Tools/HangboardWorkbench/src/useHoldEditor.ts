@@ -16,6 +16,7 @@ import {
   svgPoint,
 } from "./editor-model.ts";
 import {
+  bendEditableSegmentToPoint,
   cloneEditablePath,
   createEditablePath,
   deleteEditableAnchor,
@@ -53,15 +54,22 @@ import type {
 
 interface DragState {
   active: boolean;
-  type: "vertex" | "control" | "path" | "rotation" | "constrained-resize" | null;
+  type: "vertex" | "control" | "path" | "bend" | "rotation" | "constrained-resize" | null;
   holdKey: string | null;
+  segmentID: string | null;
   anchorID: string | null;
   controlID: string | null;
   startX: number;
   startY: number;
   editablePath: EditablePath | null;
   originalPath: string | null;
-  originalPaths: Array<{ key: string; path: string; pivot?: Point; shapeConstraint?: ShapeConstraint }> | null;
+  originalPaths: Array<{
+    key: string;
+    path: string;
+    pivot?: Point;
+    shapeConstraint?: ShapeConstraint;
+    bendableCommandIndexes?: number[];
+  }> | null;
   originalConstraint: ShapeConstraint | null;
   originalDocument: EditorDocument | null;
   resizeHandle: ConstrainedHandle | null;
@@ -101,6 +109,7 @@ const EMPTY_DRAG: DragState = {
   active: false,
   type: null,
   holdKey: null,
+  segmentID: null,
   anchorID: null,
   controlID: null,
   startX: 0,
@@ -188,6 +197,23 @@ function translateCommands(commands: PathCommand[], deltaX: number, deltaY: numb
       point.y += deltaY;
     }
   }
+}
+
+function writeBendableCommandIndexes(region: HoldRegion, commands: readonly PathCommand[]): void {
+  const bendableCommandIndexes = commands.flatMap((command, index) => (
+    command.type === "C" && command.bendable === true ? [index] : []
+  ));
+  if (bendableCommandIndexes.length > 0) region.bendableCommandIndexes = bendableCommandIndexes;
+  else delete region.bendableCommandIndexes;
+}
+
+function pathCommandsForHold(region: HoldRegion, pathEditor: PathEditor): PathCommand[] {
+  const commands = pathEditor.parsePath(region.displayPath);
+  for (const index of region.bendableCommandIndexes ?? []) {
+    const command = commands[index];
+    if (command?.type === "C") command.bendable = true;
+  }
+  return commands;
 }
 
 function nearbyGuideCoordinate(coordinates: readonly number[], value: number): number | null {
@@ -339,12 +365,18 @@ function selectedPhysicalHolds(document: EditorDocument, selectedKeys: readonly 
   return [...groups.values()];
 }
 
-function mirroredPath(path: string, canvasWidth: number, pathEditor: PathEditor): string {
-  const commands = pathEditor.parsePath(path);
+function mirrorHoldPath(
+  source: HoldRegion,
+  target: HoldRegion,
+  canvasWidth: number,
+  pathEditor: PathEditor,
+): void {
+  const commands = pathCommandsForHold(source, pathEditor);
   for (const command of commands) {
     for (const point of [...command.points, ...command.controls]) point.x = canvasWidth - point.x;
   }
-  return pathEditor.serializePath(commands);
+  target.displayPath = pathEditor.serializePath(commands);
+  writeBendableCommandIndexes(target, commands);
 }
 
 function uniqueRegionKey(document: EditorDocument, baseKey: string): string {
@@ -388,6 +420,7 @@ function editableSegmentAfter(
       ? { type: "L", points: [{ ...next.anchor }], controls: [] }
       : {
         type: next.type === "M" ? "L" : next.type,
+        ...(next.bendable === true ? { bendable: true } : {}),
         points: [{ ...next.anchor }],
         controls: next.controls.map((control) => ({ ...control })),
       },
@@ -433,7 +466,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           locallyUpdatedEditablePathRef.current = false;
         }
       } else {
-        editablePath = createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+        editablePath = createEditablePath(
+          selectedHold.key,
+          selectedHold.displayPath,
+          pathEditor,
+          selectedHold.bendableCommandIndexes,
+        );
         editablePathRef.current = {
           document,
           holdKey: selectedHold.key,
@@ -514,7 +552,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!document || !selectedHold) return false;
     const edited = actions.editDocument((candidate) => {
       const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-      if (hold && !hold.shapeConstraint) hold.displayPath = displayPath;
+      if (hold && !hold.shapeConstraint) {
+        hold.displayPath = displayPath;
+        const bendableCommandIndexes = path.segments.flatMap((segment, index) => (
+          segment.bendable === true ? [index] : []
+        ));
+        if (bendableCommandIndexes.length > 0) hold.bendableCommandIndexes = bendableCommandIndexes;
+        else delete hold.bendableCommandIndexes;
+      }
     }, { status: nextStatus });
     if (!edited) return false;
     editablePathRef.current = { document, holdKey: selectedHold.key, displayPath, path };
@@ -793,11 +838,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const edited = actions.editDocument((candidate) => {
       for (const duplicate of duplicates) {
         const { source, id, key, holdId, pieceIndex } = duplicate;
-        candidate.regions.push({
+        const mirrored: HoldRegion = {
           ...source,
           id,
           key,
-          displayPath: mirroredPath(source.displayPath, candidate.canvas.width, pathEditor),
           metadata: {
             holdID: holdId,
             pieceIndex,
@@ -809,7 +853,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
               rotationDegrees: normalizedConstraintRotation(-source.shapeConstraint.rotationDegrees),
             },
           } : {}),
-        });
+        };
+        mirrorHoldPath(source, mirrored, candidate.canvas.width, pathEditor);
+        candidate.regions.push(mirrored);
       }
     }, {
       selectedKey: duplicateKeyBySourceKey.get(selectedHold.key) ?? duplicateKeys[0] ?? null,
@@ -914,6 +960,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           delete hold.shapeConstraint;
         } else {
           hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
+          delete hold.bendableCommandIndexes;
           hold.shapeConstraint = { shape, rotationDegrees: 0 };
         }
       }
@@ -949,6 +996,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const region = restored.regions.find((candidate) => candidate.key === original.key);
         if (region) {
           region.displayPath = original.path;
+          if (original.bendableCommandIndexes) {
+            region.bendableCommandIndexes = [...original.bendableCommandIndexes];
+          } else {
+            delete region.bendableCommandIndexes;
+          }
           if (original.shapeConstraint) region.shapeConstraint = { ...original.shapeConstraint };
           else delete region.shapeConstraint;
         }
@@ -956,7 +1008,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } else {
       const region = restored.regions.find((candidate) => candidate.key === drag.holdKey);
       if (region && drag.originalPath !== null) {
+        const originalRegion = drag.originalDocument?.regions.find((candidate) => candidate.key === drag.holdKey);
         region.displayPath = drag.originalPath;
+        if (originalRegion?.bendableCommandIndexes) {
+          region.bendableCommandIndexes = [...originalRegion.bendableCommandIndexes];
+        } else {
+          delete region.bendableCommandIndexes;
+        }
         if (drag.originalConstraint) region.shapeConstraint = { ...drag.originalConstraint };
         else delete region.shapeConstraint;
       }
@@ -1078,6 +1136,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             path: region.displayPath,
             pivot: holdPivot,
             ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
+            ...(region.bendableCommandIndexes ? {
+              bendableCommandIndexes: [...region.bendableCommandIndexes],
+            } : {}),
           }));
         }),
         editablePath: editablePath ? cloneEditablePath(editablePath) : null,
@@ -1103,28 +1164,41 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     } else if (target.classList.contains("path-editor-vertex")
       || target.classList.contains("path-editor-control")
       || (target.classList.contains("region-shape") && target.getAttribute("data-hold-key") === selectedHold.key)) {
-      if (!editablePath) {
+      let dragEditablePath = editablePath;
+      if (!dragEditablePath) {
         try {
-          createEditablePath(selectedHold.key, selectedHold.displayPath, pathEditor);
+          dragEditablePath = createEditablePath(
+            selectedHold.key,
+            selectedHold.displayPath,
+            pathEditor,
+            selectedHold.bendableCommandIndexes,
+          );
         } catch (error: unknown) {
           reportInvalidPath(error);
+          return;
         }
-        return;
       }
+      if (!dragEditablePath) return;
       const anchorID = target.getAttribute("data-anchor-id");
       const controlID = target.getAttribute("data-control-id");
       if (target.classList.contains("path-editor-vertex") && !anchorID) return;
       if (target.classList.contains("path-editor-control") && !controlID) return;
-      const originalEditablePath = cloneEditablePath(editablePath);
+      const originalEditablePath = cloneEditablePath(dragEditablePath);
+      const bendableSegmentID = !selectedHold.shapeConstraint && target.classList.contains("region-shape")
+        ? closestEditableSegmentID(dragEditablePath, point)
+        : null;
+      const bendsSegment = bendableSegmentID !== null
+        && editableSegmentAfter(dragEditablePath, bendableSegmentID)?.command.bendable === true;
       next = {
         ...EMPTY_DRAG,
         active: true,
         type: target.classList.contains("path-editor-vertex")
           ? "vertex"
-          : target.classList.contains("path-editor-control") ? "control" : "path",
+          : target.classList.contains("path-editor-control") ? "control" : bendsSegment ? "bend" : "path",
         holdKey: selectedHold.key,
         anchorID,
         controlID,
+        ...(bendsSegment ? { segmentID: bendableSegmentID } : {}),
         startX: point.x,
         startY: point.y,
         editablePath: originalEditablePath,
@@ -1184,6 +1258,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             pathEditor,
           );
           region.displayPath = serializeEditablePath(rotatedEditablePath, pathEditor);
+          writeBendableCommandIndexes(region, rotatedEditablePath.segments.map((segment) => ({
+            type: segment.type,
+            ...(segment.bendable === true ? { bendable: true } : {}),
+            points: [{ x: segment.anchor.x, y: segment.anchor.y }],
+            controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
+          })));
           editablePathRef.current = {
             document: candidate,
             holdKey: original.key,
@@ -1193,8 +1273,13 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           locallyUpdatedEditablePathRef.current = true;
         } else {
           const commands = pathEditor.parsePath(original.path);
+          for (const index of original.bendableCommandIndexes ?? []) {
+            const command = commands[index];
+            if (command?.type === "C") command.bendable = true;
+          }
           pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
           region.displayPath = pathEditor.serializePath(commands);
+          writeBendableCommandIndexes(region, commands);
         }
         if (original.shapeConstraint) {
           region.shapeConstraint = {
@@ -1217,6 +1302,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           point,
         );
         hold.displayPath = resized.displayPath;
+        delete hold.bendableCommandIndexes;
         hold.shapeConstraint = resized.shapeConstraint;
       } catch (error: unknown) {
         restoreDrag(
@@ -1233,6 +1319,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         if (!drag.anchorID || !moveEditableAnchor(editable, drag.anchorID, deltaX, deltaY)) return;
       } else if (drag.type === "control") {
         if (!drag.controlID || !moveEditableControl(editable, drag.controlID, deltaX, deltaY)) return;
+      } else if (drag.type === "bend") {
+        if (!drag.segmentID || !bendEditableSegmentToPoint(editable, drag.segmentID, point, pathEditor)) return;
       } else if (drag.type === "path") {
         if (!event.altKey && drag.pathBounds) {
           deltaX += nearbyGuideEdgeOffset(
@@ -1251,6 +1339,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         translateEditablePath(editable, deltaX, deltaY);
       }
       hold.displayPath = serializeEditablePath(editable, pathEditor);
+      writeBendableCommandIndexes(hold, editable.segments.map((segment) => ({
+        type: segment.type,
+        ...(segment.bendable === true ? { bendable: true } : {}),
+        points: [{ x: segment.anchor.x, y: segment.anchor.y }],
+        controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
+      })));
       editablePathRef.current = {
         document: candidate,
         holdKey: drag.holdKey ?? selectedHold?.key ?? "",
@@ -1479,7 +1573,15 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const nextPath = serializeEditablePath(next, pathEditor);
         const edited = actions.editDocument((candidate) => {
           const hold = candidate.regions.find((region) => region.key === selectedHold.key);
-          if (hold) hold.displayPath = nextPath;
+          if (hold) {
+            hold.displayPath = nextPath;
+            writeBendableCommandIndexes(hold, next.segments.map((segment) => ({
+              type: segment.type,
+              ...(segment.bendable === true ? { bendable: true } : {}),
+              points: [{ x: segment.anchor.x, y: segment.anchor.y }],
+              controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
+            })));
+          }
         }, {
           status: "Hold nudged. Save when ready.",
           failureStatus: "Nudge reverted — contour is invalid.",
@@ -1493,9 +1595,10 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       actions.editDocument((candidate) => {
         const hold = candidate.regions.find((region) => region.key === selectedHold.key);
         if (!hold) return;
-        const commands = pathEditor.parsePath(hold.displayPath);
+        const commands = pathCommandsForHold(hold, pathEditor);
         translateCommands(commands, deltaX, deltaY);
         hold.displayPath = pathEditor.serializePath(commands);
+        writeBendableCommandIndexes(hold, commands);
       }, {
         status: "Hold nudged. Save when ready.",
         failureStatus: "Nudge reverted — contour is invalid.",

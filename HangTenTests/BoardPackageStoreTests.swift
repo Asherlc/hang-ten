@@ -767,6 +767,88 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreAcceptsBendableCurveMetadataWithoutChangingHoldGeometry() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = [
+                    "type": "path",
+                    "commands": [
+                        ["command": "move", "to": [0, 0]],
+                        ["command": "curve", "control1": [0, 0], "control2": [1, 0], "to": [1, 1], "bendable": true],
+                        ["command": "line", "to": [0, 1]],
+                        ["command": "close"]
+                    ]
+                ]
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let hold = try XCTUnwrap(board.holds.first)
+
+        XCTAssertEqual(hold.geometry.count, 2)
+        XCTAssertEqual(hold.geometry[0].frame, CGRect(x: 0.05, y: 0.2, width: 0.1, height: 0.3))
+    }
+
+    func testBendableCurveMetadataDoesNotChangeEncodedRuntimeDocument() throws {
+        let document = try JSONDecoder().decode(
+            BoardGeometryPathCommandDocument.self,
+            from: Data(
+                """
+                {"command":"curve","control1":[0,0],"control2":[1,0],"to":[1,1],"bendable":true}
+                """.utf8
+            )
+        )
+
+        let encoded = try JSONEncoder().encode(document)
+        let object = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+
+        XCTAssertEqual(object["command"] as? String, "curve")
+        XCTAssertEqual(object["to"] as? [Double], [1, 1])
+        XCTAssertEqual(object["control1"] as? [Double], [0, 0])
+        XCTAssertEqual(object["control2"] as? [Double], [1, 0])
+        XCTAssertNil(object["bendable"])
+    }
+
+    func testStoreRejectsBendableMetadataOnLineCommand() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var geometry = try XCTUnwrap(holds[0]["geometry"] as? [[String: Any]])
+                geometry[0]["shape"] = [
+                    "type": "path",
+                    "commands": [
+                        ["command": "move", "to": [0, 0]],
+                        ["command": "line", "to": [1, 0], "bendable": true],
+                        ["command": "line", "to": [1, 1]],
+                        ["command": "line", "to": [0, 1]],
+                        ["command": "close"]
+                    ]
+                ]
+                holds[0]["geometry"] = geometry
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
+    }
+
     func testStoreRejectsPathWhoseRenderedCurveEscapesDeclaredFrame() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(

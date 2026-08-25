@@ -36,6 +36,7 @@ function createSegment(regionKey: string, command: PathCommand, ordinal: number)
   return {
     id: `${regionKey}:segment:${ordinal}`,
     type: command.type,
+    ...(command.bendable === true ? { bendable: true } : {}),
     anchor: {
       id: `${regionKey}:anchor:${ordinal}`,
       ordinal,
@@ -100,6 +101,7 @@ function retainSegment(path: EditablePath, command: PathCommand, prior: Editable
   return {
     id: prior.id,
     type: command.type,
+    ...(command.bendable === true ? { bendable: true } : {}),
     anchor: {
       ...prior.anchor,
       isStart: command.type === "M",
@@ -118,6 +120,7 @@ function retainSegment(path: EditablePath, command: PathCommand, prior: Editable
 function toPathCommands(path: EditablePath): PathCommand[] {
   const commands: PathCommand[] = path.segments.map((segment) => ({
     type: segment.type,
+    ...(segment.bendable === true ? { bendable: true } : {}),
     points: [{ x: segment.anchor.x, y: segment.anchor.y }],
     controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
   }));
@@ -165,8 +168,13 @@ export function createEditablePath(
   regionKey: string,
   pathString: string,
   pathEditor: PathEditor,
+  bendableCommandIndexes: readonly number[] = [],
 ): EditablePath {
   const commands = pathEditor.parsePath(pathString);
+  for (const index of bendableCommandIndexes) {
+    const command = commands[index];
+    if (command?.type === "C") command.bendable = true;
+  }
   const segments = editableSegments(commands).map((command, index) => createSegment(regionKey, command, index));
   const path: EditablePath = {
     regionKey,
@@ -340,6 +348,23 @@ export function makeEditableSegmentBendable(
       pathEditor.makeSegmentBendable(commands, afterIndex);
     },
     (resultIndex) => closesPath && resultIndex === original.length ? undefined : original[resultIndex],
+  );
+}
+
+export function bendEditableSegmentToPoint(
+  path: EditablePath,
+  afterSegmentID: string,
+  point: Point,
+  pathEditor: PathEditor,
+): boolean {
+  const afterIndex = segmentIndex(path, afterSegmentID);
+  if (afterIndex === null) return false;
+  const original = [...path.segments];
+  return mutateCommands(
+    path,
+    pathEditor,
+    (commands) => { pathEditor.bendSegmentToPoint(commands, afterIndex, point); },
+    (resultIndex) => original[resultIndex],
   );
 }
 

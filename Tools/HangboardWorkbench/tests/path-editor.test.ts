@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   addInflectionPoint,
   addVertex,
+  bendSegmentToPoint,
   constrainedOutlineModel,
   createOutlineShapePath,
   deleteVertex,
@@ -61,6 +62,7 @@ const pathEditor: PathEditor = {
   isInflectionVertex,
   roundVertex,
   makeSegmentBendable,
+  bendSegmentToPoint,
   makeSegmentStraight,
   snapSegmentHorizontal,
   snapSegmentVertical,
@@ -207,6 +209,47 @@ test("makeSegmentBendable replaces a straight segment with a geometrically ident
   assert.equal(makeSegmentBendable(commands, 0), false, "curves cannot be converted twice");
 });
 
+test("makeSegmentBendable marks its replacement cubic", () => {
+  const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
+
+  makeSegmentBendable(commands, 0);
+
+  assert.equal(commands[1]?.bendable, true);
+});
+
+test("splitting a bendable cubic preserves bendability on both descendants", () => {
+  const commands = parsePath("M 0 0 C 3 0 7 0 10 0 L 10 10 Z");
+  commands[1]!.bendable = true;
+
+  addVertex(commands, 0, 5, 0);
+
+  assert.equal(commands[1]?.bendable, true);
+  assert.equal(commands[2]?.bendable, true);
+});
+
+test("adding an inflection point to a bendable cubic preserves both descendant markers", () => {
+  const commands = parsePath("M 0 0 C 3 0 7 0 10 0 L 10 10 Z");
+  commands[1]!.bendable = true;
+
+  assert.equal(addInflectionPoint(commands, 0, { x: 4, y: 0 }), true);
+
+  assert.equal(commands[1]?.bendable, true);
+  assert.equal(commands[2]?.bendable, true);
+});
+
+test("straightening or deleting a bendable cubic removes its marker", () => {
+  const straightened = parsePath("M 0 0 C 3 0 7 0 10 0 L 10 10 Z");
+  straightened[1]!.bendable = true;
+  assert.equal(makeSegmentStraight(straightened, 0), true);
+  assert.equal(straightened[1]?.type, "L");
+  assert.equal(straightened[1]?.bendable, undefined);
+
+  const deleted = parsePath("M 0 0 L 10 0 C 13 0 17 0 20 0 L 20 10 L 0 10 Z");
+  deleted[2]!.bendable = true;
+  deleteVertex(deleted, 1);
+  assert.equal(deleted.some((command) => command.bendable === true), false);
+});
+
 test("makeSegmentBendable converts a closing edge while retaining one final close command", () => {
   const commands = parsePath("M 0 0 L 10 0 L 10 10 Z");
 
@@ -215,6 +258,25 @@ test("makeSegmentBendable converts a closing edge while retaining one final clos
   assert.equal(commands.filter((command) => command.type === "M").length, 1);
   assert.equal(commands.filter((command) => command.type === "Z").length, 1);
   assert.equal(commands.at(-1)?.type, "Z");
+});
+
+test("bendSegmentToPoint pulls a bendable cubic through the pointer while preserving anchors", () => {
+  const commands = parsePath("M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z");
+
+  assert.equal(bendSegmentToPoint(commands, 0, { x: 20, y: 20 }), true);
+  assert.equal(serializePath(commands), "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+});
+
+test("bendSegmentToPoint leaves straight and quadratic segments unchanged", () => {
+  for (const path of [
+    "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+    "M 10 10 Q 20 20 30 10 L 30 30 L 10 30 Z",
+  ]) {
+    const commands = parsePath(path);
+
+    assert.equal(bendSegmentToPoint(commands, 0, { x: 20, y: 20 }), false, path);
+    assert.equal(serializePath(commands), path);
+  }
 });
 
 test("makeSegmentStraight replaces quadratic and cubic segments with lines to their existing endpoints", () => {
