@@ -35,6 +35,20 @@ struct GitHubBoardPackagePayload: Equatable {
     let assetPath: String
 }
 
+struct GitHubDeviceChallenge: Equatable {
+    let deviceCode: String
+    let userCode: String
+    let verificationURL: URL
+    let expiresIn: TimeInterval
+    let pollingInterval: TimeInterval
+}
+
+enum GitHubDeviceAuthorizationResult: Equatable {
+    case authorizationPending
+    case slowDown
+    case authorized(String)
+}
+
 struct GitHubTokenStore {
     static let defaultService = "com.hangten.training.board-editor"
 
@@ -85,6 +99,7 @@ struct GitHubTokenStore {
 struct GitHubBoardSyncService {
     static let repositoryOwner = "Asherlc"
     static let repositoryName = "hang-ten"
+    private static let oauthBaseURL = URL(string: "https://github.com")!
 
     private let baseURL: URL
     private let session: URLSession
@@ -100,6 +115,66 @@ struct GitHubBoardSyncService {
     func authenticatedUser(token: String) async throws -> String {
         let payload = try await call(token: token, method: "GET", path: "/user")
         return try requiredString(payload, field: "login")
+    }
+
+    func requestDeviceChallenge(clientID: String) async throws -> GitHubDeviceChallenge {
+        let payload = try await deviceAuthorizationCall(
+            path: "/login/device/code",
+            form: [
+                ("client_id", clientID),
+                ("scope", "repo read:org"),
+            ]
+        )
+        guard case .object(let fields) = payload,
+              let deviceCode = Self.nonEmptyString(fields["device_code"]),
+              let userCode = Self.nonEmptyString(fields["user_code"]),
+              let verificationURI = Self.nonEmptyString(fields["verification_uri"]),
+              let verificationURL = URL(string: verificationURI),
+              verificationURL.scheme?.lowercased() == "https",
+              verificationURL.host != nil,
+              let expiresIn = Self.positiveFiniteNumber(fields["expires_in"]),
+              let interval = Self.positiveFiniteNumber(fields["interval"]) else {
+            throw GitHubSyncError.invalidResponse("GitHub returned invalid device authorization data")
+        }
+        return GitHubDeviceChallenge(
+            deviceCode: deviceCode,
+            userCode: userCode,
+            verificationURL: verificationURL,
+            expiresIn: expiresIn,
+            pollingInterval: interval
+        )
+    }
+
+    func pollDeviceAuthorization(
+        clientID: String,
+        deviceCode: String
+    ) async throws -> GitHubDeviceAuthorizationResult {
+        let payload = try await deviceAuthorizationCall(
+            path: "/login/oauth/access_token",
+            form: [
+                ("client_id", clientID),
+                ("device_code", deviceCode),
+                ("grant_type", "urn:ietf:params:oauth:grant-type:device_code"),
+            ]
+        )
+        guard case .object(let fields) = payload else {
+            throw GitHubSyncError.invalidResponse("GitHub returned invalid device authorization data")
+        }
+        if let token = Self.nonEmptyString(fields["access_token"]) {
+            return .authorized(token)
+        }
+        switch Self.nonEmptyString(fields["error"]) {
+        case "authorization_pending":
+            return .authorizationPending
+        case "slow_down":
+            return .slowDown
+        case "access_denied":
+            throw GitHubSyncError.unauthorized("GitHub authorization was denied.")
+        case "expired_token":
+            throw GitHubSyncError.unauthorized("GitHub authorization expired. Please try again.")
+        default:
+            throw GitHubSyncError.invalidResponse("GitHub returned invalid device authorization data")
+        }
     }
 
     func defaultBranch(token: String) async throws -> String {
@@ -424,6 +499,55 @@ struct GitHubBoardSyncService {
         default:
             throw GitHubSyncError.transport(message)
         }
+    }
+
+    private func deviceAuthorizationCall(
+        path: String,
+        form: [(String, String)]
+    ) async throws -> JSONValue {
+        guard let url = URL(string: Self.oauthBaseURL.absoluteString + path) else {
+            throw GitHubSyncError.transport("Unable to reach GitHub")
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpBody = Data(Self.formEncoded(form).utf8)
+        do {
+            let (data, response) = try await session.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200..<300).contains(httpResponse.statusCode),
+                  let decoded = try? JSONSerialization.jsonObject(with: data),
+                  decoded is [String: Any] else {
+                throw GitHubSyncError.invalidResponse("GitHub returned invalid device authorization data")
+            }
+            return JSONValue(any: decoded)
+        } catch let error as GitHubSyncError {
+            throw error
+        } catch {
+            throw GitHubSyncError.transport("Unable to reach GitHub")
+        }
+    }
+
+    private static func formEncoded(_ fields: [(String, String)]) -> String {
+        fields.map { "\(formEncodedComponent($0.0))=\(formEncodedComponent($0.1))" }
+            .joined(separator: "&")
+    }
+
+    private static func formEncodedComponent(_ value: String) -> String {
+        value.addingPercentEncoding(
+            withAllowedCharacters: CharacterSet(charactersIn: "-._~").union(.alphanumerics)
+        ) ?? value
+    }
+
+    private static func nonEmptyString(_ value: JSONValue?) -> String? {
+        guard case .string(let string)? = value, !string.isEmpty else { return nil }
+        return string
+    }
+
+    private static func positiveFiniteNumber(_ value: JSONValue?) -> TimeInterval? {
+        guard case .number(let number)? = value, number.isFinite, number > 0 else { return nil }
+        return number
     }
 
     private static func errorMessage(

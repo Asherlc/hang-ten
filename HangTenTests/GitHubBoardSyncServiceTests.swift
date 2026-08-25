@@ -499,6 +499,82 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
             XCTAssertTrue(message.contains("[REDACTED]"))
         }
     }
+
+    func testRequestDeviceChallengePostsClientAndExactScopes() async throws {
+        StubState.handler = { [self] request in
+            try response(request, data: json([
+                "device_code": "device-secret",
+                "user_code": "ABCD-EFGH",
+                "verification_uri": "https://github.com/login/device",
+                "expires_in": 900,
+                "interval": 5,
+            ]))
+        }
+
+        let challenge = try await makeService().requestDeviceChallenge(clientID: "client-public")
+
+        XCTAssertEqual(challenge.userCode, "ABCD-EFGH")
+        XCTAssertEqual(challenge.verificationURL.absoluteString, "https://github.com/login/device")
+        let request = try recordedRequest(index: 0)
+        XCTAssertEqual(request.url?.absoluteString, "https://github.com/login/device/code")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Accept"), "application/json")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
+        XCTAssertEqual(String(data: requestBody(request), encoding: .utf8), "client_id=client-public&scope=repo%20read%3Aorg")
+    }
+
+    func testPollDeviceAuthorizationMapsPendingSlowDownAndApprovedToken() async throws {
+        let cases: [(payload: [String: Any], expected: GitHubDeviceAuthorizationResult)] = [
+            (["error": "authorization_pending"], .authorizationPending),
+            (["error": "slow_down"], .slowDown),
+            (["access_token": "oauth-token", "token_type": "bearer"], .authorized("oauth-token")),
+        ]
+        for item in cases {
+            StubState.handler = { [self] request in try response(request, data: json(item.payload)) }
+            let result = try await makeService().pollDeviceAuthorization(
+                clientID: "client-public",
+                deviceCode: "device-secret"
+            )
+            XCTAssertEqual(result, item.expected)
+        }
+        let request = try recordedRequest(index: 2)
+        XCTAssertEqual(
+            String(data: requestBody(request), encoding: .utf8),
+            "client_id=client-public&device_code=device-secret&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Adevice_code"
+        )
+    }
+
+    func testDeviceChallengeRejectsMissingOrInvalidFields() async throws {
+        let invalidPayloads: [[String: Any]] = [
+            ["user_code": "ABCD-EFGH", "verification_uri": "https://github.com/login/device", "expires_in": 900, "interval": 5],
+            ["device_code": "device-secret", "user_code": "ABCD-EFGH", "verification_uri": "http://github.com/login/device", "expires_in": 900, "interval": 5],
+            ["device_code": "device-secret", "user_code": "ABCD-EFGH", "verification_uri": "https://github.com/login/device", "expires_in": 900, "interval": 0],
+        ]
+        for payload in invalidPayloads {
+            StubState.handler = { [self] request in try response(request, data: json(payload)) }
+            do {
+                _ = try await makeService().requestDeviceChallenge(clientID: "client-public")
+                XCTFail("invalid challenge must fail")
+            } catch {
+                XCTAssertEqual(error as? GitHubSyncError, .invalidResponse("GitHub returned invalid device authorization data"))
+            }
+        }
+    }
+
+    func testPollDeviceAuthorizationMapsDeniedAndExpiredResponses() async throws {
+        let cases = [
+            ("access_denied", "GitHub authorization was denied."),
+            ("expired_token", "GitHub authorization expired. Please try again."),
+        ]
+        for (errorCode, message) in cases {
+            StubState.handler = { [self] request in try response(request, data: json(["error": errorCode])) }
+            do {
+                _ = try await makeService().pollDeviceAuthorization(clientID: "client-public", deviceCode: "device-secret")
+                XCTFail("\(errorCode) must fail")
+            } catch let error as GitHubSyncError {
+                XCTAssertEqual(error, .unauthorized(message))
+            }
+        }
+    }
 }
 
 private extension String {
