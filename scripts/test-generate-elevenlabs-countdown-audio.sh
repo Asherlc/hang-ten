@@ -65,7 +65,7 @@ print -r -- "url=$url" >> "$log_file"
 print -r -- '---' >> "$log_file"
 
 if [[ ${FAKE_CURL_FAILURE:-} == 1 ]]; then
-  print -n -- '{"detail":{"code":"quota_exceeded","message":"Insufficient credits for test-key."}}' > "$output_file"
+  print -n -- '{"detail":{"code":"quota_exceeded","message":"Request https://api.elevenlabs.io/v1/text-to-speech/test-voice?output_format=mp3_22050_32 with xi-api-key: other-secret and encoded=test-key%2Dderived."}}' > "$output_file"
   if [[ "$write_out" == *http_code* ]]; then
     print -n -- '402'
   fi
@@ -120,8 +120,8 @@ set -e
 (( failure_status != 0 )) || fail 'HTTP failure unexpectedly succeeded'
 [[ "$failure_output" == *'HTTP 402'* ]] || fail 'HTTP failure status was not reported'
 [[ "$failure_output" == *quota_exceeded* ]] || fail 'ElevenLabs error code was not reported'
-[[ "$failure_output" == *'Insufficient credits for [REDACTED].'* ]] || fail 'ElevenLabs error message was not sanitized'
 [[ "$failure_output" != *test-key* ]] || fail 'HTTP failure diagnostics exposed the API key'
+[[ "$failure_output" != *other-secret* && "$failure_output" != *test-key%2Dderived* ]] || fail 'HTTP failure diagnostics exposed provider credentials'
 [[ "$failure_output" != *xi-api-key* && "$failure_output" != *https://api.elevenlabs.io* ]] || fail 'HTTP failure diagnostics exposed request metadata'
 [[ "$pack_before_failure" == "$(cd "$workspace/output" && shasum countdown-1.mp3 countdown-2.mp3 countdown-3.mp3 metadata.json)" ]] || fail 'HTTP failure replaced the existing audio pack'
 

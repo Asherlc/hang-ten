@@ -30,12 +30,11 @@ trap cleanup EXIT
 json_model_id=${model_id//\\/\\\\}
 json_model_id=${json_model_id//\"/\\\"}
 
-error_detail() {
+error_code() {
   local response_body=$1
 
   python3 - "$response_body" <<'PY' 2>/dev/null || true
 import json
-import os
 import re
 import sys
 
@@ -45,19 +44,8 @@ try:
 except (OSError, ValueError, AttributeError):
     detail = None
 
-parts = []
-if isinstance(detail, dict):
-    for key in ("code", "message"):
-        value = detail.get(key)
-        if isinstance(value, str) and value:
-            parts.append(f"{key}={value}")
-elif isinstance(detail, str) and detail:
-    parts.append(f"detail={detail}")
-
-api_key = os.environ.get("ELEVENLABS_API_KEY", "")
-message = " | ".join(parts).replace(api_key, "[REDACTED]") if api_key else " | ".join(parts)
-message = re.sub(r"\\s+", " ", message).strip()
-print(message[:240])
+code = detail.get("code") if isinstance(detail, dict) else None
+print(code if isinstance(code, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,80}", code) else "unavailable")
 PY
 }
 
@@ -75,13 +63,11 @@ for phrase in 1 2 3; do
     "$request_url" 2>/dev/null); then
     http_status='000'
   fi
-  if [[ ! "$http_status" =~ '^[0-9]{3}$' ]] || (( 10#$http_status < 200 || 10#$http_status >= 300 )); then
-    response_detail=$(error_detail "$temporary_directory/countdown-$phrase.mp3")
-    if [[ -n $response_detail ]]; then
-      print -u2 -- "Failed to generate ElevenLabs countdown audio (HTTP $http_status: $response_detail)."
-    else
-      print -u2 -- "Failed to generate ElevenLabs countdown audio (HTTP $http_status)."
-    fi
+  [[ "$http_status" =~ '^[0-9]{3}$' ]] || http_status='000'
+  if (( 10#$http_status < 200 || 10#$http_status >= 300 )); then
+    response_code=$(error_code "$temporary_directory/countdown-$phrase.mp3")
+    [[ "$response_code" =~ '^[A-Za-z0-9_-]{1,80}$' ]] || response_code='unavailable'
+    print -u2 -- "Failed to generate ElevenLabs countdown audio (HTTP $http_status: $response_code)."
     exit 1
   fi
 done
