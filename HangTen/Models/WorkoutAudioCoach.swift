@@ -187,10 +187,9 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private var configuredAudioSession = false
     private var ownsCountdownSchedule = false
     private var deactivationRetryTask: Task<Void, Never>?
-    private var remainingDeactivationRetries: Int
     private var speechOwnership = WorkoutSpeechOwnership()
 
-    private static let maximumDeactivationRetries = 1
+    private static let deactivationRetryDelay: Duration = .milliseconds(200)
     override convenience init() {
         self.init(
             synthesizer: AVSpeechSynthesizer(),
@@ -237,7 +236,6 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         self.audioSession = audioSession
         self.countdownScheduler = countdownScheduler
         self.countdownCompletionScheduler = countdownCompletionScheduler
-        self.remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
         super.init()
         synthesizer.delegate = self
         beginCountdownPrewarm()
@@ -327,7 +325,6 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
             try audioSession.configureForSpokenCues()
             try audioSession.activate()
             configuredAudioSession = true
-            remainingDeactivationRetries = WorkoutAudioCoach.maximumDeactivationRetries
             return true
         } catch {
             logger.error("Unable to activate spoken cue audio session: \(error.localizedDescription, privacy: .public)")
@@ -388,12 +385,14 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private func scheduleDeactivationRetryIfNeeded() {
         guard configuredAudioSession,
               !synthesizer.isSpeaking,
-              remainingDeactivationRetries > 0,
               deactivationRetryTask == nil else { return }
 
-        remainingDeactivationRetries -= 1
         deactivationRetryTask = Task { @MainActor [weak self] in
-            await Task.yield()
+            do {
+                try await Task.sleep(for: WorkoutAudioCoach.deactivationRetryDelay)
+            } catch {
+                return
+            }
             guard !Task.isCancelled, let self else { return }
 
             deactivationRetryTask = nil
