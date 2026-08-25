@@ -71,7 +71,7 @@ final class WorkoutTimelineTests: XCTestCase {
             detail: "Edge",
             kind: .edge,
             frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
-            gripType: .openHand
+            gripType: nil
         )
         let step = WorkoutStep(
             id: "cue-step",
