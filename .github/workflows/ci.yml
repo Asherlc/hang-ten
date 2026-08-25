@@ -26,9 +26,8 @@ concurrency:
 jobs:
   changes:
     name: Classify changed components
-    # Closing (or merging) a pull request only needs to enter the
-    # concurrency group above so it cancels any stale runs still queued or
-    # in progress for this ref; it does no other work.
+    # Closing (or merging) a pull request only needs to enter its
+    # event-specific concurrency group; it does no other work.
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     permissions:

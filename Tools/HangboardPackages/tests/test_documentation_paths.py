@@ -106,11 +106,13 @@ def test_ci_pull_request_triggers_exclude_edited_events() -> None:
 
 
 def test_ci_concurrency_cancels_a_stale_synchronize_run() -> None:
-    """A new push (or PR close) must cancel a build still running for that ref."""
+    """A new event cancels stale work within its event-specific ref group."""
     workflow = _ci_workflow()
     concurrency = workflow["concurrency"]
 
-    assert concurrency["group"] == "ci-${{ github.workflow }}-${{ github.ref }}"
+    assert concurrency["group"] == (
+        "ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}"
+    )
     assert concurrency["cancel-in-progress"] is True
 
 
