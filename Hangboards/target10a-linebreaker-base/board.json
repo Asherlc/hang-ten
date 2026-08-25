@@ -955,6 +955,7 @@
       "kind": "pocket",
       "sizeMillimeters": 37,
       "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
       "geometry": [
         {
           "frame": {
