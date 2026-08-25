@@ -2,6 +2,15 @@ import XCTest
 @testable import HangTen
 
 final class BoardTargetSubstitutionTests: XCTestCase {
+    func testBoardHoldDepthMeasurementRejectsFixedAndVariableDepths() {
+        let measurement = BoardHold.DepthMeasurement(
+            sizeMillimeters: 7.5,
+            depthRangeMillimeters: 7.5...12.5
+        )
+
+        XCTAssertNil(measurement)
+    }
+
     private func hold(
         id: String,
         kind: HoldKind = .edge,
