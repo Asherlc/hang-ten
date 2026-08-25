@@ -744,7 +744,7 @@ def discover_package_listings(
             continue
         board_entry = entries["board.json"]
         board = _load_board_json(_get_blob(client, token, board_entry, "board.json"))
-        board_package.validate_catalog_board(board)
+        board_package.validate_catalog_board(board, allow_missing_kind=True)
         listing = GitHubBoardListing(slug, board, board_entry.sha)
         if listing.board_id in board_ids:
             raise board_package.BoardPackageError(
@@ -894,7 +894,11 @@ def _save_loaded_editor_document(
         presentation_id=presentation.id,
     )
     board_package._validate_board(
-        board, width, height, presentations=live.presentations
+        board,
+        width,
+        height,
+        presentations=live.presentations,
+        allow_missing_kind=True,
     )
     content = (json.dumps(board, indent=2) + "\n").encode("utf-8")
     try:
@@ -1154,6 +1158,7 @@ def _load_package_from_entries(
         default.image_height,
         presentations=presentations,
         validate_geometry=not inspect_png_header_only,
+        allow_missing_kind=True,
     )
     package = GitHubBoardPackage(
         slug,

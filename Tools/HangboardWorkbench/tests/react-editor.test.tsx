@@ -186,6 +186,36 @@ test("model helpers group physical holds and derive collision-free identifiers",
   assert.equal(nextRegionId(document), 10);
 });
 
+test("metadata warning marks every region of a physical hold missing required metadata", async () => {
+  const document = documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 }, fingerCapacity: 2, depthRangeMillimeters: { lowerBound: 15, upperBound: 20 }, handCapacity: 1 },
+  ]);
+
+  await withEditor(async (app) => {
+    assert.equal(app.text("#metadata-warning"), "1 hold needs metadata");
+    assert.equal(app.document.querySelectorAll(".region-missing-metadata").length, 2);
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-label"), "Select hold a-piece-0 (missing required metadata)");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("metadata warning updates when an incomplete hold receives its missing field", async () => {
+  const document = documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+  ]);
+
+  await withEditor(async (app) => {
+    assert.equal(app.text("#metadata-warning"), "1 hold needs metadata");
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#finger-capacity-select", "2");
+
+    assert.equal(app.document.querySelector("#metadata-warning"), null);
+    assert.equal(app.document.querySelectorAll(".region-missing-metadata").length, 0);
+  }, dependenciesFixture(boardFixture(document)));
+});
+
 test("switching presentations changes the focused canvas and scopes new holds", async () => {
   const presentations = [
     {
@@ -643,7 +673,7 @@ test("hold paths expose button semantics and support Enter and Space selection",
     const target = app.document.querySelector<SVGPathElement>('[data-hold-key="b-piece-0"]');
     assert.equal(target?.getAttribute("role"), "button");
     assert.equal(target?.getAttribute("tabindex"), "0");
-    assert.equal(target?.getAttribute("aria-label"), "Select hold b-piece-0");
+    assert.equal(target?.getAttribute("aria-label"), "Select hold b-piece-0 (missing required metadata)");
 
     assert.equal(await app.keyDown('[data-hold-key="b-piece-0"]', "Enter"), false);
     assert.equal(app.text("#hold-heading"), "b-piece-0");

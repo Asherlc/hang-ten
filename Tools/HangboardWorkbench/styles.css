@@ -55,11 +55,13 @@ button:disabled { cursor: default; opacity: .4; }
 .canvas-controls .tool-button { min-width: 34px; padding: 0 9px; }
 #canvas-zoom-level { min-width: 40px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: center; }
 .editor-heading { display: grid; gap: 2px; }
+.metadata-warning { color: #ffd08a; font-size: 10px; font-weight: 750; }
 .canvas-viewport { position: relative; min-height: 0; overflow: auto; background: #d6d7d3; }
 #editor-svg { display: block; width: 100%; height: 100%; min-height: 360px; }
 .empty-state { position: absolute; inset: 0; display: grid; place-content: center; gap: 7px; color: #5c6259; text-align: center; pointer-events: none; }
 .empty-state strong { color: #3e433d; }
 .region-shape { cursor: pointer; vector-effect: non-scaling-stroke; }
+.region-missing-metadata { filter: drop-shadow(0 0 1px #fff7dc); }
 .region-shape:hover, .region-shape.selected { stroke: #fff7dc !important; stroke-width: 2px !important; }
 .validation-panel { padding: 10px 14px; border-top: 1px solid #69343a; background: #321c1f; color: #ffb1b6; }
 .validation-panel ul { margin: 5px 0 0; padding-left: 17px; }

@@ -84,6 +84,45 @@ final class BoardEditorSession: ObservableObject {
         return hold(id: selectedPiece.holdID)
     }
 
+    /// Editable packages may omit a hold kind while metadata is being completed.
+    var incompleteMetadataHoldIDs: [String] {
+        document.holds.compactMap { hold in
+            hold.kind == nil
+                || hold.fingerCapacity == nil
+                || hold.depthRangeMillimeters == nil
+                || hold.handCapacity == nil
+                ? hold.id
+                : nil
+        }
+    }
+
+    func missingRequiredMetadata(for hold: BoardEditableHold) -> [String] {
+        var missing: [String] = []
+        if hold.kind == nil { missing.append("kind") }
+        if hold.fingerCapacity == nil { missing.append("finger capacity") }
+        if hold.depthRangeMillimeters == nil { missing.append("depth range") }
+        if hold.handCapacity == nil { missing.append("hand capacity") }
+        return missing
+    }
+
+    var metadataWarningText: String? {
+        let count = incompleteMetadataHoldIDs.count
+        guard count > 0 else { return nil }
+        return "\(count) \(count == 1 ? "hold needs" : "holds need") metadata"
+    }
+
+    var metadataWarningAccessibilityLabel: String {
+        let count = incompleteMetadataHoldIDs.count
+        guard count > 0 else { return "Hangboard hold editor" }
+        return "Hangboard hold editor. \(count) \(count == 1 ? "hold is" : "holds are") missing required metadata."
+    }
+
+    var metadataWarningAccessibilityValue: String? {
+        let ids = incompleteMetadataHoldIDs
+        guard !ids.isEmpty else { return nil }
+        return "Incomplete \(ids.count == 1 ? "hold" : "holds"): \(ids.joined(separator: ", "))"
+    }
+
     var selectedPieceDocument: BoardEditablePiece? {
         guard let selectedPiece,
               let selectedHold,

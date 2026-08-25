@@ -16,6 +16,7 @@ struct HoldEditorCanvasView: UIViewRepresentable {
 
     func updateUIView(_ uiView: HoldEditorCanvasUIView, context: Context) {
         uiView.session = session
+        uiView.updateMetadataWarningAccessibility()
         if uiView.boardImage !== image {
             uiView.boardImage = image
         }
@@ -26,7 +27,10 @@ struct HoldEditorCanvasView: UIViewRepresentable {
 @MainActor
 final class HoldEditorCanvasUIView: UIView {
     weak var session: BoardEditorSession? {
-        didSet { setNeedsDisplay() }
+        didSet {
+            updateMetadataWarningAccessibility()
+            setNeedsDisplay()
+        }
     }
 
     var boardImage: UIImage? {
@@ -70,6 +74,55 @@ final class HoldEditorCanvasUIView: UIView {
 
     var boardAspectRatio: CGFloat {
         session?.document.aspectRatio ?? 2
+    }
+
+    func updateMetadataWarningAccessibility() {
+        let aggregate = UIAccessibilityElement(accessibilityContainer: self)
+        aggregate.accessibilityTraits = .image
+        aggregate.accessibilityLabel = session?.metadataWarningAccessibilityLabel ?? "Hangboard hold editor"
+        aggregate.accessibilityValue = session?.metadataWarningAccessibilityValue
+        aggregate.accessibilityFrameInContainerSpace = bounds
+
+        var elements: [UIAccessibilityElement] = [aggregate]
+        if let session {
+            for hold in session.document.holds where !session.missingRequiredMetadata(for: hold).isEmpty {
+                let warning = UIAccessibilityElement(accessibilityContainer: self)
+                warning.accessibilityTraits = .image
+                warning.accessibilityLabel = "Incomplete hold metadata: \(hold.id)"
+                warning.accessibilityValue = "Missing: \(session.missingRequiredMetadata(for: hold).joined(separator: ", "))"
+                warning.accessibilityFrameInContainerSpace = accessibilityFrame(for: hold)
+                elements.append(warning)
+            }
+        }
+
+        isAccessibilityElement = false
+        accessibilityElements = elements
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateMetadataWarningAccessibility()
+    }
+
+    private func accessibilityFrame(for hold: BoardEditableHold) -> CGRect {
+        let boardFrame = hold.geometry.map(\.frame.cgRect).reduce(CGRect.null) { partial, frame in
+            partial.union(frame)
+        }
+        guard !boardFrame.isNull else { return bounds }
+        let first = screenPoint(
+            fromBoard: CGPoint(x: boardFrame.minX, y: boardFrame.minY),
+            bounds: bounds
+        )
+        let second = screenPoint(
+            fromBoard: CGPoint(x: boardFrame.maxX, y: boardFrame.maxY),
+            bounds: bounds
+        )
+        return CGRect(
+            x: min(first.x, second.x),
+            y: min(first.y, second.y),
+            width: abs(second.x - first.x),
+            height: abs(second.y - first.y)
+        )
     }
 
     // MARK: - Transform
@@ -126,6 +179,7 @@ final class HoldEditorCanvasUIView: UIView {
     func zoomToFit() {
         zoom = 1
         viewportCenter = CGPoint(x: 0.5, y: 0.5)
+        updateMetadataWarningAccessibility()
         setNeedsDisplay()
     }
 
@@ -150,11 +204,9 @@ final class HoldEditorCanvasUIView: UIView {
     @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {
         switch gesture.state {
         case .began:
-            pinchStartZoom = zoom
+            beginViewportZoom()
         case .changed:
-            zoom = min(max(pinchStartZoom * gesture.scale, 0.6), 24)
-            clampViewport()
-            setNeedsDisplay()
+            updateViewportZoom(scale: gesture.scale)
         default:
             break
         }
@@ -189,9 +241,36 @@ final class HoldEditorCanvasUIView: UIView {
         }
     }
 
+    func beginViewportPan() {
+        dragState = .viewport(startCenter: viewportCenter)
+    }
+
+    func updateViewportPan(translation: CGPoint) {
+        guard case .viewport(let startCenter) = dragState else { return }
+        let s = scale(for: bounds)
+        viewportCenter = CGPoint(
+            x: startCenter.x - translation.x / s,
+            y: startCenter.y - translation.y / s
+        )
+        clampViewport()
+        updateMetadataWarningAccessibility()
+        setNeedsDisplay()
+    }
+
+    func beginViewportZoom() {
+        pinchStartZoom = zoom
+    }
+
+    func updateViewportZoom(scale: CGFloat) {
+        zoom = min(max(pinchStartZoom * scale, 0.6), 24)
+        clampViewport()
+        updateMetadataWarningAccessibility()
+        setNeedsDisplay()
+    }
+
     private func beginDrag(at location: CGPoint, touches: Int, session: BoardEditorSession) {
         if session.tool == .pan || touches >= 2 {
-            dragState = .viewport(startCenter: viewportCenter)
+            beginViewportPan()
             return
         }
         if let handle = hitTestHandle(at: location), beginHandleDrag(handle, at: location) {
@@ -214,7 +293,7 @@ final class HoldEditorCanvasUIView: UIView {
             dragState = .translatePiece(startPath: startPath, startPoint: boardPoint(fromScreen: location, bounds: bounds))
             return
         }
-        dragState = .viewport(startCenter: viewportCenter)
+        beginViewportPan()
     }
 
     private func beginHandleDrag(_ handle: BoardEditorSession.HandleTarget, at location: CGPoint) -> Bool {
@@ -259,14 +338,8 @@ final class HoldEditorCanvasUIView: UIView {
         switch dragState {
         case .idle:
             break
-        case .viewport(let startCenter):
-            let s = scale(for: bounds)
-            viewportCenter = CGPoint(
-                x: startCenter.x - translation.x / s,
-                y: startCenter.y - translation.y / s
-            )
-            clampViewport()
-            setNeedsDisplay()
+        case .viewport:
+            updateViewportPan(translation: translation)
         case .translatePiece(let startPath, let startPoint):
             let current = boardPoint(fromScreen: location, bounds: bounds)
             let deltaX = current.x - startPoint.x
@@ -530,12 +603,22 @@ final class HoldEditorCanvasUIView: UIView {
 
         let selectedHoldID = session.selectedPiece?.holdID
         let selectedPieceIndex = session.selectedPiece?.pieceIndex
+        let incompleteHoldIDs = Set(session.incompleteMetadataHoldIDs)
 
         for hold in session.document.holds {
             for (pieceIndex, piece) in hold.geometry.enumerated() {
                 let isSelected = hold.id == selectedHoldID && pieceIndex == selectedPieceIndex
+                let isMetadataIncomplete = incompleteHoldIDs.contains(hold.id)
                 guard let commands = try? session.boardCommands(for: piece) else { continue }
                 let path = bezierPath(commands: commands)
+                if isMetadataIncomplete {
+                    context.setStrokeColor(UIColor.systemOrange.cgColor)
+                    context.setLineWidth(isSelected ? 5 : 3)
+                    context.setLineDash(phase: 0, lengths: [6, 4])
+                    context.addPath(path.cgPath)
+                    context.strokePath()
+                    context.setLineDash(phase: 0, lengths: [])
+                }
                 if isSelected {
                     context.setFillColor(UIColor(Color.holdOrange).withAlphaComponent(0.16).cgColor)
                     context.addPath(path.cgPath)

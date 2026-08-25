@@ -91,6 +91,31 @@ final class BoardEditorStoreTests: XCTestCase {
         return libraryURL
     }
 
+    private func makeSourceLibraryWithMissingHoldKind(
+        slug: String = "missing-kind-board"
+    ) throws -> URL {
+        let libraryURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("BoardEditorStoreSource-\(UUID().uuidString)", isDirectory: true)
+        let packageURL = libraryURL.appendingPathComponent(slug, isDirectory: true)
+        try FileManager.default.createDirectory(
+            at: packageURL.appendingPathComponent("assets", isDirectory: true),
+            withIntermediateDirectories: true
+        )
+
+        let encodedDocument = try BoardPackageWriter.data(for: sampleDocument())
+        var board = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encodedDocument) as? [String: Any]
+        )
+        var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+        holds[0].removeValue(forKey: "kind")
+        board["holds"] = holds
+        try JSONSerialization.data(withJSONObject: board, options: [.sortedKeys])
+            .write(to: packageURL.appendingPathComponent("board.json"))
+        try pngBytes().write(to: packageURL.appendingPathComponent("assets/primary.png"))
+        addTeardownBlock { try? FileManager.default.removeItem(at: libraryURL) }
+        return libraryURL
+    }
+
     private func makeStore(sourceLibraryURL: URL) -> BoardEditorStore {
         BoardEditorStore(baseDirectory: storeDirectory, sourceLibraryURL: sourceLibraryURL)
     }
@@ -133,6 +158,32 @@ final class BoardEditorStoreTests: XCTestCase {
         XCTAssertEqual(loaded.pixelWidth, 2)
         XCTAssertEqual(loaded.pixelHeight, 1)
         XCTAssertEqual(loaded.imageURL.lastPathComponent, "primary.png")
+    }
+
+    @MainActor
+    func testMissingHoldKindLoadsWithWarningAndRoundTripsWithoutInventingKind() throws {
+        let sourceLibraryURL = try makeSourceLibraryWithMissingHoldKind()
+        let store = makeStore(sourceLibraryURL: sourceLibraryURL)
+        try store.startEditing(slug: "missing-kind-board")
+
+        let loaded = try store.loadDocument(slug: "missing-kind-board")
+        XCTAssertNil(loaded.document.holds[0].kind)
+
+        let session = BoardEditorSession(package: loaded, store: store)
+        XCTAssertEqual(session.incompleteMetadataHoldIDs, ["hold-one"])
+        XCTAssertEqual(session.metadataWarningAccessibilityValue, "Incomplete hold: hold-one")
+
+        try store.save(document: loaded.document, slug: "missing-kind-board")
+        let reloaded = try store.loadDocument(slug: "missing-kind-board")
+        XCTAssertNil(reloaded.document.holds[0].kind)
+
+        let savedJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(
+                with: Data(contentsOf: reloaded.packageURL.appendingPathComponent("board.json"))
+            ) as? [String: Any]
+        )
+        let savedHold = try XCTUnwrap(savedJSON["holds"] as? [[String: Any]])[0]
+        XCTAssertNil(savedHold["kind"])
     }
 
     func testSaveRoundTripsEditedDocumentWithoutStaleCaches() throws {

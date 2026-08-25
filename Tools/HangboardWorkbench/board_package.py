@@ -178,7 +178,7 @@ class _EditorDocumentPackage(Protocol):
 
 _EditorPiece = tuple[
     int,
-    str,
+    str | None,
     Any,
     dict[str, object] | None,
     tuple[int, ...],
@@ -307,6 +307,7 @@ def _load_board_package(
         default.image_height,
         presentations=presentations,
         validate_geometry=not inspect_png_header_only,
+        allow_missing_kind=True,
     )
     return BoardPackage(
         root,
@@ -366,7 +367,6 @@ def editor_document(
             region: dict[str, object] = {
                 "id": region_id,
                 "key": key,
-                "type": hold["kind"],
                 "displayPath": path.data,
                 "metadata": {
                     "holdID": hold_id,
@@ -374,6 +374,8 @@ def editor_document(
                     "presentationID": presentation.id,
                 },
             }
+            if "kind" in hold:
+                region["type"] = hold["kind"]
             if "shapeConstraint" in piece:
                 region["shapeConstraint"] = _parse_shape_constraint(
                     piece["shapeConstraint"], f"hold {key}.shapeConstraint"
@@ -554,7 +556,10 @@ def _apply_editor_document(
             if existing is not None
             else {"id": hold_id, "name": _default_hold_name(hold_id)}
         )
-        hold_json["kind"] = pieces[0][1]
+        if pieces[0][1] is None:
+            hold_json.pop("kind", None)
+        else:
+            hold_json["kind"] = pieces[0][1]
         if pieces[0][5] is None:
             hold_json.pop("fingerCapacity", None)
         else:
@@ -636,7 +641,7 @@ def _editor_document_is_dirty(
         return True
     for hold_id, pieces in pieces_by_hold.items():
         hold = current_holds[hold_id]
-        if (hold["kind"] != pieces[0][1]
+        if (hold.get("kind") != pieces[0][1]
             or len(hold["geometry"]) != len(pieces)
             or hold.get("fingerCapacity") != pieces[0][5]
             or hold.get("depthRangeMillimeters") != pieces[0][6]
@@ -893,6 +898,7 @@ def _validate_board(
     *,
     presentations: tuple[BoardPresentation, ...] | None = None,
     validate_geometry: bool = True,
+    allow_missing_kind: bool = False,
 ) -> None:
     parsed_presentations = _parse_board_presentations(board)
     _identifier(board.get("id"), "board.json.id")
@@ -943,13 +949,16 @@ def _validate_board(
             label,
             requires_presentation_id=True,
             validate_geometry=validate_geometry,
+            allow_missing_kind=allow_missing_kind,
         )
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
 
 
-def validate_catalog_board(board: Mapping[str, Any]) -> None:
+def validate_catalog_board(
+    board: Mapping[str, Any], *, allow_missing_kind: bool = False
+) -> None:
     """Validate board metadata that does not depend on decoding its primary image."""
     parsed_presentations = _parse_board_presentations(board)
     _identifier(board.get("id"), "board.json.id")
@@ -977,6 +986,7 @@ def validate_catalog_board(board: Mapping[str, Any]) -> None:
             label,
             requires_presentation_id=True,
             validate_geometry=False,
+            allow_missing_kind=allow_missing_kind,
         )
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
@@ -991,12 +1001,13 @@ def _validate_hold(
     *,
     requires_presentation_id: bool = False,
     validate_geometry: bool = True,
+    allow_missing_kind: bool = False,
 ) -> str:
     if not isinstance(hold, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _required_and_allowed_keys(
         hold,
-        _HOLD_REQUIRED_FIELDS,
+        _HOLD_REQUIRED_FIELDS - ({"kind"} if allow_missing_kind else set()),
         _HOLD_REQUIRED_FIELDS
         | _HOLD_OPTIONAL_FIELDS
         | ({"presentationID"} if requires_presentation_id else set()),
@@ -1004,7 +1015,8 @@ def _validate_hold(
     )
     hold_id = _identifier(hold.get("id"), f"{label}.id")
     _non_empty_string(hold.get("name"), f"{label}.name")
-    _enum(hold.get("kind"), _HOLD_KINDS, f"{label}.kind")
+    if "kind" in hold:
+        _enum(hold["kind"], _HOLD_KINDS, f"{label}.kind")
     geometry = hold.get("geometry")
     if not isinstance(geometry, list) or not geometry:
         raise BoardPackageError(f"{label}.geometry must be non-empty")
@@ -1149,7 +1161,7 @@ def _validate_editor_document(
     tuple[
         str,
         int,
-        str,
+        str | None,
         Any,
         dict[str, object] | None,
         tuple[int, ...],
@@ -1188,7 +1200,7 @@ def _validate_editor_document(
         tuple[
             str,
             int,
-            str,
+            str | None,
             Any,
             dict[str, object] | None,
             tuple[int, ...],
@@ -1198,7 +1210,7 @@ def _validate_editor_document(
         ],
     ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
-    kind_by_hold: dict[str, str] = {}
+    kind_by_hold: dict[str, str | None] = {}
     finger_capacity_by_hold: dict[str, int | None] = {}
     depth_range_by_hold: dict[str, dict[str, int | float] | None] = {}
     hand_capacity_by_hold: dict[str, int | None] = {}
@@ -1207,7 +1219,7 @@ def _validate_editor_document(
             raise BoardPackageError("editor document contains an invalid hold piece")
         _required_and_allowed_keys(
             region,
-            {"id", "key", "type", "displayPath", "metadata"},
+            {"id", "key", "displayPath", "metadata"},
             {
                 "id",
                 "key",
@@ -1229,7 +1241,11 @@ def _validate_editor_document(
             raise BoardPackageError("duplicate hold piece key")
         if isinstance(region.get("id"), bool) or not isinstance(region.get("id"), int):
             raise BoardPackageError(f"editor region {key}.id must be an integer")
-        kind = _enum(region.get("type"), _HOLD_KINDS, f"editor region {key}.type")
+        kind = (
+            _enum(region["type"], _HOLD_KINDS, f"editor region {key}.type")
+            if "type" in region
+            else None
+        )
         metadata = region.get("metadata")
         if not isinstance(metadata, Mapping):
             raise BoardPackageError(f"editor region {key}.metadata must be an object")
@@ -1325,8 +1341,7 @@ def _validate_editor_document(
         if piece_index in pieces:
             raise BoardPackageError(f"hold {hold_id} has duplicate piece index {piece_index}")
         pieces[piece_index] = key
-        existing_kind = kind_by_hold.get(hold_id)
-        if existing_kind is not None and existing_kind != kind:
+        if hold_id in kind_by_hold and kind_by_hold[hold_id] != kind:
             raise BoardPackageError(f"hold {hold_id} pieces must share one kind")
         kind_by_hold[hold_id] = kind
         if hold_id in finger_capacity_by_hold and finger_capacity_by_hold[hold_id] != finger_capacity:

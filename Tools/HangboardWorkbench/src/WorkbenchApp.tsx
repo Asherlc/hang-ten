@@ -1,6 +1,6 @@
 import React from "react";
 
-import { holdCentroid } from "./editor-model.ts";
+import { holdCentroid, holdMetadataWarnings } from "./editor-model.ts";
 import type { HoldRegion, WorkbenchDependencies } from "./types.ts";
 import { useWorkbench } from "./useWorkbench.ts";
 import { useHoldEditor } from "./useHoldEditor.ts";
@@ -63,6 +63,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const selectedHoldCenter = state.document && selectedHold
     ? holdCentroid([selectedHold], dependencies.pathEditor)
     : null;
+  const metadataWarnings = state.document ? holdMetadataWarnings(state.document) : null;
   React.useEffect(() => {
     setGuides([]);
   }, [state.board?.boardId, state.board?.selectedPresentationID]);
@@ -191,6 +192,11 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             <div className="editor-heading">
               <span className="eyebrow">Board</span>
               <strong id="board-name">{state.board?.displayName ?? "No board selected"}</strong>
+              {metadataWarnings && metadataWarnings.count > 0 && (
+                <output id="metadata-warning" className="metadata-warning" aria-live="polite">
+                  {metadataWarnings.count} {metadataWarnings.count === 1 ? "hold needs" : "holds need"} metadata
+                </output>
+              )}
             </div>
             <div className="canvas-controls" aria-label="Canvas controls">
               {(state.board?.presentations?.length ?? 0) > 1 && (

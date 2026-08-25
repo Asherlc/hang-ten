@@ -38,6 +38,20 @@ final class BoardEditorSessionTests: XCTestCase {
         return nil
     }
 
+    private func package(
+        _ source: BoardEditedPackage,
+        replacing document: BoardEditableDocument
+    ) -> BoardEditedPackage {
+        BoardEditedPackage(
+            slug: source.slug,
+            packageURL: source.packageURL,
+            document: document,
+            imageURL: source.imageURL,
+            pixelWidth: source.pixelWidth,
+            pixelHeight: source.pixelHeight
+        )
+    }
+
     private func selectFirstPathPiece(_ session: inout BoardEditorSession) throws -> (
         holdID: String,
         pieceIndex: Int
@@ -65,6 +79,145 @@ final class BoardEditorSessionTests: XCTestCase {
             point.x >= frame.minX - 1e-9 && point.x <= frame.maxX + 1e-9 &&
                 point.y >= frame.minY - 1e-9 && point.y <= frame.maxY + 1e-9
         })
+    }
+
+    func testCanvasExposesAggregateAndPerHoldWarningsForIncompleteMetadata() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        XCTAssertGreaterThanOrEqual(document.holds.count, 2)
+        for index in document.holds.indices {
+            document.holds[index].fingerCapacity = 1
+            document.holds[index].depthRangeMillimeters = BoardEditableMillimeterRange(
+                lowerBound: 10,
+                upperBound: 12
+            )
+            document.holds[index].handCapacity = 1
+        }
+        let incompleteHoldID = document.holds[0].id
+        document.holds[0].fingerCapacity = nil
+        document.holds[1].sizeMillimeters = nil
+        document.holds[1].features = nil
+
+        let session = BoardEditorSession(package: package(loadedPackage, replacing: document), store: store)
+        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+        canvas.session = session
+        canvas.updateMetadataWarningAccessibility()
+
+        let elements = try XCTUnwrap(canvas.accessibilityElements as? [UIAccessibilityElement])
+        XCTAssertEqual(elements.count, 2)
+        XCTAssertEqual(
+            elements[0].accessibilityLabel,
+            "Hangboard hold editor. 1 hold is missing required metadata."
+        )
+        XCTAssertEqual(elements[0].accessibilityValue, "Incomplete hold: \(incompleteHoldID)")
+        XCTAssertEqual(elements[1].accessibilityLabel, "Incomplete hold metadata: \(incompleteHoldID)")
+        XCTAssertEqual(elements[1].accessibilityValue, "Missing: finger capacity")
+        XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.width, 0)
+        XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.height, 0)
+    }
+
+    func testViewportOperationsRefreshIncompleteHoldAccessibilityFrame() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        document.holds = [document.holds[0]]
+        document.holds[0].fingerCapacity = nil
+        document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+        document.holds[0].handCapacity = 1
+
+        let session = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+        canvas.session = session
+        let frameBeforePan = try XCTUnwrap(
+            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
+        ).accessibilityFrameInContainerSpace
+
+        canvas.beginViewportPan()
+        canvas.updateViewportPan(translation: CGPoint(x: 48, y: 16))
+
+        let frameAfterPan = try XCTUnwrap(
+            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
+        ).accessibilityFrameInContainerSpace
+        XCTAssertNotEqual(frameAfterPan, frameBeforePan)
+
+        canvas.beginViewportZoom()
+        canvas.updateViewportZoom(scale: 1.5)
+
+        let frameAfterPinch = try XCTUnwrap(
+            (canvas.accessibilityElements as? [UIAccessibilityElement])?.last
+        ).accessibilityFrameInContainerSpace
+        XCTAssertNotEqual(frameAfterPinch, frameAfterPan)
+    }
+
+    func testIncompleteMetadataRequiresKindFingerDepthAndHandButNotSizeOrFeatures() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        let holdID = document.holds[0].id
+        document.holds = [document.holds[0]]
+        document.holds[0].fingerCapacity = 1
+        document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+        document.holds[0].handCapacity = 1
+        document.holds[0].sizeMillimeters = nil
+        document.holds[0].features = nil
+
+        let completeSession = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        XCTAssertEqual(completeSession.incompleteMetadataHoldIDs, [])
+
+        document.holds[0].kind = nil
+        XCTAssertEqual(
+            BoardEditorSession(
+                package: package(loadedPackage, replacing: document),
+                store: store
+            ).incompleteMetadataHoldIDs,
+            [holdID]
+        )
+        document.holds[0].kind = .jug
+
+        document.holds[0].fingerCapacity = nil
+        XCTAssertEqual(
+            BoardEditorSession(
+                package: package(loadedPackage, replacing: document),
+                store: store
+            ).incompleteMetadataHoldIDs,
+            [holdID]
+        )
+        document.holds[0].fingerCapacity = 1
+
+        document.holds[0].depthRangeMillimeters = nil
+        XCTAssertEqual(
+            BoardEditorSession(
+                package: package(loadedPackage, replacing: document),
+                store: store
+            ).incompleteMetadataHoldIDs,
+            [holdID]
+        )
+        document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+
+        document.holds[0].handCapacity = nil
+        XCTAssertEqual(
+            BoardEditorSession(
+                package: package(loadedPackage, replacing: document),
+                store: store
+            ).incompleteMetadataHoldIDs,
+            [holdID]
+        )
     }
 
     func testTranslateMovesFrameAndKeepsCommandsNormalized() throws {
