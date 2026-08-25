@@ -84,6 +84,7 @@ export interface HoldRegion {
     presentationID?: string;
   };
   fingerCapacity?: number;
+  sizeMillimeters?: number;
   depthRangeMillimeters?: MillimeterRange;
   handCapacity?: number;
   shapeConstraint?: ShapeConstraint;
