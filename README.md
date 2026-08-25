@@ -59,6 +59,14 @@ rtk xcodebuild -project HangTen.xcodeproj \
 All Conductor/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
 
+## Maintainer-generated countdown audio
+
+Hang Ten ships reviewed audio files and never stores an ElevenLabs API key or
+makes ElevenLabs requests at runtime. An authorized maintainer can generate a
+local countdown pack with the developer-only script described in
+[`HangTen/Resources/CountdownAudio/README.md`](HangTen/Resources/CountdownAudio/README.md).
+Review and explicitly commit the generated files before they can ship.
+
 ## Continuous integration and delivery
 
 GitHub Actions runs the simulator Debug build and device Release build for
