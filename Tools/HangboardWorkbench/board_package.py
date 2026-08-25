@@ -1016,6 +1016,10 @@ def _validate_hold(
             f"{label}.geometry[{piece_index}]",
             validate_geometry=validate_geometry,
         )
+    if "sizeMillimeters" in hold and "depthRangeMillimeters" in hold:
+        raise BoardPackageError(
+            f"{label} must not specify both a size and depth range"
+        )
     if "sizeMillimeters" in hold:
         _positive_number(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
     if "depthRangeMillimeters" in hold:

@@ -638,6 +638,12 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has an unknown presentationID"
                 )
             }
+            if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) must not specify both a size and depth range"
+                )
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw BoardPackageStoreError.invalidPackage(

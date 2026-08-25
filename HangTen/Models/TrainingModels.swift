@@ -413,6 +413,10 @@ struct BoardHold: Identifiable, Hashable {
         presentationID: String = BoardPresentation.primaryID
     ) {
         precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
+        precondition(
+            sizeMillimeters == nil || depthRangeMillimeters == nil,
+            "BoardHold must not specify both a size and depth range."
+        )
         if let fingerCapacity {
             precondition(
                 Self.validFingerCapacityRange.contains(fingerCapacity),

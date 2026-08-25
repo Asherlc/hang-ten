@@ -293,7 +293,6 @@ final class BoardPackageWriterTests: XCTestCase {
                     name: "Left 7.5 mm edge",
                     kind: .edge,
                     sizeMillimeters: 7.5,
-                    depthRangeMillimeters: BoardEditableMillimeterRange(lowerBound: 7.5, upperBound: 12.5),
                     gripType: .halfCrimp,
                     fingerCapacity: 4,
                     handCapacity: 1,
@@ -326,8 +325,6 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertTrue(output.contains("  \"dimensions\": \"70.5 \\u00d7 25 cm\",\n"))
         XCTAssertTrue(output.contains("  \"aspectRatio\": 2.0,\n"))
         XCTAssertTrue(output.contains("\"sizeMillimeters\": 7.5"))
-        XCTAssertTrue(output.contains("\"lowerBound\": 7.5"))
-        XCTAssertTrue(output.contains("\"upperBound\": 12.5"))
         XCTAssertTrue(output.contains(
             "          \"shapeConstraint\": {\n"
                 + "            \"shape\": \"pill\",\n"
@@ -458,6 +455,19 @@ final class BoardPackageWriterTests: XCTestCase {
         var invertedDepth = makeDocument()
         invertedDepth.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(lowerBound: 20, upperBound: 5)
         XCTAssertThrowsError(try BoardPackageWriter.data(for: invertedDepth))
+
+        var conflictingDepthForms = makeDocument()
+        conflictingDepthForms.holds[0].sizeMillimeters = 7.5
+        conflictingDepthForms.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 7.5,
+            upperBound: 12.5
+        )
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: conflictingDepthForms)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid("board test.board: hold hold-one must not specify both a size and depth range")
+            )
+        }
 
         let emptyGeometry = makeDocument(holds: [makeHold(geometry: [])])
         XCTAssertThrowsError(try BoardPackageWriter.data(for: emptyGeometry))

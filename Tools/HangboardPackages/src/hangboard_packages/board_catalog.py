@@ -462,6 +462,8 @@ def _load_hold(
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
         raise ValueError(f"{source}.kind must be one of {sorted(_HOLD_KINDS)}")
+    if "sizeMillimeters" in payload and "depthRangeMillimeters" in payload:
+        raise ValueError(f"{source} must not specify both a size and depth range")
     size = None
     if "sizeMillimeters" in payload:
         size = _positive_number(payload["sizeMillimeters"], f"{source}.sizeMillimeters")

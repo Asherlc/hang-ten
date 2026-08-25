@@ -379,6 +379,9 @@ enum BoardPackageWriter {
             guard presentationIDs.contains(hold.presentationID) else {
                 throw invalid("hold \(hold.id) references unknown presentation \(hold.presentationID)", document)
             }
+            if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
+                throw invalid("hold \(hold.id) must not specify both a size and depth range", document)
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw invalid("hold \(hold.id) has an invalid finger capacity", document)
