@@ -1162,6 +1162,9 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         try decoder.container(keyedBy: keys)
     }
 
+    /// Runtime encoding drops editor-only bendable metadata: the training app
+    /// never re-delivers it, while the board editor writer reads the stored
+    /// property directly when it serializes canonical packages.
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(command, forKey: .command)
@@ -1169,7 +1172,6 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         try container.encodeIfPresent(control, forKey: .control)
         try container.encodeIfPresent(control1, forKey: .control1)
         try container.encodeIfPresent(control2, forKey: .control2)
-        try container.encodeIfPresent(bendable, forKey: .bendable)
     }
 }
 
