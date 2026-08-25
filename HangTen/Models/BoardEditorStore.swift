@@ -16,7 +16,7 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
     case missingSourcePackage(slug: String)
     case missingEditedPackage(slug: String)
     case missingBoardDocument(slug: String)
-    case invalidEditedDocument(slug: String)
+    case invalidEditedDocument(slug: String, reason: String = "")
     case unreadablePresentationImage(slug: String)
 
     var errorDescription: String? {
@@ -29,8 +29,10 @@ enum BoardEditorStoreError: Error, Equatable, LocalizedError {
             "Board package \(slug) has not been copied for editing."
         case .missingBoardDocument(let slug):
             "Edited board package \(slug) is missing board.json."
-        case .invalidEditedDocument(let slug):
-            "Edited board package \(slug) contains an invalid board.json."
+        case .invalidEditedDocument(let slug, let reason):
+            reason.isEmpty
+                ? "Edited board package \(slug) contains an invalid board.json."
+                : "Edited board package \(slug) contains an invalid board.json: \(reason)"
         case .unreadablePresentationImage(let slug):
             "Edited board package \(slug) has an unreadable presentation image."
         }
@@ -68,14 +70,11 @@ struct BoardEditorStore {
               ) else {
             throw BoardEditorStoreError.missingSourcePackage(slug: slug)
         }
-        let sourceBoardURL = sourceLibraryURL
-            .appendingPathComponent(slug, isDirectory: true)
-            .appendingPathComponent("board.json")
-        let sourceImageURL = sourceLibraryURL
-            .appendingPathComponent(slug, isDirectory: true)
-            .appendingPathComponent("assets/primary.png")
+        let sourcePackageURL = sourceLibraryURL.appendingPathComponent(slug, isDirectory: true)
+        let sourceBoardURL = sourcePackageURL.appendingPathComponent("board.json")
+        let sourceAssetsURL = sourcePackageURL.appendingPathComponent("assets", isDirectory: true)
         guard FileManager.default.fileExists(atPath: sourceBoardURL.path),
-              FileManager.default.fileExists(atPath: sourceImageURL.path) else {
+              FileManager.default.fileExists(atPath: sourceAssetsURL.path) else {
             throw BoardEditorStoreError.missingSourcePackage(slug: slug)
         }
         try FileManager.default.createDirectory(
@@ -83,10 +82,16 @@ struct BoardEditorStore {
             withIntermediateDirectories: true
         )
         try FileManager.default.copyItem(at: sourceBoardURL, to: packageURL.appendingPathComponent("board.json"))
-        try FileManager.default.copyItem(
-            at: sourceImageURL,
-            to: packageURL.appendingPathComponent("assets/primary.png")
-        )
+        for assetURL in try FileManager.default.contentsOfDirectory(
+            at: sourceAssetsURL,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: []
+        ) where (try? assetURL.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true {
+            try FileManager.default.copyItem(
+                at: assetURL,
+                to: packageURL.appendingPathComponent("assets/\(assetURL.lastPathComponent)")
+            )
+        }
         return packageURL
     }
 
@@ -105,10 +110,19 @@ struct BoardEditorStore {
         let document: BoardEditableDocument
         do {
             document = try BoardEditableDocument(data: boardData)
+        } catch let decodingError as DecodingError {
+            throw BoardEditorStoreError.invalidEditedDocument(
+                slug: slug,
+                reason: Self.decodingReason(decodingError)
+            )
         } catch {
             throw BoardEditorStoreError.invalidEditedDocument(slug: slug)
         }
-        let imageURL = packageURL.appendingPathComponent("assets/primary.png")
+        let defaultPresentation = try Self.defaultPresentation(
+            in: document,
+            slug: slug
+        )
+        let imageURL = packageURL.appendingPathComponent(defaultPresentation.assetPath)
         let pixelDimensions = try Self.validatePNGDimensions(at: imageURL, slug: slug)
         return BoardEditedPackage(
             slug: slug,
@@ -187,6 +201,38 @@ struct BoardEditorStore {
             throw BoardEditorStoreError.missingEditedPackage(slug: slug)
         }
         return packageURL
+    }
+
+    private static func decodingReason(_ error: DecodingError) -> String {
+        switch error {
+        case .dataCorrupted(let context):
+            context.codingPath.map(\.stringValue).joined(separator: ".")
+                + ": " + context.debugDescription
+        case .keyNotFound(let key, let context):
+            context.codingPath.map(\.stringValue).joined(separator: ".")
+                + ".\(key.stringValue) not found"
+        case .typeMismatch(_, let context):
+            context.codingPath.map(\.stringValue).joined(separator: ".")
+                + ": " + context.debugDescription
+        case .valueNotFound(let value, let context):
+            context.codingPath.map(\.stringValue).joined(separator: ".")
+                + ": unexpected nil \(value)"
+        @unknown default:
+            String(describing: error)
+        }
+    }
+
+    private static func defaultPresentation(
+        in document: BoardEditableDocument,
+        slug: String
+    ) throws -> BoardEditablePresentation {
+        if let declaredDefault = document.presentations.first(where: \.isDefault) {
+            return declaredDefault
+        }
+        guard let first = document.presentations.first else {
+            throw BoardEditorStoreError.invalidEditedDocument(slug: slug)
+        }
+        return first
     }
 
     private func validSlug(_ slug: String) throws -> String {

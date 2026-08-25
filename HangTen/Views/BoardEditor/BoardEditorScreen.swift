@@ -37,7 +37,6 @@ struct BoardEditorScreen: View {
             slug: slug,
             packageURL: URL(fileURLWithPath: "/dev/null"),
             document: BoardEditableDocument(
-                schemaVersion: 1,
                 id: slug,
                 manufacturer: "",
                 name: slug,
@@ -45,8 +44,16 @@ struct BoardEditorScreen: View {
                 productURL: URL(string: "https://example.invalid")!,
                 dimensions: "",
                 aspectRatio: 2,
-                presentationAssetPath: "assets/primary.png",
-                holds: []
+                holds: [],
+                presentations: [
+                    BoardEditablePresentation(
+                        id: "front",
+                        name: "Front",
+                        assetPath: "assets/primary.png",
+                        aspectRatio: 2,
+                        isDefault: true
+                    )
+                ]
             ),
             imageURL: URL(fileURLWithPath: "/dev/null"),
             pixelWidth: 1000,

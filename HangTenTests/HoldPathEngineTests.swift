@@ -104,19 +104,39 @@ final class HoldPathEngineTests: XCTestCase {
         XCTAssertEqual(serialize(commands), expected, file: file, line: line)
     }
 
-    func testBendableReplacesStraightSegmentWithIdenticalQuadratic() {
+    func testBendableReplacesStraightSegmentWithIdenticalCubic() {
         var commands = parse("M 0 0 L 10 0 L 10 10 Z")
 
         XCTAssertEqual(HoldPathEngine.makeSegmentBendable(&commands, afterIndex: 0), true)
-        assertSVG(commands, "M 0 0 Q 5 0 10 0 L 10 10 Z")
+        assertSVG(commands, "M 0 0 C 3.333333 0 6.666667 0 10 0 L 10 10 Z")
         XCTAssertEqual(HoldPathEngine.makeSegmentBendable(&commands, afterIndex: 0), false)
+    }
+
+    func testBendSegmentToPointPullsMarkedCubicThroughPointer() {
+        var commands = parse("M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z")
+
+        XCTAssertEqual(HoldPathEngine.bendSegmentToPoint(&commands, afterIndex: 0, point: CGPoint(x: 20, y: 18)), true)
+        if case .curve(let end, let control1, let control2) = commands[1] {
+            XCTAssertEqual(end, CGPoint(x: 30, y: 10))
+            let expectedControl = CGPoint(
+                x: (8 * 20.0 - 10.0 - 30.0) / 6,
+                y: (8 * 18.0 - 10.0 - 10.0) / 6
+            )
+            XCTAssertEqual(control1.x, expectedControl.x, accuracy: 1e-9)
+            XCTAssertEqual(control1.y, expectedControl.y, accuracy: 1e-9)
+            XCTAssertEqual(control2, control1)
+        } else {
+            XCTFail("expected marked cubic")
+        }
+        XCTAssertEqual(commands[1].holdEndPoint, CGPoint(x: 30, y: 10))
+        XCTAssertEqual(commands[0].holdEndPoint, CGPoint(x: 10, y: 10))
     }
 
     func testBendableConvertsClosingEdgeWhileRetainingOneFinalClose() {
         var commands = parse("M 0 0 L 10 0 L 10 10 Z")
 
         XCTAssertEqual(HoldPathEngine.makeSegmentBendable(&commands, afterIndex: 2), true)
-        assertSVG(commands, "M 0 0 L 10 0 L 10 10 Q 5 5 0 0 Z")
+        assertSVG(commands, "M 0 0 L 10 0 L 10 10 C 6.666667 6.666667 3.333333 3.333333 0 0 Z")
         XCTAssertEqual(commands.filter(\.isHoldMoveCommand).count, 1)
         XCTAssertEqual(commands.filter(\.isHoldCloseCommand).count, 1)
         XCTAssertTrue(commands.last!.isHoldCloseCommand)

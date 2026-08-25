@@ -45,13 +45,13 @@ final class BoardPackageWriterTests: XCTestCase {
             id: id,
             name: name,
             kind: kind,
+            presentationID: "front",
             geometry: geometry ?? [makePiece()]
         )
     }
 
     private func makeDocument(
-        schemaVersion: Int = 1,
-        id: String = "test-board",
+        id: String = "test.board",
         manufacturer: String = "Test",
         name: String = "Test board",
         subtitle: String = "Fixture",
@@ -61,7 +61,6 @@ final class BoardPackageWriterTests: XCTestCase {
         holds: [BoardEditableHold]? = nil
     ) -> BoardEditableDocument {
         BoardEditableDocument(
-            schemaVersion: schemaVersion,
             id: id,
             manufacturer: manufacturer,
             name: name,
@@ -69,8 +68,16 @@ final class BoardPackageWriterTests: XCTestCase {
             productURL: URL(string: productURL)!,
             dimensions: dimensions,
             aspectRatio: aspectRatio,
-            presentationAssetPath: "assets/primary.png",
-            holds: holds ?? [makeHold()]
+            holds: holds ?? [makeHold()],
+            presentations: [
+                BoardEditablePresentation(
+                    id: "front",
+                    name: "Front",
+                    assetPath: "assets/primary.png",
+                    aspectRatio: aspectRatio,
+                    isDefault: true
+                )
+            ]
         )
     }
 
@@ -96,7 +103,6 @@ final class BoardPackageWriterTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        XCTAssertEqual(lhs.schemaVersion, rhs.schemaVersion, file: file, line: line)
         XCTAssertEqual(lhs.id, rhs.id, file: file, line: line)
         XCTAssertEqual(lhs.manufacturer, rhs.manufacturer, file: file, line: line)
         XCTAssertEqual(lhs.name, rhs.name, file: file, line: line)
@@ -104,7 +110,7 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertEqual(lhs.productURL.absoluteString, rhs.productURL.absoluteString, file: file, line: line)
         XCTAssertEqual(lhs.dimensions, rhs.dimensions, file: file, line: line)
         XCTAssertEqual(lhs.aspectRatio, rhs.aspectRatio, accuracy: 1e-12, file: file, line: line)
-        XCTAssertEqual(lhs.presentationAssetPath, rhs.presentationAssetPath, file: file, line: line)
+        XCTAssertEqual(lhs.presentations, rhs.presentations, file: file, line: line)
         XCTAssertEqual(lhs.holds.count, rhs.holds.count, file: file, line: line)
         for (leftHold, rightHold) in zip(lhs.holds, rhs.holds) {
             XCTAssertEqual(leftHold.id, rightHold.id, file: file, line: line)
@@ -200,11 +206,9 @@ final class BoardPackageWriterTests: XCTestCase {
             let redecoded = try BoardEditableDocument(data: encoded)
 
             if redecoded != decoded {
-                XCTFail(
-                    "round-trip \(slug): redecoded document differs; "
-                        + Self.describeFirstDifference(decoded, redecoded).map { "first difference: \($0)" }
-                            ?? "documents compare unequal at an unknown field"
-                )
+                let difference = Self.describeFirstDifference(decoded, redecoded)
+                    ?? "documents compare unequal at an unknown field"
+                XCTFail("round-trip \(slug): redecoded document differs; first difference: \(difference)")
                 continue
             }
 
@@ -294,6 +298,7 @@ final class BoardPackageWriterTests: XCTestCase {
                     fingerCapacity: 4,
                     handCapacity: 1,
                     features: [.incutEdge, .flatEdge],
+                    presentationID: "front",
                     geometry: [
                         BoardEditablePiece(
                             frame: BoardPackageFrameDocument(x: 0.04, y: 0.479, width: 0.133, height: 0.11),
@@ -317,10 +322,9 @@ final class BoardPackageWriterTests: XCTestCase {
 
         let encoded = try BoardPackageWriter.data(for: document)
         let output = String(decoding: encoded, as: UTF8.self)
-        XCTAssertTrue(output.hasPrefix("{\n  \"schemaVersion\": 1,\n"))
+        XCTAssertTrue(output.hasPrefix("{\n  \"id\": \"zlagboard.pro\",\n"))
         XCTAssertTrue(output.contains("  \"dimensions\": \"70.5 \\u00d7 25 cm\",\n"))
         XCTAssertTrue(output.contains("  \"aspectRatio\": 2.0,\n"))
-        XCTAssertTrue(output.contains("\"presentation\": {\n    \"assetPath\": \"assets/primary.png\"\n  },\n"))
         XCTAssertTrue(output.contains(
             "          \"shapeConstraint\": {\n"
                 + "            \"shape\": \"pill\",\n"
@@ -337,12 +341,25 @@ final class BoardPackageWriterTests: XCTestCase {
                 + "          }\n"
         ))
         XCTAssertTrue(output.contains("  \"features\": [\n        \"incutEdge\",\n        \"flatEdge\"\n      ],\n"))
+        let expectedPresentations = [
+            "  \"presentations\": [",
+            "    {",
+            "      \"id\": \"front\",",
+            "      \"name\": \"Front\",",
+            "      \"assetPath\": \"assets/primary.png\",",
+            "      \"aspectRatio\": 2.0,",
+            "      \"default\": true",
+            "    }",
+            "  ]",
+        ]
+        for expectedLine in expectedPresentations {
+            XCTAssertTrue(output.contains(expectedLine + "\n"), "missing line: \(expectedLine)")
+        }
         XCTAssertTrue(output.hasSuffix("}\n"))
 
         let lines = output.split(separator: "\n").map(String.init)
         XCTAssertEqual(lines[0], "{")
-        XCTAssertEqual(lines[1], "  \"schemaVersion\": 1,")
-        XCTAssertEqual(lines[2], "  \"id\": \"zlagboard.pro\",")
+        XCTAssertEqual(lines[1], "  \"id\": \"zlagboard.pro\",")
         XCTAssertEqual(lines.last, "}")
 
         let redecoded = try BoardEditableDocument(data: encoded)
@@ -359,7 +376,7 @@ final class BoardPackageWriterTests: XCTestCase {
         let output = String(decoding: encoded, as: UTF8.self)
 
         XCTAssertEqual(
-            output.hasPrefix("{\n  \"schemaVersion\": 1,\n  \"id\": \"zlagboard.pro\",\n  \"manufacturer\": \"Zlagboard\","),
+            output.hasPrefix("{\n  \"id\": \"zlagboard.pro\",\n  \"manufacturer\": \"Zlagboard\","),
             true
         )
         XCTAssertTrue(output.contains("\\u00d7"), "non-ASCII multiplication sign must be escaped")
@@ -417,9 +434,6 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageWriter.data(for: recessWithBadDepth))
 
         XCTAssertThrowsError(
-            try BoardPackageWriter.data(for: makeDocument(schemaVersion: 2))
-        )
-        XCTAssertThrowsError(
             try BoardPackageWriter.data(for: makeDocument(productURL: "http://example.com/board"))
         )
         XCTAssertThrowsError(
@@ -449,6 +463,35 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageWriter.data(for: noHolds))
     }
 
+    func testBendableMarkSurvivesRoundTrip() throws {
+        var document = makeDocument()
+        document.holds[0].geometry[0].shape = BoardGeometryShapeDocument(
+            type: "path",
+            commands: [
+                BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
+                BoardGeometryPathCommandDocument(
+                    command: "curve",
+                    to: [1, 1],
+                    control: nil,
+                    control1: [0.25, 0],
+                    control2: [0.75, 0.5],
+                    bendable: true
+                ),
+                BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
+            ],
+            cornerRadiusFraction: nil
+        )
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let output = String(decoding: encoded, as: UTF8.self)
+        XCTAssertTrue(output.contains("\"bendable\": true"))
+        let redecoded = try BoardEditableDocument(data: encoded)
+        XCTAssertEqual(
+            redecoded.holds[0].geometry[0].shape.commands?[1].bendable,
+            true
+        )
+    }
+
     func testStrictDecoderRejectsUnknownKeys() throws {
         var document = makeDocument()
         let encoded = try BoardPackageWriter.data(for: document)
@@ -456,8 +499,8 @@ final class BoardPackageWriterTests: XCTestCase {
 
         var tampered = String(decoding: encoded, as: UTF8.self)
         tampered = tampered.replacingOccurrences(
-            of: "\"schemaVersion\": 1,",
-            with: "\"schemaVersion\": 1,\n  \"legacyField\": true,"
+            of: "\"dimensions\":",
+            with: "\"legacyField\": true,\n  \"dimensions\":"
         )
         XCTAssertThrowsError(try BoardEditableDocument(data: Data(tampered.utf8)))
 

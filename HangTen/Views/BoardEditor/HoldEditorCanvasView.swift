@@ -40,6 +40,7 @@ final class HoldEditorCanvasUIView: UIView {
         case idle
         case viewport(startCenter: CGPoint)
         case translatePiece(startPath: [BoardPathCommand], startPoint: CGPoint)
+        case bendSegment(index: Int, startPath: [BoardPathCommand])
         case anchor(index: Int, startPath: [BoardPathCommand])
         case control(index: Int, slot: Int, startPath: [BoardPathCommand])
         case resize(handle: ConstrainedHandle, startPath: [BoardPathCommand])
@@ -203,6 +204,12 @@ final class HoldEditorCanvasUIView: UIView {
             if session.isRoundedRectPiece { return }
             guard let piece = session.selectedPieceDocument,
                   let startPath = try? session.boardCommands(for: piece) else { return }
+            if let bendableIndex = hitTestBendableSegment(at: location, commands: startPath, session: session) {
+                session.select(handle: .anchor(commandIndex: bendableIndex - 1 >= 0 ? bendableIndex - 1 : 0))
+                session.beginInteractiveEdit()
+                dragState = .bendSegment(index: bendableIndex, startPath: startPath)
+                return
+            }
             session.beginInteractiveEdit()
             dragState = .translatePiece(startPath: startPath, startPoint: boardPoint(fromScreen: location, bounds: bounds))
             return
@@ -266,6 +273,12 @@ final class HoldEditorCanvasUIView: UIView {
             let deltaY = current.y - startPoint.y
             var moved = startPath
             HoldPathEngine.translatePath(&moved, deltaX: deltaX, deltaY: deltaY)
+            try? session.replaceSelectedBoardPath(moved, constraint: nil, recordsHistory: false)
+            setNeedsDisplay()
+        case .bendSegment(let index, let startPath):
+            var moved = startPath
+            let pointer = boardPoint(fromScreen: location, bounds: bounds)
+            HoldPathEngine.bendSegmentToPoint(&moved, afterIndex: index, point: pointer)
             try? session.replaceSelectedBoardPath(moved, constraint: nil, recordsHistory: false)
             setNeedsDisplay()
         case .anchor(let index, let startPath):
@@ -395,6 +408,79 @@ final class HoldEditorCanvasUIView: UIView {
             x: screenTop.x + direction.x / length * offset,
             y: screenTop.y + direction.y / length * offset
         )
+    }
+
+    /// Returns the command index of a marked bendable cubic whose flattened
+    /// curve passes near the touch, so body drags bend it through the pointer.
+    private func hitTestBendableSegment(
+        at location: CGPoint,
+        commands: [BoardPathCommand],
+        session: BoardEditorSession
+    ) -> Int? {
+        guard let piece = session.selectedPieceDocument,
+              piece.shapeConstraint == nil else {
+            return nil
+        }
+        let documents = piece.shape.commands ?? []
+        var current = CGPoint.zero
+        var best: (index: Int, distance: CGFloat)?
+        for (index, command) in commands.enumerated() {
+            guard index < documents.count else { break }
+            switch command {
+            case .move(let point):
+                current = point
+                continue
+            case .close:
+                continue
+            case .line(let point):
+                current = point
+                continue
+            case .quad, .curve:
+                break
+            }
+            guard documents[index].bendable == true else {
+                if let endpoint = command.boardAnchor { current = endpoint }
+                continue
+            }
+            for sample in flattenedSamples(from: current, command: command) {
+                let screenSample = screenPoint(fromBoard: sample, bounds: bounds)
+                let distance = hypot(screenSample.x - location.x, screenSample.y - location.y)
+                if distance <= handleHitRadius && (best == nil || distance < best!.distance) {
+                    best = (index, distance)
+                }
+            }
+            if let endpoint = command.boardAnchor { current = endpoint }
+        }
+        return best?.index
+    }
+
+    private func flattenedSamples(from start: CGPoint, command: BoardPathCommand) -> [CGPoint] {
+        var samples: [CGPoint] = []
+        for step in 1...16 {
+            let t = CGFloat(step) / 16
+            let inverse = 1 - t
+            switch command {
+            case .quad(let to, let control):
+                samples.append(CGPoint(
+                    x: inverse * inverse * start.x + 2 * inverse * t * control.x + t * t * to.x,
+                    y: inverse * inverse * start.y + 2 * inverse * t * control.y + t * t * to.y
+                ))
+            case .curve(let to, let control1, let control2):
+                samples.append(CGPoint(
+                    x: inverse * inverse * inverse * start.x
+                        + 3 * inverse * inverse * t * control1.x
+                        + 3 * inverse * t * t * control2.x
+                        + t * t * t * to.x,
+                    y: inverse * inverse * inverse * start.y
+                        + 3 * inverse * inverse * t * control1.y
+                        + 3 * inverse * t * t * control2.y
+                        + t * t * t * to.y
+                ))
+            default:
+                break
+            }
+        }
+        return samples
     }
 
     private func hitTestPiece(at location: CGPoint) -> BoardEditorSession.PieceSelection? {

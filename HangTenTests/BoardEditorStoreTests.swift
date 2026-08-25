@@ -52,10 +52,10 @@ final class BoardEditorStoreTests: XCTestCase {
             id: "hold-one",
             name: "Hold one",
             kind: .jug,
+            presentationID: "front",
             geometry: [piece]
         )
         return BoardEditableDocument(
-            schemaVersion: 1,
             id: "fixture.board",
             manufacturer: "Fixture",
             name: "Fixture board",
@@ -63,8 +63,16 @@ final class BoardEditorStoreTests: XCTestCase {
             productURL: URL(string: "https://example.com/fixture")!,
             dimensions: "50 \u{00d7} 25 cm",
             aspectRatio: 2.0,
-            presentationAssetPath: "assets/primary.png",
-            holds: [hold]
+            holds: [hold],
+            presentations: [
+                BoardEditablePresentation(
+                    id: "front",
+                    name: "Front",
+                    assetPath: "assets/primary.png",
+                    aspectRatio: 2.0,
+                    isDefault: true
+                )
+            ]
         )
     }
 

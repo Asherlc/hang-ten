@@ -191,9 +191,16 @@ struct HoldInspectorView: View {
         VStack(alignment: .leading, spacing: 12) {
             SectionLabel(title: "Segment after selected vertex")
             if let index = session.selectedAnchorIndex {
+                if session.isSegmentBendable(after: index) {
+                    Text("This segment is marked bendable: drag its curve on the canvas and the midpoint follows your finger.")
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.restBlueDeep)
+                }
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                     inspectorButton("Straighten") { try session.straightenSegment(after: index) }
-                    inspectorButton("Bend") { try session.bendSegment(after: index) }
+                    inspectorButton(session.isSegmentBendable(after: index) ? "Re-bend" : "Bend") {
+                        try session.bendSegment(after: index)
+                    }
                     inspectorButton("Snap horizontal") { try session.snapSegment(after: index, horizontal: true) }
                     inspectorButton("Snap vertical") { try session.snapSegment(after: index, horizontal: false) }
                 }

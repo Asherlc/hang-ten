@@ -119,12 +119,19 @@ final class BoardEditorSession: ObservableObject {
         return local.map { $0.mappedToBoard(frame: frame) }
     }
 
+    /// Bendable marks ride on the canonical curve commands; the engine works
+    /// on flag-free commands, so the session keeps this index-aligned mask.
+    func bendableFlags(for piece: BoardEditablePiece) -> [Bool] {
+        (piece.shape.commands ?? []).map { $0.bendable == true }
+    }
+
     /// Converts edited board-space commands back into canonical piece storage:
     /// the frame becomes the tight anchor bounds and every point renormalizes
     /// into it, mirroring the Workbench display-path save pipeline. Control
     /// points may legitimately fall outside the unit square after this.
     private func canonicalWriteBack(
         _ boardPath: [BoardPathCommand],
+        bendableFlags: [Bool]? = nil,
         constraint: ShapeConstraint?,
         treatment: BoardGeometryTreatmentDocument?
     ) throws -> BoardEditablePiece {
@@ -143,6 +150,13 @@ final class BoardEditorSession: ObservableObject {
         }
         let frame = CGRect(x: minX, y: minY, width: width, height: height)
         let normalized = boardPath.map { $0.normalizedToFrame(frame: frame) }
+        var commandDocuments = normalized.pathCommandDocuments()
+        if let bendableFlags, bendableFlags.count == commandDocuments.count {
+            for index in commandDocuments.indices
+            where bendableFlags[index] && commandDocuments[index].command == "curve" {
+                commandDocuments[index].bendable = true
+            }
+        }
         return BoardEditablePiece(
             frame: BoardPackageFrameDocument(
                 x: Double(frame.minX),
@@ -152,7 +166,7 @@ final class BoardEditorSession: ObservableObject {
             ),
             shape: BoardGeometryShapeDocument(
                 type: "path",
-                commands: normalized.pathCommandDocuments(),
+                commands: commandDocuments,
                 cornerRadiusFraction: nil
             ),
             shapeConstraint: constraint,
@@ -208,19 +222,19 @@ final class BoardEditorSession: ObservableObject {
     // MARK: - Live gesture edits
 
     func translateSelectedPiece(deltaX: CGFloat, deltaY: CGFloat, recordsHistory: Bool) throws {
-        try mutateSelectedBoardPath(recordsHistory: recordsHistory) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: recordsHistory) { boardPath, _ in
             HoldPathEngine.translatePath(&boardPath, deltaX: deltaX, deltaY: deltaY)
         }
     }
 
     func moveSelectedAnchor(commandIndex: Int, deltaX: CGFloat, deltaY: CGFloat, recordsHistory: Bool) throws {
-        try mutateSelectedBoardPath(recordsHistory: recordsHistory) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: recordsHistory) { boardPath, _ in
             HoldPathEngine.moveVertex(&boardPath, index: commandIndex, deltaX: deltaX, deltaY: deltaY)
         }
     }
 
     func dragControlPoint(commandIndex: Int, slot: Int, deltaX: CGFloat, deltaY: CGFloat, recordsHistory: Bool) throws {
-        try mutateSelectedBoardPath(recordsHistory: recordsHistory) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: recordsHistory) { boardPath, _ in
             guard let current = boardPath.controlPoint(commandIndex: commandIndex, slot: slot) else { return }
             boardPath.setControlPoint(
                 commandIndex: commandIndex,
@@ -233,43 +247,63 @@ final class BoardEditorSession: ObservableObject {
     // MARK: - Discrete edits
 
     func addVertexAfterAnchor(index: Int) throws {
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in
             guard boardPath.indices.contains(index) else { return }
             let start = boardPath[index].boardAnchor ?? .zero
             let nextIndex = (index + 1) % boardPath.count
             let end = boardPath[nextIndex].boardAnchor ?? CGPoint(x: start.x + 1, y: start.y)
             let midpoint = CGPoint(x: (start.x + end.x) / 2, y: (start.y + end.y) / 2)
             HoldPathEngine.addVertex(&boardPath, afterIndex: index, x: midpoint.x, y: midpoint.y)
+            if nextIndex < bendableFlags.count {
+                let carried = bendableFlags[nextIndex]
+                bendableFlags.insert(carried, at: nextIndex)
+            }
         }
     }
 
     func addInflection(after index: Int, at point: CGPoint) throws {
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in
             _ = HoldPathEngine.addInflectionPoint(&boardPath, afterIndex: index, point: point)
+            let splitIndex = index + 1
+            if boardPath.indices.contains(splitIndex), splitIndex < bendableFlags.count {
+                let carried = bendableFlags[splitIndex]
+                bendableFlags.insert(carried, at: splitIndex)
+            }
         }
     }
 
     func deleteAnchor(index: Int) throws {
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in
             HoldPathEngine.deleteVertex(&boardPath, index: index)
+            if bendableFlags.indices.contains(index) {
+                bendableFlags.remove(at: index)
+            }
         }
         selectedHandle = nil
     }
 
     func straightenSegment(after index: Int) throws {
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in
             _ = HoldPathEngine.makeSegmentStraight(&boardPath, afterIndex: index)
+            let straightenedIndex = index + 1
+            if bendableFlags.indices.contains(straightenedIndex) {
+                bendableFlags[straightenedIndex] = false
+            }
         }
     }
 
     func bendSegment(after index: Int) throws {
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in
             _ = HoldPathEngine.makeSegmentBendable(&boardPath, afterIndex: index)
+            let curveIndex = index + 1
+            if bendableFlags.indices.contains(curveIndex) {
+                bendableFlags[curveIndex] = true
+            }
         }
     }
 
     func snapSegment(after index: Int, horizontal: Bool) throws {
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, _ in
             _ = horizontal
                 ? HoldPathEngine.snapSegmentHorizontal(&boardPath, afterIndex: index)
                 : HoldPathEngine.snapSegmentVertical(&boardPath, afterIndex: index)
@@ -277,8 +311,11 @@ final class BoardEditorSession: ObservableObject {
     }
 
     func roundVertex(at index: Int) throws {
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in
             _ = HoldPathEngine.roundVertex(&boardPath, index: index)
+            for cleared in (index + 1)...(index + 2) where bendableFlags.indices.contains(cleared) {
+                bendableFlags[cleared] = false
+            }
         }
     }
 
@@ -292,8 +329,11 @@ final class BoardEditorSession: ObservableObject {
                 shape: OutlinePresetMapping.constraintShape(for: preset),
                 rotationDegrees: existingRotation
             )
-        ) { boardPath in
+        ) { boardPath, bendableFlags in
             try HoldPathEngine.createOutlineShapePath(of: boardPath, preset: preset)
+            for index in bendableFlags.indices {
+                bendableFlags[index] = false
+            }
         }
     }
 
@@ -359,7 +399,7 @@ final class BoardEditorSession: ObservableObject {
         guard let piece = selectedPieceDocument else { throw SessionError.noSelection }
         try ensurePathPiece(piece)
         guard piece.shapeConstraint == nil else { return }
-        try mutateSelectedBoardPath(recordsHistory: true) { boardPath in
+        try mutateSelectedBoardPath(recordsHistory: true) { boardPath, _ in
             HoldPathEngine.rotatePath(
                 &boardPath,
                 angleRadians: CGFloat(delta * Double.pi / 180),
@@ -392,6 +432,7 @@ final class BoardEditorSession: ObservableObject {
         )
         let updated = try canonicalWriteBack(
             result.commands,
+            bendableFlags: [],
             constraint: result.shapeConstraint,
             treatment: piece.treatment
         )
@@ -403,6 +444,7 @@ final class BoardEditorSession: ObservableObject {
 
     /// Replaces the selected path piece wholesale; the canvas drives this with
     /// gesture-start-relative math so repeated moves never compound drift.
+    /// Bendable marks ride on the piece and survive the replacement.
     func replaceSelectedBoardPath(
         _ boardPath: [BoardPathCommand],
         constraint: ShapeConstraint?,
@@ -417,6 +459,7 @@ final class BoardEditorSession: ObservableObject {
         try ensurePathPiece(piece)
         let updated = try canonicalWriteBack(
             boardPath,
+            bendableFlags: bendableFlags(for: piece),
             constraint: constraint ?? piece.shapeConstraint,
             treatment: piece.treatment
         )
@@ -424,6 +467,22 @@ final class BoardEditorSession: ObservableObject {
             pushHistory()
         }
         replaceGeometry(at: selection, with: updated)
+    }
+
+    func isSegmentBendable(after index: Int) -> Bool {
+        guard let piece = selectedPieceDocument,
+              let commands = piece.shape.commands,
+              commands.indices.contains(index) else {
+            return false
+        }
+        return commands[index].bendable == true
+    }
+
+    /// Bends a marked cubic through the pointer; anchors stay fixed.
+    func dragBendableSegment(after index: Int, point: CGPoint, recordsHistory: Bool) throws {
+        try mutateSelectedBoardPath(recordsHistory: recordsHistory) { boardPath, _ in
+            _ = HoldPathEngine.bendSegmentToPoint(&boardPath, afterIndex: index, point: point)
+        }
     }
 
     // MARK: - Persistence
@@ -465,7 +524,7 @@ final class BoardEditorSession: ObservableObject {
     private func mutateSelectedBoardPath(
         recordsHistory: Bool,
         constraintOverride: ShapeConstraint? = nil,
-        _ transform: (inout [BoardPathCommand]) throws -> Void
+        _ transform: (inout [BoardPathCommand], inout [Bool]) throws -> Void
     ) throws {
         guard let selection = selectedPiece else { throw SessionError.noSelection }
         guard let hold = self.hold(id: selection.holdID),
@@ -475,9 +534,11 @@ final class BoardEditorSession: ObservableObject {
         let piece = hold.geometry[selection.pieceIndex]
         try ensurePathPiece(piece)
         var boardPath = try boardCommands(for: piece)
-        try transform(&boardPath)
+        var bendableFlags = bendableFlags(for: piece)
+        try transform(&boardPath, &bendableFlags)
         let updated = try canonicalWriteBack(
             boardPath,
+            bendableFlags: bendableFlags,
             constraint: constraintOverride ?? piece.shapeConstraint,
             treatment: piece.treatment
         )

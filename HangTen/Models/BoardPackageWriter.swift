@@ -1,7 +1,6 @@
 import Foundation
 
 struct BoardEditableDocument: Equatable, Decodable {
-    var schemaVersion: Int
     var id: String
     var manufacturer: String
     var name: String
@@ -9,11 +8,10 @@ struct BoardEditableDocument: Equatable, Decodable {
     var productURL: URL
     var dimensions: String
     var aspectRatio: Double
-    var presentationAssetPath: String
     var holds: [BoardEditableHold]
+    var presentations: [BoardEditablePresentation]
 
     private enum CodingKeys: String, CodingKey {
-        case schemaVersion
         case id
         case manufacturer
         case name
@@ -21,12 +19,11 @@ struct BoardEditableDocument: Equatable, Decodable {
         case productURL
         case dimensions
         case aspectRatio
-        case presentation
         case holds
+        case presentations
     }
 
     init(
-        schemaVersion: Int,
         id: String,
         manufacturer: String,
         name: String,
@@ -34,10 +31,9 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL: URL,
         dimensions: String,
         aspectRatio: Double,
-        presentationAssetPath: String,
-        holds: [BoardEditableHold]
+        holds: [BoardEditableHold],
+        presentations: [BoardEditablePresentation]
     ) {
-        self.schemaVersion = schemaVersion
         self.id = id
         self.manufacturer = manufacturer
         self.name = name
@@ -45,17 +41,16 @@ struct BoardEditableDocument: Equatable, Decodable {
         self.productURL = productURL
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
-        self.presentationAssetPath = presentationAssetPath
         self.holds = holds
+        self.presentations = presentations
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
-            "schemaVersion", "id", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "presentation", "holds"
+            "id", "manufacturer", "name", "subtitle", "productURL",
+            "dimensions", "aspectRatio", "holds", "presentations"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
         id = try container.decode(String.self, forKey: .id)
         manufacturer = try container.decode(String.self, forKey: .manufacturer)
         name = try container.decode(String.self, forKey: .name)
@@ -63,12 +58,8 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decode(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        let presentation = try container.decode(
-            BoardEditablePresentationDocument.self,
-            forKey: .presentation
-        )
-        presentationAssetPath = presentation.assetPath
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
+        presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
     }
 
     init(data: Data) throws {
@@ -76,17 +67,43 @@ struct BoardEditableDocument: Equatable, Decodable {
     }
 }
 
-private struct BoardEditablePresentationDocument: Decodable {
-    let assetPath: String
+struct BoardEditablePresentation: Equatable, Decodable {
+    var id: String
+    var name: String
+    var assetPath: String
+    var aspectRatio: Double
+    var isDefault: Bool
 
     private enum CodingKeys: String, CodingKey {
+        case id
+        case name
         case assetPath
+        case aspectRatio
+        case isDefault = "default"
+    }
+
+    init(
+        id: String,
+        name: String,
+        assetPath: String,
+        aspectRatio: Double,
+        isDefault: Bool
+    ) {
+        self.id = id
+        self.name = name
+        self.assetPath = assetPath
+        self.aspectRatio = aspectRatio
+        self.isDefault = isDefault
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownEditorKeys(["assetPath"])
+        try decoder.rejectUnknownEditorKeys(["id", "name", "assetPath", "aspectRatio", "default"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
         assetPath = try container.decode(String.self, forKey: .assetPath)
+        aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        isDefault = try container.decode(Bool.self, forKey: .isDefault)
     }
 }
 
@@ -100,6 +117,7 @@ struct BoardEditableHold: Equatable, Decodable {
     var fingerCapacity: Int?
     var handCapacity: Int?
     var features: [HoldFeature]?
+    var presentationID: String
     var geometry: [BoardEditablePiece]
 
     private enum CodingKeys: String, CodingKey {
@@ -113,6 +131,7 @@ struct BoardEditableHold: Equatable, Decodable {
         case fingerCapacity
         case handCapacity
         case features
+        case presentationID
     }
 
     init(
@@ -125,6 +144,7 @@ struct BoardEditableHold: Equatable, Decodable {
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         features: [HoldFeature]? = nil,
+        presentationID: String,
         geometry: [BoardEditablePiece]
     ) {
         self.id = id
@@ -136,13 +156,15 @@ struct BoardEditableHold: Equatable, Decodable {
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
         self.features = features
+        self.presentationID = presentationID
         self.geometry = geometry
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
-            "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity", "features"
+            "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
+            "features", "presentationID"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -158,6 +180,7 @@ struct BoardEditableHold: Equatable, Decodable {
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
+        presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 }
 
@@ -296,9 +319,6 @@ enum BoardPackageWriter {
     }
 
     static func validate(_ document: BoardEditableDocument) throws {
-        guard document.schemaVersion == 1 else {
-            throw invalid("unsupported schemaVersion", document)
-        }
         guard document.id.isEditorBoardIdentifier else {
             throw invalid("board ID must be identifier-shaped", document)
         }
@@ -317,8 +337,32 @@ enum BoardPackageWriter {
         guard document.aspectRatio.isFinite, document.aspectRatio > 0 else {
             throw invalid("aspect ratio must be positive", document)
         }
-        guard document.presentationAssetPath == "assets/primary.png" else {
-            throw invalid("presentation.assetPath must be assets/primary.png", document)
+        guard !document.presentations.isEmpty else {
+            throw invalid("presentations must not be empty", document)
+        }
+        var presentationIDs = Set<String>()
+        var defaultPresentationCount = 0
+        for presentation in document.presentations {
+            guard presentation.id.isEditorBoardIdentifier, !presentation.name.isEmpty else {
+                throw invalid("presentation \(presentation.id) metadata must be non-empty and identifier-shaped", document)
+            }
+            guard presentationIDs.insert(presentation.id).inserted else {
+                throw invalid("presentation ID \(presentation.id) is duplicated", document)
+            }
+            guard presentation.assetPath.hasPrefix("assets/"),
+                  !presentation.assetPath.hasSuffix("/"),
+                  !presentation.assetPath.contains("..") else {
+                throw invalid("presentation \(presentation.id) assetPath must stay inside the package assets directory", document)
+            }
+            guard presentation.aspectRatio.isFinite, presentation.aspectRatio > 0 else {
+                throw invalid("presentation \(presentation.id) aspect ratio must be positive", document)
+            }
+            if presentation.isDefault {
+                defaultPresentationCount += 1
+            }
+        }
+        guard defaultPresentationCount == 1 else {
+            throw invalid("presentations must declare exactly one default", document)
         }
 
         var holdIDs = Set<String>()
@@ -328,6 +372,9 @@ enum BoardPackageWriter {
             }
             guard holdIDs.insert(hold.id).inserted else {
                 throw invalid("hold ID \(hold.id) is duplicated", document)
+            }
+            guard presentationIDs.contains(hold.presentationID) else {
+                throw invalid("hold \(hold.id) references unknown presentation \(hold.presentationID)", document)
             }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
@@ -436,7 +483,6 @@ enum BoardPackageWriter {
 
     private static func canonicalValue(_ document: BoardEditableDocument) -> CanonicalJSONValue {
         .object([
-            ("schemaVersion", .int(document.schemaVersion)),
             ("id", .string(document.id)),
             ("manufacturer", .string(document.manufacturer)),
             ("name", .string(document.name)),
@@ -444,10 +490,8 @@ enum BoardPackageWriter {
             ("productURL", .string(document.productURL.absoluteString)),
             ("dimensions", .string(document.dimensions)),
             ("aspectRatio", .double(document.aspectRatio)),
-            ("presentation", .object([
-                ("assetPath", .string(document.presentationAssetPath)),
-            ])),
             ("holds", .array(document.holds.map(canonicalHoldValue))),
+            ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
         ])
     }
 
@@ -478,8 +522,21 @@ enum BoardPackageWriter {
         if let features = hold.features {
             entries.append(("features", .array(features.map { .string($0.rawValue) })))
         }
+        entries.append(("presentationID", .string(hold.presentationID)))
         entries.append(("geometry", .array(hold.geometry.map(canonicalPieceValue))))
         return .object(entries)
+    }
+
+    private static func canonicalPresentationValue(
+        _ presentation: BoardEditablePresentation
+    ) -> CanonicalJSONValue {
+        .object([
+            ("id", .string(presentation.id)),
+            ("name", .string(presentation.name)),
+            ("assetPath", .string(presentation.assetPath)),
+            ("aspectRatio", .double(presentation.aspectRatio)),
+            ("default", .bool(presentation.isDefault)),
+        ])
     }
 
     private static func canonicalPieceValue(_ piece: BoardEditablePiece) -> CanonicalJSONValue {
@@ -536,6 +593,9 @@ enum BoardPackageWriter {
         }
         if let to = command.to {
             entries.append(("to", pointValue(to)))
+        }
+        if command.bendable == true {
+            entries.append(("bendable", .bool(true)))
         }
         return .object(entries)
     }

@@ -478,6 +478,9 @@ enum HoldPathEngine {
         return true
     }
 
+    /// Replaces a straight segment with a cubic whose controls sit at the
+    /// thirds; the session marks the resulting document command bendable so
+    /// later drags bend the curve through the pointer.
     static func makeSegmentBendable(_ commands: inout [BoardPathCommand], afterIndex: Int) -> Bool {
         guard commands.indices.contains(afterIndex),
               let start = commands[afterIndex].holdEndPoint else {
@@ -493,12 +496,41 @@ enum HoldPathEngine {
             end = endPoint
         }
         guard let end, !pointsMatch(start, end) else { return false }
-        let curve = BoardPathCommand.quad(to: end, control: interpolate(start, end, 0.5))
+        let curve = BoardPathCommand.curve(
+            to: end,
+            control1: interpolate(start, end, 1 / 3),
+            control2: interpolate(start, end, 2 / 3)
+        )
         if closingEdge {
             commands.replaceSubrange(nextIndex...nextIndex, with: [curve, .close])
         } else {
             commands[nextIndex] = curve
         }
+        return true
+    }
+
+    /// Moves a marked bendable cubic's controls so the curve midpoint passes
+    /// through the pointer while both anchors stay fixed.
+    static func bendSegmentToPoint(
+        _ commands: inout [BoardPathCommand],
+        afterIndex: Int,
+        point: CGPoint
+    ) -> Bool {
+        guard commands.indices.contains(afterIndex),
+              let start = commands[afterIndex].holdEndPoint else {
+            return false
+        }
+        let nextIndex = afterIndex + 1
+        guard commands.indices.contains(nextIndex),
+              point.x.isFinite, point.y.isFinite else {
+            return false
+        }
+        guard case .curve(let end, _, _) = commands[nextIndex] else { return false }
+        let control = CGPoint(
+            x: (8 * point.x - start.x - end.x) / 6,
+            y: (8 * point.y - start.y - end.y) / 6
+        )
+        commands[nextIndex] = .curve(to: end, control1: control, control2: control)
         return true
     }
 
