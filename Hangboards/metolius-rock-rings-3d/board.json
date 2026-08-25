@@ -124,16 +124,16 @@
               {
                 "command": "curve",
                 "control1": [
-                  0.0,
-                  0.1
+                  0.092468552134,
+                  0.33889154693
                 ],
                 "control2": [
-                  0.03,
-                  0.0
+                  0.122468552134,
+                  0.23889154693
                 ],
                 "to": [
-                  0.08,
-                  0.0
+                  0.172468552134,
+                  0.23889154693
                 ]
               },
               {
@@ -267,7 +267,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -392,7 +392,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -517,7 +517,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -773,7 +773,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -898,7 +898,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1023,7 +1023,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
