@@ -645,7 +645,11 @@ def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
         assert right_frame["y"] == left_frame["y"]
         assert right_frame["width"] == left_frame["width"]
         assert right_frame["height"] == left_frame["height"]
-        assert right["shape"] == left["shape"]
+        assert right["shape"]["type"] == left["shape"]["type"] == "path"
+        _assert_global_paths_are_horizontal_mirrors(left, right)
+        assert [
+            command.get("bendable") for command in right["shape"]["commands"]
+        ] == [command.get("bendable") for command in left["shape"]["commands"]]
         assert right.get("shapeConstraint") == left.get("shapeConstraint")
 
 
