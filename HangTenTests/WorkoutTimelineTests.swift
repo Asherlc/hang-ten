@@ -1354,6 +1354,30 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertEqual(scheduler.startedSequences, [["3", "2", "1"], ["3", "2", "1"]])
     }
 
+    // Catches a bounded retry budget leaving other-app audio ducked indefinitely.
+    func testCountdownCompletionRetriesDeactivationUntilItNotifiesOtherApps() async {
+        let audioSession = RecordingWorkoutAudioSession(failedDeactivationAttempts: 4)
+        let completionScheduler = RecordingWorkoutCountdownCompletionScheduler()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: audioSession,
+            countdownScheduler: RecordingCountdownAudioScheduler(),
+            countdownCompletionScheduler: completionScheduler
+        )
+        let deactivation = expectation(description: "retries countdown deactivation until other apps are notified")
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            deactivation.fulfill()
+        }
+
+        XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
+        completionScheduler.complete()
+
+        await fulfillment(of: [deactivation], timeout: 2)
+        XCTAssertEqual(audioSession.deactivationAttemptCount, 5)
+        XCTAssertEqual(audioSession.deactivationCount, 1)
+        XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+
     // Catches a rejected late schedule falling back to queued live speech.
     func testRejectedCountdownScheduleStaysSilentAndReleasesAudioSession() {
         let audioSession = RecordingWorkoutAudioSession()
