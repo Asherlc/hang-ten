@@ -106,6 +106,91 @@ protocol CountdownAudioSchedulingBackend: AnyObject {
     func stop()
 }
 
+protocol CountdownAudioBufferSource: AnyObject {
+    func buffers(for phrases: Set<String>) -> [String: [AVAudioPCMBuffer]]?
+}
+
+struct CountdownAudioSchedulingBackendSelector {
+    typealias BackendFactory = () -> any CountdownAudioSchedulingBackend
+    typealias BundledBackendFactory = (
+        [String: [AVAudioPCMBuffer]]
+    ) -> any CountdownAudioSchedulingBackend
+
+    private let bufferSource: any CountdownAudioBufferSource
+    private let bundledBackendFactory: BundledBackendFactory
+    private let appleRendererFactory: BackendFactory
+
+    init(
+        bufferSource: any CountdownAudioBufferSource,
+        bundledBackendFactory: @escaping BundledBackendFactory,
+        appleRendererFactory: @escaping BackendFactory
+    ) {
+        self.bufferSource = bufferSource
+        self.bundledBackendFactory = bundledBackendFactory
+        self.appleRendererFactory = appleRendererFactory
+    }
+
+    func backend(for phrases: Set<String>) -> any CountdownAudioSchedulingBackend {
+        guard let buffers = bufferSource.buffers(for: phrases) else {
+            return appleRendererFactory()
+        }
+        return bundledBackendFactory(buffers)
+    }
+}
+
+final class BundledCountdownAudioBufferSource: CountdownAudioBufferSource {
+    private let bundle: Bundle
+
+    init(bundle: Bundle = .main) {
+        self.bundle = bundle
+    }
+
+    func buffers(for phrases: Set<String>) -> [String: [AVAudioPCMBuffer]]? {
+        guard !phrases.isEmpty else { return nil }
+
+        var sharedFormat: AVAudioFormat?
+        var result: [String: [AVAudioPCMBuffer]] = [:]
+
+        for phrase in phrases.sorted() {
+            guard let url = bundle.url(
+                forResource: "countdown-\(phrase)",
+                withExtension: "mp3",
+                subdirectory: "CountdownAudio"
+            ) else {
+                return nil
+            }
+
+            do {
+                let file = try AVAudioFile(forReading: url)
+                let format = file.processingFormat
+                guard file.length > 0,
+                      file.length <= AVAudioFramePosition(UInt32.max),
+                      sharedFormat?.isEqual(format) ?? true,
+                      let buffer = AVAudioPCMBuffer(
+                        pcmFormat: format,
+                        frameCapacity: AVAudioFrameCount(file.length)
+                      ) else {
+                    return nil
+                }
+
+                try file.read(into: buffer)
+                guard buffer.frameLength > 0,
+                      buffer.frameLength == buffer.frameCapacity else {
+                    return nil
+                }
+
+                sharedFormat = sharedFormat ?? format
+                result[phrase] = [buffer]
+            } catch {
+                return nil
+            }
+        }
+
+        guard result.count == phrases.count else { return nil }
+        return result
+    }
+}
+
 protocol CountdownAudioLifecycleLogging: AnyObject {
     func prewarmCompleted(succeeded: Bool)
     func scheduleAccepted(_ schedule: CountdownAudioSchedule, startHostTime: UInt64)
@@ -379,6 +464,58 @@ private final class SystemCountdownAudioBufferPlayback: CountdownAudioBufferPlay
 }
 
 private final class SystemCountdownAudioSchedulingBackend: CountdownAudioSchedulingBackend {
+    private let selectedBackend: any CountdownAudioSchedulingBackend
+
+    init(
+        preferredLanguageCode: String,
+        rate: Float,
+        pitchMultiplier: Float,
+        volume: Float
+    ) {
+        let selector = CountdownAudioSchedulingBackendSelector(
+            bufferSource: BundledCountdownAudioBufferSource(),
+            bundledBackendFactory: { buffers in
+                CountdownAudioBufferSchedulingBackend(
+                    buffersForSchedule: { schedule in
+                        let phrases = Set(schedule.cues.map(\.phrase))
+                        guard phrases.allSatisfy({ buffers[$0]?.isEmpty == false }) else {
+                            return nil
+                        }
+                        return buffers
+                    },
+                    playback: SystemCountdownAudioBufferPlayback(),
+                    currentHostTime: {
+                        AVAudioTime.hostTime(forSeconds: ProcessInfo.processInfo.systemUptime)
+                    }
+                )
+            },
+            appleRendererFactory: {
+                AppleCountdownAudioSchedulingBackend(
+                    preferredLanguageCode: preferredLanguageCode,
+                    rate: rate,
+                    pitchMultiplier: pitchMultiplier,
+                    volume: volume
+                )
+            }
+        )
+        selectedBackend = selector.backend(for: ["3", "2", "1"])
+    }
+
+    func prewarm(completion: @escaping (Bool) -> Void) {
+        selectedBackend.prewarm(completion: completion)
+    }
+
+    @discardableResult
+    func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
+        selectedBackend.schedule(schedule, startHostTime: startHostTime)
+    }
+
+    func stop() {
+        selectedBackend.stop()
+    }
+}
+
+private final class AppleCountdownAudioSchedulingBackend: CountdownAudioSchedulingBackend {
     private enum PreparationState {
         case idle
         case preparingPlayback
