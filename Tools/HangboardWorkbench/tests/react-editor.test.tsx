@@ -1058,6 +1058,20 @@ test("zero depth is visibly invalid in the inspector", async () => {
   }, dependenciesFixture(board));
 });
 
+test("zero fixed depth is visibly invalid in the inspector", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#depth-measurement-select", "fixed");
+    await app.change("#hold-depth-input", "0");
+
+    const input = app.document.querySelector<HTMLInputElement>("#hold-depth-input");
+    assert.ok(input);
+    assert.equal(input.min, Number.MIN_VALUE.toString());
+    assert.equal(input.checkValidity(), false);
+    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+  });
+});
+
 test("clearing an invalid optional depth clears its validation error and saves without a depth range", async () => {
   const board = boardFixture(documentFixture([
     {
