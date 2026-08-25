@@ -110,7 +110,9 @@ struct BoardEditablePresentation: Equatable, Decodable {
 struct BoardEditableHold: Equatable, Decodable {
     var id: String
     var name: String
-    var kind: HoldKind
+    /// Editor packages may omit `kind` while metadata is being completed.
+    /// Training-board decoding remains strict in `BoardPackageStore`.
+    var kind: HoldKind?
     var sizeMillimeters: Int?
     var depthRangeMillimeters: BoardEditableMillimeterRange?
     var gripType: GripType?
@@ -137,7 +139,7 @@ struct BoardEditableHold: Equatable, Decodable {
     init(
         id: String,
         name: String,
-        kind: HoldKind,
+        kind: HoldKind?,
         sizeMillimeters: Int? = nil,
         depthRangeMillimeters: BoardEditableMillimeterRange? = nil,
         gripType: GripType? = nil,
@@ -169,7 +171,7 @@ struct BoardEditableHold: Equatable, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
-        kind = try container.decode(HoldKind.self, forKey: .kind)
+        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
         geometry = try container.decode([BoardEditablePiece].self, forKey: .geometry)
         sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
@@ -502,8 +504,10 @@ enum BoardPackageWriter {
         var entries: [(String, CanonicalJSONValue)] = [
             ("id", .string(hold.id)),
             ("name", .string(hold.name)),
-            ("kind", .string(hold.kind.rawValue)),
         ]
+        if let kind = hold.kind {
+            entries.append(("kind", .string(kind.rawValue)))
+        }
         if let sizeMillimeters = hold.sizeMillimeters {
             entries.append(("sizeMillimeters", .int(sizeMillimeters)))
         }

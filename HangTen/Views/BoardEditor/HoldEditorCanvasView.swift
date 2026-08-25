@@ -77,10 +77,53 @@ final class HoldEditorCanvasUIView: UIView {
     }
 
     func updateMetadataWarningAccessibility() {
-        isAccessibilityElement = true
-        accessibilityTraits = .image
-        accessibilityLabel = session?.metadataWarningAccessibilityLabel ?? "Hangboard hold editor"
-        accessibilityValue = session?.metadataWarningAccessibilityValue
+        let aggregate = UIAccessibilityElement(accessibilityContainer: self)
+        aggregate.accessibilityTraits = .image
+        aggregate.accessibilityLabel = session?.metadataWarningAccessibilityLabel ?? "Hangboard hold editor"
+        aggregate.accessibilityValue = session?.metadataWarningAccessibilityValue
+        aggregate.accessibilityFrameInContainerSpace = bounds
+
+        var elements: [UIAccessibilityElement] = [aggregate]
+        if let session {
+            for hold in session.document.holds where !session.missingRequiredMetadata(for: hold).isEmpty {
+                let warning = UIAccessibilityElement(accessibilityContainer: self)
+                warning.accessibilityTraits = .image
+                warning.accessibilityLabel = "Incomplete hold metadata: \(hold.id)"
+                warning.accessibilityValue = "Missing: \(session.missingRequiredMetadata(for: hold).joined(separator: ", "))"
+                warning.accessibilityHint = "Complete this hold's required metadata in the inspector."
+                warning.accessibilityFrameInContainerSpace = accessibilityFrame(for: hold)
+                elements.append(warning)
+            }
+        }
+
+        isAccessibilityElement = false
+        accessibilityElements = elements
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateMetadataWarningAccessibility()
+    }
+
+    private func accessibilityFrame(for hold: BoardEditableHold) -> CGRect {
+        let boardFrame = hold.geometry.map(\.frame.cgRect).reduce(CGRect.null) { partial, frame in
+            partial.union(frame)
+        }
+        guard !boardFrame.isNull else { return bounds }
+        let first = screenPoint(
+            fromBoard: CGPoint(x: boardFrame.minX, y: boardFrame.minY),
+            bounds: bounds
+        )
+        let second = screenPoint(
+            fromBoard: CGPoint(x: boardFrame.maxX, y: boardFrame.maxY),
+            bounds: bounds
+        )
+        return CGRect(
+            x: min(first.x, second.x),
+            y: min(first.y, second.y),
+            width: abs(second.x - first.x),
+            height: abs(second.y - first.y)
+        )
     }
 
     // MARK: - Transform

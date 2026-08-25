@@ -84,16 +84,25 @@ final class BoardEditorSession: ObservableObject {
         return hold(id: selectedPiece.holdID)
     }
 
-    /// `kind` is required by the package schema, so an editable hold needs
-    /// the remaining required metadata before it is considered complete.
+    /// Editable packages may omit a hold kind while metadata is being completed.
     var incompleteMetadataHoldIDs: [String] {
         document.holds.compactMap { hold in
-            hold.fingerCapacity == nil
+            hold.kind == nil
+                || hold.fingerCapacity == nil
                 || hold.depthRangeMillimeters == nil
                 || hold.handCapacity == nil
                 ? hold.id
                 : nil
         }
+    }
+
+    func missingRequiredMetadata(for hold: BoardEditableHold) -> [String] {
+        var missing: [String] = []
+        if hold.kind == nil { missing.append("kind") }
+        if hold.fingerCapacity == nil { missing.append("finger capacity") }
+        if hold.depthRangeMillimeters == nil { missing.append("depth range") }
+        if hold.handCapacity == nil { missing.append("hand capacity") }
+        return missing
     }
 
     var metadataWarningText: String? {
