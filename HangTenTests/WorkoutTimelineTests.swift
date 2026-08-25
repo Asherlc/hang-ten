@@ -2411,6 +2411,7 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
             countdownScheduler: scheduler,
             countdownCompletionScheduler: completionScheduler
         )
+        coach.prepareCountdownAudio()
         let startUptime = ProcessInfo.processInfo.systemUptime + 10
         let routeSteps = [
             WorkoutStep(
