@@ -9,7 +9,9 @@ import pytest
 
 from conftest import (
     ALTERNATE_PRIMARY_PNG_BYTES,
+    OPAQUE_PRIMARY_PNG_BYTES,
     PRIMARY_PNG_BYTES,
+    TRANSPARENT_PRIMARY_PNG_BYTES,
     board_document,
     load_board_catalog_module,
     write_board_package,
@@ -90,6 +92,15 @@ def test_final_inventory_rejects_a_primary_only_draft(tmp_path: Path) -> None:
         module.discover_board_packages(tmp_path, require_complete_inventory=True)
 
 
+def test_discovery_rejects_an_opaque_primary_only_draft(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    draft = write_primary_only_draft(tmp_path / "draft-model")
+    (draft / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="fully transparent pixel"):
+        module.discover_board_packages(tmp_path)
+
+
 def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     write_board_package(tmp_path / "first-model", board_id="duplicate.board")
@@ -141,6 +152,84 @@ def test_completed_package_requires_the_exact_finished_shape(
 
     with pytest.raises(ValueError, match=message):
         module.discover_board_packages(tmp_path)
+
+
+def test_completed_package_rejects_an_opaque_primary_png(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    (package / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="fully transparent pixel"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_completed_package_accepts_a_primary_png_with_actual_alpha_zero(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    (package / "assets" / "primary.png").write_bytes(TRANSPARENT_PRIMARY_PNG_BYTES)
+
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [item.root.name for item in inventory.packages] == ["fixture-model"]
+
+
+def test_primary_transparency_validation_uses_the_streaming_zlib_api(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_board_catalog_module()
+    write_board_package(tmp_path / "fixture-model")
+
+    def prohibit_full_decompression(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("the one-shot zlib API must not be used")
+
+    monkeypatch.setattr(module.zlib, "decompress", prohibit_full_decompression)
+
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [item.root.name for item in inventory.packages] == ["fixture-model"]
+
+
+def test_primary_transparency_validation_rejects_an_invalid_filter_after_alpha_zero(
+    tmp_path: Path,
+) -> None:
+    """Alpha discovery must not skip structural validation of later scanlines."""
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    raw_rows = b"\x00\xff\xff\xff\x00" + b"\x05\xff\xff\xff\xff"
+    ihdr = struct.pack(">IIBBBBB", 1, 2, 8, 6, 0, 0, 0)
+    malformed = (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", ihdr)
+        + _png_chunk(b"IDAT", zlib.compress(raw_rows))
+        + _png_chunk(b"IEND")
+    )
+    (package / "assets" / "primary.png").write_bytes(malformed)
+
+    with pytest.raises(ValueError, match="invalid PNG row filter"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_primary_transparency_validation_checks_later_filters_without_unfiltering(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Keep full structural checks without Python pixel work after alpha-zero."""
+    module = load_board_catalog_module()
+    write_board_package(tmp_path / "fixture-model")
+    original = module._unfilter_png_row
+    calls = 0
+
+    def count_rows(*args: object, **kwargs: object) -> bytes:
+        nonlocal calls
+        calls += 1
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(module, "_unfilter_png_row", count_rows)
+
+    module.discover_board_packages(tmp_path)
+
+    assert calls == 1
 
 
 def test_discovery_rejects_malformed_completed_package(tmp_path: Path) -> None:

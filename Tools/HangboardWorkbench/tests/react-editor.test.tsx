@@ -880,6 +880,45 @@ test("duplicate and mirror regenerates bendable indexes from mirrored cubic comm
   }, dependenciesFixture(board, { client }));
 });
 
+test("duplicate and mirror preserves the selected presentation on the new hold", async () => {
+  const document: EditorDocument = {
+    presentationID: "front",
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      id: 1,
+      key: "front-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "front", pieceIndex: 0, presentationID: "front" },
+    }],
+  };
+  const board: Board = {
+    ...boardFixture(document),
+    selectedPresentationID: "front",
+  };
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, savedDocument) {
+      saved.push(structuredClone(savedDocument));
+      return { ...board, document: savedDocument };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="front-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+
+    assert.equal(app.text("#hold-heading"), "hold-2-piece-0");
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions[1]?.metadata, {
+      holdID: "hold-2",
+      pieceIndex: 0,
+      presentationID: "front",
+    });
+  }, dependenciesFixture(board, { client }));
+});
+
 test("finger capacity loads in the inspector, applies to every physical piece, and new holds are unset", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, fingerCapacity: 2 },

@@ -820,7 +820,16 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         const pieceIndex = source.metadata?.pieceIndex ?? index;
         const key = uniqueRegionKey(planningDocument, `${holdId}-piece-${pieceIndex}`);
         const id = nextRegionId(planningDocument);
-        planningDocument.regions.push({ ...source, id, key, metadata: { holdID: holdId, pieceIndex } });
+        planningDocument.regions.push({
+          ...source,
+          id,
+          key,
+          metadata: {
+            holdID: holdId,
+            pieceIndex,
+            ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+          },
+        });
         duplicates.push({ source, id, key, holdId, pieceIndex });
         duplicateKeyBySourceKey.set(source.key, key);
       }
@@ -833,7 +842,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           ...source,
           id,
           key,
-          metadata: { holdID: holdId, pieceIndex },
+          metadata: {
+            holdID: holdId,
+            pieceIndex,
+            ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+          },
           ...(source.shapeConstraint ? {
             shapeConstraint: {
               ...source.shapeConstraint,
