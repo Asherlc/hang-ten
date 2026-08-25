@@ -98,6 +98,22 @@ jobs:
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: scripts/validate-app-store-metadata.sh
 
+      - name: Generate bundled countdown audio
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ vars.ELEVENLABS_VOICE_ID }}
+        run: |
+          set -euo pipefail
+          : "${ELEVENLABS_API_KEY:?Configure the ELEVENLABS_API_KEY secret}"
+          : "${ELEVENLABS_VOICE_ID:?Configure the ELEVENLABS_VOICE_ID variable}"
+          cleanup_elevenlabs_credentials() {
+            unset ELEVENLABS_API_KEY ELEVENLABS_VOICE_ID
+          }
+          trap cleanup_elevenlabs_credentials EXIT
+          scripts/generate-elevenlabs-countdown-audio.sh
+          unset ELEVENLABS_API_KEY ELEVENLABS_VOICE_ID
+          trap - EXIT
+
       - name: Archive signed release
         env:
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
