@@ -12,5 +12,7 @@ ELEVENLABS_API_KEY='…' ELEVENLABS_VOICE_ID='…' \
 ```
 
 The command creates `countdown-1.mp3`, `countdown-2.mp3`, `countdown-3.mp3`,
-and `metadata.json`. Review each generated file and explicitly commit the pack
-before it can ship in the app bundle.
+and `metadata.json`. Review each generated file, update
+`HangTenTests/BoardSourceBoundaryTrackedPaths.txt` whenever a generated pack
+file is added or removed (including `metadata.json`), then explicitly commit
+the pack before it can ship in the app bundle.
