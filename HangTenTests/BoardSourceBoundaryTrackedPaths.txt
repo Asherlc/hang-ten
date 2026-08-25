@@ -53,6 +53,8 @@ HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/Contents.json
 HangTen/Resources/Assets.xcassets/PhosphorHandPalm.imageset/hand-palm.svg
 HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/Contents.json
 HangTen/Resources/Assets.xcassets/PhosphorHandTwo.imageset/hand-peace.svg
+HangTen/Resources/CountdownAudio/.gitkeep
+HangTen/Resources/CountdownAudio/README.md
 HangTen/Resources/PlanLibrary.json
 HangTen/Views/AppSettingsView.swift
 HangTen/Views/BoardMapView.swift
