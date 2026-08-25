@@ -15,6 +15,7 @@ from .board_catalog import BoardHold, BoardInventory, is_board_identifier
 
 _FIELDS = frozenset(
     {
+        "kind",
         "sizeMillimeters",
         "depthRangeMillimeters",
         "fingerCapacity",
@@ -184,6 +185,8 @@ def _load_hold_ids(value: Any, source: str) -> tuple[str, ...]:
 
 
 def _load_verified_value(value: Any, field: str, source: str) -> object:
+    if field == "kind":
+        return _nonempty_string(value, source)
     if field in {"sizeMillimeters", "fingerCapacity", "handCapacity"}:
         return _number(value, source)
     if field == "depthRangeMillimeters":
@@ -225,6 +228,8 @@ def _load_record(value: Any, source: str) -> MetadataRecord:
     field = _nonempty_string(payload["field"], f"{source}.field")
     if field not in _FIELDS:
         raise MetadataAuditError(f"{source}.field is unsupported")
+    if field == "kind" and outcome != "verified":
+        raise MetadataAuditError(f"{source}.kind must be verified")
     return MetadataRecord(
         board_id=_identifier(payload["boardID"], f"{source}.boardID"),
         hold_ids=_load_hold_ids(payload["holdIDs"], f"{source}.holdIDs"),
@@ -292,6 +297,8 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
 
 
 def _hold_value(hold: BoardHold, field: str) -> object | None:
+    if field == "kind":
+        return hold.kind
     if field == "sizeMillimeters":
         return hold.size_millimeters
     if field == "depthRangeMillimeters":

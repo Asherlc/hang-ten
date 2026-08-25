@@ -68,10 +68,6 @@
           }
         }
       ],
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
-      ],
       "presentationID": "primary"
     },
     {
@@ -126,11 +122,6 @@
             "type": "surface"
           }
         }
-      ],
-      "sizeMillimeters": 56,
-      "fingerCapacity": 4,
-      "features": [
-        "largeSlope"
       ],
       "presentationID": "primary"
     },
@@ -194,11 +185,6 @@
           }
         }
       ],
-      "sizeMillimeters": 56,
-      "fingerCapacity": 4,
-      "features": [
-        "roundSloper"
-      ],
       "presentationID": "primary"
     },
     {
@@ -253,11 +239,6 @@
             "type": "surface"
           }
         }
-      ],
-      "sizeMillimeters": 56,
-      "fingerCapacity": 4,
-      "features": [
-        "largeSlope"
       ],
       "presentationID": "primary"
     },
@@ -329,10 +310,6 @@
           }
         }
       ],
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
-      ],
       "presentationID": "primary"
     },
     {
@@ -398,10 +375,6 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
-      ],
       "presentationID": "primary"
     },
     {
@@ -519,9 +492,6 @@
       ],
       "sizeMillimeters": 29,
       "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -639,9 +609,6 @@
       ],
       "sizeMillimeters": 29,
       "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -649,6 +616,7 @@
       "name": "Center 29 mm four-finger pocket",
       "kind": "pocket",
       "gripType": "fourFingerPocket",
+      "fingerCapacity": 4,
       "geometry": [
         {
           "frame": {
@@ -758,10 +726,6 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 4,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -879,9 +843,6 @@
       ],
       "sizeMillimeters": 29,
       "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -999,9 +960,6 @@
       ],
       "sizeMillimeters": 29,
       "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1067,10 +1025,6 @@
         }
       ],
       "sizeMillimeters": 29,
-      "fingerCapacity": 4,
-      "features": [
-        "largeEdge"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1143,11 +1097,6 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1265,9 +1214,6 @@
       ],
       "sizeMillimeters": 19,
       "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1385,9 +1331,6 @@
       ],
       "sizeMillimeters": 19,
       "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1505,9 +1448,6 @@
       ],
       "sizeMillimeters": 19,
       "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1625,9 +1565,6 @@
       ],
       "sizeMillimeters": 19,
       "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1635,6 +1572,7 @@
       "name": "Center 19 mm four-finger pocket",
       "kind": "pocket",
       "gripType": "fourFingerPocket",
+      "fingerCapacity": 4,
       "geometry": [
         {
           "frame": {
@@ -1744,10 +1682,6 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 4,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1813,11 +1747,6 @@
         }
       ],
       "sizeMillimeters": 19,
-      "fingerCapacity": 4,
-      "features": [
-        "mediumEdge",
-        "smallEdge"
-      ],
       "presentationID": "primary"
     }
   ],

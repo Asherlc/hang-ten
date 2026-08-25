@@ -16,6 +16,7 @@ from hangboard_packages.metadata_audit import (
 
 
 _FIELDS = (
+    "kind",
     "sizeMillimeters",
     "depthRangeMillimeters",
     "fingerCapacity",
@@ -71,7 +72,7 @@ def _complete_records(
     *,
     verified_values: dict[str, object] | None = None,
 ) -> list[dict[str, object]]:
-    values = verified_values or {}
+    values = {"kind": "jug", **(verified_values or {})}
     return [
         verified(board_id, hold_id, field, values[field])
         if field in values
@@ -159,14 +160,65 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
         "boards": [
             {
                 "boardID": "fixture.board",
-                "populated": 6,
-                "verified": 6,
+                "populated": 7,
+                "verified": 7,
                 "unavailable": 0,
                 "notApplicable": 0,
                 "unaccountedFields": 0,
             }
         ],
     }
+
+
+def test_metolius_contract_rejects_unavailable_kind(tmp_path: Path) -> None:
+    write_board_package(tmp_path / "boards" / "fixture")
+    records = _complete_records("fixture.board", "hold-left")
+    records[0] = unavailable("fixture.board", "hold-left", "kind")
+    ledger_path = _write_ledger(tmp_path, records)
+
+    with pytest.raises(MetadataAuditError, match="kind must be verified"):
+        load_metadata_ledger(ledger_path)
+
+
+def test_metolius_contract_verified_kind_must_match_package(tmp_path: Path) -> None:
+    write_board_package(tmp_path / "boards" / "fixture")
+    records = _complete_records(
+        "fixture.board", "hold-left", verified_values={"kind": "edge"}
+    )
+    ledger_path = _write_ledger(tmp_path, records)
+
+    with pytest.raises(MetadataAuditError, match="kind does not match"):
+        validate_metadata_ledger(
+            load_metadata_ledger(ledger_path),
+            discover_board_packages(tmp_path / "boards"),
+        )
+
+
+def test_metolius_catalog_ledger_has_complete_seven_field_coverage() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    ledger_path = (
+        repository_root
+        / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
+    )
+
+    report = validate_metadata_ledger(
+        load_metadata_ledger(ledger_path),
+        discover_board_packages(repository_root / "Hangboards"),
+    )
+
+    assert report.reviewed_board_ids == (
+        "metolius.climbers-edge",
+        "metolius.contact",
+        "metolius.foundry",
+        "metolius.light-rail-2",
+        "metolius.prime-rib",
+        "metolius.project",
+        "metolius.rock-rings-3d",
+        "metolius.simulator-3d",
+        "metolius.wood-grips-compact-ii",
+        "metolius.wood-grips-deluxe-ii",
+    )
+    assert all(board.unaccounted_fields == 0 for board in report.boards)
 
 
 def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:

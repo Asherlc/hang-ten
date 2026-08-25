@@ -1,6 +1,6 @@
 # Metolius board-package evidence audit
 
-Checked 2026-08-12 and re-reviewed 2026-08-19. This audit records the official
+Checked 2026-08-12 and re-reviewed 2026-08-19 and 2026-08-25. This audit records the official
 Metolius evidence used to create four complete flat packages. Every canonical
 region was directly authored against the official front view and checked against
 the model-specific numbered/depth diagram. The presentation PNGs are lossless
@@ -53,20 +53,27 @@ field is omitted.
   25/2, 12/4, 17/3, and 17/2.
 - Center edges `16` through `19` map to 15, 35, 28, and 23 mm.
 
-### Project — 17 contacts
+### Project — 15 continuous contacts
 
-- Mirrored positions `1` through `7`: outer jug; 55 mm flat sloper; 45 mm
-  3-finger pocket; 30 mm edge; 40 mm 2-finger pocket; 22 mm 3-finger pocket;
-  22 mm 2-finger pocket.
-- Center positions `8` through `10`: 53 mm round sloper, 39 mm edge, and 16 mm
-  edge.
+- Mirrored positions `1` and `3` through `7`: outer jug; 45 mm 3-finger
+  pocket; 30 mm edge; 40 mm 2-finger pocket; 22 mm 3-finger pocket; and 22 mm
+  2-finger pocket.
+- The diagram places mirrored position `2` flat-sloper labels and center
+  position `8` round-sloper label on one uninterrupted top contact with no
+  separator. The package therefore maps all three labels to the single
+  continuous `round-sloper-8-center` stable ID. Center positions `9` and `10`
+  are separate 39 mm and 16 mm edges.
 
-### Simulator 3-D — 31 contacts
+### Simulator 3-D — 29 continuous contacts
 
-- Mirrored positions `1` through `13`: outer jug; 55 mm flat sloper; 65 mm
-  round sloper; 30 mm 3-finger pocket; 25 mm edge; 19 mm edge; 36 mm edge;
-  15 mm 3-finger pocket; 35 mm 3-finger pocket; 17 mm 3-finger pocket; 14 mm
-  edge; 30 mm 2-finger pocket; 14 mm 2-finger pocket.
+- Mirrored positions `1` and `4` through `13`: outer jug; 30 mm 3-finger
+  pocket; 25 mm edge; 19 mm edge; 36 mm edge; 15 mm 3-finger pocket; 35 mm
+  3-finger pocket; 17 mm 3-finger pocket; 14 mm edge; 30 mm 2-finger pocket;
+  and 14 mm 2-finger pocket.
+- On each side, the diagram's position `2` flat-sloper and position `3`
+  round-sloper labels occupy one uninterrupted top contact with no separator.
+  Each label pair maps to one continuous stable ID,
+  `round-sloper-3-left` or `round-sloper-3-right`.
 - Center positions `14` through `18`: jug; 50 mm 3-finger pocket; 37 mm
   3-finger pocket; 28 mm 2-finger pocket; 32 mm 2-finger pocket.
 
@@ -88,3 +95,104 @@ All 74 constrained paths were materialized from the checked-in Workbench
 primitive definitions (including its current cubic circle constant) and then
 saved as tight canonical path frames; reapplying each saved constraint is an
 exact no-op.
+
+## 2026-08-25 source-audited metadata pilot
+
+The current product pages and the exact official diagrams linked above were
+re-opened on 2026-08-25. Stable-ID overlays were manually reviewed under
+`.context/hangboard-metadata-backfill-icky-cow/metolius/`; `icky-cow` is the
+workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset. The
+overlays are review aids only and did not alter geometry. Each source label
+maps to these visible stable IDs on presentation `front`:
+
+### Climber's Edge reviewed label map
+
+| Exact manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `Jug` | `jug-left`, `jug-right` | `jug` |
+| `Flat Sloper` (product page: 20-degree flat sloper) | `flat-sloper-left`, `flat-sloper-right` | `sloper` |
+| `Round Sloper` (product page: 40 mm radius round sloper) | `round-sloper-center` | `sloper` |
+| `1 — 10 mm edge` | `edge-10-center` | `edge` |
+| `2 — 7.5 mm edge` | `edge-7-5-center` | `edge` |
+| `3 — 15 mm edge` | `edge-15-left`, `edge-15-right` | `edge` |
+| `4 — 12.5 mm edge` | `edge-12-5-left`, `edge-12-5-right` | `edge` |
+| `5 — 20 mm edge` | `edge-20-left`, `edge-20-right` | `edge` |
+| `6 — 17.5 mm edge` | `edge-17-5-left`, `edge-17-5-right` | `edge` |
+
+### Contact reviewed label map
+
+| Exact manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `1 — variable pinches` | `pinch-left`, `pinch-right` | `pinch` |
+| `2 — outer jugs` | `jug-left`, `jug-right` | `jug` |
+| `3 — 63 mm round slopers` | `round-sloper-3-left`, `round-sloper-3-right` | `sloper` |
+| `4 — 30 mm 4-finger pockets` | `pocket-4-left`, `pocket-4-right` | `pocket` |
+| `5 — 40 mm 2-finger pockets` | `pocket-5-left`, `pocket-5-right` | `pocket` |
+| `6 — 20 mm 3-finger pockets` | `pocket-6-left`, `pocket-6-right` | `pocket` |
+| `7 — 30 mm 3-finger pockets` | `pocket-7-left`, `pocket-7-right` | `pocket` |
+| `8 — 32 mm 2-finger pockets` | `pocket-8-left`, `pocket-8-right` | `pocket` |
+| `9 — 20 mm 4-finger pockets` | `pocket-9-left`, `pocket-9-right` | `pocket` |
+| `10 — 25 mm 3-finger pockets` | `pocket-10-left`, `pocket-10-right` | `pocket` |
+| `11 — 25 mm 2-finger pockets` | `pocket-11-left`, `pocket-11-right` | `pocket` |
+| `12 — 12 mm 4-finger pockets` | `pocket-12-left`, `pocket-12-right` | `pocket` |
+| `13 — 17 mm 3-finger pockets` | `pocket-13-left`, `pocket-13-right` | `pocket` |
+| `14 — 17 mm 2-finger pockets` | `pocket-14-left`, `pocket-14-right` | `pocket` |
+| `15 — 53 mm flat sloper` | `flat-sloper-center` | `sloper` |
+| `16 — 15 mm edge` | `edge-16-center` | `edge` |
+| `17 — 35 mm edge` | `edge-17-center` | `edge` |
+| `18 — 28 mm edge` | `edge-18-center` | `edge` |
+| `19 — 23 mm edge` | `edge-19-center` | `edge` |
+
+### Project reviewed label map
+
+| Exact manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `1 — outer jugs` | `jug-1-left`, `jug-1-right` | `jug` |
+| `2 — 55 mm flat slopers`; `8 — 53 mm round sloper` | `round-sloper-8-center` (one continuous top contact) | `sloper` |
+| `3 — 45 mm 3-finger pockets` | `pocket-3-left`, `pocket-3-right` | `pocket` |
+| `4 — 30 mm edges` | `edge-4-left`, `edge-4-right` | `edge` |
+| `5 — 40 mm 2-finger pockets` | `pocket-5-left`, `pocket-5-right` | `pocket` |
+| `6 — 22 mm 3-finger pockets` | `pocket-6-left`, `pocket-6-right` | `pocket` |
+| `7 — 22 mm 2-finger pockets` | `pocket-7-left`, `pocket-7-right` | `pocket` |
+| `9 — 39 mm edge` | `edge-9-center` | `edge` |
+| `10 — 16 mm edge` | `edge-10-center` | `edge` |
+
+### Simulator 3-D reviewed label map
+
+| Exact manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `1 — outer jugs` | `jug-1-left`, `jug-1-right` | `jug` |
+| `2 — 55 mm flat slopers`; `3 — 65 mm round slopers` | `round-sloper-3-left`, `round-sloper-3-right` (one continuous contact per side) | `sloper` |
+| `4 — 30 mm 3-finger pockets` | `pocket-4-left`, `pocket-4-right` | `pocket` |
+| `5 — 25 mm edges` | `edge-5-left`, `edge-5-right` | `edge` |
+| `6 — 19 mm edges` | `edge-6-left`, `edge-6-right` | `edge` |
+| `7 — 36 mm edges` | `edge-7-left`, `edge-7-right` | `edge` |
+| `8 — 15 mm 3-finger pockets` | `pocket-8-left`, `pocket-8-right` | `pocket` |
+| `9 — 35 mm 3-finger pockets` | `pocket-9-left`, `pocket-9-right` | `pocket` |
+| `10 — 17 mm 3-finger pockets` | `pocket-10-left`, `pocket-10-right` | `pocket` |
+| `11 — 14 mm edge` | `edge-11-left`, `edge-11-right` | `edge` |
+| `12 — 30 mm 2-finger pockets` | `pocket-12-left`, `pocket-12-right` | `pocket` |
+| `13 — 14 mm 2-finger pockets` | `pocket-13-left`, `pocket-13-right` | `pocket` |
+| `14 — center jug` | `jug-14-center` | `jug` |
+| `15 — 50 mm 3-finger pocket` | `pocket-15-center` | `pocket` |
+| `16 — 37 mm 3-finger pocket` | `pocket-16-center` | `pocket` |
+| `17 — 28 mm 2-finger pocket` | `pocket-17-center` | `pocket` |
+| `18 — 32 mm 2-finger pocket` | `pocket-18-center` | `pocket` |
+
+The exact words `jug`, `sloper`, `edge`, `pocket`, and `pinch` in these
+manufacturer labels independently verify every declared `kind`; no type came
+from path shape or board metadata. Exact two-/three-/four-finger pocket labels
+also verify both `fingerCapacity` and the matching structural pocket
+`gripType`. This added 22 Contact, 8 Project, and 16 Simulator pocket grip
+enums; Climber's Edge had no pocket label. Existing exact scalar edge/pocket
+sizes and finger counts were retained; no field was removed on these four
+packages.
+
+Every hold has an explicit ledger outcome for all seven audited fields. The
+manufacturer material publishes no lower/upper depth ranges, per-contact hand
+capacities, or exact package feature-tag sets. Finger capacity is
+`notApplicable` for non-pockets. Non-pocket grip posture remains unavailable.
+Sloper angles, radii, and other non-depth measurements stay source-backed in
+the names and are absent from `sizeMillimeters`; in particular, the continuous
+Project and Simulator slopers have multiple labelled sloper measurements and
+no single source-supported scalar contact depth.
