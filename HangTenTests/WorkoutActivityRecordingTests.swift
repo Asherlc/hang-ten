@@ -558,6 +558,47 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testFallbackResolutionPrefersNearestFractionalDepthMeasurement() {
+        let board = TrainingBoard(
+            id: "fractional-depth.board",
+            manufacturer: "Fixture",
+            name: "Fractional depth board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "range-edge",
+                    name: "20.5 to 21 mm edge",
+                    shortLabel: "R",
+                    detail: "Untyped edge",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2),
+                    depthRangeMillimeters: 20.5...21
+                ),
+                BoardHold(
+                    id: "scalar-edge",
+                    name: "19.75 mm edge",
+                    shortLabel: "S",
+                    detail: "Untyped edge",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2),
+                    sizeMillimeters: 19.75
+                )
+            ],
+            productURL: URL(string: "https://example.com/fractional-depth-board")!,
+            photoAssetName: nil
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .feature(.mediumEdge),
+                on: board
+            ),
+            ["scalar-edge"]
+        )
+    }
+
     func testAppStoreResolutionSelectsOneThreeFingerPocketPerHand() {
         let defaults = makeDefaults()
         let store = AppStore(

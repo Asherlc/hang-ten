@@ -243,8 +243,9 @@ internal enum BoardTargetResolver {
         }
     }
 
-    private static func depthDistance(of hold: BoardHold, from feature: HoldFeature) -> Int {
-        guard let targetDepth = targetDepthMillimeters(for: feature) else { return .max }
+    private static func depthDistance(of hold: BoardHold, from feature: HoldFeature) -> Double {
+        guard let sourceTargetDepth = targetDepthMillimeters(for: feature) else { return .infinity }
+        let targetDepth = Double(sourceTargetDepth)
         if let range = hold.depthRangeMillimeters {
             if range.contains(targetDepth) { return 0 }
             return min(abs(range.lowerBound - targetDepth), abs(range.upperBound - targetDepth))
@@ -252,7 +253,7 @@ internal enum BoardTargetResolver {
         if let size = hold.sizeMillimeters {
             return abs(size - targetDepth)
         }
-        return .max
+        return .infinity
     }
 
     private static func crossKindPockets(for target: HoldTarget, on board: TrainingBoard) -> [BoardHold] {
