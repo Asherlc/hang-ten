@@ -195,7 +195,10 @@
       "id": "edge-10-8-left",
       "name": "Left 10/8 mm stepped edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 8, "upperBound": 10 },
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 10
+      },
       "geometry": [
         {
           "frame": {
@@ -319,7 +322,10 @@
       "id": "edge-10-8-right",
       "name": "Right 10/8 mm stepped edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 8, "upperBound": 10 },
+      "depthRangeMillimeters": {
+        "lowerBound": 8,
+        "upperBound": 10
+      },
       "geometry": [
         {
           "frame": {
@@ -443,7 +449,10 @@
       "id": "edge-30-25-left",
       "name": "Left 30/25 mm stepped edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 25, "upperBound": 30 },
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 30
+      },
       "geometry": [
         {
           "frame": {
@@ -567,7 +576,10 @@
       "id": "edge-30-25-right",
       "name": "Right 30/25 mm stepped edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 25, "upperBound": 30 },
+      "depthRangeMillimeters": {
+        "lowerBound": 25,
+        "upperBound": 30
+      },
       "geometry": [
         {
           "frame": {
@@ -815,7 +827,10 @@
       "id": "edge-20-15-left",
       "name": "Left 20/15 mm stepped edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 15, "upperBound": 20 },
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 20
+      },
       "geometry": [
         {
           "frame": {
@@ -939,7 +954,10 @@
       "id": "edge-20-15-right",
       "name": "Right 20/15 mm stepped edge",
       "kind": "edge",
-      "depthRangeMillimeters": { "lowerBound": 15, "upperBound": 20 },
+      "depthRangeMillimeters": {
+        "lowerBound": 15,
+        "upperBound": 20
+      },
       "geometry": [
         {
           "frame": {
