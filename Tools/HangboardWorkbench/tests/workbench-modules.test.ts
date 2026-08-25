@@ -8,6 +8,7 @@ import {
   validateEditorDocument,
 } from "../src/workbench-controller.ts";
 import { createWorkbenchClient } from "../src/workbench-client.ts";
+import { cloneEditorDocument } from "../src/editor-model.ts";
 import { postNativeDiagnostic } from "../src/native-bridge.ts";
 import * as pathEditor from "../src/path-editor.ts";
 import type {
@@ -59,7 +60,7 @@ function runtimeFixture(fetchImplementation: BrowserRuntime["fetch"]): RuntimeFi
 }
 
 function editorDocument(regions: EditorDocument["regions"] = []): EditorDocument {
-  return { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions };
+  return { canvas: { width: 100, height: 50 }, regions };
 }
 
 function boardFixture(overrides: Partial<Board> = {}): Board {
@@ -103,6 +104,51 @@ test("the browser client lists and opens direct boards", async () => {
   ]);
   assert.equal((await client.getBoard("compact")).boardId, "compact");
   assert.deepEqual(calls, ["/api/boards", "/api/boards/compact"]);
+});
+
+test("the browser client requests and validates a selected presentation", async () => {
+  const calls: string[] = [];
+  const document: EditorDocument = {
+    presentationID: "back",
+    canvas: { width: 80, height: 120 },
+    regions: [{
+      key: "back-hold-piece-0",
+      displayPath: "M 1 1 L 20 1 L 20 20 Z",
+      metadata: { holdID: "back-hold", pieceIndex: 0, presentationID: "back" },
+    }],
+  };
+  const { runtime } = runtimeFixture(async (input) => {
+    calls.push(String(input));
+    return response({
+      ok: true,
+      board: boardFixture({
+        imageUrl: "/api/boards/compact/image?presentationID=back",
+        selectedPresentationID: "back",
+        presentations: [
+          {
+            presentationID: "front",
+            displayName: "Front",
+            imageUrl: "/api/boards/compact/image?presentationID=front",
+            default: true,
+          },
+          {
+            presentationID: "back",
+            displayName: "Back",
+            imageUrl: "/api/boards/compact/image?presentationID=back",
+            default: false,
+          },
+        ],
+        document,
+      }),
+    });
+  });
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact", "back");
+
+  assert.equal(board.selectedPresentationID, "back");
+  assert.equal(board.document.presentationID, "back");
+  assert.equal(board.document.regions[0]?.metadata?.presentationID, "back");
+  assert.deepEqual(calls, ["/api/boards/compact?presentationID=back"]);
 });
 
 test("backend requests carry a fifteen-second timeout signal", async (context) => {
@@ -187,6 +233,14 @@ test("the browser client rejects invalid optional hold-region fields", async (co
         displayPath: "M 1 1 L 2 1 L 2 2 Z",
       },
     },
+    {
+      name: "bendable command indexes",
+      region: {
+        bendableCommandIndexes: [1, 1],
+        key: "hold-1",
+        displayPath: "M 1 1 L 2 1 L 2 2 Z",
+      },
+    },
   ];
 
   for (const fixture of invalidRegions) {
@@ -199,7 +253,6 @@ test("the browser client rejects invalid optional hold-region fields", async (co
           holdCount: 1,
           imageUrl: "/api/boards/compact/image",
           document: {
-            schemaVersion: 1,
             canvas: { width: 100, height: 50 },
             regions: [fixture.region],
           },
@@ -222,6 +275,18 @@ test("the browser client navigates to login when an API request is unauthenticat
   await assert.rejects(client.getGitStatus(), /authentication required/);
 
   assert.deepEqual(assignedUrls, ["/auth/login"]);
+});
+
+test("the browser client preserves an auth-status API failure", async () => {
+  const { runtime } = runtimeFixture(async () => response(
+    { ok: false, error: "Authentication service is unavailable" },
+    { ok: false, status: 503 },
+  ));
+
+  await assert.rejects(
+    createWorkbenchClient(runtime).getAuthStatus(),
+    /Authentication service is unavailable/,
+  );
 });
 
 test("the browser client keeps the current tab on an unauthenticated save and exposes the login URL", async () => {
@@ -492,7 +557,6 @@ test("direct board loading rejects malformed shape constraints before image load
           holdCount: 1,
           imageUrl: "/api/boards/broken/image",
           document: {
-            schemaVersion: 1,
             canvas: { width: 100, height: 50 },
             regions: [{
               key: "hold-1",
@@ -513,7 +577,7 @@ test("direct board loading rejects malformed shape constraints before image load
 });
 
 test("the direct editor model rejects duplicate and open hold paths before saving", () => {
-  const base = { schemaVersion: 1, canvas: { width: 100, height: 50 } };
+  const base = { canvas: { width: 100, height: 50 } };
   assert.throws(() => validateEditorDocument({ ...base, regions: [
     { key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20 Z" },
     { key: "hold-1", displayPath: "M 30 1 L 40 1 L 40 20 Z" },
@@ -521,6 +585,17 @@ test("the direct editor model rejects duplicate and open hold paths before savin
   assert.throws(() => validateEditorDocument({ ...base, regions: [
     { key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20" },
   ] }), /one closed contour/);
+});
+
+test("the direct editor model rejects the removed schema version field", () => {
+  assert.throws(
+    () => validateEditorDocument({
+      schemaVersion: 1,
+      canvas: { width: 100, height: 50 },
+      regions: [{ key: "hold-1", displayPath: "M 1 1 L 20 1 L 20 20 Z" }],
+    }),
+    /unknown.*schemaVersion/i,
+  );
 });
 
 test("the direct editor model rejects invalid optional hold-region fields", () => {
@@ -538,12 +613,16 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
       key: "hold-1",
       displayPath: "M 1 1 L 2 1 L 2 2 Z",
     },
+    {
+      bendableCommandIndexes: [-1],
+      key: "hold-1",
+      displayPath: "M 1 1 L 2 1 L 2 2 Z",
+    },
   ];
 
   for (const region of invalidRegions) {
     assert.throws(
       () => validateEditorDocument({
-        schemaVersion: 1,
         canvas: { width: 100, height: 50 },
         regions: [region],
       }),
@@ -552,10 +631,34 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
   }
 });
 
+test("the editor document clones and validates bendable curve command indexes", () => {
+  const document = editorDocument([{
+    key: "hold-1",
+    displayPath: "M 1 1 C 5 1 15 1 20 1 L 20 20 Z",
+    bendableCommandIndexes: [1],
+  }]);
+
+  assert.doesNotThrow(() => validateEditorDocument(document));
+  const cloned = cloneEditorDocument(document);
+  cloned.regions[0]?.bendableCommandIndexes?.push(2);
+
+  assert.deepEqual(document.regions[0]?.bendableCommandIndexes, [1]);
+  assert.deepEqual(cloned.regions[0]?.bendableCommandIndexes, [1, 2]);
+  for (const indexes of [[1, 1], [-1], [1.5]]) {
+    assert.throws(
+      () => validateEditorDocument(editorDocument([{
+        key: "hold-1",
+        displayPath: "M 1 1 L 2 1 L 2 2 Z",
+        bendableCommandIndexes: indexes,
+      }])),
+      /valid hold fields/,
+    );
+  }
+});
+
 test("the direct editor model rejects inconsistent finger capacities for one physical hold", () => {
   assert.throws(
     () => validateEditorDocument({
-      schemaVersion: 1,
       canvas: { width: 100, height: 50 },
       regions: [
         {
@@ -579,7 +682,6 @@ test("the direct editor model rejects inconsistent finger capacities for one phy
 test("the direct editor model rejects invalid and inconsistent hand capacities", () => {
   assert.throws(
     () => validateEditorDocument({
-      schemaVersion: 1,
       canvas: { width: 100, height: 50 },
       regions: [{
         key: "hold-1-piece-0",
@@ -593,7 +695,6 @@ test("the direct editor model rejects invalid and inconsistent hand capacities",
 
   assert.throws(
     () => validateEditorDocument({
-      schemaVersion: 1,
       canvas: { width: 100, height: 50 },
       regions: [
         {

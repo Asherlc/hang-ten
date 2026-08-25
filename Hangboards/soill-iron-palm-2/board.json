@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "soill.iron-palm-2",
   "manufacturer": "So iLL",
   "name": "Iron Palm 2.0",
@@ -7,9 +6,6 @@
   "productURL": "https://soillholds.com/products/iron-palm-2-0",
   "dimensions": "27 \u00d7 11.5 \u00d7 4 in",
   "aspectRatio": 1.5,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "sloper-left",
@@ -129,7 +125,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-right",
@@ -249,7 +246,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-left",
@@ -384,7 +382,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-right",
@@ -519,7 +518,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "top-incut-jug",
@@ -528,8 +528,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.250343664551,
-            "y": 0.337,
+            "x": 0.2561479764,
+            "y": 0.276054726563,
             "width": 0.499312670898,
             "height": 0.078
           },
@@ -631,7 +631,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "rounded-edge-40",
@@ -729,7 +730,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-edge-25",
@@ -739,8 +741,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.204759377441,
-            "y": 0.505,
+            "x": 0.213051251139,
+            "y": 0.555995024414,
             "width": 0.587609989014,
             "height": 0.055
           },
@@ -827,7 +829,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "flat-edge-15",
@@ -837,8 +840,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.191719909668,
-            "y": 0.574,
+            "x": 0.198353409017,
+            "y": 0.654845771484,
             "width": 0.616560180664,
             "height": 0.072
           },
@@ -955,7 +958,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
     }
   ]
 }

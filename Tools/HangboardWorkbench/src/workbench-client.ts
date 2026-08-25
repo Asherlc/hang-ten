@@ -46,6 +46,12 @@ function isHandCapacity(value: unknown): value is number {
   return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 2;
 }
 
+function isBendableCommandIndexes(value: unknown): value is number[] {
+  return Array.isArray(value)
+    && value.every((index) => typeof index === "number" && Number.isInteger(index) && index >= 0)
+    && new Set(value).size === value.length;
+}
+
 function isHoldRegion(value: unknown): value is EditorDocument["regions"][number] {
   if (!isRecord(value)) return false;
   const metadata = value.metadata;
@@ -56,10 +62,22 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
     && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
     && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
+    && (value.bendableCommandIndexes === undefined
+      || isBendableCommandIndexes(value.bendableCommandIndexes))
     && (metadata === undefined
       || (isRecord(metadata)
         && typeof metadata.holdID === "string"
-        && typeof metadata.pieceIndex === "number"));
+        && typeof metadata.pieceIndex === "number"
+        && isOptionalString(metadata.presentationID)));
+}
+
+function isBoardPresentation(value: unknown): boolean {
+  return isRecord(value)
+    && typeof value.presentationID === "string"
+    && typeof value.displayName === "string"
+    && typeof value.imageUrl === "string"
+    && (value.holdIDs === undefined || isStringArray(value.holdIDs))
+    && typeof value.default === "boolean";
 }
 
 function isBoardSummary(value: unknown): value is BoardSummary {
@@ -73,7 +91,8 @@ function isBoardSummary(value: unknown): value is BoardSummary {
 
 function isEditorDocumentPayload(value: unknown): value is EditorDocument {
   return isRecord(value)
-    && typeof value.schemaVersion === "number"
+    && Object.keys(value).every((key) => key === "presentationID" || key === "canvas" || key === "regions")
+    && (value.presentationID === undefined || typeof value.presentationID === "string")
     && isRecord(value.canvas)
     && typeof value.canvas.width === "number"
     && typeof value.canvas.height === "number"
@@ -89,6 +108,9 @@ function isBoard(value: unknown): value is Board {
     && isOptionalString(value.href)
     && typeof value.imageUrl === "string"
     && isOptionalString(value.saveUrl)
+    && isOptionalString(value.selectedPresentationID)
+    && (value.presentations === undefined
+      || (Array.isArray(value.presentations) && value.presentations.every(isBoardPresentation)))
     && isEditorDocumentPayload(value.document);
 }
 
@@ -265,9 +287,12 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
     return request("/api/boards", parseBoardList);
   }
 
-  async function getBoard(boardId: string): Promise<Board> {
+  async function getBoard(boardId: string, presentationID?: string): Promise<Board> {
+    const query = presentationID
+      ? `?presentationID=${encodeURIComponent(presentationID)}`
+      : "";
     return request(
-      `/api/boards/${encodeURIComponent(boardId)}`,
+      `/api/boards/${encodeURIComponent(boardId)}${query}`,
       parseBoard("Workbench returned an invalid board"),
     );
   }
@@ -290,11 +315,7 @@ export function createWorkbenchClient(runtime: BrowserRuntime): WorkbenchClient 
   }
 
   async function getAuthStatus(): Promise<AuthStatus> {
-    try {
-      return await request("/api/auth/status", parseAuthStatus);
-    } catch {
-      return { ok: true, authenticated: false };
-    }
+    return request("/api/auth/status", parseAuthStatus);
   }
 
   async function listBranches(): Promise<GitStatus> {

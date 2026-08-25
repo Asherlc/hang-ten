@@ -251,6 +251,8 @@ private struct CustomRoutineStepEditor: View {
     let targetMode: CustomRoutineTargetMode
     let board: TrainingBoard
 
+    @State private var activeHoldID: String?
+
     private var isBoardSpecific: Bool {
         if case .boardSpecific = targetMode {
             return true
@@ -320,6 +322,7 @@ private struct CustomRoutineStepEditor: View {
                 BoardMapView(
                     board: board,
                     highlightedHoldIDs: selectedHoldIDs,
+                    activeHoldID: activeHoldID,
                     onHoldTap: toggleHold
                 )
             }
@@ -361,6 +364,7 @@ private struct CustomRoutineStepEditor: View {
     }
 
     private func toggleHold(_ hold: BoardHold) {
+        activeHoldID = hold.id
         var holdIDs = selectedHoldIDs
         if !holdIDs.insert(hold.id).inserted {
             holdIDs.remove(hold.id)

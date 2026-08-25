@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from hangboard_packages.board_geometry_schema import BoardShapeDocument, PathCommand
+from hangboard_packages.board_geometry_schema import BoardShapeDocument, NormalizedFrame, PathCommand
 
 
 def _move(x: float, y: float) -> dict:
@@ -11,6 +11,10 @@ def _move(x: float, y: float) -> dict:
 
 def _line(x: float, y: float) -> dict:
     return {"command": "line", "to": [x, y]}
+
+
+def _quad(control: tuple[float, float], x: float, y: float) -> dict:
+    return {"command": "quad", "control": list(control), "to": [x, y]}
 
 
 def _close() -> dict:
@@ -24,8 +28,54 @@ def test_path_command_rejects_coordinates_outside_the_normalized_canvas() -> Non
         PathCommand.from_json(_line(0.5, -0.1), "commands[0]")
 
 
+def test_normalized_frame_allows_manual_off_canvas_bounds() -> None:
+    frame = NormalizedFrame.from_json({"x": -0.01, "y": 0.97, "width": 1.05, "height": 0.08}, "frame")
+
+    assert frame == NormalizedFrame(x=-0.01, y=0.97, width=1.05, height=0.08)
+
+
+@pytest.mark.parametrize(
+    ("payload", "message"),
+    [
+        ({"x": True, "y": 0, "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": 0, "y": False, "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": float("nan"), "y": 0, "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": 0, "y": float("inf"), "width": 0.1, "height": 0.1}, "finite number"),
+        ({"x": 0, "y": 0, "width": float("inf"), "height": 0.1}, "finite number"),
+        ({"x": 0, "y": 0, "width": 0.1, "height": float("nan")}, "finite number"),
+        ({"x": 0, "y": 0, "width": 0, "height": 0.1}, "must be positive"),
+        ({"x": 0, "y": 0, "width": -0.1, "height": 0.1}, "must be at least 0"),
+        ({"x": 0, "y": 0, "width": 0.1, "height": 0}, "must be positive"),
+        ({"x": 0, "y": 0, "width": 0.1, "height": -0.1}, "must be at least 0"),
+    ],
+)
+def test_normalized_frame_rejects_invalid_coordinates_and_nonpositive_dimensions(
+    payload: dict[str, float | bool],
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        NormalizedFrame.from_json(payload, "frame")
+
+
 def _curve(control1: tuple[float, float], control2: tuple[float, float], x: float, y: float) -> dict:
     return {"command": "curve", "control1": list(control1), "control2": list(control2), "to": [x, y]}
+
+
+def test_curve_command_accepts_true_bendable_metadata() -> None:
+    command = PathCommand.from_json(
+        {"command": "curve", "control1": [0.2, 0.2], "control2": [0.8, 0.2], "to": [1, 0], "bendable": True},
+        "commands[1]",
+    )
+
+    assert command.bendable is True
+
+
+@pytest.mark.parametrize("command", [_move(0, 0), _line(1, 0), _quad((0.5, 1), 1, 0), _close()])
+def test_non_curve_commands_reject_bendable_metadata(command: dict) -> None:
+    command["bendable"] = True
+
+    with pytest.raises(ValueError, match="unknown keys"):
+        PathCommand.from_json(command, "commands[0]")
 
 
 def test_path_command_allows_a_control_point_outside_the_normalized_canvas() -> None:

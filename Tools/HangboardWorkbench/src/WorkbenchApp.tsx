@@ -9,6 +9,7 @@ import { HoldCanvas, type Guide, type GuideAxis } from "./components/HoldCanvas.
 import { HoldInspector } from "./components/HoldInspector.tsx";
 import { RepositoryToolbar } from "./components/RepositoryToolbar.tsx";
 import { ValidationPanel } from "./components/ValidationPanel.tsx";
+import { ApiErrorAlert } from "./components/ApiErrorAlert.tsx";
 
 export interface WorkbenchAppProps {
   dependencies: WorkbenchDependencies;
@@ -64,10 +65,10 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     : null;
   React.useEffect(() => {
     setGuides([]);
-  }, [state.board?.boardId]);
+  }, [state.board?.boardId, state.board?.selectedPresentationID]);
   React.useEffect(() => {
     setMobileHoldSheetOpen(false);
-  }, [state.board?.boardId]);
+  }, [state.board?.boardId, state.board?.selectedPresentationID]);
   const addGuide = React.useCallback((axis: GuideAxis): void => {
     if (!selectedHoldCenter) return;
     setGuides((current) => [...current, {
@@ -95,6 +96,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
     dialogs: dependencies.dialogs,
     horizontalGuideYs: guides.filter((guide) => guide.axis === "horizontal").map((guide) => guide.coordinate),
     verticalGuideXs: guides.filter((guide) => guide.axis === "vertical").map((guide) => guide.coordinate),
+    reservedHoldIDs: state.board?.holdIDs ?? [],
   });
   const saveFromShortcut = React.useCallback(() => {
     if (busy || !state.board) return;
@@ -191,6 +193,25 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
               <strong id="board-name">{state.board?.displayName ?? "No board selected"}</strong>
             </div>
             <div className="canvas-controls" aria-label="Canvas controls">
+              {(state.board?.presentations?.length ?? 0) > 1 && (
+                <label className="surface-selector" htmlFor="presentation-select">
+                  <span>Surface</span>
+                  <select
+                    id="presentation-select"
+                    aria-label="Board surface"
+                    value={state.board?.selectedPresentationID ?? ""}
+                    disabled={editorBusy}
+                    onChange={(event) => void actions.selectPresentation(event.target.value)}
+                  >
+                    {state.board?.presentations?.map((presentation) => (
+                      <option
+                        key={presentation.presentationID}
+                        value={presentation.presentationID}
+                      >{presentation.displayName}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
               <button
                 className="tool-button"
                 id="zoom-out-button"
@@ -233,6 +254,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             guides={guides}
             onMoveGuide={moveGuide}
           />
+          <ApiErrorAlert error={state.apiError} />
           <ValidationPanel validation={state.validation} />
           <footer className="statusbar">
             <span id="editor-status">

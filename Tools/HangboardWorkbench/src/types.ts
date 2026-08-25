@@ -9,6 +9,34 @@ export interface PathCommand {
   type: PathCommandType;
   points: Point[];
   controls: Point[];
+  bendable?: boolean;
+}
+
+/** Editor-session identity for a path endpoint. Never persisted in board geometry. */
+export interface EditableAnchor extends Point {
+  readonly id: string;
+  readonly ordinal: number;
+  readonly isStart: boolean;
+}
+
+/** Editor-session identity for a Bézier control point. Never persisted in board geometry. */
+export interface EditableControl extends Point {
+  readonly id: string;
+}
+
+export interface EditableSegment {
+  readonly id: string;
+  type: Exclude<PathCommandType, "Z">;
+  bendable?: boolean;
+  anchor: EditableAnchor;
+  controls: EditableControl[];
+}
+
+/** A disposable, editor-only projection of canonical SVG path geometry. */
+export interface EditablePath {
+  readonly regionKey: string;
+  readonly segments: EditableSegment[];
+  readonly closed: boolean;
 }
 
 export type ShapeConstraintShape = "oval" | "circle" | "pill" | "roundedRectangle" | "rectangle";
@@ -53,20 +81,29 @@ export interface HoldRegion {
   metadata?: {
     holdID: string;
     pieceIndex: number;
+    presentationID?: string;
   };
   fingerCapacity?: number;
   depthRangeMillimeters?: MillimeterRange;
   handCapacity?: number;
   shapeConstraint?: ShapeConstraint;
+  bendableCommandIndexes?: number[];
 }
 
 export interface EditorDocument {
-  schemaVersion: number;
+  presentationID?: string;
   canvas: {
     width: number;
     height: number;
   };
   regions: HoldRegion[];
+}
+
+export interface BoardPresentation {
+  presentationID: string;
+  displayName: string;
+  imageUrl: string;
+  default: boolean;
 }
 
 export interface BoardSummary {
@@ -79,7 +116,10 @@ export interface BoardSummary {
 
 export interface Board extends BoardSummary {
   imageUrl: string;
+  holdIDs?: string[];
   saveUrl?: string;
+  selectedPresentationID?: string;
+  presentations?: BoardPresentation[];
   document: EditorDocument;
 }
 
@@ -119,7 +159,7 @@ export interface PullRequestResult {
 
 export interface WorkbenchClient {
   listBoards(): Promise<BoardSummary[]>;
-  getBoard(boardId: string): Promise<Board>;
+  getBoard(boardId: string, presentationID?: string): Promise<Board>;
   saveBoard(boardId: string, document: EditorDocument): Promise<Board>;
   getGitStatus(): Promise<GitStatus>;
   getAuthStatus(): Promise<AuthStatus>;
@@ -204,6 +244,7 @@ export interface PathEditor {
   isInflectionVertex(commands: readonly PathCommand[], index: number): boolean;
   roundVertex(commands: PathCommand[], index: number): boolean;
   makeSegmentBendable(commands: PathCommand[], afterIndex: number): boolean;
+  bendSegmentToPoint(commands: PathCommand[], afterIndex: number, point: Point): boolean;
   makeSegmentStraight(commands: PathCommand[], afterIndex: number): boolean;
   snapSegmentHorizontal(commands: PathCommand[], afterIndex: number): boolean;
   snapSegmentVertical(commands: PathCommand[], afterIndex: number): boolean;
@@ -269,6 +310,8 @@ export interface WorkbenchState {
   commitMessage: string;
   rotationDegrees: string;
   validation: string;
+  apiError: string;
+  apiErrorOperation: string | null;
   status: string;
   saveLoginUrl: string | null;
   boardsError: string;
@@ -300,6 +343,7 @@ export interface WorkbenchActions {
   pushBranch(): Promise<void>;
   openPullRequest(): Promise<void>;
   selectHold(key: string | null, toggle?: boolean): void;
+  selectPresentation(presentationID: string): Promise<void>;
   setRotationDegrees(value: string): void;
   replaceDocument(document: EditorDocument, options?: DocumentUpdateOptions): EditorDocument;
   editDocument(edit: (document: EditorDocument) => void, options?: DocumentUpdateOptions): boolean;

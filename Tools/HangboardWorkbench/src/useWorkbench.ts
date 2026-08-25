@@ -35,6 +35,8 @@ const INITIAL_STATE: WorkbenchState = {
   commitMessage: "",
   rotationDegrees: "",
   validation: "",
+  apiError: "",
+  apiErrorOperation: null,
   status: "Ready.",
   saveLoginUrl: null,
   boardsError: "",
@@ -70,6 +72,15 @@ interface OperationCoordinators {
 
 function errorMessage(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function clearApiErrorFor(
+  state: WorkbenchState,
+  operation: string,
+): Pick<WorkbenchState, "apiError" | "apiErrorOperation"> {
+  return state.apiErrorOperation === operation
+    ? { apiError: "", apiErrorOperation: null }
+    : { apiError: state.apiError, apiErrorOperation: state.apiErrorOperation };
 }
 
 function saveLoginUrl(error: unknown): string | null {
@@ -226,6 +237,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
           ...current,
           boards,
           boardsError: "",
+          ...clearApiErrorFor(current, "boards"),
           status: "Boards loaded.",
         }));
         loaded = true;
@@ -234,6 +246,8 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         updateState((current) => ({
           ...current,
           boardsError: errorMessage(error, "Could not load boards."),
+          apiError: errorMessage(error, "Could not load boards."),
+          apiErrorOperation: "boards",
           status: "Could not load boards.",
         }));
       }
@@ -259,6 +273,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         selectedBranch: selectedBranch(status),
         gitStatusKnown: true,
         hasUncommittedChanges: status.dirty,
+        ...clearApiErrorFor(current, "git-status"),
       }));
       return true;
     } catch (error: unknown) {
@@ -270,7 +285,8 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         selectedBranch: "",
         gitStatusKnown: false,
         hasUncommittedChanges: false,
-        validation: errorMessage(error, "Could not read repository status."),
+        apiError: errorMessage(error, "Could not read repository status."),
+        apiErrorOperation: "git-status",
         status: "Could not read repository status.",
       }));
       return false;
@@ -293,14 +309,17 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         authenticated: auth.authenticated,
         username: auth.username ?? null,
         hostedStorage: auth.hostedStorage ?? false,
+        ...clearApiErrorFor(current, "auth-status"),
       }));
-    } catch {
+    } catch (error: unknown) {
       if (!isActive()) return;
       updateState((current) => ({
         ...current,
         authenticated: false,
         username: null,
         hostedStorage: false,
+        apiError: errorMessage(error, "Could not read authentication status."),
+        apiErrorOperation: "auth-status",
       }));
     }
   }, [client, updateState]);
@@ -343,14 +362,68 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
           },
         });
         if (committed) {
-          updateState((current) => ({ ...current, status: "Board loaded." }));
+          updateState((current) => ({
+            ...current,
+            ...clearApiErrorFor(current, "load-board"),
+            status: "Board loaded.",
+          }));
         }
       } catch (error: unknown) {
         if (!isCurrent()) return;
         updateState((current) => ({
           ...current,
-          validation: errorMessage(error, "Could not load board."),
+          apiError: errorMessage(error, "Could not load board."),
+          apiErrorOperation: "load-board",
           status: "Could not load board. The current editor was kept.",
+        }));
+      }
+    });
+  }, [boardOperations, client, controller, isBusy, loadImage, updateState]);
+
+  const selectPresentation = useCallback(async (presentationID: string): Promise<void> => {
+    const current = stateRef.current;
+    if (!current.board || !presentationID || isBusy()
+      || current.board.selectedPresentationID === presentationID) return;
+    if (current.dirty) {
+      updateState((value) => ({
+        ...value,
+        validation: "Save or undo the current surface changes before switching surfaces.",
+        status: "Surface not changed. Unsaved edits were kept.",
+      }));
+      return;
+    }
+    const boardId = current.board.boardId;
+    updateState((value) => ({ ...value, validation: "", saveLoginUrl: null }));
+    await boardOperations.perform(async ({ isCurrent }) => {
+      let committed = false;
+      try {
+        await controller.loadBoardAtomically({
+          boardId,
+          getBoard: (requestedBoardID) => client.getBoard(requestedBoardID, presentationID),
+          loadImage,
+          commit: ({ board, document }) => {
+            if (!isCurrent() || board.selectedPresentationID !== presentationID) return;
+            resetHistory(historyRef.current);
+            updateState((value) => ({
+              ...value,
+              board,
+              document: cloneEditorDocument(document),
+              selectedKey: null,
+              selectedKeys: [],
+              dirty: false,
+            }));
+            committed = true;
+          },
+        });
+        if (committed) {
+          updateState((value) => ({ ...value, status: "Board surface loaded." }));
+        }
+      } catch (error: unknown) {
+        if (!isCurrent()) return;
+        updateState((value) => ({
+          ...value,
+          validation: errorMessage(error, "Could not load board surface."),
+          status: "Could not load board surface. The current editor was kept.",
         }));
       }
     });
@@ -400,6 +473,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
                   ...selection,
                   dirty: false,
                   validation: "",
+                  ...clearApiErrorFor(latest, "save-board"),
                   status: automatic ? "Board autosaved." : "Board saved.",
                 };
               });
@@ -411,13 +485,16 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
           updateState((latest) => loginUrl ? {
             ...latest,
             validation: "",
+            apiError: errorMessage(error, "Could not save board."),
+            apiErrorOperation: "save-board",
             status: automatic
               ? "Could not autosave board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept."
               : "Could not save board. Reauthenticate in a new tab, then return here and save again. Your editor changes were kept.",
             saveLoginUrl: loginUrl,
           } : {
             ...latest,
-            validation: errorMessage(error, "Could not save board."),
+            apiError: errorMessage(error, "Could not save board."),
+            apiErrorOperation: "save-board",
             status: automatic
               ? "Could not autosave board. Your editor changes were kept."
               : "Could not save board. Your editor changes were kept.",
@@ -461,14 +538,20 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     try {
       await boardOperations.perform(async () => {
         const boards = await client.listBoards();
-        updateState((current) => ({ ...current, boards, boardsError: "" }));
+        updateState((current) => ({
+          ...current,
+          boards,
+          boardsError: "",
+          ...clearApiErrorFor(current, "boards"),
+        }));
       });
     } catch (error: unknown) {
       updateState((current) => ({
         ...current,
         boards: [],
         boardsError: errorMessage(error, "Could not reload boards for the new branch."),
-        validation: errorMessage(error, "Could not reload boards for the new branch."),
+        apiError: errorMessage(error, "Could not reload boards for the new branch."),
+        apiErrorOperation: "boards",
         status: `${failurePrefix} Could not reload boards.`,
       }));
     }
@@ -486,11 +569,16 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       } catch (error: unknown) {
         updateState((current) => ({
           ...current,
-          validation: errorMessage(error, "Could not switch branch."),
+          apiError: errorMessage(error, "Could not switch branch."),
+          apiErrorOperation: "switch-branch",
           status: "Could not switch branch.",
         }));
         return;
       }
+      updateState((current) => ({
+        ...current,
+        ...clearApiErrorFor(current, "switch-branch"),
+      }));
       clearEditor();
       const refreshed = await refreshGitState();
       updateState((current) => ({
@@ -516,11 +604,16 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       } catch (error: unknown) {
         updateState((current) => ({
           ...current,
-          validation: errorMessage(error, "Could not create branch."),
+          apiError: errorMessage(error, "Could not create branch."),
+          apiErrorOperation: "create-branch",
           status: "Could not create branch.",
         }));
         return;
       }
+      updateState((current) => ({
+        ...current,
+        ...clearApiErrorFor(current, "create-branch"),
+      }));
       clearEditor();
       updateState((current) => ({ ...current, newBranchName: "" }));
       const refreshed = await refreshGitState();
@@ -551,12 +644,14 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         updateState((current) => ({
           ...current,
           ...(refreshed ? { validation: "" } : {}),
+          ...clearApiErrorFor(current, "commit-changes"),
           status: refreshed ? label : `${label} Repository status unavailable.`,
         }));
       } catch (error: unknown) {
         updateState((current) => ({
           ...current,
-          validation: errorMessage(error, "Could not commit changes."),
+          apiError: errorMessage(error, "Could not commit changes."),
+          apiErrorOperation: "commit-changes",
           status: "Could not commit changes.",
         }));
       }
@@ -574,12 +669,14 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         updateState((current) => ({
           ...current,
           ...(refreshed ? { validation: "" } : {}),
+          ...clearApiErrorFor(current, "push-branch"),
           status: refreshed ? label : `${label} Repository status unavailable.`,
         }));
       } catch (error: unknown) {
         updateState((current) => ({
           ...current,
-          validation: errorMessage(error, "Could not push branch."),
+          apiError: errorMessage(error, "Could not push branch."),
+          apiErrorOperation: "push-branch",
           status: "Could not push branch.",
         }));
       }
@@ -604,12 +701,14 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
         updateState((current) => ({
           ...current,
           validation: "",
+          ...clearApiErrorFor(current, "open-pull-request"),
           status: `Opened PR: ${result.url || "created"}`,
         }));
       } catch (error: unknown) {
         updateState((current) => ({
           ...current,
-          validation: errorMessage(error, "Could not open pull request."),
+          apiError: errorMessage(error, "Could not open pull request."),
+          apiErrorOperation: "open-pull-request",
           status: "Could not open pull request.",
         }));
       }
@@ -797,6 +896,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     commitChanges,
     pushBranch,
     openPullRequest,
+    selectPresentation,
     selectHold(key, toggle = false) {
       updateState((current) => {
         if (!key || !current.document?.regions.some((region) => region.key === key)) {
@@ -834,6 +934,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     editDocument,
     redoDocument,
     saveBoard,
+    selectPresentation,
     selectBoard,
     setAutosaveEnabled,
     switchBranch,

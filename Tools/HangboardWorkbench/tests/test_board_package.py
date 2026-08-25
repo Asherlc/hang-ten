@@ -38,6 +38,7 @@ from workbench_fixtures import (  # noqa: E402
     CANONICAL_PACKAGE,
     PRIMARY_IMAGE,
     board_document,
+    multi_presentation_board_document,
 )
 
 
@@ -152,6 +153,116 @@ def _package_snapshot(package: Path) -> dict[str, bytes]:
     }
 
 
+def _write_multi_presentation_package(library: Path) -> Path:
+    package = library / "fixture-multi-presentation"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    shutil.copyfile(PRIMARY_IMAGE, assets / "back.png")
+    _write_json(
+        package / "board.json", multi_presentation_board_document("fixture.multi")
+    )
+    return package
+
+
+def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+
+    package = board_package.load_board_package(package_root)
+    front = board_package.editor_document(package)
+    back = board_package.editor_document(package, "back")
+
+    assert [presentation.id for presentation in package.presentations] == ["front", "back"]
+    assert front["presentationID"] == "front"
+    assert back["presentationID"] == "back"
+    assert {region["metadata"]["presentationID"] for region in front["regions"]} == {"front"}
+    assert {region["metadata"]["presentationID"] for region in back["regions"]} == {"back"}
+    assert [region["metadata"]["holdID"] for region in front["regions"]] == [
+        "hold-left",
+        "hold-left",
+    ]
+    assert [region["metadata"]["holdID"] for region in back["regions"]] == [
+        "hold-back",
+        "hold-back",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (lambda board: board.__setitem__("presentation", {"assetPath": "assets/primary.png"}), "unknown keys"),
+        (lambda board: board.pop("presentations"), "missing keys"),
+        (lambda board: board["holds"][0].pop("presentationID"), "presentationID"),
+        (lambda board: board["holds"][0].__setitem__("presentationID", "missing"), "presentationID is unknown"),
+    ],
+)
+def test_rejects_legacy_or_incomplete_presentation_shape(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(package_root, mutation)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+def test_save_changes_only_the_selected_presentation_and_preserves_assets(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package, "front")
+    before = _package_snapshot(package_root)
+    back_before = copy.deepcopy(package.board["holds"][1])
+    for region in document["regions"]:
+        region["type"] = "sloper"
+    document["regions"].append(
+        {
+            "id": 3,
+            "key": "new-front-piece-0",
+            "type": "edge",
+            "displayPath": "M 800 200 L 900 200 L 900 300 L 800 300 Z",
+            "metadata": {
+                "holdID": "new-front",
+                "pieceIndex": 0,
+                "presentationID": "front",
+            },
+        }
+    )
+
+    saved = board_package.save_editor_document(
+        library, "fixture-multi-presentation", document
+    )
+
+    assert board_package.editor_document(saved, "front")["presentationID"] == "front"
+    assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
+    new_hold = next(hold for hold in saved.board["holds"] if hold["id"] == "new-front")
+    assert new_hold["presentationID"] == "front"
+    after = _package_snapshot(package_root)
+    assert after["assets/primary.png"] == before["assets/primary.png"]
+    assert after["assets/back.png"] == before["assets/back.png"]
+
+
+def test_save_rejects_the_removed_editor_document_schema_version(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["schemaVersion"] = 1
+
+    with pytest.raises(BoardPackageError, match="unknown keys.*schemaVersion"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
 def test_canonical_package_has_the_exact_single_file_inventory() -> None:
     assert {path.name for path in CANONICAL_PACKAGE.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (CANONICAL_PACKAGE / "assets").iterdir()} == {
@@ -168,16 +279,13 @@ def test_canonical_package_has_the_exact_single_file_inventory() -> None:
         for piece in hold["geometry"]:
             if piece["shape"]["type"] != "path":
                 continue
-            points = [
-                coordinates
-                for command in piece["shape"]["commands"]
-                for key, coordinates in command.items()
-                if key != "command"
-            ]
-            assert min(point[0] for point in points) == pytest.approx(0, abs=5e-7)
-            assert min(point[1] for point in points) == pytest.approx(0, abs=5e-7)
-            assert max(point[0] for point in points) == pytest.approx(1, abs=5e-7)
-            assert max(point[1] for point in points) == pytest.approx(1, abs=5e-7)
+            min_x, max_x, min_y, max_y = board_package.flattened_shape_bounds(
+                piece["shape"]["commands"]
+            )
+            assert min_x == pytest.approx(0, abs=5e-7)
+            assert min_y == pytest.approx(0, abs=5e-7)
+            assert max_x == pytest.approx(1, abs=5e-7)
+            assert max_y == pytest.approx(1, abs=5e-7)
 
 
 def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:
@@ -214,7 +322,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
     )
     pieces_by_hold: dict[
         str,
-        list[tuple[int, str, object, object, int | None, dict[str, int] | None, int | None]],
+        list[tuple[int, str, object, object, tuple[int, ...], int | None, dict[str, int] | None, int | None]],
     ] = {}
     for (
         hold_id,
@@ -222,12 +330,22 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         kind,
         path,
         shape_constraint,
+        bendable_command_indexes,
         finger_capacity,
         depth_range,
         hand_capacity,
     ) in parsed.values():
         pieces_by_hold.setdefault(hold_id, []).append(
-            (piece_index, kind, path, shape_constraint, finger_capacity, depth_range, hand_capacity)
+            (
+                piece_index,
+                kind,
+                path,
+                shape_constraint,
+                bendable_command_indexes,
+                finger_capacity,
+                depth_range,
+                hand_capacity,
+            )
         )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])
@@ -241,6 +359,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         first_piece[4],
         first_piece[5],
         first_piece[6],
+        first_piece[7],
     )
     original = copy.deepcopy(package.board)
 
@@ -560,7 +679,10 @@ def test_rejects_sidecars_and_extra_package_files(
     extra.parent.mkdir(parents=True, exist_ok=True)
     extra.write_bytes(b"{}")
 
-    with pytest.raises(BoardPackageError, match="only board.json and assets/primary.png"):
+    with pytest.raises(
+        BoardPackageError,
+        match="only board.json and assets/|assets must exactly match",
+    ):
         board_package.load_board_package(package)
 
 
@@ -784,7 +906,7 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     package = board_package.load_board_package(package_root)
     hold = package.board["holds"][0]
 
-    assert set(hold) == {"id", "name", "kind", "geometry"}
+    assert set(hold) == {"id", "name", "kind", "presentationID", "geometry"}
     assert package.hold_frame("hold-left").to_json() == {
         "x": 0.05,
         "y": 0.1,
@@ -819,8 +941,8 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
         "hold-left-piece-1",
     ]
     assert [region["metadata"] for region in document["regions"]] == [
-        {"holdID": "hold-left", "pieceIndex": 0},
-        {"holdID": "hold-left", "pieceIndex": 1},
+        {"holdID": "hold-left", "pieceIndex": 0, "presentationID": "primary"},
+        {"holdID": "hold-left", "pieceIndex": 1, "presentationID": "primary"},
     ]
 
 
@@ -883,6 +1005,130 @@ def test_omitting_editor_shape_constraint_removes_stored_constraint(
 
     assert "shapeConstraint" not in saved.board["holds"][0]["geometry"][0]
     assert "shapeConstraint" not in _read_board(package_root)["holds"][0]["geometry"][0]
+
+
+def test_editor_document_projects_a_bendable_curve_command_index(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                        "bendable": True,
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+
+    assert document["regions"][0]["bendableCommandIndexes"] == [1]
+
+
+def test_save_editor_document_persists_only_selected_curve_indexes(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.25, 0.5],
+                        "to": [0.5, 0.5],
+                        "bendable": True,
+                    },
+                    {
+                        "command": "curve",
+                        "control1": [0.75, 0.5],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["bendableCommandIndexes"] = [2]
+
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    commands = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]["commands"]
+    assert "bendable" not in commands[1]
+    assert commands[2]["bendable"] is True
+    assert "bendableCommandIndexes" not in json.dumps(_read_board(package_root))
+
+
+@pytest.mark.parametrize("indexes", [[1, 1], [99], [0], None])
+def test_save_rejects_invalid_editor_bendable_curve_indexes(
+    tmp_path: Path, indexes: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["bendableCommandIndexes"] = indexes
+
+    with pytest.raises(BoardPackageError, match="bendableCommandIndexes"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_rejects_bendable_curve_indexes_for_a_constrained_piece(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["displayPath"] = (
+        "M 177.4 45.7 C 221.75 45.7 310.45 45.7 354.8 45.7 L 354.8 228.5 L 177.4 228.5 Z"
+    )
+    document["regions"][0]["shapeConstraint"] = {
+        "shape": "rectangle",
+        "rotationDegrees": 0,
+    }
+    document["regions"][0]["bendableCommandIndexes"] = [1]
+
+    with pytest.raises(BoardPackageError, match="bendableCommandIndexes"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 @pytest.mark.parametrize(
@@ -1273,7 +1519,11 @@ def test_save_adds_a_new_hold(tmp_path: Path) -> None:
             "key": "hold-right-piece-0",
             "type": "pinch",
             "displayPath": "M 900 100 L 950 100 L 950 150 Z",
-            "metadata": {"holdID": "hold-right", "pieceIndex": 0},
+            "metadata": {
+                "holdID": "hold-right",
+                "pieceIndex": 0,
+                "presentationID": "primary",
+            },
         }
     )
 

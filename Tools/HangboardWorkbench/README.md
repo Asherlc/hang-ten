@@ -88,6 +88,13 @@ the decoded image within 0.1% relative error.
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.
 
+### Editor-local geometry identities
+
+While a freeform contour is being edited, its anchors, Bézier controls, and
+segments have stable IDs only in Workbench memory. These local identities are
+not saved: `displayPath` and `board.json` remain the canonical geometry
+representation.
+
 ## Capture a visual catalog
 
 The catalog capture command starts an isolated loopback Workbench server and a

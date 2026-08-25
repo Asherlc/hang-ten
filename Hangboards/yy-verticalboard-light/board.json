@@ -1,15 +1,11 @@
 {
-  "schemaVersion": 1,
   "id": "yy.verticalboard-light",
   "manufacturer": "YY Vertical",
   "name": "VerticalBoard Light",
   "subtitle": "Beginner poplar hangboard with broad jugs, 20- and 30-degree slopers, and deep rounded edges.",
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-light",
-  "dimensions": "54 × 9 × 5 cm",
+  "dimensions": "54 \u00d7 9 \u00d7 5 cm",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "jug-left",
@@ -93,7 +89,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -177,7 +174,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-30-left",
@@ -261,7 +259,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-30-right",
@@ -345,7 +344,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-20-center",
@@ -376,8 +376,20 @@
                   0
                 ]
               },
-              { "command": "line", "to": [1, 0.5] },
-              { "command": "line", "to": [0.96, 1] },
+              {
+                "command": "line",
+                "to": [
+                  1,
+                  0.5
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.96,
+                  1
+                ]
+              },
               {
                 "command": "line",
                 "to": [
@@ -385,8 +397,20 @@
                   1
                 ]
               },
-              { "command": "line", "to": [0, 0.5] },
-              { "command": "line", "to": [0.04, 0] },
+              {
+                "command": "line",
+                "to": [
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.04,
+                  0
+                ]
+              },
               {
                 "command": "close"
               }
@@ -396,7 +420,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-left",
@@ -519,7 +544,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-20-right",
@@ -642,7 +668,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-45-left",
@@ -765,7 +792,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-45-right",
@@ -888,7 +916,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-left",
@@ -1011,7 +1040,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-25-right",
@@ -1134,7 +1164,8 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-40-center",
@@ -1243,7 +1274,17 @@
             "rotationDegrees": 0
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
     }
   ]
 }

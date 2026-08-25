@@ -20,16 +20,35 @@ def load_board_catalog_module() -> ModuleType:
     return board_catalog
 
 
-def _encode_png(width: int, height: int) -> bytes:
+def _encode_png(
+    width: int, height: int, *, color: tuple[int, int, int] = (255, 255, 255)
+) -> bytes:
     buffer = io.BytesIO()
-    Image.new("RGB", (width, height), color=(255, 255, 255)).save(buffer, format="PNG")
+    Image.new("RGB", (width, height), color=color).save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def _encode_transparent_png(width: int, height: int) -> bytes:
+    image = Image.new("RGBA", (width, height), color=(255, 255, 255, 255))
+    image.putpixel((0, 0), (255, 255, 255, 0))
+    buffer = io.BytesIO()
+    image.save(buffer, format="PNG")
     return buffer.getvalue()
 
 
 PRIMARY_PNG_WIDTH = 40
 PRIMARY_PNG_HEIGHT = 20
-PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT)
-ALTERNATE_PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH + 2, PRIMARY_PNG_HEIGHT + 2)
+OPAQUE_PRIMARY_PNG_BYTES = _encode_png(PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT)
+TRANSPARENT_PRIMARY_PNG_BYTES = _encode_transparent_png(
+    PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT
+)
+PRIMARY_PNG_BYTES = TRANSPARENT_PRIMARY_PNG_BYTES
+SECONDARY_PNG_BYTES = _encode_png(
+    PRIMARY_PNG_WIDTH, PRIMARY_PNG_HEIGHT, color=(0, 0, 0)
+)
+ALTERNATE_PRIMARY_PNG_BYTES = _encode_transparent_png(
+    PRIMARY_PNG_WIDTH + 2, PRIMARY_PNG_HEIGHT + 2
+)
 
 
 def board_document(
@@ -39,7 +58,6 @@ def board_document(
     name: str = "Fixture Board",
 ) -> dict[str, Any]:
     return {
-        "schemaVersion": 1,
         "id": board_id,
         "manufacturer": manufacturer,
         "name": name,
@@ -47,12 +65,21 @@ def board_document(
         "productURL": f"https://example.com/{board_id}",
         "dimensions": "20 x 10 cm",
         "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
-        "presentation": {"assetPath": "assets/primary.png"},
+        "presentations": [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
+                "default": True,
+            }
+        ],
         "holds": [
             {
                 "id": "hold-left",
                 "name": "Left hold",
                 "kind": "jug",
+                "presentationID": "primary",
                 "geometry": [
                     {
                         "frame": {"x": 0.1, "y": 0.1, "width": 0.1, "height": 0.4},
@@ -62,6 +89,48 @@ def board_document(
             }
         ],
     }
+
+
+def multi_presentation_board_document(
+    board_id: str = "fixture.board",
+    *,
+    manufacturer: str = "Fixture Maker",
+    name: str = "Fixture Board",
+) -> dict[str, Any]:
+    """Return a fixture with one hold on each declared presentation."""
+    document = board_document(board_id, manufacturer=manufacturer, name=name)
+    document["presentations"] = [
+        {
+            "id": "front",
+            "name": "Front",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
+            "default": True,
+        },
+        {
+            "id": "back",
+            "name": "Back",
+            "assetPath": "assets/back.png",
+            "aspectRatio": PRIMARY_PNG_WIDTH / PRIMARY_PNG_HEIGHT,
+            "default": False,
+        },
+    ]
+    document["holds"][0]["presentationID"] = "front"
+    document["holds"].append(
+        {
+            "id": "hold-right",
+            "name": "Right hold",
+            "kind": "jug",
+            "presentationID": "back",
+            "geometry": [
+                {
+                    "frame": {"x": 0.8, "y": 0.1, "width": 0.1, "height": 0.4},
+                    "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2},
+                }
+            ],
+        }
+    )
+    return document
 
 
 def write_board_package(
@@ -76,6 +145,27 @@ def write_board_package(
     assets.mkdir(parents=True)
     (assets / "primary.png").write_bytes(PRIMARY_PNG_BYTES)
     document = board_document(board_id, manufacturer=manufacturer, name=name)
+    (root / "board.json").write_text(
+        __import__("json").dumps(document, indent=2) + "\n", encoding="utf-8"
+    )
+    return root
+
+
+def write_multi_presentation_board_package(
+    root: Path,
+    *,
+    board_id: str = "fixture.board",
+    manufacturer: str = "Fixture Maker",
+    name: str = "Fixture Board",
+) -> Path:
+    """Write a complete package with its declared presentation assets."""
+    assets = root / "assets"
+    assets.mkdir(parents=True)
+    (assets / "primary.png").write_bytes(PRIMARY_PNG_BYTES)
+    (assets / "back.png").write_bytes(SECONDARY_PNG_BYTES)
+    document = multi_presentation_board_document(
+        board_id, manufacturer=manufacturer, name=name
+    )
     (root / "board.json").write_text(
         __import__("json").dumps(document, indent=2) + "\n", encoding="utf-8"
     )

@@ -558,7 +558,24 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
-    func testSevenThreeRepeatersUseValidSymmetricGripPairs() {
+    func testAppStoreResolutionSelectsOneThreeFingerPocketPerHand() {
+        let defaults = makeDefaults()
+        let store = AppStore(
+            healthKitService: HealthWorkoutSavingSpy(),
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        XCTAssertEqual(
+            store.holdIDs(
+                for: step(targets: [.feature(.pocket, fingerCapacity: 3)]),
+                on: BoardCatalog.defaultBoard
+            ),
+            ["pocket-29-three-left", "pocket-29-three-right"]
+        )
+    }
+
+    func testSevenThreeRepeatersResolveExpectedLeftRightEdgePairs() throws {
         let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
@@ -591,6 +608,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         struct ProgressionCue {
             let targetIDs: [String]
             let sizeMillimeters: Int
+            let features: Set<HoldFeature>
             let gripType: GripType
             let fingerConfiguration: FingerConfiguration?
         }
@@ -599,36 +617,42 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             ProgressionCue(
                 targetIDs: ["edge-29-left", "edge-29-right"],
                 sizeMillimeters: 29,
+                features: [.largeEdge],
                 gripType: .openHand,
                 fingerConfiguration: nil
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
+                features: [.mediumEdge, .smallEdge],
                 gripType: .openHand,
                 fingerConfiguration: nil
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
+                features: [.mediumEdge, .smallEdge],
                 gripType: .halfCrimp,
                 fingerConfiguration: nil
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
+                features: [.mediumEdge, .smallEdge],
                 gripType: .openHand,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring])
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
+                features: [.mediumEdge, .smallEdge],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
+                features: [.mediumEdge, .smallEdge],
                 gripType: .openHand,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle])
             )
@@ -654,7 +678,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
                 let holds = board.holds.filter { cue.targetIDs.contains($0.id) }
                 XCTAssertEqual(holds.count, 2)
-                XCTAssertTrue(holds.allSatisfy { $0.kind == .edge && $0.sizeMillimeters == cue.sizeMillimeters })
+                XCTAssertTrue(holds.allSatisfy {
+                    $0.kind == .edge &&
+                        $0.sizeMillimeters == cue.sizeMillimeters &&
+                        $0.fingerCapacity == 4 &&
+                        $0.features == cue.features
+                })
             }
         }
 
@@ -663,19 +692,23 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         for holdIDs in Set(resolvedPairs) {
             XCTAssertEqual(holdIDs.count, 2)
+            XCTAssertEqual(holdIDs.filter { $0.hasSuffix("-left") }.count, 1)
+            XCTAssertEqual(holdIDs.filter { $0.hasSuffix("-right") }.count, 1)
 
             let holds = board.holds.filter { holdIDs.contains($0.id) }
             XCTAssertEqual(holds.count, 2)
             guard holds.count == 2 else { continue }
 
-            let holdsByX = holds.sorted { $0.frame.x < $1.frame.x }
-            let leftHold = holdsByX[0]
-            let rightHold = holdsByX[1]
+            let leftHold = try XCTUnwrap(holds.first { $0.id.hasSuffix("-left") })
+            let rightHold = try XCTUnwrap(holds.first { $0.id.hasSuffix("-right") })
             XCTAssertLessThan(leftHold.frame.x, rightHold.frame.x)
-            XCTAssertEqual(leftHold.frame.y, rightHold.frame.y, accuracy: 0.0001)
-            XCTAssertEqual(leftHold.frame.width, rightHold.frame.width, accuracy: 0.0001)
-            XCTAssertEqual(leftHold.frame.height, rightHold.frame.height, accuracy: 0.0001)
-            XCTAssertEqual(leftHold.frame.x, 1 - rightHold.frame.x - rightHold.frame.width, accuracy: 0.0001)
+            XCTAssertEqual(leftHold.kind, .edge)
+            XCTAssertEqual(rightHold.kind, .edge)
+            XCTAssertEqual(leftHold.sizeMillimeters, rightHold.sizeMillimeters)
+            XCTAssertEqual(leftHold.fingerCapacity, rightHold.fingerCapacity)
+            XCTAssertEqual(leftHold.features, rightHold.features)
+            XCTAssertTrue(leftHold.name.hasPrefix("Left "))
+            XCTAssertTrue(rightHold.name.hasPrefix("Right "))
         }
 
         let centeredFourFingerPocketIDs = Set(

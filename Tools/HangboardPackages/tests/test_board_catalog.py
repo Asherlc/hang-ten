@@ -8,10 +8,14 @@ from pathlib import Path
 import pytest
 
 from conftest import (
+    ALTERNATE_PRIMARY_PNG_BYTES,
+    OPAQUE_PRIMARY_PNG_BYTES,
     PRIMARY_PNG_BYTES,
+    TRANSPARENT_PRIMARY_PNG_BYTES,
     board_document,
     load_board_catalog_module,
     write_board_package,
+    write_multi_presentation_board_package,
     write_primary_only_draft,
 )
 
@@ -88,6 +92,15 @@ def test_final_inventory_rejects_a_primary_only_draft(tmp_path: Path) -> None:
         module.discover_board_packages(tmp_path, require_complete_inventory=True)
 
 
+def test_discovery_rejects_an_opaque_primary_only_draft(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    draft = write_primary_only_draft(tmp_path / "draft-model")
+    (draft / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="fully transparent pixel"):
+        module.discover_board_packages(tmp_path)
+
+
 def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     write_board_package(tmp_path / "first-model", board_id="duplicate.board")
@@ -102,7 +115,10 @@ def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
     [
         (lambda root: (root / "assets" / "primary.png").unlink(), "primary.png"),
         (lambda root: (root / "semantics.json").write_text("{}"), "unknown package entry"),
-        (lambda root: (root / "assets" / "extra.png").write_bytes(b"extra"), "unknown asset"),
+        (
+            lambda root: (root / "assets" / "extra.png").write_bytes(b"extra"),
+            "undeclared presentation asset",
+        ),
         (
             lambda root: (root / "assets" / "primary.png").write_bytes(b"not a png"),
             "must be a PNG image",
@@ -136,6 +152,84 @@ def test_completed_package_requires_the_exact_finished_shape(
 
     with pytest.raises(ValueError, match=message):
         module.discover_board_packages(tmp_path)
+
+
+def test_completed_package_rejects_an_opaque_primary_png(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    (package / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="fully transparent pixel"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_completed_package_accepts_a_primary_png_with_actual_alpha_zero(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    (package / "assets" / "primary.png").write_bytes(TRANSPARENT_PRIMARY_PNG_BYTES)
+
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [item.root.name for item in inventory.packages] == ["fixture-model"]
+
+
+def test_primary_transparency_validation_uses_the_streaming_zlib_api(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = load_board_catalog_module()
+    write_board_package(tmp_path / "fixture-model")
+
+    def prohibit_full_decompression(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("the one-shot zlib API must not be used")
+
+    monkeypatch.setattr(module.zlib, "decompress", prohibit_full_decompression)
+
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [item.root.name for item in inventory.packages] == ["fixture-model"]
+
+
+def test_primary_transparency_validation_rejects_an_invalid_filter_after_alpha_zero(
+    tmp_path: Path,
+) -> None:
+    """Alpha discovery must not skip structural validation of later scanlines."""
+    module = load_board_catalog_module()
+    package = write_board_package(tmp_path / "fixture-model")
+    raw_rows = b"\x00\xff\xff\xff\x00" + b"\x05\xff\xff\xff\xff"
+    ihdr = struct.pack(">IIBBBBB", 1, 2, 8, 6, 0, 0, 0)
+    malformed = (
+        _PNG_SIGNATURE
+        + _png_chunk(b"IHDR", ihdr)
+        + _png_chunk(b"IDAT", zlib.compress(raw_rows))
+        + _png_chunk(b"IEND")
+    )
+    (package / "assets" / "primary.png").write_bytes(malformed)
+
+    with pytest.raises(ValueError, match="invalid PNG row filter"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_primary_transparency_validation_checks_later_filters_without_unfiltering(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Keep full structural checks without Python pixel work after alpha-zero."""
+    module = load_board_catalog_module()
+    write_board_package(tmp_path / "fixture-model")
+    original = module._unfilter_png_row
+    calls = 0
+
+    def count_rows(*args: object, **kwargs: object) -> bytes:
+        nonlocal calls
+        calls += 1
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(module, "_unfilter_png_row", count_rows)
+
+    module.discover_board_packages(tmp_path)
+
+    assert calls == 1
 
 
 def test_discovery_rejects_malformed_completed_package(tmp_path: Path) -> None:
@@ -188,6 +282,162 @@ def test_package_loader_consumes_embedded_hold_geometry(tmp_path: Path) -> None:
         (0.1, 0.1, 0.4, 0.4)
     )
     assert package.board.presentation_asset_path == "assets/primary.png"
+
+
+def test_unversioned_board_loads_its_declared_primary_presentation(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    package = module.load_board_package(package_root)
+
+    assert package.board.presentations == (
+        module.BoardPresentation(
+            id="primary",
+            name="Primary",
+            asset_path="assets/primary.png",
+            aspect_ratio=2,
+            is_default=True,
+        ),
+    )
+    assert {hold.presentation_id for hold in package.board.holds} == {"primary"}
+
+
+def test_unversioned_board_loads_declared_presentations_and_scoped_holds(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package = module.load_board_package(
+        write_multi_presentation_board_package(tmp_path / "fixture-model")
+    )
+
+    assert package.board.presentations == (
+        module.BoardPresentation("front", "Front", "assets/primary.png", 2, True),
+        module.BoardPresentation("back", "Back", "assets/back.png", 2, False),
+    )
+    assert [(hold.id, hold.presentation_id) for hold in package.board.holds] == [
+        ("hold-left", "front"),
+        ("hold-right", "back"),
+    ]
+    assert package.board.presentation_asset_path == "assets/primary.png"
+
+
+def test_unversioned_board_rejects_a_declared_image_with_a_mismatched_aspect_ratio(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    (package_root / "assets" / "back.png").write_bytes(ALTERNATE_PRIMARY_PNG_BYTES)
+
+    with pytest.raises(ValueError, match="aspectRatio.*within 0.1%"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    "write_package",
+    [write_board_package, write_multi_presentation_board_package],
+    ids=["primary", "multi-presentation"],
+)
+def test_package_loader_reports_missing_required_top_level_fields_as_value_errors(
+    tmp_path: Path, write_package
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document.pop("manufacturer")
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=r"board\.json is missing keys: \['manufacturer'\]"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda document: document["presentations"].__setitem__(
+                1,
+                {
+                    **document["presentations"][1],
+                    "id": "front",
+                },
+            ),
+            "duplicate presentation id",
+        ),
+        (
+            lambda document: [
+                presentation.__setitem__("default", False)
+                for presentation in document["presentations"]
+            ],
+            "exactly one default presentation",
+        ),
+        (
+            lambda document: document["presentations"].__setitem__(
+                1,
+                {
+                    **document["presentations"][1],
+                    "default": True,
+                },
+            ),
+            "exactly one default presentation",
+        ),
+    ],
+)
+def test_unversioned_board_rejects_invalid_presentation_identifiers_and_defaults(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    mutation(document)
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        module.load_board_package(package_root)
+
+
+def test_unversioned_board_rejects_hold_with_an_unknown_presentation_id(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    document["holds"][0]["presentationID"] = "missing"
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="unknown presentationID"):
+        module.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda package, document: (package / "assets" / "undeclared.png").write_bytes(
+                PRIMARY_PNG_BYTES
+            ),
+            "undeclared presentation asset",
+        ),
+        (
+            lambda package, document: (package / "assets" / "back.png").unlink(),
+            "missing declared presentation asset",
+        ),
+        (
+            lambda package, document: document["presentations"][1].__setitem__(
+                "assetPath", "assets/../outside.png"
+            ),
+            "assetPath must name a PNG beneath assets/",
+        ),
+    ],
+)
+def test_unversioned_board_rejects_undeclared_missing_and_escaping_assets(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    mutation(package_root, document)
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        module.load_board_package(package_root)
 
 
 def test_package_loader_retains_shape_constraint(tmp_path: Path) -> None:

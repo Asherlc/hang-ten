@@ -41,7 +41,7 @@ function documentFixture(regions: EditorDocument["regions"] = [
   { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 } },
   { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
 ]): EditorDocument {
-  return { schemaVersion: 1, canvas: { width: 100, height: 50 }, regions };
+  return { canvas: { width: 100, height: 50 }, regions };
 }
 
 function boardFixture(document = documentFixture()): Board {
@@ -58,10 +58,14 @@ function gitStatus(): GitStatus {
   return { ok: true, currentBranch: "main", branches: ["main"], dirty: false, statusLines: [] };
 }
 
-function clientFixture(boards: readonly Board[]): WorkbenchClient {
+function clientFixture(boards: readonly Board[]): WorkbenchClient & {
+  saveCalls: Array<{ boardId: string; document: EditorDocument }>;
+} {
   const firstBoard = boards[0];
   if (!firstBoard) throw new Error("At least one board fixture is required");
+  const saveCalls: Array<{ boardId: string; document: EditorDocument }> = [];
   return {
+    saveCalls,
     async listBoards(): Promise<BoardSummary[]> {
       return boards.map((board) => ({
         boardId: board.boardId,
@@ -76,6 +80,7 @@ function clientFixture(boards: readonly Board[]): WorkbenchClient {
       return board;
     },
     async saveBoard(boardId, document): Promise<Board> {
+      saveCalls.push({ boardId, document: structuredClone(document) });
       const board = boards.find((candidate) => candidate.boardId === boardId) ?? firstBoard;
       return { ...board, document };
     },
@@ -177,7 +182,98 @@ test("model helpers group physical holds and derive collision-free identifiers",
   assert.deepEqual(holdSiblings(document, document.regions[2]!).map((region) => region.key), ["legacy"]);
   assert.deepEqual(holdCentroid(document.regions, pathEditor), { x: 130 / 3, y: 40 / 3 });
   assert.equal(nextHoldId(document), "hold-4");
+  assert.equal(nextHoldId(document, ["hold-4", "hold-5"]), "hold-6");
   assert.equal(nextRegionId(document), 10);
+});
+
+test("switching presentations changes the focused canvas and scopes new holds", async () => {
+  const presentations = [
+    {
+      presentationID: "front",
+      displayName: "Front",
+      imageUrl: "/api/boards/board-a/image?presentationID=front",
+      default: true,
+    },
+    {
+      presentationID: "back",
+      displayName: "Back",
+      imageUrl: "/api/boards/board-a/image?presentationID=back",
+      default: false,
+    },
+  ];
+  const frontDocument: EditorDocument = {
+    presentationID: "front",
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      id: 1,
+      key: "front-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "front", pieceIndex: 0, presentationID: "front" },
+    }],
+  };
+  const backDocument: EditorDocument = {
+    presentationID: "back",
+    canvas: { width: 80, height: 120 },
+    regions: [{
+      id: 1,
+      key: "back-piece-0",
+      type: "edge",
+      displayPath: "M 10 30 L 20 30 L 20 40 Z",
+      metadata: { holdID: "back", pieceIndex: 0, presentationID: "back" },
+    }],
+  };
+  const focusedBoard = (presentationID: "front" | "back"): Board => ({
+    boardId: "board-a",
+    displayName: "Board A",
+    holdCount: 2,
+    holdIDs: ["front", "back", "hold-1"],
+    selectedPresentationID: presentationID,
+    presentations,
+    imageUrl: `/api/boards/board-a/image?presentationID=${presentationID}`,
+    document: presentationID === "front" ? frontDocument : backDocument,
+  });
+  let savedDocument: EditorDocument | null = null;
+  const client: WorkbenchClient = {
+    ...clientFixture([focusedBoard("front")]),
+    async getBoard(_boardID, presentationID): Promise<Board> {
+      return focusedBoard(presentationID === "back" ? "back" : "front");
+    },
+    async saveBoard(_boardID, document): Promise<Board> {
+      savedDocument = document;
+      return { ...focusedBoard("back"), document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    assert.equal(app.documentValue("#presentation-select"), "front");
+    assert.equal(app.document.querySelectorAll("#hold-overlay .region-shape").length, 1);
+    assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), presentations[0]?.imageUrl);
+    await app.click('[data-hold-key="front-piece-0"]');
+    await app.click("#add-horizontal-guide-button");
+    assert.equal(app.document.querySelectorAll("#guide-overlay line").length, 1);
+
+    await app.change("#presentation-select", "back");
+    await app.flush();
+
+    assert.equal(app.document.querySelector("#board-image")?.getAttribute("href"), presentations[1]?.imageUrl);
+    assert.deepEqual(paths(app), ["M 10 30 L 20 30 L 20 40 Z"]);
+    assert.equal(app.document.querySelectorAll("#guide-overlay line").length, 0);
+    assert.equal(app.text("#hold-heading"), "No selection");
+
+    assert.equal(app.disabled("#add-hold-button"), false);
+    await app.click("#add-hold-button");
+    assert.equal(app.disabled("#save-button"), false);
+    await app.click("#save-button");
+    await app.flush();
+    await app.flush();
+
+    assert.equal(savedDocument?.presentationID, "back");
+    const added = savedDocument?.regions.find((region) => region.metadata?.holdID.startsWith("hold-"));
+    assert.equal(added?.metadata?.holdID, "hold-4");
+    assert.equal(added?.metadata?.presentationID, "back");
+    assert.ok(savedDocument?.regions.every((region) => region.metadata?.presentationID === "back"));
+  }, dependenciesFixture(focusedBoard("front"), { client }));
 });
 
 test("rotation handles stay separated and inside both top-edge and narrow canvases", () => {
@@ -754,6 +850,75 @@ test("duplicate and mirror reflects every selected physical hold with fresh hold
   }, dependenciesFixture(board, { client }));
 });
 
+test("duplicate and mirror regenerates bendable indexes from mirrored cubic commands", async () => {
+  const board = boardFixture(documentFixture([{
+    id: 1,
+    key: "curve-piece-0",
+    type: "jug",
+    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+    metadata: { holdID: "curve", pieceIndex: 0 },
+    bendableCommandIndexes: [1, 2],
+  }]));
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="curve-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+    await app.click("#save-button");
+    await app.flush();
+
+    const duplicate = saved[0]?.regions.find((region) => region.metadata?.holdID !== "curve");
+    assert.equal(duplicate?.displayPath, "M 90 10 C 83.333333 10 76.666667 10 70 10 L 70 30 L 90 30 Z");
+    assert.deepEqual(duplicate?.bendableCommandIndexes, [1]);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("duplicate and mirror preserves the selected presentation on the new hold", async () => {
+  const document: EditorDocument = {
+    presentationID: "front",
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      id: 1,
+      key: "front-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "front", pieceIndex: 0, presentationID: "front" },
+    }],
+  };
+  const board: Board = {
+    ...boardFixture(document),
+    selectedPresentationID: "front",
+  };
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, savedDocument) {
+      saved.push(structuredClone(savedDocument));
+      return { ...board, document: savedDocument };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="front-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+
+    assert.equal(app.text("#hold-heading"), "hold-2-piece-0");
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions[1]?.metadata, {
+      holdID: "hold-2",
+      pieceIndex: 0,
+      presentationID: "front",
+    });
+  }, dependenciesFixture(board, { client }));
+});
+
 test("finger capacity loads in the inspector, applies to every physical piece, and new holds are unset", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, fingerCapacity: 2 },
@@ -1058,6 +1223,177 @@ async function drag(
   await app.pointer("#editor-svg", end, { pointerId: 7, clientX: last.x, clientY: last.y });
 }
 
+test("a freeform anchor keeps its local target ID while it is dragged", async () => {
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="a-piece-0"]');
+    const anchor = app.document.querySelector<SVGCircleElement>(".path-editor-vertex");
+    const id = anchor?.dataset.anchorId;
+    assert.ok(id);
+
+    await drag(app, `.path-editor-vertex[data-anchor-id="${id}"]`, [{ x: 10, y: 10 }, { x: 14, y: 12 }]);
+
+    const moved = app.document.querySelector<SVGCircleElement>(`.path-editor-vertex[data-anchor-id="${id}"]`);
+    assert.equal(moved?.getAttribute("cx"), "14");
+    assert.equal(moved?.getAttribute("cy"), "12");
+  });
+});
+
+test("saving a stable editable path sends no local geometry IDs", async () => {
+  const document = documentFixture([{
+    id: 1,
+    key: "stable-piece-0",
+    type: "jug",
+    displayPath: "M 10 10 Q 20 5 30 10 L 30 30 Z",
+  }]);
+  const board = boardFixture(document);
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="stable-piece-0"]');
+    await drag(app, ".path-editor-vertex", [{ x: 10, y: 10 }, { x: 12, y: 12 }]);
+    const control = app.document.querySelector<SVGCircleElement>(".path-editor-control[data-control-id]");
+    const controlID = control?.dataset.controlId;
+    const controlX = Number(control?.getAttribute("cx"));
+    const controlY = Number(control?.getAttribute("cy"));
+    assert.ok(controlID && Number.isFinite(controlX) && Number.isFinite(controlY));
+    await drag(app, `.path-editor-control[data-control-id="${controlID}"]`, [
+      { x: controlX, y: controlY },
+      { x: controlX + 2, y: controlY + 2 },
+    ]);
+    await app.click("#save-button");
+
+    const saved = JSON.stringify(client.saveCalls[0]?.document);
+    assert.equal(saved.includes(":anchor:"), false);
+    assert.equal(saved.includes(":control:"), false);
+    assert.equal(saved.includes(":segment:"), false);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("insertion retains unrelated local target IDs while undo and redo keep canonical paths", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    const originalPath = paths(app)[0];
+    const unrelated = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-vertex")]
+      .find((anchor) => anchor.getAttribute("cx") === "30" && anchor.getAttribute("cy") === "30");
+    const unrelatedID = unrelated?.dataset.anchorId;
+    assert.ok(unrelatedID);
+
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+    const insertedPath = paths(app)[0];
+    assert.equal(insertedPath, "M 10 10 L 20 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.ok(app.document.querySelector(`.path-editor-vertex[data-anchor-id="${unrelatedID}"]`));
+
+    assert.equal(await app.keyDown("body", "z", { metaKey: true }), true);
+    assert.equal(paths(app)[0], originalPath);
+    assert.equal(await app.keyDown("body", "z", { metaKey: true, shiftKey: true }), true);
+    assert.equal(paths(app)[0], insertedPath);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("an inserted vertex stays selected through drag and rotation so Delete removes that vertex", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+
+    const inserted = app.document.querySelector<SVGCircleElement>('.path-editor-vertex[data-index="1"]');
+    const insertedID = inserted?.dataset.anchorId;
+    assert.ok(insertedID);
+    await drag(app, `.path-editor-vertex[data-anchor-id="${insertedID}"]`, [
+      { x: 20, y: 10 },
+      { x: 20, y: 12 },
+    ]);
+    assert.equal(
+      app.document.querySelector('.path-editor-vertex.selected')?.getAttribute("data-anchor-id"),
+      insertedID,
+    );
+
+    await app.click("#rotate-cw-button");
+    const rotatedSelection = app.document.querySelector<SVGCircleElement>(
+      `.path-editor-vertex[data-anchor-id="${insertedID}"]`,
+    );
+    assert.equal(rotatedSelection?.classList.contains("selected"), true);
+    assert.equal(rotatedSelection?.getAttribute("data-index"), "1");
+
+    const expectedCommands = pathEditor.parsePath(paths(app)[0]!);
+    pathEditor.deleteVertex(expectedCommands, 1);
+    const expectedPath = pathEditor.serializePath(expectedCommands);
+    assert.equal(await app.keyDown("body", "Delete"), true);
+    assert.equal(paths(app)[0], expectedPath);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("deleting then inserting in one edit session never reuses a local vertex ID", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    const deletedID = app.document.querySelector<SVGCircleElement>(
+      '.path-editor-vertex[data-index="3"]',
+    )?.dataset.anchorId;
+    assert.ok(deletedID);
+
+    await app.pointer(`.path-editor-vertex[data-anchor-id="${deletedID}"]`, "pointerdown", {
+      button: 0,
+      pointerId: 31,
+      clientX: 10,
+      clientY: 30,
+    });
+    await app.pointer("#editor-svg", "pointerup", {
+      button: 0,
+      pointerId: 31,
+      clientX: 10,
+      clientY: 30,
+    });
+    assert.equal(await app.keyDown("body", "Delete"), true);
+    assert.equal(app.document.querySelector(`[data-anchor-id="${deletedID}"]`), null);
+
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+    const currentIDs = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-vertex")]
+      .map((anchor) => anchor.dataset.anchorId);
+    assert.equal(currentIDs.includes(deletedID), false);
+    assert.equal(new Set(currentIDs).size, currentIDs.length);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("vertex accessibility labels follow current rendered order after insertion", async () => {
+  const square = documentFixture([{
+    id: 1,
+    key: "square",
+    type: "jug",
+    displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z",
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+
+    const labels = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-vertex")]
+      .map((anchor) => anchor.getAttribute("aria-label"));
+    assert.deepEqual(labels, ["Start vertex", "Vertex 2", "Vertex 3", "Vertex 4", "Vertex 5"]);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
 test("guide controls create horizontal and vertical guides at the selected hold center", async () => {
   const square = documentFixture([{
     id: 1,
@@ -1296,7 +1632,7 @@ test("vertex menu rounds a corner as a persisted quadratic", async () => {
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("straight-segment menu converts a segment to a bendable quadratic", async () => {
+test("straight-segment menu converts a segment to a bendable curve with controls at both endpoints", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
     app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
@@ -1312,9 +1648,221 @@ test("straight-segment menu converts a segment to a bendable quadratic", async (
 
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
     await app.click("#make-bendable-action");
-    assert.equal(paths(app)[0], "M 10 10 Q 20 10 30 10 L 30 30 L 10 30 Z");
+    assert.equal(paths(app)[0], "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z");
     assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="0"]'));
+    assert.ok(app.document.querySelector('.path-editor-control[data-index="1"][data-control="1"]'));
     assert.equal(app.document.querySelector('[role="menu"]'), null);
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("the second cubic control stays independently draggable after Make bendable", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    const secondControl = app.document.querySelector<SVGCircleElement>(
+      '.path-editor-control[data-index="1"][data-control="1"]',
+    );
+    const startX = Number(secondControl?.getAttribute("cx"));
+    const startY = Number(secondControl?.getAttribute("cy"));
+    assert.ok(Number.isFinite(startX) && Number.isFinite(startY));
+
+    await drag(app, '.path-editor-control[data-index="1"][data-control="1"]', [
+      { x: startX, y: startY },
+      { x: startX + 20 / 3, y: startY + 5 },
+    ]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 16.666667 10 30 15 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("dragging a cubic made bendable by its menu action pulls its midpoint to the pointer", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("a saved bendable segment reloads as pullable with unchanged endpoint anchors", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  let persistedBoard = boardFixture(square);
+  const client: WorkbenchClient = {
+    ...clientFixture([persistedBoard]),
+    async getBoard(): Promise<Board> {
+      return structuredClone(persistedBoard);
+    },
+    async saveBoard(_boardId, document): Promise<Board> {
+      persistedBoard = { ...persistedBoard, document: structuredClone(document) };
+      return structuredClone(persistedBoard);
+    },
+  };
+  const dependencies = dependenciesFixture(persistedBoard, { client });
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+    await app.click("#save-button");
+    await app.flush();
+    await app.flush();
+  }, dependencies);
+
+  assert.deepEqual(persistedBoard.document.regions[0]?.bendableCommandIndexes, [1]);
+
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependencies);
+});
+
+test("splitting a marked cubic leaves either descendant pullable", async () => {
+  const markedCurve = documentFixture([{
+    id: 1,
+    key: "curve",
+    type: "jug",
+    displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+    bendableCommandIndexes: [1],
+  }]);
+  for (const { start, end, commandIndex, expectedControl } of [
+    {
+      start: { x: 15, y: 10 },
+      end: { x: 15, y: 20 },
+      commandIndex: 1,
+      expectedControl: { x: 15, y: 23.333333 },
+    },
+    {
+      start: { x: 25, y: 10 },
+      end: { x: 25, y: 20 },
+      commandIndex: 2,
+      expectedControl: { x: 25, y: 23.333333 },
+    },
+  ]) {
+    await withEditor(async (app) => {
+      app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+      await app.click('[data-hold-key="curve"]');
+      await app.mouse("#editor-svg", "dblclick", { clientX: 20, clientY: 10 });
+      await drag(app, '[data-hold-key="curve"]', [start, end]);
+
+      const commands = pathEditor.parsePath(paths(app)[0]!);
+      assert.deepEqual(commands[commandIndex]?.controls, [expectedControl, expectedControl]);
+      assert.deepEqual(commands.flatMap((command) => command.points), [
+        { x: 10, y: 10 },
+        { x: 20, y: 10 },
+        { x: 30, y: 10 },
+        { x: 30, y: 30 },
+        { x: 10, y: 30 },
+      ]);
+    }, dependenciesFixture(boardFixture(markedCurve)));
+  }
+});
+
+test("a bendable segment remains opt-in after undo and redo", async () => {
+  const square = documentFixture([
+    { id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+
+    assert.equal(await app.keyDown("body", "z", { ctrlKey: true }), true);
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 L 30 30 L 10 30 Z");
+    assert.equal(await app.keyDown("body", "y", { ctrlKey: true }), true);
+
+    await drag(app, '[data-hold-key="square"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 10 C 20 23.333333 20 23.333333 30 10 L 30 30 L 10 30 Z");
+  }, dependenciesFixture(boardFixture(square)));
+});
+
+test("dragging a constrained cubic moves its whole path instead of bending it", async () => {
+  const oval = documentFixture([
+    {
+      id: 1,
+      key: "oval",
+      type: "jug",
+      displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z",
+      shapeConstraint: { shape: "oval", rotationDegrees: 0 },
+      bendableCommandIndexes: [1],
+    },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="oval"]');
+
+    await drag(app, '[data-hold-key="oval"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 20 C 16.666667 20 23.333333 20 30 20 L 30 40 L 10 40 Z");
+  }, dependenciesFixture(boardFixture(oval)));
+});
+
+test("dragging an imported custom cubic moves its whole path instead of bending it", async () => {
+  const custom = documentFixture([
+    { id: 1, key: "custom", type: "jug", displayPath: "M 10 10 C 16.666667 10 23.333333 10 30 10 L 30 30 L 10 30 Z" },
+  ]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="custom"]');
+
+    await drag(app, '[data-hold-key="custom"]', [{ x: 20, y: 10 }, { x: 20, y: 20 }]);
+
+    assert.equal(paths(app)[0], "M 10 20 C 16.666667 20 23.333333 20 30 20 L 30 40 L 10 40 Z");
+  }, dependenciesFixture(boardFixture(custom)));
+});
+
+test("controls stay uniquely addressable after converting two segments to bendable curves", async () => {
+  const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="square"]');
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 20, clientY: 10 });
+    await app.click("#make-bendable-action");
+    await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 30, clientY: 20 });
+    await app.click("#make-bendable-action");
+
+    const controls = [...app.document.querySelectorAll<SVGCircleElement>(".path-editor-control")];
+    const controlIDs = controls.map((control) => control.dataset.controlId);
+    assert.ok(controlIDs.every((id): id is string => id !== undefined));
+    assert.equal(new Set(controlIDs).size, controlIDs.length);
+
+    const secondCurveControl = app.document.querySelector<SVGCircleElement>(
+      '.path-editor-control[data-index="2"][data-control="1"]',
+    );
+    const controlID = secondCurveControl?.dataset.controlId;
+    const startX = Number(secondCurveControl?.getAttribute("cx"));
+    const startY = Number(secondCurveControl?.getAttribute("cy"));
+    assert.ok(controlID && Number.isFinite(startX) && Number.isFinite(startY));
+    const before = pathEditor.parsePath(paths(app)[0]!);
+    const firstCurveControls = before[1]?.controls;
+    const secondCurveControls = before[2]?.controls;
+
+    await drag(app, `.path-editor-control[data-control-id="${controlID}"]`, [
+      { x: startX, y: startY },
+      { x: startX + 4, y: startY + 3 },
+    ]);
+
+    const after = pathEditor.parsePath(paths(app)[0]!);
+    assert.deepEqual(after[1]?.controls, firstCurveControls);
+    assert.notDeepEqual(after[2]?.controls, secondCurveControls);
   }, dependenciesFixture(boardFixture(square)));
 });
 
@@ -1414,7 +1962,7 @@ test("straight-segment context menu chooses the closest eligible edge", async ()
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 28, clientY: 15 });
     await app.click("#make-bendable-action");
 
-    assert.equal(paths(app)[0], "M 10 10 L 30 10 Q 30 20 30 30 L 10 30 Z");
+    assert.equal(paths(app)[0], "M 10 10 L 30 10 C 30 16.666667 30 23.333333 30 30 L 10 30 Z");
   }, dependenciesFixture(boardFixture(square)));
 });
 
@@ -1847,7 +2395,6 @@ test("malformed selected paths report interaction failures instead of throwing",
 
 function constrainedBoardFixture(): Board {
   const document: EditorDocument = {
-    schemaVersion: 1,
     canvas: { width: 120, height: 80 },
     regions: [
       {
