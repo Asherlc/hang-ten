@@ -212,7 +212,9 @@ internal enum BoardTargetResolver {
 
         let sameKind = board.holds.filter { $0.kind == feature.holdKind }
         let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
-        return preferredSameKind.map(\.id)
+        // Untagged holds are only a physical-kind fallback, so they cannot
+        // identify every same-kind hold as the source-prescribed target.
+        return preferredSameKind.first.map { [$0.id] } ?? []
     }
 
     /// When the target specifies a finger count, prefer candidates that

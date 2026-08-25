@@ -135,6 +135,22 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["j"])
     }
 
+    /// A board with generic, untagged edges cannot distinguish a semantic
+    /// edge request. The physical-kind fallback must remain a usable,
+    /// bounded cue rather than highlighting every edge on the board.
+    func testMetadataLightSameKindFallbackSelectsOneRepresentativeHold() {
+        let board = board(holds: [
+            hold(id: "first-edge", kind: .edge),
+            hold(id: "second-edge", kind: .edge),
+            hold(id: "third-edge", kind: .edge)
+        ])
+        let target = HoldTarget.feature(.mediumEdge)
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
+        XCTAssertEqual(result, ["first-edge"])
+    }
+
     func testKindTargetSubstitutesByKind() {
         let board = board(holds: [
             hold(id: "e1", kind: .edge, feature: .largeEdge)
