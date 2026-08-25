@@ -7,6 +7,8 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         kind: HoldKind = .edge,
         feature: HoldFeature? = nil,
         fingerCapacity: Int? = nil,
+        sizeMillimeters: Int? = nil,
+        depthRangeMillimeters: ClosedRange<Int>? = nil,
         x: Double = 0
     ) -> BoardHold {
         BoardHold(
@@ -16,7 +18,9 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             detail: id,
             kind: kind,
             frame: HoldFrame(x: x, y: 0, width: 0.1, height: 0.1),
+            sizeMillimeters: sizeMillimeters,
             fingerCapacity: fingerCapacity,
+            depthRangeMillimeters: depthRangeMillimeters,
             features: feature.map { [$0] }
         )
     }
@@ -133,6 +137,56 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let target = HoldTarget.feature(.smallEdge)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertEqual(result, ["j"])
+    }
+
+    /// A board with generic, untagged edges cannot distinguish a semantic
+    /// edge request. The physical-kind fallback must remain a usable,
+    /// bounded cue rather than highlighting every edge on the board.
+    func testMetadataLightSameKindFallbackSelectsOneRepresentativeHold() {
+        let board = board(holds: [
+            hold(id: "first-edge", kind: .edge),
+            hold(id: "second-edge", kind: .edge),
+            hold(id: "third-edge", kind: .edge)
+        ])
+        let target = HoldTarget.feature(.mediumEdge)
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
+        XCTAssertEqual(result, ["first-edge"])
+    }
+
+    /// A 20 mm medium-edge target must prefer a documented 20/15 mm
+    /// continuous contact over shallower and deeper metadata-light edges.
+    func testMetadataLightMediumEdgeFallbackPrefersNearestDocumentedDepthRange() {
+        let board = board(holds: [
+            hold(id: "10-8", depthRangeMillimeters: 8...10),
+            hold(id: "30-25", depthRangeMillimeters: 25...30),
+            hold(id: "20-15", depthRangeMillimeters: 15...20)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.mediumEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["20-15"])
+    }
+
+    /// Depth metadata is optional, so a documented scalar measurement also
+    /// outranks unknown or farther range measurements in a physical fallback.
+    func testMetadataLightLargeEdgeFallbackUsesNearestScalarDepthBeforeUnknownHold() {
+        let board = board(holds: [
+            hold(id: "unknown"),
+            hold(id: "20-15", depthRangeMillimeters: 15...20),
+            hold(id: "29", sizeMillimeters: 29)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.largeEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["29"])
     }
 
     func testKindTargetSubstitutesByKind() {

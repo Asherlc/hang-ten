@@ -21,6 +21,7 @@
 		AA0000000000000000000014 /* PlanStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000016 /* PlanStorage.swift */; };
 		AA0000000000000000000015 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
 		AA0000000000000000000068 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
+		C10000000000000000000001 /* CountdownAudio in Resources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000001 /* CountdownAudio */; };
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
 		AA0000000000000000000093 /* CountdownAudioScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000093 /* CountdownAudioScheduler.swift */; };
@@ -146,6 +147,7 @@
 		BB0000000000000000000100 /* BoardEditorSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSessionTests.swift; path = BoardEditorSessionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
+		C20000000000000000000001 /* CountdownAudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CountdownAudio; sourceTree = "<group>"; };
 		BB0000000000000000000018 /* TestTargetSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTargetSmokeTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000019 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000020 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
@@ -382,6 +384,7 @@
 			children = (
 				BB0000000000000000000007 /* Assets.xcassets */,
 				BB0000000000000000000017 /* PlanLibrary.json */,
+				C20000000000000000000001 /* CountdownAudio */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -594,6 +597,7 @@
 			files = (
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,
+				C10000000000000000000001 /* CountdownAudio in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
