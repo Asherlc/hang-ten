@@ -518,8 +518,14 @@ final class HoldEditorCanvasUIView: UIView {
         context.setLineCap(.round)
 
         if let boardImage {
-            let rect = fittedBoardRect(for: bounds)
-            boardImage.draw(in: rect)
+            let topLeft = screenPoint(fromBoard: .zero, bounds: bounds)
+            let bottomRight = screenPoint(fromBoard: CGPoint(x: 1, y: 1), bounds: bounds)
+            boardImage.draw(in: CGRect(
+                x: topLeft.x,
+                y: topLeft.y,
+                width: bottomRight.x - topLeft.x,
+                height: bottomRight.y - topLeft.y
+            ))
         }
 
         let selectedHoldID = session.selectedPiece?.holdID

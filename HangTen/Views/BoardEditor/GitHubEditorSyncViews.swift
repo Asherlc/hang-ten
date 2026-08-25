@@ -39,8 +39,13 @@ final class GitHubSyncSession: ObservableObject {
     }
 
     func signOut() {
-        try? tokenStore.delete()
-        username = nil
+        do {
+            try tokenStore.delete()
+            username = nil
+            lastError = nil
+        } catch {
+            lastError = error.localizedDescription
+        }
     }
 }
 
@@ -57,7 +62,7 @@ struct GitHubSignInView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     SectionLabel(title: "GitHub access")
                     Text(
-                        "Create a fine-grained personal access token with read and write access to the hang-ten repository contents. The token stays in this device's Keychain."
+                        "Create a fine-grained personal access token for hang-ten with Contents read-and-write and Pull requests read-and-write permissions. The token stays in this device's Keychain."
                     )
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .foregroundStyle(Color.hangMuted)

@@ -32,6 +32,7 @@ enum GitHubSyncError: Error, Equatable, LocalizedError {
 struct GitHubBoardPackagePayload: Equatable {
     let boardJSON: Data
     let primaryPNG: Data
+    let assetPath: String
 }
 
 struct GitHubTokenStore {
@@ -274,7 +275,11 @@ struct GitHubBoardSyncService {
             )
         }
         let primaryPNG = try await blob(token: token, sha: imageEntry.sha)
-        return GitHubBoardPackagePayload(boardJSON: boardJSON, primaryPNG: primaryPNG)
+        return GitHubBoardPackagePayload(
+            boardJSON: boardJSON,
+            primaryPNG: primaryPNG,
+            assetPath: assetPath
+        )
     }
 
     private static func defaultPresentationAssetPath(_ boardJSON: Data) throws -> String {

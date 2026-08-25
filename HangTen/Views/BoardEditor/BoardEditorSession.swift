@@ -193,8 +193,8 @@ final class BoardEditorSession: ObservableObject {
         pushHistory()
     }
 
-    /// Marks the document dirty when a gesture ends; history was already
-    /// captured at gesture start.
+    /// Publishes the post-gesture state; history was captured at gesture
+    /// start and replaceGeometry already marked the document dirty.
     func commitLiveChange() {
         objectWillChange.send()
     }
@@ -330,7 +330,7 @@ final class BoardEditorSession: ObservableObject {
                 rotationDegrees: existingRotation
             )
         ) { boardPath, bendableFlags in
-            try HoldPathEngine.createOutlineShapePath(of: boardPath, preset: preset)
+            boardPath = try HoldPathEngine.createOutlineShapePath(of: boardPath, preset: preset)
             for index in bendableFlags.indices {
                 bendableFlags[index] = false
             }
@@ -563,6 +563,7 @@ final class BoardEditorSession: ObservableObject {
         if let index = document.holds.firstIndex(where: { $0.id == selection.holdID }) {
             document.holds[index] = hold
         }
+        isSaved = false
     }
 }
 

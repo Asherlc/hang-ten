@@ -365,6 +365,9 @@ enum BoardPackageWriter {
             throw invalid("presentations must declare exactly one default", document)
         }
 
+        guard !document.holds.isEmpty else {
+            throw invalid("holds must not be empty", document)
+        }
         var holdIDs = Set<String>()
         for hold in document.holds {
             guard hold.id.isEditorBoardIdentifier, !hold.name.isEmpty else {

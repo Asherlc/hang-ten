@@ -456,10 +456,10 @@ final class BoardPackageWriterTests: XCTestCase {
         invertedDepth.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(lowerBound: 20, upperBound: 5)
         XCTAssertThrowsError(try BoardPackageWriter.data(for: invertedDepth))
 
-        var emptyGeometry = makeDocument(holds: [makeHold(geometry: [])])
+        let emptyGeometry = makeDocument(holds: [makeHold(geometry: [])])
         XCTAssertThrowsError(try BoardPackageWriter.data(for: emptyGeometry))
 
-        var noHolds = makeDocument(holds: [])
+        let noHolds = makeDocument(holds: [])
         XCTAssertThrowsError(try BoardPackageWriter.data(for: noHolds))
     }
 
@@ -495,7 +495,6 @@ final class BoardPackageWriterTests: XCTestCase {
     func testStrictDecoderRejectsUnknownKeys() throws {
         var document = makeDocument()
         let encoded = try BoardPackageWriter.data(for: document)
-        _ = document
 
         var tampered = String(decoding: encoded, as: UTF8.self)
         tampered = tampered.replacingOccurrences(

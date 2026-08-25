@@ -77,21 +77,9 @@ struct BoardEditorStore {
               FileManager.default.fileExists(atPath: sourceAssetsURL.path) else {
             throw BoardEditorStoreError.missingSourcePackage(slug: slug)
         }
-        try FileManager.default.createDirectory(
-            at: packageURL.appendingPathComponent("assets", isDirectory: true),
-            withIntermediateDirectories: true
-        )
+        try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
         try FileManager.default.copyItem(at: sourceBoardURL, to: packageURL.appendingPathComponent("board.json"))
-        for assetURL in try FileManager.default.contentsOfDirectory(
-            at: sourceAssetsURL,
-            includingPropertiesForKeys: [.isRegularFileKey],
-            options: []
-        ) where (try? assetURL.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true {
-            try FileManager.default.copyItem(
-                at: assetURL,
-                to: packageURL.appendingPathComponent("assets/\(assetURL.lastPathComponent)")
-            )
-        }
+        try FileManager.default.copyItem(at: sourceAssetsURL, to: packageURL.appendingPathComponent("assets"))
         return packageURL
     }
 
@@ -147,7 +135,9 @@ struct BoardEditorStore {
         let boardURL = packageURL.appendingPathComponent("board.json")
         let temporaryURL = packageURL
             .appendingPathComponent("board.json.tmp-\(UUID().uuidString)")
-        FileManager.default.createFile(atPath: temporaryURL.path, contents: encoded)
+        guard FileManager.default.createFile(atPath: temporaryURL.path, contents: encoded) else {
+            throw BoardEditorStoreError.invalidEditedDocument(slug: slug)
+        }
         defer { try? FileManager.default.removeItem(at: temporaryURL) }
         if FileManager.default.fileExists(atPath: boardURL.path) {
             _ = try FileManager.default.replaceItemAt(boardURL, withItemAt: temporaryURL)
@@ -184,6 +174,21 @@ struct BoardEditorStore {
         let packageURL = try validatedPackageURL(slug, requireExisting: false)
         guard FileManager.default.fileExists(atPath: packageURL.path) else { return }
         try FileManager.default.removeItem(at: packageURL)
+    }
+
+    /// Persists a pulled presentation image at its declared package-relative
+    /// path; the path must stay inside the package's assets directory.
+    func persistPulledImage(slug: String, assetPath: String, data: Data) throws {
+        let packageURL = try validatedPackageURL(slug, requireExisting: true)
+        guard assetPath.hasPrefix("assets/"),
+              !assetPath.contains(".."),
+              !assetPath.hasSuffix("/") else {
+            throw BoardEditorStoreError.invalidEditedDocument(slug: slug)
+        }
+        let destination = packageURL.appendingPathComponent(assetPath)
+        let directory = destination.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try data.write(to: destination, options: .atomic)
     }
 
     func exportedFileURL(slug: String) throws -> URL {

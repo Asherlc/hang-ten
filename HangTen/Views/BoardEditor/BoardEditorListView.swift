@@ -189,9 +189,13 @@ struct BoardEditorListView: View {
             do {
                 let branch = try await syncService.defaultBranch(token: token)
                 let payload = try await syncService.fetchBoardPackage(token: token, branch: branch, slug: board.id)
-                _ = payload.primaryPNG
                 let document = try BoardEditableDocument(data: payload.boardJSON)
                 try editorStore.save(document: document, slug: board.id)
+                try editorStore.persistPulledImage(
+                    slug: board.id,
+                    assetPath: payload.assetPath,
+                    data: payload.primaryPNG
+                )
                 refreshEdited()
             } catch {
                 syncSession.lastError = error.localizedDescription

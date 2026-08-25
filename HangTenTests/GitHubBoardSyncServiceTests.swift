@@ -384,6 +384,7 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
 
         XCTAssertEqual(payload.boardJSON, boardBytes)
         XCTAssertEqual(payload.primaryPNG, pngBytes)
+        XCTAssertEqual(payload.assetPath, "assets/cover.png")
     }
 
     func testFetchBoardPackageFailsWhenPackageEntriesMissing() async throws {

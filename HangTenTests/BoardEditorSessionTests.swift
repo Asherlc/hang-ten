@@ -222,6 +222,8 @@ final class BoardEditorSessionTests: XCTestCase {
         let afterBounds = HoldPathEngine.bounds(of: afterCommands)
         XCTAssertEqual(afterBounds.width, beforeBounds.width, accuracy: 1e-6)
         XCTAssertEqual(afterBounds.height, beforeBounds.height, accuracy: 1e-6)
+        let afterAnchors = afterCommands.compactMap({ $0.boardAnchor }).count
+        XCTAssertGreaterThan(afterAnchors, 4, "pill regeneration must reshape the outline")
     }
 
     func testNormalizedConstraintDegreesWrapsIntoRange() {
