@@ -578,7 +578,7 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
     }
 
     func testDeviceAuthorizationPreservesCancellation() async throws {
-        StubState.handler = { _ in throw CancellationError() }
+        StubState.handler = { _ in throw URLError(.cancelled) }
 
         do {
             _ = try await makeService().requestDeviceChallenge(clientID: "client-public")
