@@ -45,19 +45,11 @@ struct BoardEditorScreen: View {
                 dimensions: "",
                 aspectRatio: 2,
                 holds: [],
-                presentations: [
-                    BoardEditablePresentation(
-                        id: "front",
-                        name: "Front",
-                        assetPath: "assets/primary.png",
-                        aspectRatio: 2,
-                        isDefault: true
-                    )
-                ]
+                presentations: []
             ),
             imageURL: URL(fileURLWithPath: "/dev/null"),
-            pixelWidth: 1000,
-            pixelHeight: 500
+            pixelWidth: 1,
+            pixelHeight: 1
         )
     }
 

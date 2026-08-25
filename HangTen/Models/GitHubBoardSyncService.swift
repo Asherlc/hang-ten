@@ -250,8 +250,8 @@ struct GitHubBoardSyncService {
         return url
     }
 
-    /// Fetches one canonical board package (board.json + assets/primary.png)
-    /// from the Hangboards library on the given branch.
+    /// Fetches one canonical board package's board.json plus its default
+    /// presentation image from the Hangboards library on the given branch.
     func fetchBoardPackage(
         token: String,
         branch: String,
@@ -261,14 +261,38 @@ struct GitHubBoardSyncService {
         let prefix = "Hangboards/\(slug)/"
         guard let boardEntry = entries.first(where: {
             $0.path == "\(prefix)board.json" && $0.type == "blob"
-        }), let imageEntry = entries.first(where: {
-            $0.path == "\(prefix)assets/primary.png" && $0.type == "blob"
         }) else {
             throw GitHubSyncError.notFound("board package \(slug) is not available")
         }
         let boardJSON = try await blob(token: token, sha: boardEntry.sha)
+        let assetPath = try Self.defaultPresentationAssetPath(boardJSON)
+        guard let imageEntry = entries.first(where: {
+            $0.path == "\(prefix)\(assetPath)" && $0.type == "blob"
+        }) else {
+            throw GitHubSyncError.notFound(
+                "board package \(slug) is missing its default presentation image"
+            )
+        }
         let primaryPNG = try await blob(token: token, sha: imageEntry.sha)
         return GitHubBoardPackagePayload(boardJSON: boardJSON, primaryPNG: primaryPNG)
+    }
+
+    private static func defaultPresentationAssetPath(_ boardJSON: Data) throws -> String {
+        let payload = try JSONSerialization.jsonObject(with: boardJSON)
+        guard let presentations = payload as? [String: Any],
+              let entries = presentations["presentations"] as? [[String: Any]] else {
+            throw GitHubSyncError.invalidResponse(
+                "board.json does not declare any presentations"
+            )
+        }
+        let declared = entries.first(where: { ($0["default"] as? Bool) == true })
+            ?? entries.first
+        guard let assetPath = declared?["assetPath"] as? String, !assetPath.isEmpty else {
+            throw GitHubSyncError.invalidResponse(
+                "board.json presentations do not declare an asset path"
+            )
+        }
+        return assetPath
     }
 
     private func existingBlobSHA(

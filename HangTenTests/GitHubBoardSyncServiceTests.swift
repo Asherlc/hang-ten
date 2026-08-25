@@ -159,7 +159,9 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
         let firstPage = (0..<100).map { ["name": "branch-\($0)"] }
         StubState.lock.lock()
         StubState.handler = { [self] request in
-            if request.url?.query?.contains("page=1") == true {
+            let page = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)?
+                .queryItems?.first { $0.name == "page" }?.value
+            if page == "1" {
                 return try response(request, data: json(firstPage))
             }
             return try response(request, data: json([["name": "final-a"], ["name": "final-b"]]))
@@ -347,7 +349,9 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
     }
 
     func testFetchBoardPackagePullsBothBlobsFromTree() async throws {
-        let boardBytes = Data("{\"schemaVersion\":1}".utf8)
+        let boardBytes = Data(
+            "{\"presentations\": [{\"id\": \"front\", \"name\": \"Front\", \"assetPath\": \"assets/cover.png\", \"aspectRatio\": 2.0, \"default\": true}]}".utf8
+        )
         let pngBytes = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
         StubState.lock.lock()
         StubState.handler = { [self] request in
@@ -358,7 +362,7 @@ final class GitHubBoardSyncServiceTests: XCTestCase {
                         "truncated": false,
                         "tree": [
                             ["path": "Hangboards/slug/board.json", "type": "blob", "sha": "sha-json"],
-                            ["path": "Hangboards/slug/assets/primary.png", "type": "blob", "sha": "sha-png"],
+                            ["path": "Hangboards/slug/assets/cover.png", "type": "blob", "sha": "sha-png"],
                         ],
                     ])
                 )
