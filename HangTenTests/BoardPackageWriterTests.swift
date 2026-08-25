@@ -526,5 +526,8 @@ final class BoardPackageWriterTests: XCTestCase {
 
         let nullKind = source.replacingOccurrences(of: kind, with: "      \"kind\": null,\n")
         XCTAssertThrowsError(try BoardEditableDocument(data: Data(nullKind.utf8)))
+
+        let unsupportedKind = source.replacingOccurrences(of: kind, with: "      \"kind\": \"unsupported\",\n")
+        XCTAssertThrowsError(try BoardEditableDocument(data: Data(unsupportedKind.utf8)))
     }
 }
