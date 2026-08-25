@@ -45,10 +45,11 @@ Add a catalog-level machine-readable ledger at
 `docs/source-audits/2026-08-25-hangboard-metadata-ledger.json`. It is an audit
 document, not a board-package sidecar and is never loaded by the app.
 
-The ledger has one record per reviewed mapping or blank-field rule. Each record
-identifies the board ID, stable hold ID or explicit set of hold IDs, field name,
-review date, HTTPS primary source URL, `manufacturer` source kind, source
-position/label, and one of these
+The ledger declares its complete `reviewedBoardIDs` set and has one record per
+reviewed mapping or blank-field rule. Each record identifies the board ID,
+stable hold ID or explicit set of hold IDs, field name, review date, HTTPS
+primary source URL, `manufacturer` source kind, source position/label, and one
+of these
 outcomes:
 
 - `verified`: records the exact scalar, range, enum, or feature set that must
@@ -91,8 +92,8 @@ pytest coverage. Given the ledger and discovered board packages, it must:
    exactly, including fractional numeric values and both range endpoints;
 4. require `unavailable` and `notApplicable` records to keep the JSON field
    absent;
-5. reject a hold/field that lacks either a verified mapping or an explicit
-   blank-field rule; and
+5. for every board in `reviewedBoardIDs`, reject a hold/field that lacks either
+   a verified mapping or an explicit blank-field rule; and
 6. print deterministic per-field and per-board before/after coverage totals.
 
 The validator is additive to package-schema validation. Every batch also runs
