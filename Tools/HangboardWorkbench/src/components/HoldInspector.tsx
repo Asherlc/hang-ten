@@ -49,6 +49,18 @@ export function HoldInspector({
   onMobileCollapse,
   className = "",
 }: HoldInspectorProps) {
+  const lowerDepthInputRef = React.useRef<HTMLInputElement>(null);
+  const upperDepthInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    lowerDepthInputRef.current?.setCustomValidity("");
+    upperDepthInputRef.current?.setCustomValidity("");
+  }, [
+    hold?.key,
+    hold?.depthRangeMillimeters?.lowerBound,
+    hold?.depthRangeMillimeters?.upperBound,
+  ]);
+
   return (
     <aside className={`panel inspector-panel ${className}`.trim()} aria-labelledby="hold-heading">
       <div className="panel-heading">
@@ -96,17 +108,25 @@ export function HoldInspector({
             <input
               id="depth-range-lower-input"
               type="number"
-              min="1"
-              step="1"
+              min={Number.MIN_VALUE}
+              step="any"
               disabled={busy}
+              ref={lowerDepthInputRef}
               value={hold?.depthRangeMillimeters?.lowerBound ?? ""}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 if (!value) {
+                  event.currentTarget.setCustomValidity("");
                   onDepthRangeChange(undefined);
                   return;
                 }
                 const lowerBound = Number(value);
+                if (!Number.isFinite(lowerBound) || lowerBound <= 0) {
+                  event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+                  event.currentTarget.reportValidity();
+                  return;
+                }
+                event.currentTarget.setCustomValidity("");
                 const upperBound = Math.max(hold?.depthRangeMillimeters?.upperBound ?? lowerBound, lowerBound);
                 onDepthRangeChange({ lowerBound, upperBound });
               }}
@@ -116,17 +136,25 @@ export function HoldInspector({
             <input
               id="depth-range-upper-input"
               type="number"
-              min="1"
-              step="1"
+              min={Number.MIN_VALUE}
+              step="any"
               disabled={busy}
+              ref={upperDepthInputRef}
               value={hold?.depthRangeMillimeters?.upperBound ?? ""}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 if (!value) {
+                  event.currentTarget.setCustomValidity("");
                   onDepthRangeChange(undefined);
                   return;
                 }
                 const upperBound = Number(value);
+                if (!Number.isFinite(upperBound) || upperBound <= 0) {
+                  event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+                  event.currentTarget.reportValidity();
+                  return;
+                }
+                event.currentTarget.setCustomValidity("");
                 const lowerBound = Math.min(hold?.depthRangeMillimeters?.lowerBound ?? upperBound, upperBound);
                 onDepthRangeChange({ lowerBound, upperBound });
               }}

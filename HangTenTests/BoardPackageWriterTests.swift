@@ -289,11 +289,11 @@ final class BoardPackageWriterTests: XCTestCase {
             aspectRatio: 2.0,
             holds: [
                 BoardEditableHold(
-                    id: "edge-30-left",
-                    name: "Left 30 mm edge",
+                    id: "edge-7-5-left",
+                    name: "Left 7.5 mm edge",
                     kind: .edge,
-                    sizeMillimeters: 30,
-                    depthRangeMillimeters: BoardEditableMillimeterRange(lowerBound: 10, upperBound: 22),
+                    sizeMillimeters: 7.5,
+                    depthRangeMillimeters: BoardEditableMillimeterRange(lowerBound: 7.5, upperBound: 12.5),
                     gripType: .halfCrimp,
                     fingerCapacity: 4,
                     handCapacity: 1,
@@ -325,6 +325,9 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertTrue(output.hasPrefix("{\n  \"id\": \"zlagboard.pro\",\n"))
         XCTAssertTrue(output.contains("  \"dimensions\": \"70.5 \\u00d7 25 cm\",\n"))
         XCTAssertTrue(output.contains("  \"aspectRatio\": 2.0,\n"))
+        XCTAssertTrue(output.contains("\"sizeMillimeters\": 7.5"))
+        XCTAssertTrue(output.contains("\"lowerBound\": 7.5"))
+        XCTAssertTrue(output.contains("\"upperBound\": 12.5"))
         XCTAssertTrue(output.contains(
             "          \"shapeConstraint\": {\n"
                 + "            \"shape\": \"pill\",\n"

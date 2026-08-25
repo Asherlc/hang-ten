@@ -34,10 +34,10 @@ function isFingerCapacity(value: unknown): value is number {
 function isMillimeterRange(value: unknown): value is { lowerBound: number; upperBound: number } {
   if (!isRecord(value)) return false;
   const { lowerBound, upperBound } = value;
-  return Number.isInteger(lowerBound)
-    && Number.isInteger(upperBound)
-    && typeof lowerBound === "number"
+  return typeof lowerBound === "number"
     && typeof upperBound === "number"
+    && Number.isFinite(lowerBound)
+    && Number.isFinite(upperBound)
     && lowerBound > 0
     && upperBound >= lowerBound;
 }

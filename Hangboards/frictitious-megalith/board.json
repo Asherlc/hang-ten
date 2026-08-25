@@ -82,6 +82,7 @@
       "id": "stepped-8-10-12-left",
       "name": "Left 8 / 10 / 12 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 8, "upperBound": 12 },
       "geometry": [
         {
           "frame": {
@@ -191,6 +192,7 @@
       "id": "stepped-8-10-12-right",
       "name": "Right 8 / 10 / 12 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 8, "upperBound": 12 },
       "geometry": [
         {
           "frame": {
@@ -300,6 +302,7 @@
       "id": "stepped-30-40-pocket-left",
       "name": "Left continuous 30 / 40 mm edge with integrated pocket",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 30, "upperBound": 40 },
       "geometry": [
         {
           "frame": {
@@ -409,6 +412,7 @@
       "id": "stepped-30-40-pocket-right",
       "name": "Right continuous 30 / 40 mm edge with integrated pocket",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 30, "upperBound": 40 },
       "geometry": [
         {
           "frame": {
@@ -642,6 +646,7 @@
       "id": "stepped-15-20-left",
       "name": "Left continuous 15 / 20 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 15, "upperBound": 20 },
       "geometry": [
         {
           "frame": {
@@ -751,6 +756,7 @@
       "id": "stepped-15-20-right",
       "name": "Right continuous 15 / 20 mm stepped edge",
       "kind": "edge",
+      "depthRangeMillimeters": { "lowerBound": 15, "upperBound": 20 },
       "geometry": [
         {
           "frame": {

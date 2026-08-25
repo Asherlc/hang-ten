@@ -266,22 +266,39 @@ final class AppStore: ObservableObject {
     }
 
     func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
-        let ids = step.targets.flatMap { BoardTargetResolver.substituteHoldIDs(for: $0, on: board) }
+        let gripType = step.targets.count == 1 ? step.gripType : nil
+        let ids = step.targets.flatMap {
+            BoardTargetResolver.substituteHoldIDs(for: $0, on: board, gripType: gripType)
+        }
         return Set(ids)
     }
 
     func usesFallbackMapping(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
-        plan.steps.flatMap(\.targets).contains { target in
-            guard let feature = target.feature,
-                  !target.fallbackFeatures.isEmpty else { return false }
-            let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
-            return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty
+        plan.steps.contains { step in
+            let gripType = step.targets.count == 1 ? step.gripType : nil
+            return step.targets.contains { target in
+                guard let feature = target.feature,
+                      !target.fallbackFeatures.isEmpty else { return false }
+                let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
+                return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(
+                    for: target,
+                    on: board,
+                    gripType: gripType
+                ).isEmpty
+            }
         }
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
-        plan.steps.flatMap(\.targets).contains { target in
-            BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty
+        plan.steps.contains { step in
+            let gripType = step.targets.count == 1 ? step.gripType : nil
+            return step.targets.contains { target in
+                BoardTargetResolver.substituteHoldIDs(
+                    for: target,
+                    on: board,
+                    gripType: gripType
+                ).isEmpty
+            }
         }
     }
 

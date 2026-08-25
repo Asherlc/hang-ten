@@ -155,8 +155,8 @@ draft geometry was restored or used as an input.
   per piece, an incut top-center jug, large sloper, smaller sloper, 38.1 mm
   center sloping rail, 25.4 mm center flat rail, 12.7 mm outer crimp rail, and
   12.7 mm bottom-center sloping crimp rail. That freezes exactly seven contacts
-  per piece and fourteen total. Decimal measurements remain in the names
-  because this schema's scalar `sizeMillimeters` field accepts integers only.
+  per piece and fourteen total. The exact decimal rail measurements are recorded
+  in `sizeMillimeters` for their corresponding contacts.
 
 ### `soill-training-tiles`
 

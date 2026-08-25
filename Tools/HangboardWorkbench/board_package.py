@@ -183,7 +183,7 @@ _EditorPiece = tuple[
     dict[str, object] | None,
     tuple[int, ...],
     int | None,
-    dict[str, int] | None,
+    dict[str, int | float] | None,
     int | None,
 ]
 
@@ -1029,7 +1029,7 @@ def _validate_hold(
             validate_geometry=validate_geometry,
         )
     if "sizeMillimeters" in hold:
-        _positive_integer(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
+        _positive_number(hold["sizeMillimeters"], f"{label}.sizeMillimeters")
     if "depthRangeMillimeters" in hold:
         _millimeter_range(
             hold["depthRangeMillimeters"], f"{label}.depthRangeMillimeters"
@@ -1205,14 +1205,14 @@ def _validate_editor_document(
             dict[str, object] | None,
             tuple[int, ...],
             int | None,
-            dict[str, int] | None,
+            dict[str, int | float] | None,
             int | None,
         ],
     ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
     kind_by_hold: dict[str, str | None] = {}
     finger_capacity_by_hold: dict[str, int | None] = {}
-    depth_range_by_hold: dict[str, dict[str, int] | None] = {}
+    depth_range_by_hold: dict[str, dict[str, int | float] | None] = {}
     hand_capacity_by_hold: dict[str, int | None] = {}
     for region in regions:
         if not isinstance(region, Mapping):
@@ -1530,18 +1530,12 @@ def _positive_number(value: object, label: str) -> float:
     return float(value)
 
 
-def _positive_integer(value: object, label: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
-        raise BoardPackageError(f"{label} must be a positive integer")
-    return value
-
-
 def _millimeter_range(value: object, label: str) -> None:
     if not isinstance(value, Mapping):
         raise BoardPackageError(f"{label} must be an object")
     _exact_keys(value, {"lowerBound", "upperBound"}, label)
-    lower = _positive_integer(value.get("lowerBound"), f"{label}.lowerBound")
-    upper = _positive_integer(value.get("upperBound"), f"{label}.upperBound")
+    lower = _positive_number(value.get("lowerBound"), f"{label}.lowerBound")
+    upper = _positive_number(value.get("upperBound"), f"{label}.upperBound")
     if lower > upper:
         raise BoardPackageError(f"{label}.lowerBound must not exceed upperBound")
 
