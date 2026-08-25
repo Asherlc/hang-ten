@@ -349,6 +349,21 @@ none of the removed art or geometry was restored as a starting point.
 ### `trango-rock-prodigy-natural`
 
 - **Source:** [Trango Rock Prodigy Natural](https://trango.com/products/rock-prodigy-natural).
+- **2026-08-24 presentation correction:** `assets/primary.png` uses the
+  review-approved cleaned Natural presentation, sourced from Trango's
+  first-party [Natural main product photo](https://trango.com/cdn/shop/products/22850_RockProdigyNatural_MainImage_TopDownMarkings.jpg?v=1755037315&width=1946)
+  and [official rail detail](https://trango.com/cdn/shop/products/22850_RockProdigyNatural_AltImage2_Rails.jpg?v=1724692982&width=1946).
+  Those references, plus the official [Natural quick-start guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361),
+  were used to review the paired top/front orientation, recessed relief, and
+  through-holes. The reviewed content cleanup removes product markings and
+  does not claim pixel-exact preservation of the original product photo. The
+  approved `1254 × 1254` review frame is uniformly scaled to `1536 × 1536` and
+  center-framed in the final `1536 × 1024` asset without clipping board pixels.
+  The white source background and the two lower true through-holes are
+  transparent. A generic one-pixel alpha-edge RGB decontamination changes only
+  color at the existing alpha edge to avoid a white fringe; it does not change
+  silhouette or through-hole coverage. The board geometry and canonical hold
+  paths remain unchanged and are reviewed against the resulting raster.
 - **Current JSON holds:** 14 logical holds / 16 geometry pieces.
 - **Source-backed expected physical count:** 14.
 - **Verified facts:** Trango Rock Prodigy Natural; each half is
