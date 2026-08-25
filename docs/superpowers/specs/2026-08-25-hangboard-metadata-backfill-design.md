@@ -13,13 +13,18 @@ an evidence-specific reason in the source-audit ledger.
 The catalog contains 672 hold records. It currently has 373
 `sizeMillimeters` values, 36 `depthRangeMillimeters` values, 204
 `fingerCapacity` values, zero `handCapacity` values, 43 `gripType` values, and
-58 explicit `features` values. Recent work added the schema and editor support
+58 explicit `features` values. All 672 holds structurally declare a `kind`,
+but their type assignments have not been revalidated contact by contact against
+current primary evidence. Recent work added the schema and editor support
 for several of these fields, but did not establish per-contact evidence for the
 catalog as a whole.
 
 ## Scope and non-goals
 
-The work covers these optional physical/semantic fields:
+The work covers the mandatory physical `kind` plus these optional
+physical/semantic fields:
+
+- `kind`
 
 - `sizeMillimeters`
 - `depthRangeMillimeters`
@@ -60,6 +65,9 @@ outcomes:
 - `notApplicable`: documents a semantic non-applicability, such as finger
   capacity for a non-pocket contact; the JSON field must be absent.
 
+Every hold has exactly one `kind` record and it must be `verified`; neither
+blank outcome is valid for `kind`.
+
 Rules may cover an explicit list of stable hold IDs only. They may not use
 geometry, screen coordinates, wildcards, or inferred hold classes. This makes
 the audit reviewable when a board inventory changes.
@@ -93,7 +101,8 @@ pytest coverage. Given the ledger and discovered board packages, it must:
 4. require `unavailable` and `notApplicable` records to keep the JSON field
    absent;
 5. for every board in `reviewedBoardIDs`, reject a hold/field that lacks either
-   a verified mapping or an explicit blank-field rule; and
+   a verified mapping or an explicit blank-field rule, and reject a non-verified
+   `kind` record; and
 6. print deterministic per-field and per-board before/after coverage totals.
 
 The validator is additive to package-schema validation. Every batch also runs

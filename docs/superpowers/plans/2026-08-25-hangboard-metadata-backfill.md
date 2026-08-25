@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Use only primary manufacturer product pages, manuals, labelled diagrams, and official product views; do not use retailer, forum, or image-search facts.
-- Keep unsupported values absent from `board.json`; capture the source-specific reason in the ledger and the batch source audit.
+- Keep unsupported optional values absent from `board.json`; capture the source-specific reason in the ledger and the batch source audit. Every hold `kind` must instead be source-verified.
 - Never infer a value from a photo, hold width, board-level measurement list, another model, or existing geometry.
 - Never change or generate canonical geometry as part of this project. Hold-ID overlays render existing paths solely for human review.
 - Keep all generated screenshots in `.context/hangboard-metadata-backfill-${CONDUCTOR_WORKSPACE_NAME}/`; do not commit them.
@@ -58,7 +58,7 @@
 
 - [ ] **Step 3: Implement a closed, explicit ledger schema.**
 
-  Parse a root object with exactly `schemaVersion`, `reviewedBoardIDs`, and `records`. Require schema version `1`; nonempty unique identifier board IDs; and record objects with exactly `boardID`, `holdIDs`, `field`, `outcome`, `reviewedAt`, `source`, and either `value` (`verified`) or `reason` (blank outcomes). Require `source` to have `kind: "manufacturer"`, an HTTPS URL, and a nonempty source label. Permit only the six fields in the approved spec and only `verified`, `unavailable`, and `notApplicable` outcomes.
+  Parse a root object with exactly `schemaVersion`, `reviewedBoardIDs`, and `records`. Require schema version `1`; nonempty unique identifier board IDs; and record objects with exactly `boardID`, `holdIDs`, `field`, `outcome`, `reviewedAt`, `source`, and either `value` (`verified`) or `reason` (blank outcomes). Require `source` to have `kind: "manufacturer"`, an HTTPS URL, and a nonempty source label. Permit `kind` plus the six optional fields in the approved spec. Require every `kind` record to be `verified`; permit `unavailable` and `notApplicable` only for optional fields.
 
   Implement exact comparison against raw `BoardHold` values: scalars compare as JSON numbers, ranges compare both bounds, enums compare strings, and features compare ordered JSON arrays. Expand only explicit `holdIDs`; reject duplicate expanded keys. For every hold on every `reviewedBoardID`, require one record for each scoped field. Return sorted coverage counts instead of printing from the domain module.
 
@@ -189,7 +189,7 @@
 
 **Interfaces:**
 - Consumes: official Metolius product pages and numbered depth diagrams already linked by the two Metolius source audits; review-only labelled captures.
-- Produces: the first ledger with all ten Metolius IDs in `reviewedBoardIDs` and complete six-field outcomes for every Metolius hold.
+- Produces: the first ledger with all ten Metolius IDs in `reviewedBoardIDs` and complete seven-field outcomes for every Metolius hold.
 
 - [ ] **Step 1: Produce and review labelled screenshots before assigning data.**
 
@@ -197,7 +197,7 @@
 
 - [ ] **Step 2: Research only the official evidence and write a failing coverage assertion.**
 
-  Re-open every Metolius primary product page and current official numbered diagram linked in the audit. Add a test requiring the ledger report’s sorted `reviewedBoardIDs` to equal the ten Metolius board IDs and requiring zero unaccounted fields for each board.
+  Re-open every Metolius primary product page and current official numbered diagram linked in the audit. Add a test requiring a `kind` record to be `verified` and match the package’s declared type, plus a test rejecting an `unavailable` `kind` record. Add a coverage test requiring the ledger report’s sorted `reviewedBoardIDs` to equal the ten Metolius board IDs and requiring zero unaccounted fields for each board.
 
   ```python
   assert report.reviewed_board_ids == (
@@ -212,11 +212,11 @@
 
   Run: `rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests/test_metadata_audit.py -k metolius`
 
-  Expected: FAIL because no catalog ledger exists.
+  Expected: FAIL because `kind` is not yet a permitted audited field and no catalog ledger exists.
 
 - [ ] **Step 4: Enter evidence, then only the matching package values.**
 
-  Add one ledger record for every Metolius hold/field outcome, using explicit stable IDs and exact official source labels. For `verified`, write the value to its corresponding `board.json`; for `unavailable` or `notApplicable`, leave it absent. Preserve existing values only when the refreshed ledger source proves the exact mapping; remove any value that cannot be retained. Extend both Markdown audits with the URLs, review date, ID-to-position mapping, values added/removed, and blank rationale.
+  First extend `metadata_audit.py` so `kind` is a permitted field only with a `verified` outcome and compares its source value exactly to `BoardHold.kind`; run the new focused kind tests to GREEN. Then add one ledger record for every Metolius hold/field outcome, using explicit stable IDs and exact official source labels. For `verified`, write the value to its corresponding `board.json`; for `unavailable` or `notApplicable`, leave it absent. Preserve existing values only when the refreshed ledger source proves the exact mapping; remove any value that cannot be retained. Extend both Markdown audits with the URLs, review date, ID-to-position mapping, type justification, values added/removed, and blank rationale.
 
 - [ ] **Step 5: Verify, report, commit, and push.**
 
