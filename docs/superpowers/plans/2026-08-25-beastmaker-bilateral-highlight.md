@@ -242,3 +242,53 @@ git add Tools/HangboardPackages/tests/test_beastmaker_2000_board_package.py docs
 git commit -m "Update Beastmaker edge inventory test"
 git push
 ```
+
+### Task 6: Preserve depth ranking before bilateral edge selection
+
+**Files:**
+- Modify: `HangTen/Models/WorkoutActivityRecording.swift:243-258`
+- Modify: `docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md`
+
+**Interfaces:**
+- Consumes: `depthDistance(of:from:) -> Double` and `oneHoldPerHand(from:) -> [BoardHold]`.
+- Produces: one hold per board half only when those holds are tied for the closest documented depth; otherwise preserves the single nearest representative.
+
+- [x] **Step 1: Use the existing fractional-depth regression test**
+
+`testFallbackResolutionPrefersNearestFractionalDepthMeasurement` already defines a 20.5...21 mm left edge and 19.75 mm right edge and asserts that resolving `.mediumEdge` returns only `scalar-edge`. It is the regression test because selecting left/right candidates before applying the distance ranking returns both holds.
+
+- [x] **Step 2: Verify the focused test fails on the current implementation**
+
+Run:
+
+```bash
+rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/WorkoutActivityRecordingTests/testFallbackResolutionPrefersNearestFractionalDepthMeasurement
+```
+
+Expected: FAIL because both `range-edge` and `scalar-edge` are returned, despite only `scalar-edge` being nearest to the 20 mm source-backed medium-edge depth.
+
+- [x] **Step 3: Apply the minimal resolver correction**
+
+After selecting the ranked representative, restrict edge pairing to candidates whose `depthDistance` equals that representative's distance. Return a left/right pair only when that nearest set contains one eligible hold on each half; otherwise return the representative alone. Do not change exact feature resolution, capacity preference, group-tag resolution, or the source-backed depth values.
+
+- [x] **Step 4: Verify the focused regression, bilateral behavior, and compile contract**
+
+Run:
+
+```bash
+rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/WorkoutActivityRecordingTests/testFallbackResolutionPrefersNearestFractionalDepthMeasurement
+rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:HangTenTests/BoardTargetSubstitutionTests/testMetadataLightEdgeFallbackSelectsOneEdgePerBoardHalf
+rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -destination 'generic/platform=iOS Simulator'
+```
+
+Expected: all commands exit 0. If the local Simulator runner is unavailable, record that limitation and run the compile contract; GitHub Actions is the required end-to-end XCTest verification.
+
+Local focused XCTest runs could not initialize CoreSimulatorService or write a result bundle. The generic iOS Simulator `build-for-testing` contract passed; GitHub Actions will run both focused XCTest cases end-to-end.
+
+- [x] **Step 5: Commit and push**
+
+```bash
+git add HangTen/Models/WorkoutActivityRecording.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
+git commit -m "Preserve depth ranking for paired edge fallback"
+git push
+```
