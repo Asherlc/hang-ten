@@ -59,6 +59,7 @@ enum WorkoutSpeechVoiceSelector {
 }
 
 enum CountdownAudioPreparationState: Equatable {
+    case idle
     case preparing
     case ready
     case failed
@@ -177,7 +178,7 @@ private final class SystemWorkoutCountdownCompletionScheduler:
 @MainActor
 final class WorkoutAudioCoach: NSObject, ObservableObject {
     @Published private(set) var isSpeaking = false
-    @Published private(set) var countdownPreparationState: CountdownAudioPreparationState = .preparing
+    @Published private(set) var countdownPreparationState: CountdownAudioPreparationState = .idle
 
     private let synthesizer: any WorkoutSpeechSynthesizing
     private let audioSession: any WorkoutAudioSessionManaging
@@ -238,6 +239,12 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         self.countdownCompletionScheduler = countdownCompletionScheduler
         super.init()
         synthesizer.delegate = self
+    }
+
+    func prepareCountdownAudio() {
+        guard countdownPreparationState == .idle || countdownPreparationState == .failed else {
+            return
+        }
         beginCountdownPrewarm()
     }
 
@@ -306,7 +313,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         isSpeaking = false
         synthesizer.stopSpeaking(at: .immediate)
         deactivateAudioSessionIfSpeechStopped()
-        beginCountdownPrewarm()
+        countdownPreparationState = .idle
     }
 
     private static var preferredLanguageCode: String {
@@ -337,7 +344,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         countdownCompletionScheduler.cancel()
         countdownScheduler.stop()
         ownsCountdownSchedule = false
-        beginCountdownPrewarm()
+        countdownPreparationState = .idle
     }
 
     private func finishOwnedCountdownSchedule() {
@@ -345,7 +352,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         countdownScheduler.stop()
         ownsCountdownSchedule = false
         deactivateAudioSessionIfSpeechStopped()
-        beginCountdownPrewarm()
+        countdownPreparationState = .idle
     }
 
     private func beginCountdownPrewarm() {
@@ -353,10 +360,12 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         countdownScheduler.prewarm { [weak self] succeeded in
             if Thread.isMainThread {
                 MainActor.assumeIsolated {
+                    guard self?.countdownPreparationState == .preparing else { return }
                     self?.countdownPreparationState = succeeded ? .ready : .failed
                 }
             } else {
                 Task { @MainActor in
+                    guard self?.countdownPreparationState == .preparing else { return }
                     self?.countdownPreparationState = succeeded ? .ready : .failed
                 }
             }

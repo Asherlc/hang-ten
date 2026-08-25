@@ -1348,8 +1348,8 @@ final class WorkoutSpeechOwnershipTests: XCTestCase {
 
 @MainActor
 final class WorkoutAudioCoachTests: XCTestCase {
-    // Catches a workout arming before numeric PCM and the audio engine are ready.
-    func testCoachPublishesCountdownReadinessOnlyAfterPrewarmCompletes() async {
+    // Catches app launch prewarming the countdown engine before an athlete requests it.
+    func testCountdownAudioPreparationRemainsIdleUntilRequested() async {
         let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
         let coach = WorkoutAudioCoach(
             synthesizer: RecordingWorkoutSpeechSynthesizer(),
@@ -1357,10 +1357,37 @@ final class WorkoutAudioCoachTests: XCTestCase {
             countdownScheduler: scheduler
         )
 
+        XCTAssertEqual(coach.countdownPreparationState, .idle)
+        XCTAssertEqual(scheduler.prewarmCallCount, 0)
+
+        coach.prepareCountdownAudio()
+
         XCTAssertEqual(coach.countdownPreparationState, .preparing)
+        XCTAssertEqual(scheduler.prewarmCallCount, 1)
         scheduler.completePrewarm(succeeded: true)
         await Task.yield()
         XCTAssertEqual(coach.countdownPreparationState, .ready)
+    }
+
+    // Catches completion restarting the countdown engine after its scheduled playback ends.
+    func testCountdownCompletionReturnsPreparationToIdleWithoutPrewarming() async {
+        let scheduler = RecordingCountdownAudioScheduler(automaticallyCompletesPrewarm: false)
+        let completionScheduler = RecordingWorkoutCountdownCompletionScheduler()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: RecordingWorkoutAudioSession(),
+            countdownScheduler: scheduler,
+            countdownCompletionScheduler: completionScheduler
+        )
+        coach.prepareCountdownAudio()
+        scheduler.completePrewarm(succeeded: true)
+        await Task.yield()
+
+        XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
+        completionScheduler.complete()
+
+        XCTAssertEqual(coach.countdownPreparationState, .idle)
+        XCTAssertEqual(scheduler.prewarmCallCount, 1)
     }
 
     // Catches a regression that lets later SwiftUI countdown ticks enqueue another sequence.
@@ -1373,6 +1400,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
             audioSession: audioSession,
             countdownScheduler: scheduler
         )
+        coach.prepareCountdownAudio()
 
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         XCTAssertFalse(coach.startCountdown(remainingFrom: "2", startUptime: 101))
@@ -1390,6 +1418,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
             audioSession: audioSession,
             countdownScheduler: scheduler
         )
+        coach.prepareCountdownAudio()
 
         coach.startCountdown(remainingFrom: "3", startUptime: 100)
         coach.startCountdown(remainingFrom: "2", startUptime: 101)
@@ -1415,6 +1444,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
             audioSession: audioSession,
             countdownScheduler: scheduler
         )
+        coach.prepareCountdownAudio()
 
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         coach.stop()
@@ -1440,6 +1470,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
             countdownScheduler: scheduler,
             countdownCompletionScheduler: completionScheduler
         )
+        coach.prepareCountdownAudio()
 
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         XCTAssertEqual(completionScheduler.scheduledUptime, 103)
@@ -1448,6 +1479,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
 
         XCTAssertEqual(events, ["countdown.stop", "session.deactivate"])
 
+        coach.prepareCountdownAudio()
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 200))
         XCTAssertEqual(scheduler.startedSequences, [["3", "2", "1"], ["3", "2", "1"]])
     }
@@ -1462,6 +1494,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
             countdownScheduler: RecordingCountdownAudioScheduler(),
             countdownCompletionScheduler: completionScheduler
         )
+        coach.prepareCountdownAudio()
         let deactivation = expectation(description: "retries countdown deactivation until other apps are notified")
         audioSession.onSuccessfulNotificationAwareDeactivation = {
             deactivation.fulfill()
@@ -1486,6 +1519,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
             audioSession: audioSession,
             countdownScheduler: scheduler
         )
+        coach.prepareCountdownAudio()
 
         XCTAssertFalse(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         XCTAssertTrue(synthesizer.utterances.isEmpty)
@@ -1714,6 +1748,7 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
     private let scheduleResult: Bool
     private let automaticallyCompletesPrewarm: Bool
     private var prewarmCompletion: ((Bool) -> Void)?
+    private(set) var prewarmCallCount = 0
 
     var startedSequences: [[String]] {
         backend.schedules.map { sequence in
@@ -1738,6 +1773,7 @@ private final class RecordingCountdownAudioScheduler: CountdownAudioScheduling {
     }
 
     func prewarm(completion: @escaping (Bool) -> Void) {
+        prewarmCallCount += 1
         if automaticallyCompletesPrewarm {
             completion(true)
         } else {
@@ -1881,6 +1917,12 @@ final class WorkoutSessionPolicyTests: XCTestCase {
             WorkoutSessionPolicy.shouldDeferCountdownStart(
                 isFirstStart: true,
                 preparationState: .preparing
+            )
+        )
+        XCTAssertFalse(
+            WorkoutSessionPolicy.shouldDeferCountdownStart(
+                isFirstStart: true,
+                preparationState: .idle
             )
         )
         XCTAssertFalse(
