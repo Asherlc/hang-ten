@@ -35,6 +35,10 @@
 ```swift
 func testBeastmaker2000OpenHandLargeEdgeHighlightsMirroredOuterEdges() throws {
     let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
+    let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+    let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let store = AppStore(defaults: defaults)
     let step = WorkoutStep(
         id: "open-hand-29-mm",
         number: 1,
@@ -290,5 +294,38 @@ Local focused XCTest runs could not initialize CoreSimulatorService or write a r
 ```bash
 git add HangTen/Models/WorkoutActivityRecording.swift docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
 git commit -m "Preserve depth ranking for paired edge fallback"
+git push
+```
+
+### Task 7: Make the Task 1 fixture example self-contained
+
+**Files:**
+- Modify: `docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md:36-50`
+
+**Interfaces:**
+- Consumes: the setup from the implemented `BoardTargetSubstitutionTests.testBeastmaker2000OpenHandLargeEdgeHighlightsMirroredOuterEdges`.
+- Produces: a standalone Task 1 test example whose `store` is initialized before use.
+
+- [ ] **Step 1: Verify the documentation discrepancy**
+
+Compare the Task 1 Swift example with the implemented test. The example calls `store.holdIDs` without declaring `store`, while the implementation creates an isolated `UserDefaults` suite and `AppStore(defaults:)`.
+
+- [ ] **Step 2: Apply the minimal documentation correction**
+
+Add the same isolated `UserDefaults` suite setup, cleanup `defer`, and `AppStore(defaults:)` declaration before the example's `WorkoutStep`. Do not change the product implementation, board metadata, expected hold IDs, or other plan tasks.
+
+- [ ] **Step 3: Verify scope and commit/push**
+
+Run:
+
+```bash
+rtk git diff --check
+```
+
+Expected: no whitespace errors. Commit and push only the plan document:
+
+```bash
+git add docs/superpowers/plans/2026-08-25-beastmaker-bilateral-highlight.md
+git commit -m "Document Beastmaker test fixture setup"
 git push
 ```
