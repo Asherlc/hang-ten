@@ -107,7 +107,7 @@
             "x": 0.174079825254,
             "y": 0.181,
             "width": 0.165,
-            "height": 0.083
+            "height": 0.06806
           },
           "shape": {
             "type": "path",
@@ -130,48 +130,18 @@
                 "command": "line",
                 "to": [
                   1.0,
-                  0.82
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.14,
                   1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.05,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.93
-                ],
-                "to": [
-                  0.0,
-                  0.82
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   0.0,
-                  0.22
+                  1.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.1
-                ],
-                "control2": [
-                  0.02,
-                  0.0
-                ],
+                "command": "line",
                 "to": [
                   0.06,
                   0.0
