@@ -12,8 +12,9 @@ render or photograph.
 
 ## Result
 
-`kind` is complete: all 697 current hold records have one of the schema's five
-classes. A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
+The package catalog has 706 current hold records. The ledger reviews 679 holds:
+653 have manufacturer-verified kinds and 26 have explicitly labelled adapted
+kinds. A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
 gap: capacity is meaningful only for a source-labelled finger pocket. Likewise,
 `sizeMillimeters` is only used for a source-mapped single depth; a continuous
 surface with several published depths uses `depthRangeMillimeters` when the
@@ -22,44 +23,29 @@ source establishes its endpoints.
 ### Tension and So iLL ledger certification
 
 The Tension/So iLL batch re-opened the seven current manufacturer product
-pages and manually reviewed all 69 stable IDs in
+pages and manually reviewed the stable IDs in
 `.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
 the workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset.
 Flash Board has separate labelled captures for its three-edge and two-edge
-presentations. The focused
-`soill.training-tiles--pocket-depth-stable-ids.png` review capture visibly
-separates the two pocket IDs by temporarily hiding non-pocket overlays only in
-the browser. No capture was used to create, adjust, or classify geometry.
+presentations. No capture was used to create, adjust, or classify geometry.
 
-The machine-readable ledger now covers 17 boards and 239 holds, up from 10
-boards and 170 holds. Every reviewed hold has seven accounted fields and a
-verified manufacturer-backed `kind`:
-
-| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
-| --- | ---: | ---: | ---: | ---: |
-| `kind` | 170 / 170 | 239 / 239 | 0 | 0 |
-| `sizeMillimeters` | 133 / 133 | 153 / 153 | 86 | 0 |
-| `depthRangeMillimeters` | 0 / 0 | 14 / 14 | 225 | 0 |
-| `fingerCapacity` | 87 / 87 | 91 / 91 | 2 | 146 |
-| `handCapacity` | 0 / 0 | 0 / 0 | 239 | 0 |
-| `gripType` | 87 / 87 | 89 / 89 | 150 | 0 |
-| `features` | 0 / 0 | 0 / 0 | 239 | 0 |
-
-The 109 additional populated/verified fields are 69 mandatory kinds, 20
-scalar depths, 14 continuous-contact ranges, four finger capacities, and two
-two-finger-pocket grip enums. The two additional scalar values are the Training
-Tiles' one-per-tile 3-inch pockets converted exactly to 76.2 mm; the remaining
-values were already source-mapped in the seven package files. The complete
-manufacturer-label to stable ID map and the source-term type audit are in the
+The machine-readable ledger covers every reviewed field with either a verified,
+adapted, unavailable, or not-applicable outcome. Training Tiles is the
+source-limited exception to a manufacturer contact map: the Canada listing
+publishes each tile at approximately `14 × 8 in` and grouped family facts, but
+no 20-contact ID map. Its singular top-pocket group does not map one-to-one to
+Hang Ten’s four top-pocket regions. Its 20 kind values are explicit app
+adaptations, and all optional per-contact values remain absent. The complete
+source-term type audit is in the
 [So iLL/Tension audit](2026-08-12-soill-tension-board-packages.md#2026-08-25-source-audited-metadata-batch).
 
 Remaining batch blanks are deliberate: Flash Board depths are a global,
-unpositioned list; Training Tiles sloper/edge measurements are grouped without
-numbered left/right mappings and its pockets have no published finger count; Honestone
-has source-labelled one-finger pockets but the schema has no corresponding
-grip enum; width, angle, curvature, and radius are not contact depth; and no
-reviewed source publishes simultaneous hand capacity or an exact package
-feature-tag array.
+unpositioned list; Training Tiles’ Canada-source grouped facts have no
+20-contact ID map and its source/app pocket counts do not map one-to-one;
+Honestone has source-labelled one-finger pockets but the schema has no
+corresponding grip enum; width, angle, curvature, and radius are not contact
+depth; and no reviewed source publishes simultaneous hand capacity or an exact
+package feature-tag array.
 
 ### Resolved independent-board ledger certification
 
@@ -93,6 +79,13 @@ stored as a scalar or grip value on the single continuous jug; target10a's
 finger bars have exact capacities but no corresponding three-/four-finger edge
 grip enum; and no source in this batch establishes hand capacity or an exact
 feature-tag array.
+
+### Target10a direct-source geometry exception
+
+The Target10a manufacturer distinguishes 16 mm bars from 37 mm pockets. Four
+combined paths were therefore replaced by four direct source-backed paths in
+the earlier reconciliation; this records that exception only. No image-derived
+geometry was used, and this audit does not modify Target10a geometry.
 
 ### YY Vertical and Zlagboard ledger certification
 
@@ -156,14 +149,14 @@ manufacturer views establish bilateral symmetry.
 | Package | Retired range-backed IDs | Source-confirmed scalar replacements | Physical-contact evidence | Resulting inventory |
 | --- | --- | --- | --- | --- |
 | `tension-grindstone` | `edge-10-8-{left,right}`, `edge-30-25-{left,right}`, `edge-20-15-{left,right}` | `edge-{8,10}-{left,right}`, `edge-{25,30}-{left,right}`, `edge-{15,20}-{left,right}` | The [product page](https://tensionclimbing.com/products/grindstone) enumerates all six edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Grindstone2.png?v=1726542525) places 10/8, 30/25, and 20/15 on separate planar steps on the source side. | 14 logical holds; all 13 measured edges use `sizeMillimeters`; no depth ranges remain. |
-| `tension-honestone` | `edge-20-15-{left,right}`, `edge-10-8-{left,right}` | `edge-{15,20}-{left,right}`, `edge-{8,10}-{left,right}` | The [product page](https://tensionclimbing.com/products/honestone) lists the four edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Honestone2.png?v=1726542571) maps each value to its own step. The 35°/45° macro sloper remains one unmeasured contact because Tension expressly describes continuously variable curvature. | 12 logical holds; all 11 pockets/edges use scalar depth; no depth ranges remain. |
+| `tension-honestone` | `edge-20-15-{left,right}`, `edge-10-8-{left,right}` | `edge-{15,20}-{left,right}`, `edge-{8,10}-{left,right}` | The [product page](https://tensionclimbing.com/products/honestone) lists the four edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Honestone2.png?v=1726542571) maps each value to its own step. The 35°/45° macro sloper remains one unmeasured physical contact because Tension expressly describes continuously variable curvature. | 12 source physical contacts; all 11 pockets/edges use scalar depth; no depth ranges remain. |
 | `tension-whetstone` | `edge-40-30-{left,right}`, `edge-25-20-{left,right}` | `edge-{30,40}-{left,right}`, `edge-{20,25}-{left,right}` | The [product page](https://tensionclimbing.com/products/whetstone) lists the four edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Whetstone2.png?v=1726542637) maps 40/30 and 25/20 to distinct planar steps. | 12 logical holds; all 11 pockets/edges use scalar depth; no depth ranges remain. |
 | `frictitious.megalith` | `stepped-8-10-12-{left,right}`, `stepped-30-40-pocket-{left,right}`, `stepped-15-20-{left,right}` plus the overlapping unnamed `hold-11`…`hold-14` records | `edge-{8,10,12}-{left,right}`, `edge-30-{left,right}`, `edge-40-pocket-{left,right}`, `edge-{15,20}-{left,right}` | The [product page](https://frictitiousclimbing.com/products/megalith) enumerates seven shoulder-width edge sizes and identifies the two-finger pocket on the 40 mm edge. The [official labelled front](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840) and [official oblique detail](https://frictitiousclimbing.com/cdn/shop/files/Mega-4.jpg?v=1764914587&width=3840) map every value to a visibly separate planar shelf. The integrated pocket stays part of its 40 mm edge contact; no independent depth or capacity was invented. | 18 logical holds: 14 shoulder-width scalar edges, one 25 mm centre edge, one jug, and two mono pockets. No depth ranges or unnamed duplicate holds remain. |
 
 The canonical ledger now uses the 14 replacement Tension contacts and contains
-no retired range-backed IDs. After all certifications below, it accounts for
-43 boards and 670 holds; Beastmaker 2000's 27 holds remain outside the ledger,
-completing the current 697-hold catalog inventory.
+no retired range-backed IDs. The final ledger reviews 679 holds across 43
+boards; Beastmaker 2000's 27 holds remain outside it, completing the current
+706-hold catalog inventory.
 
 Every replacement contact has a newly reviewed, closed canonical path authored
 through Workbench. Adjacent steps share only their physical transition line;
@@ -172,6 +165,20 @@ overlap selectable contacts. The four Whetstone source-side shelves were
 independently re-authored after review of the labelled view: their differing
 outer-end curvature, widths, and upper/lower recess boundaries are preserved
 in four distinct canonical command arrays rather than translated copies.
+
+### `tension-honestone` macro-sloper selection adaptation
+
+Tension’s current [Honestone product page](https://tensionclimbing.com/products/honestone)
+describes one top macro-textured sloper with 35° and 45° areas and continuously
+variable curvature; it does not enumerate four discrete contacts or publish a
+per-region depth, capacity, posture, or subtype. Hang Ten therefore retains
+the source’s single physical-contact interpretation while exposing four
+descriptive selectable regions—`macro-sloper-left`, `macro-sloper-left-center`,
+`macro-sloper-right-center`, and `macro-sloper-right`—for practical app
+selection. These regions are a clearly labelled product adaptation, not
+manufacturer-labelled holds. The package consequently has 15 selectable holds
+(four sloper regions, two pockets, and nine edges), while the source inventory
+remains 12 physical contacts.
 
 ### Retained continuous ranges and ruled-out splits
 
@@ -221,19 +228,9 @@ surfaces are the 35-/20-degree sloper family, and all 17 front cavities retain
 shared-kind ruling only: it does not position Beastmaker's 10 mm pair,
 deep/medium/small labels, or two-/three-/four-finger subtypes.
 
-After the discrete-contact migration, the ledger moves from 42 boards / 648
-holds to 43 boards / 670 holds. All 154
-seven-field outcomes are explicit and all 22 mandatory kinds are verified:
-
-| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
-| --- | ---: | ---: | ---: | ---: |
-| `kind` | 648 / 648 | 670 / 670 | 0 | 0 |
-| `sizeMillimeters` | 415 / 415 | 415 / 415 | 255 | 0 |
-| `depthRangeMillimeters` | 20 / 20 | 20 / 20 | 650 | 0 |
-| `fingerCapacity` | 185 / 185 | 185 / 185 | 73 | 412 |
-| `handCapacity` | 1 / 1 | 1 / 1 | 669 | 0 |
-| `gripType` | 182 / 182 | 182 / 182 | 488 | 0 |
-| `features` | 105 / 105 | 105 / 105 | 565 | 0 |
+The final global state supersedes this intermediate migration snapshot: the
+catalog has 706 holds and the ledger reviews 679. Of the reviewed kind records,
+653 are manufacturer-verified and 26 are explicitly labelled adaptations.
 
 Every optional Beastmaker 1000 field remains blank. The pass removes 17
 unsupported pocket scalar depths, 19 duplicated kind-as-feature arrays, and
@@ -252,7 +249,7 @@ remains blank for a specific evidence reason.
 | `beastmaker-1000` pockets; `beastmaker-2000` unmapped pockets and edges; `dewoodstok-woodbord` pockets | Per-contact capacity and/or depth | Product pages give product or family facts but no numbered per-contact mapping. The prior catalog audit explicitly prohibits applying aggregate values to a pocket ID. |
 | `beastmaker-2000` | Full seven-field ledger certification | Beastmaker's current sources do not map the board's mixed front recesses to exact stable IDs. Mandatory per-ID type certification therefore remains blocked and unchanged. |
 | `frictitious.doormount-pro-7` unnamed lower records and mixed contacts | Depth and capacity | [DoorMount Pro](https://frictitiousclimbing.com/products/doormount-pro) lists the 35/25/20/15/10 mm families and pockets, but its declared seven-hold inventory does not map those facts to this package's 13 current logical records. A fresh field assignment would be an inference; the inventory discrepancy needs a separate physical-contact reconciliation. |
-| `soill.training-tiles`; `tension.flash-board` | Per-contact depth and, where applicable, pocket capacity | Manufacturers publish grouped size/family information or product views, not an individual ID-to-value guide. The front image establishes physical contact boundaries, not an exact value assignment. |
+| `soill.training-tiles`; `tension.flash-board` | Training Tiles: all per-contact optional fields; Flash Board: per-contact depth and, where applicable, pocket capacity | Training Tiles’ Canada listing publishes overall dimensions and grouped pocket, sloper, and edge facts, but no 20-contact ID map; its singular top-pocket group does not map one-to-one to the app’s four top-pocket regions, so its 20 app-adapted contacts retain no optional values. Flash Board publishes grouped family information rather than an individual ID-to-value guide. |
 | `trango.rock-prodigy-forge` IM pockets; `trango.rock-prodigy-natural` centre-lower and supported pockets; `trango.rock-prodigy-training-center` variable rails and pockets | Exact per-contact depth | Forge's official guide gives only an aggregate IMR range. Natural's official product markings and quick-start guide conflict on the affected values/capacities. The Training Center manual names only selected training grips and lacks a depth map for each physical package contact. |
 | `frictitious.megalith` mono pockets | Exact depth | Manufacturer material identifies the board-level pocket family but does not establish individual depths for these exact mono contacts. |
 | All other blanks on jugs, edges, pinches, and slopers | `fingerCapacity` | The reviewed primary source does not constrain a fixed number of fingers. Capacity was not guessed from a hold's apparent width or use photograph. |

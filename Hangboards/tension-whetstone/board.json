@@ -1183,11 +1183,12 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-12",
-      "name": "Hold 12",
+      "id": "pocket-40-left",
+      "name": "Left 40 mm two-finger pocket",
       "kind": "pocket",
       "fingerCapacity": 2,
       "sizeMillimeters": 40,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {

@@ -3,14 +3,14 @@
   "manufacturer": "So iLL",
   "name": "Training Tiles \u2022 So iLL x Meagan Martin",
   "subtitle": "Two-piece molded training set with pockets, slopers, and graduated edges.",
-  "productURL": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
+  "productURL": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
   "dimensions": "Each tile approximately 14 \u00d7 8 in",
   "aspectRatio": 1.5,
   "holds": [
     {
-      "id": "hold-3",
-      "name": "Hold 3",
-      "kind": "edge",
+      "id": "upper-sloper-outer-left",
+      "name": "Outer left upper sloper",
+      "kind": "sloper",
       "geometry": [
         {
           "frame": {
@@ -117,9 +117,9 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-2",
-      "name": "Hold 2",
-      "kind": "edge",
+      "id": "upper-sloper-outer-right",
+      "name": "Outer right upper sloper",
+      "kind": "sloper",
       "geometry": [
         {
           "frame": {
@@ -226,9 +226,9 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-4",
-      "name": "Hold 4",
-      "kind": "edge",
+      "id": "upper-sloper-inner-left",
+      "name": "Inner left upper sloper",
+      "kind": "sloper",
       "geometry": [
         {
           "frame": {
@@ -335,9 +335,9 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-5",
-      "name": "Hold 5",
-      "kind": "edge",
+      "id": "upper-sloper-inner-right",
+      "name": "Inner right upper sloper",
+      "kind": "sloper",
       "geometry": [
         {
           "frame": {
@@ -444,8 +444,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-6",
-      "name": "Hold 6",
+      "id": "middle-edge-outer-left",
+      "name": "Outer left middle edge",
       "kind": "edge",
       "geometry": [
         {
@@ -553,8 +553,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-7",
-      "name": "Hold 7",
+      "id": "middle-edge-outer-right",
+      "name": "Outer right middle edge",
       "kind": "edge",
       "geometry": [
         {
@@ -662,8 +662,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-8",
-      "name": "Hold 8",
+      "id": "middle-edge-inner-left",
+      "name": "Inner left middle edge",
       "kind": "edge",
       "geometry": [
         {
@@ -771,8 +771,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-9",
-      "name": "Hold 9",
+      "id": "middle-edge-inner-right",
+      "name": "Inner right middle edge",
       "kind": "edge",
       "geometry": [
         {
@@ -880,8 +880,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-10",
-      "name": "Hold 10",
+      "id": "bottom-edge-center-left",
+      "name": "Center left bottom edge",
       "kind": "edge",
       "geometry": [
         {
@@ -989,8 +989,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-11",
-      "name": "Hold 11",
+      "id": "bottom-edge-center-right",
+      "name": "Center right bottom edge",
       "kind": "edge",
       "geometry": [
         {
@@ -1098,9 +1098,9 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-12",
-      "name": "Hold 12",
-      "kind": "edge",
+      "id": "top-pocket-outer-left",
+      "name": "Outer left top pocket",
+      "kind": "pocket",
       "geometry": [
         {
           "frame": {
@@ -1207,9 +1207,9 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-13",
-      "name": "Hold 13",
-      "kind": "edge",
+      "id": "top-pocket-outer-right",
+      "name": "Outer right top pocket",
+      "kind": "pocket",
       "geometry": [
         {
           "frame": {
@@ -1316,8 +1316,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-14",
-      "name": "Hold 14",
+      "id": "bottom-edge-inner-left",
+      "name": "Inner left bottom edge",
       "kind": "edge",
       "geometry": [
         {
@@ -1425,8 +1425,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-15",
-      "name": "Hold 15",
+      "id": "bottom-edge-inner-right",
+      "name": "Inner right bottom edge",
       "kind": "edge",
       "geometry": [
         {
@@ -1534,8 +1534,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-16",
-      "name": "Hold 16",
+      "id": "bottom-edge-outer-left",
+      "name": "Outer left bottom edge",
       "kind": "edge",
       "geometry": [
         {
@@ -1643,8 +1643,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-17",
-      "name": "Hold 17",
+      "id": "bottom-edge-outer-right",
+      "name": "Outer right bottom edge",
       "kind": "edge",
       "geometry": [
         {
@@ -1752,9 +1752,9 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-18",
-      "name": "Hold 18",
-      "kind": "edge",
+      "id": "top-pocket-inner-left",
+      "name": "Inner left top pocket",
+      "kind": "pocket",
       "geometry": [
         {
           "frame": {
@@ -1847,9 +1847,9 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-19",
-      "name": "Hold 19",
-      "kind": "edge",
+      "id": "top-pocket-inner-right",
+      "name": "Inner right top pocket",
+      "kind": "pocket",
       "geometry": [
         {
           "frame": {
@@ -1942,8 +1942,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-20",
-      "name": "Hold 20",
+      "id": "top-jug-left",
+      "name": "Left top jug",
       "kind": "jug",
       "geometry": [
         {
@@ -2028,8 +2028,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-21",
-      "name": "Hold 21",
+      "id": "top-jug-right",
+      "name": "Right top jug",
       "kind": "jug",
       "geometry": [
         {

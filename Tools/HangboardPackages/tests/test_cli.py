@@ -33,7 +33,7 @@ def _json_output(output: str) -> dict[str, object]:
 
 
 def _write_audit_ledger(
-    path: Path, *, hold_id: str = "hold-left"
+    path: Path, *, hold_id: str = "hold-left", kind_outcome: str = "verified"
 ) -> Path:
     ledger = path / "metadata-ledger.json"
     ledger.write_text(
@@ -47,7 +47,7 @@ def _write_audit_ledger(
                         "boardID": "fixture.board",
                         "holdIDs": [hold_id],
                         "field": "kind",
-                        "outcome": "verified",
+                        "outcome": kind_outcome,
                         "reviewedAt": "2026-08-25",
                         "source": {
                             "kind": "manufacturer",
@@ -55,6 +55,11 @@ def _write_audit_ledger(
                             "label": "Fixture manufacturer source",
                         },
                         "value": "jug",
+                        **(
+                            {"reason": "Fixture adapted role."}
+                            if kind_outcome == "adapted"
+                            else {}
+                        ),
                     },
                     *[
                         {
@@ -142,6 +147,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
             "kind": {
                 "populated": 1,
                 "verified": 1,
+                "adapted": 0,
                 "unavailable": 0,
                 "notApplicable": 0,
             },
@@ -149,6 +155,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 field: {
                     "populated": 0,
                     "verified": 0,
+                    "adapted": 0,
                     "unavailable": 1,
                     "notApplicable": 0,
                 }
@@ -164,6 +171,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
             "sloper": {
                 "populated": 0,
                 "verified": 0,
+                "adapted": 0,
                 "unavailable": 0,
                 "notApplicable": 1,
             },
@@ -173,12 +181,38 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 "boardID": "fixture.board",
                 "populated": 1,
                 "verified": 1,
+                "adapted": 0,
                 "unavailable": 6,
                 "notApplicable": 1,
                 "unaccountedFields": 0,
             }
         ],
     }
+
+
+def test_package_cli_audit_metadata_reports_nonzero_adapted_coverage(
+    tmp_path: Path,
+) -> None:
+    packages = tmp_path / "packages"
+    write_board_package(packages / "package-board", board_id="fixture.board")
+    ledger = _write_audit_ledger(tmp_path, kind_outcome="adapted")
+
+    result = _run_cli("audit-metadata", "--root", str(packages), "--ledger", str(ledger))
+
+    assert result.returncode == 0, result.stderr
+    report = _json_output(result.stdout)
+    assert report["fields"]["kind"]["adapted"] == 1
+    assert report["boards"] == [
+        {
+            "boardID": "fixture.board",
+            "populated": 1,
+            "verified": 0,
+            "adapted": 1,
+            "unavailable": 6,
+            "notApplicable": 1,
+            "unaccountedFields": 0,
+        }
+    ]
 
 
 def test_package_cli_audit_metadata_rejects_unknown_hold(tmp_path: Path) -> None:
