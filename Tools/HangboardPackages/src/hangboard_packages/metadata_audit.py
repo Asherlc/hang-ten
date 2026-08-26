@@ -25,7 +25,7 @@ _FIELDS = frozenset(
         "sloper",
     }
 )
-_OUTCOMES = frozenset({"verified", "unavailable", "notApplicable"})
+_OUTCOMES = frozenset({"verified", "adapted", "unavailable", "notApplicable"})
 
 
 class MetadataAuditError(ValueError):
@@ -63,6 +63,7 @@ class MetadataLedger:
 class MetadataFieldCoverage:
     populated: int
     verified: int
+    adapted: int
     unavailable: int
     not_applicable: int
 
@@ -70,6 +71,7 @@ class MetadataFieldCoverage:
         return {
             "populated": self.populated,
             "verified": self.verified,
+            "adapted": self.adapted,
             "unavailable": self.unavailable,
             "notApplicable": self.not_applicable,
         }
@@ -80,6 +82,7 @@ class BoardMetadataCoverage:
     board_id: str
     populated: int
     verified: int
+    adapted: int
     unavailable: int
     not_applicable: int
     unaccounted_fields: int
@@ -89,6 +92,7 @@ class BoardMetadataCoverage:
             "boardID": self.board_id,
             "populated": self.populated,
             "verified": self.verified,
+            "adapted": self.adapted,
             "unavailable": self.unavailable,
             "notApplicable": self.not_applicable,
             "unaccountedFields": self.unaccounted_fields,
@@ -239,6 +243,8 @@ def _load_record(value: Any, source: str) -> MetadataRecord:
     outcome = payload.get("outcome")
     if outcome == "verified":
         _closed(payload, base_keys | {"value"}, source)
+    elif outcome == "adapted":
+        _closed(payload, base_keys | {"value", "reason"}, source)
     elif outcome in {"unavailable", "notApplicable"}:
         _closed(payload, base_keys | {"reason"}, source)
     else:
@@ -248,8 +254,8 @@ def _load_record(value: Any, source: str) -> MetadataRecord:
     field = _nonempty_string(payload["field"], f"{source}.field")
     if field not in _FIELDS:
         raise MetadataAuditError(f"{source}.field is unsupported")
-    if field == "kind" and outcome != "verified":
-        raise MetadataAuditError(f"{source}.kind must be verified")
+    if field == "kind" and outcome not in {"verified", "adapted"}:
+        raise MetadataAuditError(f"{source}.kind must be verified or adapted")
     return MetadataRecord(
         board_id=_identifier(payload["boardID"], f"{source}.boardID"),
         hold_ids=_load_hold_ids(payload["holdIDs"], f"{source}.holdIDs"),
@@ -259,7 +265,7 @@ def _load_record(value: Any, source: str) -> MetadataRecord:
         source=_load_source(payload["source"], f"{source}.source"),
         value=(
             _load_verified_value(payload["value"], field, f"{source}.value")
-            if outcome == "verified"
+            if outcome in {"verified", "adapted"}
             else None
         ),
         reason=(
@@ -417,7 +423,13 @@ def validate_metadata_ledger(
             records_by_key[key] = record
 
     field_totals = {
-        field: {"populated": 0, "verified": 0, "unavailable": 0, "notApplicable": 0}
+        field: {
+            "populated": 0,
+            "verified": 0,
+            "adapted": 0,
+            "unavailable": 0,
+            "notApplicable": 0,
+        }
         for field in _FIELDS
     }
     fields_by_board = {
@@ -429,7 +441,13 @@ def validate_metadata_ledger(
     }
     board_reports: list[BoardMetadataCoverage] = []
     for board_id in ledger.reviewed_board_ids + ledger.sloper_only_board_ids:
-        board_totals = {"populated": 0, "verified": 0, "unavailable": 0, "notApplicable": 0}
+        board_totals = {
+            "populated": 0,
+            "verified": 0,
+            "adapted": 0,
+            "unavailable": 0,
+            "notApplicable": 0,
+        }
         for hold_id, hold in sorted(holds_by_board[board_id].items()):
             for field in sorted(fields_by_board[board_id]):
                 key = (board_id, hold_id, field)
@@ -438,16 +456,16 @@ def validate_metadata_ledger(
                     raise MetadataAuditError(f"missing record for {'/'.join(key)}")
                 if field == "sloper":
                     if hold.kind == "sloper":
-                        if record.outcome not in {"verified", "unavailable"}:
+                        if record.outcome not in {"verified", "adapted", "unavailable"}:
                             raise MetadataAuditError(
-                                f"sloper {board_id}/{hold_id} must be verified or unavailable"
+                                f"sloper {board_id}/{hold_id} must be verified, adapted, or unavailable"
                             )
                     elif record.outcome != "notApplicable":
                         raise MetadataAuditError(
                             f"non-sloper {board_id}/{hold_id} must be notApplicable"
                         )
                 actual = _hold_value(hold, field)
-                if record.outcome == "verified":
+                if record.outcome in {"verified", "adapted"}:
                     if actual is None:
                         raise MetadataAuditError(
                             f"{field} is absent for {board_id}/{hold_id}"
@@ -456,7 +474,7 @@ def validate_metadata_ledger(
                         raise MetadataAuditError(
                             f"{field} does not match for {board_id}/{hold_id}"
                         )
-                    outcome = "verified"
+                    outcome = record.outcome
                 else:
                     if actual is not None:
                         raise MetadataAuditError(
@@ -472,6 +490,7 @@ def validate_metadata_ledger(
                 board_id=board_id,
                 populated=board_totals["populated"],
                 verified=board_totals["verified"],
+                adapted=board_totals["adapted"],
                 unavailable=board_totals["unavailable"],
                 not_applicable=board_totals["notApplicable"],
                 unaccounted_fields=0,
@@ -484,6 +503,7 @@ def validate_metadata_ledger(
             field: MetadataFieldCoverage(
                 populated=field_totals[field]["populated"],
                 verified=field_totals[field]["verified"],
+                adapted=field_totals[field]["adapted"],
                 unavailable=field_totals[field]["unavailable"],
                 not_applicable=field_totals[field]["notApplicable"],
             )

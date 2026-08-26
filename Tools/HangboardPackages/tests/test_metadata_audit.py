@@ -32,7 +32,6 @@ def _record(
     hold_id: str,
     field: str,
     outcome: str,
-    *,
     value: object | None = None,
     reason: str | None = None,
 ) -> dict[str, object]:
@@ -48,9 +47,11 @@ def _record(
             "label": "Fixture manufacturer source",
         },
     }
-    if outcome == "verified":
+    if outcome in {"verified", "adapted"}:
         record["value"] = value
-    else:
+    if outcome == "adapted":
+        record["reason"] = reason
+    elif outcome != "verified":
         record["reason"] = reason or "The manufacturer source does not establish this value."
     return record
 
@@ -65,6 +66,24 @@ def unavailable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
 
 def not_applicable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
     return _record(board_id, hold_id, field, "notApplicable")
+
+
+def test_adapted_record_matches_board_value(tmp_path: Path) -> None:
+    package = write_board_package(tmp_path / "boards" / "fixture")
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    document["holds"][0].update({"id": "edge-left", "kind": "edge"})
+    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
+    records = _complete_records("fixture.board", "edge-left")
+    records[0] = _record(
+        "fixture.board", "edge-left", "kind", "adapted", "edge", "Hang Ten adaptation"
+    )
+
+    report = validate_metadata_ledger(
+        load_metadata_ledger(_write_ledger(tmp_path, records)),
+        discover_board_packages(tmp_path / "boards"),
+    )
+
+    assert report.fields["kind"].adapted == 1
 
 
 def _complete_records(
@@ -195,6 +214,7 @@ def test_sloper_only_scope_requires_exactly_one_record_per_hold(tmp_path: Path) 
         "boardID": "supplemental.board",
         "populated": 0,
         "verified": 0,
+        "adapted": 0,
         "unavailable": 1,
         "notApplicable": 1,
         "unaccountedFields": 0,
@@ -231,7 +251,7 @@ def test_sloper_only_scope_rejects_swapped_sloper_outcomes(tmp_path: Path) -> No
         (
             "notApplicable",
             "notApplicable",
-            "sloper fixture.board/sloper-left must be verified or unavailable",
+            "sloper fixture.board/sloper-left must be verified, adapted, or unavailable",
         ),
         (
             "unavailable",
@@ -423,6 +443,7 @@ def test_sloper_ledger_verified_value_matches_flat_hold(tmp_path: Path) -> None:
     assert report.fields["sloper"].to_json() == {
         "populated": 1,
         "verified": 1,
+        "adapted": 0,
         "unavailable": 0,
         "notApplicable": 0,
     }
@@ -479,6 +500,7 @@ def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
     assert report.fields["sloper"].to_json() == {
         "populated": 0,
         "verified": 0,
+        "adapted": 0,
         "unavailable": 1,
         "notApplicable": 0,
     }
@@ -568,20 +590,21 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
         "reviewedBoardIDs": ["fixture.board"],
         "sloperOnlyBoardIDs": [],
         "fields": {
-            "kind": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "sizeMillimeters": {"populated": 1, "verified": 1, "unavailable": 1, "notApplicable": 0},
-            "depthRangeMillimeters": {"populated": 1, "verified": 1, "unavailable": 1, "notApplicable": 0},
-            "fingerCapacity": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "handCapacity": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "gripType": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "features": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "sloper": {"populated": 0, "verified": 0, "unavailable": 0, "notApplicable": 2},
+            "kind": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "sizeMillimeters": {"populated": 1, "verified": 1, "adapted": 0, "unavailable": 1, "notApplicable": 0},
+            "depthRangeMillimeters": {"populated": 1, "verified": 1, "adapted": 0, "unavailable": 1, "notApplicable": 0},
+            "fingerCapacity": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "handCapacity": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "gripType": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "features": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "sloper": {"populated": 0, "verified": 0, "adapted": 0, "unavailable": 0, "notApplicable": 2},
         },
         "boards": [
             {
                 "boardID": "fixture.board",
                 "populated": 12,
                 "verified": 12,
+                "adapted": 0,
                 "unavailable": 2,
                 "notApplicable": 2,
                 "unaccountedFields": 0,
@@ -679,6 +702,7 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
         "boardID": "beastmaker-2000",
         "populated": 0,
         "verified": 0,
+        "adapted": 0,
         "unavailable": 5,
         "notApplicable": 22,
         "unaccountedFields": 0,
