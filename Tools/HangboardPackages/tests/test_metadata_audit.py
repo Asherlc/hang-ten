@@ -207,6 +207,7 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
     )
 
     assert report.reviewed_board_ids == (
+        "beastmaker-1000",
         "dewoodstok-woodbord",
         "escape-beta-22",
         "escape.unlimited",
@@ -251,6 +252,53 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "zlagboard.pro",
     )
     assert all(board.unaccounted_fields == 0 for board in report.boards)
+
+
+def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    inventory = discover_board_packages(repository_root / "Hangboards")
+    packages = {package.board.id: package.board for package in inventory.packages}
+
+    board = packages["beastmaker-1000"]
+    assert len(board.holds) == 22
+    assert {
+        hold.kind: {candidate.id for candidate in board.holds if candidate.kind == hold.kind}
+        for hold in board.holds
+    } == {
+        "jug": {"jug-left", "jug-right"},
+        "sloper": {"sloper-35-left", "sloper-center", "sloper-35-right"},
+        "pocket": {
+            "pocket-top-outer-left",
+            "pocket-top-outer-right",
+            "pocket-top-left",
+            "pocket-top-right",
+            "pocket-middle-outer-left",
+            "pocket-middle-mid-left",
+            "pocket-middle-inner-left",
+            "pocket-middle-center",
+            "pocket-middle-inner-right",
+            "pocket-middle-mid-right",
+            "pocket-middle-outer-right",
+            "pocket-bottom-outer-left",
+            "pocket-bottom-mid-left",
+            "pocket-bottom-inner-left",
+            "pocket-bottom-inner-right",
+            "pocket-bottom-mid-right",
+            "pocket-bottom-outer-right",
+        },
+    }
+    assert next(hold for hold in board.holds if hold.id == "sloper-center").name == (
+        "20 Degree Center Sloper"
+    )
+    assert all(
+        hold.size_millimeters is None
+        and hold.depth_range_millimeters is None
+        and hold.finger_capacity is None
+        and hold.hand_capacity is None
+        and hold.grip_type is None
+        and hold.features is None
+        for hold in board.holds
+    )
 
 
 def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:

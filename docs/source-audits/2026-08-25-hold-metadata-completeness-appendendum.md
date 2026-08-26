@@ -184,6 +184,42 @@ This resolves 15 formerly unrepresentable hold fields. The primary sources do
 not establish additional fractional per-contact depths among the remaining
 blank fields.
 
+### Beastmaker 1000 conditional group-level certification
+
+Beastmaker 1000 was re-reviewed against the current product page, its linked
+official front, and a fresh 22-ID Workbench capture recorded in the
+[Beastmaker source audit](2026-08-12-beastmaker-board-packages.md#2026-08-25-beastmaker-1000-source-audited-metadata-certification).
+The official front supports 22 physical contacts—two jugs, three slopers, and
+17 front cavities—even though the manufacturer's grouped copy totals only 15
+pockets. The physical inventory and geometry therefore remain at 22; the
+copy/image contradiction is recorded instead of deleting two visible cavities.
+
+Mandatory kinds are certified as three conservative source-backed groups. The
+two outer top contacts are the exact two-jug family, the other three top
+surfaces are the 35-/20-degree sloper family, and all 17 front cavities retain
+`pocket` because pockets are the exhaustive front-contact kind. This is a
+shared-kind ruling only: it does not position Beastmaker's 10 mm pair,
+deep/medium/small labels, or two-/three-/four-finger subtypes.
+
+The ledger moves from 42 boards / 634 holds to 43 boards / 656 holds. All 154
+seven-field outcomes are explicit and all 22 mandatory kinds are verified:
+
+| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
+| --- | ---: | ---: | ---: | ---: |
+| `kind` | 634 / 634 | 656 / 656 | 0 | 0 |
+| `sizeMillimeters` | 387 / 387 | 387 / 387 | 269 | 0 |
+| `depthRangeMillimeters` | 34 / 34 | 34 / 34 | 622 | 0 |
+| `fingerCapacity` | 185 / 185 | 185 / 185 | 73 | 398 |
+| `handCapacity` | 1 / 1 | 1 / 1 | 655 | 0 |
+| `gripType` | 182 / 182 | 182 / 182 | 474 | 0 |
+| `features` | 88 / 88 | 88 / 88 | 568 | 0 |
+
+Every optional Beastmaker 1000 field remains blank. The pass removes 17
+unsupported pocket scalar depths, 19 duplicated kind-as-feature arrays, and
+the two jugs' unsupported capacity, open-hand posture, and feature arrays. The
+center sloper receives only a source-faithful display name. No geometry,
+presentation asset, Beastmaker 2000 metadata, or unrelated package changed.
+
 ## Remaining unsupported metadata
 
 The audit did not leave values blank merely because they were difficult to
@@ -193,7 +229,7 @@ remains blank for a specific evidence reason.
 | Packages / contacts | Fields deliberately left blank | Reason and source status |
 | --- | --- | --- |
 | `beastmaker-1000` pockets; `beastmaker-2000` unmapped pockets and edges; `dewoodstok-woodbord` pockets | Per-contact capacity and/or depth | Product pages give product or family facts but no numbered per-contact mapping. The prior catalog audit explicitly prohibits applying aggregate values to a pocket ID. |
-| `beastmaker-1000`; `beastmaker-2000`; `moon.armstrong` | Full seven-field ledger certification | Beastmaker's current sources do not map every recess to an exact stable ID and the source/package counts remain unresolved. Moon's official 21-contact inventory includes two 22 mm one-finger pockets absent from the current 19-contact package. Mandatory per-ID type certification therefore remains blocked and unchanged. |
+| `beastmaker-2000` | Full seven-field ledger certification | Beastmaker's current sources do not map the board's mixed front recesses to exact stable IDs. Mandatory per-ID type certification therefore remains blocked and unchanged. |
 | `frictitious.doormount-pro-7` unnamed lower records and mixed contacts | Depth and capacity | [DoorMount Pro](https://frictitiousclimbing.com/products/doormount-pro) lists the 35/25/20/15/10 mm families and pockets, but its declared seven-hold inventory does not map those facts to this package's 13 current logical records. A fresh field assignment would be an inference; the inventory discrepancy needs a separate physical-contact reconciliation. |
 | `soill.training-tiles`; `tension.flash-board` | Per-contact depth and, where applicable, pocket capacity | Manufacturers publish grouped size/family information or product views, not an individual ID-to-value guide. The front image establishes physical contact boundaries, not an exact value assignment. |
 | `trango.rock-prodigy-forge` IM pockets; `trango.rock-prodigy-natural` centre-lower and supported pockets; `trango.rock-prodigy-training-center` variable rails and pockets | Exact per-contact depth | Forge's official guide gives only an aggregate IMR range. Natural's official product markings and quick-start guide conflict on the affected values/capacities. The Training Center manual names only selected training grips and lacks a depth map for each physical package contact. |

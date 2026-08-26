@@ -65,11 +65,6 @@
           }
         }
       ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
-      ],
       "presentationID": "primary"
     },
     {
@@ -132,11 +127,6 @@
             ]
           }
         }
-      ],
-      "gripType": "openHand",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
       ],
       "presentationID": "primary"
     },
@@ -268,7 +258,7 @@
     },
     {
       "id": "sloper-center",
-      "name": "Sloper Center",
+      "name": "20 Degree Center Sloper",
       "kind": "sloper",
       "geometry": [
         {
@@ -429,10 +419,6 @@
           }
         }
       ],
-      "sizeMillimeters": 15,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -541,10 +527,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 15,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     },
@@ -655,10 +637,6 @@
           }
         }
       ],
-      "sizeMillimeters": 30,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -767,10 +745,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 30,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     },
@@ -881,10 +855,6 @@
           }
         }
       ],
-      "sizeMillimeters": 45,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -993,10 +963,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 50,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     },
@@ -1107,10 +1073,6 @@
           }
         }
       ],
-      "sizeMillimeters": 45,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1219,10 +1181,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 53,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     },
@@ -1333,10 +1291,6 @@
           }
         }
       ],
-      "sizeMillimeters": 45,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1445,10 +1399,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 50,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     },
@@ -1559,10 +1509,6 @@
           }
         }
       ],
-      "sizeMillimeters": 45,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1671,10 +1617,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 20,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     },
@@ -1785,10 +1727,6 @@
           }
         }
       ],
-      "sizeMillimeters": 25,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -1897,10 +1835,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 20,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     },
@@ -2011,10 +1945,6 @@
           }
         }
       ],
-      "sizeMillimeters": 20,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -2124,10 +2054,6 @@
           }
         }
       ],
-      "sizeMillimeters": 25,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "primary"
     },
     {
@@ -2236,10 +2162,6 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "sizeMillimeters": 20,
-      "features": [
-        "pocket"
       ],
       "presentationID": "primary"
     }
