@@ -113,6 +113,7 @@ def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
     ("sloper", "expected"),
     [
         ({"type": "flat", "angleDegrees": 20}, ("flat", 20.0)),
+        ({"type": "flat"}, ("flat", None)),
         ({"type": "round"}, ("round", None)),
     ],
 )
@@ -135,7 +136,6 @@ def test_board_schema_exposes_strict_sloper_metadata(
     [
         ("sloper", None, "board.json.holds[0].sloper"),
         ("jug", {"type": "round"}, "board.json.holds[0].sloper"),
-        ("sloper", {"type": "flat"}, "board.json.holds[0].sloper.angleDegrees"),
         (
             "sloper",
             {"type": "round", "angleDegrees": 20},

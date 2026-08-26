@@ -210,12 +210,12 @@ class SloperMetadata:
         if sloper_type not in _SLOPER_TYPES:
             raise ValueError(f"{source}.type must be one of {sorted(_SLOPER_TYPES)}")
         if sloper_type == "flat":
-            if "angleDegrees" not in payload:
-                raise ValueError(f"{source}.angleDegrees is required for flat slopers")
-            _closed(payload, {"type", "angleDegrees"}, source)
-            angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
-            if not 0 <= angle_degrees <= 90:
-                raise ValueError(f"{source}.angleDegrees must be in 0...90")
+            _closed(payload, {"type", "angleDegrees"} & set(payload), source)
+            angle_degrees = None
+            if "angleDegrees" in payload:
+                angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
+                if not 0 <= angle_degrees <= 90:
+                    raise ValueError(f"{source}.angleDegrees must be in 0...90")
             return cls(sloper_type, angle_degrees)
         _closed(payload, {"type"}, source)
         return cls(sloper_type, None)

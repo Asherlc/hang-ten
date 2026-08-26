@@ -128,11 +128,11 @@ def _package_with_metadata(tmp_path: Path) -> Path:
     return package
 
 
-def _package_with_flat_sloper(tmp_path: Path) -> Path:
+def _package_with_flat_sloper(tmp_path: Path, sloper: dict[str, object] | None = None) -> Path:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
     document["holds"][0].update(
-        {"kind": "sloper", "sloper": {"type": "flat", "angleDegrees": 20}}
+        {"kind": "sloper", "sloper": sloper or {"type": "flat", "angleDegrees": 20}}
     )
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return package
@@ -195,6 +195,22 @@ def test_sloper_ledger_verified_value_matches_flat_hold(tmp_path: Path) -> None:
         "unavailable": 0,
         "notApplicable": 0,
     }
+
+
+def test_sloper_ledger_verified_value_matches_flat_hold_without_angle(
+    tmp_path: Path,
+) -> None:
+    _package_with_flat_sloper(tmp_path, {"type": "flat"})
+    ledger_path = _write_ledger(
+        tmp_path,
+        _sloper_ledger_records({"type": "flat"}),
+    )
+
+    report = validate_metadata_ledger(
+        load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
+    )
+
+    assert report.fields["sloper"].to_json()["verified"] == 1
 
 
 def test_sloper_ledger_rejects_angle_that_differs_from_hold(tmp_path: Path) -> None:

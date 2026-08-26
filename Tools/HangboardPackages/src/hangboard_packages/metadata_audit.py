@@ -202,11 +202,14 @@ def _load_verified_value(value: Any, field: str, source: str) -> object:
         payload = _mapping(value, source)
         sloper_type = _nonempty_string(payload.get("type"), f"{source}.type")
         if sloper_type == "flat":
-            _closed(payload, {"type", "angleDegrees"}, source)
-            angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
-            if not 0 <= angle_degrees <= 90:
-                raise MetadataAuditError(f"{source}.angleDegrees must be in 0...90")
-            return {"type": "flat", "angleDegrees": angle_degrees}
+            _closed(payload, {"type", "angleDegrees"} & set(payload), source)
+            verified: dict[str, object] = {"type": "flat"}
+            if "angleDegrees" in payload:
+                angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
+                if not 0 <= angle_degrees <= 90:
+                    raise MetadataAuditError(f"{source}.angleDegrees must be in 0...90")
+                verified["angleDegrees"] = angle_degrees
+            return verified
         if sloper_type == "round":
             _closed(payload, {"type"}, source)
             return {"type": "round"}
