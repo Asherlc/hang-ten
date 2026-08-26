@@ -71,22 +71,20 @@ two-finger pocket, and visible mono pockets into one physical inventory. The
 official images support visible boundaries, including whether the integrated
 pocket shares a logical contact; omit any unsupported capacity or posture.
 
-**2026-08-19 frozen mapping:** Ten logical physical contacts are represented:
-one full-width jug; mirrored continuous top contacts spanning the engraved 8,
-10, and 12 mm steps; mirrored middle contacts spanning 30 and 40 mm with the
-source-described two-finger pocket integrated into the same physical cavity;
-one isolated 25 mm centre edge; mirrored continuous bottom contacts spanning 15
-and 20 mm; and two isolated mono pockets. The composite stepped contacts omit a
-single `sizeMillimeters` because more than one manufacturer-labelled depth is
-part of the same physical region. The centre edge retains 25 mm and the isolated
-monos retain source-backed one-finger capacity. The official front JPEG is
-converted to PNG only for package compatibility, without cropping or geometry
-changes. The center edge uses a manually selected rounded-rectangle constraint,
-and the circular monos use circle constraints. The paired 8/10/12 and 15/20
-cavity outlines retain their reviewed bespoke freeform curvature rather than
-forcing the Workbench's fixed preset radii. The jug and integrated 30/40/pocket
-contacts also remain freeform. Each retained constraint was materialized from
-the current Workbench primitive and passes an exact zero-delta constrained
+**2026-08-25 corrected mapping:** Eighteen source-labelled contacts are
+represented: one full-width jug; separate left/right 8, 10, and 12 mm top
+shelves; separate left/right 30 and 40 mm middle shelves (each 40 mm shelf
+retains its integrated two-finger pocket); one 25 mm centre edge; separate
+left/right 15 and 20 mm bottom shelves; and two isolated mono pockets. The
+engraved front identifies the individual planar shelves by depth, so their
+shared cavity walls do not merge them into one logical hold. Each labelled edge
+keeps its exact scalar `sizeMillimeters`; the centre edge retains 25 mm and the
+isolated monos retain source-backed one-finger capacity. The official front JPEG
+is converted to PNG only for package compatibility, without cropping or
+geometry changes. The center edge uses a manually selected rounded-rectangle
+constraint, and the circular monos use circle constraints. The jug and the
+remaining shelf paths stay freeform. Each retained constraint was materialized
+from the current Workbench primitive and passes an exact zero-delta constrained
 resize.
 
 ## Required follow-up
@@ -174,16 +172,16 @@ The controlling sources are the current
 [official engraved front](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840).
 The product page specifies seven shoulder-width edge depths, the integrated
 two-finger pocket on the 40 mm edge, mono pockets, a 25 mm single-hand centre
-hold, and the full-width jug. The engraved front establishes that the 8, 10,
-and 12 mm labels are steps inside one uninterrupted cavity on each side.
+hold, and the full-width jug. The engraved front establishes separate planar
+8/10/12, 30/40, and 15/20 shelves on each side. They receive one scalar-depth
+record per labelled shelf, not a combined range record.
 
-The former `hold-11` and `hold-12` paths were nested inside
-`stepped-8-10-12-left`; `hold-13` and `hold-14` were nested inside
-`stepped-8-10-12-right`. Those four records were deleted as duplicate overlays,
-leaving the ten physical contacts frozen in the 2026-08-19 mapping above. No
-surviving path, kind, or optional metadata changed.
+The unnamed overlapping `hold-11` through `hold-14` paths remain removed: they
+were nested overlays rather than labelled shelves. The correction replaces the
+six range records with fourteen source-labelled scalar edge records, taking the
+package from ten to eighteen logical holds without restoring those duplicates.
 
 A fresh stable-ID capture was manually reviewed at
 `.context/hangboard-metadata-backfill-icky-cow/frictitious-megalith-reconciliation/frictitious.megalith--3f1c176e6ccc.png`.
-It reports ten regions and shows exactly one label over each continuous
-8/10/12 contact, with no nested top-row overlays remaining.
+It reports eighteen regions: separate IDs align with every engraved 8/10/12,
+30/40, and 15/20 shelf, while no unnamed nested overlay remains.

@@ -8,35 +8,33 @@ from hangboard_packages.board_catalog import load_board_package
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "frictitious-megalith"
 EXPECTED_HOLDS = (
-    "top-jug",
-    "stepped-8-10-12-left",
-    "stepped-8-10-12-right",
-    "stepped-30-40-pocket-left",
-    "stepped-30-40-pocket-right",
-    "center-edge-25",
-    "stepped-15-20-left",
-    "stepped-15-20-right",
-    "mono-left",
-    "mono-right",
+    ("top-jug", "jug", None, None),
+    ("center-edge-25", "edge", 25, None),
+    ("mono-left", "pocket", None, 1),
+    ("mono-right", "pocket", None, 1),
+    ("edge-8-left", "edge", 8, None),
+    ("edge-10-left", "edge", 10, None),
+    ("edge-12-left", "edge", 12, None),
+    ("edge-12-right", "edge", 12, None),
+    ("edge-10-right", "edge", 10, None),
+    ("edge-8-right", "edge", 8, None),
+    ("edge-30-left", "edge", 30, None),
+    ("edge-40-pocket-left", "edge", 40, None),
+    ("edge-40-pocket-right", "edge", 40, None),
+    ("edge-30-right", "edge", 30, None),
+    ("edge-15-left", "edge", 15, None),
+    ("edge-20-left", "edge", 20, None),
+    ("edge-20-right", "edge", 20, None),
+    ("edge-15-right", "edge", 15, None),
 )
 
 
-def test_megalith_has_one_record_per_continuous_physical_contact() -> None:
+def test_megalith_has_eighteen_scalar_source_labelled_contacts() -> None:
     board = load_board_package(PACKAGE_ROOT).board
-    holds = {hold.id: hold for hold in board.holds}
 
-    assert tuple(holds) == EXPECTED_HOLDS
-    assert {hold_id: hold.kind for hold_id, hold in holds.items()} == {
-        "top-jug": "jug",
-        "stepped-8-10-12-left": "edge",
-        "stepped-8-10-12-right": "edge",
-        "stepped-30-40-pocket-left": "edge",
-        "stepped-30-40-pocket-right": "edge",
-        "center-edge-25": "edge",
-        "stepped-15-20-left": "edge",
-        "stepped-15-20-right": "edge",
-        "mono-left": "pocket",
-        "mono-right": "pocket",
-    }
-    assert all(len(hold.geometry) == 1 for hold in holds.values())
-
+    assert tuple(
+        (hold.id, hold.kind, hold.size_millimeters, hold.finger_capacity)
+        for hold in board.holds
+    ) == EXPECTED_HOLDS
+    assert all(hold.depth_range_millimeters is None for hold in board.holds)
+    assert all(len(hold.geometry) == 1 for hold in board.holds)
