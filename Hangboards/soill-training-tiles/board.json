@@ -2026,6 +2026,92 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-21",
+      "name": "Hold 21",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.801862281901,
+            "y": 0.26542280957,
+            "width": 0.171982834635,
+            "height": 0.072674041992
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.529688384826,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.389512388277,
+                  0.025651057304
+                ],
+                "control2": [
+                  0.319424388109,
+                  0.038476585955
+                ],
+                "to": [
+                  0.253213338113,
+                  0.136768376572
+                ],
+                "bendable": true
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.187002291903,
+                  0.235060167188
+                ],
+                "control2": [
+                  0.124668195864,
+                  0.418818206332
+                ],
+                "to": [
+                  0.0,
+                  0.786334298057
+                ],
+                "bendable": true
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.919472485206,
+                  0.524222865371
+                ],
+                "control2": [
+                  0.939264745542,
+                  0.390310859227
+                ],
+                "to": [
+                  0.529688384826,
+                  0.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
