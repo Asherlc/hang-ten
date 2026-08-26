@@ -248,15 +248,19 @@ final class BoardEditorSessionTests: XCTestCase {
         let target = try selectFirstPathPiece(&session)
         let pieceBefore = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         let commandsBefore = try session.boardCommands(for: pieceBefore)
-        let leftmostAnchor = try XCTUnwrap(
-            commandsBefore.enumerated().compactMap { index, command in
-                command.boardAnchor.map { (index: index, point: $0) }
-            }.min { candidate, current in
-                candidate.point.x == current.point.x
-                    ? candidate.index < current.index
-                    : candidate.point.x < current.point.x
+        var leftmostAnchorCandidate: (index: Int, point: CGPoint)?
+        for (index, command) in commandsBefore.enumerated() {
+            guard let point = command.boardAnchor else { continue }
+            guard let current = leftmostAnchorCandidate else {
+                leftmostAnchorCandidate = (index: index, point: point)
+                continue
             }
-        )
+            if point.x < current.point.x ||
+                (point.x == current.point.x && index < current.index) {
+                leftmostAnchorCandidate = (index: index, point: point)
+            }
+        }
+        let leftmostAnchor = try XCTUnwrap(leftmostAnchorCandidate)
         session.select(handle: .anchor(commandIndex: leftmostAnchor.index))
 
         session.beginInteractiveEdit()
