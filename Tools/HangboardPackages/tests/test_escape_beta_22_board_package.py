@@ -50,6 +50,26 @@ EXPECTED_SIZES = {
         for side in ("left", "right")
     },
 }
+EXPECTED_FEATURES = {
+    **{
+        f"hold-{family:02d}-{side}": features
+        for family, features in (
+            (2, ("widePinch",)),
+            (3, ("jug",)),
+            (4, ("jug",)),
+            (5, ("incutEdge",)),
+            (6, ("flatEdge",)),
+            (7, ("flatEdge",)),
+            (8, ("flatEdge",)),
+        )
+        for side in ("left", "right")
+    },
+    **{
+        f"hold-{family:02d}-{side}": None
+        for family in (1, 9, 10, 11)
+        for side in ("left", "right")
+    },
+}
 CENTER_MIRRORED_PAIRS = tuple(
     (f"hold-{family:02d}-left", f"hold-{family:02d}-right") for family in range(9, 12)
 )
@@ -448,5 +468,5 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         assert hold.size_millimeters == EXPECTED_SIZES[hold.id]
         assert hold.grip_type is None
         assert hold.finger_capacity is None
-        assert hold.features is None
+        assert hold.features == EXPECTED_FEATURES[hold.id]
         assert hold.depth_range_millimeters is None

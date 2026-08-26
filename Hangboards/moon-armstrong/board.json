@@ -293,6 +293,7 @@
       "kind": "pocket",
       "sizeMillimeters": 22,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [{
         "frame": { "x": 0.235, "y": 0.586, "width": 0.09, "height": 0.045 },
         "shape": { "type": "path", "commands": [
@@ -312,6 +313,7 @@
       "kind": "pocket",
       "sizeMillimeters": 22,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [{
         "frame": { "x": 0.84, "y": 0.586, "width": 0.09, "height": 0.045 },
         "shape": { "type": "path", "commands": [

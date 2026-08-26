@@ -208,9 +208,11 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
 
     assert report.reviewed_board_ids == (
         "dewoodstok-woodbord",
+        "escape-beta-22",
         "escape.unlimited",
         "evolv-kilter-basic-long",
         "frictitious.doormount-pro-7",
+        "frictitious.megalith",
         "lattice-triple-rung",
         "metolius.climbers-edge",
         "metolius.contact",
@@ -222,6 +224,7 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "metolius.simulator-3d",
         "metolius.wood-grips-compact-ii",
         "metolius.wood-grips-deluxe-ii",
+        "moon.armstrong",
         "nature.stoak-board-iii",
         "soill.iron-palm-2",
         "soill.split-palm",
@@ -248,6 +251,76 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "zlagboard.pro",
     )
     assert all(board.unaccounted_fields == 0 for board in report.boards)
+
+
+def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    inventory = discover_board_packages(repository_root / "Hangboards")
+    packages = {package.board.id: package.board for package in inventory.packages}
+
+    moon = packages["moon.armstrong"]
+    assert len(moon.holds) == 21
+    assert {
+        hold.id: (hold.size_millimeters, hold.finger_capacity, hold.grip_type)
+        for hold in moon.holds
+        if hold.kind == "pocket"
+    } == {
+        "two-finger-pocket-left": (22, 2, "twoFingerPocket"),
+        "two-finger-pocket-right": (22, 2, "twoFingerPocket"),
+        "mono-left": (22, 1, None),
+        "mono-right": (22, 1, None),
+    }
+    assert all(
+        hold.depth_range_millimeters is None
+        and hold.hand_capacity is None
+        and hold.features is None
+        for hold in moon.holds
+    )
+
+    beta = packages["escape-beta-22"]
+    assert len(beta.holds) == 22
+    assert {
+        hold.id: hold.features
+        for hold in beta.holds
+        if hold.features is not None
+    } == {
+        "hold-02-left": ("widePinch",),
+        "hold-02-right": ("widePinch",),
+        "hold-03-left": ("jug",),
+        "hold-03-right": ("jug",),
+        "hold-04-left": ("jug",),
+        "hold-04-right": ("jug",),
+        "hold-05-left": ("incutEdge",),
+        "hold-05-right": ("incutEdge",),
+        "hold-06-left": ("flatEdge",),
+        "hold-06-right": ("flatEdge",),
+        "hold-07-left": ("flatEdge",),
+        "hold-07-right": ("flatEdge",),
+        "hold-08-left": ("flatEdge",),
+        "hold-08-right": ("flatEdge",),
+    }
+    assert all(
+        hold.depth_range_millimeters is None
+        and hold.finger_capacity is None
+        and hold.hand_capacity is None
+        and hold.grip_type is None
+        for hold in beta.holds
+    )
+
+    megalith = packages["frictitious.megalith"]
+    assert len(megalith.holds) == 18
+    assert {
+        hold.id: (hold.hand_capacity, hold.features)
+        for hold in megalith.holds
+        if hold.hand_capacity is not None or hold.features is not None
+    } == {
+        "top-jug": (None, ("jug",)),
+        "center-edge-25": (1, ("incutEdge",)),
+        "mono-left": (None, ("pocket",)),
+        "mono-right": (None, ("pocket",)),
+    }
+    assert all(hold.depth_range_millimeters is None for hold in megalith.holds)
+    assert all(hold.grip_type is None for hold in megalith.holds)
 
 
 def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() -> None:
