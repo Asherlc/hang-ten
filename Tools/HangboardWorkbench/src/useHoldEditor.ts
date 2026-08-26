@@ -893,7 +893,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
     actions.editDocument((candidate) => {
       for (const region of candidate.regions) {
-        if (siblingKeys.has(region.key)) region.type = type;
+        if (!siblingKeys.has(region.key)) continue;
+        region.type = type;
+        if (type !== "sloper") delete region.sloper;
       }
     }, {
       status: "Hold recategorized. Save when ready.",

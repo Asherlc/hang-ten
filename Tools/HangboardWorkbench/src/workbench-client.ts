@@ -35,6 +35,24 @@ function isPositiveFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
 }
 
+function isSloperMetadata(value: unknown): boolean {
+  if (!isRecord(value) || (value.type !== "flat" && value.type !== "round")) return false;
+  const allowedKeys = value.type === "flat" ? ["type", "angleDegrees"] : ["type"];
+  if (!Object.keys(value).every((key) => allowedKeys.includes(key))) return false;
+  if (value.type === "round") return true;
+  return value.angleDegrees === undefined
+    || (typeof value.angleDegrees === "number"
+      && Number.isFinite(value.angleDegrees)
+      && value.angleDegrees >= 0
+      && value.angleDegrees <= 90);
+}
+
+function sameSloperMetadata(left: unknown, right: unknown): boolean {
+  if (left === undefined || right === undefined) return left === right;
+  if (!isRecord(left) || !isRecord(right)) return false;
+  return left.type === right.type && left.angleDegrees === right.angleDegrees;
+}
+
 function isMillimeterRange(value: unknown): value is { lowerBound: number; upperBound: number } {
   if (!isRecord(value)) return false;
   const { lowerBound, upperBound } = value;
@@ -63,6 +81,8 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && isOptionalString(value.type)
+    && (value.sloper === undefined
+      || (value.type === "sloper" && isSloperMetadata(value.sloper)))
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
     && (value.sizeMillimeters === undefined || isPositiveFiniteNumber(value.sizeMillimeters))
     && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
@@ -107,11 +127,15 @@ function isEditorDocumentPayload(value: unknown): value is EditorDocument {
     && value.regions.every(isHoldRegion))) return false;
 
   const sizeMillimetersByHoldId = new Map<string, number | undefined>();
+  const sloperByHoldId = new Map<string, unknown>();
   const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
   const depthRepresentationByHoldId = new Map<string, "fixed" | "variable" | "unset">();
   for (const region of value.regions) {
     if (!region.metadata) continue;
     const { holdID } = region.metadata;
+    if (sloperByHoldId.has(holdID)
+      && !sameSloperMetadata(sloperByHoldId.get(holdID), region.sloper)) return false;
+    sloperByHoldId.set(holdID, region.sloper);
     const depthRepresentation = region.sizeMillimeters !== undefined
       ? "fixed"
       : region.depthRangeMillimeters !== undefined ? "variable" : "unset";

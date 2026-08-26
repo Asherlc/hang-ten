@@ -329,6 +329,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 str,
                 object,
                 object,
+                object,
                 tuple[int, ...],
                 int | None,
                 int | float | None,
@@ -341,6 +342,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         hold_id,
         piece_index,
         kind,
+        sloper,
         path,
         shape_constraint,
         bendable_command_indexes,
@@ -353,6 +355,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
             (
                 piece_index,
                 kind,
+                sloper,
                 path,
                 shape_constraint,
                 bendable_command_indexes,
@@ -376,6 +379,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         first_piece[6],
         first_piece[7],
         first_piece[8],
+        first_piece[9],
     )
     original = copy.deepcopy(package.board)
 
@@ -771,6 +775,116 @@ def test_accepts_exact_physical_hold_kind_enum(tmp_path: Path) -> None:
     assert [hold["kind"] for hold in loaded.board["holds"]] == list(
         SUPPORTED_HOLD_KINDS
     )
+
+
+def test_editor_round_trips_optional_sloper_metadata(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+
+    def add_sloper_metadata(board: dict[str, object]) -> None:
+        hold = board["holds"][0]
+        hold["kind"] = "sloper"
+        hold["sloper"] = {"type": "flat", "angleDegrees": 20}
+
+    _mutate_board(package_root, add_sloper_metadata)
+
+    loaded = board_package.load_board_package(package_root)
+    document = board_package.editor_document(loaded)
+
+    assert {tuple(region["sloper"].items()) for region in document["regions"]} == {
+        (("type", "flat"), ("angleDegrees", 20))
+    }
+    for region in document["regions"]:
+        region["handCapacity"] = 1
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    reloaded = board_package.load_board_package(package_root)
+
+    assert saved.board["holds"][0]["sloper"] == {
+        "type": "flat",
+        "angleDegrees": 20,
+    }
+    assert reloaded.board["holds"][0]["sloper"] == saved.board["holds"][0]["sloper"]
+
+
+@pytest.mark.parametrize(
+    ("kind", "metadata", "message"),
+    [
+        ("jug", {"type": "flat"}, "only allowed for sloper holds"),
+        ("sloper", {"type": "round", "angleDegrees": 20}, "unknown keys"),
+        ("sloper", {"type": "flat", "angleDegrees": -0.01}, "in 0...90"),
+        ("sloper", {"type": "flat", "angleDegrees": 90.01}, "in 0...90"),
+        ("sloper", {"type": "flat", "angleDegrees": math.inf}, "in 0...90"),
+        ("sloper", {"type": "domed"}, "type must be one of"),
+        ("sloper", {"type": "flat", "unexpected": True}, "unknown keys"),
+    ],
+)
+def test_rejects_invalid_sloper_metadata_combinations(
+    kind: str, metadata: dict[str, object], message: str, tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+
+    def add_sloper_metadata(board: dict[str, object]) -> None:
+        hold = board["holds"][0]
+        hold["kind"] = kind
+        hold["sloper"] = metadata
+
+    _mutate_board(package_root, add_sloper_metadata)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    ("kind", "metadata", "message"),
+    [
+        ("jug", {"type": "flat"}, "only allowed for sloper holds"),
+        ("sloper", {"type": "round", "angleDegrees": 20}, "unknown keys"),
+        ("sloper", {"type": "flat", "angleDegrees": -0.01}, "in 0...90"),
+        ("sloper", {"type": "flat", "unexpected": True}, "unknown keys"),
+    ],
+)
+def test_editor_document_rejects_invalid_sloper_metadata(
+    kind: str, metadata: dict[str, object], message: str, tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    for region in document["regions"]:
+        region["type"] = kind
+        region["sloper"] = metadata
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package._validate_editor_document(
+            document, package.image_width, package.image_height
+        )
+
+
+def test_editor_document_rejects_inconsistent_sloper_metadata_for_one_hold(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    for region in document["regions"]:
+        region["type"] = "sloper"
+    document["regions"][0]["sloper"] = {"type": "flat"}
+    document["regions"][1]["sloper"] = {"type": "round"}
+
+    with pytest.raises(BoardPackageError, match="share one sloper metadata value"):
+        board_package._validate_editor_document(
+            document, package.image_width, package.image_height
+        )
 
 
 def test_editor_round_trips_missing_physical_kind_without_inventing_a_type(
