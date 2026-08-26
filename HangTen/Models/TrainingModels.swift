@@ -1325,12 +1325,13 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: String,
         sourceURL: URL,
         boardID: String,
+        subtitle: String = "Official ten-minute sequence; remaining time rests.",
         minutes: [(instruction: String, targets: [HoldTarget], phase: WorkoutPhase)]
     ) -> TrainingPlan {
         TrainingPlan(
             id: id,
             title: title,
-            subtitle: "Official ten-minute sequence; remaining time rests.",
+            subtitle: subtitle,
             level: level,
             sourceLabel: sourceLabel,
             sourceURL: sourceURL,
@@ -1410,6 +1411,7 @@ enum LegacyPlanSeedCatalog {
         sourceLabel: "Metolius Simulator 3D Training Guide",
         sourceURL: simulator3DSourceURL,
         boardID: "metolius.simulator-3d",
+        subtitle: "Official ten-minute sequence; remaining time rests. Feet on a chair may lower resistance; place it 1'–3' behind the board plane.",
         minutes: [
             ("10 second dead hang, deep flat edge (7).", sourceTargets(["edge-7-left", "edge-7-right"]), .hang),
             ("15 second dead hang + one pull-up, outer jugs (1).", sourceTargets(["jug-1-left", "jug-1-right"]), .hang),

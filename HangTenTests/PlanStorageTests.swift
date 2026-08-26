@@ -1232,10 +1232,15 @@ final class PlanStorageTests: XCTestCase {
         ]
         let expectedIDs = Set(expectedPlans.map(\.0))
         let plans = PlanCatalog.all.filter { expectedIDs.contains($0.id) }
+        let boardSpecificFamilyPlans = PlanCatalog.all.filter {
+            $0.id.hasPrefix("metolius.contact.") || $0.id.hasPrefix("metolius.simulator-3d.")
+        }
 
         // Detects a missing, cross-board, non-resolvable, or wrong-duration source cycle.
         XCTAssertEqual(Set(plans.map(\.id)), expectedIDs)
         XCTAssertEqual(plans.count, expectedPlans.count)
+        XCTAssertEqual(Set(boardSpecificFamilyPlans.map(\.id)), expectedIDs)
+        XCTAssertEqual(boardSpecificFamilyPlans.count, 6)
 
         for (planID, boardID, sourceURL) in expectedPlans {
             let plan = try XCTUnwrap(plans.first { $0.id == planID })
@@ -1244,6 +1249,10 @@ final class PlanStorageTests: XCTestCase {
             XCTAssertEqual(plan.boardID, boardID)
             XCTAssertEqual(plan.provenance, .official)
             XCTAssertEqual(plan.sourceURL?.absoluteString, sourceURL)
+            if planID == "metolius.simulator-3d.entry" {
+                XCTAssertTrue(plan.subtitle.contains("Feet on a chair may lower resistance"))
+                XCTAssertTrue(plan.subtitle.contains("1'–3' behind the board plane"))
+            }
             XCTAssertEqual(plan.steps.count, 10)
             XCTAssertEqual(plan.duration, 600)
             XCTAssertTrue(plan.steps.allSatisfy { $0.duration == 60 })
@@ -1259,6 +1268,23 @@ final class PlanStorageTests: XCTestCase {
                     "\(planID) must not be available on \(otherBoard.id)."
                 )
             }
+        }
+
+        let suiteName = "PlanStorageTests.boardSpecificMetoliusPlans.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        for board in BoardCatalog.all {
+            store.selectBoard(board)
+            let visiblePlanIDs = Set(store.plans.map(\.id)).intersection(expectedIDs)
+            let expectedVisibleIDs = Set(expectedPlans.compactMap { plan in
+                plan.1 == board.id ? plan.0 : nil
+            })
+            XCTAssertEqual(
+                visiblePlanIDs,
+                expectedVisibleIDs,
+                "AppStore must expose only the matching board-specific Metolius plans on \(board.id)."
+            )
         }
     }
 

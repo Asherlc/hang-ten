@@ -18485,8 +18485,8 @@
     "generatedAt" : "2026-08-01",
     "id" : "hang-ten.built-in",
     "notes" : [
-      "Source-linked Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
-      "Source cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
+      "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
+      "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
       "All research and coach routines are explicitly marked as adapted.",
       "Board mappings keep plan targets semantic and board-specific IDs replaceable."
     ],
@@ -18604,7 +18604,7 @@
         ],
         "level" : "Entry",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
         ],
         "provenance" : "official",
         "sourceLabel" : "Metolius Contact Training Guide",
@@ -18635,7 +18635,7 @@
         ],
         "level" : "Intermediate",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
         ],
         "provenance" : "official",
         "sourceLabel" : "Metolius Contact Training Guide",
@@ -18666,7 +18666,7 @@
         ],
         "level" : "Advanced",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
         ],
         "provenance" : "official",
         "sourceLabel" : "Metolius Contact Training Guide",
@@ -18697,12 +18697,12 @@
         ],
         "level" : "Entry",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
         ],
         "provenance" : "official",
         "sourceLabel" : "Metolius Simulator 3D Training Guide",
         "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/simulator-3d-training-guide",
-        "subtitle" : "Official ten-minute sequence; remaining time rests.",
+        "subtitle" : "Official ten-minute sequence; remaining time rests. Feet on a chair may lower resistance; place it 1'–3' behind the board plane.",
         "tags" : [
           "built-in",
           "manufacturer"
@@ -18728,7 +18728,7 @@
         ],
         "level" : "Intermediate",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
         ],
         "provenance" : "official",
         "sourceLabel" : "Metolius Simulator 3D Training Guide",
@@ -18759,7 +18759,7 @@
         ],
         "level" : "Advanced",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
         ],
         "provenance" : "official",
         "sourceLabel" : "Metolius Simulator 3D Training Guide",

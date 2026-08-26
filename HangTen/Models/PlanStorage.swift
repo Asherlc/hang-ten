@@ -1482,8 +1482,8 @@ enum BuiltInPlanLibraryDefinition {
                 generatedAt: "2026-08-01",
                 defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,
                 notes: [
-                    "Source-linked Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
-                    "Source cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
+                    "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
+                    "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
                     "All research and coach routines are explicitly marked as adapted.",
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
@@ -1527,6 +1527,10 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+            ]
+        } else if plan.id.hasPrefix("metolius.contact.") || plan.id.hasPrefix("metolius.simulator-3d.") {
+            notes = [
+                "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
             ]
         } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
             notes = [
