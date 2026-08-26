@@ -349,7 +349,7 @@ private struct CustomRoutineStepEditor: View {
             get: {
                 guard let target = step.targets.first else { return nil }
                 switch target {
-                case let .kind(kind):
+                case let .kind(kind, _, _):
                     return .kind(kind)
                 case let .feature(feature, _, _):
                     return .feature(feature)

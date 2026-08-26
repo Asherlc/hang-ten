@@ -60,8 +60,7 @@ struct GripDiagramView: View {
     private var cueLabel: String {
         guard hold.kind != .sloper else { return hold.name }
 
-        if hold.kind == .jug,
-           hold.features?.contains(.jug) == true {
+        if hold.kind == .jug {
             return "Outer jugs"
         }
 

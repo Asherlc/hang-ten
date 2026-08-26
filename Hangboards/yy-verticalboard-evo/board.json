@@ -11,9 +11,6 @@
       "id": "jug-left",
       "name": "Left top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -99,9 +96,6 @@
       "id": "jug-right",
       "name": "Right top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1107,9 +1101,6 @@
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
       "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1236,9 +1227,6 @@
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
       "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1363,9 +1351,6 @@
       "name": "Left upper mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1462,9 +1447,6 @@
       "name": "Right upper mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1563,9 +1545,6 @@
       "sizeMillimeters": 20,
       "fingerCapacity": 2,
       "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1692,9 +1671,6 @@
       "sizeMillimeters": 20,
       "fingerCapacity": 2,
       "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2272,9 +2248,6 @@
       "name": "Left lower mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2371,9 +2344,6 @@
       "name": "Right lower mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {

@@ -67,7 +67,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(metadata["version"])
     }
 
-    func testBundledPlanLibraryContainsNoVersionFields() throws {
+    func testBundledPlanLibraryLoadsWithoutFormerFeatureAliases() throws {
         let data = try bundledPlanLibraryData()
         let document = try XCTUnwrap(
             JSONSerialization.jsonObject(with: data) as? [String: Any]
@@ -76,7 +76,13 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertNil(document["schemaVersion"])
         XCTAssertNil(metadata["version"])
-        XCTAssertNoThrow(try JSONDecoder().decode(PlanLibraryDefinition.self, from: data))
+        XCTAssertEqual(fallbackFeatureAliases(in: document), [])
+        XCTAssertNoThrow(
+            try PlanLibraryStore(
+                builtInData: data,
+                packageStore: BoardCatalog.packageStore
+            )
+        )
     }
 
     func testBuiltInPlanPresentationFieldsUseAthleteFacingCopy() throws {
@@ -265,6 +271,64 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testLegacyPocketFeatureTargetDecodesAndReencodesAsKindTarget() throws {
+        let legacy = Data(#"{ "feature": "pocket", "fingerCapacity": 3 }"#.utf8)
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "pocket")
+        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
+        XCTAssertNil(object["feature"])
+    }
+
+    func testLegacyDuplicateFallbackFeaturesAreDroppedWhenEncodingKindTarget() throws {
+        let legacy = Data(
+            #"{ "feature": "pocket", "fingerCapacity": 3, "fallbackFeatures": ["jug", "pocket"] }"#.utf8
+        )
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "pocket")
+        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
+        XCTAssertNil(object["fallbackFeatures"])
+    }
+
+    func testLegacyDuplicateFallbackFeaturesAreDroppedWhileValidFeatureFallbacksRemain() throws {
+        let legacy = Data(
+            #"{ "feature": "mediumEdge", "fallbackFeatures": ["jug", "largeEdge", "pocket"] }"#.utf8
+        )
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["feature"] as? String, "mediumEdge")
+        XCTAssertEqual(object["fallbackFeatures"] as? [String], ["largeEdge"])
+    }
+
+    func testUnknownFallbackFeatureIsRejected() {
+        let invalid = Data(#"{ "feature": "mediumEdge", "fallbackFeatures": ["unknownFeature"] }"#.utf8)
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(WorkoutTargetDefinition.self, from: invalid)
+        )
+    }
+
+    func testCanonicalPocketKindTargetRetainsFingerCapacityWhenEncoded() throws {
+        let canonical = Data(#"{ "kind": "pocket", "fingerCapacity": 3 }"#.utf8)
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: canonical)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "pocket")
+        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
+    }
+
     func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
         XCTAssertNil(FingerConfiguration(engagedFingers: []))
 
@@ -393,11 +457,11 @@ final class PlanStorageTests: XCTestCase {
                 id: "undefined",
                 duration: 60,
                 phase: .pull,
-                targets: [.feature(.jug, fallbacks: [])],
+                targets: [.kind(.jug)],
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.jug, fallbacks: [])],
+                        targets: [.kind(.jug)],
                         timing: .undefined,
                         duration: nil
                     )
@@ -426,7 +490,7 @@ final class PlanStorageTests: XCTestCase {
         )
         XCTAssertEqual(
             resolvedSteps[3].segments,
-            [WorkoutSegment(kind: .work, target: .feature(.jug), timing: .undefined, duration: nil)]
+            [WorkoutSegment(kind: .work, target: .kind(.jug), timing: .undefined, duration: nil)]
         )
     }
 
@@ -1005,7 +1069,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.pocket),
+                    target: .kind(.pocket),
                     timing: .fixed,
                     duration: 5
                 )
@@ -1123,7 +1187,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
         XCTAssertEqual(
             step.targets,
-            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)]
+            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)]
         )
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
@@ -2114,6 +2178,18 @@ final class PlanStorageTests: XCTestCase {
             "Expected PlanLibrary.json in the HangTenTests bundle."
         )
         return try Data(contentsOf: url)
+    }
+
+    private func fallbackFeatureAliases(in value: Any) -> [String] {
+        if let object = value as? [String: Any] {
+            let aliases = (object["fallbackFeatures"] as? [String] ?? [])
+                .filter { $0 == "jug" || $0 == "pocket" }
+            return aliases + object.values.flatMap(fallbackFeatureAliases)
+        }
+        if let array = value as? [Any] {
+            return array.flatMap(fallbackFeatureAliases)
+        }
+        return []
     }
 }
 

@@ -117,7 +117,24 @@ internal enum BoardTargetResolver {
             return []
         }
         guard let kind = target.kind else { return [] }
-        return holds.filter { $0.kind == kind }.map(\.id)
+        let matches = holds.filter { hold in
+            guard hold.kind == kind else { return false }
+            guard let capacity = target.fingerCapacity else { return true }
+            return hold.fingerCapacity == capacity
+        }
+        if kind == .pocket, target.fingerCapacity != nil {
+            return oneHoldPerHand(from: matches).map(\.id)
+        }
+        if !matches.isEmpty { return matches.map(\.id) }
+        for fallback in target.fallbackFeatures {
+            let fallbackMatches = matching(
+                fallback,
+                fingerCapacity: target.fingerCapacity,
+                among: holds
+            )
+            if !fallbackMatches.isEmpty { return fallbackMatches.map(\.id) }
+        }
+        return []
     }
 
     static func resolveHolds(
@@ -139,7 +156,7 @@ internal enum BoardTargetResolver {
         if !primary.isEmpty { return primary }
         let closestPrimary = closestMatch(for: target, among: holds)
         if !closestPrimary.isEmpty { return closestPrimary }
-        guard target.feature?.holdKind == .pocket else { return [] }
+        guard target.feature?.holdKind == .pocket || target.kind == .pocket else { return [] }
         for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
             let fallbackTarget = HoldTarget.feature(
                 fallback,
@@ -202,7 +219,16 @@ internal enum BoardTargetResolver {
             holds.filter { $0.kind == kind },
             target: target
         )
-        if !sameKind.isEmpty { return sameKind.map(\.id) }
+        if !sameKind.isEmpty {
+            if kind == .pocket, target.fingerCapacity != nil {
+                return oneHoldPerHand(from: sameKind).map(\.id)
+            }
+            return sameKind.map(\.id)
+        }
+        for fallback in target.fallbackFeatures {
+            let matches = sameKindOrGroup(fallback, target: target, among: holds)
+            if !matches.isEmpty { return matches }
+        }
         guard kind == .edge else { return [] }
         return crossKindPockets(for: target, among: holds).map(\.id)
     }

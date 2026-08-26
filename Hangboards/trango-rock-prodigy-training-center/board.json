@@ -225,9 +225,6 @@
       "id": "jug-left",
       "name": "Left jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -349,9 +346,6 @@
       "id": "jug-right",
       "name": "Right jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {

@@ -11,9 +11,6 @@
       "id": "top-jug",
       "name": "Full-width top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -214,9 +211,6 @@
       "name": "Left mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -313,9 +307,6 @@
       "name": "Right mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
