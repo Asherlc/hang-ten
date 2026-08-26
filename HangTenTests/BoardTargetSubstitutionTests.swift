@@ -18,7 +18,8 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         fingerCapacity: Int? = nil,
         sizeMillimeters: Double? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
-        x: Double = 0
+        x: Double = 0,
+        y: Double = 0
     ) -> BoardHold {
         BoardHold(
             id: id,
@@ -26,7 +27,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             shortLabel: id,
             detail: id,
             kind: kind,
-            frame: HoldFrame(x: x, y: 0, width: 0.1, height: 0.1),
+            frame: HoldFrame(x: x, y: y, width: 0.1, height: 0.1),
             sizeMillimeters: sizeMillimeters,
             fingerCapacity: fingerCapacity,
             depthRangeMillimeters: depthRangeMillimeters,
@@ -92,6 +93,32 @@ final class BoardTargetSubstitutionTests: XCTestCase {
                 on: compactII
             ),
             ["pocket-29-three-left", "pocket-29-three-right"]
+        )
+    }
+
+    func testGenericPocketFallbackDoesNotPairACenteredPocketAsTheOtherHand() {
+        let board = board(holds: [
+            hold(id: "left-three", kind: .pocket, fingerCapacity: 3, x: 0.1),
+            hold(id: "center-four", kind: .pocket, fingerCapacity: 4, x: 0.46)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            ["left-three"]
+        )
+    }
+
+    func testGenericPocketFallbackPrefersSameRowMirroredPairOverCrossRowPair() {
+        let board = board(holds: [
+            hold(id: "left-same-row", kind: .pocket, fingerCapacity: 3, x: 0.1, y: 0.2),
+            hold(id: "right-same-row", kind: .pocket, fingerCapacity: 3, x: 0.75, y: 0.2),
+            hold(id: "left-cross-row", kind: .pocket, fingerCapacity: 3, x: 0.2, y: 0.8),
+            hold(id: "right-cross-row", kind: .pocket, fingerCapacity: 3, x: 0.7, y: 0.1)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            ["left-same-row", "right-same-row"]
         )
     }
 

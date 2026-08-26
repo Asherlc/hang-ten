@@ -251,9 +251,11 @@ internal enum BoardTargetResolver {
         guard let representative = rankedRepresentative else { return [] }
 
         if feature.holdKind == .pocket {
-            if target.fingerCapacity == nil,
-               let symmetricPockets = symmetricPocketPair(from: preferredSameKind) {
-                return symmetricPockets.map(\.id)
+            if target.fingerCapacity == nil {
+                if let symmetricPockets = symmetricPocketPair(from: preferredSameKind) {
+                    return symmetricPockets.map(\.id)
+                }
+                return [representative.id]
             }
             let pairedPockets = oneHoldPerHand(from: preferredSameKind)
             if pairedPockets.count == 2 { return pairedPockets.map(\.id) }
@@ -316,7 +318,7 @@ internal enum BoardTargetResolver {
 
     /// Generic pocket cues need a usable two-handed pair. Choose matching
     /// capacity pockets on opposite, non-central board halves and prefer the
-    /// pair whose centers are closest to a horizontal reflection.
+    /// pair whose centers and frames are closest to a horizontal reflection.
     private static func symmetricPocketPair(from holds: [BoardHold]) -> [BoardHold]? {
         let left = holds.filter { $0.frame.x + $0.frame.width <= 0.5 }
         let right = holds.filter { $0.frame.x >= 0.5 }
@@ -326,16 +328,41 @@ internal enum BoardTargetResolver {
                 return (leftHold, rightHold)
             }
         }
-        guard let pair = pairs.min(by: { symmetryDistance(of: $0) < symmetryDistance(of: $1) }) else {
+        guard let pair = pairs.min(by: { isMoreSymmetric($0, than: $1) }) else {
             return nil
         }
         return [pair.0, pair.1]
     }
 
-    private static func symmetryDistance(of pair: (BoardHold, BoardHold)) -> Double {
+    private static func isMoreSymmetric(
+        _ lhs: (BoardHold, BoardHold),
+        than rhs: (BoardHold, BoardHold)
+    ) -> Bool {
+        let lhsScore = symmetryScore(of: lhs)
+        let rhsScore = symmetryScore(of: rhs)
+        if lhsScore.verticalAlignment != rhsScore.verticalAlignment {
+            return lhsScore.verticalAlignment < rhsScore.verticalAlignment
+        }
+        if lhsScore.horizontalReflection != rhsScore.horizontalReflection {
+            return lhsScore.horizontalReflection < rhsScore.horizontalReflection
+        }
+        return lhsScore.frameDifference < rhsScore.frameDifference
+    }
+
+    private static func symmetryScore(of pair: (BoardHold, BoardHold)) -> (
+        verticalAlignment: Double,
+        horizontalReflection: Double,
+        frameDifference: Double
+    ) {
         let leftCenter = pair.0.frame.x + pair.0.frame.width / 2
         let rightCenter = pair.1.frame.x + pair.1.frame.width / 2
-        return abs(leftCenter - (1 - rightCenter))
+        let leftVerticalCenter = pair.0.frame.y + pair.0.frame.height / 2
+        let rightVerticalCenter = pair.1.frame.y + pair.1.frame.height / 2
+        return (
+            abs(leftVerticalCenter - rightVerticalCenter),
+            abs(leftCenter - (1 - rightCenter)),
+            abs(pair.0.frame.width - pair.1.frame.width) + abs(pair.0.frame.height - pair.1.frame.height)
+        )
     }
 
     /// A bilateral target represents a two-handed hang, so highlight one
