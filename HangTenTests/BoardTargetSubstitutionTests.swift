@@ -83,6 +83,18 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
     }
 
+    func testGenericPocketFallbackOnCompactIIUsesMirroredThreeFingerPair() {
+        let compactII = BoardCatalog.board(for: "metolius.wood-grips-compact-ii")
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .feature(.pocket),
+                on: compactII
+            ),
+            ["pocket-29-three-left", "pocket-29-three-right"]
+        )
+    }
+
     func testSameKindEdgeCandidateOutranksPocketSubstitution() {
         let board = board(holds: [
             hold(id: "edge", kind: .edge, feature: .mediumEdge),

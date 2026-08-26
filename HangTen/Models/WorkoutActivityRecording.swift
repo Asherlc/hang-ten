@@ -251,6 +251,10 @@ internal enum BoardTargetResolver {
         guard let representative = rankedRepresentative else { return [] }
 
         if feature.holdKind == .pocket {
+            if target.fingerCapacity == nil,
+               let symmetricPockets = symmetricPocketPair(from: preferredSameKind) {
+                return symmetricPockets.map(\.id)
+            }
             let pairedPockets = oneHoldPerHand(from: preferredSameKind)
             if pairedPockets.count == 2 { return pairedPockets.map(\.id) }
         }
@@ -308,6 +312,30 @@ internal enum BoardTargetResolver {
             return oneHoldPerHand(from: pockets)
         }
         return pockets.filter { $0.fingerCapacity == capacity }
+    }
+
+    /// Generic pocket cues need a usable two-handed pair. Choose matching
+    /// capacity pockets on opposite, non-central board halves and prefer the
+    /// pair whose centers are closest to a horizontal reflection.
+    private static func symmetricPocketPair(from holds: [BoardHold]) -> [BoardHold]? {
+        let left = holds.filter { $0.frame.x + $0.frame.width <= 0.5 }
+        let right = holds.filter { $0.frame.x >= 0.5 }
+        let pairs = left.flatMap { leftHold in
+            right.compactMap { rightHold -> (BoardHold, BoardHold)? in
+                guard leftHold.fingerCapacity == rightHold.fingerCapacity else { return nil }
+                return (leftHold, rightHold)
+            }
+        }
+        guard let pair = pairs.min(by: { symmetryDistance(of: $0) < symmetryDistance(of: $1) }) else {
+            return nil
+        }
+        return [pair.0, pair.1]
+    }
+
+    private static func symmetryDistance(of pair: (BoardHold, BoardHold)) -> Double {
+        let leftCenter = pair.0.frame.x + pair.0.frame.width / 2
+        let rightCenter = pair.1.frame.x + pair.1.frame.width / 2
+        return abs(leftCenter - (1 - rightCenter))
     }
 
     /// A bilateral target represents a two-handed hang, so highlight one
