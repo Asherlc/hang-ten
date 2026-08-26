@@ -95,10 +95,9 @@ supported feature-tag set for the edge tiers.
   contacts, while the package combined the left/right #9 and #11 contacts and
   had no #10 contacts. The later geometry reconciliation below supersedes this
   inventory blocker; metadata-ledger certification remains a separate step.
-- `dewoodstok.woodbord` remains outside `reviewedBoardIDs`. No current primary
-  DeWoodstok product page, manual, or labelled official view was retrievable,
-  so even the mandatory per-hold `kind` values cannot be source-verified.
-  Retailer lists were not substituted for manufacturer evidence.
+- At the time of this metadata batch, `dewoodstok-woodbord` remained outside
+  `reviewedBoardIDs`. The later primary-source reconciliation below supersedes
+  that evidence blocker and certifies the 17-contact package.
 
 ## 2026-08-25 direct geometry reconciliation: Escape Beta Board
 
@@ -130,3 +129,38 @@ independent left/right #9, #10, and #11 regions aligned to the three official
 center tiers. The inventory repair does not itself add the board to the shared
 metadata ledger; unsupported range, capacity, grip, and feature fields remain
 blank for the six sloper-edge records.
+
+## 2026-08-25 source-audited metadata: DeWoodstok Woodbord
+
+The earlier primary-source blocker is superseded by the current
+[manufacturer product page](https://www.dewoodstok.nl/product/hangboard-woodbord/),
+[official media kit](https://www.dewoodstok.nl/media-kits/),
+[straight-on media-kit front](https://www.dewoodstok.nl/wp-content/uploads/2025/10/05_C_woodbord.jpg),
+and [official oblique view](https://www.dewoodstok.nl/wp-content/uploads/2025/10/05_B_woodbord.jpg).
+The product page identifies one large declining top rim, six depth families of
+four-finger pockets (13, 16, 20, 25, 30, and 35 mm), and two depth families of
+two-finger pockets (20 and 35 mm). The official views show that inventory as
+one continuous rim plus 16 physically separate front cavities.
+
+| Official contact family | Stable hold ID(s) | Verified package kind | Per-ID optional fields |
+| --- | --- | --- | --- |
+| One large declining rim | `top-rim` | `sloper` | All omitted; finger capacity is not applicable |
+| Sixteen separate front pocket cavities | `front-upper-1` through `front-upper-6`; `front-middle-1` through `front-middle-4`; `front-lower-1` through `front-lower-6` | `pocket` | All omitted because the family depths and capacities have no positioned map |
+
+`sloper` is a documented closed-taxonomy adaptation of the manufacturer's
+exact “declining rim” wording. The package path represents that same one
+continuous physical top surface, so the kind correction required no geometry
+change. The product page makes `pocket` the exhaustive category for all 16
+front cavities, but it does not assign a depth or two-/four-finger capacity to
+an exact cavity. The former capacities were therefore removed; apparent cavity
+width was not used as evidence. Scalar depth, depth range, hand capacity,
+`gripType`, and `features` also remain blank for every stable ID.
+
+The review-only Workbench capture is
+`.context/hangboard-metadata-backfill-icky-cow/dewoodstok-source-audit/dewoodstok-woodbord--e40376735372.png`.
+Manual review confirmed one `top-rim` overlay across the visible continuous top
+surface and one non-overlapping overlay on each of the 16 front cavities. The
+capture did not alter or generate geometry. The canonical ledger accounts for
+all 119 seven-field outcomes across the board's 17 physical contacts: 17
+verified kinds, one not-applicable top-rim finger capacity, and 101 deliberate
+unavailable optional outcomes.

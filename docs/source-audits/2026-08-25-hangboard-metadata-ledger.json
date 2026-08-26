@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewedBoardIDs": [
+    "dewoodstok-woodbord",
     "escape.unlimited",
     "evolv-kilter-basic-long",
     "frictitious.doormount-pro-7",
@@ -33681,6 +33682,321 @@
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
       "reason": "The use guide names a Wide Pinch but provides no positional diagram mapping it to this exact physical contact; the legacy stable ID and display name are identity only."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "top-rim"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Large declining rim; sloper is the documented closed-taxonomy adaptation"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "top-rim"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Large declining rim"
+      },
+      "reason": "The manufacturer identifies the declining rim but publishes no scalar contact depth for it."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "top-rim"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Large declining rim"
+      },
+      "reason": "The manufacturer publishes no lower/upper depth range for the declining rim."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "top-rim"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Large declining rim"
+      },
+      "reason": "The official source identifies this as a non-pocket contact, so fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "top-rim"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Large declining rim"
+      },
+      "reason": "The manufacturer does not state maximum simultaneous hand capacity for the rim."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "top-rim"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Large declining rim"
+      },
+      "reason": "The manufacturer does not prescribe one exact supported package grip posture for the rim."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "top-rim"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Large declining rim"
+      },
+      "reason": "The manufacturer's rim wording has no exact supported package feature tag."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "front-upper-1",
+        "front-upper-2",
+        "front-upper-3",
+        "front-upper-4",
+        "front-upper-5",
+        "front-upper-6",
+        "front-middle-1",
+        "front-middle-2",
+        "front-middle-3",
+        "front-middle-4",
+        "front-lower-1",
+        "front-lower-2",
+        "front-lower-3",
+        "front-lower-4",
+        "front-lower-5",
+        "front-lower-6"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Six depth families of four-finger pockets and two depth families of two-finger pockets; official front maps the exhaustive pocket family to 16 physical front cavities"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "front-upper-1",
+        "front-upper-2",
+        "front-upper-3",
+        "front-upper-4",
+        "front-upper-5",
+        "front-upper-6",
+        "front-middle-1",
+        "front-middle-2",
+        "front-middle-3",
+        "front-middle-4",
+        "front-lower-1",
+        "front-lower-2",
+        "front-lower-3",
+        "front-lower-4",
+        "front-lower-5",
+        "front-lower-6"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Grouped pocket depths: four-finger 13/16/20/25/30/35 mm; two-finger 20/35 mm"
+      },
+      "reason": "The manufacturer publishes grouped pocket-depth families but no positioned map assigning one depth to any exact stable ID."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "front-upper-1",
+        "front-upper-2",
+        "front-upper-3",
+        "front-upper-4",
+        "front-upper-5",
+        "front-upper-6",
+        "front-middle-1",
+        "front-middle-2",
+        "front-middle-3",
+        "front-middle-4",
+        "front-lower-1",
+        "front-lower-2",
+        "front-lower-3",
+        "front-lower-4",
+        "front-lower-5",
+        "front-lower-6"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Grouped pocket depths without a positioned stable-ID map"
+      },
+      "reason": "The manufacturer publishes discrete grouped depths, not a lower/upper range for any exact stable ID."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "front-upper-1",
+        "front-upper-2",
+        "front-upper-3",
+        "front-upper-4",
+        "front-upper-5",
+        "front-upper-6",
+        "front-middle-1",
+        "front-middle-2",
+        "front-middle-3",
+        "front-middle-4",
+        "front-lower-1",
+        "front-lower-2",
+        "front-lower-3",
+        "front-lower-4",
+        "front-lower-5",
+        "front-lower-6"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Grouped four-finger and two-finger pocket families without a positioned stable-ID map"
+      },
+      "reason": "The manufacturer publishes grouped capacities but does not map either capacity to exact stable IDs; apparent cavity width is not evidence."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "front-upper-1",
+        "front-upper-2",
+        "front-upper-3",
+        "front-upper-4",
+        "front-upper-5",
+        "front-upper-6",
+        "front-middle-1",
+        "front-middle-2",
+        "front-middle-3",
+        "front-middle-4",
+        "front-lower-1",
+        "front-lower-2",
+        "front-lower-3",
+        "front-lower-4",
+        "front-lower-5",
+        "front-lower-6"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Pocket family inventory"
+      },
+      "reason": "The manufacturer does not state maximum simultaneous hand capacity for any exact front cavity."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "front-upper-1",
+        "front-upper-2",
+        "front-upper-3",
+        "front-upper-4",
+        "front-upper-5",
+        "front-upper-6",
+        "front-middle-1",
+        "front-middle-2",
+        "front-middle-3",
+        "front-middle-4",
+        "front-lower-1",
+        "front-lower-2",
+        "front-lower-3",
+        "front-lower-4",
+        "front-lower-5",
+        "front-lower-6"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Grouped four-finger and two-finger pocket families without a positioned stable-ID map"
+      },
+      "reason": "The grouped capacity families cannot support one exact package pocket-grip enum for an individual stable ID."
+    },
+    {
+      "boardID": "dewoodstok-woodbord",
+      "holdIDs": [
+        "front-upper-1",
+        "front-upper-2",
+        "front-upper-3",
+        "front-upper-4",
+        "front-upper-5",
+        "front-upper-6",
+        "front-middle-1",
+        "front-middle-2",
+        "front-middle-3",
+        "front-middle-4",
+        "front-lower-1",
+        "front-lower-2",
+        "front-lower-3",
+        "front-lower-4",
+        "front-lower-5",
+        "front-lower-6"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+        "label": "Pocket family inventory"
+      },
+      "reason": "The manufacturer establishes no exact supported package feature-tag set for any individual front cavity."
     }
   ]
 }

@@ -207,6 +207,7 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
     )
 
     assert report.reviewed_board_ids == (
+        "dewoodstok-woodbord",
         "escape.unlimited",
         "evolv-kilter-basic-long",
         "frictitious.doormount-pro-7",

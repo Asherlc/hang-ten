@@ -43,8 +43,8 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
         presentation_size = image.size
 
     assert tuple(holds) == EXPECTED_HOLDS
-    assert Counter(hold.kind for hold in holds.values()) == {"pocket": 16, "jug": 1}
-    assert holds["top-rim"].kind == "jug"
+    assert Counter(hold.kind for hold in holds.values()) == {"pocket": 16, "sloper": 1}
+    assert holds["top-rim"].kind == "sloper"
     assert all(holds[hold_id].kind == "pocket" for hold_id in EXPECTED_HOLDS[1:])
 
     for hold in holds.values():
@@ -85,5 +85,9 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert symmetry_axis_x is not None
     assert 0 < symmetry_axis_x < presentation_size[0]
 
-    capacities = Counter(hold.finger_capacity for hold in holds.values())
-    assert capacities == {4: 12, 2: 4, None: 1}
+    assert all(hold.size_millimeters is None for hold in holds.values())
+    assert all(hold.depth_range_millimeters is None for hold in holds.values())
+    assert all(hold.finger_capacity is None for hold in holds.values())
+    assert all(hold.hand_capacity is None for hold in holds.values())
+    assert all(hold.grip_type is None for hold in holds.values())
+    assert all(not hold.features for hold in holds.values())
