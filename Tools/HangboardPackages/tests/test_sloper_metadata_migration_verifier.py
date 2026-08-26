@@ -101,6 +101,28 @@ def test_allows_only_new_hold_sloper_values(tmp_path: Path) -> None:
     assert result.stdout == "Verified sloper-only board JSON changes in 1 file.\n"
 
 
+def test_uses_merge_base_when_base_and_head_have_diverged(tmp_path: Path) -> None:
+    repository, base, base_document = _initialize_repository(tmp_path)
+    _run_git(repository, "branch", "target", base)
+    _run_git(repository, "switch", "--quiet", "target")
+
+    document = copy.deepcopy(base_document)
+    document["name"] = "Target branch board name"
+    _write_json(repository / "Hangboards/fixture/board.json", document)
+    _commit_head(repository)
+
+    _run_git(repository, "switch", "--quiet", "--detach", base)
+    document = copy.deepcopy(base_document)
+    document["holds"][0]["sloper"] = {"type": "flat"}
+    _write_json(repository / "Hangboards/fixture/board.json", document)
+    head = _commit_head(repository)
+
+    result = _run_verifier(repository, "target", head)
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "Verified sloper-only board JSON changes in 1 file.\n"
+
+
 def _change_geometry(document: dict[str, Any]) -> None:
     document["holds"][0]["geometry"][0]["frame"]["x"] = 0.2
 

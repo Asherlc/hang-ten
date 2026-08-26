@@ -50,6 +50,15 @@ def _changed_paths(base: str, head: str) -> list[str]:
     return sorted(path for path in result.stdout.split("\0") if path)
 
 
+def _merge_base(base: str, head: str) -> str:
+    result = _git_text("merge-base", base, head)
+    merge_base = result.stdout.strip()
+    if result.returncode != 0 or not merge_base:
+        message = result.stderr.strip() or "no common ancestor"
+        raise VerificationError(f"could not find merge base for {base} and {head}: {message}")
+    return merge_base
+
+
 def _is_board_json(path: str) -> bool:
     parts = PurePosixPath(path).parts
     return (
@@ -155,7 +164,8 @@ def _verify_board_json(base: object, head: object, path: str) -> None:
 
 def verify(base: str, head: str) -> int:
     board_paths: list[str] = []
-    for path in _changed_paths(base, head):
+    merge_base = _merge_base(base, head)
+    for path in _changed_paths(merge_base, head):
         if path in _TRAINING_PLAN_PATHS:
             raise VerificationError(f"{path}: training-plan source path changed")
         if path.startswith("Hangboards/"):
@@ -166,7 +176,7 @@ def verify(base: str, head: str) -> int:
             board_paths.append(path)
 
     for path in board_paths:
-        base_document = _load_json_at(base, path, "base")
+        base_document = _load_json_at(merge_base, path, "merge base")
         head_document = _load_json_at(head, path, "head")
         _verify_board_json(base_document, head_document, path)
     return len(board_paths)
