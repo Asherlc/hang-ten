@@ -2,6 +2,37 @@ import XCTest
 @testable import HangTen
 
 final class MotherboardModelsTests: XCTestCase {
+    func testForceRockerCentersAtThresholdAndTiltsTowardLoadDirection() {
+        XCTAssertEqual(
+            MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: 10),
+            .centered
+        )
+        XCTAssertEqual(
+            MotherboardForceRocker.state(loadKGF: 5, thresholdKGF: 10),
+            .underTarget(tiltFraction: -0.5)
+        )
+        XCTAssertEqual(
+            MotherboardForceRocker.state(loadKGF: 25, thresholdKGF: 10),
+            .overTarget(tiltFraction: 1)
+        )
+        XCTAssertEqual(
+            MotherboardForceRocker.state(
+                loadKGF: Double.greatestFiniteMagnitude,
+                thresholdKGF: Double.leastNonzeroMagnitude
+            ),
+            .overTarget(tiltFraction: 1)
+        )
+    }
+
+    func testForceRockerIsUnavailableForMissingOrInvalidMeasurements() {
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: nil, thresholdKGF: 10), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: .nan, thresholdKGF: 10), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: -1, thresholdKGF: 10), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: 0), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: -1), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: .infinity), .unavailable)
+    }
+
     func testConnectionStateShowsWorkoutMeterOnlyWhileStreaming() {
         XCTAssertTrue(MotherboardConnectionState.streaming.showsWorkoutMeter)
 

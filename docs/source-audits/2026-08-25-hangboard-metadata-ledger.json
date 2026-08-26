@@ -11683,8 +11683,10 @@
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -11692,50 +11694,67 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "value": "edge"
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
-      },
-      "reason": "The source maps two published depths to this one continuous contact, so no single scalar depth applies."
-    },
-    {
-      "boardID": "tension.grindstone",
-      "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
-      ],
-      "field": "depthRangeMillimeters",
       "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "value": {
-        "lowerBound": 8,
-        "upperBound": 10
-      }
+      "value": 10
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-8-left",
+        "edge-8-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/grindstone",
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "value": 8
+    },
+    {
+      "boardID": "tension.grindstone",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/grindstone",
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The official source maps fixed scalar shelves and does not publish a lower/upper depth range for these contacts."
+    },
+    {
+      "boardID": "tension.grindstone",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -11743,15 +11762,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -11759,15 +11780,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The official source does not state simultaneous hand capacity for these contacts."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -11775,15 +11798,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -11791,15 +11816,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The official source does not publish an exact package feature-tag set for these contacts."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-30-25-left",
-        "edge-30-25-right"
+        "edge-30-left",
+        "edge-30-right",
+        "edge-25-left",
+        "edge-25-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -11807,50 +11834,67 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "30 mm and 25 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "value": "edge"
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-30-25-left",
-        "edge-30-25-right"
+        "edge-30-left",
+        "edge-30-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "30 mm and 25 mm edges; engraved front view maps each continuous stepped contact"
-      },
-      "reason": "The source maps two published depths to this one continuous contact, so no single scalar depth applies."
-    },
-    {
-      "boardID": "tension.grindstone",
-      "holdIDs": [
-        "edge-30-25-left",
-        "edge-30-25-right"
-      ],
-      "field": "depthRangeMillimeters",
       "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "30 mm and 25 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "value": {
-        "lowerBound": 25,
-        "upperBound": 30
-      }
+      "value": 30
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-30-25-left",
-        "edge-30-25-right"
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/grindstone",
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "tension.grindstone",
+      "holdIDs": [
+        "edge-30-left",
+        "edge-30-right",
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/grindstone",
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The official source maps fixed scalar shelves and does not publish a lower/upper depth range for these contacts."
+    },
+    {
+      "boardID": "tension.grindstone",
+      "holdIDs": [
+        "edge-30-left",
+        "edge-30-right",
+        "edge-25-left",
+        "edge-25-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -11858,15 +11902,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "30 mm and 25 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-30-25-left",
-        "edge-30-25-right"
+        "edge-30-left",
+        "edge-30-right",
+        "edge-25-left",
+        "edge-25-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -11874,15 +11920,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "30 mm and 25 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The official source does not state simultaneous hand capacity for these contacts."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-30-25-left",
-        "edge-30-25-right"
+        "edge-30-left",
+        "edge-30-right",
+        "edge-25-left",
+        "edge-25-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -11890,15 +11938,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "30 mm and 25 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-30-25-left",
-        "edge-30-25-right"
+        "edge-30-left",
+        "edge-30-right",
+        "edge-25-left",
+        "edge-25-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -11906,9 +11956,9 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "30 mm and 25 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "30 mm and 25 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The official source does not publish an exact package feature-tag set for these contacts."
     },
     {
       "boardID": "tension.grindstone",
@@ -12018,8 +12068,10 @@
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -12027,50 +12079,67 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "value": "edge"
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
-      },
-      "reason": "The source maps two published depths to this one continuous contact, so no single scalar depth applies."
-    },
-    {
-      "boardID": "tension.grindstone",
-      "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
-      ],
-      "field": "depthRangeMillimeters",
       "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "value": {
-        "lowerBound": 15,
-        "upperBound": 20
-      }
+      "value": 20
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/grindstone",
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "tension.grindstone",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/grindstone",
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The official source maps fixed scalar shelves and does not publish a lower/upper depth range for these contacts."
+    },
+    {
+      "boardID": "tension.grindstone",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -12078,15 +12147,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -12094,15 +12165,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The official source does not state simultaneous hand capacity for these contacts."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -12110,15 +12183,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
     },
     {
       "boardID": "tension.grindstone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -12126,9 +12201,9 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/grindstone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The official source does not publish an exact package feature-tag set for these contacts."
     },
     {
       "boardID": "tension.honestone",
@@ -12350,8 +12425,10 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -12359,50 +12436,67 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "value": "edge"
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
-      },
-      "reason": "The source maps two published depths to this one continuous contact, so no single scalar depth applies."
-    },
-    {
-      "boardID": "tension.honestone",
-      "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
-      ],
-      "field": "depthRangeMillimeters",
       "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "value": {
-        "lowerBound": 15,
-        "upperBound": 20
-      }
+      "value": 20
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The official source maps fixed scalar shelves and does not publish a lower/upper depth range for these contacts."
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -12410,15 +12504,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -12426,15 +12522,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The official source does not state simultaneous hand capacity for these contacts."
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -12442,15 +12540,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-20-15-left",
-        "edge-20-15-right"
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -12458,9 +12558,9 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The official source does not publish an exact package feature-tag set for these contacts."
     },
     {
       "boardID": "tension.honestone",
@@ -12570,8 +12670,10 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -12579,50 +12681,67 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "value": "edge"
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
-      },
-      "reason": "The source maps two published depths to this one continuous contact, so no single scalar depth applies."
-    },
-    {
-      "boardID": "tension.honestone",
-      "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
-      ],
-      "field": "depthRangeMillimeters",
       "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "value": {
-        "lowerBound": 8,
-        "upperBound": 10
-      }
+      "value": 10
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-8-left",
+        "edge-8-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "value": 8
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The official source maps fixed scalar shelves and does not publish a lower/upper depth range for these contacts."
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -12630,15 +12749,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -12646,15 +12767,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The official source does not state simultaneous hand capacity for these contacts."
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -12662,15 +12785,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "edge-10-8-left",
-        "edge-10-8-right"
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -12678,9 +12803,9 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The official source does not publish an exact package feature-tag set for these contacts."
     },
     {
       "boardID": "tension.whetstone",
@@ -12902,8 +13027,10 @@
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-40-30-left",
-        "edge-40-30-right"
+        "edge-40-left",
+        "edge-40-right",
+        "edge-30-left",
+        "edge-30-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -12911,50 +13038,67 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "40 mm and 30 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "value": "edge"
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-40-30-left",
-        "edge-40-30-right"
+        "edge-40-left",
+        "edge-40-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "40 mm and 30 mm edges; engraved front view maps each continuous stepped contact"
-      },
-      "reason": "The source maps two published depths to this one continuous contact, so no single scalar depth applies."
-    },
-    {
-      "boardID": "tension.whetstone",
-      "holdIDs": [
-        "edge-40-30-left",
-        "edge-40-30-right"
-      ],
-      "field": "depthRangeMillimeters",
       "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "40 mm and 30 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "value": {
-        "lowerBound": 30,
-        "upperBound": 40
-      }
+      "value": 40
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-40-30-left",
-        "edge-40-30-right"
+        "edge-30-left",
+        "edge-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/whetstone",
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "tension.whetstone",
+      "holdIDs": [
+        "edge-40-left",
+        "edge-40-right",
+        "edge-30-left",
+        "edge-30-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/whetstone",
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The official source maps fixed scalar shelves and does not publish a lower/upper depth range for these contacts."
+    },
+    {
+      "boardID": "tension.whetstone",
+      "holdIDs": [
+        "edge-40-left",
+        "edge-40-right",
+        "edge-30-left",
+        "edge-30-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -12962,15 +13106,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "40 mm and 30 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-40-30-left",
-        "edge-40-30-right"
+        "edge-40-left",
+        "edge-40-right",
+        "edge-30-left",
+        "edge-30-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -12978,15 +13124,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "40 mm and 30 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The official source does not state simultaneous hand capacity for these contacts."
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-40-30-left",
-        "edge-40-30-right"
+        "edge-40-left",
+        "edge-40-right",
+        "edge-30-left",
+        "edge-30-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -12994,15 +13142,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "40 mm and 30 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-40-30-left",
-        "edge-40-30-right"
+        "edge-40-left",
+        "edge-40-right",
+        "edge-30-left",
+        "edge-30-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -13010,9 +13160,9 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "40 mm and 30 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "40 mm and 30 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The official source does not publish an exact package feature-tag set for these contacts."
     },
     {
       "boardID": "tension.whetstone",
@@ -13122,8 +13272,10 @@
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-25-20-left",
-        "edge-25-20-right"
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-left",
+        "edge-20-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -13131,50 +13283,67 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "25 mm and 20 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "value": "edge"
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-25-20-left",
-        "edge-25-20-right"
+        "edge-25-left",
+        "edge-25-right"
       ],
       "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "25 mm and 20 mm edges; engraved front view maps each continuous stepped contact"
-      },
-      "reason": "The source maps two published depths to this one continuous contact, so no single scalar depth applies."
-    },
-    {
-      "boardID": "tension.whetstone",
-      "holdIDs": [
-        "edge-25-20-left",
-        "edge-25-20-right"
-      ],
-      "field": "depthRangeMillimeters",
       "outcome": "verified",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "25 mm and 20 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "value": {
-        "lowerBound": 20,
-        "upperBound": 25
-      }
+      "value": 25
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-25-20-left",
-        "edge-25-20-right"
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/whetstone",
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "tension.whetstone",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/whetstone",
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The official source maps fixed scalar shelves and does not publish a lower/upper depth range for these contacts."
+    },
+    {
+      "boardID": "tension.whetstone",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-left",
+        "edge-20-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -13182,15 +13351,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "25 mm and 20 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-25-20-left",
-        "edge-25-20-right"
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-left",
+        "edge-20-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -13198,15 +13369,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "25 mm and 20 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The official source does not state simultaneous hand capacity for these contacts."
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-25-20-left",
-        "edge-25-20-right"
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-left",
+        "edge-20-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -13214,15 +13387,17 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "25 mm and 20 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
     },
     {
       "boardID": "tension.whetstone",
       "holdIDs": [
-        "edge-25-20-left",
-        "edge-25-20-right"
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-left",
+        "edge-20-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -13230,9 +13405,9 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
-        "label": "25 mm and 20 mm edges; engraved front view maps each continuous stepped contact"
+        "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The official source does not publish an exact package feature-tag set for these contacts."
     },
     {
       "boardID": "soill.iron-palm-2",

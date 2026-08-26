@@ -162,6 +162,14 @@ def _presentation_image_url(board_id: str, presentation_id: str) -> str:
     return f"/api/boards/{board_id}/image?presentationID={presentation_id}"
 
 
+def _hold_needs_attention(hold: dict[str, object]) -> bool:
+    return (
+        hold["kind"] in {"edge", "pocket"}
+        and "sizeMillimeters" not in hold
+        and "depthRangeMillimeters" not in hold
+    )
+
+
 def _board_payload(
     package: BoardPackage,
     *,
@@ -173,6 +181,9 @@ def _board_payload(
         "boardId": board_id,
         "displayName": _display_name(package),
         "holdCount": len(package.hold_ids),
+        "needsAttention": any(
+            _hold_needs_attention(hold) for hold in package.board["holds"]
+        ),
         "href": f"/api/boards/{board_id}",
         "imageUrl": f"/api/boards/{board_id}/image",
     }

@@ -103,11 +103,11 @@ does not supply a physical type, measurement, capacity, posture, or feature.
 
 The package remains deliberately excluded from the canonical reviewed metadata
 ledger. Beastmaker publishes a grouped inventory, but no numbered or positioned
-type guide for the 19 mixed front contacts below:
+type guide for the 17 mixed front contacts below:
 
 - `front-middle-1` through `front-middle-9`;
-- `front-lower-1` through `front-lower-4` and `front-lower-6` through
-  `front-lower-9`; and
+- `front-lower-2` through `front-lower-4` and `front-lower-6` through
+  `front-lower-8`; and
 - the nested contacts `hold-26` and `hold-27`.
 
 Those source families mix a four-finger jug, big and little edges, several
@@ -115,10 +115,12 @@ pocket families, and monos. The official unlabelled front does not establish
 which stable ID belongs to which family. Therefore their existing mandatory
 `kind` values are unchanged but not certified. The already source-mapped
 exceptions are the five top slopers, the two upper “Back 2 Pockets,” and the
-central 22 mm middle edge. A Beastmaker-published positioned guide or direct
-written manufacturer clarification is required before this board can enter
-`reviewedBoardIDs`; a retailer diagram or a visual-width inference is not a
-substitute.
+central 22 mm middle edge. A later source re-review also established
+`front-lower-{1,9}` as the mirrored outer “Big and little edges” pair, as
+recorded in the [all-board audit](2026-08-25-all-board-hold-audit.md#corrected-mapping-beastmaker-2000).
+A Beastmaker-published positioned guide or direct written manufacturer
+clarification is required before this board can enter `reviewedBoardIDs`; a
+retailer diagram or a visual-width inference is not a substitute.
 
 No `kind`, geometry, presentation asset, stable ID, or hold count changed in
 this cleanup. In particular, the directly reviewed compound parent paths

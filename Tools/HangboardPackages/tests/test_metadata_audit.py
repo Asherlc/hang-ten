@@ -107,13 +107,22 @@ def _package_with_metadata(tmp_path: Path) -> Path:
     document["holds"][0].update(
         {
             "sizeMillimeters": 18,
-            "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 14.5},
             "fingerCapacity": 2,
             "handCapacity": 1,
             "gripType": "halfCrimp",
             "features": ["smallEdge", "incutEdge"],
         }
     )
+    range_hold = dict(document["holds"][0])
+    range_hold.update(
+        {
+            "id": "hold-range",
+            "name": "Range hold",
+            "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 14.5},
+        }
+    )
+    range_hold.pop("sizeMillimeters")
+    document["holds"].append(range_hold)
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return package
 
@@ -125,12 +134,24 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
         "hold-left",
         verified_values={
             "sizeMillimeters": 18,
-            "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 14.5},
             "fingerCapacity": 2,
             "handCapacity": 1,
             "gripType": "halfCrimp",
             "features": ["smallEdge", "incutEdge"],
         },
+    )
+    records.extend(
+        _complete_records(
+            "fixture.board",
+            "hold-range",
+            verified_values={
+                "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 14.5},
+                "fingerCapacity": 2,
+                "handCapacity": 1,
+                "gripType": "halfCrimp",
+                "features": ["smallEdge", "incutEdge"],
+            },
+        )
     )
     ledger_path = _write_ledger(tmp_path, records)
 
@@ -144,25 +165,25 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
     assert report.fields["sizeMillimeters"].verified == 1
     assert report.fields["depthRangeMillimeters"].populated == 1
     assert report.fields["depthRangeMillimeters"].verified == 1
-    assert report.fields["features"].populated == 1
+    assert report.fields["features"].populated == 2
     assert report.boards[0].unaccounted_fields == 0
     assert report.to_json() == {
         "reviewedBoardIDs": ["fixture.board"],
         "fields": {
-            field: {
-                "populated": 1,
-                "verified": 1,
-                "unavailable": 0,
-                "notApplicable": 0,
-            }
-            for field in _FIELDS
+            "kind": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
+            "sizeMillimeters": {"populated": 1, "verified": 1, "unavailable": 1, "notApplicable": 0},
+            "depthRangeMillimeters": {"populated": 1, "verified": 1, "unavailable": 1, "notApplicable": 0},
+            "fingerCapacity": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
+            "handCapacity": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
+            "gripType": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
+            "features": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
         },
         "boards": [
             {
                 "boardID": "fixture.board",
-                "populated": 7,
-                "verified": 7,
-                "unavailable": 0,
+                "populated": 12,
+                "verified": 12,
+                "unavailable": 2,
                 "notApplicable": 0,
                 "unaccountedFields": 0,
             }

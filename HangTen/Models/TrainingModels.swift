@@ -399,6 +399,28 @@ struct BoardHold: Identifiable, Hashable {
     static let validFingerCapacityRange = 1...4
     static let validHandCapacityRange = 1...2
 
+    enum DepthMeasurement: Equatable {
+        case none
+        case fixed(Double)
+        case continuous(ClosedRange<Double>)
+
+        init?(
+            sizeMillimeters: Double?,
+            depthRangeMillimeters: ClosedRange<Double>?
+        ) {
+            switch (sizeMillimeters, depthRangeMillimeters) {
+            case (nil, nil):
+                self = .none
+            case (let size?, nil):
+                self = .fixed(size)
+            case (nil, let range?):
+                self = .continuous(range)
+            case (.some, .some):
+                return nil
+            }
+        }
+    }
+
     init(
         id: String,
         name: String,
@@ -413,6 +435,12 @@ struct BoardHold: Identifiable, Hashable {
         presentationID: String = BoardPresentation.primaryID
     ) {
         precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
+        guard let depthMeasurement = DepthMeasurement(
+            sizeMillimeters: sizeMillimeters,
+            depthRangeMillimeters: depthRangeMillimeters
+        ) else {
+            preconditionFailure("BoardHold must not specify both a size and depth range.")
+        }
         if let fingerCapacity {
             precondition(
                 Self.validFingerCapacityRange.contains(fingerCapacity),
@@ -441,8 +469,17 @@ struct BoardHold: Identifiable, Hashable {
             width: union.width,
             height: union.height
         )
-        self.sizeMillimeters = sizeMillimeters
-        self.depthRangeMillimeters = depthRangeMillimeters
+        switch depthMeasurement {
+        case .none:
+            self.sizeMillimeters = nil
+            self.depthRangeMillimeters = nil
+        case .fixed(let size):
+            self.sizeMillimeters = size
+            self.depthRangeMillimeters = nil
+        case .continuous(let range):
+            self.sizeMillimeters = nil
+            self.depthRangeMillimeters = range
+        }
         self.features = features
         self.presentationID = presentationID
     }

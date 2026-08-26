@@ -6,6 +6,7 @@ final class AppStore: ObservableObject {
     private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
     private static let selectedBoardIDKey = "HangTen.selectedBoardID.v1"
     private static let favoritePlanIDsKey = "favoritePlanIDs"
+    private static let favoriteBoardIDsKey = "favoriteBoardIDs"
 
     @Published private(set) var selectedBoard: TrainingBoard
     @Published private(set) var workoutHistory: WorkoutHistorySnapshot
@@ -15,6 +16,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var customPlans: [TrainingPlan]
     @Published private(set) var customRoutinePersistenceError: String?
     @Published private(set) var favoritePlanIDs: Set<String>
+    @Published private(set) var favoriteBoardIDs: Set<String>
     @Published private(set) var healthAuthorizationState: HealthAuthorizationState
     @Published private(set) var healthAuthorizationError: String?
     @Published private(set) var hasRequestedHealthAuthorization: Bool
@@ -67,6 +69,7 @@ final class AppStore: ObservableObject {
         sessionPersistenceError = resolvedSessionStore.persistenceError
 
         favoritePlanIDs = Set(defaults.stringArray(forKey: Self.favoritePlanIDsKey) ?? [])
+        favoriteBoardIDs = Set(defaults.stringArray(forKey: Self.favoriteBoardIDsKey) ?? [])
         let hasRequestedHealthAuthorization = defaults.bool(
             forKey: Self.healthAuthorizationRequestedKey
         )
@@ -249,6 +252,19 @@ final class AppStore: ObservableObject {
             favoritePlanIDs.insert(plan.id)
         }
         defaults.set(favoritePlanIDs.sorted(), forKey: Self.favoritePlanIDsKey)
+    }
+
+    func isFavorite(_ board: TrainingBoard) -> Bool {
+        favoriteBoardIDs.contains(board.id)
+    }
+
+    func toggleFavorite(_ board: TrainingBoard) {
+        if favoriteBoardIDs.contains(board.id) {
+            favoriteBoardIDs.remove(board.id)
+        } else {
+            favoriteBoardIDs.insert(board.id)
+        }
+        defaults.set(favoriteBoardIDs.sorted(), forKey: Self.favoriteBoardIDsKey)
     }
 
     var featuredPlan: TrainingPlan? {

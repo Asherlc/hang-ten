@@ -12,7 +12,7 @@ render or photograph.
 
 ## Result
 
-`kind` is complete: all 672 current hold records have one of the schema's five
+`kind` is complete: all 697 current hold records have one of the schema's five
 classes. A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
 gap: capacity is meaningful only for a source-labelled finger pocket. Likewise,
 `sizeMillimeters` is only used for a source-mapped single depth; a continuous
@@ -141,30 +141,50 @@ one-arm exercise wording likewise does not establish simultaneous hand
 capacity. No edge posture or wide-contact hand count was inferred from
 geometry.
 
-### Corrected source mappings
+### Discrete-contact correction
 
-The following are newly recorded structured mappings in this appendendum. The
-current product-page retrieval is **new evidence review**; the URLs and the
-official front-image mapping were already catalogued in the earlier source
-audits noted in the last column. No source fact was transferred between models.
+Re-reviewed 2026-08-25 under the catalog rule that manufacturer-labelled
+discrete shelves are individual scalar-depth holds, while a continuously
+variable rail remains one range-backed hold. This supersedes the earlier
+interpretation that a shared surrounding recess made all of its visibly
+stepped shelves one logical contact. The decisive evidence is not the mere
+presence of several numbers on a product page: the official labelled views
+map each number to a separate planar shelf divided by a visible vertical depth
+transition. The right-side paths are exact mirrors only where those same
+manufacturer views establish bilateral symmetry.
 
-| Package | Hold IDs | Added field | Evidence retrieved in this pass | Prior audit record |
+| Package | Retired range-backed IDs | Source-confirmed scalar replacements | Physical-contact evidence | Resulting inventory |
 | --- | --- | --- | --- | --- |
-| `tension-grindstone` | `edge-10-8-{left,right}` | 8–10 mm range | [Tension Grindstone](https://tensionclimbing.com/collections/bestsellers/products/grindstone) lists both 8 and 10 mm edges. | [So iLL/Tension audit](2026-08-12-soill-tension-board-packages.md#tension-grindstone) maps the visibly continuous paired stepped recesses. |
-| `tension-grindstone` | `edge-20-15-{left,right}` | 15–20 mm range | [Tension Grindstone](https://tensionclimbing.com/collections/bestsellers/products/grindstone) lists both 15 and 20 mm edges. | Same prior mapping. |
-| `tension-grindstone` | `edge-30-25-{left,right}` | 25–30 mm range | [Tension Grindstone](https://tensionclimbing.com/collections/bestsellers/products/grindstone) lists both 25 and 30 mm edges. | Same prior mapping. |
-| `tension-honestone` | `edge-10-8-{left,right}` | 8–10 mm range | [Tension Honestone](https://tensionclimbing.com/products/honestone) lists 8 and 10 mm edges. | [So iLL/Tension audit](2026-08-12-soill-tension-board-packages.md#tension-honestone) maps the continuous paired recesses. |
-| `tension-honestone` | `edge-20-15-{left,right}` | 15–20 mm range | [Tension Honestone](https://tensionclimbing.com/products/honestone) lists 15 and 20 mm edges. | Same prior mapping. |
-| `tension-whetstone` | `edge-25-20-{left,right}` | 20–25 mm range | [Tension Whetstone](https://tensionclimbing.com/products/whetstone) lists 20 and 25 mm edges. | [So iLL/Tension audit](2026-08-12-soill-tension-board-packages.md#tension-whetstone) maps the continuous paired recesses. |
-| `tension-whetstone` | `edge-40-30-{left,right}` | 30–40 mm range | [Tension Whetstone](https://tensionclimbing.com/products/whetstone) lists 30 and 40 mm edges. | Same prior mapping. |
-| `frictitious.megalith` | `stepped-8-10-12-{left,right}` | 8–12 mm range | [Frictitious Megalith](https://frictitiousclimbing.com/products/megalith) enumerates 8, 10, and 12 mm shoulder-width edges. | [Evolv/Frictitious audit](2026-08-12-evolv-frictitious-board-packages.md#frictitious-megalith) maps the continuous top contacts. |
-| `frictitious.megalith` | `stepped-15-20-{left,right}` | 15–20 mm range | [Frictitious Megalith](https://frictitiousclimbing.com/products/megalith) enumerates 15 and 20 mm shoulder-width edges. | Same prior mapping. |
-| `frictitious.megalith` | `stepped-30-40-pocket-{left,right}` | 30–40 mm range | [Frictitious Megalith](https://frictitiousclimbing.com/products/megalith) enumerates 30 and 40 mm shoulder-width edges and says the 40 mm edge contains the two-finger pocket. | Same prior mapping; its continuous contact remains `edge`, without a fabricated fixed pocket capacity. |
+| `tension-grindstone` | `edge-10-8-{left,right}`, `edge-30-25-{left,right}`, `edge-20-15-{left,right}` | `edge-{8,10}-{left,right}`, `edge-{25,30}-{left,right}`, `edge-{15,20}-{left,right}` | The [product page](https://tensionclimbing.com/products/grindstone) enumerates all six edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Grindstone2.png?v=1726542525) places 10/8, 30/25, and 20/15 on separate planar steps on the source side. | 14 logical holds; all 13 measured edges use `sizeMillimeters`; no depth ranges remain. |
+| `tension-honestone` | `edge-20-15-{left,right}`, `edge-10-8-{left,right}` | `edge-{15,20}-{left,right}`, `edge-{8,10}-{left,right}` | The [product page](https://tensionclimbing.com/products/honestone) lists the four edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Honestone2.png?v=1726542571) maps each value to its own step. The 35°/45° macro sloper remains one unmeasured contact because Tension expressly describes continuously variable curvature. | 12 logical holds; all 11 pockets/edges use scalar depth; no depth ranges remain. |
+| `tension-whetstone` | `edge-40-30-{left,right}`, `edge-25-20-{left,right}` | `edge-{30,40}-{left,right}`, `edge-{20,25}-{left,right}` | The [product page](https://tensionclimbing.com/products/whetstone) lists the four edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Whetstone2.png?v=1726542637) maps 40/30 and 25/20 to distinct planar steps. | 12 logical holds; all 11 pockets/edges use scalar depth; no depth ranges remain. |
+| `frictitious.megalith` | `stepped-8-10-12-{left,right}`, `stepped-30-40-pocket-{left,right}`, `stepped-15-20-{left,right}` plus the overlapping unnamed `hold-11`…`hold-14` records | `edge-{8,10,12}-{left,right}`, `edge-30-{left,right}`, `edge-40-pocket-{left,right}`, `edge-{15,20}-{left,right}` | The [product page](https://frictitiousclimbing.com/products/megalith) enumerates seven shoulder-width edge sizes and identifies the two-finger pocket on the 40 mm edge. The [official labelled front](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840) and [official oblique detail](https://frictitiousclimbing.com/cdn/shop/files/Mega-4.jpg?v=1764914587&width=3840) map every value to a visibly separate planar shelf. The integrated pocket stays part of its 40 mm edge contact; no independent depth or capacity was invented. | 18 logical holds: 14 shoulder-width scalar edges, one 25 mm centre edge, one jug, and two mono pockets. No depth ranges or unnamed duplicate holds remain. |
 
-The correction is 20 hold fields: six on Grindstone, four on Honestone, four
-on Whetstone, and six on Megalith. `depthRangeMillimeters` records the bounds
-of a continuous physical surface; it does not assert that every point between
-the two published shelf depths is a separately calibrated hold.
+The canonical ledger now uses the 14 replacement Tension contacts and contains
+no retired range-backed IDs. After all certifications below, it accounts for
+43 boards and 670 holds; Beastmaker 2000's 27 holds remain outside the ledger,
+completing the current 697-hold catalog inventory.
+
+Every replacement contact has a newly reviewed, closed canonical path authored
+through Workbench. Adjacent steps share only their physical transition line;
+none of the old full-recess paths or nested Megalith duplicates remains to
+overlap selectable contacts. The four Whetstone source-side shelves were
+independently re-authored after review of the labelled view: their differing
+outer-end curvature, widths, and upper/lower recess boundaries are preserved
+in four distinct canonical command arrays rather than translated copies.
+
+### Retained continuous ranges and ruled-out splits
+
+| Package / IDs | Retained range | Why it is not a discrete-step candidate |
+| --- | --- | --- |
+| `trango.rock-prodigy-forge` / `variable-edge-rail-{left,right}` | 7–20 mm | Trango's [Forge depth guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887) maps the endpoints to one continuously sloped rail. There are no source-mapped shelf boundaries to split. |
+| `trango.rock-prodigy-pivot` / `variable-edge-{left,right}` | 16–31 mm | The [Pivot depth guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905) maps numbered item 3, “Edge: 16mm–31mm (L–R),” to one continuous yellow rail on each half. `L–R` describes the depth change across that single sculpted contact; the guide shows no separate shelf boundary at either endpoint. |
+| `trango.rock-prodigy-pivot` / `medium-crimp-{left,right}` | 9–10 mm | The same guide maps numbered item 4, “Medium Crimp: 9mm–10mm (L–R),” to one continuous purple crimp strip on each half. The 1 mm left-to-right variation occurs within one physical strip, so splitting its endpoints would invent contacts the source does not show. |
+| `trango.rock-prodigy-pivot` / `large-crimp-{left,right}` | 11–12 mm | Numbered item 5, “Large Crimp: 11mm–12mm (L–R),” is drawn as one continuous grey crimp strip on each half. Its source-mapped left/right endpoint variation belongs to that single sculpted strip, with no intervening step. |
+| `trango.rock-prodigy-pivot` / `two-finger-pocket-{left,right}` | 28–32 mm | Numbered item 6, “2-Finger Pocket: 32mm–28mm (L–R),” maps both endpoint depths to one orange pocket opening on each half. The package normalizes the bounds to 28–32 mm; the source shows a continuously sculpted pocket floor rather than two openings or shelves. |
+| `trango.rock-prodigy-pivot` / `three-finger-pocket-{left,right}` | 17–28 mm | Numbered item 7, “3-Finger Pocket: 28mm–17mm (L–R),” maps both endpoints to one blue pocket opening on each half. The package normalizes the bounds to 17–28 mm; no source boundary divides that single sculpted pocket into discrete contacts. |
+
+No package outside the four source-mapped stepped boards was split.
 
 ### Fractional value recovery
 
@@ -201,18 +221,19 @@ surfaces are the 35-/20-degree sloper family, and all 17 front cavities retain
 shared-kind ruling only: it does not position Beastmaker's 10 mm pair,
 deep/medium/small labels, or two-/three-/four-finger subtypes.
 
-The ledger moves from 42 boards / 634 holds to 43 boards / 656 holds. All 154
+After the discrete-contact migration, the ledger moves from 42 boards / 648
+holds to 43 boards / 670 holds. All 154
 seven-field outcomes are explicit and all 22 mandatory kinds are verified:
 
 | Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
 | --- | ---: | ---: | ---: | ---: |
-| `kind` | 634 / 634 | 656 / 656 | 0 | 0 |
-| `sizeMillimeters` | 387 / 387 | 387 / 387 | 269 | 0 |
-| `depthRangeMillimeters` | 34 / 34 | 34 / 34 | 622 | 0 |
-| `fingerCapacity` | 185 / 185 | 185 / 185 | 73 | 398 |
-| `handCapacity` | 1 / 1 | 1 / 1 | 655 | 0 |
-| `gripType` | 182 / 182 | 182 / 182 | 474 | 0 |
-| `features` | 105 / 105 | 105 / 105 | 551 | 0 |
+| `kind` | 648 / 648 | 670 / 670 | 0 | 0 |
+| `sizeMillimeters` | 415 / 415 | 415 / 415 | 255 | 0 |
+| `depthRangeMillimeters` | 20 / 20 | 20 / 20 | 650 | 0 |
+| `fingerCapacity` | 185 / 185 | 185 / 185 | 73 | 412 |
+| `handCapacity` | 1 / 1 | 1 / 1 | 669 | 0 |
+| `gripType` | 182 / 182 | 182 / 182 | 488 | 0 |
+| `features` | 105 / 105 | 105 / 105 | 565 | 0 |
 
 Every optional Beastmaker 1000 field remains blank. The pass removes 17
 unsupported pocket scalar depths, 19 duplicated kind-as-feature arrays, and
@@ -239,4 +260,7 @@ remains blank for a specific evidence reason.
 Existing explicit capacities (mono, duo, three-finger, four-finger) and
 source-mapped scalar depths elsewhere in the 44 packages were rechecked and
 retained unless a later scoped certification above records an exact correction
-or addition. No optional value was populated from apparent size or geometry.
+or addition. Apart from the discrete-contact correction and fractional mappings
+above, no other `kind`, `fingerCapacity`, or scalar `sizeMillimeters` change was
+justified by the additional evidence. No optional value was populated from
+apparent size or geometry.

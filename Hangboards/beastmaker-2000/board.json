@@ -2324,7 +2324,7 @@
     {
       "id": "front-lower-9",
       "name": "Front Lower 9",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {

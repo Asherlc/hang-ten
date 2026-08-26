@@ -4,6 +4,28 @@ import XCTest
 
 @MainActor
 final class AppStoreFavoritesTests: XCTestCase {
+    func testBoardFavoritePersistsAcrossStoreInstancesAndCanRemoveFavorite() {
+        let defaults = UserDefaults(suiteName: "AppStoreFavoritesTests.boardToggle")!
+        defaults.removePersistentDomain(forName: "AppStoreFavoritesTests.boardToggle")
+        defer { defaults.removePersistentDomain(forName: "AppStoreFavoritesTests.boardToggle") }
+
+        let board = BoardCatalog.all[0]
+        let store = AppStore(userDefaults: defaults)
+
+        XCTAssertFalse(store.isFavorite(board))
+        store.toggleFavorite(board)
+        XCTAssertTrue(store.isFavorite(board))
+
+        let reloadedStore = AppStore(userDefaults: defaults)
+        XCTAssertTrue(reloadedStore.isFavorite(board))
+
+        reloadedStore.toggleFavorite(board)
+        XCTAssertFalse(reloadedStore.isFavorite(board))
+
+        let reloadedAfterRemovalStore = AppStore(userDefaults: defaults)
+        XCTAssertFalse(reloadedAfterRemovalStore.isFavorite(board))
+    }
+
     func testTogglePersistsAcrossStoreInstancesAndCanRemoveFavorite() {
         let defaults = UserDefaults(suiteName: "AppStoreFavoritesTests.toggle")!
         defaults.removePersistentDomain(forName: "AppStoreFavoritesTests.toggle")

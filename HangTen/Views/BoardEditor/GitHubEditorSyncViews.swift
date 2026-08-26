@@ -1,14 +1,67 @@
 import SwiftUI
 
+protocol GitHubTokenStoring {
+    func save(_ token: String) throws
+    func load() -> String?
+    func delete() throws
+}
+
+protocol GitHubDeviceServicing {
+    func authenticatedUser(token: String) async throws -> String
+    func requestDeviceChallenge(clientID: String) async throws -> GitHubDeviceChallenge
+    func pollDeviceAuthorization(
+        clientID: String,
+        deviceCode: String
+    ) async throws -> GitHubDeviceAuthorizationResult
+}
+
+extension GitHubTokenStore: GitHubTokenStoring {}
+extension GitHubBoardSyncService: GitHubDeviceServicing {}
+
 @MainActor
 final class GitHubSyncSession: ObservableObject {
-    static let shared = GitHubSyncSession()
+    static let shared: GitHubSyncSession = {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GITHUB_DEVICE_CHALLENGE"] == "1" {
+            return GitHubSyncSession(
+                syncService: GitHubReviewDeviceService(),
+                clientID: "review-client"
+            )
+        }
+        #endif
+        return GitHubSyncSession()
+    }()
 
     @Published private(set) var username: String?
     @Published var lastError: String?
+    @Published private(set) var deviceChallenge: GitHubDeviceChallenge?
+    @Published private(set) var isSigningIn = false
+    @Published private(set) var lastSuccessfulDeviceSignInID: UUID?
 
-    private let tokenStore = GitHubTokenStore()
-    private let syncService = GitHubBoardSyncService()
+    private let tokenStore: any GitHubTokenStoring
+    private let syncService: any GitHubDeviceServicing
+    private let clientID: String
+    private let sleep: (UInt64) async throws -> Void
+    private let now: () -> Date
+    private var authorizationTask: Task<Void, Never>?
+    private var activeDeviceSignInTaskID: UUID?
+    @Published private(set) var isDeviceSignInTaskActive = false
+
+    init(
+        tokenStore: any GitHubTokenStoring = GitHubTokenStore(),
+        syncService: any GitHubDeviceServicing = GitHubBoardSyncService(),
+        clientID: String = Bundle.main.object(forInfoDictionaryKey: "GITHUB_OAUTH_CLIENT_ID") as? String ?? "",
+        sleep: @escaping (UInt64) async throws -> Void = { nanoseconds in
+            try await Task.sleep(nanoseconds: nanoseconds)
+        },
+        now: @escaping () -> Date = Date.init
+    ) {
+        self.tokenStore = tokenStore
+        self.syncService = syncService
+        self.clientID = clientID.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.sleep = sleep
+        self.now = now
+    }
 
     var token: String? {
         tokenStore.load()
@@ -31,13 +84,6 @@ final class GitHubSyncSession: ObservableObject {
         }
     }
 
-    func signIn(token: String) async throws -> String {
-        let login = try await syncService.authenticatedUser(token: token)
-        try tokenStore.save(token)
-        username = login
-        return login
-    }
-
     func signOut() {
         do {
             try tokenStore.delete()
@@ -47,58 +93,180 @@ final class GitHubSyncSession: ObservableObject {
             lastError = error.localizedDescription
         }
     }
+
+    func startDeviceSignIn() {
+        authorizationTask?.cancel()
+        deviceChallenge = nil
+        lastError = nil
+        guard !clientID.isEmpty else {
+            lastError = "GitHub sign-in is not configured."
+            return
+        }
+        isSigningIn = true
+        let taskID = UUID()
+        activeDeviceSignInTaskID = taskID
+        isDeviceSignInTaskActive = true
+        authorizationTask = Task { [weak self] in
+            await self?.completeDeviceSignIn(taskID: taskID)
+        }
+    }
+
+    func cancelDeviceSignIn() {
+        authorizationTask?.cancel()
+        deviceChallenge = nil
+        isSigningIn = false
+    }
+
+    private func completeDeviceSignIn(taskID: UUID) async {
+        var completedSuccessfully = false
+        defer {
+            finishDeviceSignIn(
+                taskID: taskID,
+                completedSuccessfully: completedSuccessfully
+            )
+        }
+        do {
+            let challenge = try await syncService.requestDeviceChallenge(clientID: clientID)
+            guard canPublishDeviceSignInState(taskID: taskID) else { return }
+            deviceChallenge = challenge
+            var interval = challenge.pollingInterval
+            let deadline = now().addingTimeInterval(challenge.expiresIn)
+            while canPublishDeviceSignInState(taskID: taskID) {
+                let remainingLifetime = deadline.timeIntervalSince(now())
+                guard remainingLifetime > 0 else {
+                    publishDeviceSignInExpiry(taskID: taskID)
+                    return
+                }
+                let delay = min(interval, remainingLifetime)
+                try await sleep(try GitHubDeviceChallenge.sleepNanoseconds(for: delay))
+                guard canPublishDeviceSignInState(taskID: taskID) else { return }
+                guard now() < deadline else {
+                    publishDeviceSignInExpiry(taskID: taskID)
+                    return
+                }
+                let authorization = try await syncService.pollDeviceAuthorization(
+                    clientID: clientID,
+                    deviceCode: challenge.deviceCode
+                )
+                guard canPublishDeviceSignInState(taskID: taskID) else { return }
+                guard now() < deadline else {
+                    publishDeviceSignInExpiry(taskID: taskID)
+                    return
+                }
+                switch authorization {
+                case .authorizationPending:
+                    continue
+                case .slowDown:
+                    interval += 5
+                case .authorized(let token):
+                    let login = try await syncService.authenticatedUser(token: token)
+                    guard canPublishDeviceSignInState(taskID: taskID) else { return }
+                    try tokenStore.save(token)
+                    guard canPublishDeviceSignInState(taskID: taskID) else { return }
+                    username = login
+                    deviceChallenge = nil
+                    completedSuccessfully = true
+                    return
+                }
+            }
+        } catch is CancellationError {
+            // Cancellation is initiated by the user and must not change credentials.
+        } catch {
+            guard canPublishDeviceSignInState(taskID: taskID) else { return }
+            deviceChallenge = nil
+            lastError = error.localizedDescription
+        }
+    }
+
+    private func canPublishDeviceSignInState(taskID: UUID) -> Bool {
+        activeDeviceSignInTaskID == taskID && !Task.isCancelled
+    }
+
+    private func publishDeviceSignInExpiry(taskID: UUID) {
+        guard canPublishDeviceSignInState(taskID: taskID) else { return }
+        deviceChallenge = nil
+        lastError = "GitHub authorization expired. Please try again."
+    }
+
+    private func finishDeviceSignIn(
+        taskID: UUID,
+        completedSuccessfully: Bool
+    ) {
+        guard activeDeviceSignInTaskID == taskID else { return }
+        let shouldPublishSuccess = completedSuccessfully && !Task.isCancelled
+        isSigningIn = false
+        isDeviceSignInTaskActive = false
+        activeDeviceSignInTaskID = nil
+        authorizationTask = nil
+        if shouldPublishSuccess {
+            lastSuccessfulDeviceSignInID = taskID
+        }
+    }
 }
+
+#if DEBUG
+private struct GitHubReviewDeviceService: GitHubDeviceServicing {
+    func authenticatedUser(token: String) async throws -> String {
+        "review-user"
+    }
+
+    func requestDeviceChallenge(clientID: String) async throws -> GitHubDeviceChallenge {
+        GitHubDeviceChallenge(
+            deviceCode: "review-device-code",
+            userCode: "ABCD-EFGH",
+            verificationURL: URL(string: "https://github.com/login/device")!,
+            expiresIn: 900,
+            pollingInterval: 60
+        )
+    }
+
+    func pollDeviceAuthorization(
+        clientID: String,
+        deviceCode: String
+    ) async throws -> GitHubDeviceAuthorizationResult {
+        try await Task.sleep(nanoseconds: 60_000_000_000)
+        return .authorizationPending
+    }
+}
+#endif
 
 struct GitHubSignInView: View {
     @ObservedObject private var syncSession = GitHubSyncSession.shared
     @Environment(\.dismiss) private var dismiss
-    @State private var token = ""
-    @State private var isSigningIn = false
-    @State private var errorText: String?
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
                     SectionLabel(title: "GitHub access")
-                    Text(
-                        "Create a fine-grained personal access token for hang-ten with Contents read-and-write and Pull requests read-and-write permissions. The token stays in this device's Keychain."
-                    )
+                    Text("Approve Hang Ten in GitHub to connect your account.")
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
+                    .accessibilityIdentifier("github.device-flow.description")
 
-                    SecureField("Personal access token", text: $token)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .font(.system(size: 14, design: .monospaced))
-                        .padding(12)
-                        .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .accessibilityIdentifier("github.token")
+                    if let challenge = syncSession.deviceChallenge {
+                        Text(challenge.userCode)
+                            .font(.system(size: 28, weight: .bold, design: .monospaced))
+                            .accessibilityIdentifier("github.device-code")
+                        Button("Open GitHub") { openURL(challenge.verificationURL) }
+                            .accessibilityIdentifier("github.open-verification")
+                        Button("Cancel sign-in") { syncSession.cancelDeviceSignIn() }
+                            .accessibilityIdentifier("github.cancel")
+                    } else {
+                        Button("Connect GitHub") { syncSession.startDeviceSignIn() }
+                            .accessibilityIdentifier("github.connect")
+                    }
 
-                    if let errorText {
-                        Text(errorText)
+                    if let lastError = syncSession.lastError {
+                        Text(lastError)
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(Color.holdActiveDeep)
                     }
 
-                    Button {
-                        signIn()
-                    } label: {
-                        HStack {
-                            if isSigningIn {
-                                ProgressView().tint(Color.hangGreenDark)
-                            } else {
-                                Text("Connect")
-                                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 46)
-                        .background(Color.hangGreen.opacity(0.25), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-                        .foregroundStyle(Color.hangGreenDark)
+                    if syncSession.isSigningIn {
+                        ProgressView().tint(Color.hangGreenDark)
                     }
-                    .disabled(token.trimmingCharacters(in: .whitespaces).isEmpty || isSigningIn)
-                    .accessibilityIdentifier("github.connect")
                 }
                 .padding(18)
             }
@@ -107,23 +275,25 @@ struct GitHubSignInView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Cancel") { dismiss() }
+                    Button(syncSession.isDeviceSignInTaskActive ? "Cancel sign-in" : "Cancel") {
+                        if syncSession.isDeviceSignInTaskActive {
+                            syncSession.cancelDeviceSignIn()
+                        } else {
+                            dismiss()
+                        }
+                    }
                 }
             }
         }
-    }
-
-    private func signIn() {
-        isSigningIn = true
-        errorText = nil
-        let trimmed = token.trimmingCharacters(in: .whitespaces)
-        Task {
-            defer { isSigningIn = false }
-            do {
-                _ = try await syncSession.signIn(token: trimmed)
+        .interactiveDismissDisabled(syncSession.isDeviceSignInTaskActive)
+        .onChange(of: syncSession.lastSuccessfulDeviceSignInID) { _, successfulTaskID in
+            if successfulTaskID != nil {
                 dismiss()
-            } catch {
-                errorText = error.localizedDescription
+            }
+        }
+        .onDisappear {
+            if syncSession.isDeviceSignInTaskActive {
+                syncSession.cancelDeviceSignIn()
             }
         }
     }

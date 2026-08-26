@@ -119,7 +119,25 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreAcceptsFractionalMillimeterMeasurements() throws {
+    func testStoreAcceptsFractionalFixedMillimeterMeasurement() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["sizeMillimeters"] = 7.5
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let hold = try XCTUnwrap(board.holds.first)
+        XCTAssertEqual(hold.sizeMillimeters, 7.5)
+        XCTAssertNil(hold.depthRangeMillimeters)
+    }
+
+    func testStoreRejectsHoldWithFixedAndVariableDepths() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
@@ -135,10 +153,15 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
 
-        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
-        let hold = try XCTUnwrap(board.holds.first)
-        XCTAssertEqual(hold.sizeMillimeters, 7.5)
-        XCTAssertEqual(hold.depthRangeMillimeters, 7.5...12.5)
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "hold hold-left must not specify both a size and depth range"
+                )
+            )
+        }
     }
 
     func testStoreDiscoversDirectChildPackagesWithoutCatalogAndSortsThem() throws {

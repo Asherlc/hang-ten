@@ -29,6 +29,7 @@ export function BoardLibrary({ boards, selectedBoardId, busy, error, onSelectBoa
           >
             <span className="region-key">{board.displayName}</span>
             <small className="region-type">{board.holdCount} holds</small>
+            {board.needsAttention && <small className="region-type">Needs attention</small>}
           </button>
         ))}
       </div>

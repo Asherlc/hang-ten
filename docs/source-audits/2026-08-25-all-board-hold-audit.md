@@ -45,7 +45,7 @@ that optional value. The product URL is the current primary manufacturer page.
 | Package | IDs | Kind counts | Source |
 | --- | ---: | --- | --- |
 | beastmaker-1000 | 22 | jug 2; pocket 17; sloper 3 | [manufacturer](https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series) |
-| beastmaker-2000 | 27 | edge 1; pocket 21; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
+| beastmaker-2000 | 27 | edge 3; pocket 19; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
 | dewoodstok-woodbord | 17 | jug 1; pocket 16 | [manufacturer](https://www.dewoodstok.nl/product/hangboard-woodbord/) |
 | escape-beta-22 | 18 | edge 8; jug 4; pinch 4; sloper 2 | [manufacturer](https://escapeclimbing.com/products/ec72100) |
 | escape.unlimited | 7 | edge 6; sloper 1 | [manufacturer](https://escapeclimbing.com/products/ec72000) |
@@ -88,6 +88,13 @@ that optional value. The product URL is the current primary manufacturer page.
 | yy.verticalboard-one | 20 | edge 10; jug 3; pocket 4; sloper 3 | [manufacturer](https://www.yyvertical.com/en/products/verticalboard-one) |
 | zlagboard.evo | 21 | edge 7; jug 2; sloper 12 | [manufacturer](https://www.zlagboard.com/hangboards) |
 | zlagboard.pro | 28 | edge 14; jug 2; sloper 12 | [manufacturer](https://www.zlagboard.com/hangboards) |
+
+## Corrected mapping: Beastmaker 2000
+
+`front-lower-9` is the direct geometry mirror of `front-lower-1`. The
+manufacturer's plural “Big and little edges” inventory supports classifying
+both mirrored outer lower contacts as edges, so `front-lower-9.kind` is
+`edge` rather than `pocket`.
 
 ## Corrected mapping: Metolius Contact
 
