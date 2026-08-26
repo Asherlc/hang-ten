@@ -200,6 +200,55 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.height, 0)
     }
 
+    func testCanvasHighlightsOnlyEdgesAndPocketsMissingDepthMetadata() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        document.holds = Array(document.holds.prefix(7))
+        XCTAssertEqual(document.holds.count, 7)
+
+        let kinds: [HoldKind] = [.jug, .sloper, .pinch, .edge, .pocket, .edge, .pocket]
+        for index in document.holds.indices {
+            document.holds[index].kind = kinds[index]
+            document.holds[index].fingerCapacity = 1
+            document.holds[index].handCapacity = 1
+            document.holds[index].sizeMillimeters = nil
+            document.holds[index].depthRangeMillimeters = nil
+        }
+        document.holds[3].sizeMillimeters = 12
+        document.holds[4].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+
+        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+        canvas.session = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        canvas.updateMetadataWarningAccessibility()
+
+        let elements = try XCTUnwrap(canvas.accessibilityElements as? [UIAccessibilityElement])
+        XCTAssertEqual(elements.count, 3)
+        XCTAssertEqual(elements[0].accessibilityLabel, "Hangboard hold editor. 2 holds are missing required metadata.")
+        XCTAssertEqual(
+            elements[0].accessibilityValue,
+            "Incomplete holds: \(document.holds[5].id), \(document.holds[6].id)"
+        )
+        XCTAssertEqual(
+            elements.dropFirst().compactMap(\.accessibilityLabel),
+            [
+                "Incomplete hold metadata: \(document.holds[5].id)",
+                "Incomplete hold metadata: \(document.holds[6].id)",
+            ]
+        )
+        XCTAssertTrue(elements.dropFirst().allSatisfy {
+            $0.accessibilityValue == "Missing: depth"
+                && $0.accessibilityFrameInContainerSpace.width > 0
+                && $0.accessibilityFrameInContainerSpace.height > 0
+        })
+    }
+
     func testCanvasAppliesTheSessionSelectedBackgroundColor() {
         let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
 
