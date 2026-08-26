@@ -95,7 +95,7 @@ final class BoardEditorSession: ObservableObject {
         document.holds.compactMap { hold in
             hold.kind == nil
                 || hold.fingerCapacity == nil
-                || hold.depthRangeMillimeters == nil
+                || hasMissingRequiredDepth(hold)
                 || hold.handCapacity == nil
                 ? hold.id
                 : nil
@@ -106,9 +106,14 @@ final class BoardEditorSession: ObservableObject {
         var missing: [String] = []
         if hold.kind == nil { missing.append("kind") }
         if hold.fingerCapacity == nil { missing.append("finger capacity") }
-        if hold.depthRangeMillimeters == nil { missing.append("depth range") }
+        if hasMissingRequiredDepth(hold) { missing.append("depth") }
         if hold.handCapacity == nil { missing.append("hand capacity") }
         return missing
+    }
+
+    private func hasMissingRequiredDepth(_ hold: BoardEditableHold) -> Bool {
+        guard hold.kind == .edge || hold.kind == .pocket else { return false }
+        return hold.sizeMillimeters == nil && hold.depthRangeMillimeters == nil
     }
 
     var metadataWarningText: String? {

@@ -247,12 +247,13 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertNotEqual(frameAfterPinch, frameAfterPan)
     }
 
-    func testIncompleteMetadataRequiresKindFingerDepthAndHandButNotSizeOrFeatures() throws {
+    func testIncompleteMetadataRequiresKindFingerDepthAndHandForEdgesButNotSizeOrFeatures() throws {
         _ = try store.startEditing(slug: "zlagboard-pro")
         let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
         var document = loadedPackage.document
         let holdID = document.holds[0].id
         document.holds = [document.holds[0]]
+        document.holds[0].kind = .edge
         document.holds[0].fingerCapacity = 1
         document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
             lowerBound: 10,
@@ -276,7 +277,7 @@ final class BoardEditorSessionTests: XCTestCase {
             ).incompleteMetadataHoldIDs,
             [holdID]
         )
-        document.holds[0].kind = .jug
+        document.holds[0].kind = .edge
 
         document.holds[0].fingerCapacity = nil
         XCTAssertEqual(
@@ -308,6 +309,46 @@ final class BoardEditorSessionTests: XCTestCase {
                 store: store
             ).incompleteMetadataHoldIDs,
             [holdID]
+        )
+    }
+
+    func testIncompleteMetadataRequiresDepthOnlyForEdgesAndPockets() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        document.holds = Array(document.holds.prefix(5))
+        XCTAssertEqual(document.holds.count, 5)
+
+        let kinds: [HoldKind] = [.jug, .sloper, .pinch, .edge, .pocket]
+        for index in document.holds.indices {
+            document.holds[index].kind = kinds[index]
+            document.holds[index].fingerCapacity = 1
+            document.holds[index].handCapacity = 1
+            document.holds[index].sizeMillimeters = nil
+            document.holds[index].depthRangeMillimeters = nil
+        }
+
+        document.holds[3].sizeMillimeters = 12
+        document.holds[4].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+
+        let completeSession = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        XCTAssertEqual(completeSession.incompleteMetadataHoldIDs, [])
+
+        document.holds[3].sizeMillimeters = nil
+        document.holds[4].depthRangeMillimeters = nil
+        let incompleteSession = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        XCTAssertEqual(
+            incompleteSession.incompleteMetadataHoldIDs,
+            [document.holds[3].id, document.holds[4].id]
         )
     }
 
