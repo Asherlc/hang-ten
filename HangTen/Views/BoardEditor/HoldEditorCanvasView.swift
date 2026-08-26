@@ -4,12 +4,14 @@ import UIKit
 struct HoldEditorCanvasView: UIViewRepresentable {
     @ObservedObject var session: BoardEditorSession
     let image: UIImage?
+    let editorBackgroundColor: UIColor
     var reference: HoldEditorCanvasReference?
 
     func makeUIView(context: Context) -> HoldEditorCanvasUIView {
         let view = HoldEditorCanvasUIView()
         view.session = session
         view.boardImage = image
+        view.editorBackgroundColor = editorBackgroundColor
         reference?.view = view
         return view
     }
@@ -20,6 +22,7 @@ struct HoldEditorCanvasView: UIViewRepresentable {
         if uiView.boardImage !== image {
             uiView.boardImage = image
         }
+        uiView.editorBackgroundColor = editorBackgroundColor
         uiView.setNeedsDisplay()
     }
 }
@@ -35,6 +38,10 @@ final class HoldEditorCanvasUIView: UIView {
 
     var boardImage: UIImage? {
         didSet { setNeedsDisplay() }
+    }
+
+    var editorBackgroundColor: UIColor = UIColor(Color.hangBackground) {
+        didSet { backgroundColor = editorBackgroundColor }
     }
 
     private var zoom: CGFloat = 1
@@ -61,7 +68,7 @@ final class HoldEditorCanvasUIView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(Color.hangBackground)
+        backgroundColor = editorBackgroundColor
         isOpaque = true
         contentMode = .redraw
         setupGestures()
