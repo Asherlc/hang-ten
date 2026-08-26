@@ -196,7 +196,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "handCapacity": 1
     },
     {
       "id": "sloper-40-center",
