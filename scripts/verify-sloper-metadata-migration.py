@@ -131,7 +131,7 @@ def _verify_added_sloper(head_hold: dict[object, object], path: str) -> None:
         )
 
     sloper_type = value.get("type")
-    if sloper_type not in {"flat", "round"}:
+    if not isinstance(sloper_type, str) or sloper_type not in {"flat", "round"}:
         raise VerificationError(f"{path}.type must be flat or round")
     if sloper_type == "round":
         if "angleDegrees" in value:

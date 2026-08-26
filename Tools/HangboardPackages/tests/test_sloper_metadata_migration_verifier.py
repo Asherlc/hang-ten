@@ -198,6 +198,8 @@ def test_rejects_changes_to_pre_existing_sloper_values(
     [
         (0, "flat", "holds[0].sloper must be an object"),
         (0, {"type": "angled"}, "holds[0].sloper.type must be flat or round"),
+        (0, {"type": ["flat"]}, "holds[0].sloper.type must be flat or round"),
+        (0, {"type": {"value": "flat"}}, "holds[0].sloper.type must be flat or round"),
         (0, {"type": "round", "angleDegrees": 20}, "holds[0].sloper.angleDegrees is only allowed for flat slopers"),
         (0, {"type": "flat"}, "holds[0].sloper.angleDegrees must be a number"),
         (0, {"type": "flat", "angleDegrees": True}, "holds[0].sloper.angleDegrees must be a number"),
