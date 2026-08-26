@@ -176,6 +176,9 @@
       "presentationID": "primary",
       "name": "Left 35-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "geometry": [
         {
           "frame": {
@@ -255,6 +258,9 @@
       "presentationID": "primary",
       "name": "Right 35-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "geometry": [
         {
           "frame": {
@@ -334,6 +340,9 @@
       "presentationID": "primary",
       "name": "Center 20-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "geometry": [
         {
           "frame": {

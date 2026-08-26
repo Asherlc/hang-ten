@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import struct
 import zlib
 from pathlib import Path
@@ -106,6 +107,79 @@ def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
 
     assert board.holds[0].size_millimeters is None
     assert board.holds[0].depth_range_millimeters == module.MillimeterRange(7.5, 12.5)
+
+
+@pytest.mark.parametrize(
+    ("sloper", "expected"),
+    [
+        ({"type": "flat", "angleDegrees": 20}, ("flat", 20.0)),
+        ({"type": "flat"}, ("flat", None)),
+        ({"type": "round"}, ("round", None)),
+    ],
+)
+def test_board_schema_exposes_strict_sloper_metadata(
+    sloper: dict[str, object], expected: tuple[str, float | None]
+) -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    hold = document["holds"][0]
+    hold["kind"] = "sloper"
+    hold["sloper"] = sloper
+
+    board = module._load_board(document)
+
+    assert board.holds[0].sloper == module.SloperMetadata(*expected)
+
+
+def test_board_schema_allows_sloper_without_subtype_metadata() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["holds"][0]["kind"] = "sloper"
+
+    board = module._load_board(document)
+
+    assert board.holds[0].sloper is None
+
+
+@pytest.mark.parametrize(
+    ("kind", "sloper", "path"),
+    [
+        ("jug", {"type": "round"}, "board.json.holds[0].sloper"),
+        (
+            "sloper",
+            {"type": "round", "angleDegrees": 20},
+            "board.json.holds[0].sloper",
+        ),
+        (
+            "sloper",
+            {"type": "flat", "angleDegrees": -1},
+            "board.json.holds[0].sloper.angleDegrees",
+        ),
+        (
+            "sloper",
+            {"type": "flat", "angleDegrees": 91},
+            "board.json.holds[0].sloper.angleDegrees",
+        ),
+        (
+            "sloper",
+            {"type": "flat", "angleDegrees": float("inf")},
+            "board.json.holds[0].sloper.angleDegrees",
+        ),
+        ("sloper", {"type": "angled"}, "board.json.holds[0].sloper.type"),
+    ],
+)
+def test_board_schema_rejects_invalid_strict_sloper_metadata(
+    kind: str, sloper: dict[str, object] | None, path: str
+) -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    hold = document["holds"][0]
+    hold["kind"] = kind
+    if sloper is not None:
+        hold["sloper"] = sloper
+
+    with pytest.raises(ValueError, match=re.escape(path)):
+        module._load_board(document)
 
 
 def test_board_schema_rejects_hold_with_fixed_and_variable_depths() -> None:

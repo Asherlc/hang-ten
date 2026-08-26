@@ -81,5 +81,12 @@ source-audited ledger against its hold metadata, and prints a sorted coverage
 report. Like the other package commands, it is source-only and read-only: it
 does not alter packages or the ledger.
 
+Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
+must have one outcome for each supported metadata field. Boards in the
+disjoint `sloperOnlyBoardIDs` scope must instead have exactly one `sloper`
+outcome for every hold and may not have records for unrelated fields. This
+supplemental scope records a complete sloper audit without claiming that the
+board's other metadata fields have been source-audited.
+
 The current repository inventory contains 44 complete packages and zero
 drafts.

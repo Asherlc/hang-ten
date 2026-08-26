@@ -165,6 +165,93 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum SloperType: String, Codable, Hashable {
+    case flat
+    case round
+}
+
+struct SloperMetadata: Codable, Hashable {
+    var type: SloperType
+    var angleDegrees: Double?
+
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case angleDegrees
+    }
+
+    init(type: SloperType, angleDegrees: Double?) {
+        self.type = type
+        self.angleDegrees = angleDegrees
+    }
+
+    init(from decoder: Decoder) throws {
+        let unknownKeys = try decoder.container(keyedBy: SloperAnyCodingKey.self).allKeys.filter {
+            !["type", "angleDegrees"].contains($0.stringValue)
+        }
+        if let unknownKey = unknownKeys.first {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: decoder.codingPath + [unknownKey],
+                    debugDescription: "Unknown key \(unknownKey.stringValue)"
+                )
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(SloperType.self, forKey: .type)
+        angleDegrees = try container.decodeIfPresent(Double.self, forKey: .angleDegrees)
+        guard isValid else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Sloper angle must be absent for round slopers or finite and in 0...90 for flat slopers."
+                )
+            )
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        guard isValid else {
+            throw EncodingError.invalidValue(
+                self,
+                EncodingError.Context(
+                    codingPath: encoder.codingPath,
+                    debugDescription: "Sloper angle must be absent for round slopers or finite and in 0...90 for flat slopers."
+                )
+            )
+        }
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+        try container.encodeIfPresent(angleDegrees, forKey: .angleDegrees)
+    }
+
+    var isValid: Bool {
+        switch (type, angleDegrees) {
+        case (.round, nil), (.flat, nil):
+            true
+        case (.flat, let angle?):
+            angle.isFinite && (0...90).contains(angle)
+        case (.round, .some):
+            false
+        }
+    }
+}
+
+private struct SloperAnyCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        self.intValue = nil
+    }
+
+    init?(intValue: Int) {
+        self.stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}
+
 enum HoldCueStyle: String, Codable, Hashable {
     case outerJug
     case slot
@@ -396,6 +483,7 @@ struct BoardHold: Identifiable, Hashable {
     let id: String
     let name: String
     let kind: HoldKind
+    let sloper: SloperMetadata?
     let geometry: [BoardHoldPiece]
     let gripType: GripType?
     let fingerCapacity: Int?
@@ -436,6 +524,7 @@ struct BoardHold: Identifiable, Hashable {
         name: String,
         kind: HoldKind,
         geometry: [BoardHoldPiece],
+        sloper: SloperMetadata? = nil,
         sizeMillimeters: Double? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
@@ -467,6 +556,7 @@ struct BoardHold: Identifiable, Hashable {
         self.id = id
         self.name = name
         self.kind = kind
+        self.sloper = sloper
         self.geometry = geometry
         self.gripType = gripType
         self.fingerCapacity = fingerCapacity

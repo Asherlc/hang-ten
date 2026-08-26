@@ -34,6 +34,7 @@ _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _PACKAGE_ENTRIES = frozenset({"board.json", "assets"})
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+_SLOPER_TYPES = frozenset({"flat", "round"})
 _GRIP_TYPES = frozenset(
     {
         "openHand",
@@ -195,6 +196,29 @@ class MillimeterRange:
         if lower > upper:
             raise ValueError(f"{source}.lowerBound must not exceed upperBound")
         return cls(lower, upper)
+
+
+@dataclass(frozen=True)
+class SloperMetadata:
+    type: str
+    angle_degrees: float | None
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "SloperMetadata":
+        payload = _mapping(value, source)
+        sloper_type = _string(payload.get("type"), f"{source}.type")
+        if sloper_type not in _SLOPER_TYPES:
+            raise ValueError(f"{source}.type must be one of {sorted(_SLOPER_TYPES)}")
+        if sloper_type == "flat":
+            _closed(payload, {"type", "angleDegrees"} & set(payload), source)
+            angle_degrees = None
+            if "angleDegrees" in payload:
+                angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
+                if not 0 <= angle_degrees <= 90:
+                    raise ValueError(f"{source}.angleDegrees must be in 0...90")
+            return cls(sloper_type, angle_degrees)
+        _closed(payload, {"type"}, source)
+        return cls(sloper_type, None)
 
 
 @dataclass(frozen=True)
@@ -374,6 +398,7 @@ class BoardHold:
     id: str
     name: str
     kind: str
+    sloper: SloperMetadata | None
     geometry: tuple[BoardGeometryPiece, ...]
     size_millimeters: float | None
     depth_range_millimeters: MillimeterRange | None
@@ -456,12 +481,23 @@ def _load_hold(
             "fingerCapacity",
             "handCapacity",
             "features",
+            "sloper",
         }
         | {"presentationID"},
     )
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
         raise ValueError(f"{source}.kind must be one of {sorted(_HOLD_KINDS)}")
+    if kind == "sloper":
+        sloper = (
+            SloperMetadata.from_json(payload["sloper"], f"{source}.sloper")
+            if "sloper" in payload
+            else None
+        )
+    else:
+        if "sloper" in payload:
+            raise ValueError(f"{source}.sloper is only allowed for sloper holds")
+        sloper = None
     if "sizeMillimeters" in payload and "depthRangeMillimeters" in payload:
         raise ValueError(f"{source} must not specify both a size and depth range")
     size = None
@@ -508,6 +544,7 @@ def _load_hold(
         _identifier(payload["id"], f"{source}.id"),
         _string(payload["name"], f"{source}.name"),
         kind,
+        sloper,
         _load_geometry(payload["geometry"], f"{source}.geometry"),
         size,
         depth_range,

@@ -414,6 +414,84 @@ def test_opening_a_board_exposes_fractional_fixed_depth_on_every_piece(
     ] == [7.5, 7.5]
 
 
+def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
+    tmp_path: Path,
+) -> None:
+    library = tmp_path / "Hangboards"
+    library.mkdir()
+    shutil.copytree(
+        REPOSITORY_ROOT / "Hangboards" / "metolius-wood-grips-compact-ii",
+        library / "metolius-wood-grips-compact-ii",
+    )
+
+    with running_server(library) as base:
+        status, opened = request_json(
+            base, "GET", "/api/boards/metolius.wood-grips-compact-ii"
+        )
+        assert status == 200
+        document = opened["board"]["document"]
+        slopers = {
+            region["metadata"]["holdID"]: region["sloper"]
+            for region in document["regions"]
+            if "sloper" in region
+        }
+        assert slopers == {
+            "sloper-flat-left": {"type": "flat"},
+            "sloper-round-center": {"type": "round"},
+            "sloper-flat-right": {"type": "flat"},
+        }
+        document["regions"][0]["handCapacity"] = 1
+
+        status, saved = request_json(
+            base,
+            "PUT",
+            "/api/boards/metolius.wood-grips-compact-ii",
+            document,
+        )
+
+    assert status == 200
+    assert {
+        region["metadata"]["holdID"]: region["sloper"]
+        for region in saved["board"]["document"]["regions"]
+        if "sloper" in region
+    } == slopers
+    stored = json.loads(
+        (
+            library
+            / "metolius-wood-grips-compact-ii"
+            / "board.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert {
+        hold["id"]: hold["sloper"] for hold in stored["holds"] if "sloper" in hold
+    } == slopers
+
+
+def test_put_rejects_a_huge_json_integer_sloper_angle_with_bad_request(
+    tmp_path: Path,
+) -> None:
+    """Fails if a sloper angle overflow escapes BoardPackageError as a 500."""
+    library = _write_library(tmp_path)
+
+    with running_server(library) as base:
+        _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+        document = opened["board"]["document"]
+        document["regions"][0]["type"] = "sloper"
+        document["regions"][0]["sloper"] = {
+            "type": "flat",
+            "angleDegrees": 10**399,
+        }
+        status, result = request_json(
+            base, "PUT", "/api/boards/fixture.board", document
+        )
+
+    assert status == 400
+    assert result == {
+        "ok": False,
+        "error": "editor region hold-left-piece-0.sloper.angleDegrees must be finite and in 0...90",
+    }
+
+
 def test_saving_and_clearing_fractional_fixed_depth_round_trips_through_the_server(
     tmp_path: Path,
 ) -> None:
@@ -1708,6 +1786,41 @@ def test_hosted_save_round_trips_fractional_fixed_depth() -> None:
     )
     assert stored["holds"][0]["sizeMillimeters"] == 7.25
     assert "depthRangeMillimeters" not in stored["holds"][0]
+
+
+def test_hosted_save_round_trips_sloper_metadata() -> None:
+    files = _github_files()
+    board_path = "Hangboards/fixture-board/board.json"
+    board = json.loads(files[board_path])
+    board["holds"][0]["kind"] = "sloper"
+    board["holds"][0]["sloper"] = {"type": "flat", "angleDegrees": 20}
+    files[board_path] = (json.dumps(board, indent=2) + "\n").encode("utf-8")
+
+    with running_server_with_github_backend(files) as (base, client, session):
+        _status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.board"
+        )
+        document = opened["board"]["document"]
+        assert {tuple(region["sloper"].items()) for region in document["regions"]} == {
+            (("type", "flat"), ("angleDegrees", 20))
+        }
+        for region in document["regions"]:
+            region["handCapacity"] = 1
+
+        status, saved, _headers = hosted_request_json(
+            base, session, "PUT", "/api/boards/fixture.board", document
+        )
+
+    assert status == 200
+    assert {
+        tuple(region["sloper"].items())
+        for region in saved["board"]["document"]["regions"]
+    } == {(("type", "flat"), ("angleDegrees", 20))}
+    stored = json.loads(client.file_bytes(HOSTED_BRANCH, board_path))
+    assert stored["holds"][0]["sloper"] == {
+        "type": "flat",
+        "angleDegrees": 20,
+    }
 
 
 def test_hosted_save_auth_failure_instructs_editor_to_reauthenticate() -> None:
