@@ -221,11 +221,12 @@ final class BoardEditorSessionTests: XCTestCase {
             upperBound: 12
         )
 
-        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
-        canvas.session = BoardEditorSession(
+        let session = BoardEditorSession(
             package: package(loadedPackage, replacing: document),
             store: store
         )
+        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+        canvas.session = session
         canvas.updateMetadataWarningAccessibility()
 
         let elements = try XCTUnwrap(canvas.accessibilityElements as? [UIAccessibilityElement])
