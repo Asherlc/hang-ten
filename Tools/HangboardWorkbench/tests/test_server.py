@@ -467,6 +467,31 @@ def test_server_opens_and_saves_existing_sloper_metadata_without_loss(
     } == slopers
 
 
+def test_put_rejects_a_huge_json_integer_sloper_angle_with_bad_request(
+    tmp_path: Path,
+) -> None:
+    """Fails if a sloper angle overflow escapes BoardPackageError as a 500."""
+    library = _write_library(tmp_path)
+
+    with running_server(library) as base:
+        _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+        document = opened["board"]["document"]
+        document["regions"][0]["type"] = "sloper"
+        document["regions"][0]["sloper"] = {
+            "type": "flat",
+            "angleDegrees": 10**399,
+        }
+        status, result = request_json(
+            base, "PUT", "/api/boards/fixture.board", document
+        )
+
+    assert status == 400
+    assert result == {
+        "ok": False,
+        "error": "editor region hold-left-piece-0.sloper.angleDegrees must be finite and in 0...90",
+    }
+
+
 def test_saving_and_clearing_fractional_fixed_depth_round_trips_through_the_server(
     tmp_path: Path,
 ) -> None:

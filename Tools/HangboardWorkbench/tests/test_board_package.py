@@ -839,6 +839,17 @@ def test_rejects_invalid_sloper_metadata_combinations(
         board_package.load_board_package(package_root)
 
 
+def test_sloper_parser_rejects_a_huge_json_integer_angle() -> None:
+    """Fails if float conversion overflows outside the normal angle error path."""
+    with pytest.raises(
+        BoardPackageError,
+        match="sloper.angleDegrees must be finite and in 0...90",
+    ):
+        board_package._parse_sloper_metadata(
+            {"type": "flat", "angleDegrees": 10**399}, "sloper"
+        )
+
+
 @pytest.mark.parametrize(
     ("kind", "metadata", "message"),
     [

@@ -1185,12 +1185,15 @@ def _parse_sloper_metadata(value: object, label: str) -> dict[str, object]:
     parsed: dict[str, object] = {"type": sloper_type}
     if "angleDegrees" in value:
         angle = value["angleDegrees"]
-        if (
-            isinstance(angle, bool)
-            or not isinstance(angle, (int, float))
-            or not math.isfinite(angle)
-            or not 0 <= angle <= 90
-        ):
+        if isinstance(angle, bool) or not isinstance(angle, (int, float)):
+            raise BoardPackageError(f"{label}.angleDegrees must be finite and in 0...90")
+        try:
+            is_valid_angle = math.isfinite(angle) and 0 <= angle <= 90
+        except OverflowError as error:
+            raise BoardPackageError(
+                f"{label}.angleDegrees must be finite and in 0...90"
+            ) from error
+        if not is_valid_angle:
             raise BoardPackageError(f"{label}.angleDegrees must be finite and in 0...90")
         parsed["angleDegrees"] = angle
     return parsed
