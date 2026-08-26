@@ -200,9 +200,9 @@ Expected: the target exits 0 with no failing tests.
 
 - [ ] **Step 4: Inspect the complete change for accidental geometry or plan-content edits**
 
-Run: `git diff --check origin/disambiguate-round-flat-slopers...HEAD && git diff --name-only origin/disambiguate-round-flat-slopers...HEAD`
+Run: `git diff --check origin/main...HEAD && scripts/verify-sloper-metadata-migration.py origin/main HEAD && git diff --name-only origin/main...HEAD`
 
-Expected: no whitespace errors; changed board files contain only `sloper` metadata additions; no training-plan source is listed.
+Expected: no whitespace errors; the verifier confirms changed board files contain only new `sloper` metadata values; no training-plan source is listed.
 
 - [ ] **Step 5: Return any verification failure to its owning task**
 

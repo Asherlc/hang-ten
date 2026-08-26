@@ -77,9 +77,21 @@ def _write_audit_ledger(
                             "handCapacity",
                             "gripType",
                             "features",
-                            "sloper",
                         )
                     ],
+                    {
+                        "boardID": "fixture.board",
+                        "holdIDs": [hold_id],
+                        "field": "sloper",
+                        "outcome": "notApplicable",
+                        "reviewedAt": "2026-08-25",
+                        "source": {
+                            "kind": "manufacturer",
+                            "url": "https://example.com/fixture-source",
+                            "label": "Fixture manufacturer source",
+                        },
+                        "reason": "The hold is not a sloper.",
+                    },
                 ],
             }
         ),
@@ -147,8 +159,13 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                     "handCapacity",
                     "gripType",
                     "features",
-                    "sloper",
                 )
+            },
+            "sloper": {
+                "populated": 0,
+                "verified": 0,
+                "unavailable": 0,
+                "notApplicable": 1,
             },
         },
         "boards": [
@@ -156,8 +173,8 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 "boardID": "fixture.board",
                 "populated": 1,
                 "verified": 1,
-                "unavailable": 7,
-                "notApplicable": 0,
+                "unavailable": 6,
+                "notApplicable": 1,
                 "unaccountedFields": 0,
             }
         ],
