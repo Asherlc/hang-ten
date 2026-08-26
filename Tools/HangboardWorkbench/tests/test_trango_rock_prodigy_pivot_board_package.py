@@ -93,7 +93,6 @@ EXPECTED_HOLDS = (
             "depthRangeMillimeters": {"lowerBound": 28, "upperBound": 32},
             "fingerCapacity": 2,
             "gripType": "twoFingerPocket",
-            "features": ["pocket"],
         },
     ),
     (
@@ -103,7 +102,6 @@ EXPECTED_HOLDS = (
             "depthRangeMillimeters": {"lowerBound": 28, "upperBound": 32},
             "fingerCapacity": 2,
             "gripType": "twoFingerPocket",
-            "features": ["pocket"],
         },
     ),
     (
@@ -113,7 +111,6 @@ EXPECTED_HOLDS = (
             "depthRangeMillimeters": {"lowerBound": 17, "upperBound": 28},
             "fingerCapacity": 3,
             "gripType": "threeFingerPocket",
-            "features": ["pocket"],
         },
     ),
     (
@@ -123,7 +120,6 @@ EXPECTED_HOLDS = (
             "depthRangeMillimeters": {"lowerBound": 17, "upperBound": 28},
             "fingerCapacity": 3,
             "gripType": "threeFingerPocket",
-            "features": ["pocket"],
         },
     ),
     ("outer-wedge-pinch-left", "pinch", {"fingerCapacity": 4}),

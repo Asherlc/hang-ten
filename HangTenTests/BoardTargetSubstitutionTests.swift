@@ -79,7 +79,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
         XCTAssertEqual(
             BoardTargetResolver.substituteHoldIDs(
-                for: .feature(.pocket, fingerCapacity: 3),
+                for: .kind(.pocket, fingerCapacity: 3),
                 on: board
             ),
             ["left-29", "right-29"]
@@ -91,19 +91,18 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
         XCTAssertEqual(
             BoardTargetResolver.substituteHoldIDs(
-                for: .feature(.pocket),
+                for: .kind(.pocket),
                 on: compactII
             ),
             ["pocket-29-three-left", "pocket-29-three-right"]
         )
     }
 
-    func testGenericPocketExactTagsSelectOneMirroredCapacityPair() {
+    func testGenericPocketKindSelectsOneMirroredCapacityPair() {
         let board = board(holds: [
             hold(
                 id: "two-left-off-row",
                 kind: .pocket,
-                feature: .pocket,
                 fingerCapacity: 2,
                 x: 0.1,
                 y: 0.1
@@ -111,7 +110,6 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             hold(
                 id: "two-right-off-row",
                 kind: .pocket,
-                feature: .pocket,
                 fingerCapacity: 2,
                 x: 0.8,
                 y: 0.5
@@ -119,7 +117,6 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             hold(
                 id: "three-left-mirrored",
                 kind: .pocket,
-                feature: .pocket,
                 fingerCapacity: 3,
                 x: 0.2,
                 y: 0.2
@@ -127,7 +124,6 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             hold(
                 id: "three-right-mirrored",
                 kind: .pocket,
-                feature: .pocket,
                 fingerCapacity: 3,
                 x: 0.7,
                 y: 0.2
@@ -135,17 +131,16 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board),
             ["three-left-mirrored", "three-right-mirrored"]
         )
     }
 
-    func testGenericPocketExactTagsSelectMatchingAsymmetricPair() {
+    func testGenericPocketKindSelectsMatchingAsymmetricPair() {
         let board = board(holds: [
             hold(
                 id: "left-three",
                 kind: .pocket,
-                feature: .pocket,
                 fingerCapacity: 3,
                 x: 0.1,
                 y: 0.2
@@ -153,7 +148,6 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             hold(
                 id: "right-three",
                 kind: .pocket,
-                feature: .pocket,
                 fingerCapacity: 3,
                 x: 0.65,
                 y: 0.2
@@ -161,7 +155,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board),
             ["left-three", "right-three"]
         )
     }
@@ -187,7 +181,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board),
             ["left-off-row"]
         )
     }
@@ -199,17 +193,16 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board),
             ["left-unknown"]
         )
     }
 
-    func testGenericPocketExactCenterOnlyReturnsUnresolved() {
+    func testGenericPocketKindCenterOnlyReturnsUnresolved() {
         let board = board(holds: [
             hold(
                 id: "center",
                 kind: .pocket,
-                feature: .pocket,
                 fingerCapacity: 4,
                 x: 0.45,
                 width: 0.1
@@ -217,7 +210,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertTrue(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board).isEmpty
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board).isEmpty
         )
     }
 
@@ -228,7 +221,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board),
             ["left"]
         )
     }
@@ -240,7 +233,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board),
             ["left-three"]
         )
     }
@@ -254,7 +247,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
 
         XCTAssertEqual(
-            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board),
             ["left-same-row", "right-same-row"]
         )
     }
@@ -262,7 +255,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     func testSameKindEdgeCandidateOutranksPocketSubstitution() {
         let board = board(holds: [
             hold(id: "edge", kind: .edge, feature: .mediumEdge),
-            hold(id: "pocket", kind: .pocket, feature: .pocket)
+            hold(id: "pocket", kind: .pocket)
         ])
 
         let result = BoardTargetResolver.substituteHoldIDs(
@@ -277,7 +270,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2)
         ])
-        let target = HoldTarget.feature(.pocket, fingerCapacity: 2)
+        let target = HoldTarget.kind(.pocket, fingerCapacity: 2)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertEqual(result, ["e2"])
     }
@@ -286,15 +279,36 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "e4", kind: .edge, feature: nil, fingerCapacity: 4)
         ])
-        let target = HoldTarget.feature(.pocket, fingerCapacity: 2)
+        let target = HoldTarget.kind(.pocket, fingerCapacity: 2)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertTrue(result.isEmpty)
     }
 
-    func testResolveHoldIDsUsesExplicitFallbackDespiteMismatchedFingerCapacity() {
+    func testPocketKindWithoutFingerCapacityDoesNotSubstituteEdges() {
+        let board = board(holds: [
+            hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board)
+
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    func testPocketKindWithoutFingerCapacityResolvesOnlyPockets() {
+        let board = board(holds: [
+            hold(id: "edge", kind: .edge),
+            hold(id: "pocket", kind: .pocket)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board)
+
+        XCTAssertEqual(result, ["pocket"])
+    }
+
+    func testFeatureTargetCanUseExistingCapacityAgnosticFallback() {
         let board = board(holds: [
             hold(id: "fallback-edge", feature: .largeEdge, fingerCapacity: 4),
-            hold(id: "unrelated-jug", kind: .jug, feature: .jug)
+            hold(id: "unrelated-jug", kind: .jug)
         ])
         let target = HoldTarget.feature(
             .smallEdge,
@@ -307,11 +321,59 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["fallback-edge"])
     }
 
+    func testResolveHoldIDsPrefersExactCapacityFallbackOverMismatchedFallbackAndWrongPocket() {
+        let board = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "mismatched-first-fallback", feature: .mediumEdge, fingerCapacity: 4),
+            hold(id: "exact-later-fallback", feature: .largeEdge, fingerCapacity: 2)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fallbacks: [.mediumEdge, .largeEdge],
+            fingerCapacity: 2
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: target, on: board),
+            ["exact-later-fallback"]
+        )
+    }
+
+    func testResolveHoldIDsUsesCapacityAgnosticPocketFallbackBeforeWrongCapacityPocket() {
+        let board = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "declared-fallback", feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: target, on: board),
+            ["declared-fallback"]
+        )
+    }
+
+    func testResolveHoldIDsDoesNotBroadenCapacityAgnosticFallbackForOtherKinds() {
+        let board = board(holds: [
+            hold(id: "mismatched-fallback", feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .edge,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertTrue(BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty)
+    }
+
     func testSubstitutionUsesClosestMatchForExplicitEdgeFallback() {
         let board = board(holds: [
             hold(id: "generic-edge", kind: .edge, feature: nil)
         ])
-        let target = HoldTarget.feature(
+        let target = HoldTarget.kind(
             .pocket,
             fingerCapacity: 2,
             fallback: .mediumEdge
@@ -320,6 +382,77 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
 
         XCTAssertEqual(result, ["generic-edge"])
+    }
+
+    func testCapacityQualifiedPocketUsesDeclaredFallbackBeforeWrongCapacityPocket() {
+        let board = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "declared-fallback-edge", kind: .edge, feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: board),
+            ["declared-fallback-edge"]
+        )
+    }
+
+    func testCapacityQualifiedPocketPrefersExactCapacityPocketOverDeclaredFallback() {
+        let board = board(holds: [
+            hold(id: "exact-pocket", kind: .pocket, fingerCapacity: 2, x: 0.1),
+            hold(id: "declared-fallback-edge", kind: .edge, feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: board),
+            ["exact-pocket"]
+        )
+    }
+
+    func testCapacityQualifiedPocketOrderingIsExactThenFallbacksThenWrongCapacity() {
+        let target = HoldTarget.kind(
+            .pocket,
+            fallbacks: [.mediumEdge, .largeEdge],
+            fingerCapacity: 2
+        )
+
+        let exactBoard = board(holds: [
+            hold(id: "exact-pocket", kind: .pocket, fingerCapacity: 2, x: 0.1),
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.2),
+            hold(id: "medium-edge", feature: .mediumEdge),
+            hold(id: "large-edge", feature: .largeEdge)
+        ])
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: exactBoard),
+            ["exact-pocket"]
+        )
+
+        let fallbackBoard = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "medium-edge", feature: .mediumEdge),
+            hold(id: "large-edge", feature: .largeEdge)
+        ])
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: fallbackBoard),
+            ["medium-edge"]
+        )
+
+        let wrongCapacityOnlyBoard = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1)
+        ])
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: wrongCapacityOnlyBoard),
+            ["wrong-capacity-pocket"]
+        )
     }
 
     func testSubstitutionPrefersMatchingFingerCapacityWithinSameKindTier() {
@@ -415,9 +548,42 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["e1"])
     }
 
+    func testJugKindTargetResolvesEveryJug() {
+        let board = board(holds: [
+            hold(id: "left-jug", kind: .jug, x: 0.1),
+            hold(id: "right-jug", kind: .jug, x: 0.8)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: .kind(.jug), on: board),
+            ["left-jug", "right-jug"]
+        )
+    }
+
+    func testThreeFingerPocketKindTargetResolvesOneHoldPerBoardSide() {
+        let board = board(holds: [
+            hold(id: "left-three", kind: .pocket, fingerCapacity: 3, x: 0.1),
+            hold(id: "left-two", kind: .pocket, fingerCapacity: 2, x: 0.3),
+            hold(id: "right-three", kind: .pocket, fingerCapacity: 3, x: 0.7),
+            hold(id: "right-two", kind: .pocket, fingerCapacity: 2, x: 0.9)
+        ])
+        let target = HoldTarget(
+            holdIDs: [],
+            kind: .pocket,
+            feature: nil,
+            fallbackFeatures: [],
+            fingerCapacity: 3
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: target, on: board),
+            ["left-three", "right-three"]
+        )
+    }
+
     func testEdgeFeatureSubstitutesUnknownCapacityPocketsWhenBoardHasNoEdges() {
         let board = board(holds: [
-            hold(id: "pocket", kind: .pocket, feature: .pocket)
+            hold(id: "pocket", kind: .pocket)
         ])
 
         let result = BoardTargetResolver.substituteHoldIDs(
@@ -432,9 +598,9 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     @MainActor
     func testCrimpStepsRejectJugsOpenHandRailsAndPockets() throws {
         let incompatibleBoard = board(holds: [
-            hold(id: "jug", kind: .jug, feature: .jug),
+            hold(id: "jug", kind: .jug),
             hold(id: "open-hand-rail", feature: .largeOpenHandRail),
-            hold(id: "pocket", kind: .pocket, feature: .pocket)
+            hold(id: "pocket", kind: .pocket)
         ])
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
@@ -450,7 +616,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
                 accessory: "",
                 duration: 7,
                 phase: .hang,
-                targets: [.feature(.mediumEdge, fallback: .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeOpenHandRail)],
                 gripType: gripType
             )
 
@@ -460,14 +626,13 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
     func testCrimpResolverRejectsJugsOpenHandRailsAndPockets() {
         let incompatibleBoard = board(holds: [
-            hold(id: "jug", kind: .jug, feature: .jug),
+            hold(id: "jug", kind: .jug),
             hold(id: "open-hand-rail", feature: .largeOpenHandRail),
-            hold(id: "pocket", kind: .pocket, feature: .pocket)
+            hold(id: "pocket", kind: .pocket)
         ])
         let target = HoldTarget.feature(
             .mediumEdge,
-            fallback: .largeOpenHandRail,
-            .jug
+            fallback: .largeOpenHandRail
         )
 
         for gripType in [GripType.halfCrimp, .fullCrimp] {
@@ -483,10 +648,10 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
     func testEdgeFeatureFallbackSelectsOnePocketPerHandWhenCapacityIsUnspecified() {
         let board = board(holds: [
-            hold(id: "upper-left", kind: .pocket, feature: .pocket, x: 0.1),
-            hold(id: "upper-right", kind: .pocket, feature: .pocket, x: 0.8),
-            hold(id: "lower-left", kind: .pocket, feature: .pocket, x: 0.2),
-            hold(id: "lower-right", kind: .pocket, feature: .pocket, x: 0.7)
+            hold(id: "upper-left", kind: .pocket, x: 0.1),
+            hold(id: "upper-right", kind: .pocket, x: 0.8),
+            hold(id: "lower-left", kind: .pocket, x: 0.2),
+            hold(id: "lower-right", kind: .pocket, x: 0.7)
         ])
 
         let result = BoardTargetResolver.substituteHoldIDs(
@@ -499,7 +664,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
     func testEdgeKindSubstitutesPocketsWhenBoardHasNoEdges() {
         let board = board(holds: [
-            hold(id: "pocket", kind: .pocket, feature: .pocket)
+            hold(id: "pocket", kind: .pocket)
         ])
 
         let result = BoardTargetResolver.substituteHoldIDs(
@@ -512,8 +677,8 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
     func testEdgeFeatureCapacitySubstitutesOnlyMatchingPocketCapacity() {
         let board = board(holds: [
-            hold(id: "two-finger", kind: .pocket, feature: .pocket, fingerCapacity: 2),
-            hold(id: "three-finger", kind: .pocket, feature: .pocket, fingerCapacity: 3)
+            hold(id: "two-finger", kind: .pocket, fingerCapacity: 2),
+            hold(id: "three-finger", kind: .pocket, fingerCapacity: 3)
         ])
 
         let result = BoardTargetResolver.substituteHoldIDs(
@@ -526,7 +691,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
     func testPinchDoesNotSubstitutePockets() {
         let board = board(holds: [
-            hold(id: "pocket", kind: .pocket, feature: .pocket)
+            hold(id: "pocket", kind: .pocket)
         ])
 
         let result = BoardTargetResolver.substituteHoldIDs(
@@ -594,7 +759,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     func testMultiTargetCrimpStepRetainsNonCrimpTargetAndRemainsCompatible() throws {
         let board = board(holds: [
             hold(id: "medium-edge", feature: .mediumEdge),
-            hold(id: "jug", kind: .jug, feature: .jug)
+            hold(id: "jug", kind: .jug)
         ])
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
@@ -643,7 +808,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "edge", kind: .edge, feature: nil, fingerCapacity: nil)
         ])
-        let target = HoldTarget.feature(.pocket, fingerCapacity: 2, fallback: .largeEdge)
+        let target = HoldTarget.kind(.pocket, fingerCapacity: 2, fallback: .largeEdge)
 
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
 
@@ -654,7 +819,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "edge", kind: .edge, feature: nil, fingerCapacity: nil)
         ])
-        let target = HoldTarget.feature(.pocket, fingerCapacity: 2)
+        let target = HoldTarget.kind(.pocket, fingerCapacity: 2)
 
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
 
@@ -666,7 +831,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     /// single named fallback would silently reach two substitutions deep.
     func testDeclaredFallbackDoesNotInheritTheEdgeToPocketRescue() {
         let board = board(holds: [
-            hold(id: "pocket", kind: .pocket, feature: .pocket)
+            hold(id: "pocket", kind: .pocket)
         ])
         let target = HoldTarget.feature(.mediumPinch, fallback: .mediumEdge)
 
@@ -679,7 +844,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "r1", kind: .edge, feature: .largeOpenHandRail)
         ])
-        let target = HoldTarget.feature(.jug)
+        let target = HoldTarget.kind(.jug)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertTrue(result.isEmpty)
     }

@@ -512,7 +512,7 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageWriter.data(for: badCapacity))
 
         var duplicateFeatures = makeDocument()
-        duplicateFeatures.holds[0].features = [.jug, .jug]
+        duplicateFeatures.holds[0].features = [.mediumEdge, .mediumEdge]
         XCTAssertThrowsError(try BoardPackageWriter.data(for: duplicateFeatures))
 
         var zeroSize = makeDocument()

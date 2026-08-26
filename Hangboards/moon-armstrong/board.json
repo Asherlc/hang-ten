@@ -47,9 +47,6 @@
       "id": "jug-left",
       "name": "Left in-cut jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [{
         "frame": { "x": 0.233, "y": 0.365, "width": 0.15, "height": 0.066289039482 },
         "shape": { "type": "path", "commands": [
@@ -72,9 +69,6 @@
       "id": "jug-right",
       "name": "Right in-cut jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [{
         "frame": { "x": 0.789, "y": 0.365, "width": 0.15, "height": 0.066289039482 },
         "shape": { "type": "path", "commands": [
@@ -97,9 +91,6 @@
       "id": "center-jug",
       "name": "Center one-arm jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [{
         "frame": { "x": 0.411, "y": 0.334, "width": 0.178, "height": 0.064 },
         "shape": { "type": "path", "commands": [
@@ -333,9 +324,6 @@
       "sizeMillimeters": 22,
       "fingerCapacity": 2,
       "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [{
         "frame": { "x": 0.235, "y": 0.586, "width": 0.09, "height": 0.045 },
         "shape": { "type": "path", "commands": [
@@ -356,9 +344,6 @@
       "sizeMillimeters": 22,
       "fingerCapacity": 2,
       "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [{
         "frame": { "x": 0.84, "y": 0.586, "width": 0.09, "height": 0.045 },
         "shape": { "type": "path", "commands": [
@@ -378,9 +363,6 @@
       "kind": "pocket",
       "sizeMillimeters": 22,
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [{
         "frame": { "x": 0.335, "y": 0.586, "width": 0.026, "height": 0.036768333333 },
         "shape": { "type": "path", "commands": [
@@ -401,9 +383,6 @@
       "kind": "pocket",
       "sizeMillimeters": 22,
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "geometry": [{
         "frame": { "x": 0.799, "y": 0.586, "width": 0.026, "height": 0.036768333333 },
         "shape": { "type": "path", "commands": [

@@ -55,8 +55,6 @@ EXPECTED_FEATURES = {
         f"hold-{family:02d}-{side}": features
         for family, features in (
             (2, ("widePinch",)),
-            (3, ("jug",)),
-            (4, ("jug",)),
             (5, ("incutEdge",)),
             (6, ("flatEdge",)),
             (7, ("flatEdge",)),
@@ -66,7 +64,7 @@ EXPECTED_FEATURES = {
     },
     **{
         f"hold-{family:02d}-{side}": None
-        for family in (1, 9, 10, 11)
+        for family in (1, 3, 4, 9, 10, 11)
         for side in ("left", "right")
     },
 }

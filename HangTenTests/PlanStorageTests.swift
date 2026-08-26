@@ -67,7 +67,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(metadata["version"])
     }
 
-    func testBundledPlanLibraryContainsNoVersionFields() throws {
+    func testBundledPlanLibraryLoadsWithoutFormerFeatureAliases() throws {
         let data = try bundledPlanLibraryData()
         let document = try XCTUnwrap(
             JSONSerialization.jsonObject(with: data) as? [String: Any]
@@ -76,7 +76,13 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertNil(document["schemaVersion"])
         XCTAssertNil(metadata["version"])
-        XCTAssertNoThrow(try JSONDecoder().decode(PlanLibraryDefinition.self, from: data))
+        XCTAssertEqual(fallbackFeatureAliases(in: document), [])
+        XCTAssertNoThrow(
+            try PlanLibraryStore(
+                builtInData: data,
+                packageStore: BoardCatalog.packageStore
+            )
+        )
     }
 
     func testBuiltInPlanPresentationFieldsUseAthleteFacingCopy() throws {
@@ -265,6 +271,104 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testLegacyPocketFeatureTargetDecodesAndReencodesAsKindTarget() throws {
+        let legacy = Data(#"{ "feature": "pocket", "fingerCapacity": 3 }"#.utf8)
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "pocket")
+        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
+        XCTAssertNil(object["feature"])
+    }
+
+    func testJugFeatureTargetEncodesAsCanonicalKindTarget() throws {
+        let target = WorkoutTargetDefinition.feature(.jug, fallbacks: [])
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "jug")
+        XCTAssertNil(object["feature"])
+    }
+
+    func testLegacyDuplicateFallbackFeaturesAreDroppedWhenEncodingKindTarget() throws {
+        let legacy = Data(
+            #"{ "feature": "pocket", "fingerCapacity": 3, "fallbackFeatures": ["jug", "pocket"] }"#.utf8
+        )
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "pocket")
+        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
+        XCTAssertNil(object["fallbackFeatures"])
+    }
+
+    func testLegacyDuplicateFallbackFeaturesAreDroppedWhileValidFeatureFallbacksRemain() throws {
+        let legacy = Data(
+            #"{ "feature": "mediumEdge", "fallbackFeatures": ["jug", "largeEdge", "pocket"] }"#.utf8
+        )
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: legacy)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["feature"] as? String, "mediumEdge")
+        XCTAssertEqual(object["fallbackFeatures"] as? [String], ["largeEdge"])
+    }
+
+    func testUnknownFallbackFeatureIsRejected() {
+        let invalid = Data(#"{ "feature": "mediumEdge", "fallbackFeatures": ["unknownFeature"] }"#.utf8)
+
+        XCTAssertThrowsError(
+            try JSONDecoder().decode(WorkoutTargetDefinition.self, from: invalid)
+        )
+    }
+
+    func testCanonicalPocketKindTargetRetainsFingerCapacityWhenEncoded() throws {
+        let canonical = Data(#"{ "kind": "pocket", "fingerCapacity": 3 }"#.utf8)
+
+        let target = try JSONDecoder().decode(WorkoutTargetDefinition.self, from: canonical)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "pocket")
+        XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
+    }
+
+    func testWorkoutTargetDefinitionRejectsOutOfRangeDecodedFingerCapacities() {
+        for invalidCapacity in [0, 5] {
+            let payload = Data(#"{ "kind": "pocket", "fingerCapacity": \#(invalidCapacity) }"#.utf8)
+
+            XCTAssertThrowsError(
+                try JSONDecoder().decode(WorkoutTargetDefinition.self, from: payload)
+            ) { error in
+                guard case let DecodingError.dataCorrupted(context) = error else {
+                    return XCTFail("Expected invalid finger capacity to produce a data-corrupted decoding error, got: \(error)")
+                }
+
+                XCTAssertEqual(context.codingPath.last?.stringValue, "fingerCapacity")
+            }
+        }
+    }
+
+    func testWorkoutTargetDefinitionAcceptsValidAndAbsentDecodedFingerCapacities() throws {
+        let cases: [(Data, WorkoutTargetDefinition)] = [
+            (Data(#"{ "kind": "pocket", "fingerCapacity": 1 }"#.utf8), .kind(.pocket, fingerCapacity: 1)),
+            (Data(#"{ "kind": "pocket", "fingerCapacity": 4 }"#.utf8), .kind(.pocket, fingerCapacity: 4)),
+            (Data(#"{ "kind": "pocket" }"#.utf8), .kind(.pocket))
+        ]
+
+        for (payload, expectedTarget) in cases {
+            XCTAssertEqual(
+                try JSONDecoder().decode(WorkoutTargetDefinition.self, from: payload),
+                expectedTarget
+            )
+        }
+    }
+
     func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
         XCTAssertNil(FingerConfiguration(engagedFingers: []))
 
@@ -393,11 +497,11 @@ final class PlanStorageTests: XCTestCase {
                 id: "undefined",
                 duration: 60,
                 phase: .pull,
-                targets: [.feature(.jug, fallbacks: [])],
+                targets: [.kind(.jug)],
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.jug, fallbacks: [])],
+                        targets: [.kind(.jug)],
                         timing: .undefined,
                         duration: nil
                     )
@@ -426,7 +530,7 @@ final class PlanStorageTests: XCTestCase {
         )
         XCTAssertEqual(
             resolvedSteps[3].segments,
-            [WorkoutSegment(kind: .work, target: .feature(.jug), timing: .undefined, duration: nil)]
+            [WorkoutSegment(kind: .work, target: .kind(.jug), timing: .undefined, duration: nil)]
         )
     }
 
@@ -1005,7 +1109,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.pocket),
+                    target: .kind(.pocket),
                     timing: .fixed,
                     duration: 5
                 )
@@ -1123,7 +1227,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
         XCTAssertEqual(
             step.targets,
-            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)]
+            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)]
         )
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
@@ -1623,6 +1727,76 @@ final class PlanStorageTests: XCTestCase {
                 .first { $0.feature == .mediumPinch }
         )
         XCTAssertFalse(BoardTargetResolver.substituteHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
+    }
+
+    @MainActor
+    func testCapacityQualifiedPocketPlansRetainTheirAvailabilityFallbacks() throws {
+        let expectedFallbacks: [HoldFeature] = [.mediumEdge, .largeEdge, .largeOpenHandRail]
+        let pocketTargets = [
+            (planID: "coach.horst-seven-fifty-three", fingerCapacity: 2, capacitySourceBacked: true),
+            (planID: "coach.density-hangs", fingerCapacity: 4, capacitySourceBacked: false)
+        ]
+        let audit = try loadPlanCueAudit()
+
+        for expected in pocketTargets {
+            let plan = try XCTUnwrap(LegacyPlanSeedCatalog.all.first { $0.id == expected.planID })
+            let target = try XCTUnwrap(
+                plan.steps
+                    .flatMap(\.targets)
+                    .first { $0.kind == .pocket && $0.fingerCapacity == expected.fingerCapacity }
+            )
+
+            XCTAssertEqual(target.fallbackFeatures, expectedFallbacks)
+
+            let fallbackAudit = try XCTUnwrap(
+                audit.targetFallbackRules.filter { rule in
+                    rule.planID == expected.planID &&
+                        rule.primaryKind == .pocket &&
+                        rule.fingerCapacity == expected.fingerCapacity
+                }.only,
+                "Expected one explicit fallback audit mapping for \(expected.planID)."
+            )
+            XCTAssertEqual(fallbackAudit.fallbackFeatures, expectedFallbacks)
+            XCTAssertEqual(fallbackAudit.decision, "adapt")
+            XCTAssertFalse(fallbackAudit.sourcePrescription)
+            XCTAssertEqual(
+                fallbackAudit.fingerCapacitySourcePrescription,
+                expected.capacitySourceBacked,
+                "The capacity provenance must be distinct from the fallback availability adaptation."
+            )
+            XCTAssertEqual(fallbackAudit.adaptationType, "availability")
+            XCTAssertTrue(fallbackAudit.sourceBasis.contains("app availability adaptation"))
+            XCTAssertEqual(
+                fallbackAudit.sourceURL,
+                try XCTUnwrap(audit.planSources.first { $0.planID == expected.planID }).sourceURL
+            )
+
+            let edgeOnlyBoard = TrainingBoard(
+                id: "fixture.edge-only.\(expected.fingerCapacity)",
+                manufacturer: "Fixture Maker",
+                name: "Edge-only Board",
+                subtitle: "A test board without pockets.",
+                dimensions: "10 × 5",
+                aspectRatio: 2,
+                holds: [
+                    BoardHold(
+                        id: "fixture.large-edge",
+                        name: "Large edge",
+                        shortLabel: "E",
+                        detail: "A fixture large edge.",
+                        kind: .edge,
+                        frame: .init(x: 0.1, y: 0.1, width: 0.2, height: 0.1),
+                        features: [.largeEdge]
+                    )
+                ],
+                productURL: URL(string: "https://example.com/edge-only")!,
+                photoAssetName: nil
+            )
+            XCTAssertEqual(
+                BoardTargetResolver.substituteHoldIDs(for: target, on: edgeOnlyBoard),
+                ["fixture.large-edge"]
+            )
+        }
     }
 
     @MainActor
@@ -2230,6 +2404,18 @@ final class PlanStorageTests: XCTestCase {
         )
         return try Data(contentsOf: url)
     }
+
+    private func fallbackFeatureAliases(in value: Any) -> [String] {
+        if let object = value as? [String: Any] {
+            let aliases = (object["fallbackFeatures"] as? [String] ?? [])
+                .filter { $0 == "jug" || $0 == "pocket" }
+            return aliases + object.values.flatMap(fallbackFeatureAliases)
+        }
+        if let array = value as? [Any] {
+            return array.flatMap(fallbackFeatureAliases)
+        }
+        return []
+    }
 }
 
 private struct CueAuditKey: Hashable, Comparable, CustomStringConvertible {
@@ -2287,6 +2473,20 @@ private struct CueAuditDocument: Decodable {
     let planSources: [PlanSourceManifestEntry]
     let planFieldRules: [PlanFieldRule]
     let stepFieldRules: [StepFieldRule]
+    let targetFallbackRules: [TargetFallbackAuditRule]
+}
+
+private struct TargetFallbackAuditRule: Decodable {
+    let planID: String
+    let primaryKind: HoldKind
+    let fingerCapacity: Int
+    let fallbackFeatures: [HoldFeature]
+    let decision: String
+    let sourcePrescription: Bool
+    let fingerCapacitySourcePrescription: Bool
+    let adaptationType: String
+    let sourceURL: String
+    let sourceBasis: String
 }
 
 private struct PlanSourceManifestEntry: Decodable {

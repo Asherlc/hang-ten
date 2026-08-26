@@ -37,14 +37,29 @@ right/left instruction without inventing board-side mappings.
 | `research.eva-int-hangs` | research | [Eva López hangboard comparison](https://pubmed.ncbi.nlm.nih.gov/30988852/) | title: identifies the intermittent dead-hang comparison | subtitle, instruction, accessory, target, count, duration, interval: generic `mediumEdge` target and explicitly labeled app-guided realization; the linked record does not establish those exact values | warmUp, cooldown, gripType, fingerConfiguration |
 | `research.seven-three-repeaters` | research | [Beastmaker 7/3 study protocol](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.888158/full) | title, instruction, accessory, count, duration, interval: two sets, six progressive series, seven reps, 7/3, 2:30 series recovery, and six-minute set recovery | subtitle, target, gripType, fingerConfiguration: documented progression expressed with generic `largeEdge`/`mediumEdge` targets and structured cues; Beastmaker study context does not make the prescription product-specific | warmUp, cooldown |
 | `research.abrahangs` | research | [Lattice Abrahangs protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | title, instruction, count, gripType, fingerConfiguration: low-intensity feet-supported Half 4, F3 Open, M2 Open, F2 Open, B3 Half, and F3 Half variants | subtitle, accessory, target, duration, interval: generic `mediumEdge` target and 10/50 app timer; the final app-adapted 50-second recovery is omitted by Hang Ten's terminal-work policy, analogous to F80 | warmUp, cooldown |
-| `coach.horst-seven-fifty-three` | coach | [Eric Hörst fingerboard protocols](https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/) | title, instruction, accessory, duration, gripType: 7/53, three hangs, and half/open or pocket options | subtitle, target, count, interval: generic `largeEdge`/`mediumEdge` and factual two-finger-pocket targets plus three-minute selection from the 3–5 minute recovery range | warmUp, cooldown, fingerConfiguration |
+| `coach.horst-seven-fifty-three` | coach | [Eric Hörst fingerboard protocols](https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/) | title, instruction, accessory, duration, gripType: 7/53, three hangs, half/open options, and the 20–30 mm two-finger-pocket option | subtitle, target, count, interval: generic `largeEdge`/`mediumEdge`, the app availability fallback order for the source-backed two-finger-pocket capacity, plus three-minute selection from the 3–5 minute recovery range | warmUp, cooldown, fingerConfiguration |
 | `coach.bechtel-three-six-nine` | coach | [Steve Bechtel 3–6–9 ladder protocol](https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/) | title, instruction, duration: 3/6/9 sequence and source loading cue | subtitle, accessory, target, count, interval: three rounds and exact rest values selected from source ranges, plus generic `largeEdge` target | warmUp, cooldown, gripType, fingerConfiguration |
-| `coach.density-hangs` | coach | [Tyler Nelson density hang protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) | title, instruction: source ranges and 2:1 relationship remain identifiable | subtitle, accessory, target, count, duration, interval: 30/15, three reps, three-minute recoveries, set count, and generic `largeEdge`/factual four-finger-pocket targets are app choices within the published ranges | warmUp, cooldown, gripType, fingerConfiguration |
+| `coach.density-hangs` | coach | [Tyler Nelson density hang protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) | title, instruction: source ranges and 2:1 relationship remain identifiable | subtitle, accessory, target, count, duration, interval: 30/15, three reps, three-minute recoveries, set count, and generic `largeEdge`/an app-selected four-finger-pocket target plus its availability fallback order are app choices; the timing choices stay within the published ranges | warmUp, cooldown, gripType, fingerConfiguration |
+
 | `device.zlagboard-sixty-sixty` | device | [Zlagboard endurance protocol](https://strengthclimbing.com/zlagboard-forearm-endurance-workout/) | title, instruction, accessory, count, duration, interval: ten 60/60 sets | subtitle, target: generic `largeEdge` target | warmUp, cooldown, gripType, fingerConfiguration; unsupported feet-supported copy was removed |
 | `hoopers-beta.introductory-home-hangboard` | coach | [Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS](https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine) | title and identifiable routine order, counts, ranges, durations, and qualifiers | subtitle, instruction, accessory, target, count, duration, interval, gripType: the app splits the source routine into guided rows and semantic targets | warmUp, cooldown, fingerConfiguration |
 | `method.intermediate-hangboarding.repeaters` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable five-round 5–7-second repeater ranges | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects range endpoints, expands rows, and supplies semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 | `method.intermediate-hangboarding.emom` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, target, count, duration, interval, gripType: app defaults untimed counted work and maps source holds to semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 | `rei.hangboard-sample-workout` | retailer | [REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing](https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html) | title and identifiable warm-up alternatives, five-grip order, repetitions, timing ranges, and recovery guidance | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects preview/range defaults and semantic targets/cues | warmUp, cooldown, fingerConfiguration |
+
+### Capacity-qualified pocket availability mappings
+
+The following two ordered fallback lists are app availability adaptations, not
+source-prescribed hold substitutions. They preserve the existing app target
+when a selected board has no pocket of the app-selected capacity: try the fixed
+availability ladder `mediumEdge`, then `largeEdge`, then
+`largeOpenHandRail`. The order is deliberate and regression-tested; neither
+linked source specifies a replacement hold or an order for replacements.
+
+| Plan ID | Primary target | Ordered fallback features | Decision and source basis |
+| --- | --- | --- | --- |
+| `coach.horst-seven-fifty-three` | `kind: pocket`, `fingerCapacity: 2` | `mediumEdge` → `largeEdge` → `largeOpenHandRail` | The [Hörst protocol](https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/) prescribes 20–30 mm two-finger pockets, so the two-finger capacity is source-backed. `adapt` applies only to the app's availability ladder: the source does not prescribe substitutes or their order. |
+| `coach.density-hangs` | `kind: pocket`, `fingerCapacity: 4` | `mediumEdge` → `largeEdge` → `largeOpenHandRail` | `adapt` / not source-prescribed. The [Nelson density-hangs protocol](https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/) supports the density method's work/rest and recovery ranges; it does not specify a four-finger pocket or replacements. The capacity and availability ladder are app availability adaptations of this already adapted board target, not a source claim. |
 
 ## Removed catalog content
 
@@ -92,6 +107,32 @@ grip/finger cue.
     {"planID":"method.intermediate-hangboarding.repeaters","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"method.intermediate-hangboarding.emom","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"}
+  ],
+  "targetFallbackRules": [
+    {
+      "planID":"coach.horst-seven-fifty-three",
+      "primaryKind":"pocket",
+      "fingerCapacity":2,
+      "fallbackFeatures":["mediumEdge","largeEdge","largeOpenHandRail"],
+      "decision":"adapt",
+      "sourcePrescription":false,
+      "fingerCapacitySourcePrescription":true,
+      "adaptationType":"availability",
+      "sourceURL":"https://trainingforclimbing.com/4-fingerboard-strength-protocols-that-work/",
+      "sourceBasis":"The source prescribes 20–30 mm two-finger pockets, supporting fingerCapacity: 2. It does not prescribe a fallback order, so the ordered availability ladder is an app availability adaptation."
+    },
+    {
+      "planID":"coach.density-hangs",
+      "primaryKind":"pocket",
+      "fingerCapacity":4,
+      "fallbackFeatures":["mediumEdge","largeEdge","largeOpenHandRail"],
+      "decision":"adapt",
+      "sourcePrescription":false,
+      "fingerCapacitySourcePrescription":false,
+      "adaptationType":"availability",
+      "sourceURL":"https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/",
+      "sourceBasis":"The source supports density-hang timing and recovery ranges, not a four-finger pocket or fallback order. The ordered availability ladder is an app availability adaptation of the app's adapted board target, not a source prescription."
+    }
   ],
   "planFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","target","count"],"decision":"keep","sourcePrescription":true},

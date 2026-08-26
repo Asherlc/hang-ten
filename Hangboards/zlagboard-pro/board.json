@@ -11,9 +11,6 @@
       "id": "top-jug-left",
       "name": "Left top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -91,9 +88,6 @@
       "id": "top-jug-right",
       "name": "Right top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -375,9 +369,7 @@
       "name": "Center top sloper jug",
       "kind": "sloper",
       "gripType": "sloper",
-      "features": [
-        "jug"
-      ],
+      "features": ["jug"],
       "geometry": [
         {
           "frame": {

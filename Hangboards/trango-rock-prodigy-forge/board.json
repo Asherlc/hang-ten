@@ -1169,10 +1169,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "mr-deep-right",
@@ -1270,10 +1267,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "mr-shallow-left",
@@ -1371,10 +1365,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "mr-shallow-right",
@@ -1472,10 +1463,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "im-deep-left",
@@ -1572,10 +1560,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "im-deep-right",
@@ -1672,10 +1657,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "im-shallow-left",
@@ -1772,10 +1754,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "im-shallow-right",
@@ -1872,10 +1851,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     }
   ],
   "presentations": [

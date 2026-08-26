@@ -269,7 +269,6 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     case largeEdge
     case mediumEdge
     case smallEdge
-    case pocket
     case flatEdge
     case incutEdge
     case largeOpenHandRail
@@ -289,7 +288,6 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
         case .largeEdge: "Large edge"
         case .mediumEdge: "Medium edge"
         case .smallEdge: "Small edge"
-        case .pocket: "Pocket"
         case .flatEdge: "Flat edge"
         case .incutEdge: "Incut edge"
         case .largeOpenHandRail: "Large open-hand rail"
@@ -322,7 +320,7 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
     private var physicality: Physicality {
         switch self {
         case .jug:
-            Physicality(holdKind: .jug, featureGroup: .other)
+            Physicality(holdKind: .sloper, featureGroup: .sloper)
         case .roundSloper:
             Physicality(holdKind: .sloper, featureGroup: .sloper)
         case .largeSlope:
@@ -333,8 +331,6 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
             Physicality(holdKind: .edge, featureGroup: .edge)
         case .smallEdge:
             Physicality(holdKind: .edge, featureGroup: .edge)
-        case .pocket:
-            Physicality(holdKind: .pocket, featureGroup: .pocket)
         case .flatEdge:
             Physicality(holdKind: .edge, featureGroup: .edge)
         case .incutEdge:
@@ -712,9 +708,8 @@ struct HoldTarget: Hashable {
     let feature: HoldFeature?
     let fallbackFeatures: [HoldFeature]
     /// The finger count this target wants, matched against
-    /// `BoardHold.fingerCapacity`. Real, author-specified data — not derived
-    /// from `feature`'s name (see e.g. `.pocket`, which covers holds of any
-    /// finger count on its own).
+    /// `BoardHold.fingerCapacity`. Real, author-specified data that can
+    /// qualify either a kind or a feature target.
     let fingerCapacity: Int?
 
     init(
@@ -745,8 +740,26 @@ struct HoldTarget: Hashable {
         HoldTarget(holdIDs: holdIDs, kind: nil, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
     }
 
-    static func kind(_ kind: HoldKind) -> HoldTarget {
-        HoldTarget(holdIDs: [], kind: kind, feature: nil, fallbackFeatures: [], fingerCapacity: nil)
+    static func kind(
+        _ kind: HoldKind,
+        fingerCapacity: Int? = nil,
+        fallback fallbackFeatures: HoldFeature...
+    ) -> HoldTarget {
+        self.kind(kind, fallbacks: fallbackFeatures, fingerCapacity: fingerCapacity)
+    }
+
+    static func kind(
+        _ kind: HoldKind,
+        fallbacks: [HoldFeature],
+        fingerCapacity: Int? = nil
+    ) -> HoldTarget {
+        HoldTarget(
+            holdIDs: [],
+            kind: kind,
+            feature: nil,
+            fallbackFeatures: fallbacks,
+            fingerCapacity: fingerCapacity
+        )
     }
 
     static func feature(
@@ -1659,18 +1672,18 @@ enum LegacyPlanSeedCatalog {
         provenance: .adapted,
         boardID: nil,
         steps: expanded(planID: "entry", [
-            [MetoliusCycleBuilder.fixed(title: "Jug hang", instruction: "Hang from the jugs for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.jug)])],
+            [MetoliusCycleBuilder.fixed(title: "Jug hang", instruction: "Hang from the jugs for 15 seconds.", duration: 15, phase: .hang, targets: [.kind(.jug)])],
             [MetoliusCycleBuilder.pullUps(count: 1, title: "Round sloper pull-up", instruction: "Do 1 pull-up on a round sloper.", phase: .pull, targets: [.feature(.roundSloper)])],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
-            [MetoliusCycleBuilder.fixed(title: "Pocket hang + shrugs", instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.", duration: 15, phase: .hang, targets: [.feature(.pocket)])],
+            [MetoliusCycleBuilder.fixed(title: "Pocket hang + shrugs", instruction: "Hang from a pocket for 15 seconds and include 3 shrugs.", duration: 15, phase: .hang, targets: [.kind(.pocket)])],
             [MetoliusCycleBuilder.fixed(title: "Large edge + pull-ups", instruction: "Hang from a large edge for 20 seconds and include 2 pull-ups.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)])],
             [
                 MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.roundSloper)]),
-                MetoliusCycleBuilder.repetitions(count: 5, title: "Pocket knee raises", instruction: "Do 5 knee raises on a pocket.", phase: .pull, targets: [.feature(.pocket)])
+                MetoliusCycleBuilder.repetitions(count: 5, title: "Pocket knee raises", instruction: "Do 5 knee raises on a pocket.", phase: .pull, targets: [.kind(.pocket)])
             ],
             [MetoliusCycleBuilder.pullUps(count: 4, title: "Large-edge pull-ups", instruction: "Do 4 pull-ups on a large edge.", phase: .pull, targets: [.feature(.largeEdge)])],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 10 seconds.", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)])],
-            [MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])],
+            [MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.kind(.jug)])],
             [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)])]
         ])
     )
@@ -1695,25 +1708,25 @@ enum LegacyPlanSeedCatalog {
             ],
             [
                 MetoliusCycleBuilder.fixed(title: "Small-edge hang", instruction: "Hang from a small edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.smallEdge)]),
-                MetoliusCycleBuilder.fixed(title: "Bent-arm pocket hang", instruction: "Hold a pocket at a 90° bent arm for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.pocket)])
+                MetoliusCycleBuilder.fixed(title: "Bent-arm pocket hang", instruction: "Hold a pocket at a 90° bent arm for 15 seconds.", duration: 15, phase: .hang, targets: [.kind(.pocket)])
             ],
             [MetoliusCycleBuilder.fixed(title: "Round-sloper hang", instruction: "Hang from a round sloper for 30 seconds.", duration: 30, phase: .hang, targets: [.feature(.roundSloper)])],
             [
                 MetoliusCycleBuilder.fixed(title: "Large-edge hang", instruction: "Hang from a large edge for 20 seconds.", duration: 20, phase: .hang, targets: [.feature(.largeEdge)]),
-                MetoliusCycleBuilder.pullUps(count: 4, title: "Pocket pull-ups", instruction: "Do 4 pull-ups on a pocket.", phase: .pull, targets: [.feature(.pocket)])
+                MetoliusCycleBuilder.pullUps(count: 4, title: "Pocket pull-ups", instruction: "Do 4 pull-ups on a pocket.", phase: .pull, targets: [.kind(.pocket)])
             ],
             [
-                MetoliusCycleBuilder.pullUps(count: 3, title: "Offset pulls", instruction: "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)]),
-                MetoliusCycleBuilder.pullUps(count: 3, title: "Offset pulls · other side", instruction: "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.feature(.jug), .feature(.smallEdge)])
+                MetoliusCycleBuilder.pullUps(count: 3, title: "Offset pulls", instruction: "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.kind(.jug), .feature(.smallEdge)]),
+                MetoliusCycleBuilder.pullUps(count: 3, title: "Offset pulls · other side", instruction: "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.", phase: .pull, targets: [.kind(.jug), .feature(.smallEdge)])
             ],
             [
-                MetoliusCycleBuilder.repetitions(count: 15, title: "Jug knee raises", instruction: "Do 15 knee raises on the jugs.", phase: .pull, targets: [.feature(.jug)]),
+                MetoliusCycleBuilder.repetitions(count: 15, title: "Jug knee raises", instruction: "Do 15 knee raises on the jugs.", phase: .pull, targets: [.kind(.jug)]),
                 MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.mediumEdge)])
             ],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [.feature(.mediumEdge)])],
             [
                 MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.feature(.largeSlope)]),
-                MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.feature(.jug)])
+                MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.kind(.jug)])
             ],
             [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [.feature(.roundSloper)])]
         ])
@@ -1770,7 +1783,7 @@ enum LegacyPlanSeedCatalog {
                     title: "Three-finger-pocket pull-ups",
                     instruction: "Do 5 pull-ups on a three-finger pocket.",
                     phase: .pull,
-                    targets: [.feature(.pocket, fingerCapacity: 3)],
+                    targets: [.kind(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 ),
                 MetoliusCycleBuilder.fixed(
@@ -1778,7 +1791,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
                     duration: 25,
                     phase: .hang,
-                    targets: [.feature(.pocket, fingerCapacity: 3)],
+                    targets: [.kind(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 )
             ],
@@ -1813,14 +1826,14 @@ enum LegacyPlanSeedCatalog {
                     title: "Offset pull-ups",
                     instruction: "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
                     phase: .pull,
-                    targets: [.feature(.largeSlope), .feature(.pocket, fingerCapacity: 3)]
+                    targets: [.feature(.largeSlope), .kind(.pocket, fingerCapacity: 3)]
                 ),
                 MetoliusCycleBuilder.pullUps(
                     count: 5,
                     title: "Offset pull-ups · other side",
                     instruction: "Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
                     phase: .pull,
-                    targets: [.feature(.largeSlope), .feature(.pocket, fingerCapacity: 3)]
+                    targets: [.feature(.largeSlope), .kind(.pocket, fingerCapacity: 3)]
                 )
             ],
             [
@@ -1836,7 +1849,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
                     duration: 15,
                     phase: .hang,
-                    targets: [.feature(.pocket, fingerCapacity: 3)],
+                    targets: [.kind(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 )
             ],
@@ -1864,7 +1877,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
                     duration: 20,
                     phase: .hang,
-                    targets: [.feature(.pocket, fingerCapacity: 3)],
+                    targets: [.kind(.pocket, fingerCapacity: 3)],
                     gripType: nil
                 ),
                 MetoliusCycleBuilder.pullUps(
@@ -1872,7 +1885,7 @@ enum LegacyPlanSeedCatalog {
                     title: "Power pull-ups",
                     instruction: "Then do 3 power pull-ups with weight or helper resistance.",
                     phase: .pull,
-                    targets: [.feature(.pocket, fingerCapacity: 3)]
+                    targets: [.kind(.pocket, fingerCapacity: 3)]
                 )
             ],
             [
@@ -2034,7 +2047,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: set == 3 && rep == 12 ? 0 : 6,
-                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)],
+                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail)],
                             gripType: nil
                         )
                     )
@@ -2075,7 +2088,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: 0,
-                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)],
+                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail)],
                             gripType: nil
                         )
                     )
@@ -2087,7 +2100,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
-                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)],
+                            targets: [.feature(.smallEdge, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail)],
                             gripType: nil
                         )
                     )
@@ -2118,7 +2131,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "10s hang · 5s rest",
                             active: 10,
                             rest: rep < 5 ? 5 : 0,
-                            targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                            targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)],
                             gripType: nil
                         )
                     )
@@ -2155,12 +2168,12 @@ enum LegacyPlanSeedCatalog {
                 grip: GripType?,
                 fingerConfiguration: FingerConfiguration?
             )] = [
-                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)], .openHand, nil),
-                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, nil),
-                ("19 mm half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, nil),
-                ("Front-three open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("Back-three half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("Front-two open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
+                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .openHand, nil),
+                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, nil),
+                ("19 mm half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, nil),
+                ("Front-three open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("Back-three half crimp", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("Front-two open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
             ]
 
             for set in 1...2 {
@@ -2218,12 +2231,12 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, nil),
-                ("F3 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+                ("Half 4 Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, nil),
+                ("F3 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -2257,9 +2270,19 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm half crimp", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)], .halfCrimp),
-                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)], .openHand),
-                ("Two-finger pocket", [.feature(.pocket, fingerCapacity: 2, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)], .openHand)
+                ("29 mm half crimp", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .halfCrimp),
+                ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand),
+                (
+                    "Two-finger pocket",
+                    [
+                        .kind(
+                            .pocket,
+                            fingerCapacity: 2,
+                            fallback: .mediumEdge, .largeEdge, .largeOpenHandRail
+                        )
+                    ],
+                    .openHand
+                )
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -2313,7 +2336,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "\(hangSeconds)s hang · 30s rest",
                             active: TimeInterval(hangSeconds),
                             rest: index < 2 ? 30 : 0,
-                            targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)],
+                            targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)],
                             gripType: nil
                         )
                     )
@@ -2345,8 +2368,18 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
-                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)], .openHand),
-                ("Four-finger pocket", [.feature(.pocket, fingerCapacity: 4, fallback: .mediumEdge, .largeEdge, .largeOpenHandRail, .jug)], .openHand)
+                ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .openHand),
+                (
+                    "Four-finger pocket",
+                    [
+                        .kind(
+                            .pocket,
+                            fingerCapacity: 4,
+                            fallback: .mediumEdge, .largeEdge, .largeOpenHandRail
+                        )
+                    ],
+                    .openHand
+                )
             ]
 
             for (holdIndex, grip) in grips.enumerated() {
@@ -2411,7 +2444,7 @@ enum LegacyPlanSeedCatalog {
                         accessory: "60s hang · 60s rest",
                         active: 60,
                         rest: interval < 10 ? 60 : 0,
-                        targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail, .jug)],
+                        targets: [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)],
                         gripType: nil
                     )
                 )
@@ -2604,14 +2637,14 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: numbered([
             emomMinute(id: "method-emom-minute-1", title: "Minute 1 · 20mm hang", instruction: "Hang for 20 seconds on 20mm, then rest for the remainder of the minute.", work: [(.feature(.mediumEdge), 20, .hang, .halfCrimp)], rest: 40),
-            emomMinute(id: "method-emom-minute-2", title: "Minute 2 · deep three-finger pocket + jug pull-ups", instruction: "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs.", work: [(.feature(.pocket, fingerCapacity: 3), 15, .hang, .openHand), (.feature(.jug), 15, .pull, nil)], rest: 30),
-            emomMinute(id: "method-emom-minute-3", title: "Minute 3 · 20mm hang + jug knee raises", instruction: "Hang for 10 seconds on 20mm, then do 5 knee raises on jugs.", work: [(.feature(.mediumEdge), 10, .hang, .halfCrimp), (.feature(.jug), 5, .pull, nil)], rest: 45),
+            emomMinute(id: "method-emom-minute-2", title: "Minute 2 · deep three-finger pocket + jug pull-ups", instruction: "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs.", work: [(.kind(.pocket, fingerCapacity: 3), 15, .hang, .openHand), (.kind(.jug), 15, .pull, nil)], rest: 30),
+            emomMinute(id: "method-emom-minute-3", title: "Minute 3 · 20mm hang + jug knee raises", instruction: "Hang for 10 seconds on 20mm, then do 5 knee raises on jugs.", work: [(.feature(.mediumEdge), 10, .hang, .halfCrimp), (.kind(.jug), 5, .pull, nil)], rest: 45),
             emomMinute(id: "method-emom-minute-4", title: "Minute 4 · bent-arm 15mm hang", instruction: "Hold a bent-arm hang for 15 seconds on 15mm, then rest for the remainder.", work: [(.feature(.smallEdge), 15, .hang, .halfCrimp)], rest: 45),
-            emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.", work: [(.feature(.largeSlope, fallback: .roundSloper), 10, .hang, .openHand), (.feature(.jug), 15, .pull, nil)], rest: 35),
-            emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(.feature(.pocket, fingerCapacity: 3), 10, .hang, .openHand)], rest: 50),
-            emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.", work: [(.feature(.jug), 15, .pull, nil), (.feature(.smallEdge), 15, .pull, nil)], rest: 30),
+            emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.", work: [(.feature(.largeSlope, fallback: .roundSloper), 10, .hang, .openHand), (.kind(.jug), 15, .pull, nil)], rest: 35),
+            emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(.kind(.pocket, fingerCapacity: 3), 10, .hang, .openHand)], rest: 50),
+            emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.", work: [(.kind(.jug), 15, .pull, nil), (.feature(.smallEdge), 15, .pull, nil)], rest: 30),
             emomMinute(id: "method-emom-minute-8", title: "Minute 8 · 15mm hang", instruction: "Hang for 25 seconds on a 15mm edge, then rest for the remainder.", work: [(.feature(.smallEdge), 25, .hang, .halfCrimp)], rest: 35),
-            emomMinute(id: "method-emom-minute-9", title: "Minute 9 · 20mm hang + jug knee raises", instruction: "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs.", work: [(.feature(.mediumEdge), 20, .hang, .halfCrimp), (.feature(.jug), 10, .pull, nil)], rest: 30),
+            emomMinute(id: "method-emom-minute-9", title: "Minute 9 · 20mm hang + jug knee raises", instruction: "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs.", work: [(.feature(.mediumEdge), 20, .hang, .halfCrimp), (.kind(.jug), 10, .pull, nil)], rest: 30),
             guidedTask(id: "method-emom-minute-10", title: "Minute 10 · max sloper", instruction: "Take a max hang on a sloper.", accessory: "Max effort · stopwatch", phase: .hang, targets: [.feature(.largeSlope, fallback: .roundSloper)], duration: 60, timing: .stopwatch, gripType: .openHand)
         ])
     )
@@ -2630,8 +2663,8 @@ enum LegacyPlanSeedCatalog {
                 guidedTask(id: "rei-sample-warm-up", title: "Warm-up", instruction: "Warm up with 20–30 minutes of easy climbing or light traversing, OR use 20–30-second dead hangs on the biggest holds plus several pull-up sets.", accessory: "20–30m easy climbing OR 20–30s big-hold hangs + pull-up sets", phase: .conditioning, duration: 1500, timing: .stopwatch)
             ]
             let grips: [(title: String, target: HoldTarget, grip: GripType)] = [
-                ("Jug", .feature(.jug), .openHand),
-                ("Three-finger pocket", .feature(.pocket, fingerCapacity: 3), .openHand),
+                ("Jug", .kind(.jug), .openHand),
+                ("Three-finger pocket", .kind(.pocket, fingerCapacity: 3), .openHand),
                 ("Medium edge", .feature(.mediumEdge), .openHand),
                 ("Medium pinch", .feature(.mediumPinch, fallback: .mediumEdge), .openHand),
                 ("Large sloper", .feature(.largeSlope, fallback: .roundSloper), .openHand)

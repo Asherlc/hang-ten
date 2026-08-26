@@ -134,7 +134,49 @@ internal enum BoardTargetResolver {
             return []
         }
         guard let kind = target.kind else { return [] }
-        return holds.filter { $0.kind == kind }.map(\.id)
+        let matches = holds.filter { hold in
+            guard hold.kind == kind else { return false }
+            guard let capacity = target.fingerCapacity else { return true }
+            return hold.fingerCapacity == capacity
+        }
+        if kind == .pocket {
+            if target.fingerCapacity != nil, !matches.isEmpty {
+                return oneHoldPerHand(from: matches).map(\.id)
+            }
+            if target.fingerCapacity == nil {
+                return genericPocketSelection(from: matches).map(\.id)
+            }
+        }
+        if !matches.isEmpty { return matches.map(\.id) }
+        for fallback in target.fallbackFeatures {
+            let fallbackMatches = matching(
+                fallback,
+                fingerCapacity: target.fingerCapacity,
+                among: holds
+            )
+            if !fallbackMatches.isEmpty { return fallbackMatches.map(\.id) }
+        }
+
+        // Only a capacity-qualified pocket target may relax a declared
+        // fallback's capacity. This is the documented availability ladder
+        // for pocket routines; doing it for every kind target would broaden
+        // unrelated targets and custom routines. Try every exact-capacity
+        // fallback above before accepting any capacity-agnostic substitute.
+        if kind == .pocket, target.fingerCapacity != nil {
+            for fallback in target.fallbackFeatures {
+                // A declared fallback is an available substitute, rather than a
+                // claim that it shares the source target's finger capacity.
+                let capacityAgnosticFallbackMatches = matching(
+                    fallback,
+                    fingerCapacity: nil,
+                    among: holds
+                )
+                if !capacityAgnosticFallbackMatches.isEmpty {
+                    return capacityAgnosticFallbackMatches.map(\.id)
+                }
+            }
+        }
+        return []
     }
 
     static func resolveHolds(
@@ -156,7 +198,7 @@ internal enum BoardTargetResolver {
         if !primary.isEmpty { return primary }
         let closestPrimary = closestMatch(for: target, among: holds)
         if !closestPrimary.isEmpty { return closestPrimary }
-        guard target.feature?.holdKind == .pocket else { return [] }
+        guard target.feature?.holdKind == .pocket || target.kind == .pocket else { return [] }
         for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
             let fallbackTarget = HoldTarget.feature(
                 fallback,
@@ -215,11 +257,38 @@ internal enum BoardTargetResolver {
             return []
         }
         guard let kind = target.kind else { return [] }
-        let sameKind = preferringFingerCapacity(
-            holds.filter { $0.kind == kind },
-            target: target
-        )
-        if !sameKind.isEmpty { return sameKind.map(\.id) }
+        let sameKindCandidates = holds.filter { $0.kind == kind }
+        let sameKind = preferringFingerCapacity(sameKindCandidates, target: target)
+        if !sameKind.isEmpty {
+            // A capacity-qualified pocket must not silently become a
+            // differently sized pocket when its plan declares an
+            // availability fallback. Exact-capacity pockets remain first;
+            // otherwise let the plan's stated fallback order decide before
+            // considering a mismatched pocket.
+            if kind == .pocket,
+               target.fingerCapacity != nil,
+               !target.fallbackFeatures.isEmpty,
+               !sameKindCandidates.contains(where: { $0.fingerCapacity == target.fingerCapacity }) {
+                for fallback in target.fallbackFeatures {
+                    let matches = sameKindOrGroup(fallback, target: target, among: holds)
+                    if !matches.isEmpty { return matches }
+                }
+            }
+            if kind == .pocket {
+                if target.fingerCapacity != nil {
+                    return oneHoldPerHand(from: sameKind).map(\.id)
+                }
+                return genericPocketSelection(from: sameKind).map(\.id)
+            }
+            return sameKind.map(\.id)
+        }
+        for fallback in target.fallbackFeatures {
+            let matches = sameKindOrGroup(fallback, target: target, among: holds)
+            if !matches.isEmpty { return matches }
+        }
+        if kind == .pocket, target.fingerCapacity != nil {
+            return crossKindEdges(for: target, among: holds).map(\.id)
+        }
         guard kind == .edge else { return [] }
         return crossKindPockets(for: target, among: holds).map(\.id)
     }
@@ -333,6 +402,14 @@ internal enum BoardTargetResolver {
             return oneHoldPerHand(from: pockets)
         }
         return pockets.filter { $0.fingerCapacity == capacity }
+    }
+
+    /// A capacity-qualified pocket request may use same-capacity edges only
+    /// when the board has no pocket candidate. An unqualified pocket request
+    /// must not broaden into an arbitrary edge selection.
+    private static func crossKindEdges(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
+        guard let capacity = target.fingerCapacity else { return [] }
+        return holds.filter { $0.kind == .edge && $0.fingerCapacity == capacity }
     }
 
     private static func selectingGenericPocketPair(
