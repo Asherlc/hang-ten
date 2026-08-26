@@ -102,8 +102,12 @@ and labelled captures documented in the [YY
 audit](2026-08-12-yy-vertical-board-packages.md#2026-08-25-source-audited-metadata-certification)
 and [Zlagboard
 audit](2026-08-12-zlagboard-board-packages.md#2026-08-25-source-audited-metadata-certification).
-All ten captures are retained under
-`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`; no geometry
+The primary-presentation captures are retained under
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`, while the
+collision-free secondary-contact captures and manifest are under
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard-secondary/`. Those
+14 one-ID images are manually reviewed renderings of the Workbench API's
+selected-presentation document and existing canonical paths; no geometry
 changed.
 
 The ledger moves from 28 boards / 388 holds to 38 boards / 556 holds. All seven
@@ -115,23 +119,27 @@ fields are accounted for and all 168 mandatory kinds are source-verified:
 | `sizeMillimeters` | 223 / 223 | 338 / 338 | 218 | 0 |
 | `depthRangeMillimeters` | 34 / 34 | 34 / 34 | 522 | 0 |
 | `fingerCapacity` | 161 / 161 | 179 / 179 | 40 | 337 |
-| `handCapacity` | 0 / 0 | 2 / 2 | 554 | 0 |
-| `gripType` | 134 / 134 | 182 / 182 | 374 | 0 |
-| `features` | 32 / 32 | 74 / 74 | 482 | 0 |
+| `handCapacity` | 0 / 0 | 0 / 0 | 556 | 0 |
+| `gripType` | 134 / 134 | 180 / 180 | 376 | 0 |
+| `features` | 32 / 32 | 70 / 70 | 486 | 0 |
 
-The batch certifies 393 populated outcomes: 168 kinds, 115 scalar depths, 18
-finger capacities, two one-arm hand capacities, 48 grip enums, and 42 feature
-arrays. The 92 package additions are the two hand capacities, 48 grips, and 42
-features; the other exact values were already present and are now tied to
+The batch certifies 391 populated outcomes: 168 kinds, 115 scalar depths, 18
+finger capacities, 48 grip enums, and 42 feature arrays. The 90 package
+additions are the 48 grips and 42 features; the other exact values were already
+present and are now tied to
 stable-ID evidence records. Zlagboard's compound `sloper JUG` stays
 `kind: sloper`, with `gripType: sloper` and feature `jug` preserving the whole
-manufacturer label.
+manufacturer label. The global after totals also incorporate the later removal
+of two unsupported Trango grip values and four unsupported Trango feature
+values; the 391 Task 9 outcomes themselves are unchanged.
 
 Remaining blanks are deliberate. YY degree labels, mono phalange wording,
 magnetic inserts, and portable-board inclination are not millimetre depth
 ranges. Zlagboard's exhaustive maps do not assign the product page's general
-`pockets` wording to any exact contact or publish finger/hand capacity. No edge
-posture or wide-contact hand count was inferred from geometry.
+`pockets` wording to any exact contact or publish finger/hand capacity. YY's
+one-arm exercise wording likewise does not establish simultaneous hand
+capacity. No edge posture or wide-contact hand count was inferred from
+geometry.
 
 ### Corrected source mappings
 

@@ -348,17 +348,15 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
     assert sum(hold.grip_type == "sloper" for hold in yy_holds) == 14
     assert sum(hold.grip_type == "sloper" for hold in zlag_holds) == 24
     assert sum(hold.grip_type == "twoFingerPocket" for hold in yy_holds) == 10
-    assert {
-        board_id: next(
+    assert all(
+        next(
             hold.hand_capacity
             for hold in packages[board_id].holds
             if hold.id == "center-handle"
         )
+        is None
         for board_id in ("yy.verticalboard-one", "yy.verticalboard-evo")
-    } == {
-        "yy.verticalboard-one": 1,
-        "yy.verticalboard-evo": 1,
-    }
+    )
 
     for board_id in ("zlagboard.evo", "zlagboard.pro"):
         sloper_jug = next(

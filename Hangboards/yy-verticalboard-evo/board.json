@@ -1942,7 +1942,6 @@
       "id": "center-handle",
       "name": "Center one-arm handle",
       "kind": "jug",
-      "handCapacity": 1,
       "geometry": [
         {
           "frame": {

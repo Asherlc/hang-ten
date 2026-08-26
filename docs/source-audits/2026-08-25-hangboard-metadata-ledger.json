@@ -23473,14 +23473,14 @@
         "center-handle"
       ],
       "field": "handCapacity",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
         "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": 1
+      "reason": "The official one-arm exercise wording establishes intended unilateral use, not a maximum simultaneous hand capacity for this exact contact."
     },
     {
       "boardID": "yy.verticalboard-evo",
@@ -24590,14 +24590,14 @@
         "center-handle"
       ],
       "field": "handCapacity",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-one",
         "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": 1
+      "reason": "The official one-arm exercise wording establishes intended unilateral use, not a maximum simultaneous hand capacity for this exact contact."
     },
     {
       "boardID": "yy.verticalboard-one",

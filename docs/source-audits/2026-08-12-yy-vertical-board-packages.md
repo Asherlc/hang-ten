@@ -114,9 +114,19 @@ byte-exact.
 
 This batch re-opened the eight official YY Vertical product pages, the fixed
 board comparison table, and the official product views linked above and below.
-All 119 logical contacts were manually reconciled with the visible stable IDs
-in `.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`. `icky-cow` is
-the workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset. The
+The eight primary presentations were manually reconciled with the visible
+stable IDs in `.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`.
+The secondary-presentation contacts are separately covered by the collision-free
+one-ID-per-capture evidence and explicit ID manifest in
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard-secondary/`:
+TravelBoard `edge-10`; La Baguette `edge-15` and `edge-10`; and Baguette Evo's
+six shallow-pair, four central, and rounded-tray contacts. Together these
+captures reconcile all 119 YY logical contacts. Each secondary image is a
+review-only rendering of the Workbench API's selected-presentation document:
+its validated presentation image and existing canonical `displayPath` regions,
+with exactly one stable-ID label. The 14 images and manifest were manually
+visually reviewed. `icky-cow` is the
+workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset. The
 captures were review aids only; no path, measurement, capacity, or type was
 derived from pixels, and geometry did not change.
 
@@ -147,13 +157,13 @@ optional package fields. A dash means that row adds no value for that field.
 | One | `sloper-35-{left,right}`, `sloper-20-center` | `plats` 35° / 20° | `sloper` | — | — | grip `sloper` |
 | One | `edge-25-{left,right}`, `edge-45-{left,right}`, `edge-inclined-25-{left,right}`, `edge-20-{left,right}`, `edge-18-{left,right}` | mapped straight/inclined `réglettes` | `edge` | IDs' printed value | — | — |
 | One | `pocket-50-{left,right}`, `pocket-30-{left,right}` | `bidoigts` 50 / 30 mm | `pocket` | IDs' printed value | finger 2 | grip `twoFingerPocket`; feature `pocket` |
-| One | `center-handle` | central handle for unilateral pull | `jug` | — | hand 1 | — |
+| One | `center-handle` | central handle for unilateral pull | `jug` | — | — | — |
 | Evo | `jug-{left,right}` | `bacs x2` | `jug` | — | — | feature `jug` |
 | Evo | `sloper-43-{left,right}`, `sloper-38-{left,right}`, `sloper-30-center` | `plats` 43° / 38° / 30° | `sloper` | — | — | grip `sloper` |
 | Evo | `edge-25-{left,right}`, `edge-20-outer-{left,right}`, `edge-40-center`, `edge-inclined-30-{left,right}`, `edge-18-{left,right}` | mapped straight/inclined `réglettes` | `edge` | IDs' printed value | — | — |
 | Evo | `pocket-inclined-{left,right}`, `pocket-20-{left,right}` | 25 mm inclined / 20 mm `bidoigts` | `pocket` | 25 / 20 | finger 2 | grip `twoFingerPocket`; feature `pocket` |
 | Evo | `mono-upper-{left,right}`, `mono-lower-{left,right}` | `mono-doigts`, one/two phalanges | `pocket` | — | finger 1 | feature `pocket` |
-| Evo | `center-handle` | central one-arm handle | `jug` | — | hand 1 | — |
+| Evo | `center-handle` | central one-arm handle | `jug` | — | — | — |
 | TravelBoard | `tray` | traction tray | `jug` | — | — | feature `jug` |
 | TravelBoard | `edge-25`, `edge-15`, `edge-10` | exhaustive 25 / 15 / 10 mm grips | `edge` | IDs' printed value | — | — |
 | TravelBoard | `mono-{left,right}` | isolated mono-fingers | `pocket` | — | finger 1 | feature `pocket` |
@@ -168,13 +178,15 @@ optional package fields. A dash means that row adds no value for that field.
 
 ### Coverage and deliberate blanks
 
-The ledger certifies 119 kinds, 80 scalar depths, 18 finger capacities, two
-one-hand capacities, 24 grip enums, and 31 feature arrays. All other outcomes
+The ledger certifies 119 kinds, 80 scalar depths, 18 finger capacities, 24 grip
+enums, and 31 feature arrays. All other outcomes
 are explicit source-specific blanks. No YY source gives a depth interval for
 one canonical contact. Degree values, mono depth in phalanges, magnetic-insert
 states, and Turn & Pull inclination are not millimetre depth or depth ranges.
 Non-pocket contacts have `fingerCapacity: notApplicable`; no width-based hand
-capacity or edge posture was inferred.
+capacity or edge posture was inferred. In particular, a source-supported
+one-arm exercise names intended unilateral use, not a maximum simultaneous
+hand capacity, so both center handles remain blank.
 
 The source conflicts are retained rather than hidden: First's summary says 25°
 for lateral slopers while its technical table, comparison table, and front say

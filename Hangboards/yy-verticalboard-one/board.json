@@ -1510,7 +1510,6 @@
     },
     {
       "id": "center-handle",
-      "handCapacity": 1,
       "presentationID": "primary",
       "name": "Center multifunction handle",
       "kind": "jug",
