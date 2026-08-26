@@ -629,7 +629,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "handCapacity": 1
     },
     {
       "id": "edge-40-right",
