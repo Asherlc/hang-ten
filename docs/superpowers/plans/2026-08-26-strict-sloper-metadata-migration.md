@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Require source-backed flat-versus-round sloper metadata, including flat-surface angle, in every canonical board package and expose it in the iOS Hold inspector.
+**Goal:** Require source-backed flat-versus-round sloper metadata in every canonical board package, preserve manufacturer-published flat-surface angles when available, and expose both in the iOS Hold inspector.
 
 **Architecture:** Add one canonical `sloper` metadata object to the per-hold JSON schema, with matching Python and Swift value types. Extend the existing source-audit ledger with a `sloper` field so the strict package migration can be mechanically cross-checked against all 96 current slopers. The editor reads and writes the same model, offering a subtype control and a conditional angle control.
 
@@ -14,9 +14,9 @@
 
 - `sloper` is required exactly when `kind` is `sloper`, and prohibited otherwise.
 - `sloper.type` is exactly `flat` or `round`.
-- A flat sloper requires finite `angleDegrees` in the inclusive range 0 through 90, measured from the board face; a round sloper must not contain it.
-- Each migrated hold must be justified by a primary manufacturer URL; do not infer subtype or angle from names, images, geometry, or `shapeConstraint`.
-- A missing primary-source fact blocks the migration; do not fabricate or approximate a value.
+- A flat sloper may include finite `angleDegrees` in the inclusive range 0 through 90, measured from the board face; a round sloper must not contain it.
+- Each migrated hold must be justified by a primary manufacturer URL for its subtype; an angle is stored only when the manufacturer publishes it. Do not infer either fact from names, images, geometry, or `shapeConstraint`.
+- A missing primary-source subtype blocks the migration; omit unsupported flat angles rather than fabricating or approximating them.
 - Add and execute red-green tests before production changes, using real decoder, writer, validator, and editor-session behavior.
 - Keep plan wording and training content unchanged. Do not alter hold geometry.
 
@@ -47,12 +47,12 @@
 
 **Interfaces:**
 - Produces a Python `SloperMetadata` value carried by `BoardHold`.
-- Produces `_load_hold` validation: slopers require `{type, angleDegrees?}`; non-slopers reject `sloper`.
+- Produces `_load_hold` validation: slopers require a `sloper.type`; flat slopers may include `angleDegrees`; non-slopers reject `sloper`.
 - Produces metadata-audit field `sloper`, whose verified value is exactly the canonical object and whose comparison reads `BoardHold.sloper`.
 
 - [ ] **Step 1: Write failing schema tests**
 
-Add focused tests that load otherwise-valid board payloads containing these literal cases: a flat sloper with `{"type": "flat", "angleDegrees": 20}`, a round sloper with `{"type": "round"}`, a sloper missing `sloper`, a non-sloper containing `sloper`, a flat sloper missing `angleDegrees`, a round sloper containing `angleDegrees`, and out-of-range/non-finite angles. Assert accepted values are exposed as structured metadata and rejected values raise `ValueError` containing the relevant field path.
+Add focused tests that load otherwise-valid board payloads containing these literal cases: a flat sloper with `{"type": "flat", "angleDegrees": 20}`, a flat sloper with `{"type": "flat"}`, a round sloper with `{"type": "round"}`, a sloper missing `sloper`, a non-sloper containing `sloper`, a round sloper containing `angleDegrees`, and out-of-range/non-finite supplied angles. Assert accepted values are exposed as structured metadata and rejected values raise `ValueError` containing the relevant field path.
 
 - [ ] **Step 2: Verify the schema tests fail for the missing contract**
 
@@ -72,7 +72,7 @@ Expected: the new valid record is rejected as an unsupported field or does not c
 
 - [ ] **Step 5: Implement the minimum Python model and validation**
 
-Add a frozen `SloperMetadata(type: str, angle_degrees: float | None)` with a parser that accepts only `flat` and `round`, enforces the exact conditional key set, and bounds flat angles to 0...90. Add `sloper` to the Python `BoardHold`, make `_load_hold` close over the conditional key, and extend the audit ledger field set, verified-value parsing, actual-value extraction, and value comparison for canonical `{"type": ..., "angleDegrees": ...}` values.
+Add a frozen `SloperMetadata(type: str, angle_degrees: float | None)` with a parser that accepts only `flat` and `round`, permits an absent flat angle, rejects every round angle, and bounds any supplied flat angle to 0...90. Add `sloper` to the Python `BoardHold`, make `_load_hold` close over the conditional key, and extend the audit ledger field set, verified-value parsing, actual-value extraction, and value comparison for canonical `{"type": ..., "angleDegrees": ...}` values.
 
 - [ ] **Step 6: Verify the focused Python tests pass**
 
@@ -102,7 +102,7 @@ Run `rg -n -C 2 '"kind": "sloper"' Hangboards/*/board.json` and record each pack
 
 - [ ] **Step 2: Gather primary manufacturer evidence without inference**
 
-For each inventory row, use the official manufacturer product page, specification, or official labelled hold diagram. Record the direct source URL, visible source fact, and resulting `flat` or `round` type. For each flat entry, record the manufacturer-stated numeric angle and ensure it uses the documented board-face convention. Stop and report any row whose primary source does not establish both required values; do not write a JSON value for it.
+For each inventory row, use the official manufacturer product page, specification, or official labelled hold diagram. Record the direct source URL, visible source fact, and resulting `flat` or `round` type. For a flat entry, record an angle only when the manufacturer states it using the documented board-face convention. Stop and report any row whose primary source does not establish the required subtype; do not write a JSON value for it.
 
 - [ ] **Step 3: Add the source-audit document and ledger entries**
 
@@ -110,7 +110,7 @@ Write one audit table row for every sloper, grouping only hold IDs supported by 
 
 - [ ] **Step 4: Update only the canonical sloper data**
 
-Insert the literal `sloper` object after `kind` for each inventory hold. A flat hold receives `{"type":"flat","angleDegrees":<manufacturer value>}`; a round hold receives `{"type":"round"}`. Do not change the hold name, kind, geometry, presentations, depth, capacity, features, or training-plan files.
+Insert the literal `sloper` object after `kind` for each inventory hold. A flat hold receives `{"type":"flat"}` plus `angleDegrees` only when the manufacturer publishes the value; a round hold receives `{"type":"round"}`. Do not change the hold name, kind, geometry, presentations, depth, capacity, features, or training-plan files.
 
 - [ ] **Step 5: Validate all package data and source records**
 
@@ -141,7 +141,7 @@ Run: `git add Hangboards docs/source-audits/2026-08-26-sloper-metadata-audit.md 
 
 - [ ] **Step 1: Write failing Store and writer tests**
 
-Add XCTest fixtures that decode a flat sloper and assert `type == .flat` and `angleDegrees == 20`; decode a round sloper and assert a nil angle; reject missing metadata, non-sloper metadata, flat-without-angle, round-with-angle, and values outside 0...90. Extend the existing editable-document semantic equality assertion and round-trip test to compare sloper metadata.
+Add XCTest fixtures that decode a flat sloper with `angleDegrees == 20`, a flat sloper with a nil angle, and a round sloper with a nil angle; reject missing metadata, non-sloper metadata, round-with-angle, and supplied values outside 0...90. Extend the existing editable-document semantic equality assertion and round-trip test to compare sloper metadata.
 
 - [ ] **Step 2: Verify Store and writer tests fail**
 
@@ -149,11 +149,11 @@ Run the exact Xcode test selector(s) containing the new Store and writer tests u
 
 - [ ] **Step 3: Implement the shared model and strict persistence**
 
-Define `SloperType: String, Codable, Hashable` with `flat` and `round`, plus `SloperMetadata: Codable, Hashable` with conditional validation. Add it to `BoardHold`, the strict package document, the editable document, `BoardPackageStore`, and `BoardPackageWriter`. Keep decoding fail-closed by adding `sloper` to exact coding-key allowlists and rejecting every invalid kind/type/angle combination named in Step 1.
+Define `SloperType: String, Codable, Hashable` with `flat` and `round`, plus `SloperMetadata: Codable, Hashable` with conditional validation. Add it to `BoardHold`, the strict package document, the editable document, `BoardPackageStore`, and `BoardPackageWriter`. Keep decoding fail-closed by adding `sloper` to exact coding-key allowlists and rejecting every invalid kind/type/angle combination named in Step 1, while preserving an absent flat angle.
 
 - [ ] **Step 4: Write failing editor-session tests**
 
-Create a selected sloper fixture in `BoardEditorSessionTests`. Assert changing it to flat assigns an in-range editor default angle, updating the angle changes only flat metadata, changing to round clears the angle, and an angle update while round is rejected or ignored without changing the saved document.
+Create a selected sloper fixture in `BoardEditorSessionTests`. Assert changing it to flat leaves an absent angle absent, updating a supplied angle changes only flat metadata, changing to round clears the angle, and an angle update while round is rejected or ignored without changing the saved document.
 
 - [ ] **Step 5: Verify editor tests fail**
 
@@ -161,7 +161,7 @@ Run the exact Xcode test selector(s) containing the new editor-session tests. Ex
 
 - [ ] **Step 6: Implement the editor API and Hold inspector**
 
-Add session methods that push one undo checkpoint before changing the selected hold’s `sloper` value and that only accept an in-range finite angle while the type is flat. In `HoldInspectorView`, render a `Sloper` card only when the selected hold kind is `.sloper`, use a `Picker`/segmented control for `Flat` and `Round`, and display a degrees-labelled numeric control only when the model type is `.flat`. Wire each control through the session methods, preserving existing error presentation and undo behavior.
+Add session methods that push one undo checkpoint before changing the selected hold’s `sloper` value and that only accept an in-range finite angle while the type is flat. In `HoldInspectorView`, render a `Sloper` card only when the selected hold kind is `.sloper`, use a `Picker`/segmented control for `Flat` and `Round`, and display an optional degrees-labelled numeric control only when the model type is `.flat`. Wire each control through the session methods, preserving existing error presentation and undo behavior.
 
 - [ ] **Step 7: Verify all focused Swift tests pass**
 

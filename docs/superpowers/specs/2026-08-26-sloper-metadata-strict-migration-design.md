@@ -28,11 +28,12 @@ Every sloper hold must declare a `sloper` object:
 
 `type` is exactly one of `flat` or `round`.
 
-`angleDegrees` is required only for `flat`. It is a finite number from 0
-through 90, inclusive, measured from the board face: 0 degrees is parallel
-to the board face and larger angles slope farther away. A `round` sloper must
-not include `angleDegrees`. Holds of any other kind must not include
-`sloper`.
+`angleDegrees` is available only for `flat`; it is optional because many
+manufacturer sources do not publish a value. When present, it is a finite
+number from 0 through 90, inclusive, measured from the board face: 0 degrees
+is parallel to the board face and larger angles slope farther away. A `round`
+sloper must not include `angleDegrees`. Holds of any other kind must not
+include `sloper`.
 
 The package validator, the Swift decoder, and the editor writer all reject
 the same invalid combinations. The decoded `BoardHold` retains this metadata
@@ -41,23 +42,25 @@ so callers do not need to reinterpret JSON.
 ## Evidence and migration
 
 Each migrated hold must be mapped to a primary manufacturer URL that supports
-the chosen subtype and, for flat slopers, the exact angle. The migration will
-record this mapping in a checked-in audit document with the board package,
-hold IDs, source URL, source fact, and resulting schema value.
+the chosen subtype. A flat angle is recorded only when that source publishes
+the exact value. The migration will record this mapping in a checked-in audit
+document with the board package, hold IDs, source URL, source fact, and
+resulting schema value.
 
 Names, rendered geometry, imagery, and the existing `shapeConstraint` are
-not evidence. When primary manufacturer material does not establish a required
-value, that hold remains a migration blocker; the schema is not weakened and
-no value is fabricated.
+not evidence. When primary manufacturer material does not establish the
+required subtype, that hold remains a migration blocker; no value is
+fabricated. A missing manufacturer angle is represented by an omitted
+`angleDegrees` field, rather than an invented value.
 
 ## Editor behavior
 
 The Hold inspector displays a Sloper section only when the selected hold has
 `kind: sloper`. It offers a subtype control for `flat` and `round`. When the
-subtype is flat, it exposes an angle control in degrees. When it becomes
-round, it clears the angle before saving. The editor may choose a valid
-initial angle for a newly selected flat subtype, but the canonical package
-remains subject to the same strict validation rules.
+subtype is flat, it exposes an optional angle control in degrees. When it
+becomes round, it clears the angle before saving. Selecting flat leaves an
+absent angle absent; the editor never invents one. The canonical package
+remains subject to the same validation rules.
 
 ## Testing and verification
 
