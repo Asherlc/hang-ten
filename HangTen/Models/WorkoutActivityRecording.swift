@@ -140,10 +140,12 @@ internal enum BoardTargetResolver {
             return hold.fingerCapacity == capacity
         }
         if kind == .pocket {
-            if target.fingerCapacity != nil {
+            if target.fingerCapacity != nil, !matches.isEmpty {
                 return oneHoldPerHand(from: matches).map(\.id)
             }
-            return genericPocketSelection(from: matches).map(\.id)
+            if target.fingerCapacity == nil {
+                return genericPocketSelection(from: matches).map(\.id)
+            }
         }
         if !matches.isEmpty { return matches.map(\.id) }
         for fallback in target.fallbackFeatures {
@@ -153,6 +155,26 @@ internal enum BoardTargetResolver {
                 among: holds
             )
             if !fallbackMatches.isEmpty { return fallbackMatches.map(\.id) }
+        }
+
+        // Only a capacity-qualified pocket target may relax a declared
+        // fallback's capacity. This is the documented availability ladder
+        // for pocket routines; doing it for every kind target would broaden
+        // unrelated targets and custom routines. Try every exact-capacity
+        // fallback above before accepting any capacity-agnostic substitute.
+        if kind == .pocket, target.fingerCapacity != nil {
+            for fallback in target.fallbackFeatures {
+                // A declared fallback is an available substitute, rather than a
+                // claim that it shares the source target's finger capacity.
+                let capacityAgnosticFallbackMatches = matching(
+                    fallback,
+                    fingerCapacity: nil,
+                    among: holds
+                )
+                if !capacityAgnosticFallbackMatches.isEmpty {
+                    return capacityAgnosticFallbackMatches.map(\.id)
+                }
+            }
         }
         return []
     }

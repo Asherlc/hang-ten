@@ -305,7 +305,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["pocket"])
     }
 
-    func testResolveHoldIDsUsesExplicitFallbackDespiteMismatchedFingerCapacity() {
+    func testFeatureTargetCanUseExistingCapacityAgnosticFallback() {
         let board = board(holds: [
             hold(id: "fallback-edge", feature: .largeEdge, fingerCapacity: 4),
             hold(id: "unrelated-jug", kind: .jug)
@@ -319,6 +319,54 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let result = BoardTargetResolver.resolveHoldIDs(for: target, on: board)
 
         XCTAssertEqual(result, ["fallback-edge"])
+    }
+
+    func testResolveHoldIDsPrefersExactCapacityFallbackOverMismatchedFallbackAndWrongPocket() {
+        let board = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "mismatched-first-fallback", feature: .mediumEdge, fingerCapacity: 4),
+            hold(id: "exact-later-fallback", feature: .largeEdge, fingerCapacity: 2)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fallbacks: [.mediumEdge, .largeEdge],
+            fingerCapacity: 2
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: target, on: board),
+            ["exact-later-fallback"]
+        )
+    }
+
+    func testResolveHoldIDsUsesCapacityAgnosticPocketFallbackBeforeWrongCapacityPocket() {
+        let board = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "declared-fallback", feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(for: target, on: board),
+            ["declared-fallback"]
+        )
+    }
+
+    func testResolveHoldIDsDoesNotBroadenCapacityAgnosticFallbackForOtherKinds() {
+        let board = board(holds: [
+            hold(id: "mismatched-fallback", feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .edge,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertTrue(BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty)
     }
 
     func testSubstitutionUsesClosestMatchForExplicitEdgeFallback() {
