@@ -115,6 +115,115 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-2",
+      "name": "Hold 2",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.642512075521,
+            "y": 0.328157352539,
+            "width": 0.129054522786,
+            "height": 0.086956523438
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.775401069357,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.224598930643,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.100556366612,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.223857625511
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.776142374489
+                ],
+                "control2": [
+                  0.100556366612,
+                  1.0
+                ],
+                "to": [
+                  0.224598930643,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.775401069357,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.899443633388,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.776142374489
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.223857625511
+                ],
+                "control2": [
+                  0.899443633388,
+                  0.0
+                ],
+                "to": [
+                  0.775401069357,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
