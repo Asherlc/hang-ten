@@ -144,6 +144,16 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         }
     }
 
+    var detailLabel: String {
+        switch self {
+        case .jug: "Jug"
+        case .edge: "Edge"
+        case .pocket: "Pocket"
+        case .pinch: "Pinch"
+        case .sloper: "Sloper"
+        }
+    }
+
     var tint: Color {
         switch self {
         case .jug: .holdBlue
