@@ -183,8 +183,8 @@ private struct WorkoutSummaryContent: View {
             }
 
             Section("Measured load") {
-                ForEach(session.steps, id: \.stepID) { step in
-                    stepRow(step)
+                ForEach(Array(session.steps.enumerated()), id: \.element.stepID) { index, step in
+                    stepRow(step, title: session.stepTitle(at: index))
                 }
             }
 
@@ -234,10 +234,10 @@ private struct WorkoutSummaryContent: View {
     }
 
     @ViewBuilder
-    private func stepRow(_ step: WorkoutStepMeasurement) -> some View {
+    private func stepRow(_ step: WorkoutStepMeasurement, title: String) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline) {
-                Text(step.stepID)
+                Text(title)
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
                 Spacer()

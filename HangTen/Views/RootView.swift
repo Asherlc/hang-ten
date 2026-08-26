@@ -2668,6 +2668,7 @@ struct WorkoutView: View {
 			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
 			batteryValue: motherboardBluetoothService.batteryValue,
 			steps: steps,
+			stepTitles: plan.steps.map(\.title),
 			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
 			bodyweightKGF: bodyweightKGF,
 			motherboardMeasurements: motherboardMeasurementCollector.measurements,
