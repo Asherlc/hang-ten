@@ -1221,6 +1221,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    @MainActor
     func testBoardSpecificMetoliusPlansAreOfficialAndVisibleOnlyOnTheirSourceBoard() throws {
         let expectedPlans = [
             ("metolius.contact.entry", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
@@ -1284,6 +1285,53 @@ final class PlanStorageTests: XCTestCase {
                 visiblePlanIDs,
                 expectedVisibleIDs,
                 "AppStore must expose only the matching board-specific Metolius plans on \(board.id)."
+            )
+        }
+    }
+
+    func testBoardSpecificMetoliusCompoundCyclesKeepEverySourceTarget() throws {
+        // This catches a regression where a compound any-hold, bump, or campus
+        // source task loses its later numbered destination from the active holds.
+        let expectedNumberedTargets: [(String, Set<String>)] = [
+            ("metolius.contact.entry.minute-4", ["pocket-11-left", "pocket-11-right"]),
+            ("metolius.contact.entry.minute-10", ["edge-17-center"]),
+            ("metolius.contact.intermediate.minute-4", ["pocket-11-left", "pocket-11-right"]),
+            ("metolius.contact.intermediate.minute-10", ["flat-sloper-center", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.contact.advanced.minute-4", ["pocket-11-left", "pocket-11-right"]),
+            ("metolius.contact.advanced.minute-5", ["pocket-13-left", "pocket-13-right", "pocket-9-left", "pocket-9-right", "jug-left", "jug-right"]),
+            ("metolius.contact.advanced.minute-9", ["pocket-7-left", "pocket-7-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.contact.advanced.minute-10", ["round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.intermediate.minute-10", ["edge-7-left", "edge-7-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.advanced.minute-5", ["edge-11-left", "edge-11-right", "pocket-9-left", "pocket-9-right", "edge-6-left", "edge-6-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.advanced.minute-8", ["pocket-8-left", "pocket-8-right", "pocket-9-left", "pocket-9-right"])
+        ]
+        let anyHoldCycles = [
+            "metolius.contact.entry.minute-4",
+            "metolius.contact.entry.minute-10",
+            "metolius.contact.intermediate.minute-4",
+            "metolius.contact.intermediate.minute-7",
+            "metolius.contact.advanced.minute-4",
+            "metolius.simulator-3d.entry.minute-10",
+            "metolius.simulator-3d.intermediate.minute-7"
+        ]
+
+        for (stepID, expectedTargets) in expectedNumberedTargets {
+            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
+            XCTAssertTrue(
+                expectedTargets.isSubset(of: Set(step.targets.flatMap(\.holdIDs))),
+                "\(stepID) must retain every numbered target in its compound source task."
+            )
+        }
+
+        for stepID in anyHoldCycles {
+            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
+            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
+            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
+
+            XCTAssertEqual(
+                Set(step.targets.flatMap(\.holdIDs)),
+                Set(board.holds.map(\.id)),
+                "\(stepID) must keep the source's any-hold option unconstrained."
             )
         }
     }

@@ -2012,6 +2012,43 @@
               "targets" : [
                 {
                   "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
                     "pocket-11-left",
                     "pocket-11-right"
                   ]
@@ -2021,6 +2058,43 @@
             }
           ],
           "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
             {
               "holdIDs" : [
                 "pocket-11-left",
@@ -2298,6 +2372,43 @@
               "targets" : [
                 {
                   "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
                     "edge-17-center"
                   ]
                 }
@@ -2306,6 +2417,43 @@
             }
           ],
           "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
             {
               "holdIDs" : [
                 "edge-17-center"
@@ -2452,6 +2600,43 @@
               "targets" : [
                 {
                   "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
                     "pocket-11-left",
                     "pocket-11-right"
                   ]
@@ -2461,6 +2646,43 @@
             }
           ],
           "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
             {
               "holdIDs" : [
                 "pocket-11-left",
@@ -2566,6 +2788,43 @@
                   "holdIDs" : [
                     "edge-17-center"
                   ]
+                },
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
                 }
               ],
               "timing" : "undefined"
@@ -2575,6 +2834,43 @@
             {
               "holdIDs" : [
                 "edge-17-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
               ]
             }
           ],
@@ -2850,6 +3146,43 @@
               "targets" : [
                 {
                   "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
                     "pocket-11-left",
                     "pocket-11-right"
                   ]
@@ -2859,6 +3192,43 @@
             }
           ],
           "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
             {
               "holdIDs" : [
                 "pocket-11-left",
@@ -3741,6 +4111,39 @@
                     "edge-5-left",
                     "edge-5-right"
                   ]
+                },
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "round-sloper-3-left",
+                    "jug-14-center",
+                    "round-sloper-3-right",
+                    "jug-1-right",
+                    "pocket-4-left",
+                    "edge-5-left",
+                    "edge-6-left",
+                    "edge-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "edge-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-15-center",
+                    "pocket-16-center",
+                    "pocket-17-center",
+                    "pocket-18-center",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "edge-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "edge-7-right",
+                    "edge-6-right",
+                    "edge-5-right",
+                    "pocket-4-right"
+                  ]
                 }
               ],
               "timing" : "undefined"
@@ -3751,6 +4154,39 @@
               "holdIDs" : [
                 "edge-5-left",
                 "edge-5-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "round-sloper-3-left",
+                "jug-14-center",
+                "round-sloper-3-right",
+                "jug-1-right",
+                "pocket-4-left",
+                "edge-5-left",
+                "edge-6-left",
+                "edge-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "edge-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-15-center",
+                "pocket-16-center",
+                "pocket-17-center",
+                "pocket-18-center",
+                "pocket-13-right",
+                "pocket-12-right",
+                "edge-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "edge-7-right",
+                "edge-6-right",
+                "edge-5-right",
+                "pocket-4-right"
               ]
             }
           ],
@@ -4177,6 +4613,12 @@
                     "pocket-8-left",
                     "pocket-8-right"
                   ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
                 }
               ],
               "timing" : "undefined"
@@ -4187,6 +4629,12 @@
               "holdIDs" : [
                 "pocket-8-left",
                 "pocket-8-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
               ]
             }
           ],
