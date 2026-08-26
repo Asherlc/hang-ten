@@ -1078,11 +1078,20 @@
                 "bendable": true
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [
+                  0.186936627433,
+                  0.697848808696
+                ],
+                "control2": [
+                  0.186936627433,
+                  0.697848808696
+                ],
                 "to": [
                   0.0,
                   0.076336944125
-                ]
+                ],
+                "bendable": true
               },
               {
                 "command": "close"
