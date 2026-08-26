@@ -32,21 +32,27 @@ format contract; no product pixel was changed.
 ## Direct geometry review
 
 All 19 retained canonical paths were deliberately reviewed against the complete
-official front in its own coordinate system. Symmetric physical pairs use exact
-horizontal mirrors. The two restored contacts are:
+official front in its own coordinate system. Moon's front is staggered: the
+right inner block is the 25/20/10/8 mm stack, while the right outer block is
+the jug/15 mm/mono/two-finger group. Right-side paths are therefore authored
+independently from the source, not horizontally mirrored from the left.
+
+The two restored contacts are:
 
 | Stable ID | Source contact | Canonical frame | Constraint |
 | --- | --- | --- | --- |
 | `mono-left` | Viewer-left 22 mm one-finger through-pocket | `x 0.335`, `y 0.586`, `w 0.026`, `h 0.036768333333` | operator-selected circle |
-| `mono-right` | Viewer-right 22 mm one-finger through-pocket | `x 0.639`, `y 0.586`, `w 0.026`, `h 0.036768333333` | exact mirrored circle |
+| `mono-right` | Viewer-right 22 mm one-finger through-pocket | `x 0.799`, `y 0.586`, `w 0.026`, `h 0.036768333333` | operator-selected circle |
 
 Each restored record is a `pocket` with exact source-supported
 `sizeMillimeters: 22` and `fingerCapacity: 1`. Unsupported range, hand
-capacity, grip enum, and features remain absent. The mono frames do not overlap
-their adjacent two-finger pocket frames.
+capacity, grip enum, and features remain absent. The right 8 mm edge is the
+inner-block path (`x 0.617`); it is collision-free with the outer mono and
+two-finger pocket frames. The mono frames do not overlap their adjacent
+two-finger pocket frames.
 
 Workbench visible-ID evidence is stored at
-`.context/hangboard-metadata-backfill-icky-cow/moon-armstrong-geometry-repair/capture/moon.armstrong--45a10ab74773.png`.
+`.context/hangboard-metadata-backfill-icky-cow/moon-armstrong-geometry-repair/capture-final/moon.armstrong--45a10ab74773.png`.
 Its manifest records 21 rendered regions. Manual review confirmed all 21 labels
 map to distinct source-supported contacts, including both circular monos, and
 that no hold path covers a mounting or pulley hole.

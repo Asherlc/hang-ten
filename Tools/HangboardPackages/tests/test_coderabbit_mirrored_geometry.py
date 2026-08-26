@@ -48,10 +48,6 @@ MIRRORED_PAIRS = {
         ("front-middle-3", "front-middle-7"),
         ("hold-26", "hold-27"),
     ),
-    "moon-armstrong": (
-        ("edge-20-left", "edge-20-right"),
-        ("edge-10-left", "edge-10-right"),
-    ),
     "nature-stoak-board-iii": (
         ("gradient-edge-left", "gradient-edge-right"),
     ),
