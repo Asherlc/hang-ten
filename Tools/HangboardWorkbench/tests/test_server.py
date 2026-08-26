@@ -14,6 +14,7 @@ import urllib.error
 import urllib.request
 from collections.abc import Iterator
 from contextlib import contextmanager
+from html.parser import HTMLParser
 from http.cookies import SimpleCookie
 from pathlib import Path
 from types import SimpleNamespace
@@ -45,10 +46,26 @@ from server import (  # noqa: E402
     create_server,
     validate_hang_ten_checkout,
 )
-from workbench_fixtures import PRIMARY_IMAGE, board_document  # noqa: E402
+from workbench_fixtures import (  # noqa: E402
+    PRIMARY_IMAGE,
+    board_document,
+    multi_presentation_board_document,
+)
 
 HOSTED_TOKEN = "ghp_hosted_session"
 HOSTED_BRANCH = "workbench-default"
+
+
+class _ScriptTagParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.sources: list[str | None] = []
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        if tag == "script":
+            self.sources.append(dict(attrs).get("src"))
 
 
 def _write_library(root: Path) -> Path:
@@ -60,6 +77,22 @@ def _write_library(root: Path) -> Path:
     board = board_document("fixture.board")
     (package / "board.json").write_text(
         json.dumps(board, indent=2) + "\n", encoding="utf-8"
+    )
+    return library
+
+
+def _write_multi_presentation_library(root: Path) -> Path:
+    library = root / "Hangboards"
+    package = library / "fixture-v2"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    back = bytearray(PRIMARY_IMAGE.read_bytes())
+    back[-12:-12] = b""
+    (assets / "back.png").write_bytes(bytes(back))
+    (package / "board.json").write_text(
+        json.dumps(multi_presentation_board_document("fixture.multi"), indent=2) + "\n",
+        encoding="utf-8",
     )
     return library
 
@@ -155,20 +188,20 @@ def _github_files() -> dict[str, bytes]:
 
 
 class _HostedSaveIdentityRaceClient(FakeGitHubClient):
-    """Replace a slug after PUT resolves its ID but before the save reload."""
+    """Replace a slug after it opens but before its conditional write."""
 
     def __init__(self, files: dict[str, bytes]) -> None:
         super().__init__(
             {"main": files, HOSTED_BRANCH: files, "feature": files},
             default_branch=HOSTED_BRANCH,
         )
-        self._head_reads = 0
+        self._raced = False
 
-    def get_branch_head_sha(self, token: str, branch: str) -> str:
-        self._head_reads += 1
-        if self._head_reads == 3:
+    def put_file(self, token, path, branch, content, message, sha):
+        if not self._raced:
+            self._raced = True
             path = "Hangboards/fixture-board/board.json"
-            content = (
+            replacement = (
                 json.dumps(board_document("different.board"), indent=2) + "\n"
             ).encode("utf-8")
             current_sha = self._branches[branch][path][1]
@@ -176,11 +209,11 @@ class _HostedSaveIdentityRaceClient(FakeGitHubClient):
                 token,
                 path,
                 branch,
-                content,
+                replacement,
                 "Concurrent board replacement",
                 current_sha,
             )
-        return super().get_branch_head_sha(token, branch)
+        return super().put_file(token, path, branch, content, message, sha)
 
 
 class _ConcurrentHostedBlobClient(FakeGitHubClient):
@@ -300,6 +333,26 @@ def hosted_request_json(
     return status, json.loads(body), headers
 
 
+def test_root_serves_only_the_bundled_react_frontend(tmp_path: Path) -> None:
+    library = _write_library(tmp_path)
+
+    with running_server(library) as base, urlopen(base + "/") as response:
+        assert response.status == 200
+        html = response.read().decode("utf-8")
+
+    parser = _ScriptTagParser()
+    parser.feed(html)
+    parser.close()
+    assert '<div id="root"></div>' in html
+    assert parser.sources == ["app.js"]
+    for legacy_script in (
+        "workbench-client.js",
+        "workbench-controller.js",
+        "path-editor.js",
+    ):
+        assert legacy_script not in html
+
+
 def test_lists_and_opens_direct_packages_with_independent_piece_regions(
     tmp_path: Path,
 ) -> None:
@@ -315,7 +368,9 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
                     "boardId": "fixture.board",
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
+                    "needsAttention": False,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }
@@ -323,7 +378,10 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
         status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         assert status == 200
         board = opened["board"]
-        assert board["imageUrl"] == "/api/boards/fixture.board/image"
+        assert (
+            board["imageUrl"]
+            == "/api/boards/fixture.board/image?presentationID=primary"
+        )
         assert board["saveUrl"] == "/api/boards/fixture.board"
         assert [region["key"] for region in board["document"]["regions"]] == [
             "hold-left-piece-0",
@@ -334,6 +392,215 @@ def test_lists_and_opens_direct_packages_with_independent_piece_regions(
             assert response.status == 200
             assert response.headers["Content-Type"] == "image/png"
             assert response.read(8) == b"\x89PNG\r\n\x1a\n"
+
+
+def test_opening_a_board_exposes_fractional_fixed_depth_on_every_piece(
+    tmp_path: Path,
+) -> None:
+    """Dropping fixed depth from the GET payload makes the inspector show Unset."""
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    board = board_document("fixture.board")
+    board["holds"][0]["sizeMillimeters"] = 7.5
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+
+    assert status == 200
+    assert [
+        region["sizeMillimeters"]
+        for region in opened["board"]["document"]["regions"]
+    ] == [7.5, 7.5]
+
+
+def test_saving_and_clearing_fractional_fixed_depth_round_trips_through_the_server(
+    tmp_path: Path,
+) -> None:
+    """A fixed-depth edit must persist, reopen, and clear through the HTTP API."""
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+
+    with running_server(library) as base:
+        _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+        document = opened["board"]["document"]
+        for region in document["regions"]:
+            region["sizeMillimeters"] = 7.25
+
+        status, fixed = request_json(
+            base, "PUT", "/api/boards/fixture.board", document
+        )
+        assert status == 200
+        assert [
+            region["sizeMillimeters"]
+            for region in fixed["board"]["document"]["regions"]
+        ] == [7.25, 7.25]
+
+        cleared_document = fixed["board"]["document"]
+        for region in cleared_document["regions"]:
+            del region["sizeMillimeters"]
+        status, cleared = request_json(
+            base, "PUT", "/api/boards/fixture.board", cleared_document
+        )
+
+    assert status == 200
+    assert all(
+        "sizeMillimeters" not in region
+        and "depthRangeMillimeters" not in region
+        for region in cleared["board"]["document"]["regions"]
+    )
+    stored_hold = json.loads(
+        (package / "board.json").read_text(encoding="utf-8")
+    )["holds"][0]
+    assert "sizeMillimeters" not in stored_hold
+    assert "depthRangeMillimeters" not in stored_hold
+
+
+def test_saving_switches_atomically_between_variable_and_fixed_depth(
+    tmp_path: Path,
+) -> None:
+    """Switching modes must remove the opposite canonical depth representation."""
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    board = board_document("fixture.board")
+    board["holds"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 7.5,
+        "upperBound": 12.5,
+    }
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
+        document = opened["board"]["document"]
+        for region in document["regions"]:
+            del region["depthRangeMillimeters"]
+            region["sizeMillimeters"] = 8.75
+
+        status, fixed = request_json(
+            base, "PUT", "/api/boards/fixture.board", document
+        )
+        assert status == 200
+        stored_fixed = json.loads(
+            (package / "board.json").read_text(encoding="utf-8")
+        )["holds"][0]
+        assert stored_fixed["sizeMillimeters"] == 8.75
+        assert "depthRangeMillimeters" not in stored_fixed
+
+        variable_document = fixed["board"]["document"]
+        for region in variable_document["regions"]:
+            del region["sizeMillimeters"]
+            region["depthRangeMillimeters"] = {
+                "lowerBound": 9.5,
+                "upperBound": 14.25,
+            }
+        status, variable = request_json(
+            base, "PUT", "/api/boards/fixture.board", variable_document
+        )
+
+    assert status == 200
+    stored_variable = json.loads(
+        (package / "board.json").read_text(encoding="utf-8")
+    )["holds"][0]
+    assert stored_variable["depthRangeMillimeters"] == {
+        "lowerBound": 9.5,
+        "upperBound": 14.25,
+    }
+    assert "sizeMillimeters" not in stored_variable
+    assert all(
+        region["depthRangeMillimeters"] == {
+            "lowerBound": 9.5,
+            "upperBound": 14.25,
+        }
+        and "sizeMillimeters" not in region
+        for region in variable["board"]["document"]["regions"]
+    )
+
+
+def test_board_list_marks_only_edge_and_pocket_holds_without_depth_for_attention(
+    tmp_path: Path,
+) -> None:
+    library = _write_library(tmp_path)
+    package = library / "fixture-board"
+    board = board_document("fixture.board")
+    template_hold = board["holds"][0]
+    assert isinstance(template_hold, dict)
+
+    def hold(hold_id: str, kind: str, **depth: object) -> dict[str, object]:
+        return {**template_hold, "id": hold_id, "name": hold_id, "kind": kind, **depth}
+
+    board["holds"] = [
+        hold("jug", "jug"),
+        hold("sloper", "sloper"),
+        hold("pinch", "pinch"),
+        hold("edge", "edge"),
+        hold("pocket", "pocket"),
+    ]
+    (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+    with running_server(library) as base:
+        status, listed = request_json(base, "GET", "/api/boards")
+        assert status == 200
+        assert listed["boards"][0]["needsAttention"] is True
+
+        board["holds"] = [
+            hold("jug", "jug"),
+            hold("sloper", "sloper"),
+            hold("pinch", "pinch"),
+            hold("edge", "edge", sizeMillimeters=20),
+            hold(
+                "pocket",
+                "pocket",
+                depthRangeMillimeters={"lowerBound": 10, "upperBound": 15},
+            ),
+        ]
+        (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
+
+        status, listed = request_json(base, "GET", "/api/boards")
+        assert status == 200
+        assert listed["boards"][0]["needsAttention"] is False
+
+
+def test_board_payload_lists_surfaces_and_opens_the_requested_canvas(
+    tmp_path: Path,
+) -> None:
+    library = _write_multi_presentation_library(tmp_path)
+
+    with running_server(library) as base:
+        status, opened = request_json(base, "GET", "/api/boards/fixture.multi")
+        assert status == 200
+        board = opened["board"]
+        assert board["selectedPresentationID"] == "front"
+        assert board["holdIDs"] == ["hold-left", "hold-back"]
+        assert board["presentations"] == [
+            {
+                "presentationID": "front",
+                "displayName": "Front",
+                "imageUrl": "/api/boards/fixture.multi/image?presentationID=front",
+                "default": True,
+            },
+            {
+                "presentationID": "back",
+                "displayName": "Back",
+                "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
+                "default": False,
+            },
+        ]
+        assert {region["metadata"]["presentationID"] for region in board["document"]["regions"]} == {"front"}
+
+        status, opened_back = request_json(
+            base,
+            "GET",
+            "/api/boards/fixture.multi?presentationID=back",
+        )
+        assert status == 200
+        back_board = opened_back["board"]
+        assert back_board["selectedPresentationID"] == "back"
+        assert back_board["imageUrl"].endswith("presentationID=back")
+        assert {region["metadata"]["presentationID"] for region in back_board["document"]["regions"]} == {"back"}
+
+        with urlopen(base + back_board["imageUrl"]) as response:
+            assert response.status == 200
+            assert response.headers["Content-Type"] == "image/png"
 
 
 def test_save_keeps_geometry_inside_board_json_and_creates_no_registry_or_sidecar(
@@ -379,14 +646,17 @@ def test_invalid_save_leaves_board_json_and_inventory_unchanged(tmp_path: Path) 
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
         document["regions"][0]["displayPath"] = (
-            "M 10 10 L 90 90 L 10 90 L 90 10 Z"
+            "M 10 10 L 90 90 L 10 90 L 90 10"
         )
         status, result = request_json(
             base, "PUT", "/api/boards/fixture.board", document
         )
 
     assert status == 400
-    assert result == {"ok": False, "error": "hold hold-left-piece-0 must not self-intersect"}
+    assert result == {
+        "ok": False,
+        "error": "hold hold-left-piece-0 must be exactly one closed contour",
+    }
     after = {
         path.relative_to(package).as_posix(): path.read_bytes()
         for path in package.rglob("*")
@@ -553,20 +823,15 @@ def test_server_imports_with_only_the_workbench_on_pythonpath(tmp_path: Path) ->
     assert completed.stdout.strip() == "server"
 
 
-def test_checkout_validation_requires_only_the_direct_workbench_layout(
+def test_checkout_validation_accepts_a_local_repository_without_workbench_sources(
     tmp_path: Path,
 ) -> None:
     checkout = tmp_path / "checkout"
     (checkout / ".git").mkdir(parents=True)
     (checkout / "Hangboards").mkdir()
-    workbench = checkout / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    (workbench / "server.py").touch()
-    (workbench / "board_package.py").touch()
-    (workbench / "board_geometry.py").touch()
 
     assert validate_hang_ten_checkout(checkout) == checkout.resolve()
-    (workbench / "board_geometry.py").unlink()
+    (checkout / "Hangboards").rmdir()
 
     with pytest.raises(EditorError, match="Hang Ten checkout"):
         validate_hang_ten_checkout(checkout)
@@ -597,12 +862,6 @@ def test_checkout_rejects_a_hangboards_symlink_that_escapes_the_checkout(
         outside_library,
         target_is_directory=True,
     )
-    workbench = checkout / "Tools" / "HangboardWorkbench"
-    workbench.mkdir(parents=True)
-    (workbench / "server.py").touch()
-    (workbench / "board_package.py").touch()
-    (workbench / "board_geometry.py").touch()
-
     with pytest.raises(EditorError, match="Hang Ten checkout"):
         validate_hang_ten_checkout(checkout)
 
@@ -873,6 +1132,61 @@ def test_remote_cli_requires_a_session_secret(
     assert "--session-secret" in capsys.readouterr().err
 
 
+def test_browser_server_cli_rejects_local_checkout_mode(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Fails if a browser-hosted server can silently use local Git storage."""
+    monkeypatch.setattr(
+        server_module,
+        "create_server",
+        lambda *_args, **_kwargs: pytest.fail("local browser server must not start"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            ["--repository-root", str(REPOSITORY_ROOT), "--port", "0"]
+        )
+
+    assert error.value.code == 2
+    assert "--allow-remote" in capsys.readouterr().err
+
+
+def test_packaged_cli_rejects_hosted_storage_mode(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Fails if the packaged local app can be redirected to hosted storage."""
+    monkeypatch.setattr(
+        server_module,
+        "create_server",
+        lambda *_args, **_kwargs: pytest.fail("packaged server must stay local"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        server_module._server_from_cli(
+            [
+                "--repository-root",
+                str(REPOSITORY_ROOT),
+                "--port",
+                "0",
+                "--allow-remote",
+                "--github-client-id",
+                "test-client-id",
+                "--github-client-secret",
+                "test-client-secret",
+                "--session-secret",
+                "test-session-secret",
+                "--github-owner",
+                "fixture-owner",
+                "--github-repo",
+                "fixture-repo",
+            ],
+            local_checkout=True,
+        )
+
+    assert error.value.code == 2
+    assert "local checkout" in capsys.readouterr().err
+
+
 def test_root_without_session_redirects_to_login(tmp_path: Path) -> None:
     checkout = _git_checkout(tmp_path)
 
@@ -1025,7 +1339,9 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
                     "boardId": "fixture.board",
                     "displayName": "Fixture Maker Fixture Board",
                     "holdCount": 1,
+                    "needsAttention": False,
                     "href": "/api/boards/fixture.board",
+                    "imageUrl": "/api/boards/fixture.board/image",
                 }
             ],
         }
@@ -1051,8 +1367,43 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
     } == {HOSTED_TOKEN}
 
 
+def test_hosted_board_catalog_reads_metadata_without_primary_image_blobs() -> None:
+    """Fails if GET /api/boards downloads primary images before a board is selected."""
+    files: dict[str, bytes] = {}
+    for index in range(33):
+        slug = f"board-{index:02d}"
+        board = board_document(f"{slug}.id")
+        board["name"] = slug
+        primary_image = PRIMARY_IMAGE.read_bytes() + slug.encode("utf-8")
+        files.update(
+            {
+                f"Hangboards/{slug}/board.json": (
+                    json.dumps(board, indent=2) + "\n"
+                ).encode("utf-8"),
+                f"Hangboards/{slug}/assets/primary.png": primary_image,
+            }
+        )
+    image_shas = {
+        FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.endswith("/assets/primary.png")
+    }
+
+    with running_server_with_github_backend(files) as (base, client, session):
+        status, payload, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards"
+        )
+
+    assert status == 200
+    assert len(payload["boards"]) == 33
+    assert {
+        call.args[1] for call in client.calls_named("get_blob")
+    }.isdisjoint(image_shas)
+    assert len(client.calls_named("get_blob")) == 33
+
+
 def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
-    """Fails if list, open, and image repeatedly fetch the same GitHub tree/blobs."""
+    """Fails if opening a listed board re-downloads immutable board metadata."""
     with running_server_with_github_backend(_github_files()) as (
         base,
         client,
@@ -1074,7 +1425,7 @@ def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     assert image == PRIMARY_IMAGE.read_bytes()
     assert len(client.calls_named("get_branch_head_sha")) == 3
     assert len(client.calls_named("get_tree")) == 1
-    assert len(client.calls_named("get_blob")) == 4
+    assert len(client.calls_named("get_blob")) == 2
 
 
 def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
@@ -1114,8 +1465,8 @@ def test_hosted_board_reads_refresh_when_the_branch_head_changes() -> None:
     assert len(client.calls_named("get_tree")) == 3
 
 
-def test_simultaneous_hosted_catalog_reads_share_one_bounded_upstream_load() -> None:
-    """Fails if concurrent cold routes duplicate catalog reads or worker pools."""
+def test_simultaneous_hosted_catalog_reads_share_one_metadata_load() -> None:
+    """Fails if concurrent cold routes duplicate one catalog's board JSON reads."""
     files: dict[str, bytes] = {}
     for slug in ("alpha", "bravo", "charlie", "delta", "echo", "foxtrot"):
         board = board_document(f"{slug}.board")
@@ -1153,7 +1504,7 @@ def test_simultaneous_hosted_catalog_reads_share_one_bounded_upstream_load() -> 
 
     assert [status for status, _body, _headers in results] == [200, 200]
     assert len(client.calls_named("get_tree")) == 1
-    assert len(client.calls_named("get_blob")) == 12
+    assert len(client.calls_named("get_blob")) == 6
     assert client.max_active_blob_reads <= 4
 
 
@@ -1329,6 +1680,67 @@ def test_hosted_save_writes_github_and_returns_the_commit_sha() -> None:
         assert put_call.args[2] == HOSTED_BRANCH
 
 
+def test_hosted_save_round_trips_fractional_fixed_depth() -> None:
+    """Hosted persistence must carry fixed depth through its tuple adapter."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        _status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.board"
+        )
+        document = opened["board"]["document"]
+        for region in document["regions"]:
+            region["sizeMillimeters"] = 7.25
+
+        status, saved, _headers = hosted_request_json(
+            base, session, "PUT", "/api/boards/fixture.board", document
+        )
+
+    assert status == 200
+    assert {
+        region["sizeMillimeters"]
+        for region in saved["board"]["document"]["regions"]
+    } == {7.25}
+    stored = json.loads(
+        client.file_bytes(HOSTED_BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert stored["holds"][0]["sizeMillimeters"] == 7.25
+    assert "depthRangeMillimeters" not in stored["holds"][0]
+
+
+def test_hosted_save_auth_failure_instructs_editor_to_reauthenticate() -> None:
+    """Fails if hosted save auth expiry no longer tells the editor where to reauthenticate."""
+    with running_server_with_github_backend(_github_files()) as (
+        base,
+        client,
+        session,
+    ):
+        _status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.board"
+        )
+        document = opened["board"]["document"]
+        document["regions"][0]["displayPath"] = (
+            "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+        )
+
+        def auth_failing_put_file(*_args: object, **_kwargs: object) -> str:
+            raise GitHubAuthError("token leaked detail")
+
+        client.put_file = auth_failing_put_file  # type: ignore[method-assign]
+        status, payload, _headers = hosted_request_json(
+            base, session, "PUT", "/api/boards/fixture.board", document
+        )
+
+    assert status == 401
+    assert payload == {
+        "ok": False,
+        "error": "GitHub authentication expired or insufficient permissions",
+        "login_url": "/auth/login",
+    }
+
+
 def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> None:
     """Fails if a PUT can write a board whose ID no longer matches its URL."""
     files = _github_files()
@@ -1351,7 +1763,8 @@ def test_hosted_save_rejects_slug_identity_changed_after_route_resolution() -> N
     assert status == 409
     assert payload["ok"] is False
     assert [call.args[4] for call in client.calls_named("put_file")] == [
-        "Concurrent board replacement"
+        "Concurrent board replacement",
+        "Update fixture.board",
     ]
 
 
@@ -1490,27 +1903,43 @@ def test_hosted_open_pull_request_uses_the_session_branch_and_defaults() -> None
 
 
 @pytest.mark.parametrize(
-    ("github_error", "expected_status", "expected_message"),
+    ("github_error", "expected_status", "expected_payload"),
     [
-        (GitHubNotFoundError("remote branch missing"), 404, "remote branch missing"),
-        (GitHubRateLimitError("rate limit exhausted"), 429, "rate limit exhausted"),
-        (GitHubForbiddenError("permission denied"), 403, "permission denied"),
+        (
+            GitHubNotFoundError("remote branch missing"),
+            404,
+            {"ok": False, "error": "remote branch missing"},
+        ),
+        (
+            GitHubRateLimitError("rate limit exhausted"),
+            429,
+            {"ok": False, "error": "rate limit exhausted"},
+        ),
+        (
+            GitHubForbiddenError("permission denied"),
+            403,
+            {"ok": False, "error": "permission denied"},
+        ),
         (
             GitHubAuthError("token leaked detail"),
             401,
-            "GitHub authentication expired or insufficient permissions",
+            {
+                "ok": False,
+                "error": "GitHub authentication expired or insufficient permissions",
+                "login_url": "/auth/login",
+            },
         ),
         (
             GitHubTransportError("socket leaked detail"),
             502,
-            "could not reach GitHub",
+            {"ok": False, "error": "could not reach GitHub"},
         ),
     ],
 )
 def test_hosted_routes_map_typed_github_errors(
     github_error: Exception,
     expected_status: int,
-    expected_message: str,
+    expected_payload: dict[str, object],
 ) -> None:
     """Fails if typed GitHub failures collapse into a generic server error."""
     with running_server_with_github_backend(_github_files()) as (
@@ -1527,7 +1956,7 @@ def test_hosted_routes_map_typed_github_errors(
         )
 
     assert status == expected_status
-    assert payload == {"ok": False, "error": expected_message}
+    assert payload == expected_payload
 
 
 def test_hosted_save_conflict_maps_to_conflict_status() -> None:

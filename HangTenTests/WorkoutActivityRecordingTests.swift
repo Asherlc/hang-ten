@@ -108,9 +108,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         sessionStoreDirectory = nil
     }
 
-    func testSessionStoreCleanupWaitsForQueuedPersistenceBeforeRemovingDirectory() {
+    func testSessionStoreCleanupWaitsForQueuedPersistenceBeforeRemovingDirectory() async {
         let directory = sessionStoreDirectory!
-        let fileManager = BlockingWorkoutActivityFileManager()
+        let writeStarted = expectation(description: "session write started")
+        let writeFinished = expectation(description: "session write finished")
+        let fileManager = BlockingWorkoutActivityFileManager(
+            writeStarted: writeStarted,
+            writeFinished: writeFinished
+        )
         let store = makeSessionStore(defaults: makeDefaults(), fileManager: fileManager)
         let record = WorkoutSessionRecord(
             id: UUID(),
@@ -125,7 +130,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
 
         store.append(record)
-        XCTAssertEqual(fileManager.writeStarted.wait(timeout: .now() + 1), .success)
+        await fulfillment(of: [writeStarted], timeout: 30)
         let allowWrite = fileManager.allowWrite
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
             allowWrite.signal()
@@ -133,7 +138,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         cleanUpSessionStores()
 
-        XCTAssertEqual(fileManager.writeFinished.wait(timeout: .now() + 1), .success)
+        await fulfillment(of: [writeFinished], timeout: 30)
         XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
     }
 
@@ -553,7 +558,65 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
-    func testSevenThreeRepeatersUseValidSymmetricGripPairs() {
+    func testFallbackResolutionPrefersNearestFractionalDepthMeasurement() {
+        let board = TrainingBoard(
+            id: "fractional-depth.board",
+            manufacturer: "Fixture",
+            name: "Fractional depth board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "range-edge",
+                    name: "20.5 to 21 mm edge",
+                    shortLabel: "R",
+                    detail: "Untyped edge",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2),
+                    depthRangeMillimeters: 20.5...21
+                ),
+                BoardHold(
+                    id: "scalar-edge",
+                    name: "19.75 mm edge",
+                    shortLabel: "S",
+                    detail: "Untyped edge",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2),
+                    sizeMillimeters: 19.75
+                )
+            ],
+            productURL: URL(string: "https://example.com/fractional-depth-board")!,
+            photoAssetName: nil
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .feature(.mediumEdge),
+                on: board
+            ),
+            ["scalar-edge"]
+        )
+    }
+
+    func testAppStoreResolutionSelectsOneThreeFingerPocketPerHand() {
+        let defaults = makeDefaults()
+        let store = AppStore(
+            healthKitService: HealthWorkoutSavingSpy(),
+            workoutSessionStore: makeSessionStore(defaults: defaults),
+            defaults: defaults
+        )
+
+        XCTAssertEqual(
+            store.holdIDs(
+                for: step(targets: [.feature(.pocket, fingerCapacity: 3)]),
+                on: BoardCatalog.defaultBoard
+            ),
+            ["pocket-29-three-left", "pocket-29-three-right"]
+        )
+    }
+
+    func testSevenThreeRepeatersResolveExpectedLeftRightEdgePairs() throws {
         let defaults = makeDefaults()
         let store = AppStore(
             healthKitService: HealthWorkoutSavingSpy(),
@@ -585,7 +648,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         struct ProgressionCue {
             let targetIDs: [String]
-            let sizeMillimeters: Int
+            let sizeMillimeters: Double
             let gripType: GripType
             let fingerConfiguration: FingerConfiguration?
         }
@@ -649,7 +712,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
                 let holds = board.holds.filter { cue.targetIDs.contains($0.id) }
                 XCTAssertEqual(holds.count, 2)
-                XCTAssertTrue(holds.allSatisfy { $0.kind == .edge && $0.sizeMillimeters == cue.sizeMillimeters })
+                XCTAssertTrue(holds.allSatisfy {
+                    $0.kind == .edge &&
+                        $0.sizeMillimeters == cue.sizeMillimeters
+                })
             }
         }
 
@@ -658,19 +724,23 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         for holdIDs in Set(resolvedPairs) {
             XCTAssertEqual(holdIDs.count, 2)
+            XCTAssertEqual(holdIDs.filter { $0.hasSuffix("-left") }.count, 1)
+            XCTAssertEqual(holdIDs.filter { $0.hasSuffix("-right") }.count, 1)
 
             let holds = board.holds.filter { holdIDs.contains($0.id) }
             XCTAssertEqual(holds.count, 2)
             guard holds.count == 2 else { continue }
 
-            let holdsByX = holds.sorted { $0.frame.x < $1.frame.x }
-            let leftHold = holdsByX[0]
-            let rightHold = holdsByX[1]
+            let leftHold = try XCTUnwrap(holds.first { $0.id.hasSuffix("-left") })
+            let rightHold = try XCTUnwrap(holds.first { $0.id.hasSuffix("-right") })
             XCTAssertLessThan(leftHold.frame.x, rightHold.frame.x)
-            XCTAssertEqual(leftHold.frame.y, rightHold.frame.y, accuracy: 0.0001)
-            XCTAssertEqual(leftHold.frame.width, rightHold.frame.width, accuracy: 0.0001)
-            XCTAssertEqual(leftHold.frame.height, rightHold.frame.height, accuracy: 0.0001)
-            XCTAssertEqual(leftHold.frame.x, 1 - rightHold.frame.x - rightHold.frame.width, accuracy: 0.0001)
+            XCTAssertEqual(leftHold.kind, .edge)
+            XCTAssertEqual(rightHold.kind, .edge)
+            XCTAssertEqual(leftHold.sizeMillimeters, rightHold.sizeMillimeters)
+            XCTAssertEqual(leftHold.fingerCapacity, rightHold.fingerCapacity)
+            XCTAssertEqual(leftHold.features, rightHold.features)
+            XCTAssertTrue(leftHold.name.hasPrefix("Left "))
+            XCTAssertTrue(rightHold.name.hasPrefix("Right "))
         }
 
         let centeredFourFingerPocketIDs = Set(
@@ -843,7 +913,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             workoutSessionStore: makeSessionStore(defaults: defaults),
             defaults: defaults
         )
-        store.selectedBoard = board
+        store.selectBoard(board)
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -1145,18 +1215,24 @@ private final class WorkoutHealthStoreSpy: WorkoutHealthStore {
 }
 
 private final class BlockingWorkoutActivityFileManager: FileManager {
-    let writeStarted = DispatchSemaphore(value: 0)
+    private let writeStarted: XCTestExpectation
+    private let writeFinished: XCTestExpectation
     let allowWrite = DispatchSemaphore(value: 0)
-    let writeFinished = DispatchSemaphore(value: 0)
+
+    init(writeStarted: XCTestExpectation, writeFinished: XCTestExpectation) {
+        self.writeStarted = writeStarted
+        self.writeFinished = writeFinished
+        super.init()
+    }
 
     override func createDirectory(
         at url: URL,
         withIntermediateDirectories createIntermediates: Bool,
         attributes: [FileAttributeKey: Any]? = nil
     ) throws {
-        writeStarted.signal()
+        writeStarted.fulfill()
         allowWrite.wait()
-        defer { writeFinished.signal() }
+        defer { writeFinished.fulfill() }
         try super.createDirectory(
             at: url,
             withIntermediateDirectories: createIntermediates,

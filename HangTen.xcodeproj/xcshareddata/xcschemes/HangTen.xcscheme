@@ -29,6 +29,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AE0000000000000000000009"
+               BuildableName = "HangTenUITests.xctest"
+               BlueprintName = "HangTenUITests"
+               ReferencedContainer = "container:HangTen.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "EE0000000000000000000002"
                BuildableName = "HangTenTests.xctest"
                BlueprintName = "HangTenTests"
@@ -52,6 +66,17 @@
                BlueprintIdentifier = "EE0000000000000000000002"
                BuildableName = "HangTenTests.xctest"
                BlueprintName = "HangTenTests"
+               ReferencedContainer = "container:HangTen.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AE0000000000000000000009"
+               BuildableName = "HangTenUITests.xctest"
+               BlueprintName = "HangTenUITests"
                ReferencedContainer = "container:HangTen.xcodeproj">
             </BuildableReference>
          </TestableReference>

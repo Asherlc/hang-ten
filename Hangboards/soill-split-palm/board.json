@@ -1,15 +1,11 @@
 {
-  "schemaVersion": 1,
-  "id": "soill-split-palm",
+  "id": "soill.split-palm",
   "manufacturer": "So iLL",
   "name": "Split Palm",
-  "subtitle": "Sculptural molded jug pair with radiating open-hand prongs.",
-  "productURL": "https://www.soill.com/products/split-palm",
-  "dimensions": "480 × 480 mm",
+  "subtitle": "Two-piece molded training board with jugs, slopers, and graduated rails.",
+  "productURL": "https://soillholds.com/products/split-palm",
+  "dimensions": "Each piece: 16.5 \u00d7 11 \u00d7 3.875 in",
   "aspectRatio": 1.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "large-sloper-left",
@@ -165,7 +161,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "large-sloper-right",
@@ -321,7 +318,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "round-sloper-left",
@@ -456,7 +454,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "round-sloper-right",
@@ -591,7 +590,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "inboard-pinch-left",
@@ -695,7 +695,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "inboard-pinch-right",
@@ -799,7 +800,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "upper-outer-edge-left",
@@ -896,7 +898,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "upper-outer-edge-right",
@@ -993,7 +996,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-outer-edge-left",
@@ -1120,7 +1124,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-outer-edge-right",
@@ -1247,7 +1252,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-inner-edge-left",
@@ -1389,7 +1395,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "middle-inner-edge-right",
@@ -1531,7 +1538,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-inner-edge-left",
@@ -1658,7 +1666,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-inner-edge-right",
@@ -1785,7 +1794,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-diagonal-edge-left",
@@ -1919,7 +1929,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "lower-diagonal-edge-right",
@@ -2053,7 +2064,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-left",
@@ -2202,7 +2214,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "bottom-edge-right",
@@ -2351,7 +2364,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-diagonal-edge-left",
@@ -2492,7 +2506,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "outer-diagonal-edge-right",
@@ -2633,7 +2648,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.0,
+      "default": true
     }
   ]
 }

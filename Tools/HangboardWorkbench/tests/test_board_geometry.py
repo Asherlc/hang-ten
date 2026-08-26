@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -47,21 +49,26 @@ def test_unions_multiple_normalized_piece_frames() -> None:
     }
 
 
-def test_serialized_normalized_frame_stays_within_canvas_after_rounding() -> None:
-    x = 75918 / 91672
-    width = (91672 - 75918) / 91672
-    assert round(x, 12) + round(width, 12) == 1.000000000001
-
-    serialized = NormalizedFrame(x=x, y=x, width=width, height=width).to_json()
-
-    assert serialized["width"] == 0.17185181953
-    assert serialized["height"] == 0.17185181953
-    assert json.dumps(serialized, separators=(",", ":")) == (
-        '{"x":0.82814818047,"y":0.82814818047,'
-        '"width":0.17185181953,"height":0.17185181953}'
+def test_serialized_normalized_frame_preserves_off_canvas_coordinates_after_rounding() -> None:
+    frame = NormalizedFrame(
+        x=-0.1718518195296,
+        y=0.8281481804704,
+        width=1.25,
+        height=0.3,
     )
-    assert serialized["x"] + serialized["width"] <= 1
-    assert serialized["y"] + serialized["height"] <= 1
+
+    serialized = frame.to_json()
+
+    assert serialized == {
+        "x": -0.17185181953,
+        "y": 0.82814818047,
+        "width": 1.25,
+        "height": 0.3,
+    }
+    assert json.dumps(serialized, separators=(",", ":")) == (
+        '{"x":-0.17185181953,"y":0.82814818047,'
+        '"width":1.25,"height":0.3}'
+    )
     assert NormalizedFrame.from_json(serialized) == NormalizedFrame(**serialized)
 
 
@@ -74,8 +81,8 @@ def test_serialized_normalized_frame_keeps_tiny_edge_dimensions_positive() -> No
     ).to_json()
 
     assert serialized == {
-        "x": 0.999999999999,
-        "y": 0.999999999999,
+        "x": 1.0,
+        "y": 1.0,
         "width": 0.000000000001,
         "height": 0.000000000001,
     }
@@ -94,15 +101,85 @@ def test_parses_one_closed_contiguous_contour_and_derives_its_frame() -> None:
     }
 
 
-def test_round_trips_two_cubic_segments_with_controls_outside_the_visual_bounds() -> None:
+def test_round_trips_two_cubic_segments_whose_controls_fall_outside_the_frame() -> None:
     path = parse_closed_path(
         "M 20 20 C 0 20 0 80 20 80 C 100 80 100 20 20 20 Z", 100, 100
     )
 
     frame, shape = shape_for_path(path, 100, 100)
 
-    assert frame.to_json() == {"x": 0.0, "y": 0.2, "width": 1.0, "height": 0.6}
+    # The frame tightly bounds the rendered curve (which never reaches the
+    # control points' x=0/x=100), not the control points themselves; those
+    # legitimately serialize outside [0, 1] local coordinates.
+    assert frame.to_json() == {"x": 0.05, "y": 0.2, "width": 0.75, "height": 0.6}
+    control_points = [
+        point
+        for command in shape["commands"]
+        for key, point in command.items()
+        if key in ("control", "control1", "control2")
+    ]
+    assert any(not 0 <= point[0] <= 1 for point in control_points)
     assert display_path_for_shape(frame.to_json(), shape, 100, 100, label="hold").data == path.data
+
+
+def test_rejects_a_control_point_too_far_outside_its_frame() -> None:
+    # A control point only needs to be finite, but the app quantizes
+    # flattened contour coordinates into an Int64 by scaling by 1e12, which
+    # traps outside Int64's range. Reject an oversized-but-finite control
+    # here instead of writing a board.json that would crash the app later.
+    with pytest.raises(GeometryError, match="too far outside its frame"):
+        display_path_for_shape(
+            {"x": 0, "y": 0, "width": 1, "height": 1},
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {"command": "line", "to": [1, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [2_000_000, 0.5],
+                        "control2": [0.5, 0.5],
+                        "to": [1, 1],
+                    },
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+            100,
+            100,
+            label="hold",
+        )
+
+
+def test_parses_a_path_whose_control_point_falls_outside_the_canvas() -> None:
+    # A control point only shapes the curve between two points it passes
+    # through; it may legitimately fall outside the canvas the same way it
+    # falls outside a hold's frame, as long as it stays finite.
+    path = parse_closed_path(
+        "M 20 20 C -50 20 -50 80 20 80 L 40 80 L 40 20 Z", 100, 100
+    )
+
+    assert path.data == "M 20 20 C -50 20 -50 80 20 80 L 40 80 L 40 20 Z"
+
+
+def test_parses_a_hold_whose_contour_falls_outside_the_canvas() -> None:
+    path = parse_closed_path(
+        "M -20 20 L 120 20 L 120 80 L -20 80 Z", 100, 100
+    )
+
+    assert path.data == "M -20 20 L 120 20 L 120 80 L -20 80 Z"
+
+
+def test_parses_and_round_trips_a_symmetric_self_crossing_hold_contour() -> None:
+    path = parse_closed_path(
+        "M 10 10 L 90 90 L 10 90 L 90 10 Z", 100, 100
+    )
+
+    assert path.data == "M 10 10 L 90 90 L 10 90 L 90 10 Z"
+    frame, shape = shape_for_path(path, 100, 100)
+    assert display_path_for_shape(
+        frame.to_json(), shape, 100, 100, label="hold"
+    ).data == path.data
 
 
 def test_parses_a_pill_shaped_rounded_rectangle() -> None:
@@ -124,19 +201,103 @@ def test_parses_a_pill_shaped_rounded_rectangle() -> None:
             "M 10 10 L 30 10 L 30 30 L 10 30 Z M 50 50 L 70 50 L 70 70 L 50 70 Z",
             "exactly one closed contour",
         ),
-        (
-            "M 10 10 L 70 70 L 10 70 L 70 10 Z",
-            "self-intersect",
-        ),
-        (
-            "M -1 10 L 30 10 L 30 30 L 10 30 Z",
-            "inside the canvas",
-        ),
     ],
 )
 def test_rejects_invalid_hold_geometry(display_path: str, message: str) -> None:
     with pytest.raises(GeometryError, match=message):
         parse_closed_path(display_path, 100, 100)
+
+
+def test_rejects_large_translated_non_collinear_fully_backtracked_contour() -> None:
+    with pytest.raises(GeometryError, match="enclose area"):
+        parse_closed_path(
+            "M 10000000.7 10000000.7 "
+            "L 10000000.2 10000000.6 "
+            "L 10000000.7 10000000.5 "
+            "L 10000000.2 10000000.6 "
+            "L 10000000.7 10000000.7 Z",
+            100,
+            100,
+        )
+
+
+def test_rejects_a_contour_with_more_than_1024_flattened_segments() -> None:
+    vertex_count = 1025
+    vertices = [
+        (
+            50 + 40 * math.cos(2 * math.pi * index / vertex_count),
+            50 + 40 * math.sin(2 * math.pi * index / vertex_count),
+        )
+        for index in range(vertex_count)
+    ]
+    display_path = " ".join(
+        [f"M {vertices[0][0]} {vertices[0][1]}"]
+        + [f"L {x} {y}" for x, y in vertices[1:]]
+        + ["Z"]
+    )
+
+    with pytest.raises(
+        GeometryError,
+        match="must contain no more than 1024 flattened segments",
+    ):
+        parse_closed_path(display_path, 100, 100)
+
+
+def test_rejects_excessive_curves_before_parsing_a_later_incomplete_command() -> None:
+    display_path = " ".join(
+        ["M 0 0"]
+        + ["C 0 0 1 1 0 0"] * 33
+        + ["L 1", "Z"]
+    )
+
+    with pytest.raises(
+        GeometryError,
+        match="must contain no more than 1024 flattened segments",
+    ):
+        parse_closed_path(display_path, 100, 100)
+
+
+def test_rejects_finite_coordinates_that_overflow_canonicalization_safely() -> None:
+    with pytest.raises(
+        GeometryError,
+        match="coordinates are too large to represent",
+    ):
+        parse_closed_path(
+            "M -1e308 -1e308 L 1e308 -1e308 L 1e308 1e308 Z",
+            100,
+            100,
+        )
+
+
+def test_rejects_a_maximum_size_exactly_retraced_contour_quickly() -> None:
+    vertex_count = 256
+    step = vertex_count // 2 - 1
+    order: list[int] = []
+    visited: set[int] = set()
+    index = 0
+    while index not in visited:
+        visited.add(index)
+        order.append(index)
+        index = (index + step) % vertex_count
+    vertices = [
+        (
+            50 + 40 * math.cos(2 * math.pi * index / vertex_count),
+            50 + 40 * math.sin(2 * math.pi * index / vertex_count),
+        )
+        for index in order
+    ]
+    display_path = " ".join(
+        [f"M {vertices[0][0]} {vertices[0][1]}"]
+        + [f"L {x} {y}" for x, y in vertices[1:]]
+        + [f"L {x} {y}" for x, y in reversed(vertices[:-1])]
+        + ["Z"]
+    )
+
+    started = time.perf_counter()
+    with pytest.raises(GeometryError, match="must enclose area"):
+        parse_closed_path(display_path, 100, 100)
+
+    assert time.perf_counter() - started < 1.0
 
 
 @pytest.mark.parametrize(
@@ -158,3 +319,22 @@ def test_rejects_shared_malformed_package_path_shapes(
             100,
             label=str(fixture["name"]),
         )
+
+
+@pytest.mark.parametrize(
+    "fixture",
+    VALIDATION_FIXTURES["selfCrossingPathShapes"],
+    ids=lambda fixture: fixture["name"],
+)
+def test_accepts_shared_self_crossing_package_path_shapes(
+    fixture: dict[str, object],
+) -> None:
+    path = display_path_for_shape(
+        {"x": 0, "y": 0, "width": 1, "height": 1},
+        {"type": "path", "commands": fixture["commands"]},
+        100,
+        100,
+        label=str(fixture["name"]),
+    )
+
+    assert path.data.endswith(" Z")

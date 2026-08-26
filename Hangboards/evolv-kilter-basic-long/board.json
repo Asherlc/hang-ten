@@ -1,27 +1,250 @@
 {
-  "schemaVersion": 1,
   "id": "evolv-kilter-basic-long",
-  "manufacturer": "Kilter",
-  "name": "Basic Long",
-  "subtitle": "Molded rubber jug bar with four stacked open-hand ridges.",
-  "productURL": "https://kiltergrips.com/products/basic-long",
-  "dimensions": "580 × 110 mm",
+  "manufacturer": "Evolv",
+  "name": "Basic Training Board (Long)",
+  "subtitle": "Resin training board developed with Kilter.",
+  "productURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+  "dimensions": "79 \u00d7 16 \u00d7 6 cm",
   "aspectRatio": 1.5024437927663734,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
-    { "id": "edge-row1", "name": "Row 1 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.39, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-row2", "name": "Row 2 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.45, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-row3", "name": "Row 3 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.51, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]},
-    { "id": "edge-row4", "name": "Row 4 rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.06, "y": 0.565, "width": 0.88, "height": 0.045}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.5} }
-    ]}
+    {
+      "id": "jug-rounded",
+      "name": "Rounded jug",
+      "kind": "jug",
+      "features": [
+        "jug"
+      ],
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.057709642811,
+            "y": 0.39,
+            "width": 0.882290357189,
+            "height": 0.045
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-20",
+      "name": "20 mm rounded edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.060234439818,
+            "y": 0.500722533724,
+            "width": 0.882236279766,
+            "height": 0.038172128055
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-15",
+      "name": "15 mm rounded edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.062885482759,
+            "y": 0.560874478006,
+            "width": 0.879224551074,
+            "height": 0.035852546432
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-10",
+      "name": "10 mm rounded edge",
+      "kind": "edge",
+      "sizeMillimeters": 10,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.062037866623,
+            "y": 0.617774965787,
+            "width": 0.881154223162,
+            "height": 0.037203515152
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5024437927663734,
+      "default": true
+    }
   ]
 }

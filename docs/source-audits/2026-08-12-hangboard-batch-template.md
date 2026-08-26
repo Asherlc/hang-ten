@@ -1,43 +1,66 @@
 # Hangboard batch source-audit template
 
-Use this document for a single source-backed authoring batch. It is
-documentation only: it is not runtime content, a package sidecar, or a
-lifecycle, confidence, approximation, or review-state record.
+Use this document to record the primary evidence and field decisions for one
+directly authored batch. It is documentation, not package content.
 
-Set `checkedAt` in each completed package's `evidence.json` to the ISO calendar
-date on which its listed source URLs were checked. Capture the direct HTTPS URL
-for every official manufacturer source used, including the product page, front
-image, oblique image where needed, and hold guide, depth diagram, manual, or
-measurement source. Do not prescribe or copy a board value unless the cited
-official source supports it.
+## Models and primary sources
 
-## Candidates
+Record the review date and exact model-specific sources. Prefer the current
+manufacturer product page, a straight-on image, an oblique/side image, and any
+official hold diagram, depth chart, or manual.
 
-| slug | catalog id | official product URL | official front image URL |
-| --- | --- | --- | --- |
+| package slug | checked | product page | front image | oblique image | hold guide/manual |
+| --- | --- | --- | --- | --- | --- |
 
-## Evidence coverage
+Do not substitute another model's source. Record contradictions and choose only
+facts that can be tied to the exact product.
 
-| board fact, hold field, semantic target, or asset | official source URL | package evidence key | representation method |
-| --- | --- | --- | --- |
+## Physical inventory
 
-The completed package must use exact evidence maps: `fieldEvidence` covers
-every factual field in `board.json`; `holdEvidence` covers every
-`<hold-id>.<field>`; `semanticEvidence` covers every semantic ID;
-and `assetEvidence` covers `assets/primary.png` plus an optional unchanged
-source photo. The registered package has exactly `board.json`, `evidence.json`,
-and `semantics.json`; `assets/primary.png` is its only board visual. Each
-`board.json` hold frame is the normalized factual region used for generic taps
-and highlights.
+Freeze the logical hold inventory before drawing. A continuous contact is one
+hold even when it needs multiple disconnected geometry pieces; distinct
+contacts are distinct holds.
 
-## Evidence blockers
+| hold ID | name | required kind | source/visible justification | symmetry or multi-piece note |
+| --- | --- | --- | --- | --- |
 
-For every candidate that cannot be fully authored, use this exact record and
-leave its existing directory unregistered with only `assets/primary.png`:
+Every hold needs `id`, `name`, `kind`, and nonempty `geometry`. Product identity,
+presentation path, aspect ratio, and the four required hold properties must be
+valid.
+Measurements, depth ranges, finger capacity, grip posture, and feature tags are
+optional: cite them when supported and omit them when unknown.
 
-### `manufacturer-model`
+## Direct geometry authoring
 
-Missing official evidence: no manufacturer hold guide or measurement supports
-`fingerCapacity`, `gripType`, and each physical hold boundary. The product page
-and front image establish identity and silhouette only. No `board.json`,
-`semantics.json`, `evidence.json`, or catalog entry was added.
+Author each normalized closed path deliberately in `board.json`, then refine it
+in Workbench against the primary evidence. Mirror a reviewed side exactly when
+the product is symmetric. If the current schema supports constraints, select a
+regular preset only when the hold is genuinely regular; otherwise keep the path
+freeform. Constraints are human-selected editing metadata, and the canonical
+path remains the rendering and hit-testing truth.
+
+Do not use image-driven detection, segmentation, masks, contour extraction,
+registration, vectorization, generated path proposals, or automatic cleanup.
+
+## Package and review result
+
+Each batch member must be committed as a complete flat package:
+
+```text
+Hangboards/<slug>/
+  board.json
+  assets/
+    primary.png
+```
+
+Record package-validator output and the visual reviewer/date. Inspect normal
+paths in Workbench and active/highlight alignment in the app on an owned
+simulator.
+
+```sh
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+rtk scripts/hangboard-packages.sh status --root Hangboards
+```
+
+| package slug | validator result | Workbench review | app highlight review | unresolved omissions |
+| --- | --- | --- | --- | --- |

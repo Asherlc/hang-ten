@@ -10,6 +10,10 @@ enum WorkoutSummaryMode: Equatable {
 }
 
 enum WorkoutSummaryFormatting {
+    static func stepRowTitle(for session: WorkoutSessionRecord, at index: Int) -> String {
+        session.stepTitle(at: index)
+    }
+
     static func granularSampleCountText(
         for measurements: [MotherboardMeasurement],
         profile: ForceSensorProfile = .motherboard,
@@ -72,12 +76,43 @@ struct WorkoutSummaryView: View {
     }
 }
 
+struct HistoryView: View {
+    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var settings: MotherboardSettingsStore
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some View {
+        NavigationStack {
+            WorkoutSessionHistoryView(
+                sessions: store.sessionHistory,
+                unit: settings.forceUnit,
+                persistenceError: store.sessionPersistenceError
+            )
+        }
+        .onAppear {
+            store.refreshHealthAuthorization()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                store.refreshHealthAuthorization()
+            }
+        }
+    }
+}
+
 struct WorkoutSessionHistoryView: View {
     let sessions: [WorkoutSessionRecord]
     let unit: MotherboardForceUnit
+    var persistenceError: String? = nil
 
     var body: some View {
         List {
+            if let persistenceError {
+                Label(persistenceError, systemImage: "exclamationmark.triangle.fill")
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.holdActiveDeep)
+            }
+
             if sessions.isEmpty {
                 ContentUnavailableView(
                     "No saved sessions",
@@ -111,7 +146,7 @@ struct WorkoutSessionHistoryView: View {
                 }
             }
         }
-        .navigationTitle("Session history")
+        .navigationTitle("History")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -152,8 +187,8 @@ private struct WorkoutSummaryContent: View {
             }
 
             Section("Measured load") {
-                ForEach(session.steps, id: \.stepID) { step in
-                    stepRow(step)
+                ForEach(Array(session.steps.enumerated()), id: \.element.stepID) { index, step in
+                    stepRow(step, title: WorkoutSummaryFormatting.stepRowTitle(for: session, at: index))
                 }
             }
 
@@ -203,10 +238,10 @@ private struct WorkoutSummaryContent: View {
     }
 
     @ViewBuilder
-    private func stepRow(_ step: WorkoutStepMeasurement) -> some View {
+    private func stepRow(_ step: WorkoutStepMeasurement, title: String) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline) {
-                Text(step.stepID)
+                Text(title)
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
                 Spacer()

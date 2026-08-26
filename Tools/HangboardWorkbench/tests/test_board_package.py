@@ -5,6 +5,7 @@ import copy
 import errno
 import importlib.util
 import json
+import math
 import os
 import shutil
 import struct
@@ -18,8 +19,8 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
-PIPELINE_MODULE_ROOT = (
-    REPOSITORY_ROOT / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+PACKAGE_MODULE_ROOT = (
+    REPOSITORY_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
 )
 VALIDATION_FIXTURES = json.loads(
     (
@@ -28,9 +29,6 @@ VALIDATION_FIXTURES = json.loads(
         / "Fixtures"
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
-)
-assert VALIDATION_FIXTURES["outOfBoundsFrames"], (
-    "outOfBoundsFrames must contain at least one fixture"
 )
 SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
 sys.path.insert(0, str(WORKBENCH_ROOT))
@@ -41,6 +39,7 @@ from workbench_fixtures import (  # noqa: E402
     CANONICAL_PACKAGE,
     PRIMARY_IMAGE,
     board_document,
+    multi_presentation_board_document,
 )
 
 
@@ -155,6 +154,116 @@ def _package_snapshot(package: Path) -> dict[str, bytes]:
     }
 
 
+def _write_multi_presentation_package(library: Path) -> Path:
+    package = library / "fixture-multi-presentation"
+    assets = package / "assets"
+    assets.mkdir(parents=True)
+    shutil.copyfile(PRIMARY_IMAGE, assets / "primary.png")
+    shutil.copyfile(PRIMARY_IMAGE, assets / "back.png")
+    _write_json(
+        package / "board.json", multi_presentation_board_document("fixture.multi")
+    )
+    return package
+
+
+def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+
+    package = board_package.load_board_package(package_root)
+    front = board_package.editor_document(package)
+    back = board_package.editor_document(package, "back")
+
+    assert [presentation.id for presentation in package.presentations] == ["front", "back"]
+    assert front["presentationID"] == "front"
+    assert back["presentationID"] == "back"
+    assert {region["metadata"]["presentationID"] for region in front["regions"]} == {"front"}
+    assert {region["metadata"]["presentationID"] for region in back["regions"]} == {"back"}
+    assert [region["metadata"]["holdID"] for region in front["regions"]] == [
+        "hold-left",
+        "hold-left",
+    ]
+    assert [region["metadata"]["holdID"] for region in back["regions"]] == [
+        "hold-back",
+        "hold-back",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda board: board.__setitem__("schemaVersion", 1), "unknown keys"),
+        (lambda board: board.__setitem__("presentation", {"assetPath": "assets/primary.png"}), "unknown keys"),
+        (lambda board: board.pop("presentations"), "missing keys"),
+        (lambda board: board["holds"][0].pop("presentationID"), "presentationID"),
+        (lambda board: board["holds"][0].__setitem__("presentationID", "missing"), "presentationID is unknown"),
+    ],
+)
+def test_rejects_legacy_or_incomplete_presentation_shape(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(package_root, mutation)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+def test_save_changes_only_the_selected_presentation_and_preserves_assets(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package, "front")
+    before = _package_snapshot(package_root)
+    back_before = copy.deepcopy(package.board["holds"][1])
+    for region in document["regions"]:
+        region["type"] = "sloper"
+    document["regions"].append(
+        {
+            "id": 3,
+            "key": "new-front-piece-0",
+            "type": "edge",
+            "displayPath": "M 800 200 L 900 200 L 900 300 L 800 300 Z",
+            "metadata": {
+                "holdID": "new-front",
+                "pieceIndex": 0,
+                "presentationID": "front",
+            },
+        }
+    )
+
+    saved = board_package.save_editor_document(
+        library, "fixture-multi-presentation", document
+    )
+
+    assert board_package.editor_document(saved, "front")["presentationID"] == "front"
+    assert next(hold for hold in saved.board["holds"] if hold["id"] == "hold-back") == back_before
+    new_hold = next(hold for hold in saved.board["holds"] if hold["id"] == "new-front")
+    assert new_hold["presentationID"] == "front"
+    after = _package_snapshot(package_root)
+    assert after["assets/primary.png"] == before["assets/primary.png"]
+    assert after["assets/back.png"] == before["assets/back.png"]
+
+
+def test_save_rejects_the_removed_editor_document_schema_version(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["schemaVersion"] = 1
+
+    with pytest.raises(BoardPackageError, match="unknown keys.*schemaVersion"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
 def test_canonical_package_has_the_exact_single_file_inventory() -> None:
     assert {path.name for path in CANONICAL_PACKAGE.iterdir()} == {"board.json", "assets"}
     assert {path.name for path in (CANONICAL_PACKAGE / "assets").iterdir()} == {
@@ -171,16 +280,13 @@ def test_canonical_package_has_the_exact_single_file_inventory() -> None:
         for piece in hold["geometry"]:
             if piece["shape"]["type"] != "path":
                 continue
-            points = [
-                coordinates
-                for command in piece["shape"]["commands"]
-                for key, coordinates in command.items()
-                if key != "command"
-            ]
-            assert min(point[0] for point in points) == pytest.approx(0, abs=5e-7)
-            assert min(point[1] for point in points) == pytest.approx(0, abs=5e-7)
-            assert max(point[0] for point in points) == pytest.approx(1, abs=5e-7)
-            assert max(point[1] for point in points) == pytest.approx(1, abs=5e-7)
+            min_x, max_x, min_y, max_y = board_package.flattened_shape_bounds(
+                piece["shape"]["commands"]
+            )
+            assert min_x == pytest.approx(0, abs=5e-7)
+            assert min_y == pytest.approx(0, abs=5e-7)
+            assert max_x == pytest.approx(1, abs=5e-7)
+            assert max_y == pytest.approx(1, abs=5e-7)
 
 
 def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:
@@ -190,20 +296,87 @@ def test_png_byte_helpers_decode_the_same_primary_image_dimensions() -> None:
     assert board_package._png_dimensions_from_bytes(image) == (1774, 457)
 
 
+def test_completed_packages_match_their_primary_image_aspect_ratio() -> None:
+    """Every published board declares the aspect ratio of its manufacturer image."""
+    mismatches: list[str] = []
+    for package in sorted((REPOSITORY_ROOT / "Hangboards").iterdir()):
+        board_path = package / "board.json"
+        if not board_path.is_file():
+            continue
+        board = json.loads(board_path.read_text(encoding="utf-8"))
+        width, height = board_package._png_dimensions(package / "assets" / "primary.png")
+        image_aspect_ratio = width / height
+        declared_aspect_ratio = board["aspectRatio"]
+        if abs(declared_aspect_ratio - image_aspect_ratio) / image_aspect_ratio > 0.001:
+            mismatches.append(
+                f"{package.name}: declared {declared_aspect_ratio}, image {width}/{height}"
+            )
+
+    assert not mismatches, "\n".join(mismatches)
+
+
 def test_apply_editor_document_returns_updated_board_without_mutating_its_input() -> None:
     package = board_package.load_board_package(CANONICAL_PACKAGE)
     document = board_package.editor_document(package)
     parsed = board_package._validate_editor_document(
         document, package.image_width, package.image_height
     )
-    pieces_by_hold: dict[str, list[tuple[int, str, object]]] = {}
-    for hold_id, piece_index, kind, path in parsed.values():
-        pieces_by_hold.setdefault(hold_id, []).append((piece_index, kind, path))
+    pieces_by_hold: dict[
+        str,
+        list[
+            tuple[
+                int,
+                str,
+                object,
+                object,
+                tuple[int, ...],
+                int | None,
+                int | float | None,
+                dict[str, int | float] | None,
+                int | None,
+            ]
+        ],
+    ] = {}
+    for (
+        hold_id,
+        piece_index,
+        kind,
+        path,
+        shape_constraint,
+        bendable_command_indexes,
+        finger_capacity,
+        size_millimeters,
+        depth_range,
+        hand_capacity,
+    ) in parsed.values():
+        pieces_by_hold.setdefault(hold_id, []).append(
+            (
+                piece_index,
+                kind,
+                path,
+                shape_constraint,
+                bendable_command_indexes,
+                finger_capacity,
+                size_millimeters,
+                depth_range,
+                hand_capacity,
+            )
+        )
     for pieces in pieces_by_hold.values():
         pieces.sort(key=lambda item: item[0])
     first_hold_id = next(iter(pieces_by_hold))
     first_piece = pieces_by_hold[first_hold_id][0]
-    pieces_by_hold[first_hold_id][0] = (first_piece[0], "sloper", first_piece[2])
+    pieces_by_hold[first_hold_id][0] = (
+        first_piece[0],
+        "sloper",
+        first_piece[2],
+        first_piece[3],
+        first_piece[4],
+        first_piece[5],
+        first_piece[6],
+        first_piece[7],
+        first_piece[8],
+    )
     original = copy.deepcopy(package.board)
 
     updated = board_package._apply_editor_document(
@@ -522,7 +695,10 @@ def test_rejects_sidecars_and_extra_package_files(
     extra.parent.mkdir(parents=True, exist_ok=True)
     extra.write_bytes(b"{}")
 
-    with pytest.raises(BoardPackageError, match="only board.json and assets/primary.png"):
+    with pytest.raises(
+        BoardPackageError,
+        match="only board.json and assets/|assets must exactly match",
+    ):
         board_package.load_board_package(package)
 
 
@@ -597,15 +773,33 @@ def test_accepts_exact_physical_hold_kind_enum(tmp_path: Path) -> None:
     )
 
 
+def test_editor_round_trips_missing_physical_kind_without_inventing_a_type(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, lambda board: board["holds"][0].pop("kind"))
+
+    loaded = board_package.load_board_package(package_root)
+    document = board_package.editor_document(loaded)
+
+    assert "type" not in document["regions"][0]
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    reloaded = board_package.load_board_package(package_root)
+
+    assert "kind" not in saved.board["holds"][0]
+    assert "kind" not in reloaded.board["holds"][0]
+    assert "type" not in board_package.editor_document(reloaded)["regions"][0]
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (lambda hold: hold.pop("kind"), "kind"),
         (lambda hold: hold.__setitem__("kind", "crimp"), "kind must be one of"),
         (lambda hold: hold.__setitem__("geometry", []), "geometry must be non-empty"),
     ],
 )
-def test_requires_physical_kind_and_nonempty_geometry(
+def test_rejects_invalid_physical_kind_and_nonempty_geometry(
     mutation, message: str, tmp_path: Path
 ) -> None:
     library = _library(tmp_path)
@@ -619,10 +813,6 @@ def test_requires_physical_kind_and_nonempty_geometry(
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
-        (
-            lambda piece: piece["frame"].__setitem__("x", -0.1),
-            "normalized canvas",
-        ),
         (
             lambda piece: piece.__setitem__(
                 "shape",
@@ -640,7 +830,7 @@ def test_requires_physical_kind_and_nonempty_geometry(
         ),
     ],
 )
-def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
+def test_rejects_malformed_geometry_and_mismatched_bounds(
     mutation, message: str, tmp_path: Path
 ) -> None:
     library = _library(tmp_path)
@@ -651,19 +841,92 @@ def test_rejects_malformed_normalized_geometry_and_mismatched_bounds(
         board_package.load_board_package(package)
 
 
-@pytest.mark.parametrize(
-    "fixture",
-    VALIDATION_FIXTURES["outOfBoundsFrames"],
-    ids=lambda fixture: fixture["name"],
-)
-def test_rejects_shared_out_of_bounds_normalized_frames(
-    fixture: dict[str, object],
+def test_rejects_path_whose_rendered_curve_escapes_declared_frame(
+    tmp_path: Path,
 ) -> None:
-    with pytest.raises(board_package.GeometryError, match="normalized canvas"):
-        board_package.NormalizedFrame.from_json(
-            fixture["frame"],
-            fixture["name"],
-        )
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {"command": "line", "to": [1, 0]},
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "quad", "control": [-16, 2], "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+
+    with pytest.raises(
+        BoardPackageError, match="frame must match its derived shape bounds"
+    ):
+        board_package.load_board_package(package)
+
+
+def test_header_only_discovery_rejects_a_leading_curve_as_a_board_package_error(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {
+                        "command": "curve",
+                        "control1": [0, 0],
+                        "control2": [1, 1],
+                        "to": [1, 1],
+                    }
+                ],
+            },
+        ),
+    )
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+@pytest.mark.parametrize(
+    "commands",
+    [
+        [{"command": "move", "to": []}],
+        [{"command": "move", "to": ["left", "top"]}],
+    ],
+    ids=["empty-move-coordinates", "string-move-coordinates"],
+)
+def test_header_only_discovery_wraps_malformed_path_commands_as_board_package_errors(
+    commands: list[dict[str, object]], tmp_path: Path
+) -> None:
+    library = _library(tmp_path)
+    package = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape", {"type": "path", "commands": commands}
+        ),
+    )
+
+    with pytest.raises(BoardPackageError):
+        board_package.discover_packages(library)
+
+
+def test_accepts_off_canvas_finite_frame_with_positive_dimensions() -> None:
+    frame = board_package.NormalizedFrame.from_json(
+        {"x": -0.1, "y": 0.9, "width": 1.2, "height": 0.3},
+        "off-canvas",
+    )
+
+    assert frame.to_json() == {"x": -0.1, "y": 0.9, "width": 1.2, "height": 0.3}
 
 
 def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
@@ -677,7 +940,7 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     package = board_package.load_board_package(package_root)
     hold = package.board["holds"][0]
 
-    assert set(hold) == {"id", "name", "kind", "geometry"}
+    assert set(hold) == {"id", "name", "kind", "presentationID", "geometry"}
     assert package.hold_frame("hold-left").to_json() == {
         "x": 0.05,
         "y": 0.1,
@@ -712,9 +975,251 @@ def test_editor_exposes_independently_keyed_pieces_for_one_physical_hold(
         "hold-left-piece-1",
     ]
     assert [region["metadata"] for region in document["regions"]] == [
-        {"holdID": "hold-left", "pieceIndex": 0},
-        {"holdID": "hold-left", "pieceIndex": 1},
+        {"holdID": "hold-left", "pieceIndex": 0, "presentationID": "primary"},
+        {"holdID": "hold-left", "pieceIndex": 1, "presentationID": "primary"},
     ]
+
+
+def test_shape_constraint_round_trips_and_preserves_unrelated_geometry(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shapeConstraint", {"shape": "oval", "rotationDegrees": 15}
+        ),
+    )
+    package = board_package.load_board_package(package_root)
+    sibling_before = copy.deepcopy(package.board["holds"][0]["geometry"][1])
+    document = board_package.editor_document(package)
+
+    assert document["regions"][0]["shapeConstraint"] == {
+        "shape": "oval",
+        "rotationDegrees": 15.0,
+    }
+    document["regions"][0]["shapeConstraint"] = {
+        "shape": "pill",
+        "rotationDegrees": -45,
+    }
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    reopened = board_package.open_package(library, saved.board_id)
+
+    first_geometry = reopened.board["holds"][0]["geometry"]
+    assert first_geometry[0]["shapeConstraint"] == {
+        "shape": "pill",
+        "rotationDegrees": -45.0,
+    }
+    assert first_geometry[1] == sibling_before
+    assert first_geometry[1]["treatment"] == {"type": "surface"}
+
+
+def test_omitting_editor_shape_constraint_removes_stored_constraint(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shapeConstraint", {"shape": "rectangle", "rotationDegrees": 0}
+        ),
+    )
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][0].pop("shapeConstraint")
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert "shapeConstraint" not in saved.board["holds"][0]["geometry"][0]
+    assert "shapeConstraint" not in _read_board(package_root)["holds"][0]["geometry"][0]
+
+
+def test_editor_document_projects_a_bendable_curve_command_index(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                        "bendable": True,
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+
+    assert document["regions"][0]["bendableCommandIndexes"] == [1]
+
+
+def test_save_editor_document_persists_only_selected_curve_indexes(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.25, 0.5],
+                        "to": [0.5, 0.5],
+                        "bendable": True,
+                    },
+                    {
+                        "command": "curve",
+                        "control1": [0.75, 0.5],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["bendableCommandIndexes"] = [2]
+
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    commands = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]["commands"]
+    assert "bendable" not in commands[1]
+    assert commands[2]["bendable"] is True
+    assert "bendableCommandIndexes" not in json.dumps(_read_board(package_root))
+
+
+@pytest.mark.parametrize("indexes", [[1, 1], [99], [0], None])
+def test_save_rejects_invalid_editor_bendable_curve_indexes(
+    tmp_path: Path, indexes: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {
+                        "command": "curve",
+                        "control1": [0.25, 0],
+                        "control2": [0.75, 0],
+                        "to": [1, 0],
+                    },
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["bendableCommandIndexes"] = indexes
+
+    with pytest.raises(BoardPackageError, match="bendableCommandIndexes"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_rejects_bendable_curve_indexes_for_a_constrained_piece(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["displayPath"] = (
+        "M 177.4 45.7 C 221.75 45.7 310.45 45.7 354.8 45.7 L 354.8 228.5 L 177.4 228.5 Z"
+    )
+    document["regions"][0]["shapeConstraint"] = {
+        "shape": "rectangle",
+        "rotationDegrees": 0,
+    }
+    document["regions"][0]["bendableCommandIndexes"] = [1]
+
+    with pytest.raises(BoardPackageError, match="bendableCommandIndexes"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+@pytest.mark.parametrize(
+    "constraint",
+    [
+        {"shape": "triangle", "rotationDegrees": 0},
+        {"shape": "oval", "rotationDegrees": True},
+        {"shape": "oval", "rotationDegrees": float("inf")},
+        {"shape": "oval", "rotationDegrees": 10**1000},
+        {"shape": "oval", "rotationDegrees": -180.0001},
+        {"shape": "oval", "rotationDegrees": 180},
+        {"shape": "oval", "rotationDegrees": 0, "unexpected": True},
+    ],
+)
+def test_package_rejects_invalid_shape_constraints(
+    tmp_path: Path, constraint: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shapeConstraint", constraint
+        ),
+    )
+
+    with pytest.raises(BoardPackageError, match="shapeConstraint"):
+        board_package.load_board_package(package_root)
+
+
+@pytest.mark.parametrize(
+    "constraint",
+    [
+        {"shape": "triangle", "rotationDegrees": 0},
+        {"shape": "circle", "rotationDegrees": False},
+        {"shape": "circle", "rotationDegrees": float("nan")},
+        {"shape": "circle", "rotationDegrees": -181},
+        {"shape": "circle", "rotationDegrees": 180},
+        {"shape": "circle", "rotationDegrees": 0, "unexpected": True},
+    ],
+)
+def test_save_rejects_invalid_editor_shape_constraints(
+    tmp_path: Path, constraint: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["regions"][0]["shapeConstraint"] = constraint
+
+    with pytest.raises(BoardPackageError, match="shapeConstraint"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 def test_open_save_round_trip_keeps_board_json_and_creates_no_sidecar(
@@ -791,6 +1296,64 @@ def test_save_updates_one_piece_inside_board_json_and_preserves_its_sibling(
     assert not (library / "catalog.json").exists()
 
 
+def test_save_and_reopen_preserves_off_canvas_hold_geometry(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    document["regions"][0]["displayPath"] = (
+        "M -88.7 45.7 L 177.4 45.7 L 177.4 137.1 L -88.7 137.1 Z"
+    )
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+    reopened = board_package.open_package(library, saved.board_id)
+
+    assert _read_board(package_root)["holds"][0]["geometry"][0]["frame"] == {
+        "x": -0.05,
+        "y": 0.1,
+        "width": 0.15,
+        "height": 0.2,
+    }
+    assert board_package.editor_document(reopened)["regions"][0]["displayPath"] == (
+        "M -88.7 45.7 L 177.4 45.7 L 177.4 137.1 L -88.7 137.1 Z"
+    )
+
+
+def test_save_persists_a_quadratic_display_path_as_a_canonical_path_shape(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(
+        library, "fixture-board", "fixture.board"
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root)
+    )
+    document["regions"][0]["displayPath"] = (
+        "M 177.4 91.4 Q 266.1 45.7 354.8 91.4 L 354.8 228.5 L 177.4 228.5 Z"
+    )
+
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    shape = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]
+    assert shape["type"] == "path"
+    assert shape["commands"] == [
+        {"command": "move", "to": [0.0, 0.142857142857]},
+        {
+            "command": "quad",
+            "control": [0.5, -0.142857142857],
+            "to": [1.0, 0.142857142857],
+        },
+        {"command": "line", "to": [1.0, 1.0]},
+        {"command": "line", "to": [0.0, 1.0]},
+        {"command": "close"},
+    ]
+    reopened = board_package.open_package(library, "fixture.board")
+    assert board_package.editor_document(reopened)["regions"][0]["displayPath"] == (
+        "M 177.4 91.4 Q 266.1 45.7 354.8 91.4 L 354.8 228.5 L 177.4 228.5 Z"
+    )
+
+
 def test_changed_save_derives_current_display_paths_once_per_piece(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -799,7 +1362,7 @@ def test_changed_save_derives_current_display_paths_once_per_piece(
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
     document["regions"][0]["displayPath"] = (
-        "M 177.4 45.7 L 354.8 45.7 L 354.8 137.1 L 177.4 137.1 Z"
+        "M 177.4 45.7 L 354.8 137.1 L 200 150 L 330 60 Z"
     )
     original_display_path_for_shape = board_package.display_path_for_shape
     calls = 0
@@ -829,11 +1392,11 @@ def test_invalid_save_leaves_the_live_single_file_package_unchanged(
         board_package.load_board_package(package_root)
     )
     document["regions"][0]["displayPath"] = (
-        "M 10 10 L 90 90 L 10 90 L 90 10 Z"
+        "M 10 10 L 90 90 L 10 90 L 90 10"
     )
     before = _package_snapshot(package_root)
 
-    with pytest.raises(BoardPackageError, match="self-intersect"):
+    with pytest.raises(BoardPackageError, match="exactly one closed contour"):
         board_package.save_editor_document(library, "fixture-board", document)
 
     assert _package_snapshot(package_root) == before
@@ -852,6 +1415,224 @@ def test_save_recategorizes_a_hold_across_all_its_pieces(tmp_path: Path) -> None
 
     assert _read_board(package_root)["holds"][0]["kind"] == "edge"
     assert saved.board["holds"][0]["kind"] == "edge"
+
+
+def test_save_round_trips_optional_finger_capacity_for_all_pieces_of_a_hold(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+
+    for region in document["regions"]:
+        region["fingerCapacity"] = 3
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert _read_board(package_root)["holds"][0]["fingerCapacity"] == 3
+    assert {region["fingerCapacity"] for region in board_package.editor_document(saved)["regions"]} == {3}
+
+
+def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_hold(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+
+    for region in document["regions"]:
+        region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert _read_board(package_root)["holds"][0]["depthRangeMillimeters"] == {
+        "lowerBound": 12,
+        "upperBound": 16,
+    }
+    assert {
+        tuple(region["depthRangeMillimeters"].items())
+        for region in board_package.editor_document(saved)["regions"]
+    } == {(("lowerBound", 12), ("upperBound", 16))}
+
+
+def test_opening_and_saving_preserves_fractional_fixed_hold_measurement(
+    tmp_path: Path,
+) -> None:
+    """Rejects a regression that treats a source-backed fractional fixed depth as invalid."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0].update(sizeMillimeters=7.5),
+    )
+
+    opened = board_package.open_package(library, "fixture.board")
+    document = board_package.editor_document(opened)
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert saved.board["holds"][0]["sizeMillimeters"] == 7.5
+    assert "depthRangeMillimeters" not in saved.board["holds"][0]
+    assert _read_board(package_root)["holds"][0]["sizeMillimeters"] == 7.5
+
+
+def test_opening_rejects_hold_with_fixed_and_variable_depths(tmp_path: Path) -> None:
+    """Removing depth-form exclusivity would accept an ambiguous package hold."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0].update(
+            sizeMillimeters=7.5,
+            depthRangeMillimeters={"lowerBound": 7.5, "upperBound": 12.5},
+        ),
+    )
+
+    with pytest.raises(BoardPackageError, match="must not specify both"):
+        board_package.open_package(library, "fixture.board")
+
+
+@pytest.mark.parametrize(
+    "size",
+    [0, -1, math.nan, math.inf, True, "7.5", None],
+)
+def test_save_rejects_malformed_or_non_positive_fixed_depth(
+    tmp_path: Path, size: object
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    for region in document["regions"]:
+        region["sizeMillimeters"] = size
+
+    with pytest.raises(BoardPackageError, match="positive finite number"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_rejects_fixed_and_variable_depth_on_one_piece(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    for region in document["regions"]:
+        region["sizeMillimeters"] = 8.5
+        region["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 12.5}
+
+    with pytest.raises(BoardPackageError, match="must not specify both"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+@pytest.mark.parametrize(
+    ("second_piece_depth", "message"),
+    [
+        ({"sizeMillimeters": 9.5}, "share one fixed depth"),
+        (
+            {"depthRangeMillimeters": {"lowerBound": 7.5, "upperBound": 12.5}},
+            "share one depth representation",
+        ),
+        ({}, "share one depth representation"),
+    ],
+)
+def test_save_rejects_inconsistent_depth_across_physical_pieces(
+    tmp_path: Path,
+    second_piece_depth: dict[str, object],
+    message: str,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["sizeMillimeters"] = 8.5
+    document["regions"][1].update(second_piece_depth)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+@pytest.mark.parametrize(
+    ("measurement", "message"),
+    [
+        ({"sizeMillimeters": math.nan}, "positive finite number"),
+        (
+            {"depthRangeMillimeters": {"lowerBound": 0, "upperBound": 7.5}},
+            "positive finite number",
+        ),
+        (
+            {"depthRangeMillimeters": {"lowerBound": 12.5, "upperBound": 7.5}},
+            "must not exceed",
+        ),
+    ],
+)
+def test_opening_rejects_invalid_fractional_hold_measurements(
+    tmp_path: Path, measurement: dict[str, object], message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, lambda board: board["holds"][0].update(measurement))
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.open_package(library, "fixture.board")
+
+
+def test_save_round_trips_hand_capacity_and_depth_range_for_all_pieces(
+    tmp_path: Path,
+) -> None:
+    """Removing either metadata field from persistence breaks this contract."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+
+    for region in document["regions"]:
+        region["handCapacity"] = 2
+        region["depthRangeMillimeters"] = {"lowerBound": 12, "upperBound": 16}
+
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    stored = _read_board(package_root)["holds"][0]
+    assert stored["handCapacity"] == 2
+    assert stored["depthRangeMillimeters"] == {"lowerBound": 12, "upperBound": 16}
+    assert {
+        (region["handCapacity"], tuple(region["depthRangeMillimeters"].items()))
+        for region in board_package.editor_document(saved)["regions"]
+    } == {(2, (("lowerBound", 12), ("upperBound", 16)))}
+
+
+def test_save_rejects_multi_piece_hold_with_mixed_hand_capacity(
+    tmp_path: Path,
+) -> None:
+    """A physical hold has one capacity even when it has multiple paths."""
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["handCapacity"] = 1
+    document["regions"][1]["handCapacity"] = 2
+
+    with pytest.raises(BoardPackageError, match="share one hand capacity"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_rejects_an_explicit_null_finger_capacity(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["fingerCapacity"] = None
+
+    with pytest.raises(BoardPackageError, match="fingerCapacity must be in 1...4"):
+        board_package.save_editor_document(library, "fixture-board", document)
+
+
+def test_save_removes_canonical_finger_capacity_when_every_piece_is_unset(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, lambda board: board["holds"][0].update(fingerCapacity=3))
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+
+    for region in document["regions"]:
+        del region["fingerCapacity"]
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    assert "fingerCapacity" not in _read_board(package_root)["holds"][0]
 
 
 def test_save_rejects_a_hold_with_pieces_of_mixed_kinds(tmp_path: Path) -> None:
@@ -888,7 +1669,11 @@ def test_save_adds_a_new_hold(tmp_path: Path) -> None:
             "key": "hold-right-piece-0",
             "type": "pinch",
             "displayPath": "M 900 100 L 950 100 L 950 150 Z",
-            "metadata": {"holdID": "hold-right", "pieceIndex": 0},
+            "metadata": {
+                "holdID": "hold-right",
+                "pieceIndex": 0,
+                "presentationID": "primary",
+            },
         }
     )
 
@@ -1140,12 +1925,12 @@ def test_staging_ignores_primary_only_drafts_when_staging_packages(
     finished = _write_finished_package(library, "finished-board", "finished.board")
     _mutate_board(finished, _replace_holds_with_supported_kinds)
     _write_draft(library, "draft-board")
-    pipeline_module = (
-        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    package_module = (
+        repository / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
     )
-    pipeline_module.mkdir(parents=True)
-    for filename in ["board_catalog.py", "board_artwork.py"]:
-        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
+    package_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_geometry_schema.py"]:
+        shutil.copyfile(PACKAGE_MODULE_ROOT / filename, package_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_test")
 
@@ -1168,12 +1953,12 @@ def test_staging_commits_new_destination_when_backup_cleanup_fails(
     library = repository / "Hangboards"
     library.mkdir(parents=True)
     _write_finished_package(library, "finished-board", "finished.board")
-    pipeline_module = (
-        repository / "Tools" / "HangboardPipeline" / "src" / "hangboard_vectorizer"
+    package_module = (
+        repository / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
     )
-    pipeline_module.mkdir(parents=True)
-    for filename in ["board_catalog.py", "board_artwork.py"]:
-        shutil.copyfile(PIPELINE_MODULE_ROOT / filename, pipeline_module / filename)
+    package_module.mkdir(parents=True)
+    for filename in ["board_catalog.py", "board_geometry_schema.py"]:
+        shutil.copyfile(PACKAGE_MODULE_ROOT / filename, package_module / filename)
 
     stage_module = _load_stage_module("stage_board_packages_cleanup_test")
 

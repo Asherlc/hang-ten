@@ -1,0 +1,836 @@
+{
+  "id": "metolius.rock-rings-3d",
+  "manufacturer": "Metolius",
+  "name": "Rock Rings 3D",
+  "subtitle": "Portable pair with independent single-point suspension, one jug, and three pockets per unit.",
+  "productURL": "https://www.metoliusclimbing.com/collections/training-equipment/products/rock-rings-3d",
+  "dimensions": "184 \u00d7 146 \u00d7 57 mm",
+  "aspectRatio": 1.5,
+  "presentations": [
+    {
+      "id": "front-pair",
+      "name": "Front pair",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    }
+  ],
+  "holds": [
+    {
+      "id": "jug-left",
+      "name": "Left unit jug",
+      "kind": "jug",
+      "presentationID": "front-pair",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.184389344401,
+            "y": 0.324421225953,
+            "width": 0.241714065104,
+            "height": 0.097047676391
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.014545703164,
+                  -0.104839572347
+                ],
+                "control2": [
+                  0.416638049794,
+                  0.017461643607
+                ],
+                "to": [
+                  0.459465377378,
+                  0.002086398249
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.905173005885,
+                  -0.038616815786
+                ],
+                "control2": [
+                  0.919752218102,
+                  0.518025695539
+                ],
+                "to": [
+                  1.0,
+                  1.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-40-four-left",
+      "name": "Left unit 40 mm four-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 40,
+      "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
+      "presentationID": "front-pair",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.208419598958,
+            "y": 0.454,
+            "width": 0.169082128255,
+            "height": 0.091
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.179399997187,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.820600002813,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.919679885132,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857625773
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142374227
+                ],
+                "control2": [
+                  0.919679885132,
+                  1.0
+                ],
+                "to": [
+                  0.820600002813,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.179399997187,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.080320114868,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142374227
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857625773
+                ],
+                "control2": [
+                  0.080320114868,
+                  0.0
+                ],
+                "to": [
+                  0.179399997187,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-32-three-left",
+      "name": "Left unit 32 mm three-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 32,
+      "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
+      "presentationID": "front-pair",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.231193926432,
+            "y": 0.615,
+            "width": 0.122843342448,
+            "height": 0.082
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.222505613969,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.777494386031,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.900380843712,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857624333
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142375667
+                ],
+                "control2": [
+                  0.900380843712,
+                  1.0
+                ],
+                "to": [
+                  0.777494386031,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.222505613969,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.099619156288,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142375667
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857624333
+                ],
+                "control2": [
+                  0.099619156288,
+                  0.0
+                ],
+                "to": [
+                  0.222505613969,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-25-two-left",
+      "name": "Left unit 25 mm two-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 25,
+      "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "presentationID": "front-pair",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.251207729167,
+            "y": 0.751552805664,
+            "width": 0.086956523438,
+            "height": 0.076447194336
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.293047576308,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.706952423692,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.868798134724,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857621696
+                ],
+                "to": [
+                  1.0,
+                  0.499999993613
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142378304
+                ],
+                "control2": [
+                  0.868798134724,
+                  1.0
+                ],
+                "to": [
+                  0.706952423692,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.293047576308,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.131201865276,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142378304
+                ],
+                "to": [
+                  0.0,
+                  0.499999993613
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857621696
+                ],
+                "control2": [
+                  0.131201865276,
+                  0.0
+                ],
+                "to": [
+                  0.293047576308,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jug-right",
+      "name": "Right unit jug",
+      "kind": "jug",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.573896590495,
+            "y": 0.324421225953,
+            "width": 0.241714065104,
+            "height": 0.097047676391
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.985454296836,
+                  -0.104839572347
+                ],
+                "control2": [
+                  0.583361950206,
+                  0.017461643607
+                ],
+                "to": [
+                  0.540534622622,
+                  0.002086398249
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.094826994115,
+                  -0.038616815786
+                ],
+                "control2": [
+                  0.080247781898,
+                  0.518025695539
+                ],
+                "to": [
+                  0.0,
+                  1.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "presentationID": "front-pair"
+    },
+    {
+      "id": "pocket-40-four-right",
+      "name": "Right unit 40 mm four-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 40,
+      "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
+      "presentationID": "front-pair",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.622498272787,
+            "y": 0.454,
+            "width": 0.169082128255,
+            "height": 0.091
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.179399997187,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.820600002813,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.919679885132,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857625773
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142374227
+                ],
+                "control2": [
+                  0.919679885132,
+                  1.0
+                ],
+                "to": [
+                  0.820600002813,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.179399997187,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.080320114868,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142374227
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857625773
+                ],
+                "control2": [
+                  0.080320114868,
+                  0.0
+                ],
+                "to": [
+                  0.179399997187,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-32-three-right",
+      "name": "Right unit 32 mm three-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 32,
+      "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
+      "presentationID": "front-pair",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.64596273112,
+            "y": 0.615,
+            "width": 0.122843342448,
+            "height": 0.082
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.222505613969,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.777494386031,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.900380843712,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857624333
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142375667
+                ],
+                "control2": [
+                  0.900380843712,
+                  1.0
+                ],
+                "to": [
+                  0.777494386031,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.222505613969,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.099619156288,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142375667
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857624333
+                ],
+                "control2": [
+                  0.099619156288,
+                  0.0
+                ],
+                "to": [
+                  0.222505613969,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-25-two-right",
+      "name": "Right unit 25 mm two-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 25,
+      "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "presentationID": "front-pair",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.661835747395,
+            "y": 0.751552805664,
+            "width": 0.086956523438,
+            "height": 0.076447194336
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.293047576308,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.706952423692,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.868798134724,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857621696
+                ],
+                "to": [
+                  1.0,
+                  0.499999993613
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142378304
+                ],
+                "control2": [
+                  0.868798134724,
+                  1.0
+                ],
+                "to": [
+                  0.706952423692,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.293047576308,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.131201865276,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142378304
+                ],
+                "to": [
+                  0.0,
+                  0.499999993613
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857621696
+                ],
+                "control2": [
+                  0.131201865276,
+                  0.0
+                ],
+                "to": [
+                  0.293047576308,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    }
+  ]
+}

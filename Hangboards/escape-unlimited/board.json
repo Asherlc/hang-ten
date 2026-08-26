@@ -1,33 +1,766 @@
 {
-  "schemaVersion": 1,
-  "id": "escape-unlimited",
+  "id": "escape.unlimited",
   "manufacturer": "Escape Climbing",
-  "name": "Unlimited",
-  "subtitle": "Wooden training board with three rows of open-hand edge rails.",
-  "productURL": "https://escapeclimbing.com/products/unlimited",
-  "dimensions": "600 × 300 mm",
+  "name": "Unlimited Board",
+  "subtitle": "Premium Baltic Birch hangboard with a continuous top sloper and three mirrored edge rows.",
+  "productURL": "https://escapeclimbing.com/products/ec72000",
+  "dimensions": "23.5 \u00d7 6 in",
   "aspectRatio": 2.0,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
-    { "id": "edge-row1-left", "name": "Row 1 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.07, "y": 0.20, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row1-right", "name": "Row 1 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.20, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row2-left", "name": "Row 2 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.07, "y": 0.42, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row2-right", "name": "Row 2 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.42, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row3-left", "name": "Row 3 left rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.07, "y": 0.64, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]},
-    { "id": "edge-row3-right", "name": "Row 3 right rail", "kind": "edge", "gripType": "openHand", "features": ["largeOpenHandRail"], "geometry": [
-      { "frame": {"x": 0.53, "y": 0.64, "width": 0.40, "height": 0.14}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.4} }
-    ]}
+    {
+      "id": "top-sloper-60",
+      "name": "Full-width 60 mm top sloper",
+      "kind": "sloper",
+      "sizeMillimeters": 60,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.067670873732,
+            "y": 0.251122232903,
+            "width": 0.866236250846,
+            "height": 0.059414459318
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.174798391717,
+                  0.01023567388
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.788657111385,
+                  0.049087926275
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  0.981528916136,
+                  -0.075360729663
+                ],
+                "to": [
+                  0.984962893701,
+                  0.115428751882
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.924116669043
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  0.004982399629,
+                  0.684382455255
+                ],
+                "to": [
+                  0.009769619722,
+                  0.456030724982
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  0.014556839814,
+                  0.227678994709
+                ],
+                "to": [
+                  0.019148880371,
+                  0.010709766926
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-45-left",
+      "name": "Left 45 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 45,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.068890900225,
+            "y": 0.380877657272,
+            "width": 0.41406673788,
+            "height": 0.093778173619
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.056620204571,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.943379795429,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.974650270725,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857627032
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142372968
+                ],
+                "control2": [
+                  0.974650270725,
+                  1.0
+                ],
+                "to": [
+                  0.943379795429,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.056620204571,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.025349729275,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142372968
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857627032
+                ],
+                "control2": [
+                  0.025349729275,
+                  0.0
+                ],
+                "to": [
+                  0.056620204571,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-45-right",
+      "name": "Right 45 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 45,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.517042361895,
+            "y": 0.380877657272,
+            "width": 0.41406673788,
+            "height": 0.093778173619
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.943379795429,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.056620204571,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.025349729275,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.223857627032
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.776142372968
+                ],
+                "control2": [
+                  0.025349729275,
+                  1.0
+                ],
+                "to": [
+                  0.056620204571,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.943379795429,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.974650270725,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.776142372968
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.223857627032
+                ],
+                "control2": [
+                  0.974650270725,
+                  0.0
+                ],
+                "to": [
+                  0.943379795429,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-20-left",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.061752028185,
+            "y": 0.552247971815,
+            "width": 0.421205609921,
+            "height": 0.066681990981
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.039578052506,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.960421946156,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.982280301499,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857618568
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142381432
+                ],
+                "control2": [
+                  0.982280301499,
+                  1.0
+                ],
+                "to": [
+                  0.960421946156,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.039578052506,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.017719697163,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142381432
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857618568
+                ],
+                "control2": [
+                  0.017719697163,
+                  0.0
+                ],
+                "to": [
+                  0.039578052506,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-20-right",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 20,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.517042361894,
+            "y": 0.552247971815,
+            "width": 0.421205609921,
+            "height": 0.066681990981
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.960421947494,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.039578053844,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.017719698501,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.223857618568
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.776142381432
+                ],
+                "control2": [
+                  0.017719698501,
+                  1.0
+                ],
+                "to": [
+                  0.039578053844,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.960421947494,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.982280302837,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.776142381432
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.223857618568
+                ],
+                "control2": [
+                  0.982280302837,
+                  0.0
+                ],
+                "to": [
+                  0.960421947494,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-15-left",
+      "name": "Left 15 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.064227230552,
+            "y": 0.675514880496,
+            "width": 0.417287665727,
+            "height": 0.069654941375
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.041730770056,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.958269231295,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.981316498836,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857633019
+                ],
+                "to": [
+                  1.0,
+                  0.500000008093
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142383166
+                ],
+                "control2": [
+                  0.981316498836,
+                  1.0
+                ],
+                "to": [
+                  0.958269231295,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.041730770056,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.018683502515,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142383166
+                ],
+                "to": [
+                  0.0,
+                  0.500000008093
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857633019
+                ],
+                "control2": [
+                  0.018683502515,
+                  0.0
+                ],
+                "to": [
+                  0.041730770056,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-15-right",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.518485103721,
+            "y": 0.675514880496,
+            "width": 0.417287665727,
+            "height": 0.069654941375
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.958269229944,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.041730768705,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.018683501164,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.223857633019
+                ],
+                "to": [
+                  0.0,
+                  0.500000008093
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.776142383166
+                ],
+                "control2": [
+                  0.018683501164,
+                  1.0
+                ],
+                "to": [
+                  0.041730768705,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.958269229944,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.981316497485,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.776142383166
+                ],
+                "to": [
+                  1.0,
+                  0.500000008093
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.223857633019
+                ],
+                "control2": [
+                  0.981316497485,
+                  0.0
+                ],
+                "to": [
+                  0.958269229944,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
   ]
 }

@@ -1,4 +1,4 @@
 interface:
   display_name: "Add a Hangboard"
-  short_description: "Add deterministic hangboard artwork and metadata"
-  default_prompt: "Use $add-hangboard to add a new physical hangboard to Hang Ten."
+  short_description: "Author and review a physical hangboard package"
+  default_prompt: "Use $add-hangboard to research a physical hangboard and directly author its reviewed package geometry in Hang Ten."

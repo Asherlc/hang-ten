@@ -130,6 +130,66 @@ enum MotherboardConnectionState: Equatable {
     }
 }
 
+enum MotherboardForceRocker {
+    enum State: Equatable {
+        case unavailable
+        case underTarget(tiltFraction: Double)
+        case centered
+        case overTarget(tiltFraction: Double)
+
+        var tiltFraction: Double {
+            switch self {
+            case .unavailable, .centered:
+                0
+            case let .underTarget(tiltFraction), let .overTarget(tiltFraction):
+                tiltFraction
+            }
+        }
+
+        var accessibilityValue: String {
+            switch self {
+            case .unavailable: "Unavailable"
+            case .underTarget: "Below threshold"
+            case .centered: "At threshold"
+            case .overTarget: "Above threshold"
+            }
+        }
+
+        var isAtOrAboveThreshold: Bool {
+            switch self {
+            case .centered, .overTarget:
+                true
+            case .unavailable, .underTarget:
+                false
+            }
+        }
+    }
+
+    static func state(loadKGF: Double?, thresholdKGF: Double) -> State {
+        guard let loadKGF,
+              loadKGF.isFinite,
+              loadKGF >= 0,
+              thresholdKGF.isFinite,
+              thresholdKGF > 0 else {
+            return .unavailable
+        }
+
+        if loadKGF == thresholdKGF {
+            return .centered
+        }
+
+        if loadKGF < thresholdKGF {
+            return .underTarget(tiltFraction: max(loadKGF / thresholdKGF - 1, -1))
+        }
+
+        let thresholdRatio = thresholdKGF / loadKGF
+        guard thresholdRatio > 0.5 else {
+            return .overTarget(tiltFraction: 1)
+        }
+        return .overTarget(tiltFraction: 1 / thresholdRatio - 1)
+    }
+}
+
 struct MotherboardDetectionConfiguration: Codable, Equatable {
     var thresholdKGF: Double = 2.5
     var releaseRatio: Double = 0.8
@@ -173,6 +233,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let motherboardIdentifier: String?
     let batteryValue: UInt16?
     let steps: [WorkoutStepMeasurement]
+    let stepTitles: [String]
     let forceSensorProfile: ForceSensorProfile
     let bodyweightKGF: Double?
     let motherboardMeasurements: [MotherboardMeasurement]
@@ -180,7 +241,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
 
     private enum CodingKeys: String, CodingKey {
         case id, planID, planTitle, recordedAt, startDate, endDate
-        case motherboardIdentifier, batteryValue, steps, forceSensorProfile, bodyweightKGF
+        case motherboardIdentifier, batteryValue, steps, stepTitles, forceSensorProfile, bodyweightKGF
         case motherboardMeasurements, motherboardMeasurementsTruncated
     }
 
@@ -194,6 +255,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         motherboardIdentifier: String?,
         batteryValue: UInt16?,
         steps: [WorkoutStepMeasurement],
+        stepTitles: [String] = [],
         forceSensorProfile: ForceSensorProfile = .motherboard,
         bodyweightKGF: Double? = nil,
         motherboardMeasurements: [MotherboardMeasurement] = [],
@@ -208,6 +270,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.motherboardIdentifier = motherboardIdentifier
         self.batteryValue = batteryValue
         self.steps = steps
+        self.stepTitles = stepTitles
         self.forceSensorProfile = forceSensorProfile
         self.bodyweightKGF = bodyweightKGF
         self.motherboardMeasurements = motherboardMeasurements
@@ -225,11 +288,20 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         motherboardIdentifier = try container.decodeIfPresent(String.self, forKey: .motherboardIdentifier)
         batteryValue = try container.decodeIfPresent(UInt16.self, forKey: .batteryValue)
         steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
+        stepTitles = try container.decodeIfPresent([String].self, forKey: .stepTitles) ?? []
         let forceSensorProfileRawValue = try container.decodeIfPresent(String.self, forKey: .forceSensorProfile)
         forceSensorProfile = forceSensorProfileRawValue.flatMap(ForceSensorProfile.init(rawValue:)) ?? .motherboard
         bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
         motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
         motherboardMeasurementsTruncated = try container.decodeIfPresent(Bool.self, forKey: .motherboardMeasurementsTruncated) ?? false
+    }
+
+    func stepTitle(at index: Int) -> String {
+        guard stepTitles.indices.contains(index),
+              !stepTitles[index].trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return "Step \(index + 1)"
+        }
+        return stepTitles[index]
     }
 }
 

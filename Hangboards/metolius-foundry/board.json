@@ -1,0 +1,2234 @@
+{
+  "id": "metolius.foundry",
+  "manufacturer": "Metolius",
+  "name": "Foundry Training Board",
+  "subtitle": "Compact symmetric training board with tapered pinches, jugs, pockets, a flat sloper, and edges.",
+  "productURL": "https://www.metoliusclimbing.com/products/foundry-training-board",
+  "dimensions": "22.75 \u00d7 8.5 in",
+  "aspectRatio": 2.0,
+  "presentations": [
+    {
+      "id": "front",
+      "name": "Front",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.0,
+      "default": true
+    }
+  ],
+  "holds": [
+    {
+      "id": "pinch-1-left",
+      "name": "Left #1 variable pinch",
+      "kind": "pinch",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.057,
+            "y": 0.255,
+            "width": 0.164,
+            "height": 0.57
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.78,
+                  0.02
+                ],
+                "control2": [
+                  0.47,
+                  0.12
+                ],
+                "to": [
+                  0.26,
+                  0.3
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.1,
+                  0.43
+                ],
+                "control2": [
+                  0.02,
+                  0.53
+                ],
+                "to": [
+                  0.0,
+                  0.62
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.03,
+                  0.82
+                ],
+                "control2": [
+                  0.18,
+                  0.97
+                ],
+                "to": [
+                  0.41,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.68,
+                  0.93
+                ],
+                "control2": [
+                  0.85,
+                  0.65
+                ],
+                "to": [
+                  0.92,
+                  0.3
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.95,
+                  0.16
+                ],
+                "control2": [
+                  0.98,
+                  0.06
+                ],
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "jug-2-left",
+      "name": "Left #2 outer jug",
+      "kind": "jug",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.22,
+            "y": 0.167,
+            "width": 0.12,
+            "height": 0.205
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.38,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.6,
+                  0.0
+                ],
+                "control2": [
+                  0.82,
+                  0.04
+                ],
+                "to": [
+                  1.0,
+                  0.18
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.98,
+                  0.48
+                ],
+                "control2": [
+                  0.9,
+                  0.76
+                ],
+                "to": [
+                  0.76,
+                  0.9
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.68,
+                  0.96
+                ],
+                "control2": [
+                  0.6,
+                  1.0
+                ],
+                "to": [
+                  0.53,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.3,
+                  1.0
+                ],
+                "control2": [
+                  0.14,
+                  0.93
+                ],
+                "to": [
+                  0.05,
+                  0.79
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01,
+                  0.68
+                ],
+                "control2": [
+                  0.0,
+                  0.59
+                ],
+                "to": [
+                  0.0,
+                  0.52
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.03,
+                  0.24
+                ],
+                "control2": [
+                  0.18,
+                  0.07
+                ],
+                "to": [
+                  0.38,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-3-left",
+      "name": "Left #3 32 mm 4-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 32,
+      "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.222,
+            "y": 0.385,
+            "width": 0.112,
+            "height": 0.078
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.955,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.955,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.045,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.045,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-4-left",
+      "name": "Left #4 22 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 22,
+      "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.172,
+            "y": 0.514,
+            "width": 0.094,
+            "height": 0.066
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.955,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.955,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.045,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.045,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-5-left",
+      "name": "Left #5 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.284,
+            "y": 0.514,
+            "width": 0.055,
+            "height": 0.066
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.82,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.92,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.92,
+                  1.0
+                ],
+                "to": [
+                  0.82,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.18,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.08,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.08,
+                  0.0
+                ],
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-6-left",
+      "name": "Left #6 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 15,
+      "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.172,
+            "y": 0.621,
+            "width": 0.094,
+            "height": 0.068
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.955,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.955,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.045,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.045,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-7-left",
+      "name": "Left #7 21 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 21,
+      "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.284,
+            "y": 0.621,
+            "width": 0.055,
+            "height": 0.068
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.82,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.92,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.92,
+                  1.0
+                ],
+                "to": [
+                  0.82,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.18,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.08,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.08,
+                  0.0
+                ],
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "sloper-8-center",
+      "name": "Center #8 53 mm flat sloper",
+      "kind": "sloper",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.33,
+            "y": 0.174,
+            "width": 0.34,
+            "height": 0.115
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.06,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.02,
+                  0.9
+                ],
+                "control2": [
+                  0.0,
+                  0.79
+                ],
+                "to": [
+                  0.0,
+                  0.7
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.02,
+                  0.26
+                ],
+                "control2": [
+                  0.08,
+                  0.08
+                ],
+                "to": [
+                  0.15,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.34,
+                  0.0
+                ],
+                "control2": [
+                  0.66,
+                  0.0
+                ],
+                "to": [
+                  0.85,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.92,
+                  0.08
+                ],
+                "control2": [
+                  0.98,
+                  0.26
+                ],
+                "to": [
+                  1.0,
+                  0.7
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.79
+                ],
+                "control2": [
+                  0.98,
+                  0.9
+                ],
+                "to": [
+                  0.94,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.06,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-9-center",
+      "name": "Center #9 16 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 16,
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.361,
+            "y": 0.283,
+            "width": 0.278,
+            "height": 0.08
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.08,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.92,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.965,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.965,
+                  1.0
+                ],
+                "to": [
+                  0.92,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.08,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.035,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.035,
+                  0.0
+                ],
+                "to": [
+                  0.08,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-10-center",
+      "name": "Center #10 30 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 30,
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.362,
+            "y": 0.397,
+            "width": 0.276,
+            "height": 0.117
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.955,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.955,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.045,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.045,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-11-center",
+      "name": "Center #11 23 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 23,
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.363,
+            "y": 0.585,
+            "width": 0.274,
+            "height": 0.105
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.91,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.91,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.09,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-7-right",
+      "name": "Right #7 21 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 21,
+      "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.661,
+            "y": 0.621,
+            "width": 0.055,
+            "height": 0.068
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.82,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.92,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.92,
+                  1.0
+                ],
+                "to": [
+                  0.82,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.18,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.08,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.08,
+                  0.0
+                ],
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-6-right",
+      "name": "Right #6 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 15,
+      "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.734,
+            "y": 0.621,
+            "width": 0.094,
+            "height": 0.068
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.955,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.955,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.045,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.045,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-5-right",
+      "name": "Right #5 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.661,
+            "y": 0.514,
+            "width": 0.055,
+            "height": 0.066
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.82,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.92,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.92,
+                  1.0
+                ],
+                "to": [
+                  0.82,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.18,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.08,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.08,
+                  0.0
+                ],
+                "to": [
+                  0.18,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-4-right",
+      "name": "Right #4 22 mm 3-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 22,
+      "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.734,
+            "y": 0.514,
+            "width": 0.094,
+            "height": 0.066
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.955,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.955,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.045,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.045,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "pocket-3-right",
+      "name": "Right #3 32 mm 4-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 32,
+      "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.666,
+            "y": 0.385,
+            "width": 0.112,
+            "height": 0.078
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.955,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.09
+                ],
+                "to": [
+                  1.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.91
+                ],
+                "control2": [
+                  0.955,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.045,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.91
+                ],
+                "to": [
+                  0.0,
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.09
+                ],
+                "control2": [
+                  0.045,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jug-2-right",
+      "name": "Right #2 outer jug",
+      "kind": "jug",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.66,
+            "y": 0.167,
+            "width": 0.12,
+            "height": 0.205
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.62,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.4,
+                  0.0
+                ],
+                "control2": [
+                  0.18,
+                  0.04
+                ],
+                "to": [
+                  0.0,
+                  0.18
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.02,
+                  0.48
+                ],
+                "control2": [
+                  0.1,
+                  0.76
+                ],
+                "to": [
+                  0.24,
+                  0.9
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.32,
+                  0.96
+                ],
+                "control2": [
+                  0.4,
+                  1.0
+                ],
+                "to": [
+                  0.47,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.7,
+                  1.0
+                ],
+                "control2": [
+                  0.86,
+                  0.93
+                ],
+                "to": [
+                  0.95,
+                  0.79
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.99,
+                  0.68
+                ],
+                "control2": [
+                  1.0,
+                  0.59
+                ],
+                "to": [
+                  1.0,
+                  0.52
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.97,
+                  0.24
+                ],
+                "control2": [
+                  0.82,
+                  0.07
+                ],
+                "to": [
+                  0.62,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pinch-1-right",
+      "name": "Right #1 variable pinch",
+      "kind": "pinch",
+      "presentationID": "front",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.779,
+            "y": 0.255,
+            "width": 0.164,
+            "height": 0.57
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.22,
+                  0.02
+                ],
+                "control2": [
+                  0.53,
+                  0.12
+                ],
+                "to": [
+                  0.74,
+                  0.3
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.9,
+                  0.43
+                ],
+                "control2": [
+                  0.98,
+                  0.53
+                ],
+                "to": [
+                  1.0,
+                  0.62
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.97,
+                  0.82
+                ],
+                "control2": [
+                  0.82,
+                  0.97
+                ],
+                "to": [
+                  0.59,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.32,
+                  0.93
+                ],
+                "control2": [
+                  0.15,
+                  0.65
+                ],
+                "to": [
+                  0.08,
+                  0.3
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.05,
+                  0.16
+                ],
+                "control2": [
+                  0.02,
+                  0.06
+                ],
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    }
+  ]
+}

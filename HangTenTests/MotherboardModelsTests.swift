@@ -2,6 +2,37 @@ import XCTest
 @testable import HangTen
 
 final class MotherboardModelsTests: XCTestCase {
+    func testForceRockerCentersAtThresholdAndTiltsTowardLoadDirection() {
+        XCTAssertEqual(
+            MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: 10),
+            .centered
+        )
+        XCTAssertEqual(
+            MotherboardForceRocker.state(loadKGF: 5, thresholdKGF: 10),
+            .underTarget(tiltFraction: -0.5)
+        )
+        XCTAssertEqual(
+            MotherboardForceRocker.state(loadKGF: 25, thresholdKGF: 10),
+            .overTarget(tiltFraction: 1)
+        )
+        XCTAssertEqual(
+            MotherboardForceRocker.state(
+                loadKGF: Double.greatestFiniteMagnitude,
+                thresholdKGF: Double.leastNonzeroMagnitude
+            ),
+            .overTarget(tiltFraction: 1)
+        )
+    }
+
+    func testForceRockerIsUnavailableForMissingOrInvalidMeasurements() {
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: nil, thresholdKGF: 10), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: .nan, thresholdKGF: 10), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: -1, thresholdKGF: 10), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: 0), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: -1), .unavailable)
+        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: .infinity), .unavailable)
+    }
+
     func testConnectionStateShowsWorkoutMeterOnlyWhileStreaming() {
         XCTAssertTrue(MotherboardConnectionState.streaming.showsWorkoutMeter)
 
@@ -176,12 +207,41 @@ final class MotherboardModelsTests: XCTestCase {
         object.removeValue(forKey: "bodyweightKGF")
         object.removeValue(forKey: "motherboardMeasurements")
         object.removeValue(forKey: "motherboardMeasurementsTruncated")
+        object.removeValue(forKey: "stepTitles")
         let legacyData = try JSONSerialization.data(withJSONObject: object)
 
         let decoded = try JSONDecoder().decode(WorkoutSessionRecord.self, from: legacyData)
         XCTAssertNil(decoded.bodyweightKGF)
         XCTAssertEqual(decoded.motherboardMeasurements, [])
         XCTAssertFalse(decoded.motherboardMeasurementsTruncated)
+        XCTAssertEqual(decoded.stepTitles, [])
+        XCTAssertEqual(decoded.stepTitle(at: 0), "Step 1")
+    }
+
+    func testSessionRecordRoundTripsRecordedStepTitles() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [],
+            stepTitles: ["Maximum hang"]
+        )
+        let data = try JSONEncoder().encode(record)
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: data
+        )
+        let roundTrippedObject = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: JSONEncoder().encode(decoded)) as? [String: Any]
+        )
+
+        XCTAssertEqual(roundTrippedObject["stepTitles"] as? [String], ["Maximum hang"])
+        XCTAssertEqual(decoded.stepTitle(at: 0), "Maximum hang")
     }
 
     func testSettingsUseDefaultsAndRoundTripThroughUserDefaults() {

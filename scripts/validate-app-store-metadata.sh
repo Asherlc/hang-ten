@@ -6,6 +6,12 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 project_path="$repo_root/HangTen.xcodeproj"
 icon_dir="$repo_root/HangTen/Resources/Assets.xcassets/AppIcon.appiconset"
 contents_path="$icon_dir/Contents.json"
+swift_package_cache_args=()
+
+if [[ -n "${SWIFT_PACKAGE_CACHE_PATH:-}" ]]; then
+  mkdir -p "$SWIFT_PACKAGE_CACHE_PATH"
+  swift_package_cache_args=(-clonedSourcePackagesDirPath "$SWIFT_PACKAGE_CACHE_PATH")
+fi
 
 fail() {
   echo "App Store metadata validation failed: $*" >&2
@@ -60,6 +66,7 @@ for configuration in Debug Release; do
     -project "$project_path" \
     -scheme HangTen \
     -configuration "$configuration" \
+    "${swift_package_cache_args[@]}" \
     -showBuildSettings)"
 
   require_setting "$settings" "ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon"

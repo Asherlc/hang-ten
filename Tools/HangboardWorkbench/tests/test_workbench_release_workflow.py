@@ -202,7 +202,7 @@ gh() {
     }
     jobs = [
         {
-            "name": "Build verified arm64 workbench",
+            "name": "Build arm64 workbench artifact",
             "conclusion": build_conclusion,
         }
     ]
@@ -281,7 +281,7 @@ def _native_release_quick_start(path: Path) -> str:
     return " ".join(quick_start.split())
 
 
-def test_release_readmes_document_the_native_checkout_workflow():
+def test_release_readmes_document_the_native_local_repository_workflow():
     for path in RELEASE_README_PATHS:
         quick_start = _native_release_quick_start(path)
 
@@ -290,10 +290,10 @@ def test_release_readmes_document_the_native_checkout_workflow():
             "native window",
             "first launch",
             "last valid checkout",
-            "Choose Hang Ten Checkout…",
+            "Choose Local Repository…",
             "selected checkout",
             "normal Git review",
-            "**Choose Another Checkout…**",
+            "**Choose Another Local Repository…**",
             "hosted deployment uses",
             "--allow-remote",
         ):
@@ -362,6 +362,89 @@ def test_every_workflow_shell_step_has_valid_bash_syntax(tmp_path):
             assert result.returncode == 0, result.stderr
 
 
+def test_generated_bundle_is_built_before_every_python_suite():
+    workflows = (
+        _workflow(PR_WORKFLOW_PATH),
+        _workflow(),
+    )
+
+    for workflow in workflows:
+        job = workflow["jobs"]["test-python"]
+        setup = _step(job, "Set up Node")
+        assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+        assert setup["with"]["node-version"] == "22.14.0"
+        assert setup["with"]["cache"] == "npm"
+        assert (
+            setup["with"]["cache-dependency-path"]
+            == "Tools/HangboardWorkbench/package-lock.json"
+        )
+
+        bundle = _step(job, "Build generated Workbench bundle")
+        assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+        assert "npm ci" in bundle["run"]
+        assert "npm run check:bundle" in bundle["run"]
+
+        steps = job["steps"]
+        assert steps.index(setup) < steps.index(bundle)
+        assert steps.index(bundle) < steps.index(_step(job, "Set up Python"))
+        assert steps.index(bundle) < steps.index(_step(job, "Run Python suite"))
+
+
+def test_generated_bundle_is_built_before_signed_release_packaging():
+    release = _workflow()["jobs"]["release"]
+    setup = _step(release, "Set up Node")
+    assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+    assert setup["with"]["node-version"] == "22.14.0"
+    assert setup["with"]["cache"] == "npm"
+    assert (
+        setup["with"]["cache-dependency-path"]
+        == "Tools/HangboardWorkbench/package-lock.json"
+    )
+
+    bundle = _step(release, "Build generated Workbench bundle")
+    assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+    assert "npm ci" in bundle["run"]
+    assert "npm run check:bundle" in bundle["run"]
+
+    steps = release["steps"]
+    assert steps.index(setup) < steps.index(bundle)
+    assert steps.index(bundle) < steps.index(_step(release, "Set up Python"))
+    assert steps.index(bundle) < steps.index(
+        _step(release, "Build, sign, and archive workbench app")
+    )
+
+
+def test_native_bundle_is_built_before_native_packaging():
+    steps = _build_action()["steps"]
+
+    setup = _step(_build_action(), "Set up Node")
+    assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+    assert setup["with"]["node-version"] == "22.14.0"
+    assert setup["with"]["cache"] == "npm"
+    assert (
+        setup["with"]["cache-dependency-path"]
+        == "Tools/HangboardWorkbench/package-lock.json"
+    )
+
+    bundle_index = next(
+        index
+        for index, step in enumerate(steps)
+        if step["name"] == "Build generated Workbench bundle"
+    )
+    native_index = next(
+        index
+        for index, step in enumerate(steps)
+        if step["name"] == "Build unsigned native app"
+    )
+    bundle = steps[bundle_index]
+    setup_index = steps.index(setup)
+    assert setup_index < bundle_index
+    assert bundle_index < native_index
+    assert bundle["working-directory"] == "Tools/HangboardWorkbench"
+    assert "npm ci" in bundle["run"]
+    assert "npm run check:bundle" in bundle["run"]
+
+
 def test_signed_workbench_preserves_and_uploads_debug_symbols_to_sentry():
     release = _workflow()["jobs"]["release"]
     install = _step(release, "Install pinned Sentry CLI")
@@ -386,7 +469,7 @@ def test_signed_workbench_preserves_and_uploads_debug_symbols_to_sentry():
     assert release["steps"].index(install) < release["steps"].index(upload)
 
 
-def test_pr_build_and_main_release_share_the_composite_build_action():
+def test_pr_and_main_release_use_portable_checks_before_the_native_build():
     pr = _workflow(PR_WORKFLOW_PATH)
     release = _workflow()
     action = _workflow(BUILD_ACTION_PATH)
@@ -394,11 +477,14 @@ def test_pr_build_and_main_release_share_the_composite_build_action():
     assert set(pr["true"]) == {"pull_request", "merge_group"}
     assert set(release["true"]) == {"push", "workflow_dispatch"}
     assert release["true"]["push"] == {"branches": ["main"]}
-    assert release["jobs"]["build"]["if"] == "github.ref == 'refs/heads/main'"
+    release_jobs = release["jobs"]
+    for job_name in ("test-js", "test-python", "build", "release"):
+        assert release_jobs[job_name]["if"] == "github.ref == 'refs/heads/main'"
+    assert release_jobs["build"]["needs"] == ["test-js", "test-python"]
     assert release["jobs"]["release"]["if"] == "github.ref == 'refs/heads/main'"
     uses = "./.github/actions/build-hangboard-workbench"
     assert (
-        _step(pr["jobs"]["build"], "Build and upload verified unsigned app")["uses"]
+        _step(pr["jobs"]["native-build"], "Build and upload verified unsigned app")["uses"]
         == uses
     )
     assert (
@@ -433,36 +519,48 @@ def test_pr_build_and_main_release_share_the_composite_build_action():
     assert upload["with"]["compression-level"] == 0
 
 
-def test_composite_build_installs_direct_workbench_dev_dependencies_before_python_tests():
+def test_composite_build_installs_direct_workbench_dev_dependencies_without_portable_tests():
     steps = _build_action()["steps"]
-    dependency_install_index = next(
-        index
-        for index, step in enumerate(steps)
-        if step.get("name") == "Install workbench build dependencies"
-    )
-    python_suite_index = next(
-        index
-        for index, step in enumerate(steps)
-        if step.get("name") == "Run focused Python suite"
-    )
 
     assert all(step.get("name") != "Set up uv" for step in steps)
-    dependencies = steps[dependency_install_index]["run"]
+    dependencies = next(
+        step["run"]
+        for step in steps
+        if step.get("name") == "Install workbench build dependencies"
+    )
     assert "python -m venv" in dependencies
     assert "-e 'Tools/HangboardWorkbench[dev]'" in dependencies
-    assert dependency_install_index < python_suite_index
+    assert all(
+        step.get("name") not in {"Run focused Python suite", "Run focused Node suite"}
+        for step in steps
+    )
 
 
-def test_pr_build_uses_one_auditable_component_gate():
+def test_pr_build_uses_an_always_result_reporting_gate_and_separate_native_build():
     jobs = _workflow(PR_WORKFLOW_PATH)["jobs"]
     changes = jobs["changes"]
+    gate = jobs["build"]
+    native_build = jobs["native-build"]
     assert changes["permissions"] == {"contents": "read", "pull-requests": "read"}
     assert _step(changes, "Check out source")["with"]["persist-credentials"] is False
-    assert jobs["build"]["needs"] == "changes"
-    condition = _normalized_expression(jobs["build"]["if"])
+    assert gate["name"] == "Build verified arm64 workbench"
+    assert gate["needs"] == ["changes", "test-js", "test-python", "native-build"]
+    assert _normalized_expression(gate["if"]) == (
+        "always() && github.event.action != 'closed'"
+    )
+    assert gate["runs-on"] == "ubuntu-latest"
+    report = _step(gate, "Report Workbench validation result")["run"]
+    assert "needs.changes.result" in report
+    assert "needs.test-js.result" in report
+    assert "needs.test-python.result" in report
+    assert "needs['native-build'].result" in report
+    assert "needs.changes.outputs.workbench" in report
     assert changes["outputs"] == {"workbench": "${{ steps.filter.outputs.workbench }}"}
-    assert condition == "needs.changes.outputs.workbench == 'true'"
-    assert "outputs" not in jobs["build"]
+    assert native_build["needs"] == ["changes", "test-js", "test-python"]
+    assert _normalized_expression(native_build["if"]) == (
+        "needs.changes.outputs.workbench == 'true'"
+    )
+    assert native_build["runs-on"] == "macos-latest"
 
 
 def test_completed_pr_runs_are_serialized_and_manage_one_current_head_comment():
@@ -515,8 +613,8 @@ def test_completed_pr_runs_are_serialized_and_manage_one_current_head_comment():
         'RUN_CONCLUSION" == "success"',
         "actions/runs/$RUN_ID/artifacts?per_page=100",
         "actions/runs/$RUN_ID/jobs?per_page=100",
-        'select(.name == "Build verified arm64 workbench")',
-        'if [[ "$build_conclusion" == "skipped" ]]',
+        'select(.name == "Build arm64 workbench artifact")',
+        'if [[ "$native_build_conclusion" == "skipped" ]]',
         "did not change relevant paths",
         "<!-- hangboard-workbench-artifact -->",
         "<!-- hangboard-workbench-artifact-run",
@@ -776,7 +874,7 @@ def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
     ]
     assert _run_jq(artifacts_program, artifacts, "--arg", "name", "wanted") == "20"
 
-    jobs_program = _jq_program(script, "build_conclusion")
+    jobs_program = _jq_program(script, "native_build_conclusion")
     assert ".[].jobs[]" in jobs_program
     jobs = [
         {"total_count": 2, "jobs": [{"name": "Classify", "conclusion": "success"}]},
@@ -784,7 +882,7 @@ def test_pr_comment_jq_programs_handle_slurped_paginated_api_responses():
             "total_count": 2,
             "jobs": [
                 {
-                    "name": "Build verified arm64 workbench",
+                    "name": "Build arm64 workbench artifact",
                     "conclusion": "skipped",
                 }
             ],
@@ -887,6 +985,8 @@ def test_build_tests_and_assembles_the_unsigned_native_app():
 
     swift_test = _step(build, "Run native shell tests")["run"]
     assert "swift test --package-path Tools/HangboardWorkbench/macos" in swift_test
+    assert "-c release" not in swift_test
+    assert "-Xswiftc -g" not in swift_test
 
     app_build = _step(build, "Build unsigned native app")["run"]
     for required_fragment in (
@@ -1072,7 +1172,7 @@ def test_release_rebuilds_with_one_matching_identity_and_signs_inside_out():
     dependencies = _step(release, "Install workbench release dependencies")["run"]
     assert "-e 'Tools/HangboardWorkbench[dev]'" in dependencies
     assert "pyinstaller==" not in dependencies
-    assert "pyinstaller==6.22.0" in (EDITOR_ROOT / "pyproject.toml").read_text(
+    assert "pyinstaller==6.22.2" in (EDITOR_ROOT / "pyproject.toml").read_text(
         encoding="utf-8"
     )
 

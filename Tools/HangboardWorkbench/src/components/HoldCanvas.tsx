@@ -1,0 +1,627 @@
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+import { holdCentroid, holdMetadataWarnings, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
+import type { HoldEditorActions } from "../useHoldEditor.ts";
+import type {
+  Board,
+  ConstrainedOutlineModel,
+  EditorDocument,
+  PathCommand,
+  PathEditor,
+} from "../types.ts";
+
+const TYPE_COLORS: Readonly<Record<string, string>> = {
+  jug: "#ff754f",
+  sloper: "#32bbc1",
+  edge: "#9a6cf2",
+  pocket: "#ee4d97",
+  pinch: "#f2c94c",
+};
+const PINCH_ZOOM_DELTA_THRESHOLD = 100;
+const TOUCH_PINCH_ZOOM_THRESHOLD = 1.1;
+
+interface VertexMenuPosition {
+  anchorX: number;
+  anchorY: number;
+  x: number;
+  y: number;
+}
+
+export type GuideAxis = "horizontal" | "vertical";
+
+export interface Guide {
+  id: string;
+  axis: GuideAxis;
+  coordinate: number;
+}
+
+interface GuideDragState {
+  id: string;
+  axis: GuideAxis;
+  pointerId: number;
+  svg: SVGSVGElement;
+}
+
+function fixedMenuCoordinate(anchor: number, size: number, viewportSize: number): number {
+  const flipped = anchor + size > viewportSize ? anchor - size : anchor;
+  return Math.max(0, Math.min(flipped, Math.max(0, viewportSize - size)));
+}
+
+export interface HoldCanvasProps {
+  board: Board | null;
+  document: EditorDocument | null;
+  selectedKey: string | null;
+  selectedKeys: readonly string[];
+  busy: boolean;
+  onSelectHold(key: string, toggle: boolean): void;
+  pathEditor: PathEditor;
+  editor: HoldEditorActions;
+  zoomPercent: number;
+  onZoomChange(direction: number): boolean | void;
+  canZoomChange(direction: number): boolean;
+  onPinchZoomChange(direction: number): boolean | void;
+  canPinchZoomChange(direction: number): boolean;
+  guides: readonly Guide[];
+  onMoveGuide(id: string, coordinate: number): void;
+}
+
+export function HoldCanvas({
+  board,
+  document,
+  selectedKey,
+  selectedKeys,
+  busy,
+  onSelectHold,
+  pathEditor,
+  editor,
+  zoomPercent,
+  onZoomChange,
+  canZoomChange,
+  onPinchZoomChange,
+  canPinchZoomChange,
+  guides,
+  onMoveGuide,
+}: HoldCanvasProps) {
+  const vertexMenuRef = useRef<HTMLDivElement>(null);
+  const [vertexMenuPosition, setVertexMenuPosition] = useState<VertexMenuPosition | null>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const guideDragRef = useRef<GuideDragState | null>(null);
+  const modifierSelectionRef = useRef<string | null>(null);
+  const pinchZoomDeltaRef = useRef(0);
+  const touchPinchDistanceRef = useRef<number | null>(null);
+  const touchPinchActiveRef = useRef(false);
+  const editorRef = useRef(editor);
+  const onZoomChangeRef = useRef(onZoomChange);
+  const canZoomChangeRef = useRef(canZoomChange);
+  const onPinchZoomChangeRef = useRef(onPinchZoomChange);
+  const canPinchZoomChangeRef = useRef(canPinchZoomChange);
+  editorRef.current = editor;
+  onZoomChangeRef.current = onZoomChange;
+  canZoomChangeRef.current = canZoomChange;
+  onPinchZoomChangeRef.current = onPinchZoomChange;
+  canPinchZoomChangeRef.current = canPinchZoomChange;
+  const releaseGuidePointer = (pointerId: number): void => {
+    const drag = guideDragRef.current;
+    if (!drag || drag.pointerId !== pointerId) return;
+    guideDragRef.current = null;
+    try {
+      drag.svg.releasePointerCapture?.(pointerId);
+    } catch {
+      // Capture can already be released when a cancellation is reported.
+    }
+  };
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const touchDistance = (touches: TouchList): number => {
+      const first = touches[0];
+      const second = touches[1];
+      if (!first || !second) return 0;
+      return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+    };
+    const handleTouchStart = (event: TouchEvent): void => {
+      if (!document || event.touches.length < 2) return;
+      const distance = touchDistance(event.touches);
+      if (distance === 0) return;
+      touchPinchActiveRef.current = true;
+      touchPinchDistanceRef.current = distance;
+      const guidePointerId = guideDragRef.current?.pointerId;
+      if (guidePointerId !== undefined) releaseGuidePointer(guidePointerId);
+      editorRef.current.cancelActiveEdit();
+      event.preventDefault();
+    };
+    const handleTouchMove = (event: TouchEvent): void => {
+      if (!document || event.touches.length < 2 || !touchPinchActiveRef.current) return;
+      const distance = touchDistance(event.touches);
+      const previousDistance = touchPinchDistanceRef.current;
+      if (!previousDistance || distance === 0) return;
+      let thresholdDistance = previousDistance;
+      while (distance / thresholdDistance >= TOUCH_PINCH_ZOOM_THRESHOLD) {
+        if (!canPinchZoomChangeRef.current(1) || onPinchZoomChangeRef.current(1) === false) {
+          thresholdDistance = distance;
+          break;
+        }
+        thresholdDistance *= TOUCH_PINCH_ZOOM_THRESHOLD;
+      }
+      while (distance / thresholdDistance <= 1 / TOUCH_PINCH_ZOOM_THRESHOLD) {
+        if (!canPinchZoomChangeRef.current(-1) || onPinchZoomChangeRef.current(-1) === false) {
+          thresholdDistance = distance;
+          break;
+        }
+        thresholdDistance /= TOUCH_PINCH_ZOOM_THRESHOLD;
+      }
+      touchPinchDistanceRef.current = thresholdDistance;
+      event.preventDefault();
+    };
+    const handleTouchEnd = (event: TouchEvent): void => {
+      if (event.touches.length >= 2) return;
+      touchPinchActiveRef.current = false;
+      touchPinchDistanceRef.current = null;
+    };
+    const handleWheel = (event: WheelEvent): void => {
+      if (!event.altKey && !event.ctrlKey) {
+        pinchZoomDeltaRef.current = 0;
+        return;
+      }
+      if (!document) return;
+      if (event.altKey) pinchZoomDeltaRef.current = 0;
+      const delta = event.deltaY === 0 ? event.deltaX : event.deltaY;
+      if (delta === 0) return;
+      if (event.ctrlKey && !event.altKey) {
+        pinchZoomDeltaRef.current += delta;
+        let zoomChanged = false;
+        while (Math.abs(pinchZoomDeltaRef.current) >= PINCH_ZOOM_DELTA_THRESHOLD) {
+          const direction = pinchZoomDeltaRef.current < 0 ? 1 : -1;
+          if (!canPinchZoomChangeRef.current(direction) || onPinchZoomChangeRef.current(direction) === false) {
+            pinchZoomDeltaRef.current = 0;
+            break;
+          }
+          pinchZoomDeltaRef.current -= Math.sign(pinchZoomDeltaRef.current) * PINCH_ZOOM_DELTA_THRESHOLD;
+          zoomChanged = true;
+        }
+        const pendingDirection = pinchZoomDeltaRef.current < 0 ? 1 : -1;
+        if (zoomChanged || (pinchZoomDeltaRef.current !== 0 && canPinchZoomChangeRef.current(pendingDirection))) {
+          event.preventDefault();
+        }
+        return;
+      }
+      if (onZoomChangeRef.current(delta < 0 ? 1 : -1) === true) event.preventDefault();
+    };
+    viewport.addEventListener("touchstart", handleTouchStart, { passive: false });
+    viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
+    viewport.addEventListener("touchend", handleTouchEnd);
+    viewport.addEventListener("touchcancel", handleTouchEnd);
+    viewport.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      pinchZoomDeltaRef.current = 0;
+      touchPinchActiveRef.current = false;
+      touchPinchDistanceRef.current = null;
+      viewport.removeEventListener("touchstart", handleTouchStart);
+      viewport.removeEventListener("touchmove", handleTouchMove);
+      viewport.removeEventListener("touchend", handleTouchEnd);
+      viewport.removeEventListener("touchcancel", handleTouchEnd);
+      viewport.removeEventListener("wheel", handleWheel);
+    };
+  }, [document]);
+  const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
+  const metadataWarnings = document ? holdMetadataWarnings(document) : null;
+  const selectedEditablePath = selectedHold?.shapeConstraint ? null : editor.editablePath;
+  let selectedCommands: PathCommand[] | null = null;
+  if (selectedHold) {
+    try {
+      selectedCommands = pathEditor.parsePath(selectedHold.displayPath);
+    } catch {
+      selectedCommands = null;
+    }
+  }
+  const pivot = document && selectedHold && selectedCommands
+    ? holdCentroid(holdSiblings(document, selectedHold), pathEditor)
+    : null;
+  const rotationHandle = document && pivot ? rotationHandlePosition(pivot, document.canvas) : null;
+  const selectedColor = selectedHold ? TYPE_COLORS[selectedHold.type ?? ""] ?? "#ff754f" : "#ff754f";
+  let constrainedModel: ConstrainedOutlineModel | null = null;
+  if (selectedHold?.shapeConstraint) {
+    try {
+      constrainedModel = pathEditor.constrainedOutlineModel(
+        selectedHold.displayPath,
+        selectedHold.shapeConstraint,
+      );
+    } catch {
+      constrainedModel = null;
+    }
+  }
+  useLayoutEffect(() => {
+    const menu = vertexMenuRef.current;
+    if (!editor.vertexMenu || !menu) return;
+    const bounds = menu.getBoundingClientRect();
+    const nextPosition = {
+      anchorX: editor.vertexMenu.x,
+      anchorY: editor.vertexMenu.y,
+      x: fixedMenuCoordinate(editor.vertexMenu.x, bounds.width, window.innerWidth),
+      y: fixedMenuCoordinate(editor.vertexMenu.y, bounds.height, window.innerHeight),
+    };
+    setVertexMenuPosition((current) => (
+      current?.anchorX === nextPosition.anchorX
+        && current.anchorY === nextPosition.anchorY
+        && current.x === nextPosition.x
+        && current.y === nextPosition.y
+        ? current
+        : nextPosition
+    ));
+    const firstEnabledItem = [...menu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')]
+      .find((item) => !item.disabled);
+    (firstEnabledItem ?? menu).focus();
+  }, [
+    editor.canDeleteSelectedVertex,
+    editor.canAddInflectionPoint,
+    editor.canMakeSelectedSegmentBendable,
+    editor.canMakeSelectedSegmentStraight,
+    editor.canRoundSelectedVertex,
+    editor.vertexMenu?.x,
+    editor.vertexMenu?.y,
+  ]);
+  const displayedVertexMenuPosition = editor.vertexMenu
+    && vertexMenuPosition?.anchorX === editor.vertexMenu.x
+    && vertexMenuPosition.anchorY === editor.vertexMenu.y
+    ? vertexMenuPosition
+    : editor.vertexMenu;
+  const onGuidePointerDown = (event: React.PointerEvent<SVGLineElement>, guide: Guide): void => {
+    if (busy) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const svg = event.currentTarget.ownerSVGElement;
+    if (!svg) return;
+    guideDragRef.current = { id: guide.id, axis: guide.axis, pointerId: event.pointerId, svg };
+    try {
+      svg.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Pointer capture may be unavailable in older browsers and test environments.
+    }
+  };
+  const onGuidePointerMove = (event: React.PointerEvent<SVGSVGElement>): void => {
+    const drag = guideDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId || !document) return;
+    event.preventDefault();
+    const point = svgPoint(event.currentTarget, event.nativeEvent);
+    const documentCoordinate = Math.max(0, Math.min(
+      drag.axis === "horizontal" ? document.canvas.height : document.canvas.width,
+      drag.axis === "horizontal" ? point.y : point.x,
+    ));
+    onMoveGuide(drag.id, documentCoordinate);
+  };
+  const onGuidePointerEnd = (event: React.PointerEvent<SVGSVGElement>): void => {
+    releaseGuidePointer(event.pointerId);
+  };
+  const clearModifierSelection = (key: string): void => {
+    if (modifierSelectionRef.current === key) modifierSelectionRef.current = null;
+  };
+  return (
+    <div className="editor-views">
+      <div
+        className="canvas-viewport"
+        id="canvas-viewport"
+        ref={viewportRef}
+      >
+        <svg
+          id="editor-svg"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-label="Hangboard hold editor"
+          viewBox={document ? `0 0 ${document.canvas.width} ${document.canvas.height}` : undefined}
+          width={document?.canvas.width}
+          height={document?.canvas.height}
+          style={{
+            width: `${zoomPercent}%`,
+            height: `${zoomPercent}%`,
+            minHeight: `${3.6 * zoomPercent}px`,
+          }}
+          onPointerDown={(event) => {
+            if (!touchPinchActiveRef.current) editor.onPointerDown(event);
+          }}
+          onPointerMove={(event) => {
+            onGuidePointerMove(event);
+            if (!touchPinchActiveRef.current) editor.onPointerMove(event);
+          }}
+          onPointerUp={(event) => {
+            onGuidePointerEnd(event);
+            if (!touchPinchActiveRef.current) editor.onPointerUp(event);
+          }}
+          onPointerCancel={(event) => {
+            onGuidePointerEnd(event);
+            if (!touchPinchActiveRef.current) editor.onPointerCancel(event);
+          }}
+          onLostPointerCapture={(event) => {
+            onGuidePointerEnd(event);
+            if (!touchPinchActiveRef.current) editor.onLostPointerCapture(event);
+          }}
+          onDoubleClick={editor.onDoubleClick}
+          onContextMenu={editor.onContextMenu}
+        >
+          <image
+            id="board-image"
+            x="0"
+            y="0"
+            preserveAspectRatio="none"
+            href={board?.imageUrl}
+            width={document?.canvas.width}
+            height={document?.canvas.height}
+          />
+          <g id="guide-overlay" aria-label="Alignment guides">
+            {guides.map((guide) => guide.axis === "horizontal" ? (
+              <line
+                key={guide.id}
+                className="editor-guide editor-guide-horizontal"
+                data-guide-id={guide.id}
+                data-guide-axis={guide.axis}
+                data-guide-coordinate={guide.coordinate}
+                x1="0"
+                y1={guide.coordinate}
+                x2={document?.canvas.width}
+                y2={guide.coordinate}
+                stroke="#72d4ff"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+                style={{ cursor: "ns-resize" }}
+                onPointerDown={(event) => onGuidePointerDown(event, guide)}
+              />
+            ) : (
+              <line
+                key={guide.id}
+                className="editor-guide editor-guide-vertical"
+                data-guide-id={guide.id}
+                data-guide-axis={guide.axis}
+                data-guide-coordinate={guide.coordinate}
+                x1={guide.coordinate}
+                y1="0"
+                x2={guide.coordinate}
+                y2={document?.canvas.height}
+                stroke="#72d4ff"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+                style={{ cursor: "ew-resize" }}
+                onPointerDown={(event) => onGuidePointerDown(event, guide)}
+              />
+            ))}
+          </g>
+          <g id="hold-overlay">
+            {document?.regions.map((hold) => {
+              const isMetadataIncomplete = metadataWarnings?.incompleteRegionKeys.has(hold.key) ?? false;
+              return <path
+                key={hold.key}
+                className={`region-shape${isMetadataIncomplete ? " region-missing-metadata" : ""}`}
+                data-hold-key={hold.key}
+                d={hold.displayPath}
+                fill={TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
+                fillOpacity={selectedKeys.includes(hold.key) ? "0.58" : "0.3"}
+                stroke={selectedKeys.includes(hold.key) ? "#fff7dc" : isMetadataIncomplete ? "#9a3d00" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
+                strokeWidth={selectedKeys.includes(hold.key) ? "2.2" : isMetadataIncomplete ? "3" : "1.4"}
+                strokeDasharray={isMetadataIncomplete ? "5 3" : undefined}
+                role="button"
+                tabIndex={0}
+                aria-label={`Select hold ${hold.key}${isMetadataIncomplete ? " (missing required metadata)" : ""}`}
+                aria-pressed={selectedKeys.includes(hold.key)}
+                onPointerDown={(event) => {
+                  if (busy || event.button !== 0 || (!event.metaKey && !event.ctrlKey)) return;
+                  modifierSelectionRef.current = hold.key;
+                  event.stopPropagation();
+                  onSelectHold(hold.key, true);
+                }}
+                onPointerCancel={() => clearModifierSelection(hold.key)}
+                onContextMenu={() => clearModifierSelection(hold.key)}
+                onClick={(event) => {
+                  if (busy) return;
+                  if (modifierSelectionRef.current === hold.key) {
+                    clearModifierSelection(hold.key);
+                    return;
+                  }
+                  onSelectHold(hold.key, event.metaKey || event.ctrlKey);
+                }}
+                onKeyDown={(event) => {
+                  if (busy || (event.key !== "Enter" && event.key !== " ")) return;
+                  if (event.key === " ") event.preventDefault();
+                  onSelectHold(hold.key, event.metaKey || event.ctrlKey);
+                }}
+              />
+            })}
+          </g>
+          {selectedCommands && pivot && rotationHandle && (
+            <g className={`path-editor-overlay${busy ? " busy" : ""}`}>
+              <line
+                className="path-editor-rotation-connector"
+                x1={pivot.x}
+                y1={pivot.y}
+                x2={rotationHandle.x}
+                y2={rotationHandle.y}
+                stroke="#fff7dc"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+              />
+              <circle
+                className="path-editor-rotation-handle"
+                cx={rotationHandle.x}
+                cy={rotationHandle.y}
+                r="6"
+                fill="#fff7dc"
+                stroke={selectedColor}
+                strokeWidth="2"
+              />
+              {constrainedModel ? <>
+                <polygon
+                  className="path-editor-constrained-box"
+                  points={["nw", "ne", "se", "sw"].map((handle) => {
+                    const point = constrainedModel.handles[handle as "nw" | "ne" | "se" | "sw"];
+                    return `${point.x},${point.y}`;
+                  }).join(" ")}
+                  fill="none"
+                  stroke="#fff7dc"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 3"
+                />
+                {Object.entries(constrainedModel.handles).map(([handle, point]) => (
+                  <circle
+                    key={handle}
+                    className="path-editor-resize-handle"
+                    data-handle={handle}
+                    cx={point.x}
+                    cy={point.y}
+                    r="5"
+                    fill={selectedColor}
+                    stroke="#fff7dc"
+                    strokeWidth="1.5"
+                  />
+                ))}
+              </> : selectedEditablePath?.segments.map((segment, segmentIndex) => {
+                const { anchor } = segment;
+                const previous = segmentIndex > 0 ? selectedEditablePath.segments[segmentIndex - 1] : null;
+                return (
+                  <g key={segment.id}>
+                    <circle
+                      className={`path-editor-vertex${editor.selectedAnchorID === anchor.id ? " selected" : ""}`}
+                      data-anchor-id={anchor.id}
+                      data-index={segmentIndex}
+                      cx={anchor.x}
+                      cy={anchor.y}
+                      r="6"
+                      fill={selectedColor}
+                      stroke="#fff7dc"
+                      strokeWidth="1.5"
+                      role="button"
+                      tabIndex={busy ? -1 : 0}
+                      aria-label={anchor.isStart ? "Start vertex" : `Vertex ${segmentIndex + 1}`}
+                      aria-pressed={editor.selectedAnchorID === anchor.id}
+                      onFocus={() => editor.selectAnchor(anchor.id)}
+                      onKeyDown={(event) => {
+                        if (busy || (event.key !== "Enter" && event.key !== " ")) return;
+                        if (event.key === " ") event.preventDefault();
+                        editor.selectAnchor(anchor.id);
+                      }}
+                    />
+                    {segment.controls.map((control, controlIndex) => {
+                      const anchor = controlIndex === 0
+                        ? previous?.anchor ?? segment.anchor
+                        : segment.anchor;
+                      return (
+                        <g key={control.id}>
+                          {anchor && <line
+                            className="path-editor-line"
+                            x1={anchor.x}
+                            y1={anchor.y}
+                            x2={control.x}
+                            y2={control.y}
+                            stroke="#888"
+                            strokeWidth="1"
+                            strokeDasharray="4 2"
+                          />}
+                          <circle
+                            className="path-editor-control"
+                            data-control-id={control.id}
+                            data-index={segmentIndex}
+                            data-control={controlIndex}
+                            cx={control.x}
+                            cy={control.y}
+                            r="3"
+                            fill="#888"
+                            stroke="#fff"
+                            strokeWidth="1"
+                          />
+                        </g>
+                      );
+                    })}
+                  </g>
+                );
+              })}
+            </g>
+          )}
+        </svg>
+        {editor.vertexMenu && (
+          <div
+            ref={vertexMenuRef}
+            className="path-editor-vertex-menu"
+            role="menu"
+            aria-label={editor.vertexMenu.kind === "vertex" ? "Vertex actions" : "Line actions"}
+            tabIndex={-1}
+            style={{ left: displayedVertexMenuPosition?.x, top: displayedVertexMenuPosition?.y }}
+            onContextMenu={(event) => event.preventDefault()}
+            onKeyDown={(event) => {
+              const items = [...(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'))]
+                .filter((item) => !item.disabled);
+              if (["[", "]"].includes(event.key)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+              }
+              if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+                event.preventDefault();
+                event.stopPropagation();
+                if (items.length === 0) return;
+                if (event.key === "Home") {
+                  items[0]?.focus();
+                  return;
+                }
+                if (event.key === "End") {
+                  items.at(-1)?.focus();
+                  return;
+                }
+                const currentIndex = items.indexOf(window.document.activeElement as HTMLButtonElement);
+                const direction = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+                items[(currentIndex + direction + items.length) % items.length]?.focus();
+                return;
+              }
+              if (event.key !== "Escape") return;
+              event.preventDefault();
+              event.stopPropagation();
+              editor.dismissVertexMenu(true);
+            }}
+          >
+            {editor.selectedAnchorID !== null && <button
+              type="button"
+              role="menuitem"
+              disabled={!editor.canDeleteSelectedVertex}
+              aria-disabled={!editor.canDeleteSelectedVertex}
+              onClick={() => editor.deleteSelectedVertex()}
+            >{editor.selectedVertexIsInflection ? "Remove inflection point" : "Delete"}</button>}
+            {editor.canRoundSelectedVertex && <button
+              id="round-corner-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.roundSelectedVertex()}
+            >Round corner</button>}
+            {editor.canAddInflectionPoint && <button
+              id="add-inflection-point-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.addInflectionPoint()}
+            >Add inflection point</button>}
+            {editor.canMakeSelectedSegmentBendable && <button
+              id="make-bendable-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentBendable()}
+            >Make bendable</button>}
+            {editor.canMakeSelectedSegmentStraight && <button
+              id="make-straight-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentStraight()}
+            >Make straight</button>}
+            {editor.canMakeSelectedSegmentHorizontal && <button
+              id="make-horizontal-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentHorizontal()}
+            >Make horizontal</button>}
+            {editor.canMakeSelectedSegmentVertical && <button
+              id="make-vertical-action"
+              type="button"
+              role="menuitem"
+              onClick={() => editor.makeSelectedSegmentVertical()}
+            >Make vertical</button>}
+          </div>
+        )}
+        <div className={`empty-state${document ? " hidden" : ""}`} id="empty-state">
+          <strong>Select a board</strong>
+          <span>Its image and holds load together.</span>
+        </div>
+      </div>
+    </div>
+  );
+}

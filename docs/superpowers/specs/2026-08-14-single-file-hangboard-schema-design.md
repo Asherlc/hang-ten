@@ -2,9 +2,7 @@
 
 ## Decision
 
-Every direct child of `Hangboards/` that matches the finished-package contract is an
-app board candidate. There is no root catalog and no package-side artwork,
-semantics, or evidence document. A finished board directory contains exactly:
+Every direct child of `Hangboards/` is a complete app board package with exactly:
 
 ```text
 manufacturer-model/
@@ -13,52 +11,42 @@ manufacturer-model/
     primary.png
 ```
 
-Primary-only directories remain non-runtime drafts during migration. Final
-inventory validation requires every board directory to contain a finished package.
+No incomplete board directory is committed. `board.json` is the only structured
+package document.
 
 ## Physical board document
 
-`board.json` contains product identity plus physical holds. Each hold requires
-a stable ID, a human-readable physical name, one of `jug`, `edge`, `pocket`,
-`pinch`, or `sloper`, and one or more normalized geometry pieces. A reviewed
-photo/spec inspection may classify `kind`.
+`board.json` contains product identity and physical holds. Each hold requires a
+stable `id`, human-readable `name`, one of `jug`, `edge`, `pocket`, `pinch`, or
+`sloper`, and one or more normalized geometry pieces. Each piece has a finite
+frame and a supported closed shape. The union of a hold's pieces supplies its
+runtime bounds, and those same paths draw normal contact, active contact, and
+hit-testing geometry.
 
-Exact measurements, depth ranges, finger capacity, grip posture, and physical
-feature tags are optional. Unknown values are omitted and remain unknown at
-runtime; the loader must not manufacture defaults.
+Measurements, depth ranges, finger capacity, grip posture, and physical feature
+tags are optional. Unknown values are omitted. Coaching copy, palettes, and
+routine semantics are not board-package fields.
 
-Each geometry piece contains its normalized frame, shape, and optional physical
-profile. The union of those pieces supplies the runtime hold bounds. The same
-piece paths draw normal contact, active contact, and hit-testing geometry.
+`aspectRatio` is the presentation canvas width divided by height and must match
+the decoded dimensions of `assets/primary.png` within the validator tolerance.
 
-`aspectRatio` is the presentation canvas width divided by height, not the
-physical product-envelope or multi-piece installation ratio. It must match the
-decoded pixel dimensions of `assets/primary.png` within 0.1% relative error.
-Two-decimal metadata is valid only when it remains within that bound.
+## Direct authoring
 
-`cueStyle`, `shortLabel`, coaching detail, palettes, colors, shadows, and
-gradients are app presentation concerns and are not board fields. The app owns
-all styling. Board-specific routine semantics are training-plan concerns and
-do not live in a board package.
+An operator freezes the physical inventory from primary manufacturer sources,
+authors every closed path directly, and reviews it in Workbench. Exact mirroring
+is used when the product is actually symmetric. When supported, a constraint may
+be selected manually for a genuinely regular shape; irregular contacts remain
+freeform. The constraint never replaces the canonical path.
 
 ## Discovery and validation
 
-The repository validator, staging script, and iOS loader enumerate direct
-children rather than reading `catalog.json`. Packages are sorted by
-manufacturer, name, then ID. Duplicate IDs, unsafe paths, symlinks, malformed
-documents, missing primary images, unknown keys, invalid normalized geometry,
-or model/geometry mismatches fail closed.
+The validator, staging script, and iOS loader enumerate complete direct-child
+packages and sort them by manufacturer, name, ID, and path. Duplicate IDs,
+unsafe paths, symlinks, malformed documents, missing presentation images,
+unknown keys, invalid geometry, and hold/geometry mismatches fail closed.
 
-During migration, a direct child containing only `assets/primary.png` is
-ignored by runtime staging. After all authoring batches, the final inventory
-test rejects any remaining primary-only directory.
+The final inventory command rejects every incomplete direct child:
 
-## Migration and delivery
-
-The current Compact II package migrates first and proves the schema end to end.
-Its existing physical hold data and vector paths are combined into one board
-document; its semantics and evidence are not carried forward. The remaining
-boards are then authored in small image-audited batches. Each batch verifies
-model hold IDs equal geometry hold IDs and inspects inactive and active paths
-in portrait and landscape.
-
+```sh
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+```

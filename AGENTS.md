@@ -31,6 +31,28 @@ them as sourced. For any new or changed routine content, document the source
 URLs and audit mappings used to justify each field. Omit unsupported fields or
 UI text rather than filling gaps from board metadata or model assumptions.
 
+## Hangboard geometry authoring
+
+Author hangboard geometry directly from primary manufacturer evidence, following
+the Trango Rock Prodigy Pivot package as the structural and path-style
+precedent. An operator must deliberately draw and review every canonical hold
+path in `board.json`; exact left/right mirroring is preferred when the product
+is actually symmetric.
+
+When the checked-out schema and Workbench support shape constraints, prefer an
+operator-selected constraint for holds that are genuinely circles, ovals,
+pills, rounded rectangles, or rectangles. Freeform paths remain valid for
+irregular holds. A constraint is editing metadata only: the saved path remains
+the sole rendering, highlighting, and hit-testing source of truth. Never infer
+a constraint from pixels.
+
+Do not use image-driven hold detection, segmentation, generated masks or
+contours, source registration/alignment, vectorization, automatic path
+simplification, automatic cropping, or proposal/refine/promote geometry
+workflows. Do not reintroduce tooling or guidance for those approaches. The
+accepted process is direct path authoring, package validation, and human visual
+review in Workbench and the app.
+
 ## CodeGraph
 
 When `.codegraph/` exists, use CodeGraph before grep/find to understand or

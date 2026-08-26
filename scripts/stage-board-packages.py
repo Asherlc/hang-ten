@@ -17,9 +17,9 @@ def load_board_package_module(repository_root: Path):
     module_path = (
         repository_root
         / "Tools"
-        / "HangboardPipeline"
+        / "HangboardPackages"
         / "src"
-        / "hangboard_vectorizer"
+        / "hangboard_packages"
         / "board_catalog.py"
     )
     spec = importlib.util.spec_from_file_location("board_package_staging", module_path)

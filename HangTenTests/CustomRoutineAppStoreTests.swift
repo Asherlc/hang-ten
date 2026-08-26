@@ -106,6 +106,54 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
+    func testSavedForceFeedbackDuplicateRemainsUnavailableToStart() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let source = try XCTUnwrap(
+            store.plans.first { $0.id == "research.force-feedback-f80" }
+        )
+
+        let duplicate = try store.duplicateRoutine(source)
+        try store.saveCustomRoutine(duplicate)
+        let reconstitutedPlan = try XCTUnwrap(
+            store.plans.first { $0.id == duplicate.id }
+        )
+
+        XCTAssertEqual(
+            PlanStartAvailabilityPolicy.availability(
+                for: reconstitutedPlan,
+                metadata: store.metadata(for: reconstitutedPlan)
+            ),
+            .unavailable(
+                requirement: "Requires real-time force feedback from an instrumented 12 mm edge."
+            )
+        )
+    }
+
+    func testSavedOrdinaryDuplicateRemainsAvailableToStart() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let source = try XCTUnwrap(
+            store.plans.first { $0.id == "research.max-hangs" }
+        )
+
+        let duplicate = try store.duplicateRoutine(source)
+        try store.saveCustomRoutine(duplicate)
+        let reconstitutedPlan = try XCTUnwrap(
+            store.plans.first { $0.id == duplicate.id }
+        )
+
+        XCTAssertEqual(
+            PlanStartAvailabilityPolicy.availability(
+                for: reconstitutedPlan,
+                metadata: store.metadata(for: reconstitutedPlan)
+            ),
+            .available
+        )
+    }
+
     func testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -143,6 +191,50 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertEqual(duplicate.category, "strength")
         XCTAssertEqual(duplicate.tags, ["updated"])
         XCTAssertEqual(duplicate.steps.map(\.id), ["step-1", "step-2"])
+    }
+
+    func testPlanDetailRejectsCapturedBoardSpecificPlanAfterBoardChanges() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let boardSpecificDefinition = makeRoutine(id: "custom.captured-board-specific")
+        try store.saveCustomRoutine(boardSpecificDefinition)
+        let capturedPlan = try XCTUnwrap(
+            store.plans.first { $0.id == boardSpecificDefinition.id }
+        )
+        XCTAssertEqual(capturedPlan.boardID, BoardCatalog.defaultBoard.id)
+        let otherBoard = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id != capturedPlan.boardID }
+        )
+
+        store.selectBoard(otherBoard)
+
+        XCTAssertNil(PlanDetailPlanResolver.resolve(
+            capturedPlan: capturedPlan,
+            eligiblePlans: store.plans
+        ))
+        XCTAssertThrowsError(
+            try PlanDetailView.duplicateDefinition(for: capturedPlan, in: store)
+        )
+    }
+
+    func testPlanDetailRemapsCapturedGenericPlanToTheSelectedBoard() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let capturedPlan = try XCTUnwrap(store.plans.first { $0.boardID == nil })
+        let otherBoard = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id != store.selectedBoard.id }
+        )
+
+        store.selectBoard(otherBoard)
+        let resolvedPlan = try XCTUnwrap(PlanDetailPlanResolver.resolve(
+            capturedPlan: capturedPlan,
+            eligiblePlans: store.plans
+        ))
+
+        XCTAssertEqual(resolvedPlan.id, capturedPlan.id)
+        XCTAssertEqual(store.board(for: resolvedPlan).id, otherBoard.id)
     }
 
     func testCorruptCustomIDsAreOmittedWithoutShadowingBuiltInsAndWarningIsRetained() throws {

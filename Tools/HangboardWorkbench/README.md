@@ -1,33 +1,29 @@
 # Hangboard Workbench
 
-Hangboard Workbench is the local authoring suite for direct board packages.
+Hangboard Workbench edits direct board packages. The packaged macOS app is the
+only local-checkout editor; browser-hosted deployments use GitHub-backed storage.
 It discovers completed boards, opens the primary image and hold geometry together,
 edits hold contours, validates the package, and saves the result atomically.
 
-## Run from a checkout
+## Run as a hosted editor
 
 From the repository root:
 
 ```sh
-rtk python3 Tools/HangboardWorkbench/server.py
-```
-
-Open `http://127.0.0.1:4173`. The **Boards** button lists the completed
-packages in `Hangboards/`. Selecting a board loads its image and all of its
-holds. **Save** writes directly to that board package; it does not commit or
-push your Git changes.
-
-For a different checkout, provide its root explicitly:
-
-```sh
+cd Tools/HangboardWorkbench && npm ci && npm run check:bundle
+cd ../..
 rtk python3 Tools/HangboardWorkbench/server.py \
-  --repository-root /absolute/path/to/hang-ten
+  --allow-remote \
+  --github-client-id <id> \
+  --github-client-secret <secret> \
+  --session-secret <secret>
 ```
 
-### Hosted server mode (same editor, remote access)
+The local server and package operations require the generated UI bundle. Run
+`npm ci && npm run check:bundle` in `Tools/HangboardWorkbench` before those
+operations.
 
-If you want to use Workbench through a hosted server without downloading
-the app, run:
+For a different deployment checkout, provide its root explicitly:
 
 ```sh
 rtk python3 Tools/HangboardWorkbench/server.py \
@@ -36,31 +32,29 @@ rtk python3 Tools/HangboardWorkbench/server.py \
   --port 4173 \
   --allow-remote \
   --github-client-id <id> \
-  --github-client-secret <secret>
+  --github-client-secret <secret> \
+  --session-secret <secret>
 ```
 
 Host this process with HTTPS in front (for example via a reverse proxy or your
 provider’s platform TLS), then point browsers to your public URL.
-`--allow-remote` is intentionally opt-in, because it allows non-loopback
-clients, and it requires `--github-client-id`/`--github-client-secret` from a
-GitHub OAuth App so that remote clients must sign in before mutating the
-repository. See "Repository workflow actions from the editor UI" below for how
-to set up the OAuth App.
+`--allow-remote` is required for the browser server. It uses GitHub OAuth and
+GitHub-backed board storage, so each **Save** creates a GitHub commit on the
+selected branch. See "Repository workflow actions from the editor UI" below
+for how to set up the OAuth App.
 
 ### Repository workflow actions from the editor UI
 
 From the hosted editor toolbar you can:
 
 - Switch branches.
-- Commit current repository changes with a message.
-- Push the current branch to a remote (`origin` by default).
-- Open a pull request from the current branch using the authenticated `gh` CLI.
+- Create a branch from the current branch.
+- Save directly to the selected GitHub branch.
+- Open a pull request using the authenticated GitHub session.
 
-In local (loopback-only) mode, the PR action expects `gh` to be available in
-the server environment and logged into GitHub with permission to create pull
-requests. If `gh` is missing, the `/api/git/open-pr` endpoint returns a 500
-error. If `gh` runs and fails, the endpoint returns a 400 error with the
-reported reason.
+The packaged macOS app is the only supported local-checkout workflow. Its
+**Save** action writes to the chosen checkout; commit and push remain explicit
+Git review steps.
 
 Hosted deployments (`--allow-remote`) instead require a GitHub OAuth App:
 start the server with `--github-client-id` and `--github-client-secret` to
@@ -74,9 +68,8 @@ To set up a GitHub OAuth App:
 2. Set its callback URL to `http://<your-host>/auth/callback`.
 3. Start the server with `--allow-remote --github-client-id <id> --github-client-secret <secret>`.
 
-Security note: this still writes directly to the repository checkout. For
-production use, place it behind authentication/authorization and only expose
-trusted users.
+Security note: hosted saves write to GitHub under the authenticated user's
+session. Place the deployment behind appropriate access controls.
 
 ## Board packages
 
@@ -89,11 +82,79 @@ Each physical hold has one identifier and one or more geometry pieces embedded
 in `board.json`; each piece has one closed, contiguous contour. The editor
 exposes each piece under a stable `<hold-id>-piece-<index>` key, and runtime
 bounds are the union of all pieces belonging to the physical hold.
+Optional `sizeMillimeters` and `depthRangeMillimeters` values are positive
+finite millimeter measurements, so source-backed fractional values such as
+`7.5` are preserved. A depth range's lower bound must not exceed its upper
+bound.
 `aspectRatio` is the primary PNG's pixel width divided by height and must match
 the decoded image within 0.1% relative error.
 
 Save validates the complete package before replacing it. Invalid geometry,
 invalid image data, or an interrupted write leave the saved package unchanged.
+
+### Editor-local geometry identities
+
+While a freeform contour is being edited, its anchors, Bézier controls, and
+segments have stable IDs only in Workbench memory. These local identities are
+not saved: `displayPath` and `board.json` remain the canonical geometry
+representation.
+
+## Capture a visual catalog
+
+The catalog capture command starts an isolated loopback Workbench server and a
+headless Chrome DevTools session. It opens each completed board through the
+editor, waits for its primary image and SVG regions, then captures the unchanged
+`#editor-svg` surface at a fixed viewport.
+
+```sh
+rtk python3 Tools/HangboardWorkbench/capture_catalog.py \
+  --repository-root /absolute/path/to/hang-ten \
+  --output-root /absolute/path/to/catalog-captures \
+  --chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --port 4173
+```
+
+The output includes one labeled PNG per board, an API-order `manifest.json`,
+and a labeled `contact-sheet.png`. It uses a dedicated capture-only loopback
+launcher rather than the browser-hosted server, then terminates its Chrome and
+server children before returning.
+
+For metadata mapping review, add `--hold-id-labels`. This overlays one
+high-contrast, non-interactive SVG label for each logical `metadata.holdID` at
+the union center of that hold's rendered pieces. The labels exist only while a
+screenshot is taken; they do not edit board data or geometry.
+
+## Outline shape constraints
+
+The **Outline shape** picker reflects the selected geometry piece and offers
+**Custom**, **Oval**, **Circle**, **Pill**, **Rounded rectangle**, and
+**Rectangle**. Choosing a preset replaces that piece's outline with the exact
+primitive and keeps the selection constrained as it is moved, rotated, and
+resized. Constrained outlines use a shape-aligned box with eight handles: edge
+handles resize one dimension and corner handles resize both. Circles retain a
+1:1 aspect ratio during either kind of resize.
+
+Choosing **Custom** removes the constraint without changing the current
+outline, then restores point and Bezier-control editing. Saving persists the
+selected constraint and orientation in `board.json`, so the same picker state
+and constrained handles return when the package is reopened.
+
+A geometry piece may include this optional object alongside its existing
+`frame` and `shape`:
+
+```json
+"shapeConstraint": {
+  "shape": "oval",
+  "rotationDegrees": 15
+}
+```
+
+`shape` must be exactly one of `oval`, `circle`, `pill`, `roundedRectangle`, or
+`rectangle`. `rotationDegrees` must be a finite number normalized to the
+half-open range `[-180, 180)`. Omitting `shapeConstraint` means the piece is
+Custom/freeform. The existing `frame` and `shape` remain the authoritative
+rendering geometry, including position and size; `shapeConstraint` records only
+the geometric invariant and its orientation.
 
 ## Run the Apple Silicon macOS release
 
@@ -108,9 +169,9 @@ unzip hangboard-workbench-macos-arm64.zip
 open "Hangboard Workbench.app"
 ```
 
-On first launch the native window asks you to **Choose Hang Ten Checkout…**.
+On first launch the native window asks you to **Choose Local Repository…**.
 The app remembers the last valid checkout and uses the selected checkout on
-later launches; choose **Choose Another Checkout…** from the app menu to
+later launches; choose **Choose Another Local Repository…** from the app menu to
 switch. All edits remain ordinary local Git changes for normal Git review.
 
 Local editor users can continue to use the packaged app; hosted deployment uses
@@ -119,7 +180,13 @@ an opt-in server mode (`--allow-remote`) of the same Workbench codebase.
 ## Verification
 
 ```sh
+(
+  cd Tools/HangboardWorkbench
+  npm ci
+  npm run check:bundle
+  npm run typecheck
+  npm test
+)
 uv run --with pytest python -m pytest -q Tools/HangboardWorkbench/tests
-node --test Tools/HangboardWorkbench/tests/workbench*.test.js
 swift test --package-path Tools/HangboardWorkbench/macos
 ```

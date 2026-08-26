@@ -1,23 +1,23 @@
 # Trango Forge, Natural, and Pivot board-package source audit
 
-Checked 2026-08-12. This document records the manufacturer material reviewed
-for the three generated-image candidates below. It is documentation, not
-runtime content or package state. Each candidate remains unregistered with
-only its existing `assets/primary.png`; that generated presentation image was
-not used to supply unsupported hold facts.
+Checked 2026-08-12; Forge and Natural re-audited and directly authored
+2026-08-19. This audit preserves the manufacturer material reviewed for Forge,
+Natural, and Pivot. The old incomplete art was removed and was not used as an
+authoring input. Pivot was completed through direct path authoring and is the
+structural/style precedent described in
+`docs/ADDING_A_BOARD.md`; it is not a geometry template for other products.
 
 ## Candidates and official manufacturer sources
 
-| slug | catalog ID | product page | official front image | hold documentation |
+| slug | board ID | product page | official front image | hold documentation |
 | --- | --- | --- | --- | --- |
 | `trango-rock-prodigy-forge` | `trango.rock-prodigy-forge` | [Forge product page](https://trango.com/products/rock-prodigy-forge) | [Forge main image](https://trango.com/cdn/shop/products/22820_Rock_Prodigy_Forge_Main_Image.jpg?v=1582662057&width=1946) | [Forge manual](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/2018_update_forge_instructions_booklet.pdf?v=1588609204), [Forge depth guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887), [Forge grip-identification chart](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203) |
-| `trango-rock-prodigy-natural` | `trango.rock-prodigy-natural` | [Natural product page](https://trango.com/products/rock-prodigy-natural) | [Natural main image](https://trango.com/cdn/shop/products/22850_RockProdigyNatural_MainImage_TopDownMarkings.jpg?v=1755037315&width=1946) | [Natural quick-start guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361) |
+| `trango-rock-prodigy-natural` | `trango.rock-prodigy-natural` | [Natural product page](https://trango.com/products/rock-prodigy-natural) | [Natural main image](https://trango.com/cdn/shop/products/22850_RockProdigyNatural_MainImage_TopDownMarkings.jpg?v=1755037315&width=1946) | [Natural quick-start guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361), [official rail detail](https://trango.com/cdn/shop/products/22850_RockProdigyNatural_AltImage2_Rails.jpg?v=1724692982&width=1946) |
 | `trango-rock-prodigy-pivot` | `trango.rock-prodigy-pivot` | [Pivot product page](https://trango.com/products/rock-prodigy-pivot) | [Pivot main image](https://trango.com/cdn/shop/products/22840_RockProdigyPivot_MainImage_TopDown.jpg?v=1755037446&width=1946) | [Pivot quick-start guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507), [Pivot depth guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905) |
 
-The pages and linked documents are first-party Trango material. The current
-unregistered, primary-only Rock Prodigy Training Center candidate and its
-sources were intentionally not used as evidence for a Forge, Natural, or Pivot
-hold: Trango says Forge has
+The pages and linked documents are first-party Trango material. The Rock
+Prodigy Training Center sources were intentionally not used as evidence for a
+Forge, Natural, or Pivot hold: Trango says Forge has
 different hold dimensions from the Training Center, and shared brand naming is
 not evidence of a cross-model hold map.
 
@@ -29,53 +29,114 @@ not evidence of a cross-model hold map.
 | Natural | Identity, material, each-board dimensions, variable rails, pockets, closed crimp, pinches, and the quick-start guide's named key grips and depth ranges. | The quick-start guide expressly says its grip guide is *not a comprehensive list of all holds*. Its key-grip illustrations cannot establish every physical boundary or all package hold records. |
 | Pivot | Identity, four orientations, 22 distinct grip positions, and named key grips including pockets, rails, pinches, gastons, slopers, crimps, and monos. | The quick-start guide expressly says its orientation guide is *not a comprehensive list of all possible holds*. The product page provides no board dimensions, while the depth guide does not turn the non-exhaustive selection into a complete physical inventory. |
 
-## Evidence-key readiness matrix
-
-A registered board must have evidence for every `board.json` fact, every
-physical `holds[]` field and normalized frame, each semantic target, and
-`assets/primary.png`. The table below identifies why none of these
-candidates can honestly populate those maps.
-
-| candidate | source-backed portions | missing required package evidence | result |
-| --- | --- | --- | --- |
-| `trango.rock-prodigy-forge` | Product identity/dimensions; selected named grips and several measurements; official front image | Complete individual physical-hold inventory and frames; source-backed `gripType`, `fingerCapacity`, `cueStyle`, and `features` for every contact region; exhaustive semantic mappings | Do not add sidecars or a catalog entry. |
-| `trango.rock-prodigy-natural` | Product identity/material/dimensions; named key grips, capacities, and depth ranges; official front image | Complete inventory and individual frames, because the manufacturer calls the guide non-comprehensive; all required app-specific field mappings and exhaustive semantic mappings | Do not add sidecars or a catalog entry. |
-| `trango.rock-prodigy-pivot` | Product identity; officially named key grips across orientations; official front image | Published board dimensions; complete inventory/frames across all 22 positions; source-backed field mappings and exhaustive semantic mappings | Do not add sidecars or a catalog entry. |
-
-## Exact blockers
+## Completed authoring interpretation
 
 ### `trango-rock-prodigy-forge`
 
-The official depth guide documents selected measurement labels but does not
-publish the complete, individual physical-hold inventory needed to distinguish
-all board contact regions. The product page's claim that Forge dimensions
-differ from the Training Center expressly prevents filling that gap from the
-Training Center package. No source establishes every required hold boundary,
-capacity, grip classification, UI cue, feature, semantic target, or normalized
-frame. The candidate must remain primary-only and unregistered.
+The official grip-identification chart names ten distinct regions on each
+physical half: 30-degree sloper, 40-degree sloper, large flat edge, slopey
+crimper, variable-depth rail, closed crimp, MR deep pocket, MR shallow pocket,
+IM deep pocket, and IM shallow pocket. The three pinch widths are alternate
+grip positions on the same outer sloper block rather than three additional
+physical contacts. That yields 20 logical holds and 20 pieces across the
+mirrored pair.
+
+The depth guide maps the variable rail to `7–20 mm`, MR deep to `25 mm`, and MR
+shallow to `15 mm`; those values are retained. The guide maps the closed crimp
+to `7.5 mm`, which is recorded exactly in `sizeMillimeters`. It assigns an
+aggregate `19–31 mm` range to the IMR area rather than separately mapping the visible deep and
+shallow lobes; those two holds therefore omit measurements. `MR` and `IM` names
+are retained only where Trango's chart explicitly labels them. The chart and
+depth-guide abbreviation key establish two-finger MR/IM use, so all eight
+stable MR/IM pocket IDs use `fingerCapacity: 2`, `twoFingerPocket`, and the
+literal `pocket` feature. The four angle-labelled surfaces use the exact
+`sloper` posture, and the two large flat edges use the literal `largeEdge` and
+`flatEdge` features. The manufacturer term “closed crimp” is recorded as the
+explicit app-schema adaptation `fullCrimp`; no other posture or feature is
+filled from appearance.
+
+The official square JPEG was converted to PNG without cropping, registration,
+or geometric alteration. Every left-side path was deliberately authored from
+the main image and its official diagrams; the right-side frames and path
+directions are exact mirrors. Oval constraints were operator-selected only for
+the visibly regular MR and IM pocket openings. All sculpted rails and surfaces
+remain freeform.
 
 ### `trango-rock-prodigy-natural`
 
-The Natural quick-start guide provides valuable named-grip measurements, but
-states that the grip guide is not comprehensive. It therefore cannot prove the
-complete physical inventory/boundaries required by the package schema. Neither
-the product page nor the image supplies the omitted records or the evidence for
-every required per-hold field. The candidate must remain primary-only and
-unregistered.
+The front view establishes six recessed logical contacts per half: top and
+bottom variable rails, one closed crimp, one upper pocket, one center lower
+pocket, and one outer supported pocket. The supported pocket is a single
+physical contact interrupted by the mounting/relief feature, so it has two
+geometry pieces. The quick-start guide separately corroborates a top jug on
+each half. This yields 14 logical holds and 16 pieces across the mirrored pair.
+
+The product page and marked front view agree on `20–33 mm` and `10–24 mm` for
+the two rails and `38 mm` for the upper pocket; those values are retained. The
+product page calls the crimp `10 mm`, while the quick-start guide calls it
+`7.5 mm`. The quick-start guide distinguishes a `29 mm` two-finger pocket from
+a `36–26 mm` supported pocket, while the marked front image labels those
+contacts `27 mm` and `30/27 mm`, respectively. Those conflicted measurements
+remain omitted. The guide's position diagrams nevertheless establish maximum
+finger capacity independently of those depth conflicts: four on each jug,
+rail, and closed crimp; three on each upper and supported pocket; and two on
+each center-lower pocket. The pocket postures and `pocket` features are mapped
+to those exact stable IDs. “Closed crimp” is explicitly adapted to the app
+schema's `fullCrimp`; the source terminology remains recorded here. The
+guide's wide and medium pinches are ways to combine already-modeled contact
+surfaces, not additional physical openings, so they are not duplicated as
+holds.
+
+The official square JPEG was converted to PNG without cropping, registration,
+or geometric alteration. The right half is an exact mirror of the authored
+left half. Only the genuinely regular upper and center-lower pocket openings
+use operator-selected oval constraints; variable rails, the crimp, jug, and
+compound supported pocket remain freeform.
 
 ### `trango-rock-prodigy-pivot`
 
-Trango documents orientations and selected key grips but explicitly does not
-claim a comprehensive list of possible holds. It publishes neither an
-exhaustive physical boundary map nor overall board dimensions. The source set
-cannot support all per-hold records, semantic targets, and normalized frames
-without inference. The candidate must remain primary-only and unregistered.
+The completed package remains the structural and path-style precedent; its
+product-specific coordinates must not be reused. The 2026-08-25 stable-ID
+review reconciled 18 physical contacts / 22 geometry pieces. Trango's “22
+distinct grip positions” is an orientation-dependent usage count, not a claim
+of 22 separately bounded physical contacts, so it does not require geometry or
+ID changes.
 
-## Required follow-up
+The depth guide maps the stable pairs exactly: `upper-sloped-crimp-*` to
+`12.5 mm`, `outer-sloped-crimp-*` to `11.5 mm`, `variable-edge-*` to
+`16–31 mm`, `medium-crimp-*` to `9–10 mm`, `large-crimp-*` to `11–12 mm`,
+`two-finger-pocket-*` to `28–32 mm`, and `three-finger-pocket-*` to
+`17–28 mm`. The orientation guide explicitly draws four fingers on every
+non-pocket contact represented in this presentation and two or three on the
+corresponding pocket openings. Those capacities are retained; the two pocket
+postures/features and lower-sloper posture are retained where the guide has an
+exact schema representation. Supported/sloped crimp labels do not distinguish
+the app's half- versus full-crimp postures, so those posture fields stay blank.
+The pinch changes role across orientations, so no width feature is selected.
 
-Obtain a manufacturer-issued exhaustive, model-specific hold diagram or data
-sheet for each board. It must map every physical contact region and its
-boundary to measured depth/size, finger capacity, grip classification, and
-the documented targets intended for training. Then author all three canonical
-sidecars and register that model in one change. Do not treat Training Center
-evidence as a substitute.
+## 2026-08-25 per-contact metadata ledger
+
+The stable-ID captures were generated at
+`.context/hangboard-metadata-backfill-icky-cow/trango/` with one label per
+logical hold. All 52 Forge, Natural, and Pivot contacts were visually matched
+to the first-party diagrams before the canonical ledger was written.
+
+| board | exact verified mapping | retained blanks |
+| --- | --- | --- |
+| Forge | 20 kinds; rail/crimp/MR measurements; eight MR/IM two-finger capacities and pocket postures; four sloper postures; literal large-flat-edge and pocket features | IM lobe depths remain blank because `19–31 mm` is published only for the aggregate IMR area; no hand capacities; no unsupported crimper/rail postures |
+| Natural | 14 kinds; jug/rail/upper-pocket measurements; 14 diagrammed finger capacities; six pocket postures/features; jug feature; closed-crimp schema adaptation | closed-crimp, center-lower-pocket, and supported-pocket measurements remain blank because the current official sources conflict; all hand capacities and unsupported rail/jug postures remain blank |
+| Pivot | 18 kinds; all seven depth-guide measurement groups; all 18 diagrammed finger capacities; four pocket postures/features; two sloper postures | all hand capacities; generic supported/sloped crimp postures; orientation-dependent pinch features; measurements not published by the depth guide |
+
+Every omitted field has a hold-level reason and primary source in
+`2026-08-25-hangboard-metadata-ledger.json`. No geometry, hold identity, or
+presentation raster changed in this metadata pass.
+
+Trango says Forge differs from Training Center, so no Training Center source or
+geometry was substituted into Forge. Forge and Natural were authored from
+their own current manufacturer evidence and remain gated on current package and
+visual validation.
+
+All 12 constrained Forge and Natural pieces pass the production `+1 px` resize
+invariants. A zero-distance save can reserialize decimal precision, so these
+pieces are verified for mathematical oval consistency and no visible snap
+rather than claimed as byte-exact.

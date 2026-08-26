@@ -1,8 +1,9 @@
 name: Release to App Store Connect
 
-# A successful CI run on main is the only release trigger. There is deliberately
-# no manual or pull-request trigger, so every uploaded build has passed CI.
+# Automatic releases require a successful CI run on main. Authorized maintainers
+# can also manually release the selected workflow revision.
 on:
+  workflow_dispatch:
   workflow_run:
     workflows:
       - CI
@@ -21,9 +22,12 @@ concurrency:
 jobs:
   release:
     if: >-
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.head_branch == 'main'
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main'
+      )
     name: Archive, sign, and upload
     runs-on: macos-26
     timeout-minutes: 60
@@ -32,15 +36,22 @@ jobs:
       url: https://appstoreconnect.apple.com/
 
     steps:
-      # Check out the exact commit whose CI run succeeded, not whichever commit
-      # happens to be at the tip of main when this workflow starts.
+      # Automatic runs check out the exact commit whose CI run succeeded, while
+      # manual runs check out the revision selected for workflow dispatch.
       # actions/checkout v4.2.2
       - name: Check out tested commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
           fetch-depth: 1
           persist-credentials: false
+
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
 
       - name: Show Apple toolchain
         run: |
@@ -87,40 +98,53 @@ jobs:
           echo "Using App Store build number $build_number"
 
       - name: Validate App Store metadata
+        env:
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: scripts/validate-app-store-metadata.sh
 
       - name: Archive signed release
         env:
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+          GITHUB_OAUTH_CLIENT_ID: ${{ vars.HANGTEN_GITHUB_OAUTH_CLIENT_ID }}
           POSTHOG_CLIENT_TOKEN: ${{ secrets.POSTHOG_CLIENT_TOKEN }}
           POSTHOG_HOST: ${{ vars.POSTHOG_HOST || 'https://us.i.posthog.com' }}
         run: |
           set -euo pipefail
           archive_path="$PWD/build/HangTen.xcarchive"
           mkdir -p "$PWD/build"
-          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-posthog.XXXXXX")"
-          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          build_settings_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-build-settings.XXXXXX")"
+          # Expand the step-local path when the trap runs.
+          # shellcheck disable=SC2016
+          trap 'rm -f "$build_settings_xcconfig"' EXIT
           umask 077
+          : "${GITHUB_OAUTH_CLIENT_ID:?Configure the public HANGTEN_GITHUB_OAUTH_CLIENT_ID variable in the app-store-connect environment}"
+          case "$GITHUB_OAUTH_CLIENT_ID" in
+            *[!A-Za-z0-9_-]*) echo "GITHUB_OAUTH_CLIENT_ID contains unsupported characters" >&2; exit 1 ;;
+          esac
           case "$POSTHOG_HOST" in
             https://?*) posthog_host_remainder="${POSTHOG_HOST#https://}" ;;
             *) echo "POSTHOG_HOST must be a normal HTTPS URL" >&2; exit 1 ;;
           esac
           # `//` begins a comment in an xcconfig. Compose the second slash via
           # a build setting so the resolved value remains the full HTTPS URL.
-          printf 'POSTHOG_URL_SLASH = /\nPOSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = https:/$(POSTHOG_URL_SLASH)%s\n' \
-            "$POSTHOG_CLIENT_TOKEN" "$posthog_host_remainder" > "$telemetry_xcconfig"
-          chmod 600 "$telemetry_xcconfig"
-          unset POSTHOG_CLIENT_TOKEN POSTHOG_HOST
+          # shellcheck disable=SC2016
+          printf 'POSTHOG_URL_SLASH = /\nPOSTHOG_CLIENT_TOKEN = %s\nPOSTHOG_HOST = https:/$(POSTHOG_URL_SLASH)%s\nGITHUB_OAUTH_CLIENT_ID = %s\n' \
+            "$POSTHOG_CLIENT_TOKEN" "$posthog_host_remainder" "$GITHUB_OAUTH_CLIENT_ID" > "$build_settings_xcconfig"
+          chmod 600 "$build_settings_xcconfig"
+          unset GITHUB_OAUTH_CLIENT_ID POSTHOG_CLIENT_TOKEN POSTHOG_HOST
           xcodebuild \
             -project HangTen.xcodeproj \
             -scheme HangTen \
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath "$archive_path" \
+            -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
+            -showBuildTimingSummary \
             HANGTEN_DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             HANGTEN_PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_UUID" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
-            -xcconfig "$telemetry_xcconfig" \
+            -xcconfig "$build_settings_xcconfig" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             clean archive
 
       - name: Verify archived bundle
@@ -128,6 +152,16 @@ jobs:
           set -euo pipefail
           app_path="$PWD/build/HangTen.xcarchive/Products/Applications/HangTen.app"
           test -d "$app_path"
+          github_oauth_client_id="$(/usr/libexec/PlistBuddy -c 'Print :GITHUB_OAUTH_CLIENT_ID' "$app_path/Info.plist")"
+          test -n "$github_oauth_client_id"
+          case "$github_oauth_client_id" in
+            *[!A-Za-z0-9_-]*) echo "Archived GITHUB_OAUTH_CLIENT_ID is invalid" >&2; exit 1 ;;
+          esac
+          if /usr/libexec/PlistBuddy -c 'Print :GITHUB_CLIENT_SECRET' "$app_path/Info.plist" >/dev/null 2>&1; then
+            echo "Archived bundle must not contain GITHUB_CLIENT_SECRET" >&2
+            exit 1
+          fi
+          echo "GitHub OAuth client ID: configured"
           echo "Version: $(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app_path/Info.plist")"
           echo "Build: $(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app_path/Info.plist")"
           codesign --verify --deep --strict --verbose=2 "$app_path"

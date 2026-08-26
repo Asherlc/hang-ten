@@ -1,23 +1,13 @@
 # Training plan source audit — 2026-08-10
 
-The seven built-in plan entries below cover the six requested resources. All
-are classified `adapted`: the sources are not current Metolius built-ins, and
-Hang Ten supplies runnable rows, manual timing defaults, or board resolution
-where the source is a weekly template or prose guidance.
+Four bundled plan entries cover the first three requested resources below:
+one from Hooper's Beta, two from Method Climbing, and one from REI. All are
+classified `adapted`: the sources are not current Metolius built-ins, and Hang
+Ten supplies runnable rows, manual timing defaults, or board resolution where
+the source is a weekly template or prose guidance. Section 4 documents Rock
+Prodigy, which is not bundled.
 
-## 1. Lattice Lite Guide to Home Adaptations
-
-Source: <https://latticetraining.com/app/uploads/2020/03/Lite-Guide-to-home-adaptations.pdf>
-
-Classification: board-flexible weekly-template reference. The sample-week
-frequency is preserved in the row title/accessory exactly: max hang 2×,
-80% repeaters 1×, 7:3s 40% 1×, on-the-minute pull-ups 1.5×, weighted pull-ups
-1×, floor core 1×, stabilizer conditioning 2×, hip flexibility 2×, and
-upper-body flexibility 1×. The source does not prescribe task counts or
-durations for this sample week. Hang Ten uses 60-second manual/coach-guided
-preview rows and records that as an app default, never as source timing.
-
-## 2. Hooper's Beta introductory home hangboard routine
+## 1. Hooper's Beta introductory home hangboard routine
 
 Source: <https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine>
 
@@ -45,7 +35,7 @@ conditioning rows use manual 60s/90s/180s presentation defaults only where
 the source describes an interval or coach-guided movement rather than a
 standalone fixed task timer.
 
-## 3. Method Climbing Intermediate Hangboarding
+## 2. Method Climbing Intermediate Hangboarding
 
 Source: <https://methodclimb.com/intermediate-hangboarding/>
 
@@ -65,19 +55,7 @@ does not give a movement duration. The source's 1× weekly start, progression
 to 2× nonconsecutive, and one-of-each rule are retained in plan metadata/UI
 notes rather than added as invented workout steps.
 
-## 4. Lattice Beginner Climber's Training Guide
-
-Source: <https://latticetraining.com/blog/the-beginners-guide>
-
-Classification: board-flexible foundational reference, not a timed protocol.
-The implementation preserves the source priority of climbing/wall finger
-strength before hangboarding; assisted/banded pull-ups and press-ups; Spider-
-Man holds, dish tucks, and moving plank variations; deadlifts for posterior
-chain/core bracing; and later light, slow hangboarding. The source example of
-20s with one foot down is kept as an explicitly labeled example. Counts,
-frequencies, and timers are not fabricated; rows are coach-guided previews.
-
-## 5. REI hangboard sample workout
+## 3. REI hangboard sample workout
 
 Source: <https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html>
 
@@ -90,7 +68,7 @@ the range to 7s, uses an app-only 25-minute warm-up preview, and adds a
 light-stretch/recovery row. The full-day-or-two recovery warning and stop-at-
 pain warning remain in the plan instructions/metadata.
 
-## 6. Rock Prodigy Training Center intermediate routine
+## 4. Rock Prodigy Training Center intermediate routine
 
 Product source: <https://trango.com/products/rock-prodigy-training-center>
 

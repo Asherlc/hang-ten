@@ -1,5 +1,4 @@
 {
-  "schemaVersion": 1,
   "id": "trango.rock-prodigy-training-center",
   "manufacturer": "Trango",
   "name": "Rock Prodigy Training Center",
@@ -7,9 +6,6 @@
   "productURL": "https://trango.com/products/rock-prodigy-training-center",
   "dimensions": "9.1 \u00d7 12.1 in",
   "aspectRatio": 2.8344827586206898,
-  "presentation": {
-    "assetPath": "assets/primary.png"
-  },
   "holds": [
     {
       "id": "sloper-left",
@@ -115,7 +111,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "sloper-right",
@@ -221,7 +218,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-left",
@@ -344,7 +342,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -467,16 +466,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-large-vder-left",
       "name": "Left large variable-depth edge rail",
       "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "largeOpenHandRail"
-      ],
       "geometry": [
         {
           "frame": {
@@ -591,16 +587,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-large-vder-right",
       "name": "Right large variable-depth edge rail",
       "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "largeOpenHandRail"
-      ],
       "geometry": [
         {
           "frame": {
@@ -715,7 +708,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-shallow-vder-left",
@@ -835,7 +829,8 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-shallow-vder-right",
@@ -955,15 +950,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-thin-crimp-left",
       "name": "Left thin crimp",
       "kind": "edge",
-      "features": [
-        "thinCrimp"
-      ],
       "geometry": [
         {
           "frame": {
@@ -973,120 +966,17 @@
             "height": 0.07268988703566268
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.06,
-                  1.822719653e-06
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.02,
-                  0.043012438213872
-                ],
-                "control2": [
-                  0,
-                  0.215054900190751
-                ],
-                "to": [
-                  0,
-                  0.494623900903179
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.795698209362717
-                ],
-                "control2": [
-                  0.02,
-                  0.946235363592486
-                ],
-                "to": [
-                  0.06,
-                  0.999998632960261
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.34,
-                  1
-                ],
-                "control2": [
-                  0.7,
-                  1
-                ],
-                "to": [
-                  0.94,
-                  0.999998632960261
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.98,
-                  0.924730055845376
-                ],
-                "control2": [
-                  1,
-                  0.752687593868497
-                ],
-                "to": [
-                  1,
-                  0.494623900903179
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.193549592443641
-                ],
-                "control2": [
-                  0.98,
-                  0.043012438213872
-                ],
-                "to": [
-                  0.94,
-                  1.822719653e-06
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.7,
-                  0
-                ],
-                "control2": [
-                  0.34,
-                  0
-                ],
-                "to": [
-                  0.06,
-                  1.822719653e-06
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.387411793974
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "edge-thin-crimp-right",
       "name": "Right thin crimp",
       "kind": "edge",
-      "features": [
-        "thinCrimp"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1096,122 +986,17 @@
             "height": 0.07268988703566268
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.94,
-                  1.822719653e-06
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.98,
-                  0.043012438213872
-                ],
-                "control2": [
-                  1,
-                  0.215054900190751
-                ],
-                "to": [
-                  1,
-                  0.494623900903179
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.795698209362717
-                ],
-                "control2": [
-                  0.98,
-                  0.946235363592486
-                ],
-                "to": [
-                  0.94,
-                  0.999998632960261
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.66,
-                  1
-                ],
-                "control2": [
-                  0.3,
-                  1
-                ],
-                "to": [
-                  0.06,
-                  0.999998632960261
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.02,
-                  0.924730055845376
-                ],
-                "control2": [
-                  0,
-                  0.752687593868497
-                ],
-                "to": [
-                  0,
-                  0.494623900903179
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.193549592443641
-                ],
-                "control2": [
-                  0.02,
-                  0.043012438213872
-                ],
-                "to": [
-                  0.06,
-                  1.822719653e-06
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.3,
-                  0
-                ],
-                "control2": [
-                  0.66,
-                  0
-                ],
-                "to": [
-                  0.94,
-                  1.822719653e-06
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.387411793974
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-three-finger-slot-left",
       "name": "Left shallow three-finger slot",
       "kind": "pocket",
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1326,17 +1111,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-three-finger-slot-right",
       "name": "Right shallow three-finger slot",
       "kind": "pocket",
-      "gripType": "threeFingerPocket",
-      "fingerCapacity": 3,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1451,17 +1232,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-deep-left",
       "name": "Left index-middle deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1471,122 +1248,17 @@
             "height": 0.0711264367816074
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.03,
-                  0.076923076923077
-                ],
-                "control2": [
-                  0,
-                  0.252747252747253
-                ],
-                "to": [
-                  0,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.03,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.09,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  1
-                ],
-                "control2": [
-                  0.72,
-                  1
-                ],
-                "to": [
-                  0.91,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.98,
-                  0.868131868131868
-                ],
-                "control2": [
-                  1,
-                  0.692307692307693
-                ],
-                "to": [
-                  1,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.97,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.9,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  0
-                ],
-                "control2": [
-                  0.34,
-                  0
-                ],
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-deep-right",
       "name": "Right index-middle deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1596,122 +1268,17 @@
             "height": 0.0711264367816074
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.97,
-                  0.076923076923077
-                ],
-                "control2": [
-                  1,
-                  0.252747252747253
-                ],
-                "to": [
-                  1,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.97,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.91,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  1
-                ],
-                "control2": [
-                  0.28,
-                  1
-                ],
-                "to": [
-                  0.09,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.02,
-                  0.868131868131868
-                ],
-                "control2": [
-                  0,
-                  0.692307692307693
-                ],
-                "to": [
-                  0,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.03,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.1,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  0
-                ],
-                "control2": [
-                  0.66,
-                  0
-                ],
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.5
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-deep-left",
       "name": "Left middle-ring deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1721,122 +1288,17 @@
             "height": 0.0774022988505759
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.03,
-                  0.076923076923077
-                ],
-                "control2": [
-                  0,
-                  0.252747252747253
-                ],
-                "to": [
-                  0,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.03,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.09,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  1
-                ],
-                "control2": [
-                  0.72,
-                  1
-                ],
-                "to": [
-                  0.91,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.98,
-                  0.868131868131868
-                ],
-                "control2": [
-                  1,
-                  0.692307692307693
-                ],
-                "to": [
-                  1,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.97,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.9,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  0
-                ],
-                "control2": [
-                  0.34,
-                  0
-                ],
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.363825363825
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-deep-right",
       "name": "Right middle-ring deep pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1846,122 +1308,17 @@
             "height": 0.0774022988505759
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.97,
-                  0.076923076923077
-                ],
-                "control2": [
-                  1,
-                  0.252747252747253
-                ],
-                "to": [
-                  1,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.97,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.91,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  1
-                ],
-                "control2": [
-                  0.28,
-                  1
-                ],
-                "to": [
-                  0.09,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.02,
-                  0.868131868131868
-                ],
-                "control2": [
-                  0,
-                  0.692307692307693
-                ],
-                "to": [
-                  0,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.03,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.1,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  0
-                ],
-                "control2": [
-                  0.66,
-                  0
-                ],
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.363825363825
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-medium-shallow-left",
       "name": "Left index-middle medium/shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1971,122 +1328,17 @@
             "height": 0.0711264367816074
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.03,
-                  0.076923076923077
-                ],
-                "control2": [
-                  0,
-                  0.252747252747253
-                ],
-                "to": [
-                  0,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.03,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.09,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  1
-                ],
-                "control2": [
-                  0.72,
-                  1
-                ],
-                "to": [
-                  0.91,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.98,
-                  0.868131868131868
-                ],
-                "control2": [
-                  1,
-                  0.692307692307693
-                ],
-                "to": [
-                  1,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.97,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.9,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  0
-                ],
-                "control2": [
-                  0.34,
-                  0
-                ],
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.371687136393
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-medium-shallow-right",
       "name": "Right index-middle medium/shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2096,122 +1348,17 @@
             "height": 0.0711264367816074
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.97,
-                  0.076923076923077
-                ],
-                "control2": [
-                  1,
-                  0.252747252747253
-                ],
-                "to": [
-                  1,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.97,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.91,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  1
-                ],
-                "control2": [
-                  0.28,
-                  1
-                ],
-                "to": [
-                  0.09,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.02,
-                  0.868131868131868
-                ],
-                "control2": [
-                  0,
-                  0.692307692307693
-                ],
-                "to": [
-                  0,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.03,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.1,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  0
-                ],
-                "control2": [
-                  0.66,
-                  0
-                ],
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.371687136393
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-shallow-left",
       "name": "Left middle-ring shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2221,122 +1368,17 @@
             "height": 0.07531034482758736
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.03,
-                  0.076923076923077
-                ],
-                "control2": [
-                  0,
-                  0.252747252747253
-                ],
-                "to": [
-                  0,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.03,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.09,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  1
-                ],
-                "control2": [
-                  0.72,
-                  1
-                ],
-                "to": [
-                  0.91,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.98,
-                  0.868131868131868
-                ],
-                "control2": [
-                  1,
-                  0.692307692307693
-                ],
-                "to": [
-                  1,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.97,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.9,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  0
-                ],
-                "control2": [
-                  0.34,
-                  0
-                ],
-                "to": [
-                  0.08,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.373931623932
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-shallow-right",
       "name": "Right middle-ring shallow pocket",
       "kind": "pocket",
-      "gripType": "twoFingerPocket",
-      "fingerCapacity": 2,
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2346,120 +1388,17 @@
             "height": 0.07531034482758736
           },
           "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.97,
-                  0.076923076923077
-                ],
-                "control2": [
-                  1,
-                  0.252747252747253
-                ],
-                "to": [
-                  1,
-                  0.494505494505495
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1,
-                  0.780219780219781
-                ],
-                "control2": [
-                  0.97,
-                  0.934065934065934
-                ],
-                "to": [
-                  0.91,
-                  1
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.65,
-                  1
-                ],
-                "control2": [
-                  0.28,
-                  1
-                ],
-                "to": [
-                  0.09,
-                  0.956043956043956
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.02,
-                  0.868131868131868
-                ],
-                "control2": [
-                  0,
-                  0.692307692307693
-                ],
-                "to": [
-                  0,
-                  0.472527472527473
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0,
-                  0.208791208791209
-                ],
-                "control2": [
-                  0.03,
-                  0.054945054945055
-                ],
-                "to": [
-                  0.1,
-                  0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.35,
-                  0
-                ],
-                "control2": [
-                  0.66,
-                  0
-                ],
-                "to": [
-                  0.92,
-                  0.032967032967033
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
+            "type": "roundedRect",
+            "cornerRadiusFraction": 0.373931623932
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-medium-left",
       "name": "Left medium pinch",
       "kind": "pinch",
-      "features": [
-        "mediumPinch"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2662,15 +1601,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-medium-right",
       "name": "Right medium pinch",
       "kind": "pinch",
-      "features": [
-        "mediumPinch"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2873,15 +1810,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-wide-left",
       "name": "Left wide pinch",
       "kind": "pinch",
-      "features": [
-        "widePinch"
-      ],
       "geometry": [
         {
           "frame": {
@@ -3063,15 +1998,13 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
     },
     {
       "id": "pinch-wide-right",
       "name": "Right wide pinch",
       "kind": "pinch",
-      "features": [
-        "widePinch"
-      ],
       "geometry": [
         {
           "frame": {
@@ -3253,7 +2186,17 @@
             ]
           }
         }
-      ]
+      ],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.8344827586206898,
+      "default": true
     }
   ]
 }

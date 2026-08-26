@@ -1,0 +1,638 @@
+{
+  "id": "yy.travelboard",
+  "manufacturer": "YY Vertical",
+  "name": "TravelBoard",
+  "productURL": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+  "subtitle": "Portable board with three edges, two mono-finger openings, and a tray",
+  "dimensions": "34 \u00d7 10 \u00d7 3 cm",
+  "aspectRatio": 1.5,
+  "presentations": [
+    {
+      "id": "front-25-15",
+      "name": "25 / 15 mm face",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    },
+    {
+      "id": "reverse-10",
+      "name": "10 mm face",
+      "assetPath": "assets/reverse.png",
+      "aspectRatio": 2.0,
+      "default": false
+    }
+  ],
+  "holds": [
+    {
+      "id": "tray",
+      "name": "Wide tray",
+      "kind": "jug",
+      "features": [
+        "jug"
+      ],
+      "presentationID": "front-25-15",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.028295371745,
+            "y": 0.310559008789,
+            "width": 0.944789527344,
+            "height": 0.069358178711
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.072315558592,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.951935719447,
+                  0.01492536725
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.993401510004,
+                  0.189054722235
+                ],
+                "control2": [
+                  0.993401510004,
+                  0.189054722235
+                ],
+                "to": [
+                  1.0,
+                  1.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.006574141815,
+                  -0.079602000907
+                ],
+                "control2": [
+                  0.021183345237,
+                  0.109452735408
+                ],
+                "to": [
+                  0.072315558592,
+                  0.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-25",
+      "name": "25 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 25,
+      "presentationID": "front-25-15",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.085576251627,
+            "y": 0.39,
+            "width": 0.828847496745,
+            "height": 0.083084891602
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.03341382299,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.96658617701,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.985040121698,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857625194
+                ],
+                "to": [
+                  1.0,
+                  0.500000005877
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142374806
+                ],
+                "control2": [
+                  0.985040121698,
+                  1.0
+                ],
+                "to": [
+                  0.96658617701,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.03341382299,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.014959878302,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142374806
+                ],
+                "to": [
+                  0.0,
+                  0.500000005877
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857625194
+                ],
+                "control2": [
+                  0.014959878302,
+                  0.0
+                ],
+                "to": [
+                  0.03341382299,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-15",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 15,
+      "presentationID": "front-25-15",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.191963417969,
+            "y": 0.573,
+            "width": 0.616073164063,
+            "height": 0.075
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.040579595831,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.959420404169,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.981831895685,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857630208
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142369792
+                ],
+                "control2": [
+                  0.981831895685,
+                  1.0
+                ],
+                "to": [
+                  0.959420404169,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.040579595831,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.018168104315,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142369792
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857630208
+                ],
+                "control2": [
+                  0.018168104315,
+                  0.0
+                ],
+                "to": [
+                  0.040579595831,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "mono-left",
+      "name": "Left mono-finger opening",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
+      "presentationID": "front-25-15",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.083666666667,
+            "y": 0.568,
+            "width": 0.062666666667,
+            "height": 0.094
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.776142370346,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857629654
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142370346
+                ],
+                "control2": [
+                  0.776142370346,
+                  1.0
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.223857629654,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142370346
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857629654
+                ],
+                "control2": [
+                  0.223857629654,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "circle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "mono-right",
+      "name": "Right mono-finger opening",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
+      "presentationID": "front-25-15",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.853666666667,
+            "y": 0.568,
+            "width": 0.062666666667,
+            "height": 0.094
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.776142370346,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857629654
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.776142370346
+                ],
+                "control2": [
+                  0.776142370346,
+                  1.0
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.223857629654,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142370346
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857629654
+                ],
+                "control2": [
+                  0.223857629654,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "circle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-10",
+      "name": "10 mm edge",
+      "kind": "edge",
+      "sizeMillimeters": 10,
+      "presentationID": "reverse-10",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.222,
+            "y": 0.506,
+            "width": 0.556,
+            "height": 0.102
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.045,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.955,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.985,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.985,
+                  1.0
+                ],
+                "to": [
+                  0.955,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.045,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.015,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.015,
+                  0.0
+                ],
+                "to": [
+                  0.045,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,212 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testPlanLibraryStoreRejectsFormerSchemaVersionField() throws {
+        let data = Data(
+            #"""
+            {
+              "schemaVersion": 3,
+              "metadata": {
+                "id": "legacy.plan-library",
+                "title": "Legacy plan library",
+                "generatedAt": "2026-08-24",
+                "notes": []
+              },
+              "boardMappings": [],
+              "blocks": [],
+              "plans": []
+            }
+            """#.utf8
+        )
+
+        XCTAssertThrowsError(try PlanLibraryStore(data: data))
+    }
+
+    func testPlanLibraryStoreRejectsFormerMetadataVersionField() throws {
+        let data = Data(
+            #"""
+            {
+              "metadata": {
+                "id": "legacy.plan-library",
+                "version": "3.0.0",
+                "title": "Legacy plan library",
+                "generatedAt": "2026-08-24",
+                "notes": []
+              },
+              "boardMappings": [],
+              "blocks": [],
+              "plans": []
+            }
+            """#.utf8
+        )
+
+        XCTAssertThrowsError(try PlanLibraryStore(data: data))
+    }
+
+    func testPlanLibraryStoreEncodingOmitsFormerVersionFields() throws {
+        let store = try PlanLibraryStore(
+            definition: makeLibrary(
+                steps: [
+                    makeStep(
+                        id: "conditioning",
+                        duration: 30,
+                        phase: .conditioning,
+                        targets: [],
+                        segments: []
+                    )
+                ]
+            )
+        )
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: try store.encodedData()) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(document["metadata"] as? [String: Any])
+
+        XCTAssertNil(document["schemaVersion"])
+        XCTAssertNil(metadata["version"])
+    }
+
+    func testBundledPlanLibraryContainsNoVersionFields() throws {
+        let data = try bundledPlanLibraryData()
+        let document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: data) as? [String: Any]
+        )
+        let metadata = try XCTUnwrap(document["metadata"] as? [String: Any])
+
+        XCTAssertNil(document["schemaVersion"])
+        XCTAssertNil(metadata["version"])
+        XCTAssertNoThrow(try JSONDecoder().decode(PlanLibraryDefinition.self, from: data))
+    }
+
+    func testBuiltInPlanPresentationFieldsUseAthleteFacingCopy() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let visibleFields = store.plans.flatMap { plan in
+            [plan.subtitle] + plan.steps.flatMap { [$0.instruction, $0.accessory] }
+        }
+        let auditNarration = [
+            "app timer",
+            "app default",
+            "app-guided",
+            "app recovery",
+            "source range",
+            "no source count",
+            "source's",
+            "source does not prescribe",
+            "source gives no",
+            "guided default",
+            "adaptation",
+            "semantic",
+            "app choices",
+            "app uses"
+        ]
+
+        XCTAssertEqual(
+            visibleFields.filter { field in
+                let normalized = field.lowercased()
+                return auditNarration.contains { normalized.contains($0) }
+            },
+            [],
+            "Built-in plan fields must state the workout, not its audit history."
+        )
+    }
+
+    func testInstructionAccessoryContentPreservesSourceBackedPlanText() {
+        let rows = InstructionAccessoryCardContent.rows(
+            instruction: "Nice work on the prescribed 7-second hang.",
+            accessory: "Step off and shake out for the prescribed 3-minute recovery."
+        )
+
+        XCTAssertEqual(
+            rows,
+            [
+                InstructionAccessoryCardRow(kind: .instruction, text: "Nice work on the prescribed 7-second hang."),
+                InstructionAccessoryCardRow(kind: .accessory, text: "Step off and shake out for the prescribed 3-minute recovery.")
+            ]
+        )
+    }
+
+    func testBundledF80PreservesForceFeedbackAndStopRule() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f80"))
+        let hangSteps = plan.steps.filter {
+            $0.id.hasPrefix("f80-set-") && $0.phase == .hang
+        }
+
+        XCTAssertEqual(hangSteps.count, 36)
+        XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 10 })
+        XCTAssertTrue(plan.subtitle.lowercased().contains("three sets"))
+        XCTAssertTrue(plan.subtitle.contains("12"))
+        XCTAssertTrue(plan.subtitle.contains("80% MFSi"))
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("real-time force feedback") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("Stop the set if force falls below 70% MFSi.") })
+    }
+
+    func testBundledF100PreservesForceFeedbackProtocolFacts() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+        let plan = try XCTUnwrap(store.plan(id: "research.force-feedback-f100"))
+        let hangSteps = plan.steps.filter {
+            $0.id.hasPrefix("f100-set-") && $0.phase == .hang
+        }
+
+        XCTAssertEqual(hangSteps.count, 24)
+        XCTAssertTrue(hangSteps.allSatisfy { $0.activeDuration == 6 })
+        XCTAssertTrue(plan.subtitle.lowercased().contains("two sets"))
+        XCTAssertTrue(plan.subtitle.contains("six 6-second hangs per hand"))
+        XCTAssertTrue(plan.subtitle.contains("6-second"))
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("real-time force feedback") })
+        XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
+    }
+
+    func testWorkoutCueCardShowsSourceInstructionDuringCountdown() {
+        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "Source accessory", duration: 10, phase: .hang, targets: [])
+
+        XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: false), "Source title")
+        XCTAssertEqual(
+            WorkoutPresentationContent.cueCardRows(step: step, countdown: 3, isComplete: false),
+            [
+                InstructionAccessoryCardRow(kind: .instruction, text: "Source instruction")
+            ]
+        )
+    }
+
+    func testWorkoutCueCardIsOmittedAfterCompletion() {
+        let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "Source accessory", duration: 10, phase: .hang, targets: [])
+
+        XCTAssertEqual(WorkoutPresentationContent.title(step: step, isComplete: true), "Session complete")
+        XCTAssertNil(WorkoutPresentationContent.cueCardRows(step: step, countdown: 0, isComplete: true))
+    }
+
+    func testForceFeedbackPlansAreUnavailableUntilInstrumentedEdgeSetupCanBeVerified() {
+        for plan in [LegacyPlanSeedCatalog.forceF80, LegacyPlanSeedCatalog.forceF100] {
+            XCTAssertEqual(
+                PlanStartAvailabilityPolicy.availability(for: plan),
+                .unavailable(requirement: "Requires real-time force feedback from an instrumented 12 mm edge.")
+            )
+        }
+    }
+
+    func testOrdinaryPlanRemainsAvailableToStart() {
+        XCTAssertEqual(
+            PlanStartAvailabilityPolicy.availability(for: LegacyPlanSeedCatalog.maxHangs),
+            .available
+        )
+    }
+
+    func testPlanSourcePresentationContainsOnlySourceName() {
+        let plan = LegacyPlanSeedCatalog.maxHangs
+        XCTAssertEqual(PlanSourcePresentationContent.label(for: plan), "Source: Lattice max hang protocol")
+    }
+
     func testBuiltInPlanDataPreservesPlanOwnedMappingsAndResolvesEdge19() throws {
         let packageStore = BoardCatalog.packageStore
         let store = try PlanLibraryStore(
@@ -22,7 +228,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(packageStore.semantics(for: compactMapping.boardID), [:])
         XCTAssertEqual(
             store.plan(id: "research.max-hangs")?.steps.first?.targets,
-            [.ids(expectedHoldIDs)]
+            [.feature(.mediumEdge, fallback: .largeEdge)]
         )
     }
 
@@ -150,16 +356,16 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testVersionThreeDefinitionsResolveOrderedSegmentTimingModes() throws {
+    func testUnversionedDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
-            target: .feature(.mediumEdge, fallbacks: []),
+            targets: [.feature(.mediumEdge, fallbacks: [])],
             timing: .fixed,
             duration: 20
         )
         let fixedRest = WorkoutSegmentDefinition(
             kind: .rest,
-            target: nil,
+            targets: [],
             timing: .fixed,
             duration: 40
         )
@@ -177,7 +383,7 @@ final class PlanStorageTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        target: .feature(.roundSloper, fallbacks: []),
+                        targets: [.feature(.roundSloper, fallbacks: [])],
                         timing: .stopwatch,
                         duration: nil
                     )
@@ -191,7 +397,7 @@ final class PlanStorageTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        target: .feature(.jug, fallbacks: []),
+                        targets: [.feature(.jug, fallbacks: [])],
                         timing: .undefined,
                         duration: nil
                     )
@@ -224,14 +430,12 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testSegmentTargetFixturesRoundTripMultiTargetAndLegacyTarget() throws {
+    func testSegmentTargetFixturesRoundTripOnlyPluralTargets() throws {
         let data = Data(
             #"""
             {
-              "schemaVersion": 3,
               "metadata": {
                 "id": "segment.fixture",
-                "version": "3.0.0",
                 "title": "Segment fixture",
                 "generatedAt": "2026-08-03",
                 "notes": []
@@ -257,7 +461,7 @@ final class PlanStorageTests: XCTestCase {
                     },
                     {
                       "kind": "work",
-                      "target": { "feature": "mediumEdge" },
+                      "targets": [{ "feature": "mediumEdge" }],
                       "timing": "fixed",
                       "duration": 10
                     }
@@ -299,8 +503,8 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertNotNil(encodedSegments[0]["targets"])
         XCTAssertNil(encodedSegments[0]["target"])
-        XCTAssertNotNil(encodedSegments[1]["target"])
-        XCTAssertNil(encodedSegments[1]["targets"])
+        XCTAssertNotNil(encodedSegments[1]["targets"])
+        XCTAssertNil(encodedSegments[1]["target"])
         XCTAssertEqual(
             resolvedSegments[0].targets,
             [.feature(.mediumEdge), .kind(.jug)]
@@ -312,17 +516,53 @@ final class PlanStorageTests: XCTestCase {
             persistedSegments[0].targets,
             [.feature(.mediumEdge, fallbacks: []), .kind(.jug)]
         )
-        XCTAssertEqual(persistedSegments[1].target, .feature(.mediumEdge, fallbacks: []))
+        XCTAssertEqual(persistedSegments[1].targets, [.feature(.mediumEdge, fallbacks: [])])
     }
 
-    func testSchemaTwoDefinitionsWithoutSegmentsMigrateWithCompatibilitySegments() throws {
+    func testPlanLibraryStoreRejectsFormerSingularSegmentTarget() {
         let data = Data(
             #"""
             {
-              "schemaVersion": 2,
+              "metadata": {
+                "id": "segment.fixture",
+                "title": "Segment fixture",
+                "generatedAt": "2026-08-24",
+                "notes": []
+              },
+              "boardMappings": [],
+              "blocks": [{
+                "id": "segment.block",
+                "title": "Segment block",
+                "steps": [{
+                  "id": "segment.step",
+                  "title": "Segment step",
+                  "instruction": "Hang.",
+                  "accessory": "10s",
+                  "duration": 10,
+                  "phase": "hang",
+                  "targets": [{ "kind": "edge" }],
+                  "segments": [{
+                    "kind": "work",
+                    "target": { "kind": "edge" },
+                    "timing": "fixed",
+                    "duration": 10
+                  }]
+                }]
+              }],
+              "plans": []
+            }
+            """#.utf8
+        )
+
+        XCTAssertThrowsError(try PlanLibraryStore(data: data))
+    }
+
+    func testUnversionedDefinitionsWithExplicitSegmentsResolveCompatibilityTiming() throws {
+        let data = Data(
+            #"""
+            {
               "metadata": {
                 "id": "legacy.fixture",
-                "version": "2.0.0",
                 "title": "Legacy fixture",
                 "generatedAt": "2026-08-02",
                 "notes": []
@@ -339,7 +579,13 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "30s",
                     "duration": 30,
                     "phase": "rest",
-                    "targets": []
+                    "targets": [],
+                    "segments": [{
+                      "kind": "rest",
+                      "targets": [],
+                      "timing": "fixed",
+                      "duration": 30
+                    }]
                   },
                   {
                     "id": "timed",
@@ -349,7 +595,20 @@ final class PlanStorageTests: XCTestCase {
                     "duration": 30,
                     "phase": "hang",
                     "targets": [{ "kind": "edge" }],
-                    "activeDuration": 10
+                    "segments": [
+                      {
+                        "kind": "work",
+                        "targets": [{ "kind": "edge" }],
+                        "timing": "fixed",
+                        "duration": 10
+                      },
+                      {
+                        "kind": "rest",
+                        "targets": [],
+                        "timing": "fixed",
+                        "duration": 20
+                      }
+                    ]
                   },
                   {
                     "id": "untimed",
@@ -358,7 +617,12 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "Repetitions",
                     "duration": 60,
                     "phase": "pull",
-                    "targets": [{ "kind": "jug" }]
+                    "targets": [{ "kind": "jug" }],
+                    "segments": [{
+                      "kind": "work",
+                        "targets": [{ "kind": "jug" }],
+                      "timing": "undefined"
+                    }]
                   }
                 ]
               }],
@@ -385,7 +649,6 @@ final class PlanStorageTests: XCTestCase {
         let store = try PlanLibraryStore(data: data)
         let steps = try XCTUnwrap(store.plan(id: "legacy.plan")).steps
 
-        XCTAssertEqual(store.definition.schemaVersion, PlanDefinitionSchema.currentVersion)
         XCTAssertEqual(steps.map(\.id), ["rest", "timed.segment-1", "timed.segment-2", "untimed"])
         XCTAssertEqual(steps.map(\.number), [1, 2, 3, 4])
         XCTAssertEqual(
@@ -409,7 +672,7 @@ final class PlanStorageTests: XCTestCase {
     func testFixedSegmentRequiresDuration() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .fixed,
             duration: nil
         )
@@ -422,33 +685,33 @@ final class PlanStorageTests: XCTestCase {
     func testWorkSegmentRequiresTarget() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: nil,
+            targets: [],
             timing: .undefined,
             duration: nil
         )
 
         XCTAssertTrue(validationIssues(for: segment).contains {
-            $0.path == "blocks[0].steps[0].segments[0].target"
+            $0.path == "blocks[0].steps[0].segments[0].targets"
         })
     }
 
     func testRestSegmentCannotTargetAHold() {
         let segment = WorkoutSegmentDefinition(
             kind: .rest,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .fixed,
             duration: 30
         )
 
         XCTAssertTrue(validationIssues(for: segment).contains {
-            $0.path == "blocks[0].steps[0].segments[0].target"
+            $0.path == "blocks[0].steps[0].segments[0].targets"
         })
     }
 
     func testRestSegmentRequiresDurationRegardlessOfTiming() {
         let segment = WorkoutSegmentDefinition(
             kind: .rest,
-            target: nil,
+            targets: [],
             timing: .undefined,
             duration: nil
         )
@@ -461,7 +724,7 @@ final class PlanStorageTests: XCTestCase {
     func testRestSegmentRequiresFixedTiming() {
         let segment = WorkoutSegmentDefinition(
             kind: .rest,
-            target: nil,
+            targets: [],
             timing: .undefined,
             duration: 30
         )
@@ -474,7 +737,7 @@ final class PlanStorageTests: XCTestCase {
     func testStopwatchSegmentCannotHaveDuration() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .stopwatch,
             duration: 10
         )
@@ -487,7 +750,7 @@ final class PlanStorageTests: XCTestCase {
     func testUndefinedSegmentCannotHaveDuration() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .undefined,
             duration: 10
         )
@@ -501,7 +764,7 @@ final class PlanStorageTests: XCTestCase {
         for invalidDuration in [-1.0, .infinity] {
             let segment = WorkoutSegmentDefinition(
                 kind: .work,
-                target: .kind(.edge),
+                targets: [.kind(.edge)],
                 timing: .fixed,
                 duration: invalidDuration
             )
@@ -535,7 +798,7 @@ final class PlanStorageTests: XCTestCase {
     func testSegmentDurationCannotExceedEnclosingStep() {
         let segment = WorkoutSegmentDefinition(
             kind: .work,
-            target: .kind(.edge),
+            targets: [.kind(.edge)],
             timing: .fixed,
             duration: 31
         )
@@ -553,8 +816,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 5)
                     ]
                 )
             ]
@@ -574,8 +837,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 0),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 0),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 30)
                     ]
                 )
             ]
@@ -595,8 +858,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 0,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 5),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 5)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 5),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 5)
                     ]
                 )
             ]
@@ -616,8 +879,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 10)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 20),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 10)
                     ]
                 ),
                 makeStep(
@@ -625,7 +888,7 @@ final class PlanStorageTests: XCTestCase {
                     duration: 10,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .fixed, duration: 10)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 10)
                     ]
                 )
             ]
@@ -645,8 +908,8 @@ final class PlanStorageTests: XCTestCase {
                     duration: 30,
                     targets: [.kind(.edge)],
                     segments: [
-                        WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .stopwatch, duration: nil),
-                        WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 30)
+                        WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .stopwatch, duration: nil),
+                        WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 30)
                     ]
                 )
             ]
@@ -674,7 +937,7 @@ final class PlanStorageTests: XCTestCase {
             duration: 30,
             targets: [.kind(.edge)],
             segments: [
-                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .undefined, duration: nil)
             ]
         )
 
@@ -702,7 +965,7 @@ final class PlanStorageTests: XCTestCase {
             duration: 30,
             targets: [.kind(.edge)],
             segments: [
-                WorkoutSegmentDefinition(kind: .work, target: .kind(.edge), timing: .undefined, duration: nil)
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .undefined, duration: nil)
             ]
         )
 
@@ -805,13 +1068,63 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testPlanLibraryRejectsPlanWhoseImplicitNormalizedStepsEndInRest() {
+        let timedWork = WorkoutStepDefinition(
+            id: "timed-work",
+            title: "Timed work",
+            instruction: "Perform the activity.",
+            accessory: "8s work · 4s rest",
+            duration: 12,
+            phase: .hang,
+            targets: [.kind(.edge)],
+            activeDuration: 8
+        )
+
+        let issues = makeLibrary(steps: [timedWork]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0].steps[0]" &&
+                $0.message == "A plan cannot end in a rest step."
+        })
+    }
+
+    func testPlanLibraryRejectsPlanWhoseCompoundStepEndsInRest() {
+        let compound = makeStep(
+            id: "compound-trailing-rest",
+            duration: 12,
+            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegmentDefinition(kind: .work, targets: [.kind(.edge)], timing: .fixed, duration: 8),
+                WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 4)
+            ]
+        )
+
+        let issues = makeLibrary(steps: [compound]).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0].steps[0]" &&
+                $0.message == "A plan cannot end in a rest step."
+        })
+    }
+
+    func testShippedRoutineSeedsExpandToTerminalWorkSteps() throws {
+        let terminalSteps = try LegacyPlanSeedCatalog.all.map { plan in
+            try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
+        }
+
+        XCTAssertTrue(terminalSteps.allSatisfy { $0.phase != .rest })
+    }
+
     func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
         )
 
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
-        XCTAssertEqual(step.targets, [.ids("edge-19-left", "edge-19-right")])
+        XCTAssertEqual(
+            step.targets,
+            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)]
+        )
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
             step.fingerConfiguration,
@@ -834,6 +1147,18 @@ final class PlanStorageTests: XCTestCase {
             FingerConfiguration(engagedFingers: [.index, .middle])
         )
         XCTAssertEqual(step.fingerConfiguration?.orderedFingers, [.index, .middle])
+    }
+
+    func testMaxHangsWorkStepsKeepSourceBackedFourFingerCue() {
+        let workSteps = PlanCatalog.maxHangs.steps.filter {
+            $0.id.hasPrefix("max-hangs-")
+                && $0.segments.contains { $0.kind == .work }
+        }
+
+        XCTAssertEqual(workSteps.count, 5)
+        XCTAssertTrue(workSteps.allSatisfy {
+            $0.fingerConfiguration?.orderedFingers == [.index, .middle, .ring, .pinky]
+        })
     }
 
     func testUnsupportedBuiltInGripAndFingerOverridesAreAbsent() throws {
@@ -909,7 +1234,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .ids("edge-19-left", "edge-19-right"),
+                    target: .feature(.mediumEdge, fallback: .largeEdge),
                     timing: .fixed,
                     duration: 7
                 ),
@@ -1128,13 +1453,25 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
+    func testLatticeBeginnerGuideIsNotAvailableFromBuiltInCatalog() {
+        let removedPlanID = "lattice.beginner-climbers-training-guide"
+
+        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
+    }
+
+    func testLatticeLiteHomeAdaptationsIsNotAvailableFromBuiltInCatalog() {
+        let removedPlanID = "lattice.lite-home-adaptations"
+
+        XCTAssertFalse(LegacyPlanSeedCatalog.all.contains { $0.id == removedPlanID })
+        XCTAssertNil(PlanCatalog.plan(id: removedPlanID))
+    }
+
     func testRequestedSourcePlansAreSeededAndResolved() throws {
         let expectedIDs = [
-            "lattice.lite-home-adaptations",
             "hoopers-beta.introductory-home-hangboard",
             "method.intermediate-hangboarding.repeaters",
             "method.intermediate-hangboarding.emom",
-            "lattice.beginner-climbers-training-guide",
             "rei.hangboard-sample-workout"
         ]
 
@@ -1143,11 +1480,11 @@ final class PlanStorageTests: XCTestCase {
         })
         XCTAssertEqual(
             expectedIDs.map { PlanCatalog.metadata(for: $0)?.category },
-            ["coach", "coach", "coach", "coach", "coach", "retailer"]
+            ["coach", "coach", "coach", "retailer"]
         )
     }
 
-    func testCompactIIStillResolvesGenericNonPinchPlans() throws {
+    func testCompactIIStillSubstitutesGenericNonPinchPlans() throws {
         let compact = BoardCatalog.defaultBoard
         let genericPlans = LegacyPlanSeedCatalog.all.filter {
             $0.boardID == nil && $0.id != LegacyPlanSeedCatalog.reiHangboardSample.id
@@ -1156,7 +1493,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(
             genericPlans.allSatisfy { plan in
                 plan.steps.flatMap(\.targets).allSatisfy {
-                    !BoardTargetResolver.resolveHoldIDs(for: $0, on: compact).isEmpty
+                    !BoardTargetResolver.substituteHoldIDs(for: $0, on: compact).isEmpty
                 }
             }
         )
@@ -1170,7 +1507,57 @@ final class PlanStorageTests: XCTestCase {
                 .flatMap(\.targets)
                 .first { $0.feature == .mediumPinch }
         )
-        XCTAssertFalse(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
+        XCTAssertFalse(BoardTargetResolver.substituteHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
+    }
+
+    @MainActor
+    func testAuditedPlansAreBoardFlexibleAndSubstituteOnEveryRegisteredBoard() throws {
+        let auditedPlanIDs: Set<String> = [
+            "research.force-feedback-f80",
+            "research.force-feedback-f100",
+            "research.eva-int-hangs",
+            "research.seven-three-repeaters",
+            "research.abrahangs",
+            "coach.horst-seven-fifty-three",
+            "coach.bechtel-three-six-nine",
+            "coach.density-hangs",
+            "device.zlagboard-sixty-sixty"
+        ]
+        let auditedPlans = LegacyPlanSeedCatalog.all.filter { auditedPlanIDs.contains($0.id) }
+
+        XCTAssertEqual(auditedPlans.map(\.id).count, auditedPlanIDs.count)
+        XCTAssertTrue(auditedPlans.allSatisfy { $0.boardID == nil })
+        XCTAssertTrue(auditedPlans.allSatisfy { plan in
+            plan.steps.flatMap(\.targets).allSatisfy(\.holdIDs.isEmpty)
+        })
+
+        let suiteName = "PlanStorageTests.boardFlexiblePlans.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let nonCompactBoard = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id != BoardCatalog.defaultBoard.id }
+        )
+        store.selectBoard(nonCompactBoard)
+
+        XCTAssertTrue(auditedPlanIDs.isSubset(of: Set(store.plans.map(\.id))))
+
+        for board in BoardCatalog.all {
+            for plan in auditedPlans {
+                let workTargets = plan.steps.flatMap { step in
+                    step.segments
+                        .filter { $0.kind == .work }
+                        .flatMap(\.targets)
+                }
+                XCTAssertFalse(workTargets.isEmpty, "\(plan.id) must include work targets")
+                XCTAssertTrue(
+                    workTargets.allSatisfy {
+                        !BoardTargetResolver.substituteHoldIDs(for: $0, on: board).isEmpty
+                    },
+                    "\(plan.id) must substitute every work target on \(board.id)"
+                )
+            }
+        }
     }
 
     func testHoopersRoundTwoKeepsFiveRecruitmentRepsPerHandAcrossThreeSets() throws {
@@ -1190,6 +1577,99 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(hollow.count, 4)
         XCTAssertTrue(pullUps.allSatisfy { $0.instruction.contains("2–4 total") })
         XCTAssertTrue(hollow.allSatisfy { $0.instruction.contains("2–4 total paired sets") })
+    }
+
+    func testFeatureTargetValidationAcceptsRuntimeResolvableUntaggedSameKindHold() {
+        let board = TrainingBoard(
+            id: "fixture.untagged-edge",
+            manufacturer: "Fixture Maker",
+            name: "Untagged Edge",
+            subtitle: "A test board whose edge has no feature metadata.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.edge",
+                    name: "Fixture edge",
+                    kind: .edge,
+                    geometry: [
+                        BoardHoldPiece(
+                            id: "fixture.edge-piece",
+                            holdID: "fixture.edge",
+                            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
+                            shape: .roundedRect(cornerRadiusFraction: 0),
+                            treatment: .surface
+                        )
+                    ]
+                )
+            ],
+            productURL: URL(string: "https://example.com/untagged-edge")!,
+            photoAssetName: nil
+        )
+        let target = HoldTarget.feature(.mediumEdge)
+        let step = makeStep(
+            id: "feature-target",
+            duration: 10,
+            targets: [.feature(.mediumEdge, fallbacks: [])],
+            segments: []
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: board),
+            ["fixture.edge"]
+        )
+        XCTAssertFalse(
+            makeLibrary(steps: [step], boardID: board.id)
+                .validationIssues(availableBoards: [board])
+                .contains {
+                    $0.path == "plans[0].blocks[0].steps[0].targets[0]" &&
+                        $0.message == "No compatible board exposes feature \"mediumEdge\" or its fallbacks."
+                }
+        )
+    }
+
+    func testFeatureTargetValidationRejectsTargetRuntimeCannotResolve() {
+        let board = TrainingBoard(
+            id: "fixture.jug-only",
+            manufacturer: "Fixture Maker",
+            name: "Jug Only",
+            subtitle: "A test board with no edge or pocket holds.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.jug",
+                    name: "Fixture jug",
+                    kind: .jug,
+                    geometry: [
+                        BoardHoldPiece(
+                            id: "fixture.jug-piece",
+                            holdID: "fixture.jug",
+                            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
+                            shape: .roundedRect(cornerRadiusFraction: 0),
+                            treatment: .surface
+                        )
+                    ]
+                )
+            ],
+            productURL: URL(string: "https://example.com/jug-only")!,
+            photoAssetName: nil
+        )
+        let step = makeStep(
+            id: "feature-target",
+            duration: 10,
+            targets: [.feature(.mediumEdge, fallbacks: [])],
+            segments: []
+        )
+
+        XCTAssertTrue(
+            makeLibrary(steps: [step], boardID: board.id)
+                .validationIssues(availableBoards: [board])
+                .contains {
+                    $0.path == "plans[0].blocks[0].steps[0].targets[0]" &&
+                        $0.message == "No compatible board exposes feature \"mediumEdge\" or its fallbacks."
+                }
+        )
     }
 
     func testPlanSemanticMappingsRemainAuthoritativeDuringValidation() {
@@ -1248,60 +1728,41 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testPlanMappingsOverrideBoardLoadedSemanticMappings() throws {
-        let boardStore = try BoardLibraryStore(data: Data(
-            #"""
-            {
-              "schemaVersion": 1,
-              "metadata": {
-                "id": "fixture.board-library",
-                "version": "1.0.0",
-                "title": "Fixture board library",
-                "generatedAt": "2026-08-10",
-                "notes": []
-              },
-              "boards": [{
-                "id": "fixture.board",
-                "manufacturer": "Fixture Maker",
-                "name": "Fixture Board",
-                "subtitle": "A test board.",
-                "dimensions": "10 × 5",
-                "aspectRatio": 2,
-                "holds": [
-                  {
-                    "id": "fixture.edge",
-                    "name": "Fixture edge",
-                    "shortLabel": "E",
-                    "detail": "A fixture edge.",
-                    "kind": "edge",
-                    "frame": { "x": 0.1, "y": 0.2, "width": 0.2, "height": 0.4 }
-                  },
-                  {
-                    "id": "fixture.pinch",
-                    "name": "Fixture pinch",
-                    "shortLabel": "P",
-                    "detail": "A fixture pinch.",
-                    "kind": "pinch",
-                    "frame": { "x": 0.4, "y": 0.2, "width": 0.2, "height": 0.4 }
-                  },
-                  {
-                    "id": "fixture.jug",
-                    "name": "Fixture jug",
-                    "shortLabel": "J",
-                    "detail": "A fixture jug.",
-                    "kind": "jug",
-                    "frame": { "x": 0.7, "y": 0.2, "width": 0.2, "height": 0.4 }
-                  }
-                ],
-                "semanticHolds": {
-                  "fixture-target": { "holdIDs": ["fixture.edge"] },
-                  "fixture-fallback": { "kind": "pinch" }
-                },
-                "productURL": "https://example.com/fixture-board"
-              }]
-            }
-            """#.utf8
-        ))
-        let board = try XCTUnwrap(boardStore.boards.first)
+        func hold(id: String, name: String, kind: HoldKind, x: CGFloat) -> BoardHold {
+            BoardHold(
+                id: id,
+                name: name,
+                kind: kind,
+                geometry: [
+                    BoardHoldPiece(
+                        id: "\(id)-piece",
+                        holdID: id,
+                        frame: CGRect(x: x, y: 0.2, width: 0.2, height: 0.4),
+                        shape: .roundedRect(cornerRadiusFraction: 0),
+                        treatment: .surface
+                    )
+                ]
+            )
+        }
+        let board = TrainingBoard(
+            id: "fixture.board",
+            manufacturer: "Fixture Maker",
+            name: "Fixture Board",
+            subtitle: "A test board.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                hold(id: "fixture.edge", name: "Fixture edge", kind: .edge, x: 0.1),
+                hold(id: "fixture.pinch", name: "Fixture pinch", kind: .pinch, x: 0.4),
+                hold(id: "fixture.jug", name: "Fixture jug", kind: .jug, x: 0.7)
+            ],
+            semanticHolds: [
+                "fixture-target": SemanticHoldMappingDefinition(holdIDs: ["fixture.edge"]),
+                "fixture-fallback": SemanticHoldMappingDefinition(kind: .pinch)
+            ],
+            productURL: URL(string: "https://example.com/fixture-board")!,
+            photoAssetName: nil
+        )
         let step = makeStep(
             id: "semantic-target",
             duration: 10,
@@ -1319,7 +1780,7 @@ final class PlanStorageTests: XCTestCase {
             SemanticHoldMappingDefinition(kind: .pinch)
         )
         XCTAssertTrue(
-            boardOnlyLibrary.validationIssues(availableBoards: boardStore.boards).contains {
+            boardOnlyLibrary.validationIssues(availableBoards: [board]).contains {
                 $0.message == "Missing board mapping for \"fixture.board\"."
             }
         )
@@ -1338,11 +1799,11 @@ final class PlanStorageTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(planMappingLibrary.validationIssues(availableBoards: boardStore.boards), [])
+        XCTAssertEqual(planMappingLibrary.validationIssues(availableBoards: [board]), [])
 
         let planMappingStore = try PlanLibraryStore(
             definition: planMappingLibrary,
-            availableBoards: boardStore.boards
+            availableBoards: [board]
         )
         let planMappingTargets = try XCTUnwrap(
             planMappingStore.plan(id: "test.plan")?.steps.first?.targets
@@ -1400,10 +1861,8 @@ final class PlanStorageTests: XCTestCase {
         boardMappings: [BoardMappingDefinition] = []
     ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
-            schemaVersion: 3,
             metadata: PlanLibraryMetadata(
                 id: "test.library",
-                version: "3.0.0",
                 title: "Test library",
                 generatedAt: "2026-08-02"
             ),
@@ -1520,8 +1979,6 @@ final class PlanStorageTests: XCTestCase {
             return ["subtitle", "accessory", "duration", "interval"]
         case "research.max-hangs":
             return ["subtitle", "accessory", "count", "duration", "interval"]
-        case "research.force-feedback-f100":
-            return ["subtitle", "instruction", "count", "interval"]
         case "research.eva-int-hangs":
             return ["subtitle", "instruction", "accessory", "count", "duration", "interval"]
         case "research.abrahangs":

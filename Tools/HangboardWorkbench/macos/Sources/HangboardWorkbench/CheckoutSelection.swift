@@ -5,7 +5,7 @@ final class CheckoutSelection {
         case notHangTenCheckout
 
         var errorDescription: String? {
-            "Choose a Hang Ten checkout containing .git, Hangboards, and the direct Workbench tools."
+            "Choose a local Hang Ten repository copy containing .git and Hangboards."
         }
     }
 
@@ -51,29 +51,36 @@ final class CheckoutSelection {
         guard url.isFileURL else {
             throw ValidationError.notHangTenCheckout
         }
-        let normalized = url.standardizedFileURL.resolvingSymlinksInPath()
-        guard isDirectory(normalized, fileManager: fileManager),
-              fileManager.fileExists(atPath: normalized.appending(path: ".git").path),
-              isDirectory(
-                  normalized.appending(path: "Hangboards"),
+        let lexical = url.standardizedFileURL
+        guard fileType(at: lexical, fileManager: fileManager) != .typeSymbolicLink,
+              isDirectory(lexical, fileManager: fileManager),
+              isRegularFileOrDirectory(
+                  lexical.appending(path: ".git"),
                   fileManager: fileManager
               ),
-              fileManager.fileExists(
-                  atPath: normalized.appending(path: "Tools/HangboardWorkbench/server.py").path
-              ),
-              fileManager.fileExists(
-                  atPath: normalized.appending(path: "Tools/HangboardWorkbench/board_package.py").path
-              ),
-              fileManager.fileExists(
-                  atPath: normalized.appending(path: "Tools/HangboardWorkbench/board_geometry.py").path
+              isDirectory(
+                  lexical.appending(path: "Hangboards"),
+                  fileManager: fileManager
               ) else {
             throw ValidationError.notHangTenCheckout
         }
-        return normalized
+        return lexical.resolvingSymlinksInPath()
     }
 
     private static func isDirectory(_ url: URL, fileManager: FileManager) -> Bool {
-        var isDirectory = ObjCBool(false)
-        return fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue
+        fileType(at: url, fileManager: fileManager) == .typeDirectory
+    }
+
+    private static func isRegularFileOrDirectory(_ url: URL, fileManager: FileManager) -> Bool {
+        switch fileType(at: url, fileManager: fileManager) {
+        case .typeRegular, .typeDirectory:
+            true
+        default:
+            false
+        }
+    }
+
+    private static func fileType(at url: URL, fileManager: FileManager) -> FileAttributeType? {
+        try? fileManager.attributesOfItem(atPath: url.path)[.type] as? FileAttributeType
     }
 }

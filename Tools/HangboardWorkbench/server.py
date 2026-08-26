@@ -26,7 +26,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from ipaddress import ip_address
 from pathlib import Path
 from typing import Any
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 import github_board_store
 from board_package import (
@@ -37,7 +37,7 @@ from board_package import (
     discover_packages,
     editor_document,
     open_package,
-    primary_image_path,
+    presentation_image_path,
     save_editor_document,
 )
 from github_client import (
@@ -158,19 +158,52 @@ def _display_name(package: BoardPackage) -> str:
     return f"{manufacturer} {name}".strip()
 
 
-def _board_payload(package: BoardPackage, *, include_document: bool) -> dict[str, object]:
+def _presentation_image_url(board_id: str, presentation_id: str) -> str:
+    return f"/api/boards/{board_id}/image?presentationID={presentation_id}"
+
+
+def _hold_needs_attention(hold: dict[str, object]) -> bool:
+    return (
+        hold["kind"] in {"edge", "pocket"}
+        and "sizeMillimeters" not in hold
+        and "depthRangeMillimeters" not in hold
+    )
+
+
+def _board_payload(
+    package: BoardPackage,
+    *,
+    include_document: bool,
+    presentation_id: str | None = None,
+) -> dict[str, object]:
     board_id = package.board_id
     payload: dict[str, object] = {
         "boardId": board_id,
         "displayName": _display_name(package),
         "holdCount": len(package.hold_ids),
+        "needsAttention": any(
+            _hold_needs_attention(hold) for hold in package.board["holds"]
+        ),
         "href": f"/api/boards/{board_id}",
+        "imageUrl": f"/api/boards/{board_id}/image",
     }
     if include_document:
+        presentation = package.presentation(presentation_id)
         payload.update(
-            imageUrl=f"/api/boards/{board_id}/image",
+            imageUrl=_presentation_image_url(board_id, presentation.id),
+            holdIDs=list(package.hold_ids),
             saveUrl=f"/api/boards/{board_id}",
-            document=editor_document(package),
+            selectedPresentationID=presentation.id,
+            presentations=[
+                {
+                    "presentationID": item.id,
+                    "displayName": item.name,
+                    "imageUrl": _presentation_image_url(board_id, item.id),
+                    "default": item.is_default,
+                }
+                for item in package.presentations
+            ],
+            document=editor_document(package, presentation.id),
         )
     return payload
 
@@ -301,11 +334,16 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             board_path = path.removeprefix("/api/boards/")
             if board_path.endswith("/image") and "/" not in board_path.removesuffix("/image"):
                 with self._mutation_error_response():
-                    self._get_image(unquote(board_path.removesuffix("/image")))
+                    self._get_image(
+                        unquote(board_path.removesuffix("/image")),
+                        self._presentation_query(request.query),
+                    )
                 return
             if "/" not in board_path:
                 with self._mutation_error_response():
-                    self._get_board(unquote(board_path))
+                    self._get_board(
+                        unquote(board_path), self._presentation_query(request.query)
+                    )
                 return
         filename = next((asset for route, asset in STATIC_ASSET_ROUTES if route == path), None)
         if filename is not None:
@@ -329,21 +367,21 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             if self.server.allow_remote:
                 session = self._github_session()
                 store = self._github_board_store()
-                package = store.open_package(
-                    session.token, session.branch, unquote(board_path)
-                )
-                saved, commit_sha = store.save_editor_document(
+                saved, commit_sha = store.save_board_editor_document(
                     session.token,
                     session.branch,
-                    package.slug,
+                    unquote(board_path),
                     document,
-                    expected_board_id=unquote(board_path),
                 )
                 self._send_json(
                     HTTPStatus.OK,
                     {
                         "ok": True,
-                        "board": _board_payload(saved, include_document=True),
+                        "board": _board_payload(
+                            saved,
+                            include_document=True,
+                            presentation_id=document.get("presentationID"),
+                        ),
                         "commit": commit_sha,
                     },
                 )
@@ -354,7 +392,14 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 )
                 self._send_json(
                     HTTPStatus.OK,
-                    {"ok": True, "board": _board_payload(saved, include_document=True)},
+                    {
+                        "ok": True,
+                        "board": _board_payload(
+                            saved,
+                            include_document=True,
+                            presentation_id=document.get("presentationID"),
+                        ),
+                    },
                 )
 
     def do_POST(self) -> None:  # noqa: N802
@@ -399,7 +444,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json(HTTPStatus.OK, {"ok": True, "boards": boards})
 
-    def _get_board(self, board_id: str) -> None:
+    def _get_board(self, board_id: str, presentation_id: str | None = None) -> None:
         if not board_id:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
@@ -410,7 +455,11 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 package = store.open_package(session.token, session.branch, board_id)
             else:
                 package = open_package(self.server.library_root, board_id)
-            payload = _board_payload(package, include_document=True)
+            payload = _board_payload(
+                package,
+                include_document=True,
+                presentation_id=presentation_id,
+            )
         except BoardNotAvailableError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board is not available"})
             return
@@ -610,23 +659,31 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             },
         )
 
-    def _get_image(self, board_id: str) -> None:
+    def _get_image(self, board_id: str, presentation_id: str | None = None) -> None:
         try:
             if self.server.allow_remote:
                 session = self._github_session()
                 store = self._github_board_store()
-                image = store.primary_image_bytes(
-                    session.token, session.branch, board_id
+                image = store.presentation_image_bytes(
+                    session.token, session.branch, board_id, presentation_id
                 )
-                self._send_bytes(image, "primary.png")
+                self._send_bytes(image, "presentation.png")
             else:
                 package = open_package(self.server.library_root, board_id)
-                image = primary_image_path(package)
+                image = presentation_image_path(package, presentation_id)
                 self._send_file(image)
         except BoardPackageError:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "board image is unavailable"})
         except OSError:
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": "board image is unavailable"})
+
+    def _presentation_query(self, query: str) -> str | None:
+        values = parse_qs(query, keep_blank_values=True)
+        if not values:
+            return None
+        if set(values) != {"presentationID"} or len(values["presentationID"]) != 1:
+            raise RequestError(HTTPStatus.BAD_REQUEST, "invalid presentation query")
+        return values["presentationID"][0]
 
     @contextmanager
     def _mutation_error_response(self) -> Iterator[None]:
@@ -655,6 +712,7 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
                 {
                     "ok": False,
                     "error": "GitHub authentication expired or insufficient permissions",
+                    "login_url": "/auth/login",
                 },
             )
         except GitHubTransportError:
@@ -1079,7 +1137,7 @@ def _loopback_origin(value: object, selected_port: int) -> tuple[str, int] | Non
 
 
 def validate_hang_ten_checkout(root: Path) -> Path:
-    """Accept a checkout containing the direct Workbench and board library."""
+    """Accept a local Git checkout or worktree containing the board library."""
     resolved_root = _resolved_lexical_directory(
         root,
         unavailable_message="repository root must be a Hang Ten checkout",
@@ -1087,17 +1145,9 @@ def validate_hang_ten_checkout(root: Path) -> Path:
     )
     git_marker = resolved_root / ".git"
     hangboards = resolved_root / "Hangboards"
-    workbench = resolved_root / "Tools" / "HangboardWorkbench"
-    source_files = (
-        workbench / "server.py",
-        workbench / "board_package.py",
-        workbench / "board_geometry.py",
-    )
     if (
         not _is_lexical_file_or_directory(git_marker)
         or not _is_lexical_directory(hangboards)
-        or not _is_lexical_directory(workbench)
-        or any(not _is_lexical_file(source_file) for source_file in source_files)
     ):
         raise EditorError("repository root must be a Hang Ten checkout")
     return resolved_root
@@ -1127,13 +1177,6 @@ def _resolved_lexical_directory(
 def _is_lexical_directory(path: Path) -> bool:
     try:
         return stat.S_ISDIR(path.lstat().st_mode)
-    except OSError:
-        return False
-
-
-def _is_lexical_file(path: Path) -> bool:
-    try:
-        return stat.S_ISREG(path.lstat().st_mode)
     except OSError:
         return False
 
@@ -1247,9 +1290,22 @@ def _argument_parser() -> ArgumentParser:
     return parser
 
 
-def _server_from_cli(arguments: list[str] | None = None, *, editor_root: Path = EDITOR_ROOT) -> tuple[WorkbenchHTTPServer, None]:
+def _server_from_cli(
+    arguments: list[str] | None = None,
+    *,
+    editor_root: Path = EDITOR_ROOT,
+    local_checkout: bool = False,
+) -> tuple[WorkbenchHTTPServer, None]:
     parser = _argument_parser()
     parsed = parser.parse_args(arguments)
+    if local_checkout:
+        if parsed.allow_remote:
+            parser.error("local checkout mode does not support --allow-remote")
+    elif not parsed.allow_remote:
+        parser.error(
+            "browser-hosted Workbench requires --allow-remote; "
+            "local checkout mode is available only in the packaged macOS app"
+        )
     if parsed.allow_remote and (
         not parsed.github_client_id
         or not parsed.github_client_secret
