@@ -1362,6 +1362,58 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-15",
+      "name": "Hold 15",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.747565701555,
+            "y": 0.296337782147,
+            "width": 0.20302851555,
+            "height": 0.059525001063
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.018515603853
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.984812678545,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.979888428095
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.016375807959,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
