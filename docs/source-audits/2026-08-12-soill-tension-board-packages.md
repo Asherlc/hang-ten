@@ -301,9 +301,11 @@ already present before this batch. In particular:
 - The final 1536 × 1024 RGBA presentation was reviewed on a dark canvas. A
   second bounded isolated-simulator run (iPhone 17 Pro / iOS 26.3) displayed
   the normal board plus the in-app active 25 mm flat-rail preview and active
-  round-sloper state; their overlays aligned with opaque board material. The
-  simulator command interface exposes no supported touch injection and the
-  macOS accessibility window was unavailable in this environment, so a
-  physical tap-resolution assertion remains pending. The app's interaction
-  path is nevertheless the same canonical `BoardHoldPathShape` used for the
-  visual overlay; no geometry was changed for this presentation-only repair.
+  round-sloper state; their overlays aligned with opaque board material. A
+  focused XCTest UI test now launches the existing Debug board picker, opens
+  Iron Palm, taps its accessibility-exposed `Right sloper` board-map button,
+  and observes `boardDetail.selectedHold.sloper-right`. The test log records
+  the deterministic `Tap "Right sloper" Button` event before that selected-hold
+  assertion passes, establishing the selected canonical path's in-app tap
+  resolution without changing geometry. The app's interaction path remains
+  the canonical `BoardHoldPathShape` used for the visual overlay.
