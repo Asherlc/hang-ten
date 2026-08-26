@@ -87,3 +87,66 @@ The canonical ledger accounts for all 154 required outcomes: 22 verified
 mandatory kinds, 127 unavailable optional fields, five not-applicable finger
 capacities, and zero unaccounted fields. Beastmaker 2000 remains outside this
 certification; no value or ruling from the 1000 was transferred to it.
+
+## 2026-08-25 Beastmaker 2000 conservative metadata cleanup
+
+The current [Beastmaker 2000 product
+page](https://www.beastmaker.co.uk/products/beastmaker-2000-series), its linked
+[official straight-on
+front](https://cdn.shopify.com/s/files/1/0107/6442/files/2000_Small_Tulip.jpg?v=1756734230),
+and the post-repair stable-ID capture at
+`.context/hangboard-metadata-backfill-icky-cow/beastmaker-2000-geometry-repair/beastmaker-2000--305c473cc719.png`
+were manually reconciled. The capture identifies existing canonical paths; it
+does not supply a physical type, measurement, capacity, posture, or feature.
+
+### Mandatory-kind blocker
+
+The package remains deliberately excluded from the canonical reviewed metadata
+ledger. Beastmaker publishes a grouped inventory, but no numbered or positioned
+type guide for the 19 mixed front contacts below:
+
+- `front-middle-1` through `front-middle-9`;
+- `front-lower-1` through `front-lower-4` and `front-lower-6` through
+  `front-lower-9`; and
+- the nested contacts `hold-26` and `hold-27`.
+
+Those source families mix a four-finger jug, big and little edges, several
+pocket families, and monos. The official unlabelled front does not establish
+which stable ID belongs to which family. Therefore their existing mandatory
+`kind` values are unchanged but not certified. The already source-mapped
+exceptions are the five top slopers, the two upper “Back 2 Pockets,” and the
+central 22 mm middle edge. A Beastmaker-published positioned guide or direct
+written manufacturer clarification is required before this board can enter
+`reviewedBoardIDs`; a retailer diagram or a visual-width inference is not a
+substitute.
+
+No `kind`, geometry, presentation asset, stable ID, or hold count changed in
+this cleanup. In particular, the directly reviewed compound parent paths
+`front-middle-{3,7}` and nested paths `hold-{26,27}` remain intact and
+non-overlapping.
+
+### Deliberate optional blanks
+
+All 24 existing `fingerCapacity` values were removed because the grouped source
+does not position a capacity on an exact stable ID. This includes four top
+slopers (`top-sloper-1`, `top-sloper-2`, `top-sloper-4`, and `hold-28`), all 19
+unmapped mixed front contacts (including both compound parents and both nested
+contacts), and `front-lower-5`. The latter remains the source-backed
+`sizeMillimeters: 22` center edge, but an edge depth does not establish its
+three-finger capacity.
+
+The exact package state after cleanup is:
+
+| Optional field | Populated contacts | Intentionally blank contacts |
+| --- | --- | ---: |
+| `sizeMillimeters` | `front-lower-5`: 22 mm | 26 |
+| `depthRangeMillimeters` | none | 27 |
+| `fingerCapacity` | none | 27 |
+| `handCapacity` | none | 27 |
+| `gripType` | none | 27 |
+| `features` | none | 27 |
+
+The grouped angle labels are not depth measurements, and the source publishes
+no exact per-contact range, simultaneous hand capacity, supported grip enum, or
+closed feature-tag array. These blanks are intentional evidence boundaries,
+not incomplete metadata.

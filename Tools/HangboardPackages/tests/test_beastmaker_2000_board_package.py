@@ -646,3 +646,20 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
         hold_axis_x = hold_x + hold_width / 2
         assert hold_axis_x == pytest.approx(symmetry_axis_x, abs=2e-3)
     assert 0 < symmetry_axis_x < presentation_size[0]
+
+
+def test_beastmaker_2000_omits_unpositioned_optional_metadata() -> None:
+    holds = {
+        hold.id: hold for hold in load_board_package(PACKAGE_ROOT).board.holds
+    }
+
+    assert {
+        hold.id: hold.size_millimeters
+        for hold in holds.values()
+        if hold.size_millimeters is not None
+    } == {"front-lower-5": 22}
+    assert all(hold.depth_range_millimeters is None for hold in holds.values())
+    assert all(hold.finger_capacity is None for hold in holds.values())
+    assert all(hold.hand_capacity is None for hold in holds.values())
+    assert all(hold.grip_type is None for hold in holds.values())
+    assert all(hold.features is None for hold in holds.values())
