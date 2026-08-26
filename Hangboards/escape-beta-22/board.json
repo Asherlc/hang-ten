@@ -1050,16 +1050,17 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-09-center",
-      "name": "Hold 09 Center",
+      "id": "hold-09-left",
+      "name": "Left 50mm Sloper Edge",
       "kind": "sloper",
+      "sizeMillimeters": 50,
       "geometry": [
         {
           "frame": {
-            "x": 0.380146330672,
-            "y": 0.04339135533,
-            "width": 0.117524993347,
-            "height": 0.189075649746
+            "x": 0.377080505656,
+            "y": 0.07847715736,
+            "width": 0.120590818363,
+            "height": 0.153989847716
           },
           "shape": {
             "type": "path",
@@ -1068,21 +1069,21 @@
                 "command": "move",
                 "to": [
                   0.0,
-                  0.002428593094
+                  0.253164556962
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.227366056506,
+                  0.25,
                   0.0
                 ],
                 "control2": [
-                  0.709626748609,
+                  0.72,
                   0.0
                 ],
                 "to": [
-                  0.996930990713,
+                  1.0,
                   0.0
                 ]
               },
@@ -1096,16 +1097,31 @@
               {
                 "command": "curve",
                 "control1": [
-                  0.712695757896,
+                  0.72,
                   1.0
                 ],
                 "control2": [
-                  0.199652468425,
+                  0.22,
                   1.0
                 ],
                 "to": [
-                  0.014956884215,
-                  0.886597642826
+                  0.04,
+                  0.860759493671
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.683544303797
+                ],
+                "control2": [
+                  0.0,
+                  0.430379746835
+                ],
+                "to": [
+                  0.0,
+                  0.253164556962
                 ]
               },
               {
@@ -1113,7 +1129,16 @@
               }
             ]
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "hold-09-right",
+      "name": "Right 50mm Sloper Edge",
+      "kind": "sloper",
+      "sizeMillimeters": 50,
+      "geometry": [
         {
           "frame": {
             "x": 0.497671324019,
@@ -1193,9 +1218,178 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-11-center",
-      "name": "Hold 11 Center",
+      "id": "hold-10-left",
+      "name": "Left 31mm Sloper Edge",
       "kind": "sloper",
+      "sizeMillimeters": 31,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.372993,
+            "y": 0.42425,
+            "width": 0.124678324019,
+            "height": 0.1359
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.084337349398
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.28,
+                  0.0
+                ],
+                "control2": [
+                  0.72,
+                  0.0
+                ],
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.72,
+                  1.0
+                ],
+                "control2": [
+                  0.22,
+                  1.0
+                ],
+                "to": [
+                  0.04,
+                  0.807228915663
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.626506024096
+                ],
+                "control2": [
+                  0.0,
+                  0.277108433735
+                ],
+                "to": [
+                  0.0,
+                  0.084337349398
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "hold-10-right",
+      "name": "Right 31mm Sloper Edge",
+      "kind": "sloper",
+      "sizeMillimeters": 31,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.497671324019,
+            "y": 0.42425,
+            "width": 0.124678324019,
+            "height": 0.1359
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.084337349398
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.72,
+                  0.0
+                ],
+                "control2": [
+                  0.28,
+                  0.0
+                ],
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.28,
+                  1.0
+                ],
+                "control2": [
+                  0.78,
+                  1.0
+                ],
+                "to": [
+                  0.96,
+                  0.807228915663
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.626506024096
+                ],
+                "control2": [
+                  1.0,
+                  0.277108433735
+                ],
+                "to": [
+                  1.0,
+                  0.084337349398
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "hold-11-left",
+      "name": "Left 12mm Sloper Edge",
+      "kind": "sloper",
+      "sizeMillimeters": 12,
       "geometry": [
         {
           "frame": {
@@ -1271,7 +1465,16 @@
               }
             ]
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "hold-11-right",
+      "name": "Right 12mm Sloper Edge",
+      "kind": "sloper",
+      "sizeMillimeters": 12,
+      "geometry": [
         {
           "frame": {
             "x": 0.497671324019,

@@ -90,12 +90,43 @@ supported feature-tag set for the edge tiers.
 
 ### Deferred packages from this manufacturer batch
 
-- `escape-beta-22` remains outside `reviewedBoardIDs`. Escape's official
-  numbered breakdown shows 22 physical contacts, while the package combines
-  the left/right #9 and #11 contacts and has no #10 contacts. Metadata cannot
-  make that inventory one-to-one; it requires a separate reviewed inventory
-  and geometry reconciliation.
+- At the time of this metadata batch, `escape-beta-22` remained outside
+  `reviewedBoardIDs`. Escape's official numbered breakdown showed 22 physical
+  contacts, while the package combined the left/right #9 and #11 contacts and
+  had no #10 contacts. The later geometry reconciliation below supersedes this
+  inventory blocker; metadata-ledger certification remains a separate step.
 - `dewoodstok.woodbord` remains outside `reviewedBoardIDs`. No current primary
   DeWoodstok product page, manual, or labelled official view was retrievable,
   so even the mandatory per-hold `kind` values cannot be source-verified.
   Retailer lists were not substituted for manufacturer evidence.
+
+## 2026-08-25 direct geometry reconciliation: Escape Beta Board
+
+The current [Beta Board product page](https://escapeclimbing.com/products/ec72100),
+[official numbered breakdown](https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445),
+and [official straight-on front](https://escapeclimbing.com/cdn/shop/products/2020_Website_ProductImage_BetaBoardListing_01-02.jpg?v=1700454580&width=1445)
+establish eleven separate contacts on each symmetric side. The numbered
+breakdown is the controlling position and measurement source:
+
+| Official positions | Canonical stable IDs | Source label | Package adaptation |
+| --- | --- | --- | --- |
+| #9 left/right | `hold-09-left`, `hold-09-right` | 50mm Sloper Edge | Separate mirrored `sloper` records, 50 mm each |
+| #10 left/right | `hold-10-left`, `hold-10-right` | 31mm Sloper Edge | Separate mirrored `sloper` records, 31 mm each |
+| #11 left/right | `hold-11-left`, `hold-11-right` | 12mm Sloper Edge | Separate mirrored `sloper` records, 12 mm each |
+
+`sloper` is the conservative closed-taxonomy representation of Escape's exact
+“Sloper Edge” term. The former compound #9 and #11 records were separated into
+one logical record per physical contact. The #10 pair was deliberately drawn
+over the previously unclaimed middle sloper-edge surfaces against the official
+front, then mirrored about the board's physical symmetry line. The retained
+#9 pair was also restored to exact symmetry. No detection, segmentation,
+registration, vectorization, automatic path simplification, or generated
+contour informed these canonical paths.
+
+The review-only Workbench stable-ID capture is
+`.context/hangboard-metadata-backfill-icky-cow/escape-beta-geometry-repair/visible-id-capture/escape-beta-22--245680ffb240.png`.
+Its manifest reports 22 logical contacts and the manual overlay review confirms
+independent left/right #9, #10, and #11 regions aligned to the three official
+center tiers. The inventory repair does not itself add the board to the shared
+metadata ledger; unsupported range, capacity, grip, and feature fields remain
+blank for the six sloper-edge records.
