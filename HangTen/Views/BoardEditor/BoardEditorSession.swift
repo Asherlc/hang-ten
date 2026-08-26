@@ -25,6 +25,8 @@ final class BoardEditorSession: ObservableObject {
         case pieceNotEditable
         case invalidGeometry(String)
         case segmentNotEditable
+        case sloperMetadataUnavailable
+        case invalidSloperAngle
 
         var errorDescription: String? {
             switch self {
@@ -36,6 +38,10 @@ final class BoardEditorSession: ObservableObject {
                 reason
             case .segmentNotEditable:
                 "Choose a vertex first."
+            case .sloperMetadataUnavailable:
+                "Select a sloper with flat-surface metadata first."
+            case .invalidSloperAngle:
+                "Sloper angle must be between 0 and 90 degrees."
             }
         }
     }
@@ -284,6 +290,43 @@ final class BoardEditorSession: ObservableObject {
     }
 
     // MARK: - Discrete edits
+
+    func setSelectedSloperType(_ type: SloperType?) throws {
+        guard let selection = selectedPiece,
+              let holdIndex = document.holds.firstIndex(where: { $0.id == selection.holdID }),
+              document.holds[holdIndex].kind == .sloper else {
+            throw SessionError.sloperMetadataUnavailable
+        }
+        let current = document.holds[holdIndex].sloper
+        if current?.type == type || (current == nil && type == nil) {
+            return
+        }
+        let updated = type.map { SloperMetadata(type: $0, angleDegrees: nil) }
+        pushHistory()
+        document.holds[holdIndex].sloper = updated
+        isSaved = false
+    }
+
+    func setSelectedSloperAngleDegrees(_ angleDegrees: Double?) throws {
+        guard let selection = selectedPiece,
+              let holdIndex = document.holds.firstIndex(where: { $0.id == selection.holdID }),
+              document.holds[holdIndex].kind == .sloper,
+              let current = document.holds[holdIndex].sloper,
+              current.type == .flat else {
+            throw SessionError.sloperMetadataUnavailable
+        }
+        if let angleDegrees,
+           !angleDegrees.isFinite || !(0...90).contains(angleDegrees) {
+            throw SessionError.invalidSloperAngle
+        }
+        guard current.angleDegrees != angleDegrees else { return }
+        pushHistory()
+        document.holds[holdIndex].sloper = SloperMetadata(
+            type: .flat,
+            angleDegrees: angleDegrees
+        )
+        isSaved = false
+    }
 
     func addVertexAfterAnchor(index: Int) throws {
         try mutateSelectedBoardPath(recordsHistory: true) { boardPath, bendableFlags in

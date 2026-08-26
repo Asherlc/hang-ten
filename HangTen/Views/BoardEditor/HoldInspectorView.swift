@@ -11,6 +11,9 @@ struct HoldInspectorView: View {
                 header
                 if let hold = session.selectedHold {
                     pieceTabs(hold)
+                    if hold.kind == .sloper {
+                        sloperSection
+                    }
                     if session.isRoundedRectPiece {
                         roundedRectNotice
                     } else if let piece = session.selectedPieceDocument {
@@ -40,6 +43,53 @@ struct HoldInspectorView: View {
                 Button("Done") { dismiss() }
             }
         }
+    }
+
+    private var sloperSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionLabel(title: "Sloper")
+            Picker("Sloper type", selection: Binding<SloperType?>(
+                get: { session.selectedHold?.sloper?.type },
+                set: { type in
+                    perform { try session.setSelectedSloperType(type) }
+                }
+            )) {
+                Text("Unspecified").tag(SloperType?.none)
+                Text("Flat").tag(SloperType?.some(.flat))
+                Text("Round").tag(SloperType?.some(.round))
+            }
+            .pickerStyle(.segmented)
+
+            if session.selectedHold?.sloper?.type == .flat {
+                HStack(spacing: 10) {
+                    TextField(
+                        "Unspecified",
+                        value: Binding<Double?>(
+                            get: { session.selectedHold?.sloper?.angleDegrees },
+                            set: { angle in
+                                perform { try session.setSelectedSloperAngleDegrees(angle) }
+                            }
+                        ),
+                        format: .number.precision(.fractionLength(0...2))
+                    )
+                    .keyboardType(.decimalPad)
+                    .textFieldStyle(.roundedBorder)
+                    .accessibilityLabel("Sloper angle")
+
+                    Text("degrees")
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+
+                    if session.selectedHold?.sloper?.angleDegrees != nil {
+                        Button("Clear") {
+                            perform { try session.setSelectedSloperAngleDegrees(nil) }
+                        }
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                    }
+                }
+            }
+        }
+        .hangCard(padding: 14)
     }
 
     private var header: some View {
