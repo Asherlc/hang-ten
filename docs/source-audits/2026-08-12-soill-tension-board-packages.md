@@ -299,7 +299,11 @@ already present before this batch. In particular:
   watermark.” The generated chroma-key image was converted using the supported
   chroma-key workflow; no repository backdrop-removal migration was used.
 - The final 1536 × 1024 RGBA presentation was reviewed on a dark canvas. A
-  bounded isolated-simulator attempt installed and launched the app but
-  remained at the iOS splash screen, so the required in-app normal,
-  active-rail, active-sloper, and hit-test confirmation remains pending; no
-  alignment claim is made from that attempt.
+  second bounded isolated-simulator run (iPhone 17 Pro / iOS 26.3) displayed
+  the normal board plus the in-app active 25 mm flat-rail preview and active
+  round-sloper state; their overlays aligned with opaque board material. The
+  simulator command interface exposes no supported touch injection and the
+  macOS accessibility window was unavailable in this environment, so a
+  physical tap-resolution assertion remains pending. The app's interaction
+  path is nevertheless the same canonical `BoardHoldPathShape` used for the
+  visual overlay; no geometry was changed for this presentation-only repair.
