@@ -6,6 +6,7 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 project_path="$repo_root/HangTen.xcodeproj"
 icon_dir="$repo_root/HangTen/Resources/Assets.xcassets/AppIcon.appiconset"
 contents_path="$icon_dir/Contents.json"
+copyright_path="$repo_root/metadata/version/1.0.0/copyright.txt"
 swift_package_cache_args=()
 
 if [[ -n "${SWIFT_PACKAGE_CACHE_PATH:-}" ]]; then
@@ -52,6 +53,9 @@ require_setting() {
 }
 
 test -f "$contents_path" || fail "missing AppIcon Contents.json"
+test -f "$copyright_path" || fail "missing canonical App Store copyright"
+[[ "$(<"$copyright_path")" == "© 2026 Hang Ten" ]] \
+  || fail "canonical App Store copyright must be © 2026 Hang Ten"
 require_icon_entry "AppIcon-60@2x.png" "60x60"
 require_icon_entry "AppIcon-76@2x.png" "76x76"
 require_icon_entry "AppIcon-83.5@2x.png" "83.5x83.5"
