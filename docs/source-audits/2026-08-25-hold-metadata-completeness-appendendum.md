@@ -12,8 +12,9 @@ render or photograph.
 
 ## Result
 
-`kind` is complete: all 706 current hold records have one of the schema's five
-classes. A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
+The package catalog has 706 current hold records. The ledger reviews 679 holds:
+653 have manufacturer-verified kinds and 26 have explicitly labelled adapted
+kinds. A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
 gap: capacity is meaningful only for a source-labelled finger pocket. Likewise,
 `sizeMillimeters` is only used for a source-mapped single depth; a continuous
 surface with several published depths uses `depthRangeMillimeters` when the

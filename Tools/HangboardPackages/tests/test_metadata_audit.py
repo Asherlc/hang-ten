@@ -773,6 +773,16 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
     }
     assert expected_adaptations <= adapted_kind_ids
 
+    training_tile_pocket_sloper = next(
+        record
+        for record in records
+        if record["boardID"] == "soill.training-tiles"
+        and record["field"] == "sloper"
+        and "top-pocket-outer-left" in record["holdIDs"]
+    )
+    assert "non-pocket" not in training_tile_pocket_sloper["reason"]
+    assert "adapted pocket contact role" in training_tile_pocket_sloper["reason"]
+
 
 def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> None:
     repository_root = Path(__file__).resolve().parents[3]
