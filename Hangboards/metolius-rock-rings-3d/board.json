@@ -94,6 +94,7 @@
       "kind": "pocket",
       "sizeMillimeters": 40,
       "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -205,6 +206,7 @@
       "kind": "pocket",
       "sizeMillimeters": 32,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -316,6 +318,7 @@
       "kind": "pocket",
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -499,6 +502,7 @@
       "kind": "pocket",
       "sizeMillimeters": 40,
       "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -610,6 +614,7 @@
       "kind": "pocket",
       "sizeMillimeters": 32,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -721,6 +726,7 @@
       "kind": "pocket",
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "presentationID": "front-pair",
       "geometry": [
         {

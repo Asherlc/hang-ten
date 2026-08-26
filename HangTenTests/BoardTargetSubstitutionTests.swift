@@ -66,6 +66,23 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["a"])
     }
 
+    func testUntaggedThreeFingerPocketSubstitutionKeepsOneHoldPerHand() {
+        let board = board(holds: [
+            hold(id: "left-29", kind: .pocket, fingerCapacity: 3, x: 0.1),
+            hold(id: "left-19", kind: .pocket, fingerCapacity: 3, x: 0.3),
+            hold(id: "right-29", kind: .pocket, fingerCapacity: 3, x: 0.7),
+            hold(id: "right-19", kind: .pocket, fingerCapacity: 3, x: 0.9)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .feature(.pocket, fingerCapacity: 3),
+                on: board
+            ),
+            ["left-29", "right-29"]
+        )
+    }
+
     func testSameKindEdgeCandidateOutranksPocketSubstitution() {
         let board = board(holds: [
             hold(id: "edge", kind: .edge, feature: .mediumEdge),
@@ -359,7 +376,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
-    func testBeastmaker2000OpenHandLargeEdgeHighlightsMirroredOuterEdges() throws {
+    func testBeastmaker2000OpenHandLargeEdgeUsesTheOnlySourceMeasuredEdge() throws {
         let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
@@ -377,7 +394,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             gripType: .openHand
         )
 
-        XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-lower-1", "front-lower-9"])
+        XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-lower-5"])
     }
 
     @MainActor

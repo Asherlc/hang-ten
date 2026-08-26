@@ -530,6 +530,7 @@
       "kind": "pocket",
       "sizeMillimeters": 28,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -655,6 +656,7 @@
       "kind": "pocket",
       "sizeMillimeters": 28,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -783,10 +785,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.096795783149,
-            "y": 0.457671958564,
-            "width": 0.094154228591,
-            "height": 0.034932755985
+            "x": 0.086977254834,
+            "y": 0.44114690884,
+            "width": 0.14,
+            "height": 0.0165
           },
           "shape": {
             "type": "path",
@@ -794,82 +796,29 @@
               {
                 "command": "move",
                 "to": [
-                  0.139131125981,
+                  0.0,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.860868874019,
+                  1.0,
                   0.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.93770887241,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.223857607195
-                ],
+                "command": "line",
                 "to": [
                   1.0,
-                  0.49999998682
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.776142366446
-                ],
-                "control2": [
-                  0.93770887241,
-                  1.0
-                ],
-                "to": [
-                  0.860868874019,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.139131125981,
+                  0.0,
                   1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.06229112759,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.776142366446
-                ],
-                "to": [
-                  0.0,
-                  0.49999998682
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.223857607195
-                ],
-                "control2": [
-                  0.06229112759,
-                  0.0
-                ],
-                "to": [
-                  0.139131125981,
-                  0.0
                 ]
               },
               {
@@ -878,7 +827,124 @@
             ]
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-16-right",
+      "name": "Right 16 mm four-finger bar",
+      "kind": "edge",
+      "sizeMillimeters": 16,
+      "fingerCapacity": 4,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.773022745166,
+            "y": 0.44114690884,
+            "width": 0.14,
+            "height": 0.0165
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "pocket-37-left",
+      "name": "Left 37 mm four-finger pocket",
+      "kind": "pocket",
+      "sizeMillimeters": 37,
+      "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.086977254834,
+            "y": 0.45764690884,
+            "width": 0.14,
+            "height": 0.0165
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
             "rotationDegrees": 0.0
           }
         }
@@ -891,6 +957,7 @@
       "kind": "pocket",
       "sizeMillimeters": 37,
       "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -949,6 +1016,7 @@
       "kind": "pocket",
       "sizeMillimeters": 45,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1060,6 +1128,7 @@
       "kind": "pocket",
       "sizeMillimeters": 45,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1185,6 +1254,7 @@
       "kind": "pocket",
       "sizeMillimeters": 50,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1296,6 +1366,7 @@
       "kind": "pocket",
       "sizeMillimeters": 50,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1545,6 +1616,7 @@
       "kind": "pocket",
       "sizeMillimeters": 30,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1656,6 +1728,7 @@
       "kind": "pocket",
       "sizeMillimeters": 30,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1781,6 +1854,7 @@
       "kind": "pocket",
       "sizeMillimeters": 24,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {
@@ -1892,6 +1966,7 @@
       "kind": "pocket",
       "sizeMillimeters": 24,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "geometry": [
         {
           "frame": {

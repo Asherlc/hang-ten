@@ -42,25 +42,14 @@ MIRRORED_PAIRS = (
     *((f"front-middle-{left}", f"front-middle-{5 - left}") for left in range(1, 3)),
     *((f"front-lower-{left}", f"front-lower-{7 - left}") for left in range(1, 4)),
 )
-EXPECTED_FINGER_CAPACITIES = {
-    "top-rim": None,
-    "front-upper-1": 4,
-    "front-upper-2": 2,
-    "front-upper-3": 4,
-    "front-upper-4": 4,
-    "front-upper-5": 2,
-    "front-upper-6": 4,
-    "front-middle-1": 4,
-    "front-middle-2": 4,
-    "front-middle-3": 4,
-    "front-middle-4": 4,
-    "front-lower-1": 4,
-    "front-lower-2": 2,
-    "front-lower-3": 4,
-    "front-lower-4": 4,
-    "front-lower-5": 2,
-    "front-lower-6": 4,
-}
+OPTIONAL_HOLD_METADATA_FIELDS = (
+    "sizeMillimeters",
+    "depthRangeMillimeters",
+    "fingerCapacity",
+    "handCapacity",
+    "gripType",
+    "features",
+)
 TOP_RIM_COMMAND_SIGNATURE = (
     ("move", (0.048229873043, 0.002568095969), None, None, None),
     ("line", (0.957526152209, 0.054875575786), None, None, None),
@@ -232,13 +221,13 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert all(hold["presentationID"] == "primary" for hold in holds.values())
     assert tuple(hold["id"] for hold in board["holds"]) == EXPECTED_HOLDS
     assert tuple(holds) == EXPECTED_HOLDS
-    assert Counter(hold["kind"] for hold in holds.values()) == {"pocket": 16, "jug": 1}
-    assert holds["top-rim"]["kind"] == "jug"
+    assert Counter(hold["kind"] for hold in holds.values()) == {"pocket": 16, "sloper": 1}
+    assert holds["top-rim"]["kind"] == "sloper"
     assert all(holds[hold_id]["kind"] == "pocket" for hold_id in EXPECTED_HOLDS[1:])
-    assert all("sizeMillimeters" not in hold for hold in holds.values())
-    assert all("depthRangeMillimeters" not in hold for hold in holds.values())
-    assert all("gripType" not in hold for hold in holds.values())
-    assert all("features" not in hold for hold in holds.values())
+    assert all(
+        set(OPTIONAL_HOLD_METADATA_FIELDS).isdisjoint(hold)
+        for hold in holds.values()
+    )
 
     crop_translation = None
     for hold in holds.values():
@@ -287,9 +276,6 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert symmetry_axis_x is not None
     assert 0 < symmetry_axis_x < 1
 
-    capacities = Counter(hold.get("fingerCapacity") for hold in holds.values())
-    assert capacities == {4: 12, 2: 4, None: 1}
-    assert {hold_id: hold.get("fingerCapacity") for hold_id, hold in holds.items()} == EXPECTED_FINGER_CAPACITIES
     actual_signatures = {hold_id: _command_signature(hold) for hold_id, hold in holds.items()}
     assert actual_signatures.keys() == EXPECTED_PATH_SIGNATURES.keys()
     for hold_id, expected_signature in EXPECTED_PATH_SIGNATURES.items():
@@ -297,10 +283,7 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
 
     raw_document = (PACKAGE_ROOT / "board.json").read_text(encoding="utf-8")
     for forbidden in (
-        "sizeMillimeters",
-        "depthRangeMillimeters",
-        "gripType",
-        "features",
+        *OPTIONAL_HOLD_METADATA_FIELDS,
         "cueStyle",
         "shortLabel",
         "detail",

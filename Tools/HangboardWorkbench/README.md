@@ -119,6 +119,11 @@ and a labeled `contact-sheet.png`. It uses a dedicated capture-only loopback
 launcher rather than the browser-hosted server, then terminates its Chrome and
 server children before returning.
 
+For metadata mapping review, add `--hold-id-labels`. This overlays one
+high-contrast, non-interactive SVG label for each logical `metadata.holdID` at
+the union center of that hold's rendered pieces. The labels exist only while a
+screenshot is taken; they do not edit board data or geometry.
+
 ## Outline shape constraints
 
 The **Outline shape** picker reflects the selected geometry piece and offers

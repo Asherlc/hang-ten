@@ -11,6 +11,9 @@
       "id": "jug-left",
       "name": "Left top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -96,6 +99,9 @@
       "id": "jug-right",
       "name": "Right top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -181,6 +187,7 @@
       "id": "sloper-43-left",
       "name": "Left 43-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -266,6 +273,7 @@
       "id": "sloper-43-right",
       "name": "Right 43-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -351,6 +359,7 @@
       "id": "sloper-38-left",
       "name": "Left 38-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -436,6 +445,7 @@
       "id": "sloper-38-right",
       "name": "Right 38-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -521,6 +531,7 @@
       "id": "sloper-30-center",
       "name": "Center 30-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -1095,6 +1106,10 @@
       "kind": "pocket",
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -1220,6 +1235,10 @@
       "kind": "pocket",
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -1344,6 +1363,9 @@
       "name": "Left upper mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -1440,6 +1462,9 @@
       "name": "Right upper mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -1537,6 +1562,10 @@
       "kind": "pocket",
       "sizeMillimeters": 20,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -1662,6 +1691,10 @@
       "kind": "pocket",
       "sizeMillimeters": 20,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -2239,6 +2272,9 @@
       "name": "Left lower mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -2335,6 +2371,9 @@
       "name": "Right lower mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {

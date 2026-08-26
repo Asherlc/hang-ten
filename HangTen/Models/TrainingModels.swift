@@ -2317,11 +2317,8 @@ enum LegacyPlanSeedCatalog {
             if !target.holdIDs.isEmpty {
                 return Set(target.holdIDs).isSubset(of: boardHoldIDs)
             }
-            if let feature = target.feature {
-                let acceptedFeatures = [feature] + target.fallbackFeatures
-                return board.holds.contains { hold in
-                    !(hold.features ?? []).isDisjoint(with: acceptedFeatures)
-                }
+            if target.feature != nil {
+                return !BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty
             }
             if let kind = target.kind {
                 return board.holds.contains { $0.kind == kind }

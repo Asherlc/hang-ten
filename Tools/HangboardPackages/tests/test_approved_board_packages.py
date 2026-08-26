@@ -166,30 +166,30 @@ COMPACT_HOLD_BOUNDS = {
     "edge-19-right": (0.785154857012, 0.640384105033, 0.14809514298799997, 0.20808716411399997),
 }
 
-# Each value is (source-backed kind, depth, capacity, structural pocket grip,
-# app semantic routing). Pocket grip types are the direct semantic encoding of
-# visible/source-backed capacity, not manufacturer posture prescriptions. The
-# feature tuple is an app compatibility adaptation, not a manufacturer grip fact.
-COMPACT_HOLD_SOURCE_FACTS_AND_ROUTING = {
-    "jug-left": ("jug", None, 4, None, ("jug",)),
-    "sloper-flat-left": ("sloper", 56, 4, None, ("largeSlope",)),
-    "sloper-round-center": ("sloper", 56, 4, None, ("roundSloper",)),
-    "sloper-flat-right": ("sloper", 56, 4, None, ("largeSlope",)),
-    "jug-right": ("jug", None, 4, None, ("jug",)),
-    "edge-29-left": ("edge", 29, 4, None, ("largeEdge",)),
-    "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", ("pocket",)),
-    "pocket-29-two-left": ("pocket", 29, 2, "twoFingerPocket", ("pocket",)),
-    "pocket-29-four-center": ("pocket", 29, 4, "fourFingerPocket", ("pocket",)),
-    "pocket-29-two-right": ("pocket", 29, 2, "twoFingerPocket", ("pocket",)),
-    "pocket-29-three-right": ("pocket", 29, 3, "threeFingerPocket", ("pocket",)),
-    "edge-29-right": ("edge", 29, 4, None, ("largeEdge",)),
-    "edge-19-left": ("edge", 19, 4, None, ("mediumEdge", "smallEdge")),
-    "pocket-19-three-left": ("pocket", 19, 3, "threeFingerPocket", ("pocket",)),
-    "pocket-19-three-right": ("pocket", 19, 3, "threeFingerPocket", ("pocket",)),
-    "pocket-19-two-left": ("pocket", 19, 2, "twoFingerPocket", ("pocket",)),
-    "pocket-19-two-right": ("pocket", 19, 2, "twoFingerPocket", ("pocket",)),
-    "pocket-19-four-center": ("pocket", 19, 4, "fourFingerPocket", ("pocket",)),
-    "edge-19-right": ("edge", 19, 4, None, ("mediumEdge", "smallEdge")),
+# Each value is (source-backed kind, scalar depth, capacity, structural pocket
+# grip, feature set). Sloper descriptors are not scalar depths, non-pocket
+# capacities are not published, and the manufacturer publishes no package
+# feature tags.
+COMPACT_HOLD_SOURCE_FACTS = {
+    "jug-left": ("jug", None, None, None, ()),
+    "sloper-flat-left": ("sloper", None, None, None, ()),
+    "sloper-round-center": ("sloper", None, None, None, ()),
+    "sloper-flat-right": ("sloper", None, None, None, ()),
+    "jug-right": ("jug", None, None, None, ()),
+    "edge-29-left": ("edge", 29, None, None, ()),
+    "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", ()),
+    "pocket-29-two-left": ("pocket", 29, 2, "twoFingerPocket", ()),
+    "pocket-29-four-center": ("pocket", 29, 4, "fourFingerPocket", ()),
+    "pocket-29-two-right": ("pocket", 29, 2, "twoFingerPocket", ()),
+    "pocket-29-three-right": ("pocket", 29, 3, "threeFingerPocket", ()),
+    "edge-29-right": ("edge", 29, None, None, ()),
+    "edge-19-left": ("edge", 19, None, None, ()),
+    "pocket-19-three-left": ("pocket", 19, 3, "threeFingerPocket", ()),
+    "pocket-19-three-right": ("pocket", 19, 3, "threeFingerPocket", ()),
+    "pocket-19-two-left": ("pocket", 19, 2, "twoFingerPocket", ()),
+    "pocket-19-two-right": ("pocket", 19, 2, "twoFingerPocket", ()),
+    "pocket-19-four-center": ("pocket", 19, 4, "fourFingerPocket", ()),
+    "edge-19-right": ("edge", 19, None, None, ()),
 }
 
 def _embedded_geometry_bounds(
@@ -679,9 +679,9 @@ def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
     } == {
         ("jug-1-left", "jug", None, None, None),
         ("jug-1-right", "jug", None, None, None),
-        ("sloper-2-flat-left", "sloper", 56, None, None),
-        ("sloper-2-flat-right", "sloper", 56, None, None),
-        ("sloper-12-round-center", "sloper", 56, None, None),
+        ("sloper-2-flat-left", "sloper", None, None, None),
+        ("sloper-2-flat-right", "sloper", None, None, None),
+        ("sloper-12-round-center", "sloper", None, None, None),
         ("edge-3-31-left", "edge", 31, None, None),
         ("edge-3-31-right", "edge", 31, None, None),
         ("pocket-4-32-three-left", "pocket", 32, 3, "threeFingerPocket"),
@@ -751,7 +751,7 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry()
     assert all(hold.get("geometry") for hold in holds)
 
 
-def test_compact_hold_records_keep_sourced_physical_facts_and_app_routing() -> None:
+def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
     board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
     holds = board["holds"]
     retired_fields = {"frame", "shortLabel", "detail", "cueStyle"}
@@ -797,7 +797,7 @@ def test_compact_hold_records_keep_sourced_physical_facts_and_app_routing() -> N
             tuple(hold.get("features", ())),
         )
         for hold in holds
-    } == COMPACT_HOLD_SOURCE_FACTS_AND_ROUTING
+    } == COMPACT_HOLD_SOURCE_FACTS
 
 
 def test_compact_hold_bounds_are_derived_from_embedded_piece_unions() -> None:

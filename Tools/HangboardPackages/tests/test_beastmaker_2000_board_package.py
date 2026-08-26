@@ -38,7 +38,7 @@ EXPECTED_KINDS = {
     "front-lower-2": "pocket",
     "front-lower-3": "pocket",
     "front-lower-4": "pocket",
-    "front-lower-5": "pocket",
+    "front-lower-5": "edge",
     "front-lower-6": "pocket",
     "front-lower-7": "pocket",
     "front-lower-8": "pocket",
@@ -50,12 +50,12 @@ EXPECTED_KINDS = {
 MIRRORED_PAIRS = (
     ("front-upper-1", "front-upper-2"),
     ("front-middle-1", "front-middle-9"),
-    ("front-middle-3", "front-middle-7"),
     ("front-middle-4", "front-middle-6"),
     *((f"front-lower-{left}", f"front-lower-{10 - left}") for left in range(1, 5)),
 )
 DIRECT_MIRRORED_PAIRS = (
     ("front-middle-2", "front-middle-8"),
+    ("front-middle-3", "front-middle-7"),
     ("hold-26", "hold-27"),
 )
 DIRECT_MIRRORED_RIGHT_IDS = frozenset(right_id for _, right_id in DIRECT_MIRRORED_PAIRS)
@@ -195,15 +195,17 @@ EXPECTED_GEOMETRY = {
     ),
     "front-middle-3": (
         {
-            "frame": {"x": 0.231958372116, "y": 0.420213007092, "width": 0.080264836524, "height": 0.141843666667},
+            "frame": {"x": 0.231958372116, "y": 0.420213007092, "width": 0.046215322962, "height": 0.141843666667},
             "commands": (
-                {"command": "move", "to": (0.244648582107, 0.0)},
-                {"command": "line", "to": (0.755351417893, 0.0)},
-                {"command": "curve", "control1": (0.89046709582, 0.0), "control2": (1.0, 0.223857631294), "to": (1.0, 0.5)},
-                {"command": "curve", "control1": (1.0, 0.776142368706), "control2": (0.89046709582, 1.0), "to": (0.755351417893, 1.0)},
-                {"command": "line", "to": (0.244648582107, 1.0)},
-                {"command": "curve", "control1": (0.10953290418, 1.0), "control2": (0.0, 0.776142368706), "to": (0.0, 0.5)},
-                {"command": "curve", "control1": (0.0, 0.223857631294), "control2": (0.10953290418, 0.0), "to": (0.244648582107, 0.0)},
+                {"command": "move", "to": (0.424895406762, 0.0)},
+                {"command": "line", "to": (0.769044239138, 0.0)},
+                {"command": "quad", "control": (1.0, 0.0), "to": (1.0, 0.22781756403)},
+                {"command": "curve", "control1": (0.929518688348, 0.310757166568), "control2": (0.8859250907, 0.425337161353), "to": (0.8859250907, 0.551898730334)},
+                {"command": "curve", "control1": (0.8859250907, 0.678460289941), "control2": (0.929518688348, 0.793040286288), "to": (1.0, 0.87597989117)},
+                {"command": "quad", "control": (1.0, 1.0), "to": (0.769044239138, 1.0)},
+                {"command": "line", "to": (0.424895406762, 1.0)},
+                {"command": "curve", "control1": (0.190232158611, 1.0), "control2": (0.0, 0.776142368706), "to": (0.0, 0.5)},
+                {"command": "curve", "control1": (0.0, 0.223857631294), "control2": (0.190232158611, 0.0), "to": (0.424895406762, 0.0)},
                 {"command": "close"},
             ),
         },
@@ -481,6 +483,111 @@ def _serialize_shape(piece: object) -> tuple[dict[str, object], ...]:
     return tuple(serialize_command(command) for command in piece.shape.commands)
 
 
+def _flatten_global_contour(piece: object) -> tuple[tuple[float, float], ...]:
+    frame = piece.frame
+
+    def global_point(point: tuple[float, float]) -> tuple[float, float]:
+        return (
+            frame.x + point[0] * frame.width,
+            frame.y + point[1] * frame.height,
+        )
+
+    contour: list[tuple[float, float]] = []
+    start: tuple[float, float] | None = None
+    current: tuple[float, float] | None = None
+    for command in piece.shape.commands:
+        if command.command == "move":
+            assert command.to is not None
+            start = current = global_point(command.to)
+            contour.append(current)
+        elif command.command == "line":
+            assert command.to is not None
+            current = global_point(command.to)
+            contour.append(current)
+        elif command.command in {"quad", "curve"}:
+            assert current is not None and command.to is not None
+            end = global_point(command.to)
+            for step in range(1, 33):
+                t = step / 32
+                inverse = 1 - t
+                if command.command == "quad":
+                    assert command.control is not None
+                    control = global_point(command.control)
+                    point = (
+                        inverse * inverse * current[0]
+                        + 2 * inverse * t * control[0]
+                        + t * t * end[0],
+                        inverse * inverse * current[1]
+                        + 2 * inverse * t * control[1]
+                        + t * t * end[1],
+                    )
+                else:
+                    assert (
+                        command.control1 is not None and command.control2 is not None
+                    )
+                    control1 = global_point(command.control1)
+                    control2 = global_point(command.control2)
+                    point = (
+                        inverse**3 * current[0]
+                        + 3 * inverse * inverse * t * control1[0]
+                        + 3 * inverse * t * t * control2[0]
+                        + t**3 * end[0],
+                        inverse**3 * current[1]
+                        + 3 * inverse * inverse * t * control1[1]
+                        + 3 * inverse * t * t * control2[1]
+                        + t**3 * end[1],
+                    )
+                contour.append(point)
+            current = end
+        else:
+            assert command.command == "close"
+            assert start is not None
+            contour.append(start)
+            current = start
+    return tuple(contour)
+
+
+def _contains_point(
+    contour: tuple[tuple[float, float], ...], point: tuple[float, float]
+) -> bool:
+    inside = False
+    x, y = point
+    for start, end in zip(contour, contour[1:]):
+        if (start[1] > y) == (end[1] > y):
+            continue
+        crossing_x = start[0] + (y - start[1]) * (end[0] - start[0]) / (
+            end[1] - start[1]
+        )
+        if x < crossing_x:
+            inside = not inside
+    return inside
+
+
+@pytest.mark.parametrize(
+    ("parent_id", "nested_id"),
+    [("front-middle-3", "hold-26"), ("front-middle-7", "hold-27")],
+)
+def test_compound_pocket_parent_does_not_cover_nested_mono(
+    parent_id: str, nested_id: str
+) -> None:
+    holds = {hold.id: hold for hold in load_board_package(PACKAGE_ROOT).board.holds}
+    parent_contour = _flatten_global_contour(holds[parent_id].geometry[0])
+    nested = holds[nested_id].geometry[0]
+    nested_contour = _flatten_global_contour(nested)
+
+    interior_samples = 0
+    for row in range(32):
+        for column in range(32):
+            point = (
+                nested.frame.x + (column + 0.5) / 32 * nested.frame.width,
+                nested.frame.y + (row + 0.5) / 32 * nested.frame.height,
+            )
+            if _contains_point(nested_contour, point):
+                interior_samples += 1
+                assert not _contains_point(parent_contour, point)
+    assert interior_samples > 0
+
+
 def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     board = load_board_package(PACKAGE_ROOT).board
     holds = {hold.id: hold for hold in board.holds}
@@ -491,8 +598,8 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     assert {hold_id: hold.kind for hold_id, hold in holds.items()} == EXPECTED_KINDS
     assert Counter(hold.kind for hold in holds.values()) == {
         "sloper": 5,
-        "edge": 2,
-        "pocket": 20,
+        "edge": 3,
+        "pocket": 19,
     }
 
     for hold in holds.values():
@@ -542,3 +649,20 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
         hold_axis_x = hold_x + hold_width / 2
         assert hold_axis_x == pytest.approx(symmetry_axis_x, abs=2e-3)
     assert 0 < symmetry_axis_x < presentation_size[0]
+
+
+def test_beastmaker_2000_omits_unpositioned_optional_metadata() -> None:
+    holds = {
+        hold.id: hold for hold in load_board_package(PACKAGE_ROOT).board.holds
+    }
+
+    assert {
+        hold.id: hold.size_millimeters
+        for hold in holds.values()
+        if hold.size_millimeters is not None
+    } == {"front-lower-5": 22}
+    assert all(hold.depth_range_millimeters is None for hold in holds.values())
+    assert all(hold.finger_capacity is None for hold in holds.values())
+    assert all(hold.hand_capacity is None for hold in holds.values())
+    assert all(hold.grip_type is None for hold in holds.values())
+    assert all(hold.features is None for hold in holds.values())

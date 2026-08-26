@@ -11,6 +11,9 @@
       "id": "top-jug",
       "name": "Full-width top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -83,6 +86,10 @@
       "name": "Center 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
+      "handCapacity": 1,
+      "features": [
+        "incutEdge"
+      ],
       "geometry": [
         {
           "frame": {
@@ -207,6 +214,9 @@
       "name": "Left mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -303,6 +313,9 @@
       "name": "Right mono pocket",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -1498,10 +1511,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.702473958333,
-            "y": 0.5673828125,
-            "width": 0.089192708333,
-            "height": 0.0634765625
+            "x": 0.629300570964,
+            "y": 0.572587926758,
+            "width": 0.089848755208,
+            "height": 0.056040568359
           },
           "shape": {
             "type": "path",
@@ -1588,10 +1601,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.791666666667,
-            "y": 0.5673828125,
-            "width": 0.133463541667,
-            "height": 0.0634765625
+            "x": 0.719149326172,
+            "y": 0.572587926758,
+            "width": 0.134773132813,
+            "height": 0.056040568359
           },
           "shape": {
             "type": "path",

@@ -45,13 +45,13 @@ that optional value. The product URL is the current primary manufacturer page.
 | Package | IDs | Kind counts | Source |
 | --- | ---: | --- | --- |
 | beastmaker-1000 | 22 | jug 2; pocket 17; sloper 3 | [manufacturer](https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series) |
-| beastmaker-2000 | 27 | edge 2; pocket 20; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
-| dewoodstok-woodbord | 17 | jug 1; pocket 16 | [manufacturer](https://www.dewoodstok.nl/product/hangboard-woodbord/) |
-| escape-beta-22 | 18 | edge 8; jug 4; pinch 4; sloper 2 | [manufacturer](https://escapeclimbing.com/products/ec72100) |
+| beastmaker-2000 | 27 | edge 3; pocket 19; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
+| dewoodstok-woodbord | 17 | pocket 16; sloper 1 | [manufacturer](https://www.dewoodstok.nl/product/hangboard-woodbord/) |
+| escape-beta-22 | 22 | edge 8; jug 4; pinch 4; sloper 6 | [manufacturer](https://escapeclimbing.com/products/ec72100) |
 | escape.unlimited | 7 | edge 6; sloper 1 | [manufacturer](https://escapeclimbing.com/products/ec72000) |
 | evolv-kilter-basic-long | 4 | edge 3; jug 1 | [manufacturer](https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105) |
 | frictitious.doormount-pro-7 | 13 | edge 10; jug 1; pocket 2 | [manufacturer](https://frictitiousclimbing.com/en-ca/products/doormount-pro) |
-| frictitious.megalith | 14 | edge 11; jug 1; pocket 2 | [manufacturer](https://frictitiousclimbing.com/products/megalith) |
+| frictitious.megalith | 18 | edge 15; jug 1; pocket 2 | [manufacturer](https://frictitiousclimbing.com/products/megalith) |
 | lattice-triple-rung | 3 | edge 3 | [manufacturer](https://latticetraining.com/product/triple-rung-wooden-hangboard/) |
 | metolius.climbers-edge | 15 | edge 10; jug 2; sloper 3 | [manufacturer](https://www.metoliusclimbing.com/products/climbers-edge-board) |
 | metolius.contact | 33 | edge 4; jug 2; pinch 2; pocket 22; sloper 3 | [manufacturer](https://www.metoliusclimbing.com/products/contact-training-board) |
@@ -63,16 +63,16 @@ that optional value. The product URL is the current primary manufacturer page.
 | metolius.simulator-3d | 29 | edge 8; jug 3; pocket 16; sloper 2 | [manufacturer](https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board) |
 | metolius.wood-grips-compact-ii | 19 | edge 4; jug 2; pocket 10; sloper 3 | [manufacturer](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards) |
 | metolius.wood-grips-deluxe-ii | 26 | edge 6; jug 2; pocket 15; sloper 3 | [manufacturer](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards) |
-| moon.armstrong | 19 | edge 12; jug 3; pocket 2; sloper 2 | [manufacturer](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) |
-| nature.stoak-board-iii | 8 | edge 6; jug 1; sloper 1 | [manufacturer](https://natureclimbing.com/products/stoak-board-iii) |
+| moon.armstrong | 21 | edge 12; jug 3; pocket 4; sloper 2 | [manufacturer](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) |
+| nature.stoak-board-iii | 7 | edge 6; jug 1 | [manufacturer](https://natureclimbing.com/products/stoak-board-iii) |
 | soill.iron-palm-2 | 8 | edge 3; jug 1; pinch 2; sloper 2 | [manufacturer](https://soillholds.com/products/iron-palm-2-0) |
 | soill.split-palm | 14 | edge 8; jug 2; sloper 4 | [manufacturer](https://soillholds.com/products/split-palm) |
 | soill.training-tiles | 16 | edge 10; pocket 2; sloper 4 | [manufacturer](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin) |
-| target10a.linebreaker-base | 22 | edge 5; jug 2; pocket 11; sloper 4 | [manufacturer](https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html) |
+| target10a.linebreaker-base | 24 | edge 6; jug 2; pocket 12; sloper 4 | [manufacturer](https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html) |
 | tension.flash-board | 7 | edge 7 | [manufacturer](https://tensionclimbing.com/products/flash-board-2) |
-| tension.grindstone | 8 | edge 7; jug 1 | [manufacturer](https://tensionclimbing.com/products/grindstone) |
-| tension.honestone | 8 | edge 5; pocket 2; sloper 1 | [manufacturer](https://tensionclimbing.com/products/honestone) |
-| tension.whetstone | 8 | edge 5; jug 1; pocket 2 | [manufacturer](https://tensionclimbing.com/products/whetstone) |
+| tension.grindstone | 14 | edge 13; jug 1 | [manufacturer](https://tensionclimbing.com/products/grindstone) |
+| tension.honestone | 12 | edge 9; pocket 2; sloper 1 | [manufacturer](https://tensionclimbing.com/products/honestone) |
+| tension.whetstone | 12 | edge 9; jug 1; pocket 2 | [manufacturer](https://tensionclimbing.com/products/whetstone) |
 | the-hangboard.the-hangboard | 15 | edge 12; jug 2; sloper 1 | [manufacturer](https://thehangboard.com/products/hangboard) |
 | trango.rock-prodigy-forge | 20 | edge 8; pocket 8; sloper 4 | [manufacturer](https://trango.com/products/rock-prodigy-forge) |
 | trango.rock-prodigy-natural | 14 | edge 6; jug 2; pocket 6 | [manufacturer](https://trango.com/products/rock-prodigy-natural) |

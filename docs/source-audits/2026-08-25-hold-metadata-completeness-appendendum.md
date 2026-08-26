@@ -12,12 +12,134 @@ render or photograph.
 
 ## Result
 
-`kind` is complete: all 690 current hold records have one of the schema's five
+`kind` is complete: all 697 current hold records have one of the schema's five
 classes. A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
 gap: capacity is meaningful only for a source-labelled finger pocket. Likewise,
 `sizeMillimeters` is only used for a source-mapped single depth; a continuous
 surface with several published depths uses `depthRangeMillimeters` when the
 source establishes its endpoints.
+
+### Tension and So iLL ledger certification
+
+The Tension/So iLL batch re-opened the seven current manufacturer product
+pages and manually reviewed all 69 stable IDs in
+`.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
+the workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset.
+Flash Board has separate labelled captures for its three-edge and two-edge
+presentations. The focused
+`soill.training-tiles--pocket-depth-stable-ids.png` review capture visibly
+separates the two pocket IDs by temporarily hiding non-pocket overlays only in
+the browser. No capture was used to create, adjust, or classify geometry.
+
+The machine-readable ledger now covers 17 boards and 239 holds, up from 10
+boards and 170 holds. Every reviewed hold has seven accounted fields and a
+verified manufacturer-backed `kind`:
+
+| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
+| --- | ---: | ---: | ---: | ---: |
+| `kind` | 170 / 170 | 239 / 239 | 0 | 0 |
+| `sizeMillimeters` | 133 / 133 | 153 / 153 | 86 | 0 |
+| `depthRangeMillimeters` | 0 / 0 | 14 / 14 | 225 | 0 |
+| `fingerCapacity` | 87 / 87 | 91 / 91 | 2 | 146 |
+| `handCapacity` | 0 / 0 | 0 / 0 | 239 | 0 |
+| `gripType` | 87 / 87 | 89 / 89 | 150 | 0 |
+| `features` | 0 / 0 | 0 / 0 | 239 | 0 |
+
+The 109 additional populated/verified fields are 69 mandatory kinds, 20
+scalar depths, 14 continuous-contact ranges, four finger capacities, and two
+two-finger-pocket grip enums. The two additional scalar values are the Training
+Tiles' one-per-tile 3-inch pockets converted exactly to 76.2 mm; the remaining
+values were already source-mapped in the seven package files. The complete
+manufacturer-label to stable ID map and the source-term type audit are in the
+[So iLL/Tension audit](2026-08-12-soill-tension-board-packages.md#2026-08-25-source-audited-metadata-batch).
+
+Remaining batch blanks are deliberate: Flash Board depths are a global,
+unpositioned list; Training Tiles sloper/edge measurements are grouped without
+numbered left/right mappings and its pockets have no published finger count; Honestone
+has source-labelled one-finger pockets but the schema has no corresponding
+grip enum; width, angle, curvature, and radius are not contact depth; and no
+reviewed source publishes simultaneous hand capacity or an exact package
+feature-tag array.
+
+### Resolved independent-board ledger certification
+
+The Lattice Triple Rung, The Hangboard, target10a Linebreaker BASE, and Nature
+Stoak Board III batch reviewed 49 stable IDs against the current manufacturer
+sources and the visible-ID captures listed in the
+[scoped source audit](2026-08-12-single-board-documentation-packages.md#2026-08-25-resolved-independent-board-metadata-certification).
+The target10a capture contains all 24 corrected stable IDs; the Nature capture
+contains seven contacts with one full-width `top-jug`. No capture supplied a
+physical value and no geometry changed in this metadata certification.
+
+The ledger moves from 20 boards / 263 holds after the independently committed
+Escape/Evolv/DoorMount review to 24 boards / 312 holds. All seven fields are
+accounted for and all 49 mandatory `kind` values are manufacturer-backed:
+
+| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
+| --- | ---: | ---: | ---: | ---: |
+| `kind` | 263 / 263 | 312 / 312 | 0 | 0 |
+| `sizeMillimeters` | 173 / 173 | 209 / 209 | 103 | 0 |
+| `depthRangeMillimeters` | 14 / 14 | 18 / 18 | 294 | 0 |
+| `fingerCapacity` | 91 / 91 | 121 / 121 | 4 | 187 |
+| `handCapacity` | 0 / 0 | 0 / 0 | 312 | 0 |
+| `gripType` | 89 / 89 | 102 / 102 | 210 | 0 |
+| `features` | 4 / 4 | 4 / 4 | 308 | 0 |
+
+The 132 batch-populated outcomes are 49 kinds, 36 scalar depths, four exact
+continuous-contact depth ranges, 30 exact finger capacities, and 13 exact grip
+enums. Every other outcome has a source-specific ledger reason. In particular,
+Nature's 55 mm/open-hand callout does not create a second top contact and is not
+stored as a scalar or grip value on the single continuous jug; target10a's
+finger bars have exact capacities but no corresponding three-/four-finger edge
+grip enum; and no source in this batch establishes hand capacity or an exact
+feature-tag array.
+
+### YY Vertical and Zlagboard ledger certification
+
+The final manufacturer-family batch manually reconciled 168 stable IDs across
+eight YY Vertical packages and two Zlagboard packages with the primary sources
+and labelled captures documented in the [YY
+audit](2026-08-12-yy-vertical-board-packages.md#2026-08-25-source-audited-metadata-certification)
+and [Zlagboard
+audit](2026-08-12-zlagboard-board-packages.md#2026-08-25-source-audited-metadata-certification).
+The primary-presentation captures are retained under
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`, while the
+collision-free secondary-contact captures and manifest are under
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard-secondary/`. Those
+14 one-ID images are manually reviewed renderings of the Workbench API's
+selected-presentation document and existing canonical paths; no geometry
+changed.
+
+The ledger moves from 28 boards / 388 holds to 38 boards / 556 holds. All seven
+fields are accounted for and all 168 mandatory kinds are source-verified:
+
+| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
+| --- | ---: | ---: | ---: | ---: |
+| `kind` | 388 / 388 | 556 / 556 | 0 | 0 |
+| `sizeMillimeters` | 223 / 223 | 338 / 338 | 218 | 0 |
+| `depthRangeMillimeters` | 34 / 34 | 34 / 34 | 522 | 0 |
+| `fingerCapacity` | 161 / 161 | 179 / 179 | 40 | 337 |
+| `handCapacity` | 0 / 0 | 0 / 0 | 556 | 0 |
+| `gripType` | 134 / 134 | 180 / 180 | 376 | 0 |
+| `features` | 32 / 32 | 70 / 70 | 486 | 0 |
+
+The batch certifies 391 populated outcomes: 168 kinds, 115 scalar depths, 18
+finger capacities, 48 grip enums, and 42 feature arrays. The 90 package
+additions are the 48 grips and 42 features; the other exact values were already
+present and are now tied to
+stable-ID evidence records. Zlagboard's compound `sloper JUG` stays
+`kind: sloper`, with `gripType: sloper` and feature `jug` preserving the whole
+manufacturer label. The global after totals also incorporate the later removal
+of two unsupported Trango grip values and four unsupported Trango feature
+values; the 391 Task 9 outcomes themselves are unchanged.
+
+Remaining blanks are deliberate. YY degree labels, mono phalange wording,
+magnetic inserts, and portable-board inclination are not millimetre depth
+ranges. Zlagboard's exhaustive maps do not assign the product page's general
+`pockets` wording to any exact contact or publish finger/hand capacity. YY's
+one-arm exercise wording likewise does not establish simultaneous hand
+capacity. No edge posture or wide-contact hand count was inferred from
+geometry.
 
 ### Discrete-contact correction
 
@@ -37,6 +159,11 @@ manufacturer views establish bilateral symmetry.
 | `tension-honestone` | `edge-20-15-{left,right}`, `edge-10-8-{left,right}` | `edge-{15,20}-{left,right}`, `edge-{8,10}-{left,right}` | The [product page](https://tensionclimbing.com/products/honestone) lists the four edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Honestone2.png?v=1726542571) maps each value to its own step. The 35°/45° macro sloper remains one unmeasured contact because Tension expressly describes continuously variable curvature. | 12 logical holds; all 11 pockets/edges use scalar depth; no depth ranges remain. |
 | `tension-whetstone` | `edge-40-30-{left,right}`, `edge-25-20-{left,right}` | `edge-{30,40}-{left,right}`, `edge-{20,25}-{left,right}` | The [product page](https://tensionclimbing.com/products/whetstone) lists the four edge depths, and the [official labelled close view](https://tensionclimbing.com/cdn/shop/files/Whetstone2.png?v=1726542637) maps 40/30 and 25/20 to distinct planar steps. | 12 logical holds; all 11 pockets/edges use scalar depth; no depth ranges remain. |
 | `frictitious.megalith` | `stepped-8-10-12-{left,right}`, `stepped-30-40-pocket-{left,right}`, `stepped-15-20-{left,right}` plus the overlapping unnamed `hold-11`…`hold-14` records | `edge-{8,10,12}-{left,right}`, `edge-30-{left,right}`, `edge-40-pocket-{left,right}`, `edge-{15,20}-{left,right}` | The [product page](https://frictitiousclimbing.com/products/megalith) enumerates seven shoulder-width edge sizes and identifies the two-finger pocket on the 40 mm edge. The [official labelled front](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840) and [official oblique detail](https://frictitiousclimbing.com/cdn/shop/files/Mega-4.jpg?v=1764914587&width=3840) map every value to a visibly separate planar shelf. The integrated pocket stays part of its 40 mm edge contact; no independent depth or capacity was invented. | 18 logical holds: 14 shoulder-width scalar edges, one 25 mm centre edge, one jug, and two mono pockets. No depth ranges or unnamed duplicate holds remain. |
+
+The canonical ledger now uses the 14 replacement Tension contacts and contains
+no retired range-backed IDs. After all certifications below, it accounts for
+43 boards and 670 holds; Beastmaker 2000's 27 holds remain outside the ledger,
+completing the current 697-hold catalog inventory.
 
 Every replacement contact has a newly reviewed, closed canonical path authored
 through Workbench. Adjacent steps share only their physical transition line;
@@ -77,6 +204,43 @@ This resolves 15 formerly unrepresentable hold fields. The primary sources do
 not establish additional fractional per-contact depths among the remaining
 blank fields.
 
+### Beastmaker 1000 conditional group-level certification
+
+Beastmaker 1000 was re-reviewed against the current product page, its linked
+official front, and a fresh 22-ID Workbench capture recorded in the
+[Beastmaker source audit](2026-08-12-beastmaker-board-packages.md#2026-08-25-beastmaker-1000-source-audited-metadata-certification).
+The official front supports 22 physical contacts—two jugs, three slopers, and
+17 front cavities—even though the manufacturer's grouped copy totals only 15
+pockets. The physical inventory and geometry therefore remain at 22; the
+copy/image contradiction is recorded instead of deleting two visible cavities.
+
+Mandatory kinds are certified as three conservative source-backed groups. The
+two outer top contacts are the exact two-jug family, the other three top
+surfaces are the 35-/20-degree sloper family, and all 17 front cavities retain
+`pocket` because pockets are the exhaustive front-contact kind. This is a
+shared-kind ruling only: it does not position Beastmaker's 10 mm pair,
+deep/medium/small labels, or two-/three-/four-finger subtypes.
+
+After the discrete-contact migration, the ledger moves from 42 boards / 648
+holds to 43 boards / 670 holds. All 154
+seven-field outcomes are explicit and all 22 mandatory kinds are verified:
+
+| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
+| --- | ---: | ---: | ---: | ---: |
+| `kind` | 648 / 648 | 670 / 670 | 0 | 0 |
+| `sizeMillimeters` | 415 / 415 | 415 / 415 | 255 | 0 |
+| `depthRangeMillimeters` | 20 / 20 | 20 / 20 | 650 | 0 |
+| `fingerCapacity` | 185 / 185 | 185 / 185 | 73 | 412 |
+| `handCapacity` | 1 / 1 | 1 / 1 | 669 | 0 |
+| `gripType` | 182 / 182 | 182 / 182 | 488 | 0 |
+| `features` | 105 / 105 | 105 / 105 | 565 | 0 |
+
+Every optional Beastmaker 1000 field remains blank. The pass removes 17
+unsupported pocket scalar depths, 19 duplicated kind-as-feature arrays, and
+the two jugs' unsupported capacity, open-hand posture, and feature arrays. The
+center sloper receives only a source-faithful display name. No geometry,
+presentation asset, Beastmaker 2000 metadata, or unrelated package changed.
+
 ## Remaining unsupported metadata
 
 The audit did not leave values blank merely because they were difficult to
@@ -86,14 +250,17 @@ remains blank for a specific evidence reason.
 | Packages / contacts | Fields deliberately left blank | Reason and source status |
 | --- | --- | --- |
 | `beastmaker-1000` pockets; `beastmaker-2000` unmapped pockets and edges; `dewoodstok-woodbord` pockets | Per-contact capacity and/or depth | Product pages give product or family facts but no numbered per-contact mapping. The prior catalog audit explicitly prohibits applying aggregate values to a pocket ID. |
+| `beastmaker-2000` | Full seven-field ledger certification | Beastmaker's current sources do not map the board's mixed front recesses to exact stable IDs. Mandatory per-ID type certification therefore remains blocked and unchanged. |
 | `frictitious.doormount-pro-7` unnamed lower records and mixed contacts | Depth and capacity | [DoorMount Pro](https://frictitiousclimbing.com/products/doormount-pro) lists the 35/25/20/15/10 mm families and pockets, but its declared seven-hold inventory does not map those facts to this package's 13 current logical records. A fresh field assignment would be an inference; the inventory discrepancy needs a separate physical-contact reconciliation. |
-| `soill.training-tiles`; `tension.flash-board`; `target10a.linebreaker-base`; `zlagboard.evo`; `zlagboard.pro` | Per-contact depth and, where applicable, pocket capacity | Manufacturers publish grouped size/family information or product views, not an individual ID-to-value guide. The front image establishes physical contact boundaries, not an exact value assignment. |
+| `soill.training-tiles`; `tension.flash-board` | Per-contact depth and, where applicable, pocket capacity | Manufacturers publish grouped size/family information or product views, not an individual ID-to-value guide. The front image establishes physical contact boundaries, not an exact value assignment. |
 | `trango.rock-prodigy-forge` IM pockets; `trango.rock-prodigy-natural` centre-lower and supported pockets; `trango.rock-prodigy-training-center` variable rails and pockets | Exact per-contact depth | Forge's official guide gives only an aggregate IMR range. Natural's official product markings and quick-start guide conflict on the affected values/capacities. The Training Center manual names only selected training grips and lacks a depth map for each physical package contact. |
-| `nature.stoak-board-iii` gradient/composite contacts; `frictitious.megalith` mono pockets | Exact depth | Manufacturer material identifies the board-level or named edge facts but does not establish individual endpoints/depths for these exact compound/mono contacts. |
+| `frictitious.megalith` mono pockets | Exact depth | Manufacturer material identifies the board-level pocket family but does not establish individual depths for these exact mono contacts. |
 | All other blanks on jugs, edges, pinches, and slopers | `fingerCapacity` | The reviewed primary source does not constrain a fixed number of fingers. Capacity was not guessed from a hold's apparent width or use photograph. |
 
 Existing explicit capacities (mono, duo, three-finger, four-finger) and
 source-mapped scalar depths elsewhere in the 44 packages were rechecked and
-retained. Apart from the discrete-contact correction and fractional mappings
-above, no `kind`, `fingerCapacity`, or scalar `sizeMillimeters` change was
-justified by the additional evidence.
+retained unless a later scoped certification above records an exact correction
+or addition. Apart from the discrete-contact correction and fractional mappings
+above, no other `kind`, `fingerCapacity`, or scalar `sizeMillimeters` change was
+justified by the additional evidence. No optional value was populated from
+apparent size or geometry.

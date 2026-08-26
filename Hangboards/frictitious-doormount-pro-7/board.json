@@ -2,7 +2,7 @@
   "id": "frictitious.doormount-pro-7",
   "manufacturer": "Frictitious Climbing",
   "name": "DoorMount Pro 7",
-  "subtitle": "Poplar hangboard for the DoorMount Pro system with seven continuous training contacts.",
+  "subtitle": "Poplar hangboard for the DoorMount Pro system with a pull-up jug, pockets, and five edge depths.",
   "productURL": "https://frictitiousclimbing.com/en-ca/products/doormount-pro",
   "dimensions": "25.5 \u00d7 4.5 \u00d7 2.25 in",
   "aspectRatio": 2.0,
@@ -11,6 +11,9 @@
       "id": "top-jug",
       "name": "Full-width top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -328,8 +331,9 @@
     },
     {
       "id": "mixed-25-pocket-left",
-      "name": "Left continuous 25 mm edge and pocket contact",
+      "name": "Left 25 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 25,
       "geometry": [
         {
           "frame": {
@@ -451,8 +455,9 @@
     },
     {
       "id": "mixed-25-pocket-right",
-      "name": "Right continuous 25 mm edge and pocket contact",
+      "name": "Right 25 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 25,
       "geometry": [
         {
           "frame": {
@@ -574,8 +579,11 @@
     },
     {
       "id": "hold-6",
-      "name": "Hold 6",
+      "name": "Right pocket",
       "kind": "pocket",
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -679,13 +687,15 @@
           }
         }
       ],
-      "fingerCapacity": 2,
       "presentationID": "primary"
     },
     {
       "id": "hold-7",
-      "name": "Hold 7",
+      "name": "Left pocket",
       "kind": "pocket",
+      "features": [
+        "pocket"
+      ],
       "geometry": [
         {
           "frame": {
@@ -789,13 +799,13 @@
           }
         }
       ],
-      "fingerCapacity": 2,
       "presentationID": "primary"
     },
     {
       "id": "hold-8",
-      "name": "Hold 8",
+      "name": "Right 15 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 15,
       "geometry": [
         {
           "frame": {
@@ -917,8 +927,9 @@
     },
     {
       "id": "hold-9",
-      "name": "Hold 9",
+      "name": "Right 10 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 10,
       "geometry": [
         {
           "frame": {
@@ -1040,8 +1051,9 @@
     },
     {
       "id": "hold-10",
-      "name": "Hold 10",
+      "name": "Left 10 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 10,
       "geometry": [
         {
           "frame": {
@@ -1163,8 +1175,9 @@
     },
     {
       "id": "hold-11",
-      "name": "Hold 11",
+      "name": "Left 15 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 15,
       "geometry": [
         {
           "frame": {
@@ -1286,8 +1299,9 @@
     },
     {
       "id": "hold-12",
-      "name": "Hold 12",
+      "name": "Left 20 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 20,
       "geometry": [
         {
           "frame": {
@@ -1409,8 +1423,9 @@
     },
     {
       "id": "hold-13",
-      "name": "Hold 13",
+      "name": "Right 20 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 20,
       "geometry": [
         {
           "frame": {

@@ -383,10 +383,14 @@ enum CustomRoutineValidator {
         case let .kind(kind):
             return board.holds.contains { $0.kind == kind }
         case let .feature(feature, fallbacks, fingerCapacity):
-            let acceptedFeatures = [feature] + fallbacks
-            return board.holds.contains { hold in
-                hold.matches(anyOf: acceptedFeatures, fingerCapacity: fingerCapacity)
-            }
+            return !BoardTargetResolver.substituteHoldIDs(
+                for: .feature(
+                    feature,
+                    fallbacks: fallbacks,
+                    fingerCapacity: fingerCapacity
+                ),
+                on: board
+            ).isEmpty
         }
     }
 }

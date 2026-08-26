@@ -13,6 +13,7 @@ Usage: scripts/hangboard-packages.sh <command> [arguments]
 Commands:
   validate    Validate directly discovered hangboard packages
   status      Print directly discovered package metadata
+  audit-metadata  Validate a source-audited metadata ledger
 EOF
 }
 
@@ -25,7 +26,7 @@ command_name="$1"
 shift
 
 case "$command_name" in
-    validate|status)
+    validate|status|audit-metadata)
         ;;
     -h|--help|help)
         usage

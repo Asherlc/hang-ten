@@ -11,6 +11,9 @@
       "id": "top-jug-left",
       "name": "Left top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -88,6 +91,7 @@
       "id": "top-sloper-32-left",
       "name": "Left 32-degree top sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -140,6 +144,7 @@
       "id": "top-sloper-20-left",
       "name": "Left 20-degree top sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -192,6 +197,10 @@
       "id": "top-sloper-jug-center",
       "name": "Center top sloper jug",
       "kind": "sloper",
+      "gripType": "sloper",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -301,6 +310,7 @@
       "id": "top-sloper-20-right",
       "name": "Right 20-degree top sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -353,6 +363,7 @@
       "id": "top-sloper-32-right",
       "name": "Right 32-degree top sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -405,6 +416,9 @@
       "id": "top-jug-right",
       "name": "Right top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -593,6 +607,7 @@
       "name": "Left 30 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 30,
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -703,6 +718,7 @@
       "name": "Left 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -923,6 +939,7 @@
       "name": "Right 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -1033,6 +1050,7 @@
       "name": "Right 30 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 30,
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -1363,6 +1381,7 @@
       "name": "Lower left 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -1583,6 +1602,7 @@
       "name": "Center 30 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 30,
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -1803,6 +1823,7 @@
       "name": "Lower right 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {

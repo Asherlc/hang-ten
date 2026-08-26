@@ -27,8 +27,7 @@ EXPECTED_HOLDS = (
         )
         for side in ("left", "right")
     ),
-    ("hold-09-center", "sloper"),
-    ("hold-11-center", "sloper"),
+    *((f"hold-{family:02d}-{side}", "sloper") for family in range(9, 12) for side in ("left", "right")),
 )
 EXPECTED_SIZES = {
     **{
@@ -45,10 +44,35 @@ EXPECTED_SIZES = {
         )
         for side in ("left", "right")
     },
-    "hold-09-center": None,
-    "hold-11-center": None,
+    **{
+        f"hold-{family:02d}-{side}": size
+        for family, size in ((9, 50), (10, 31), (11, 12))
+        for side in ("left", "right")
+    },
 }
-CENTER_HOLDS = ("hold-09-center", "hold-11-center")
+EXPECTED_FEATURES = {
+    **{
+        f"hold-{family:02d}-{side}": features
+        for family, features in (
+            (2, ("widePinch",)),
+            (3, ("jug",)),
+            (4, ("jug",)),
+            (5, ("incutEdge",)),
+            (6, ("flatEdge",)),
+            (7, ("flatEdge",)),
+            (8, ("flatEdge",)),
+        )
+        for side in ("left", "right")
+    },
+    **{
+        f"hold-{family:02d}-{side}": None
+        for family in (1, 9, 10, 11)
+        for side in ("left", "right")
+    },
+}
+CENTER_MIRRORED_PAIRS = tuple(
+    (f"hold-{family:02d}-left", f"hold-{family:02d}-right") for family in range(9, 12)
+)
 DIRECT_MIRRORED_PAIRS = tuple(
     (f"hold-{family:02d}-left", f"hold-{family:02d}-right")
     for family in range(1, 9)
@@ -284,17 +308,20 @@ EXPECTED_GEOMETRY = {
             ),
         },
     ),
-    "hold-09-center": (
+    "hold-09-left": (
         {
-            "frame": {"x": 0.380146330672, "y": 0.04339135533, "width": 0.117524993347, "height": 0.189075649746},
+            "frame": {"x": 0.377080505656, "y": 0.07847715736, "width": 0.120590818363, "height": 0.153989847716},
             "commands": (
-                {"command": "move", "to": (0.0, 0.002428593094)},
-                {"command": "curve", "control1": (0.227366056506, 0.0), "control2": (0.709626748609, 0.0), "to": (0.996930990713, 0.0)},
+                {"command": "move", "to": (0.0, 0.253164556962)},
+                {"command": "curve", "control1": (0.25, 0.0), "control2": (0.72, 0.0), "to": (1.0, 0.0)},
                 {"command": "line", "to": (1.0, 1.0)},
-                {"command": "curve", "control1": (0.712695757896, 1.0), "control2": (0.199652468425, 1.0), "to": (0.014956884215, 0.886597642826)},
+                {"command": "curve", "control1": (0.72, 1.0), "control2": (0.22, 1.0), "to": (0.04, 0.860759493671)},
+                {"command": "curve", "control1": (0.0, 0.683544303797), "control2": (0.0, 0.430379746835), "to": (0.0, 0.253164556962)},
                 {"command": "close"},
             ),
         },
+    ),
+    "hold-09-right": (
         {
             "frame": {"x": 0.497671324019, "y": 0.07847715736, "width": 0.120590818363, "height": 0.153989847716},
             "commands": (
@@ -307,7 +334,33 @@ EXPECTED_GEOMETRY = {
             ),
         },
     ),
-    "hold-11-center": (
+    "hold-10-left": (
+        {
+            "frame": {"x": 0.372993, "y": 0.42425, "width": 0.124678324019, "height": 0.1359},
+            "commands": (
+                {"command": "move", "to": (0.0, 0.084337349398)},
+                {"command": "curve", "control1": (0.28, 0.0), "control2": (0.72, 0.0), "to": (1.0, 0.0)},
+                {"command": "line", "to": (1.0, 1.0)},
+                {"command": "curve", "control1": (0.72, 1.0), "control2": (0.22, 1.0), "to": (0.04, 0.807228915663)},
+                {"command": "curve", "control1": (0.0, 0.626506024096), "control2": (0.0, 0.277108433735), "to": (0.0, 0.084337349398)},
+                {"command": "close"},
+            ),
+        },
+    ),
+    "hold-10-right": (
+        {
+            "frame": {"x": 0.497671324019, "y": 0.42425, "width": 0.124678324019, "height": 0.1359},
+            "commands": (
+                {"command": "move", "to": (1.0, 0.084337349398)},
+                {"command": "curve", "control1": (0.72, 0.0), "control2": (0.28, 0.0), "to": (0.0, 0.0)},
+                {"command": "line", "to": (0.0, 1.0)},
+                {"command": "curve", "control1": (0.28, 1.0), "control2": (0.78, 1.0), "to": (0.96, 0.807228915663)},
+                {"command": "curve", "control1": (1.0, 0.626506024096), "control2": (1.0, 0.277108433735), "to": (1.0, 0.084337349398)},
+                {"command": "close"},
+            ),
+        },
+    ),
+    "hold-11-left": (
         {
             "frame": {"x": 0.356457431803, "y": 0.699634517766, "width": 0.141213892216, "height": 0.124751269036},
             "commands": (
@@ -319,6 +372,8 @@ EXPECTED_GEOMETRY = {
                 {"command": "close"},
             ),
         },
+    ),
+    "hold-11-right": (
         {
             "frame": {"x": 0.497671324019, "y": 0.699634517766, "width": 0.141213892216, "height": 0.124751269036},
             "commands": (
@@ -342,8 +397,8 @@ EXPECTED_GEOMETRY.update(
 
 
 def _frame_seam_x(left: object, right: object) -> float:
-    assert left.frame.x + left.frame.width <= right.frame.x
-    return left.frame.x + left.frame.width
+    assert left.frame.x + left.frame.width == pytest.approx(right.frame.x, abs=1e-12)
+    return right.frame.x
 
 
 def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
@@ -358,13 +413,12 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         "pinch": 4,
         "jug": 4,
         "edge": 8,
-        "sloper": 2,
+        "sloper": 6,
     }
-    assert sum(len(hold.geometry) for hold in board.holds) == 20
+    assert sum(len(hold.geometry) for hold in board.holds) == 22
 
     for hold in board.holds:
-        expected_piece_count = 2 if hold.id.endswith("-center") else 1
-        assert len(hold.geometry) == expected_piece_count
+        assert len(hold.geometry) == 1
         for piece in hold.geometry:
             assert piece.shape.type == "path"
             assert piece.shape.commands[0].command == "move"
@@ -394,13 +448,18 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         assert left_x + left_width <= right_x
 
     seam_x: float | None = None
-    for hold_id in CENTER_HOLDS:
-        left, right = holds[hold_id].geometry
+    for left_id, right_id in CENTER_MIRRORED_PAIRS:
+        left = holds[left_id].geometry[0]
+        right = holds[right_id].geometry[0]
         pair_seam_x = _frame_seam_x(left, right)
         if seam_x is None:
             seam_x = pair_seam_x
         else:
             assert pair_seam_x == pytest.approx(seam_x, abs=1e-9)
+        assert right.frame.x == pytest.approx(pair_seam_x, abs=1e-9)
+        assert right.frame.y == pytest.approx(left.frame.y)
+        assert right.frame.width == pytest.approx(left.frame.width)
+        assert right.frame.height == pytest.approx(left.frame.height)
 
     assert seam_x is not None
     assert 0 < seam_x < 1
@@ -409,5 +468,5 @@ def test_escape_beta_22_audited_inventory_geometry_and_symmetry() -> None:
         assert hold.size_millimeters == EXPECTED_SIZES[hold.id]
         assert hold.grip_type is None
         assert hold.finger_capacity is None
-        assert hold.features is None
+        assert hold.features == EXPECTED_FEATURES[hold.id]
         assert hold.depth_range_millimeters is None
