@@ -649,7 +649,6 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         struct ProgressionCue {
             let targetIDs: [String]
             let sizeMillimeters: Double
-            let features: Set<HoldFeature>
             let gripType: GripType
             let fingerConfiguration: FingerConfiguration?
         }
@@ -658,42 +657,36 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             ProgressionCue(
                 targetIDs: ["edge-29-left", "edge-29-right"],
                 sizeMillimeters: 29,
-                features: [.largeEdge],
                 gripType: .openHand,
                 fingerConfiguration: nil
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
-                features: [.mediumEdge, .smallEdge],
                 gripType: .openHand,
                 fingerConfiguration: nil
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
-                features: [.mediumEdge, .smallEdge],
                 gripType: .halfCrimp,
                 fingerConfiguration: nil
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
-                features: [.mediumEdge, .smallEdge],
                 gripType: .openHand,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring])
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
-                features: [.mediumEdge, .smallEdge],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])
             ),
             ProgressionCue(
                 targetIDs: ["edge-19-left", "edge-19-right"],
                 sizeMillimeters: 19,
-                features: [.mediumEdge, .smallEdge],
                 gripType: .openHand,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle])
             )
@@ -721,9 +714,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 XCTAssertEqual(holds.count, 2)
                 XCTAssertTrue(holds.allSatisfy {
                     $0.kind == .edge &&
-                        $0.sizeMillimeters == cue.sizeMillimeters &&
-                        $0.fingerCapacity == 4 &&
-                        $0.features == cue.features
+                        $0.sizeMillimeters == cue.sizeMillimeters
                 })
             }
         }

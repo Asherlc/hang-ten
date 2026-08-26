@@ -441,8 +441,28 @@ final class CustomRoutineStoreTests: XCTestCase {
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
         let definition = genericDefinition(targets: [.feature(.flatEdge, fallbacks: [])])
+        let jugOnlyBoard = TrainingBoard(
+            id: "fixture.jug-only",
+            manufacturer: "Fixture Maker",
+            name: "Jug Only",
+            subtitle: "A board without edges.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.jug",
+                    name: "Fixture jug",
+                    shortLabel: "J",
+                    detail: "Jug",
+                    kind: .jug,
+                    frame: HoldFrame(x: 0.1, y: 0.2, width: 0.2, height: 0.4)
+                )
+            ],
+            productURL: URL(string: "https://example.com/jug-only")!,
+            photoAssetName: nil
+        )
 
-        let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
+        let issues = CustomRoutineValidator.issues(for: definition, availableBoards: [jugOnlyBoard])
 
         XCTAssertTrue(issues.contains(.unresolvableTargets(stepIndex: 0)))
     }

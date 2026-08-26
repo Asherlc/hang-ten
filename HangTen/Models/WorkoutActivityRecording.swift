@@ -250,6 +250,11 @@ internal enum BoardTargetResolver {
             .min { depthDistance(of: $0, from: feature) < depthDistance(of: $1, from: feature) }
         guard let representative = rankedRepresentative else { return [] }
 
+        if feature.holdKind == .pocket {
+            let pairedPockets = oneHoldPerHand(from: preferredSameKind)
+            if pairedPockets.count == 2 { return pairedPockets.map(\.id) }
+        }
+
         if feature.holdKind == .edge {
             let representativeDepthDistance = depthDistance(of: representative, from: feature)
             let nearestEdges = preferredSameKind.filter {

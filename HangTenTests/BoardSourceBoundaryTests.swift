@@ -119,7 +119,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             for step in plan.steps {
                 for target in step.targets {
                     XCTAssertFalse(
-                        BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty,
+                        BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty,
                         "Expected target in \(plan.id)/\(step.id) to resolve on \(board.id)."
                     )
                 }
