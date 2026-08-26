@@ -120,6 +120,9 @@
       "id": "sloper-2-flat-left",
       "name": "Left #2 56 mm flat sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "presentationID": "front",
       "geometry": [
         {
@@ -242,6 +245,9 @@
       "id": "sloper-12-round-center",
       "name": "Center #12 56 mm round sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "round"
+      },
       "presentationID": "front",
       "geometry": [
         {
@@ -372,6 +378,9 @@
       "id": "sloper-2-flat-right",
       "name": "Right #2 56 mm flat sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "presentationID": "front",
       "geometry": [
         {

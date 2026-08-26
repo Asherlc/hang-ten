@@ -85,6 +85,9 @@
       "id": "flat-sloper-left",
       "name": "Left 20-degree flat sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "geometry": [
         {
           "frame": {
@@ -155,6 +158,9 @@
       "id": "round-sloper-center",
       "name": "Center 40 mm-radius round sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "round"
+      },
       "geometry": [
         {
           "frame": {
@@ -267,6 +273,9 @@
       "id": "flat-sloper-right",
       "name": "Right 20-degree flat sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "geometry": [
         {
           "frame": {

@@ -187,6 +187,9 @@
       "id": "sloper-35-left",
       "name": "Left 35-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {
@@ -273,6 +276,9 @@
       "id": "sloper-35-right",
       "name": "Right 35-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {
@@ -359,6 +365,9 @@
       "id": "sloper-20-center",
       "name": "Center 20-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {
