@@ -59,6 +59,36 @@ rtk xcodebuild -project HangTen.xcodeproj \
 All Conductor/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
 
+## GitHub Device Flow release setup
+
+Before distributing a build with board-package GitHub sync, enable Device Flow
+in the existing GitHub OAuth App. Add its public client ID as the
+`HANGTEN_GITHUB_OAUTH_CLIENT_ID` variable in the `app-store-connect` GitHub
+Actions environment (a repository variable with the same name may also supply
+trusted non-release workflows). GitHub reserves the `GITHUB_` prefix for its
+own configuration-variable names, so the release job maps that value to the
+iOS `GITHUB_OAUTH_CLIENT_ID` build setting. It writes the setting to its
+temporary mode-`0600` xcconfig and verifies that the archived app's Info.plist
+contains a nonempty client ID.
+
+For local Xcode builds, copy `HangTen/Config/PostHog.local.xcconfig.example` to
+the ignored `HangTen/Config/PostHog.local.xcconfig` file and set
+`GITHUB_OAUTH_CLIENT_ID` there. Do not create a `GITHUB_CLIENT_SECRET` iOS app
+build setting, `app-store-connect` Actions secret, or bundled Info.plist key:
+Device Flow uses only the public client ID. Keep the public
+`GITHUB_OAUTH_CLIENT_ID` in the iOS app's Info.plist. This iOS-only restriction
+does not apply to the browser-hosted Workbench, whose server-side OAuth flow
+retains its separately hosted `GITHUB_CLIENT_SECRET` configuration. The app
+requests `repo read:org` and no longer accepts personal access tokens.
+
+## Maintainer-generated countdown audio
+
+Hang Ten ships reviewed audio files and never stores an ElevenLabs API key or
+makes ElevenLabs requests at runtime. An authorized maintainer can generate a
+local countdown pack with the developer-only script described in
+[`HangTen/Resources/CountdownAudio/README.md`](HangTen/Resources/CountdownAudio/README.md).
+Review and explicitly commit the generated files before they can ship.
+
 ## Continuous integration and delivery
 
 GitHub Actions runs the simulator Debug build and device Release build for
@@ -80,7 +110,10 @@ Add these environment variables:
 - `APPLE_TEAM_ID`: the 10-character Apple Developer Team ID.
 - `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
 - `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
-
+- `HANGTEN_GITHUB_OAUTH_CLIENT_ID`: the existing GitHub OAuth App's public
+  client ID; its Device Flow option must be enabled. The workflow maps it to
+  the app's `GITHUB_OAUTH_CLIENT_ID` build setting. Do not configure a client
+  secret.
 ## PostHog CI configuration
 
 The app runs without telemetry when its PostHog client token is absent. This is

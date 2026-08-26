@@ -43,12 +43,17 @@ mirrored pair.
 
 The depth guide maps the variable rail to `7–20 mm`, MR deep to `25 mm`, and MR
 shallow to `15 mm`; those values are retained. The guide maps the closed crimp
-to `7.5 mm`, which the integer-only `sizeMillimeters` field cannot represent, so
-the sourced value appears only in its name. It assigns an aggregate `19–31 mm`
-range to the IMR area rather than separately mapping the visible deep and
+to `7.5 mm`, which is recorded exactly in `sizeMillimeters`. It assigns an
+aggregate `19–31 mm` range to the IMR area rather than separately mapping the visible deep and
 shallow lobes; those two holds therefore omit measurements. `MR` and `IM` names
-are retained only where Trango's chart explicitly labels them. No grip posture,
-feature tags, or app routing metadata is added.
+are retained only where Trango's chart explicitly labels them. The chart and
+depth-guide abbreviation key establish two-finger MR/IM use, so all eight
+stable MR/IM pocket IDs use `fingerCapacity: 2`, `twoFingerPocket`, and the
+literal `pocket` feature. The four angle-labelled surfaces use the exact
+`sloper` posture, and the two large flat edges use the literal `largeEdge` and
+`flatEdge` features. The manufacturer term “closed crimp” is recorded as the
+explicit app-schema adaptation `fullCrimp`; no other posture or feature is
+filled from appearance.
 
 The official square JPEG was converted to PNG without cropping, registration,
 or geometric alteration. Every left-side path was deliberately authored from
@@ -72,9 +77,15 @@ product page calls the crimp `10 mm`, while the quick-start guide calls it
 `7.5 mm`. The quick-start guide distinguishes a `29 mm` two-finger pocket from
 a `36–26 mm` supported pocket, while the marked front image labels those
 contacts `27 mm` and `30/27 mm`, respectively. Those conflicted measurements
-and exact finger-combination labels are omitted. The guide's wide and medium
-pinches are ways to combine already-modeled contact surfaces, not additional
-physical openings, so they are not duplicated as holds.
+remain omitted. The guide's position diagrams nevertheless establish maximum
+finger capacity independently of those depth conflicts: four on each jug,
+rail, and closed crimp; three on each upper and supported pocket; and two on
+each center-lower pocket. The pocket postures and `pocket` features are mapped
+to those exact stable IDs. “Closed crimp” is explicitly adapted to the app
+schema's `fullCrimp`; the source terminology remains recorded here. The
+guide's wide and medium pinches are ways to combine already-modeled contact
+surfaces, not additional physical openings, so they are not duplicated as
+holds.
 
 The official square JPEG was converted to PNG without cropping, registration,
 or geometric alteration. The right half is an exact mirror of the authored
@@ -82,9 +93,43 @@ left half. Only the genuinely regular upper and center-lower pocket openings
 use operator-selected oval constraints; variable rails, the crimp, jug, and
 compound supported pocket remain freeform.
 
-- Pivot: the completed package is the structural and path-style precedent. Its
-  paths were directly authored and visually reviewed; its product-specific
-  coordinates must not be reused.
+### `trango-rock-prodigy-pivot`
+
+The completed package remains the structural and path-style precedent; its
+product-specific coordinates must not be reused. The 2026-08-25 stable-ID
+review reconciled 18 physical contacts / 22 geometry pieces. Trango's “22
+distinct grip positions” is an orientation-dependent usage count, not a claim
+of 22 separately bounded physical contacts, so it does not require geometry or
+ID changes.
+
+The depth guide maps the stable pairs exactly: `upper-sloped-crimp-*` to
+`12.5 mm`, `outer-sloped-crimp-*` to `11.5 mm`, `variable-edge-*` to
+`16–31 mm`, `medium-crimp-*` to `9–10 mm`, `large-crimp-*` to `11–12 mm`,
+`two-finger-pocket-*` to `28–32 mm`, and `three-finger-pocket-*` to
+`17–28 mm`. The orientation guide explicitly draws four fingers on every
+non-pocket contact represented in this presentation and two or three on the
+corresponding pocket openings. Those capacities are retained; the two pocket
+postures/features and lower-sloper posture are retained where the guide has an
+exact schema representation. Supported/sloped crimp labels do not distinguish
+the app's half- versus full-crimp postures, so those posture fields stay blank.
+The pinch changes role across orientations, so no width feature is selected.
+
+## 2026-08-25 per-contact metadata ledger
+
+The stable-ID captures were generated at
+`.context/hangboard-metadata-backfill-icky-cow/trango/` with one label per
+logical hold. All 52 Forge, Natural, and Pivot contacts were visually matched
+to the first-party diagrams before the canonical ledger was written.
+
+| board | exact verified mapping | retained blanks |
+| --- | --- | --- |
+| Forge | 20 kinds; rail/crimp/MR measurements; eight MR/IM two-finger capacities and pocket postures; four sloper postures; literal large-flat-edge and pocket features | IM lobe depths remain blank because `19–31 mm` is published only for the aggregate IMR area; no hand capacities; no unsupported crimper/rail postures |
+| Natural | 14 kinds; jug/rail/upper-pocket measurements; 14 diagrammed finger capacities; six pocket postures/features; jug feature; closed-crimp schema adaptation | closed-crimp, center-lower-pocket, and supported-pocket measurements remain blank because the current official sources conflict; all hand capacities and unsupported rail/jug postures remain blank |
+| Pivot | 18 kinds; all seven depth-guide measurement groups; all 18 diagrammed finger capacities; four pocket postures/features; two sloper postures | all hand capacities; generic supported/sloped crimp postures; orientation-dependent pinch features; measurements not published by the depth guide |
+
+Every omitted field has a hold-level reason and primary source in
+`2026-08-25-hangboard-metadata-ledger.json`. No geometry, hold identity, or
+presentation raster changed in this metadata pass.
 
 Trango says Forge differs from Training Center, so no Training Center source or
 geometry was substituted into Forge. Forge and Natural were authored from

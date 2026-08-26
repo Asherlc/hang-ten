@@ -99,7 +99,6 @@
       "id": "sloper-2-flat-left",
       "name": "Left #2 56 mm flat sloper",
       "kind": "sloper",
-      "sizeMillimeters": 56,
       "presentationID": "front",
       "geometry": [
         {
@@ -155,7 +154,6 @@
       "id": "sloper-12-round-center",
       "name": "Center #12 56 mm round sloper",
       "kind": "sloper",
-      "sizeMillimeters": 56,
       "presentationID": "front",
       "geometry": [
         {
@@ -211,7 +209,6 @@
       "id": "sloper-2-flat-right",
       "name": "Right #2 56 mm flat sloper",
       "kind": "sloper",
-      "sizeMillimeters": 56,
       "presentationID": "front",
       "geometry": [
         {

@@ -11,6 +11,9 @@
       "id": "jug-rounded",
       "name": "Rounded jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {

@@ -74,7 +74,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "sloper"
     },
     {
       "id": "sloper-30-right",
@@ -143,7 +144,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "sloper"
     },
     {
       "id": "sloper-40-left",
@@ -213,7 +215,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "sloper"
     },
     {
       "id": "sloper-40-right",
@@ -283,7 +286,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "sloper"
     },
     {
       "id": "large-flat-edge-left",
@@ -384,7 +388,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "features": [
+        "largeEdge",
+        "flatEdge"
+      ]
     },
     {
       "id": "large-flat-edge-right",
@@ -485,7 +493,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "features": [
+        "largeEdge",
+        "flatEdge"
+      ]
     },
     {
       "id": "slopey-crimper-left",
@@ -881,6 +893,7 @@
       "id": "closed-crimp-left",
       "name": "Left 7.5 mm closed crimp with thumb support",
       "kind": "edge",
+      "sizeMillimeters": 7.5,
       "geometry": [
         {
           "frame": {
@@ -965,12 +978,14 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "fullCrimp"
     },
     {
       "id": "closed-crimp-right",
       "name": "Right 7.5 mm closed crimp with thumb support",
       "kind": "edge",
+      "sizeMillimeters": 7.5,
       "geometry": [
         {
           "frame": {
@@ -1055,7 +1070,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "fullCrimp"
     },
     {
       "id": "mr-deep-left",
@@ -1152,7 +1168,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "mr-deep-right",
@@ -1249,7 +1269,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "mr-shallow-left",
@@ -1346,7 +1370,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "mr-shallow-right",
@@ -1443,7 +1471,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "im-deep-left",
@@ -1539,7 +1571,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "im-deep-right",
@@ -1635,7 +1671,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "im-shallow-left",
@@ -1731,7 +1771,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "im-shallow-right",
@@ -1827,7 +1871,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     }
   ],
   "presentations": [

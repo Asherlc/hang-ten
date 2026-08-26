@@ -20,15 +20,15 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   changes:
     name: Classify changed components
-    # Closing (or merging) a pull request only needs to enter the
-    # concurrency group above so it cancels any stale runs still queued or
-    # in progress for this ref; it does no other work.
+    # Closing (or merging) a pull request only needs to enter its distinct,
+    # event-specific concurrency group, so a merged PR's pull_request.closed
+    # event cannot cancel the merge push CI; it does no other work.
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     permissions:
@@ -274,7 +274,7 @@ jobs:
       needs.changes.outputs.workflow == 'true' ||
       needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       # actions/checkout v4.2.2
@@ -347,7 +347,7 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure()
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-${{ github.run_id }}

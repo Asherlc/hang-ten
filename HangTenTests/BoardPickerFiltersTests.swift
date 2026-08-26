@@ -79,6 +79,23 @@ final class BoardPickerFiltersTests: XCTestCase {
         XCTAssertEqual(filters.filteredBoards(from: boards).map(\.id), ["one", "two"])
     }
 
+    func testFilteredBoardsPutFavoritesFirstWhilePreservingCatalogOrderWithinGroups() {
+        let boards = [
+            board(id: "first", manufacturer: "Metolius", name: "Compact", subtitle: ""),
+            board(id: "second", manufacturer: "Metolius", name: "Wood Grips", subtitle: ""),
+            board(id: "third", manufacturer: "Trango", name: "Pivot", subtitle: ""),
+            board(id: "fourth", manufacturer: "Metolius", name: "Compact Pro", subtitle: "")
+        ]
+        var filters = BoardPickerFilters()
+        filters.searchText = "compact"
+        filters.manufacturer = "Metolius"
+
+        XCTAssertEqual(
+            filters.filteredBoards(from: boards, favoriteBoardIDs: ["fourth"]).map(\.id),
+            ["fourth", "first"]
+        )
+    }
+
     private func board(id: String, manufacturer: String, name: String, subtitle: String) -> TrainingBoard {
         TrainingBoard(
             id: id,

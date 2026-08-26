@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { holdCentroid, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
+import { holdCentroid, holdMetadataWarnings, holdSiblings, rotationHandlePosition, svgPoint } from "../editor-model.ts";
 import type { HoldEditorActions } from "../useHoldEditor.ts";
 import type {
   Board,
@@ -204,6 +204,7 @@ export function HoldCanvas({
     };
   }, [document]);
   const selectedHold = document?.regions.find((region) => region.key === selectedKey) ?? null;
+  const metadataWarnings = document ? holdMetadataWarnings(document) : null;
   const selectedEditablePath = selectedHold?.shapeConstraint ? null : editor.editablePath;
   let selectedCommands: PathCommand[] | null = null;
   if (selectedHold) {
@@ -382,19 +383,21 @@ export function HoldCanvas({
             ))}
           </g>
           <g id="hold-overlay">
-            {document?.regions.map((hold) => (
-              <path
+            {document?.regions.map((hold) => {
+              const isMetadataIncomplete = metadataWarnings?.incompleteRegionKeys.has(hold.key) ?? false;
+              return <path
                 key={hold.key}
-                className="region-shape"
+                className={`region-shape${isMetadataIncomplete ? " region-missing-metadata" : ""}`}
                 data-hold-key={hold.key}
                 d={hold.displayPath}
                 fill={TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
                 fillOpacity={selectedKeys.includes(hold.key) ? "0.58" : "0.3"}
-                stroke={selectedKeys.includes(hold.key) ? "#fff7dc" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
-                strokeWidth={selectedKeys.includes(hold.key) ? "2.2" : "1.4"}
+                stroke={selectedKeys.includes(hold.key) ? "#fff7dc" : isMetadataIncomplete ? "#9a3d00" : TYPE_COLORS[hold.type ?? ""] ?? "#ff754f"}
+                strokeWidth={selectedKeys.includes(hold.key) ? "2.2" : isMetadataIncomplete ? "3" : "1.4"}
+                strokeDasharray={isMetadataIncomplete ? "5 3" : undefined}
                 role="button"
                 tabIndex={0}
-                aria-label={`Select hold ${hold.key}`}
+                aria-label={`Select hold ${hold.key}${isMetadataIncomplete ? " (missing required metadata)" : ""}`}
                 aria-pressed={selectedKeys.includes(hold.key)}
                 onPointerDown={(event) => {
                   if (busy || event.button !== 0 || (!event.metaKey && !event.ctrlKey)) return;
@@ -418,7 +421,7 @@ export function HoldCanvas({
                   onSelectHold(hold.key, event.metaKey || event.ctrlKey);
                 }}
               />
-            ))}
+            })}
           </g>
           {selectedCommands && pivot && rotationHandle && (
             <g className={`path-editor-overlay${busy ? " busy" : ""}`}>

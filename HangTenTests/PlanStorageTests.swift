@@ -228,7 +228,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(packageStore.semantics(for: compactMapping.boardID), [:])
         XCTAssertEqual(
             store.plan(id: "research.max-hangs")?.steps.first?.targets,
-            [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)]
+            [.feature(.mediumEdge, fallback: .largeEdge)]
         )
     }
 
@@ -1234,7 +1234,7 @@ final class PlanStorageTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug),
+                    target: .feature(.mediumEdge, fallback: .largeEdge),
                     timing: .fixed,
                     duration: 7
                 ),
@@ -1484,7 +1484,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testCompactIIStillResolvesGenericNonPinchPlans() throws {
+    func testCompactIIStillSubstitutesGenericNonPinchPlans() throws {
         let compact = BoardCatalog.defaultBoard
         let genericPlans = LegacyPlanSeedCatalog.all.filter {
             $0.boardID == nil && $0.id != LegacyPlanSeedCatalog.reiHangboardSample.id
@@ -1493,7 +1493,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(
             genericPlans.allSatisfy { plan in
                 plan.steps.flatMap(\.targets).allSatisfy {
-                    !BoardTargetResolver.resolveHoldIDs(for: $0, on: compact).isEmpty
+                    !BoardTargetResolver.substituteHoldIDs(for: $0, on: compact).isEmpty
                 }
             }
         )
@@ -1507,13 +1507,12 @@ final class PlanStorageTests: XCTestCase {
                 .flatMap(\.targets)
                 .first { $0.feature == .mediumPinch }
         )
-        XCTAssertFalse(BoardTargetResolver.resolveHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
+        XCTAssertFalse(BoardTargetResolver.substituteHoldIDs(for: reiMediumPinch, on: compact).isEmpty)
     }
 
     @MainActor
     func testAuditedPlansAreBoardFlexibleAndSubstituteOnEveryRegisteredBoard() throws {
         let auditedPlanIDs: Set<String> = [
-            "research.max-hangs",
             "research.force-feedback-f80",
             "research.force-feedback-f100",
             "research.eva-int-hangs",
@@ -1578,6 +1577,99 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(hollow.count, 4)
         XCTAssertTrue(pullUps.allSatisfy { $0.instruction.contains("2–4 total") })
         XCTAssertTrue(hollow.allSatisfy { $0.instruction.contains("2–4 total paired sets") })
+    }
+
+    func testFeatureTargetValidationAcceptsRuntimeResolvableUntaggedSameKindHold() {
+        let board = TrainingBoard(
+            id: "fixture.untagged-edge",
+            manufacturer: "Fixture Maker",
+            name: "Untagged Edge",
+            subtitle: "A test board whose edge has no feature metadata.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.edge",
+                    name: "Fixture edge",
+                    kind: .edge,
+                    geometry: [
+                        BoardHoldPiece(
+                            id: "fixture.edge-piece",
+                            holdID: "fixture.edge",
+                            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
+                            shape: .roundedRect(cornerRadiusFraction: 0),
+                            treatment: .surface
+                        )
+                    ]
+                )
+            ],
+            productURL: URL(string: "https://example.com/untagged-edge")!,
+            photoAssetName: nil
+        )
+        let target = HoldTarget.feature(.mediumEdge)
+        let step = makeStep(
+            id: "feature-target",
+            duration: 10,
+            targets: [.feature(.mediumEdge, fallbacks: [])],
+            segments: []
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: board),
+            ["fixture.edge"]
+        )
+        XCTAssertFalse(
+            makeLibrary(steps: [step], boardID: board.id)
+                .validationIssues(availableBoards: [board])
+                .contains {
+                    $0.path == "plans[0].blocks[0].steps[0].targets[0]" &&
+                        $0.message == "No compatible board exposes feature \"mediumEdge\" or its fallbacks."
+                }
+        )
+    }
+
+    func testFeatureTargetValidationRejectsTargetRuntimeCannotResolve() {
+        let board = TrainingBoard(
+            id: "fixture.jug-only",
+            manufacturer: "Fixture Maker",
+            name: "Jug Only",
+            subtitle: "A test board with no edge or pocket holds.",
+            dimensions: "10 × 5",
+            aspectRatio: 2,
+            holds: [
+                BoardHold(
+                    id: "fixture.jug",
+                    name: "Fixture jug",
+                    kind: .jug,
+                    geometry: [
+                        BoardHoldPiece(
+                            id: "fixture.jug-piece",
+                            holdID: "fixture.jug",
+                            frame: CGRect(x: 0.1, y: 0.2, width: 0.2, height: 0.4),
+                            shape: .roundedRect(cornerRadiusFraction: 0),
+                            treatment: .surface
+                        )
+                    ]
+                )
+            ],
+            productURL: URL(string: "https://example.com/jug-only")!,
+            photoAssetName: nil
+        )
+        let step = makeStep(
+            id: "feature-target",
+            duration: 10,
+            targets: [.feature(.mediumEdge, fallbacks: [])],
+            segments: []
+        )
+
+        XCTAssertTrue(
+            makeLibrary(steps: [step], boardID: board.id)
+                .validationIssues(availableBoards: [board])
+                .contains {
+                    $0.path == "plans[0].blocks[0].steps[0].targets[0]" &&
+                        $0.message == "No compatible board exposes feature \"mediumEdge\" or its fallbacks."
+                }
+        )
     }
 
     func testPlanSemanticMappingsRemainAuthoritativeDuringValidation() {

@@ -72,6 +72,7 @@ function clientFixture(boards: readonly Board[]): WorkbenchClient & {
         displayName: board.displayName,
         holdCount: board.holdCount,
         imageUrl: board.imageUrl,
+        needsAttention: false,
       }));
     },
     async getBoard(boardId): Promise<Board> {
@@ -184,6 +185,36 @@ test("model helpers group physical holds and derive collision-free identifiers",
   assert.equal(nextHoldId(document), "hold-4");
   assert.equal(nextHoldId(document, ["hold-4", "hold-5"]), "hold-6");
   assert.equal(nextRegionId(document), 10);
+});
+
+test("metadata warning marks every region of a physical hold missing required metadata", async () => {
+  const document = documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+    { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 }, fingerCapacity: 2, depthRangeMillimeters: { lowerBound: 15, upperBound: 20 }, handCapacity: 1 },
+  ]);
+
+  await withEditor(async (app) => {
+    assert.equal(app.text("#metadata-warning"), "1 hold needs metadata");
+    assert.equal(app.document.querySelectorAll(".region-missing-metadata").length, 2);
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-label"), "Select hold a-piece-0 (missing required metadata)");
+  }, dependenciesFixture(boardFixture(document)));
+});
+
+test("metadata warning updates when an incomplete hold receives its missing field", async () => {
+  const document = documentFixture([
+    { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+    { id: 2, key: "a-piece-1", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+  ]);
+
+  await withEditor(async (app) => {
+    assert.equal(app.text("#metadata-warning"), "1 hold needs metadata");
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#finger-capacity-select", "2");
+
+    assert.equal(app.document.querySelector("#metadata-warning"), null);
+    assert.equal(app.document.querySelectorAll(".region-missing-metadata").length, 0);
+  }, dependenciesFixture(boardFixture(document)));
 });
 
 test("switching presentations changes the focused canvas and scopes new holds", async () => {
@@ -643,7 +674,7 @@ test("hold paths expose button semantics and support Enter and Space selection",
     const target = app.document.querySelector<SVGPathElement>('[data-hold-key="b-piece-0"]');
     assert.equal(target?.getAttribute("role"), "button");
     assert.equal(target?.getAttribute("tabindex"), "0");
-    assert.equal(target?.getAttribute("aria-label"), "Select hold b-piece-0");
+    assert.equal(target?.getAttribute("aria-label"), "Select hold b-piece-0 (missing required metadata)");
 
     assert.equal(await app.keyDown('[data-hold-key="b-piece-0"]', "Enter"), false);
     assert.equal(app.text("#hold-heading"), "b-piece-0");
@@ -947,7 +978,7 @@ test("finger capacity loads in the inspector, applies to every physical piece, a
   }, dependenciesFixture(board, { client }));
 });
 
-test("depth range loads in the inspector and saves across every physical piece", async () => {
+test("depth measurement modes load existing ranges, switch atomically, and save across every physical piece", async () => {
   const board = boardFixture(documentFixture([
     {
       id: 1,
@@ -955,7 +986,7 @@ test("depth range loads in the inspector and saves across every physical piece",
       type: "jug",
       displayPath: FIRST_PATH,
       metadata: { holdID: "a", pieceIndex: 0 },
-      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
     },
     {
       id: 2,
@@ -963,7 +994,7 @@ test("depth range loads in the inspector and saves across every physical piece",
       type: "jug",
       displayPath: SECOND_PATH,
       metadata: { holdID: "a", pieceIndex: 1 },
-      depthRangeMillimeters: { lowerBound: 9, upperBound: 10 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
     },
     { id: 3, key: "b-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "b", pieceIndex: 0 } },
   ]));
@@ -978,20 +1009,162 @@ test("depth range loads in the inspector and saves across every physical piece",
 
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
-    assert.equal(app.documentValue("#depth-range-lower-input"), "9");
+    assert.equal(app.documentValue("#depth-measurement-select"), "variable");
+    assert.equal(app.documentValue("#depth-range-lower-input"), "7.5");
     assert.equal(app.documentValue("#depth-range-upper-input"), "10");
-    await app.change("#depth-range-lower-input", "12");
-    await app.change("#depth-range-upper-input", "16");
+    await app.change("#depth-measurement-select", "fixed");
+    assert.equal(app.document.querySelector("#depth-range-lower-input"), null);
+    await app.change("#hold-depth-input", "12.5");
     await app.click("#save-button");
-    assert.deepEqual(
-      saved[0]?.regions.slice(0, 2).map((region) => region.depthRangeMillimeters),
-      [{ lowerBound: 12, upperBound: 16 }, { lowerBound: 12, upperBound: 16 }],
-    );
+    assert.deepEqual(saved[0]?.regions.slice(0, 2).map((region) => region.sizeMillimeters), [12.5, 12.5]);
+    assert.ok(saved[0]?.regions.slice(0, 2).every((region) => !Object.hasOwn(region, "depthRangeMillimeters")));
 
     await app.click("#add-hold-button");
-    assert.equal(app.documentValue("#depth-range-lower-input"), "");
-    assert.equal(app.documentValue("#depth-range-upper-input"), "");
+    assert.equal(app.documentValue("#depth-measurement-select"), "unset");
+    assert.equal(app.document.querySelector("#hold-depth-input"), null);
+    assert.equal(app.document.querySelector("#depth-range-lower-input"), null);
   }, dependenciesFixture(board, { client }));
+});
+
+test("depth measurement modes reopen scalar values and clear the opposite depth form", async () => {
+  const scalarRegion = {
+    id: 1,
+    key: "a-piece-0",
+    type: "jug",
+    displayPath: FIRST_PATH,
+    metadata: { holdID: "a", pieceIndex: 0 },
+    sizeMillimeters: 10,
+  };
+  const board = boardFixture(documentFixture([scalarRegion]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    assert.equal(app.documentValue("#depth-measurement-select"), "fixed");
+    assert.equal(app.documentValue("#hold-depth-input"), "10");
+
+    await app.change("#depth-measurement-select", "variable");
+    await app.change("#depth-range-lower-input", "7.5");
+    await app.change("#depth-range-upper-input", "12.5");
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions[0]?.depthRangeMillimeters, { lowerBound: 7.5, upperBound: 12.5 });
+    assert.equal(Object.hasOwn(saved[0]?.regions[0] ?? {}, "sizeMillimeters"), false);
+
+    await app.change("#depth-measurement-select", "unset");
+    await app.click("#save-button");
+    assert.equal(Object.hasOwn(saved[1]?.regions[0] ?? {}, "sizeMillimeters"), false);
+    assert.equal(Object.hasOwn(saved[1]?.regions[0] ?? {}, "depthRangeMillimeters"), false);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("zero depth is visibly invalid in the inspector", async () => {
+  const board = boardFixture(documentFixture([
+    {
+      id: 1,
+      key: "a-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "a", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
+    },
+  ]));
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#depth-range-lower-input", "0");
+
+    const input = app.document.querySelector<HTMLInputElement>("#depth-range-lower-input");
+    assert.ok(input);
+    assert.equal(input.min, Number.MIN_VALUE.toString());
+    assert.equal(input.checkValidity(), false);
+    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+  }, dependenciesFixture(board));
+});
+
+test("zero fixed depth is visibly invalid in the inspector", async () => {
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#depth-measurement-select", "fixed");
+    await app.change("#hold-depth-input", "0");
+
+    const input = app.document.querySelector<HTMLInputElement>("#hold-depth-input");
+    assert.ok(input);
+    assert.equal(input.min, Number.MIN_VALUE.toString());
+    assert.equal(input.checkValidity(), false);
+    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+  });
+});
+
+test("clearing an invalid optional depth clears its validation error and saves without a depth range", async () => {
+  const board = boardFixture(documentFixture([
+    {
+      id: 1,
+      key: "a-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "a", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
+    },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#depth-range-lower-input", "0");
+    await app.change("#depth-range-lower-input", "");
+
+    const input = app.document.querySelector<HTMLInputElement>("#depth-range-lower-input");
+    assert.ok(input);
+    assert.equal(input.checkValidity(), true);
+    await app.click("#save-button");
+    assert.equal(Object.hasOwn(saved[0]?.regions[0] ?? {}, "depthRangeMillimeters"), false);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("changing the selected hold clears stale depth validation", async () => {
+  const board = boardFixture(documentFixture([
+    {
+      id: 1,
+      key: "a-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "a", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 },
+    },
+    {
+      id: 2,
+      key: "b-piece-0",
+      type: "edge",
+      displayPath: OTHER_PATH,
+      metadata: { holdID: "b", pieceIndex: 0 },
+      depthRangeMillimeters: { lowerBound: 12.5, upperBound: 15 },
+    },
+  ]));
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#depth-range-lower-input", "0");
+    await app.click('[data-hold-key="b-piece-0"]');
+
+    const input = app.document.querySelector<HTMLInputElement>("#depth-range-lower-input");
+    assert.ok(input);
+    assert.equal(input.value, "12.5");
+    assert.equal(input.checkValidity(), true);
+  }, dependenciesFixture(board));
 });
 
 test("arrows nudge by 1 and 10 while input-targeted arrows retain native behavior", async () => {

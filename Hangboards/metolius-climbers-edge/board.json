@@ -1031,6 +1031,7 @@
       "id": "edge-17-5-left",
       "name": "Left 17.5 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 17.5,
       "geometry": [
         {
           "frame": {
@@ -1154,6 +1155,7 @@
       "id": "edge-12-5-left",
       "name": "Left 12.5 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 12.5,
       "geometry": [
         {
           "frame": {
@@ -1277,6 +1279,7 @@
       "id": "edge-7-5-center",
       "name": "Center 7.5 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 7.5,
       "geometry": [
         {
           "frame": {
@@ -1400,6 +1403,7 @@
       "id": "edge-12-5-right",
       "name": "Right 12.5 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 12.5,
       "geometry": [
         {
           "frame": {
@@ -1523,6 +1527,7 @@
       "id": "edge-17-5-right",
       "name": "Right 17.5 mm edge",
       "kind": "edge",
+      "sizeMillimeters": 17.5,
       "geometry": [
         {
           "frame": {

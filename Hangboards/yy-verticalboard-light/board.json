@@ -11,6 +11,9 @@
       "id": "jug-left",
       "name": "Left top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -82,6 +85,9 @@
       "id": "jug-right",
       "name": "Right top jug",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "geometry": [
         {
           "frame": {
@@ -153,6 +159,7 @@
       "id": "sloper-30-left",
       "name": "Left 30-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -232,6 +239,7 @@
       "id": "sloper-30-right",
       "name": "Right 30-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {
@@ -311,6 +319,7 @@
       "id": "sloper-20-center",
       "name": "Center 20-degree sloper",
       "kind": "sloper",
+      "gripType": "sloper",
       "geometry": [
         {
           "frame": {

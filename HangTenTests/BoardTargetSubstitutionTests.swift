@@ -2,11 +2,22 @@ import XCTest
 @testable import HangTen
 
 final class BoardTargetSubstitutionTests: XCTestCase {
+    func testBoardHoldDepthMeasurementRejectsFixedAndVariableDepths() {
+        let measurement = BoardHold.DepthMeasurement(
+            sizeMillimeters: 7.5,
+            depthRangeMillimeters: 7.5...12.5
+        )
+
+        XCTAssertNil(measurement)
+    }
+
     private func hold(
         id: String,
         kind: HoldKind = .edge,
         feature: HoldFeature? = nil,
         fingerCapacity: Int? = nil,
+        sizeMillimeters: Double? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
         x: Double = 0
     ) -> BoardHold {
         BoardHold(
@@ -16,7 +27,9 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             detail: id,
             kind: kind,
             frame: HoldFrame(x: x, y: 0, width: 0.1, height: 0.1),
+            sizeMillimeters: sizeMillimeters,
             fingerCapacity: fingerCapacity,
+            depthRangeMillimeters: depthRangeMillimeters,
             features: feature.map { [$0] }
         )
     }
@@ -51,6 +64,23 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let target = HoldTarget.feature(.smallEdge)
         let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
         XCTAssertEqual(result, ["a"])
+    }
+
+    func testUntaggedThreeFingerPocketSubstitutionKeepsOneHoldPerHand() {
+        let board = board(holds: [
+            hold(id: "left-29", kind: .pocket, fingerCapacity: 3, x: 0.1),
+            hold(id: "left-19", kind: .pocket, fingerCapacity: 3, x: 0.3),
+            hold(id: "right-29", kind: .pocket, fingerCapacity: 3, x: 0.7),
+            hold(id: "right-19", kind: .pocket, fingerCapacity: 3, x: 0.9)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .feature(.pocket, fingerCapacity: 3),
+                on: board
+            ),
+            ["left-29", "right-29"]
+        )
     }
 
     func testSameKindEdgeCandidateOutranksPocketSubstitution() {
@@ -135,6 +165,71 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["j"])
     }
 
+    /// A board with generic, untagged edges cannot distinguish a semantic
+    /// edge request. The physical-kind fallback must remain a usable,
+    /// bounded cue rather than highlighting every edge on the board.
+    func testMetadataLightSameKindFallbackSelectsOneRepresentativeHold() {
+        let board = board(holds: [
+            hold(id: "first-edge", kind: .edge),
+            hold(id: "second-edge", kind: .edge),
+            hold(id: "third-edge", kind: .edge)
+        ])
+        let target = HoldTarget.feature(.mediumEdge)
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: target, on: board)
+
+        XCTAssertEqual(result, ["first-edge"])
+    }
+
+    func testMetadataLightEdgeFallbackSelectsOneEdgePerBoardHalf() {
+        let board = board(holds: [
+            hold(id: "left-edge", x: 0.1),
+            hold(id: "left-extra", x: 0.3),
+            hold(id: "right-edge", x: 0.8)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.largeEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["left-edge", "right-edge"])
+    }
+
+    /// A 20 mm medium-edge target must prefer a documented 20/15 mm
+    /// continuous contact over shallower and deeper metadata-light edges.
+    func testMetadataLightMediumEdgeFallbackPrefersNearestDocumentedDepthRange() {
+        let board = board(holds: [
+            hold(id: "10-8", depthRangeMillimeters: 8...10),
+            hold(id: "30-25", depthRangeMillimeters: 25...30),
+            hold(id: "20-15", depthRangeMillimeters: 15...20)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.mediumEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["20-15"])
+    }
+
+    /// Depth metadata is optional, so a documented scalar measurement also
+    /// outranks unknown or farther range measurements in a physical fallback.
+    func testMetadataLightLargeEdgeFallbackUsesNearestScalarDepthBeforeUnknownHold() {
+        let board = board(holds: [
+            hold(id: "unknown"),
+            hold(id: "20-15", depthRangeMillimeters: 15...20),
+            hold(id: "29", sizeMillimeters: 29)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(
+            for: .feature(.largeEdge),
+            on: board
+        )
+
+        XCTAssertEqual(result, ["29"])
+    }
+
     func testKindTargetSubstitutesByKind() {
         let board = board(holds: [
             hold(id: "e1", kind: .edge, feature: .largeEdge)
@@ -151,10 +246,63 @@ final class BoardTargetSubstitutionTests: XCTestCase {
 
         let result = BoardTargetResolver.substituteHoldIDs(
             for: .feature(.smallEdge),
-            on: board
+            on: board,
+            gripType: .openHand
         )
 
         XCTAssertEqual(result, ["pocket"])
+    }
+
+    @MainActor
+    func testCrimpStepsRejectJugsOpenHandRailsAndPockets() throws {
+        let incompatibleBoard = board(holds: [
+            hold(id: "jug", kind: .jug, feature: .jug),
+            hold(id: "open-hand-rail", feature: .largeOpenHandRail),
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+
+        for gripType in [GripType.halfCrimp, .fullCrimp] {
+            let step = WorkoutStep(
+                id: "crimp-step",
+                number: 1,
+                title: "Crimp step",
+                instruction: "Crimp an edge.",
+                accessory: "",
+                duration: 7,
+                phase: .hang,
+                targets: [.feature(.mediumEdge, fallback: .largeOpenHandRail, .jug)],
+                gripType: gripType
+            )
+
+            XCTAssertTrue(store.holdIDs(for: step, on: incompatibleBoard).isEmpty)
+        }
+    }
+
+    func testCrimpResolverRejectsJugsOpenHandRailsAndPockets() {
+        let incompatibleBoard = board(holds: [
+            hold(id: "jug", kind: .jug, feature: .jug),
+            hold(id: "open-hand-rail", feature: .largeOpenHandRail),
+            hold(id: "pocket", kind: .pocket, feature: .pocket)
+        ])
+        let target = HoldTarget.feature(
+            .mediumEdge,
+            fallback: .largeOpenHandRail,
+            .jug
+        )
+
+        for gripType in [GripType.halfCrimp, .fullCrimp] {
+            XCTAssertTrue(
+                BoardTargetResolver.substituteHoldIDs(
+                    for: target,
+                    on: incompatibleBoard,
+                    gripType: gripType
+                ).isEmpty
+            )
+        }
     }
 
     func testEdgeFeatureFallbackSelectsOnePocketPerHandWhenCapacityIsUnspecified() {
@@ -214,14 +362,94 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
-    func testBeastmaker1000SupportsGenericEdgeRoutineButNotUnsupportedREIPinchRoutine() throws {
+    func testBeastmaker1000IsIncompatibleWithRuntimeMaxHangs() throws {
         let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
 
-        XCTAssertFalse(store.isIncompatible(LegacyPlanSeedCatalog.methodRepeaters, on: board))
+        XCTAssertTrue(store.isIncompatible(PlanCatalog.maxHangs, on: board))
+        XCTAssertTrue(
+            store.holdIDs(for: try XCTUnwrap(PlanCatalog.maxHangs.steps.first), on: board).isEmpty
+        )
+    }
+
+    @MainActor
+    func testBeastmaker2000OpenHandLargeEdgeUsesTheOnlySourceMeasuredEdge() throws {
+        let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let step = WorkoutStep(
+            id: "open-hand-29-mm",
+            number: 1,
+            title: "29 mm open edge",
+            instruction: "",
+            accessory: "",
+            duration: 7,
+            phase: .hang,
+            targets: [.feature(.largeEdge)],
+            gripType: .openHand
+        )
+
+        XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-lower-5"])
+    }
+
+    @MainActor
+    func testMaxHangsResolvesOnBoardWithCompatibleEdge() throws {
+        let board = board(holds: [
+            hold(id: "large-edge", feature: .largeEdge)
+        ])
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+
+        XCTAssertFalse(store.isIncompatible(PlanCatalog.maxHangs, on: board))
+        XCTAssertEqual(
+            store.holdIDs(for: try XCTUnwrap(PlanCatalog.maxHangs.steps.first), on: board),
+            ["large-edge"]
+        )
+    }
+
+    @MainActor
+    func testMultiTargetCrimpStepRetainsNonCrimpTargetAndRemainsCompatible() throws {
+        let board = board(holds: [
+            hold(id: "medium-edge", feature: .mediumEdge),
+            hold(id: "jug", kind: .jug, feature: .jug)
+        ])
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let methodPlan = LegacyPlanSeedCatalog.methodEMOM
+        let step = try XCTUnwrap(methodPlan.steps.first { $0.id == "method-emom-minute-3" })
+        let plan = TrainingPlan(
+            id: methodPlan.id,
+            title: methodPlan.title,
+            subtitle: methodPlan.subtitle,
+            level: methodPlan.level,
+            sourceLabel: methodPlan.sourceLabel,
+            sourceURL: methodPlan.sourceURL,
+            provenance: methodPlan.provenance,
+            boardID: methodPlan.boardID,
+            steps: [step]
+        )
+
+        XCTAssertEqual(store.holdIDs(for: step, on: board), ["medium-edge", "jug"])
+        XCTAssertFalse(store.isIncompatible(plan, on: board))
+    }
+
+    @MainActor
+    func testBeastmaker1000IsIncompatibleWithUnsupportedREIPinchRoutine() throws {
+        let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
+        let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+
         XCTAssertTrue(store.isIncompatible(LegacyPlanSeedCatalog.reiHangboardSample, on: board))
     }
 

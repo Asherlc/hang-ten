@@ -71,22 +71,20 @@ two-finger pocket, and visible mono pockets into one physical inventory. The
 official images support visible boundaries, including whether the integrated
 pocket shares a logical contact; omit any unsupported capacity or posture.
 
-**2026-08-19 frozen mapping:** Ten logical physical contacts are represented:
-one full-width jug; mirrored continuous top contacts spanning the engraved 8,
-10, and 12 mm steps; mirrored middle contacts spanning 30 and 40 mm with the
-source-described two-finger pocket integrated into the same physical cavity;
-one isolated 25 mm centre edge; mirrored continuous bottom contacts spanning 15
-and 20 mm; and two isolated mono pockets. The composite stepped contacts omit a
-single `sizeMillimeters` because more than one manufacturer-labelled depth is
-part of the same physical region. The centre edge retains 25 mm and the isolated
-monos retain source-backed one-finger capacity. The official front JPEG is
-converted to PNG only for package compatibility, without cropping or geometry
-changes. The center edge uses a manually selected rounded-rectangle constraint,
-and the circular monos use circle constraints. The paired 8/10/12 and 15/20
-cavity outlines retain their reviewed bespoke freeform curvature rather than
-forcing the Workbench's fixed preset radii. The jug and integrated 30/40/pocket
-contacts also remain freeform. Each retained constraint was materialized from
-the current Workbench primitive and passes an exact zero-delta constrained
+**2026-08-25 corrected mapping:** Eighteen source-labelled contacts are
+represented: one full-width jug; separate left/right 8, 10, and 12 mm top
+shelves; separate left/right 30 and 40 mm middle shelves (each 40 mm shelf
+retains its integrated two-finger pocket); one 25 mm centre edge; separate
+left/right 15 and 20 mm bottom shelves; and two isolated mono pockets. The
+engraved front identifies the individual planar shelves by depth, so their
+shared cavity walls do not merge them into one logical hold. Each labelled edge
+keeps its exact scalar `sizeMillimeters`; the centre edge retains 25 mm and the
+isolated monos retain source-backed one-finger capacity. The official front JPEG
+is converted to PNG only for package compatibility, without cropping or
+geometry changes. The center edge uses a manually selected rounded-rectangle
+constraint, and the circular monos use circle constraints. The jug and the
+remaining shelf paths stay freeform. Each retained constraint was materialized
+from the current Workbench primitive and passes an exact zero-delta constrained
 resize.
 
 ## Required follow-up
@@ -94,3 +92,100 @@ resize.
 For each unfinished model, confirm the physical inventory from the product copy
 and official views, document any ambiguity, omit unsupported optional facts,
 and directly author and visually review the complete flat package.
+
+## 2026-08-25 source-audited metadata
+
+The current manufacturer pages and images below were re-opened on 2026-08-25.
+Fresh stable-ID captures were manually reviewed under
+`.context/hangboard-metadata-backfill-icky-cow/escape-frictitious-evolv-dewoodstok/`.
+The captures are review aids only; no path or geometry changed.
+
+### Frictitious DoorMount Pro 7
+
+The controlling sources are the current
+[DoorMount Pro product page](https://frictitiousclimbing.com/products/doormount-pro),
+[official engraved Pro 7 front](https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840),
+and [official pocket-use image](https://frictitiousclimbing.com/cdn/shop/files/DMP-Pockets.jpg?v=1779384260&width=3840).
+The reviewed overlay is
+`frictitious.doormount-pro-7--1afc3c4fb553.png`.
+
+This current review supersedes the 2026-08-19 seven-contact interpretation
+above. The product page's seven-hold wording counts source families: five edge
+depths, pockets, and the pull-up jug. The current engraved front resolves those
+families to one full-width jug and six mirrored contact pairs, exactly matching
+the package's 13 stable records.
+
+| Official position | Stable hold ID(s) | Verified kind | Verified metadata |
+| --- | --- | --- | --- |
+| Full-width pull-up jug | `top-jug` | `jug` | `features: [jug]` |
+| Outer upper surfaces engraved `35` | `edge-35-left`, `edge-35-right` | `edge` | 35 mm |
+| Inner upper surfaces engraved `25` | `mixed-25-pocket-left`, `mixed-25-pocket-right` | `edge` | 25 mm |
+| Circular pockets below the 25 mm edges | `hold-7`, `hold-6` | `pocket` | `features: [pocket]`; fixed capacity blank |
+| Outer lower surfaces engraved `20` | `hold-12`, `hold-13` | `edge` | 20 mm |
+| Middle lower surfaces engraved `15` | `hold-11`, `hold-8` | `edge` | 15 mm |
+| Inner lower surfaces engraved `10` | `hold-10`, `hold-9` | `edge` | 10 mm |
+
+The package gained the exact 25/20/15/10 mm scalar mappings and exact jug and
+pocket feature tags. The old `fingerCapacity: 2` values on `hold-6` and
+`hold-7` were removed: the use image shows a two-finger use, not a fixed
+maximum capacity. Display names and the subtitle were corrected to reflect the
+source positions; stable IDs and geometry were preserved. The ledger accounts
+for all 91 seven-field outcomes: 26 verified, 54 unavailable, and 11 not
+applicable.
+
+All depth ranges, simultaneous-hand capacities, and exact grip postures remain
+blank because Frictitious publishes none for these exact contacts. Finger
+capacity is not applicable to the source-identified jug and edges; the two
+pockets retain an unavailable capacity. Edge feature tags remain blank because
+the official labels establish no additional exact supported taxonomy.
+
+### Evolv Basic Training Board (Long)
+
+The controlling source is Evolv's current
+[Basic Training Board (Long) product page](https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105),
+supported by its
+[official straight-on image](https://oberalp.imgix.net/ef857c73-13f1-4205-ac47-706cd101e1bb.jpg?auto=format&cs=srgb&fit=clip&type=still&w=628).
+The reviewed overlay is
+`evolv-kilter-basic-long--ac4049aa3a2d.png`.
+
+| Official hold-list label | Stable hold ID | Verified kind | Verified metadata |
+| --- | --- | --- | --- |
+| `Jug Rounded` | `jug-rounded` | `jug` | `features: [jug]` |
+| `20 mm rounded edge` | `edge-20` | `edge` | 20 mm |
+| `15 mm rounded edge` | `edge-15` | `edge` | 15 mm |
+| `10 mm rounded edge` | `edge-10` | `edge` | 10 mm |
+
+The three scalar depths were already present. This pass added only the exact
+jug feature tag. All four `kind` values are directly verified by Evolv's hold
+list. The ledger accounts for all 28 seven-field outcomes: 8 verified, 16
+unavailable, and 4 not applicable.
+
+Depth ranges, simultaneous-hand capacities, and exact grip postures remain
+blank. Finger capacity is not applicable to the source-identified jug and
+edges. `rounded edge` has no exact `roundedEdge` schema tag, so the three edge
+feature lists remain blank rather than receiving inferred qualitative tags.
+
+### Frictitious Megalith inventory reconciliation
+
+The controlling sources are the current
+[Megalith product page](https://frictitiousclimbing.com/products/megalith) and
+[official engraved front](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840).
+The product page specifies seven shoulder-width edge depths, the integrated
+two-finger pocket on the 40 mm edge, mono pockets, a 25 mm single-hand centre
+hold, and the full-width jug. The engraved front establishes separate planar
+8/10/12, 30/40, and 15/20 shelves on each side. They receive one scalar-depth
+record per labelled shelf, not a combined range record.
+
+The unnamed overlapping `hold-11` through `hold-14` paths remain removed: they
+were nested overlays rather than labelled shelves. The correction replaces the
+six range records with fourteen source-labelled scalar edge records, taking the
+package from ten to eighteen logical holds without restoring those duplicates.
+The right 20/15 mm shelves use their own asymmetric source footprint
+(`x = 0.629301` through `0.853922`), split at the visible divider rather than
+mirroring the left shelf paths. That endpoint is deliberately left of the
+separate right mono cavity, so the two selectable contacts do not overlap.
+
+A fresh stable-ID capture was manually reviewed at
+`.context/hangboard-metadata-backfill-icky-cow/frictitious-megalith-reconciliation/frictitious.megalith--3f1c176e6ccc.png`.
+It reports eighteen regions: separate IDs align with every engraved 8/10/12,
+30/40, and 15/20 shelf, while no unnamed nested overlay remains.

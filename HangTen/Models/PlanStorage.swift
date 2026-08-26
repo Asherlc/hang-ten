@@ -1040,11 +1040,16 @@ enum PlanLibraryValidator {
             case .kind:
                 break
             case let .feature(feature, fallbacks, fingerCapacity):
-                let acceptedFeatures = [feature] + fallbacks
+                let runtimeTarget = HoldTarget(
+                    holdIDs: [],
+                    kind: nil,
+                    feature: feature,
+                    fallbackFeatures: fallbacks,
+                    fingerCapacity: fingerCapacity
+                )
                 let hasCompatibleBoard = boardIDs.contains { boardID in
-                    boardByID[boardID]?.first?.holds.contains { hold in
-                        hold.matches(anyOf: acceptedFeatures, fingerCapacity: fingerCapacity)
-                    } == true
+                    guard let board = boardByID[boardID]?.first else { return false }
+                    return !BoardTargetResolver.substituteHoldIDs(for: runtimeTarget, on: board).isEmpty
                 }
                 if !hasCompatibleBoard {
                     issues.append(

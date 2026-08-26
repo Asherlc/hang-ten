@@ -58,3 +58,109 @@ The product-page pad wording and the millimetre graphics describe the same
 ordered tiers but are not identical unit conversions. The package records the
 graphic's explicit millimetre labels and does not derive new conversions. No
 capacity, posture, grip prescription, or training claim is inferred.
+
+## 2026-08-25 source-audited metadata: Escape Unlimited
+
+The current [Unlimited product page](https://escapeclimbing.com/products/ec72000),
+[official progression diagram](https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445),
+and [official straight-on view](https://escapeclimbing.com/cdn/shop/files/PDP_EC72000_UnlimitedBoard-01.png?v=1690380978&width=1445)
+were re-opened on 2026-08-25. A fresh stable-ID capture was manually reviewed
+under
+`.context/hangboard-metadata-backfill-icky-cow/escape-frictitious-evolv-dewoodstok/escape.unlimited--86fd62e22895.png`.
+The overlay is a review aid only and did not change geometry.
+
+| Official position | Stable hold ID(s) | Verified kind | Verified scalar depth |
+| --- | --- | --- | ---: |
+| Full-width top, `SLOPER`, `60MM` | `top-sloper-60` | `sloper` | 60 mm |
+| Upper split rung, `45MM` | `edge-45-left`, `edge-45-right` | `edge` | 45 mm |
+| Middle split rung, `20MM` | `edge-20-left`, `edge-20-right` | `edge` | 20 mm |
+| Lower split rung, `15MM` | `edge-15-left`, `edge-15-right` | `edge` | 15 mm |
+
+All seven existing stable IDs map one-to-one to the four labelled tiers and
+their physical split/continuous boundaries. The package already contained the
+seven exact scalar values, so this pass verified them without changing the
+package. The ledger now accounts for all 49 seven-field outcomes: 14 verified,
+28 unavailable, and 7 not applicable.
+
+The remaining blanks are deliberate. Escape publishes no lower/upper depth
+range, fixed simultaneous-hand capacity, or exact per-contact grip posture.
+Finger capacity is not applicable to the source-identified sloper and rungs.
+The schema has no exact sloper feature tag, and Escape establishes no exact
+supported feature-tag set for the edge tiers.
+
+### Deferred packages from this manufacturer batch
+
+- At the time of this metadata batch, `escape-beta-22` remained outside
+  `reviewedBoardIDs`. Escape's official numbered breakdown showed 22 physical
+  contacts, while the package combined the left/right #9 and #11 contacts and
+  had no #10 contacts. The later geometry reconciliation below supersedes this
+  inventory blocker; metadata-ledger certification remains a separate step.
+- At the time of this metadata batch, `dewoodstok-woodbord` remained outside
+  `reviewedBoardIDs`. The later primary-source reconciliation below supersedes
+  that evidence blocker and certifies the 17-contact package.
+
+## 2026-08-25 direct geometry reconciliation: Escape Beta Board
+
+The current [Beta Board product page](https://escapeclimbing.com/products/ec72100),
+[official numbered breakdown](https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445),
+and [official straight-on front](https://escapeclimbing.com/cdn/shop/products/2020_Website_ProductImage_BetaBoardListing_01-02.jpg?v=1700454580&width=1445)
+establish eleven separate contacts on each symmetric side. The numbered
+breakdown is the controlling position and measurement source:
+
+| Official positions | Canonical stable IDs | Source label | Package adaptation |
+| --- | --- | --- | --- |
+| #9 left/right | `hold-09-left`, `hold-09-right` | 50mm Sloper Edge | Separate mirrored `sloper` records, 50 mm each |
+| #10 left/right | `hold-10-left`, `hold-10-right` | 31mm Sloper Edge | Separate mirrored `sloper` records, 31 mm each |
+| #11 left/right | `hold-11-left`, `hold-11-right` | 12mm Sloper Edge | Separate mirrored `sloper` records, 12 mm each |
+
+`sloper` is the conservative closed-taxonomy representation of Escape's exact
+“Sloper Edge” term. The former compound #9 and #11 records were separated into
+one logical record per physical contact. The #10 pair was deliberately drawn
+over the previously unclaimed middle sloper-edge surfaces against the official
+front, then mirrored about the board's physical symmetry line. The retained
+#9 pair was also restored to exact symmetry. No detection, segmentation,
+registration, vectorization, automatic path simplification, or generated
+contour informed these canonical paths.
+
+The review-only Workbench stable-ID capture is
+`.context/hangboard-metadata-backfill-icky-cow/escape-beta-geometry-repair/visible-id-capture/escape-beta-22--245680ffb240.png`.
+Its manifest reports 22 logical contacts and the manual overlay review confirms
+independent left/right #9, #10, and #11 regions aligned to the three official
+center tiers. The inventory repair does not itself add the board to the shared
+metadata ledger; unsupported range, capacity, grip, and feature fields remain
+blank for the six sloper-edge records.
+
+## 2026-08-25 source-audited metadata: DeWoodstok Woodbord
+
+The earlier primary-source blocker is superseded by the current
+[manufacturer product page](https://www.dewoodstok.nl/product/hangboard-woodbord/),
+[official media kit](https://www.dewoodstok.nl/media-kits/),
+[straight-on media-kit front](https://www.dewoodstok.nl/wp-content/uploads/2025/10/05_C_woodbord.jpg),
+and [official oblique view](https://www.dewoodstok.nl/wp-content/uploads/2025/10/05_B_woodbord.jpg).
+The product page identifies one large declining top rim, six depth families of
+four-finger pockets (13, 16, 20, 25, 30, and 35 mm), and two depth families of
+two-finger pockets (20 and 35 mm). The official views show that inventory as
+one continuous rim plus 16 physically separate front cavities.
+
+| Official contact family | Stable hold ID(s) | Verified package kind | Per-ID optional fields |
+| --- | --- | --- | --- |
+| One large declining rim | `top-rim` | `sloper` | All omitted; finger capacity is not applicable |
+| Sixteen separate front pocket cavities | `front-upper-1` through `front-upper-6`; `front-middle-1` through `front-middle-4`; `front-lower-1` through `front-lower-6` | `pocket` | All omitted because the family depths and capacities have no positioned map |
+
+`sloper` is a documented closed-taxonomy adaptation of the manufacturer's
+exact “declining rim” wording. The package path represents that same one
+continuous physical top surface, so the kind correction required no geometry
+change. The product page makes `pocket` the exhaustive category for all 16
+front cavities, but it does not assign a depth or two-/four-finger capacity to
+an exact cavity. The former capacities were therefore removed; apparent cavity
+width was not used as evidence. Scalar depth, depth range, hand capacity,
+`gripType`, and `features` also remain blank for every stable ID.
+
+The review-only Workbench capture is
+`.context/hangboard-metadata-backfill-icky-cow/dewoodstok-source-audit/dewoodstok-woodbord--e40376735372.png`.
+Manual review confirmed one `top-rim` overlay across the visible continuous top
+surface and one non-overlapping overlay on each of the 16 front cavities. The
+capture did not alter or generate geometry. The canonical ledger accounts for
+all 119 seven-field outcomes across the board's 17 physical contacts: 17
+verified kinds, one not-applicable top-rim finger capacity, and 101 deliberate
+unavailable optional outcomes.

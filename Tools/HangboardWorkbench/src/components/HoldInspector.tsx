@@ -2,6 +2,14 @@ import React from "react";
 
 import type { HoldRegion, MillimeterRange } from "../types.ts";
 
+type DepthMeasurementMode = "unset" | "fixed" | "variable";
+
+function depthMeasurementMode(hold: HoldRegion | null): DepthMeasurementMode {
+  if (hold?.sizeMillimeters !== undefined) return "fixed";
+  if (hold?.depthRangeMillimeters !== undefined) return "variable";
+  return "unset";
+}
+
 const HOLD_TYPES = ["jug", "sloper", "edge", "pocket", "pinch"] as const;
 const OUTLINE_SHAPES = [
   ["custom", "Custom"],
@@ -20,6 +28,8 @@ export interface HoldInspectorProps {
   onRotationDegreesChange(value: string): void;
   onTypeChange(type: string): void;
   onFingerCapacityChange(capacity: number | undefined): void;
+  onDepthMeasurementChange(mode: DepthMeasurementMode): void;
+  onSizeMillimetersChange(size: number | undefined): void;
   onDepthRangeChange(depthRange: MillimeterRange | undefined): void;
   onHandCapacityChange(capacity: number | undefined): void;
   onOutlineShapeChange(shape: string): void;
@@ -39,6 +49,8 @@ export function HoldInspector({
   onRotationDegreesChange,
   onTypeChange,
   onFingerCapacityChange,
+  onDepthMeasurementChange,
+  onSizeMillimetersChange,
   onDepthRangeChange,
   onHandCapacityChange,
   onOutlineShapeChange,
@@ -49,6 +61,26 @@ export function HoldInspector({
   onMobileCollapse,
   className = "",
 }: HoldInspectorProps) {
+  const [selectedDepthMode, setSelectedDepthMode] = React.useState<DepthMeasurementMode>(() => depthMeasurementMode(hold));
+  const depthInputRef = React.useRef<HTMLInputElement>(null);
+  const lowerDepthInputRef = React.useRef<HTMLInputElement>(null);
+  const upperDepthInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    setSelectedDepthMode(depthMeasurementMode(hold));
+  }, [hold?.key]);
+
+  React.useEffect(() => {
+    depthInputRef.current?.setCustomValidity("");
+    lowerDepthInputRef.current?.setCustomValidity("");
+    upperDepthInputRef.current?.setCustomValidity("");
+  }, [
+    hold?.key,
+    hold?.sizeMillimeters,
+    hold?.depthRangeMillimeters?.lowerBound,
+    hold?.depthRangeMillimeters?.upperBound,
+  ]);
+
   return (
     <aside className={`panel inspector-panel ${className}`.trim()} aria-labelledby="hold-heading">
       <div className="panel-heading">
@@ -90,23 +122,74 @@ export function HoldInspector({
             {[1, 2, 3, 4].map((capacity) => <option key={capacity} value={capacity}>{capacity}</option>)}
           </select>
         </label>
-        <fieldset className="depth-range-inputs">
+        <label>Depth measurement
+          <select
+            id="depth-measurement-select"
+            disabled={busy}
+            value={selectedDepthMode}
+            onChange={(event) => {
+              const mode = event.currentTarget.value as DepthMeasurementMode;
+              setSelectedDepthMode(mode);
+              onDepthMeasurementChange(mode);
+            }}
+          >
+            <option value="unset">Unset</option>
+            <option value="fixed">Fixed</option>
+            <option value="variable">Variable</option>
+          </select>
+        </label>
+        {selectedDepthMode === "fixed" && <label>Depth (mm)
+          <input
+            id="hold-depth-input"
+            type="number"
+            min={Number.MIN_VALUE}
+            step="any"
+            disabled={busy}
+            ref={depthInputRef}
+            value={hold?.sizeMillimeters ?? ""}
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              if (!value) {
+                event.currentTarget.setCustomValidity("");
+                onSizeMillimetersChange(undefined);
+                return;
+              }
+              const size = Number(value);
+              if (!Number.isFinite(size) || size <= 0) {
+                event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+                event.currentTarget.reportValidity();
+                return;
+              }
+              event.currentTarget.setCustomValidity("");
+              onSizeMillimetersChange(size);
+            }}
+          />
+        </label>}
+        {selectedDepthMode === "variable" && <fieldset className="depth-range-inputs">
           <legend>Depth range (mm)</legend>
           <label>Minimum
             <input
               id="depth-range-lower-input"
               type="number"
-              min="1"
-              step="1"
+              min={Number.MIN_VALUE}
+              step="any"
               disabled={busy}
+              ref={lowerDepthInputRef}
               value={hold?.depthRangeMillimeters?.lowerBound ?? ""}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 if (!value) {
+                  event.currentTarget.setCustomValidity("");
                   onDepthRangeChange(undefined);
                   return;
                 }
                 const lowerBound = Number(value);
+                if (!Number.isFinite(lowerBound) || lowerBound <= 0) {
+                  event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+                  event.currentTarget.reportValidity();
+                  return;
+                }
+                event.currentTarget.setCustomValidity("");
                 const upperBound = Math.max(hold?.depthRangeMillimeters?.upperBound ?? lowerBound, lowerBound);
                 onDepthRangeChange({ lowerBound, upperBound });
               }}
@@ -116,23 +199,31 @@ export function HoldInspector({
             <input
               id="depth-range-upper-input"
               type="number"
-              min="1"
-              step="1"
+              min={Number.MIN_VALUE}
+              step="any"
               disabled={busy}
+              ref={upperDepthInputRef}
               value={hold?.depthRangeMillimeters?.upperBound ?? ""}
               onChange={(event) => {
                 const value = event.currentTarget.value;
                 if (!value) {
+                  event.currentTarget.setCustomValidity("");
                   onDepthRangeChange(undefined);
                   return;
                 }
                 const upperBound = Number(value);
+                if (!Number.isFinite(upperBound) || upperBound <= 0) {
+                  event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+                  event.currentTarget.reportValidity();
+                  return;
+                }
+                event.currentTarget.setCustomValidity("");
                 const lowerBound = Math.min(hold?.depthRangeMillimeters?.lowerBound ?? upperBound, upperBound);
                 onDepthRangeChange({ lowerBound, upperBound });
               }}
             />
           </label>
-        </fieldset>
+        </fieldset>}
         <label>Hand capacity
           <select
             id="hand-capacity-select"

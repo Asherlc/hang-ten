@@ -287,7 +287,7 @@ Reviewed 2026-08-21.
 | `dimensions` | `24 × 8.5 in`, the page's Deluxe-specific dimensions. The Compact-specific 24 × 6.2 in value was deliberately excluded. |
 | `aspectRatio` and `presentations` | Presentation-art facts only: the accepted PNG is 1774 × 887 pixels, exactly `2.0`; every physical contact belongs to the single `front` presentation. |
 | `holds[].kind` | Directly follows each numbered Deluxe guide label: outer jugs, flat/round slopers, edges, or pockets. |
-| `holds[].sizeMillimeters` | Directly copies the millimeter value printed for that numbered Deluxe-guide position; no values came from Compact. |
+| `holds[].sizeMillimeters` | Directly copies the millimeter depth for numbered Deluxe edge/pocket positions. The 56 mm sloper descriptors remain in names and are omitted from scalar depth metadata. No values came from Compact. |
 | `holds[].fingerCapacity` and `gripType` | Present only for positions the Deluxe guide explicitly calls two-, three-, or four-finger pockets. No finger capacity or posture was inferred for jugs, slopers, or edges. |
 | omitted optional fields | No depth ranges, feature tags, grip posture for non-pockets, training claims, or other optional measurements were added. |
 
@@ -1451,3 +1451,133 @@ Xcode resource-staging script. Every exact simulator used for the visual,
 Penta-correction, and XCTest runs was archived and deleted; pending/owned
 manifests and task-specific Derived Data, screenshots, logs, and staging trees
 were cleared and verified absent without touching shared resources.
+
+## 2026-08-25 Metolius source-audited metadata pilot
+
+The Metolius sources below were re-opened on 2026-08-25 and compared manually
+with stable-ID overlays under
+`.context/hangboard-metadata-backfill-icky-cow/metolius/`. The workspace name
+fallback is `icky-cow` because `CONDUCTOR_WORKSPACE_NAME` was unset. All paths
+and geometry are unchanged. Light Rail was reviewed in both `20mm-side` and
+`15mm-side` captures; every other board below uses presentation `front`, except
+Rock Rings (`front-pair`) and Compact II (`primary`).
+
+### Foundry reviewed label map
+
+Source: [official numbered diagram](https://www.metoliusclimbing.com/cdn/shop/files/Foundry-depth.jpg?v=1762201186)
+and [current product page](https://www.metoliusclimbing.com/products/foundry-training-board).
+
+| Exact manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `1 — variable pinches` | `pinch-1-left`, `pinch-1-right` | `pinch` |
+| `2 — outer jugs` | `jug-2-left`, `jug-2-right` | `jug` |
+| `3 — 32 mm 4-finger pockets` | `pocket-3-left`, `pocket-3-right` | `pocket` |
+| `4 — 22 mm 3-finger pockets` | `pocket-4-left`, `pocket-4-right` | `pocket` |
+| `5 — 30 mm 2-finger pockets` | `pocket-5-left`, `pocket-5-right` | `pocket` |
+| `6 — 15 mm 3-finger pockets` | `pocket-6-left`, `pocket-6-right` | `pocket` |
+| `7 — 21 mm 2-finger pockets` | `pocket-7-left`, `pocket-7-right` | `pocket` |
+| `8 — 53 mm flat sloper` | `sloper-8-center` | `sloper` |
+| `9 — 16 mm edge` | `edge-9-center` | `edge` |
+| `10 — 30 mm edge` | `edge-10-center` | `edge` |
+| `11 — 23 mm edge` | `edge-11-center` | `edge` |
+
+### Prime Rib reviewed label map
+
+Source: [current product page](https://www.metoliusclimbing.com/products/prime-rib),
+which states `Three edges` and publishes their top-to-bottom depths.
+
+| Exact manufacturer position | Stable hold ID | Verified kind |
+| --- | --- | --- |
+| Top `38 mm` edge | `edge-38` | `edge` |
+| Middle `23 mm` edge | `edge-23` | `edge` |
+| Bottom `15 mm` edge | `edge-15` | `edge` |
+
+### Wood Grips Compact II reviewed label map
+
+Source: [official combined Compact/Deluxe numbered diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428)
+and [current product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards).
+
+| Exact Compact manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `1 — outer jugs` | `jug-left`, `jug-right` | `jug` |
+| `2 — 56 mm flat sloper` | `sloper-flat-left`, `sloper-flat-right` | `sloper` |
+| `3 — 29 mm edges` | `edge-29-left`, `edge-29-right` | `edge` |
+| `4 — 29 mm 3-finger pockets` | `pocket-29-three-left`, `pocket-29-three-right` | `pocket` |
+| `5 — 29 mm 2-finger pockets` | `pocket-29-two-left`, `pocket-29-two-right` | `pocket` |
+| `6 — 19 mm edges` | `edge-19-left`, `edge-19-right` | `edge` |
+| `7 — 19 mm 3-finger pockets` | `pocket-19-three-left`, `pocket-19-three-right` | `pocket` |
+| `8 — 19 mm 2-finger pockets` | `pocket-19-two-left`, `pocket-19-two-right` | `pocket` |
+| `9 — 56 mm round sloper` | `sloper-round-center` | `sloper` |
+| `10 — 29 mm 4-finger pocket` | `pocket-29-four-center` | `pocket` |
+| `11 — 19 mm 4-finger pocket` | `pocket-19-four-center` | `pocket` |
+
+### Wood Grips II Deluxe reviewed label map
+
+Source: [official combined Compact/Deluxe numbered diagram](https://www.metoliusclimbing.com/cdn/shop/files/woodgrips-boards-depths.jpg?v=1762201428)
+and [current product page](https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards).
+
+| Exact Deluxe manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `1 — outer jugs` | `jug-1-left`, `jug-1-right` | `jug` |
+| `2 — 56 mm flat slopers` | `sloper-2-flat-left`, `sloper-2-flat-right` | `sloper` |
+| `3 — 31 mm edges` | `edge-3-31-left`, `edge-3-31-right` | `edge` |
+| `4 — 32 mm 3-finger pockets` | `pocket-4-32-three-left`, `pocket-4-32-three-right` | `pocket` |
+| `5 — 38 mm 2-finger pockets` | `pocket-5-38-two-left`, `pocket-5-38-two-right` | `pocket` |
+| `6 — 25 mm edges` | `edge-6-25-left`, `edge-6-25-right` | `edge` |
+| `7 — 25 mm 3-finger pockets` | `pocket-7-25-three-left`, `pocket-7-25-three-right` | `pocket` |
+| `8 — 28 mm 2-finger pockets` | `pocket-8-28-two-left`, `pocket-8-28-two-right` | `pocket` |
+| `9 — 19 mm edges` | `edge-9-19-left`, `edge-9-19-right` | `edge` |
+| `10 — 19 mm 3-finger pockets` | `pocket-10-19-three-left`, `pocket-10-19-three-right` | `pocket` |
+| `11 — 19 mm 2-finger pockets` | `pocket-11-19-two-left`, `pocket-11-19-two-right` | `pocket` |
+| `12 — 56 mm round sloper` | `sloper-12-round-center` | `sloper` |
+| `13 — 32 mm 4-finger pocket` | `pocket-13-32-four-center` | `pocket` |
+| `14 — 25 mm 4-finger pocket` | `pocket-14-25-four-center` | `pocket` |
+| `15 — 19 mm 4-finger pocket` | `pocket-15-19-four-center` | `pocket` |
+
+### Light Rail 2.0 reviewed label map
+
+Source: [current product page with the official photo and embedded manufacturer demonstration](https://www.metoliusclimbing.com/products/light-rail).
+The page states four reversible holds and 15, 20, and 40 mm edge depths; the
+official presentation identifies the rounded outer contact as a jug.
+
+| Official presentation/label | Stable hold ID | Verified kind |
+| --- | --- | --- |
+| `20mm-side — 40 mm rounded jug` | `jug-40-20mm-side` | `jug` |
+| `20mm-side — 20 mm edge` | `edge-20` | `edge` |
+| `15mm-side — 40 mm rounded jug` | `jug-40-15mm-side` | `jug` |
+| `15mm-side — 15 mm edge` | `edge-15` | `edge` |
+
+### Rock Rings 3D reviewed label map
+
+Source: [official numbered diagram](https://www.metoliusclimbing.com/cdn/shop/files/Rock-Ring-Depts.jpg?v=1762201543)
+and [current product page](https://www.metoliusclimbing.com/collections/training-equipment/products/rock-rings-3d).
+
+| Exact manufacturer label | Stable hold ID(s) | Verified kind |
+| --- | --- | --- |
+| `1 — jug` | `jug-left`, `jug-right` | `jug` |
+| `2 — 40 mm 4-finger pocket` | `pocket-40-four-left`, `pocket-40-four-right` | `pocket` |
+| `3 — 32 mm 3-finger pocket` | `pocket-32-three-left`, `pocket-32-three-right` | `pocket` |
+| `4 — 25 mm 2-finger pocket` | `pocket-25-two-left`, `pocket-25-two-right` | `pocket` |
+
+The exact manufacturer type words in these mappings independently verify every
+declared `kind`; no path appearance or prior package field supplied a type.
+Exact two-/three-/four-finger pocket labels verify both `fingerCapacity` and
+the corresponding structural pocket `gripType`. This added 10 Foundry and six
+Rock Rings grip enums. Prime Rib and Light Rail needed no package change.
+
+Compact II removed nine unsupported four-finger capacities from its jugs,
+slopers, and edges and removed all 19 legacy app-routing `features` sets. The
+Compact and Deluxe packages each removed three `56` sloper
+`sizeMillimeters` values: the sources name 56 mm sloper surfaces but do not
+establish one scalar contact depth, and the catalog metadata contract forbids
+turning non-depth sloper measurements into depth coverage. The exact ten
+Compact and fifteen Deluxe pocket capacities/grip enums, and every published
+edge/pocket scalar depth, remain source-verified.
+
+Every hold has a ledger outcome for all seven audited fields. Across these six
+boards, and consistently across the other four Metolius packages, the official
+material publishes no lower/upper depth ranges, per-contact hand capacities,
+or exact package feature-tag sets. Finger capacity is `notApplicable` for
+non-pockets. No non-pocket grip posture is inferred. Unproven optional values
+remain absent and the machine ledger records the source-specific reason for
+each explicit stable ID.

@@ -78,3 +78,54 @@ was split into multiple logical holds.
 - Owned isolated iOS validation covered the four YY and two Zlag boards:
   normal and exhaustive-active screenshots visually passed, all 12/12
   production `BoardHoldPathShape` probes passed, and cleanup completed.
+
+## 2026-08-25 source-audited metadata certification
+
+The two exhaustive official hold maps were re-opened and checked column by
+column against all 49 visible stable IDs in
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`. `icky-cow` is
+the workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset.
+Unmodified copies of the maps used for manual review remain under
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard-task9-official/`.
+The captures and maps were used only to reconcile manufacturer labels with
+existing IDs; geometry did not change.
+
+### Exact stable-ID field map
+
+Every row's map label verifies the listed `kind`. Printed millimetres populate
+`sizeMillimeters`; `grip` and `feature` name exact enum mappings. The ID groups
+are exhaustive for each map label.
+
+| Boards | Stable hold IDs | Official map label | Kind | Size | Grip | Feature |
+| --- | --- | --- | --- | ---: | --- | --- |
+| Evo + Pro | `top-jug-{left,right}` | `JUG` | `jug` | — | — | `jug` |
+| Evo + Pro | `top-sloper-32-{left,right}` | `32°` top sloper | `sloper` | — | `sloper` | — |
+| Evo + Pro | `top-sloper-20-{left,right}` | `20°` top sloper | `sloper` | — | `sloper` | — |
+| Evo + Pro | `top-sloper-jug-center` | `sloper JUG` | `sloper` | — | `sloper` | `jug` |
+| Evo + Pro | `edge-30-{left,right}` | `30 mm` | `edge` | 30 | — | — |
+| Evo + Pro | `sloper-edge-30-{left,right}` | `sloper 30 mm` | `sloper` | 30 | `sloper` | — |
+| Evo + Pro | `sloper-edge-25-{left,right}` | `sloper 25 mm` | `sloper` | 25 | `sloper` | — |
+| Evo + Pro | `edge-35-center` | `35 mm` | `edge` | 35 | — | — |
+| Evo + Pro | `edge-20-{left,right}` | `20 mm` | `edge` | 20 | — | — |
+| Evo + Pro | `sloper-edge-25-lower-{left,right}` | `sloper 25 mm` | `sloper` | 25 | `sloper` | — |
+| Evo + Pro | `edge-30-inner-{left,right}` | `30 mm` | `edge` | 30 | — | — |
+| Evo + Pro | `sloper-edge-30-center` | `sloper 30 mm` | `sloper` | 30 | `sloper` | — |
+| Pro | `edge-incut-15-{left,right}` | `incut 15 mm` | `edge` | 15 | — | `incutEdge` |
+| Pro | `edge-15-{left,right}` | `15 mm` | `edge` | 15 | — | — |
+| Pro | `edge-incut-30-{left,right}` | `incut 30 mm` | `edge` | 30 | — | `incutEdge` |
+| Pro | `edge-incut-10-center` | `incut 10 mm` | `edge` | 10 | — | `incutEdge` |
+
+This preserves both words in the compound `sloper JUG` label without forcing
+a false binary classification: its mandatory `kind` remains `sloper`, its
+`gripType` is `sloper`, and its exact qualifier is stored as feature `jug`.
+
+### Coverage and deliberate blanks
+
+The ledger certifies all 49 kinds, 35 scalar depths, 24 sloper grip enums, and
+11 feature arrays (six `jug`, five `incutEdge`). Every other field has an
+explicit blank outcome. The maps publish fixed values, not depth intervals;
+degree labels are not converted to millimetres. Both boards' general marketing
+copy mentions pockets, but neither exhaustive map assigns a pocket family or
+finger count to a contact, so no hold is reclassified and no capacity is
+guessed from a cavity's appearance. The sources also do not state simultaneous
+hand capacity or prescribe an edge posture enum.

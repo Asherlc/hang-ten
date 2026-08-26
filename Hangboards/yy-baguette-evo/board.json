@@ -1928,6 +1928,9 @@
       "id": "rounded-tray",
       "name": "Rounded tray",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "presentationID": "rounded-tray",
       "geometry": [
         {

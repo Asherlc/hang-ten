@@ -6,6 +6,7 @@ final class AppStore: ObservableObject {
     private static let healthAuthorizationRequestedKey = "HangTen.healthAuthorizationRequested.v1"
     private static let selectedBoardIDKey = "HangTen.selectedBoardID.v1"
     private static let favoritePlanIDsKey = "favoritePlanIDs"
+    private static let favoriteBoardIDsKey = "favoriteBoardIDs"
 
     @Published private(set) var selectedBoard: TrainingBoard
     @Published private(set) var workoutHistory: WorkoutHistorySnapshot
@@ -15,6 +16,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var customPlans: [TrainingPlan]
     @Published private(set) var customRoutinePersistenceError: String?
     @Published private(set) var favoritePlanIDs: Set<String>
+    @Published private(set) var favoriteBoardIDs: Set<String>
     @Published private(set) var healthAuthorizationState: HealthAuthorizationState
     @Published private(set) var healthAuthorizationError: String?
     @Published private(set) var hasRequestedHealthAuthorization: Bool
@@ -67,6 +69,7 @@ final class AppStore: ObservableObject {
         sessionPersistenceError = resolvedSessionStore.persistenceError
 
         favoritePlanIDs = Set(defaults.stringArray(forKey: Self.favoritePlanIDsKey) ?? [])
+        favoriteBoardIDs = Set(defaults.stringArray(forKey: Self.favoriteBoardIDsKey) ?? [])
         let hasRequestedHealthAuthorization = defaults.bool(
             forKey: Self.healthAuthorizationRequestedKey
         )
@@ -251,6 +254,19 @@ final class AppStore: ObservableObject {
         defaults.set(favoritePlanIDs.sorted(), forKey: Self.favoritePlanIDsKey)
     }
 
+    func isFavorite(_ board: TrainingBoard) -> Bool {
+        favoriteBoardIDs.contains(board.id)
+    }
+
+    func toggleFavorite(_ board: TrainingBoard) {
+        if favoriteBoardIDs.contains(board.id) {
+            favoriteBoardIDs.remove(board.id)
+        } else {
+            favoriteBoardIDs.insert(board.id)
+        }
+        defaults.set(favoriteBoardIDs.sorted(), forKey: Self.favoriteBoardIDsKey)
+    }
+
     var featuredPlan: TrainingPlan? {
         #if DEBUG
         if let reviewPlanID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN_ID"],
@@ -266,22 +282,39 @@ final class AppStore: ObservableObject {
     }
 
     func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
-        let ids = step.targets.flatMap { BoardTargetResolver.substituteHoldIDs(for: $0, on: board) }
+        let gripType = step.targets.count == 1 ? step.gripType : nil
+        let ids = step.targets.flatMap {
+            BoardTargetResolver.substituteHoldIDs(for: $0, on: board, gripType: gripType)
+        }
         return Set(ids)
     }
 
     func usesFallbackMapping(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
-        plan.steps.flatMap(\.targets).contains { target in
-            guard let feature = target.feature,
-                  !target.fallbackFeatures.isEmpty else { return false }
-            let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
-            return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(for: target, on: board).isEmpty
+        plan.steps.contains { step in
+            let gripType = step.targets.count == 1 ? step.gripType : nil
+            return step.targets.contains { target in
+                guard let feature = target.feature,
+                      !target.fallbackFeatures.isEmpty else { return false }
+                let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
+                return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(
+                    for: target,
+                    on: board,
+                    gripType: gripType
+                ).isEmpty
+            }
         }
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: TrainingBoard) -> Bool {
-        plan.steps.flatMap(\.targets).contains { target in
-            BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty
+        plan.steps.contains { step in
+            let gripType = step.targets.count == 1 ? step.gripType : nil
+            return step.targets.contains { target in
+                BoardTargetResolver.substituteHoldIDs(
+                    for: target,
+                    on: board,
+                    gripType: gripType
+                ).isEmpty
+            }
         }
     }
 

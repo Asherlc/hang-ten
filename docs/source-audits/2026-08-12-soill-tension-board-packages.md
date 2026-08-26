@@ -71,7 +71,10 @@ an input.
   view establish exactly eight physical contacts under the continuous-contact
   rule: one full-width bar-style top jug, one 50 mm center one-arm edge, and
   mirrored continuous 30/25, 20/15, and 10/8 mm stepped edges. Only the center
-  contact receives a scalar `sizeMillimeters` value.
+  contact receives a scalar `sizeMillimeters` value. The six named stepped
+  contacts map to `depthRangeMillimeters` ranges of 25...30, 15...20, and
+  8...10 respectively; their two documented depths remain a range because
+  each pair is one continuous physical contact.
 
 ### `tension-honestone`
 
@@ -152,8 +155,8 @@ draft geometry was restored or used as an input.
   per piece, an incut top-center jug, large sloper, smaller sloper, 38.1 mm
   center sloping rail, 25.4 mm center flat rail, 12.7 mm outer crimp rail, and
   12.7 mm bottom-center sloping crimp rail. That freezes exactly seven contacts
-  per piece and fourteen total. Decimal measurements remain in the names
-  because this schema's scalar `sizeMillimeters` field accepts integers only.
+  per piece and fourteen total. The exact decimal rail measurements are recorded
+  in `sizeMillimeters` for their corresponding contacts.
 
 ### `soill-training-tiles`
 
@@ -169,3 +172,112 @@ draft geometry was restored or used as an input.
   straight-on view does not provide a numbered one-to-one mapping for those
   values. The package therefore uses conservative spatial names and omits the
   per-hold scalar values rather than guessing the assignment.
+
+## 2026-08-25 source-audited metadata batch
+
+The seven current product pages and the official gallery views linked above
+were re-opened on 2026-08-25. So iLL's current product HTML still exposes the
+manufacturer feature text used in the 2026-08-19 addendum: Iron Palm 2.0's
+40/25/15 mm crimp rails, Split Palm's exact 38.1/25.4/12.7/12.7 mm rails per
+piece, and Training Tiles' grouped pocket/sloper/edge measurements. Tension's
+current pages still publish the Flash Board's global edge list and the exact
+Grindstone, Honestone, and Whetstone feature lists.
+
+Stable-ID overlays were generated and manually reviewed under
+`.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
+the safe workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was
+unset. Flash Board was reviewed in both `three-edge` and `two-edge`
+presentations; the other six packages each use one presentation. The overlays
+are review aids only. They did not change geometry or establish a kind or
+measurement.
+
+The standard configured capture was refreshed for this correction. Its normal
+Training Tiles overlay has nearby labels around the upper pockets, so a second,
+review-only Workbench capture at
+`soill.training-tiles--pocket-depth-stable-ids.png` temporarily hid every
+non-pocket overlay in the browser before capture. It visibly and separately
+labels `pocket-left` and `pocket-right`; it did not change the saved paths,
+package, or source image. Together with the product page's `Pocket (3" depth),
+one per tile` text, this establishes the direct two-ID mapping.
+
+The tables below are the complete contact-by-contact type audit. Exact
+left/right pairs are grouped only after both visible stable IDs were compared
+with the named manufacturer source position. So iLL's terms `rail` and `crimp
+rail` map to the schema's closed `edge` kind; that is a source-term taxonomy
+mapping, not a classification inferred from pixels.
+
+### Tension-reviewed label map
+
+| Board | Exact manufacturer label / position | Stable hold ID(s) | Verified kind | Verified optional value |
+| --- | --- | --- | --- | --- |
+| Flash Board | `Edges: 8 mm, 10 mm, 15 mm, 20 mm`; official three-edge view | `three-edge-left`, `three-edge-center`, `three-edge-right` | `edge` | none; depths are not position-mapped |
+| Flash Board | same global edge list; official two-edge views | `two-edge-left`, `two-edge-right` | `edge` | none; depths are not position-mapped |
+| Flash Board | `Edges: Small Crimps`; official two-edge views | `small-crimp-left`, `small-crimp-right` | `edge` | none; the separate overview's approximately 6 mm category is not exact |
+| Grindstone | `Full Width "Bar-style" Top Jug` | `top-jug` | `jug` | none |
+| Grindstone | `10 mm edges`; `8 mm edges` | `edge-10-8-left`, `edge-10-8-right` | `edge` | `depthRangeMillimeters` 8–10 |
+| Grindstone | `30 mm edges`; `25 mm edges` | `edge-30-25-left`, `edge-30-25-right` | `edge` | `depthRangeMillimeters` 25–30 |
+| Grindstone | `50 mm center one-arm edge` | `edge-50-center` | `edge` | `sizeMillimeters` 50 |
+| Grindstone | `20 mm edges`; `15 mm edges` | `edge-20-15-left`, `edge-20-15-right` | `edge` | `depthRangeMillimeters` 15–20 |
+| Honestone | `35° and 45° top slopers with a continuously variable curvature and macro-texture` | `top-macro-sloper` | `sloper` | none; angles/curvature are not scalar depth |
+| Honestone | `25 mm 1-finger pockets` | `mono-left`, `mono-right` | `pocket` | size 25; finger capacity 1 |
+| Honestone | `20 mm edges`; `15 mm edges` | `edge-20-15-left`, `edge-20-15-right` | `edge` | `depthRangeMillimeters` 15–20 |
+| Honestone | `25 mm center edge w/10 degree incut` | `edge-25-center` | `edge` | `sizeMillimeters` 25 |
+| Honestone | `10 mm edges`; `8 mm edge` | `edge-10-8-left`, `edge-10-8-right` | `edge` | `depthRangeMillimeters` 8–10 |
+| Whetstone | `Custom jug profile with ergo-bumps` | `top-ergo-jug` | `jug` | none |
+| Whetstone | `40 mm 2-finger pockets` | `pocket-40-left`, `pocket-40-right` | `pocket` | size 40; finger capacity 2; `twoFingerPocket` |
+| Whetstone | `40 mm edges`; `30 mm edges` | `edge-40-30-left`, `edge-40-30-right` | `edge` | `depthRangeMillimeters` 30–40 |
+| Whetstone | `40 mm center edge w/10 degree incut` | `edge-40-center` | `edge` | `sizeMillimeters` 40 |
+| Whetstone | `25 mm edges`; `20 mm edges` | `edge-25-20-left`, `edge-25-20-right` | `edge` | `depthRangeMillimeters` 20–25 |
+
+The engraved official front views supply the spatial mapping for the three
+fixed Tension boards. Each paired two-depth recess is visibly and physically
+continuous, so its two published shelves remain one stable hold with a range.
+No range was collapsed to a scalar value.
+
+### So iLL reviewed label map
+
+| Board | Exact manufacturer label / position | Stable hold ID(s) | Verified kind | Verified optional value |
+| --- | --- | --- | --- | --- |
+| Iron Palm 2.0 | `Big Slopers`; description: `Slopers` | `sloper-left`, `sloper-right` | `sloper` | none |
+| Iron Palm 2.0 | `2 Pinches: 3" Width` | `pinch-left`, `pinch-right` | `pinch` | none; width is not depth |
+| Iron Palm 2.0 | `Top Jug Rail`; description: `thicker, comfy incut top rung` | `top-incut-jug` | `jug` | none |
+| Iron Palm 2.0 | `Edges`; `First Crimp Rail (slightly rounded): 40mm` | `rounded-edge-40` | `edge` | `sizeMillimeters` 40 |
+| Iron Palm 2.0 | `Edges`; `Second Crimp Rail (flat): 25mm` | `flat-edge-25` | `edge` | `sizeMillimeters` 25 |
+| Iron Palm 2.0 | `Edges`; `Bottom Crimp Rail (flat): 15mm` | `flat-edge-15` | `edge` | `sizeMillimeters` 15 |
+| Split Palm | `Top Center Rail: Incut Jug` (one per piece) | `jug-left`, `jug-right` | `jug` | none |
+| Split Palm | `Large Sloper` (one per piece) | `large-sloper-left`, `large-sloper-right` | `sloper` | none |
+| Split Palm | `Smaller Sloper` (one per piece) | `small-sloper-left`, `small-sloper-right` | `sloper` | none |
+| Split Palm | `Center Sloping Rail: 1.5" (38.1mm)` (one per piece) | `sloping-rail-38-left`, `sloping-rail-38-right` | `edge` | `sizeMillimeters` 38.1 |
+| Split Palm | `Center Flat Rail: 1" (25.4mm)` (one per piece) | `flat-edge-25-left`, `flat-edge-25-right` | `edge` | `sizeMillimeters` 25.4 |
+| Split Palm | `Outer Crimp Rail: 1/2" (12.7mm)` (one per piece) | `outer-crimp-12-left`, `outer-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
+| Split Palm | `Bottom Center Sloping Crimp Rail - 1/2" (12.7mm)` (one per piece) | `bottom-sloping-crimp-12-left`, `bottom-sloping-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
+| Training Tiles | `Top: Pocket (3" depth)`, one per tile | `pocket-left`, `pocket-right` | `pocket` | `sizeMillimeters` 76.2; no finger count |
+| Training Tiles | `Top: Slopers: 25° - 54mm; 12° - 64mm`, two per tile | `outer-sloper-left`, `outer-sloper-right`, `inner-sloper-left`, `inner-sloper-right` | `sloper` | none; positions are not numbered |
+| Training Tiles | `Middle: Slightly Positive Edges: 44mm, 50mm`, two per tile | `middle-edge-upper-left`, `middle-edge-upper-right`, `middle-edge-lower-left`, `middle-edge-lower-right` | `edge` | none; positions are not numbered |
+| Training Tiles | `Bottom Flat Edge: 36mm, 31mm, 24mm`, three per tile | `bottom-edge-outer-left`, `bottom-edge-outer-right`, `bottom-edge-center-left`, `bottom-edge-center-right`, `bottom-edge-inner-left`, `bottom-edge-inner-right` | `edge` | none; positions are not numbered |
+
+### Field outcomes and retained package data
+
+All 69 holds have one verified ledger `kind` and an explicit outcome for each
+of the six optional fields. The refreshed evidence supports 20 scalar sizes,
+14 depth ranges, four finger capacities, and two `twoFingerPocket` grip enums.
+The two Training Tiles pockets now receive the exact 76.2 mm conversion of the
+manufacturer's one-per-tile 3-inch depth; all other package values were
+already present before this batch. In particular:
+
+- the 14 Tension stepped-edge values remain ranges on continuous contacts;
+- Honestone's one-finger pockets retain size and capacity but no `gripType`,
+  because the checked-in schema has no one-finger-pocket enum;
+- Training Tiles pockets receive their one-per-tile 3-inch (76.2 mm) depth;
+  its sloper and edge families remain blank because their grouped lists do not
+  number the left/right positions, and the pockets have no published finger
+  count;
+- Flash Board retains no scalar depth because the global size list is not
+  mapped to its five recess IDs, and its small crimp value is only approximate
+  on the separate overview page;
+- pinch width, sloper angle/radius, and product dimensions are not written as
+  contact depth; and
+- no source states simultaneous hand capacity or an exact package feature-tag
+  array. Non-pocket finger capacity is recorded as not applicable; every other
+  unsupported optional field remains absent with a source-specific ledger
+  reason.

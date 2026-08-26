@@ -173,6 +173,7 @@
       "kind": "pocket",
       "sizeMillimeters": 32,
       "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -284,6 +285,7 @@
       "kind": "pocket",
       "sizeMillimeters": 22,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -395,6 +397,7 @@
       "kind": "pocket",
       "sizeMillimeters": 30,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -506,6 +509,7 @@
       "kind": "pocket",
       "sizeMillimeters": 15,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -617,6 +621,7 @@
       "kind": "pocket",
       "sizeMillimeters": 21,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -1136,6 +1141,7 @@
       "kind": "pocket",
       "sizeMillimeters": 21,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -1247,6 +1253,7 @@
       "kind": "pocket",
       "sizeMillimeters": 15,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -1358,6 +1365,7 @@
       "kind": "pocket",
       "sizeMillimeters": 30,
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -1469,6 +1477,7 @@
       "kind": "pocket",
       "sizeMillimeters": 22,
       "fingerCapacity": 3,
+      "gripType": "threeFingerPocket",
       "presentationID": "front",
       "geometry": [
         {
@@ -1580,6 +1589,7 @@
       "kind": "pocket",
       "sizeMillimeters": 32,
       "fingerCapacity": 4,
+      "gripType": "fourFingerPocket",
       "presentationID": "front",
       "geometry": [
         {

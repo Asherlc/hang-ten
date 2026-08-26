@@ -18,24 +18,134 @@ import board_package  # noqa: E402
 
 
 EXPECTED_HOLDS = (
-    ("upper-sloped-crimp-left", "edge", None, None),
-    ("upper-sloped-crimp-right", "edge", None, None),
-    ("outer-sloped-crimp-left", "edge", None, None),
-    ("outer-sloped-crimp-right", "edge", None, None),
-    ("variable-edge-left", "edge", (16, 31), None),
-    ("variable-edge-right", "edge", (16, 31), None),
-    ("medium-crimp-left", "edge", (9, 10), None),
-    ("medium-crimp-right", "edge", (9, 10), None),
-    ("large-crimp-left", "edge", (11, 12), None),
-    ("large-crimp-right", "edge", (11, 12), None),
-    ("two-finger-pocket-left", "pocket", (28, 32), 2),
-    ("two-finger-pocket-right", "pocket", (28, 32), 2),
-    ("three-finger-pocket-left", "pocket", (17, 28), 3),
-    ("three-finger-pocket-right", "pocket", (17, 28), 3),
-    ("outer-wedge-pinch-left", "pinch", None, None),
-    ("outer-wedge-pinch-right", "pinch", None, None),
-    ("lower-sloper-left", "sloper", None, None),
-    ("lower-sloper-right", "sloper", None, None),
+    (
+        "upper-sloped-crimp-left",
+        "edge",
+        {"sizeMillimeters": 12.5, "fingerCapacity": 4},
+    ),
+    (
+        "upper-sloped-crimp-right",
+        "edge",
+        {"sizeMillimeters": 12.5, "fingerCapacity": 4},
+    ),
+    (
+        "outer-sloped-crimp-left",
+        "edge",
+        {"sizeMillimeters": 11.5, "fingerCapacity": 4},
+    ),
+    (
+        "outer-sloped-crimp-right",
+        "edge",
+        {"sizeMillimeters": 11.5, "fingerCapacity": 4},
+    ),
+    (
+        "variable-edge-left",
+        "edge",
+        {
+            "depthRangeMillimeters": {"lowerBound": 16, "upperBound": 31},
+            "fingerCapacity": 4,
+        },
+    ),
+    (
+        "variable-edge-right",
+        "edge",
+        {
+            "depthRangeMillimeters": {"lowerBound": 16, "upperBound": 31},
+            "fingerCapacity": 4,
+        },
+    ),
+    (
+        "medium-crimp-left",
+        "edge",
+        {
+            "depthRangeMillimeters": {"lowerBound": 9, "upperBound": 10},
+            "fingerCapacity": 4,
+        },
+    ),
+    (
+        "medium-crimp-right",
+        "edge",
+        {
+            "depthRangeMillimeters": {"lowerBound": 9, "upperBound": 10},
+            "fingerCapacity": 4,
+        },
+    ),
+    (
+        "large-crimp-left",
+        "edge",
+        {
+            "depthRangeMillimeters": {"lowerBound": 11, "upperBound": 12},
+            "fingerCapacity": 4,
+        },
+    ),
+    (
+        "large-crimp-right",
+        "edge",
+        {
+            "depthRangeMillimeters": {"lowerBound": 11, "upperBound": 12},
+            "fingerCapacity": 4,
+        },
+    ),
+    (
+        "two-finger-pocket-left",
+        "pocket",
+        {
+            "depthRangeMillimeters": {"lowerBound": 28, "upperBound": 32},
+            "fingerCapacity": 2,
+            "gripType": "twoFingerPocket",
+            "features": ["pocket"],
+        },
+    ),
+    (
+        "two-finger-pocket-right",
+        "pocket",
+        {
+            "depthRangeMillimeters": {"lowerBound": 28, "upperBound": 32},
+            "fingerCapacity": 2,
+            "gripType": "twoFingerPocket",
+            "features": ["pocket"],
+        },
+    ),
+    (
+        "three-finger-pocket-left",
+        "pocket",
+        {
+            "depthRangeMillimeters": {"lowerBound": 17, "upperBound": 28},
+            "fingerCapacity": 3,
+            "gripType": "threeFingerPocket",
+            "features": ["pocket"],
+        },
+    ),
+    (
+        "three-finger-pocket-right",
+        "pocket",
+        {
+            "depthRangeMillimeters": {"lowerBound": 17, "upperBound": 28},
+            "fingerCapacity": 3,
+            "gripType": "threeFingerPocket",
+            "features": ["pocket"],
+        },
+    ),
+    ("outer-wedge-pinch-left", "pinch", {"fingerCapacity": 4}),
+    ("outer-wedge-pinch-right", "pinch", {"fingerCapacity": 4}),
+    (
+        "lower-sloper-left",
+        "sloper",
+        {"fingerCapacity": 4, "gripType": "sloper"},
+    ),
+    (
+        "lower-sloper-right",
+        "sloper",
+        {"fingerCapacity": 4, "gripType": "sloper"},
+    ),
+)
+OPTIONAL_HOLD_METADATA_FIELDS = (
+    "sizeMillimeters",
+    "depthRangeMillimeters",
+    "fingerCapacity",
+    "handCapacity",
+    "gripType",
+    "features",
 )
 ALLOWED_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
 EXPECTED_KIND_COUNTS = Counter({"edge": 10, "pocket": 4, "pinch": 2, "sloper": 2})
@@ -100,7 +210,9 @@ def test_package_contents_and_metadata(package: board_package.BoardPackage, pixe
     assert board["aspectRatio"] == width / height
 
 
-def test_hold_inventory_and_kinds(package: board_package.BoardPackage) -> None:
+def test_hold_inventory_kinds_and_source_audited_metadata(
+    package: board_package.BoardPackage,
+) -> None:
     board = package.board
 
     assert board_package._HOLD_KINDS == ALLOWED_KINDS
@@ -111,15 +223,11 @@ def test_hold_inventory_and_kinds(package: board_package.BoardPackage) -> None:
         (
             hold["id"],
             hold["kind"],
-            (
-                None
-                if "depthRangeMillimeters" not in hold
-                else (
-                    hold["depthRangeMillimeters"]["lowerBound"],
-                    hold["depthRangeMillimeters"]["upperBound"],
-                )
-            ),
-            hold.get("fingerCapacity"),
+            {
+                field: hold[field]
+                for field in OPTIONAL_HOLD_METADATA_FIELDS
+                if field in hold
+            },
         )
         for hold in board["holds"]
     )
@@ -142,7 +250,6 @@ def test_piece_geometry_fills_declared_frames(
 ) -> None:
     width, height = pixel_size
     for hold in package.board["holds"]:
-        assert {"sizeMillimeters", "gripType", "features"}.isdisjoint(hold)
         for piece_index, piece in enumerate(hold["geometry"]):
             label = f"{hold['id']}.geometry[{piece_index}]"
             shape = piece["shape"]

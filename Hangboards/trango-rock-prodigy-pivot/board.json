@@ -129,7 +129,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "sizeMillimeters": 12.5,
+      "fingerCapacity": 4
     },
     {
       "id": "upper-sloped-crimp-right",
@@ -253,7 +255,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "sizeMillimeters": 12.5,
+      "fingerCapacity": 4
     },
     {
       "id": "outer-sloped-crimp-left",
@@ -362,7 +366,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "sizeMillimeters": 11.5,
+      "fingerCapacity": 4
     },
     {
       "id": "outer-sloped-crimp-right",
@@ -471,7 +477,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "sizeMillimeters": 11.5,
+      "fingerCapacity": 4
     },
     {
       "id": "variable-edge-left",
@@ -589,7 +597,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "variable-edge-right",
@@ -707,7 +716,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "medium-crimp-left",
@@ -836,7 +846,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "medium-crimp-right",
@@ -965,7 +976,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "large-crimp-left",
@@ -1094,7 +1106,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "large-crimp-right",
@@ -1223,7 +1236,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "two-finger-pocket-left",
@@ -1354,7 +1368,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "two-finger-pocket-right",
@@ -1485,7 +1503,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "three-finger-pocket-left",
@@ -1631,7 +1653,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "threeFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "three-finger-pocket-right",
@@ -1777,7 +1803,11 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "threeFingerPocket",
+      "features": [
+        "pocket"
+      ]
     },
     {
       "id": "outer-wedge-pinch-left",
@@ -2032,7 +2062,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "outer-wedge-pinch-right",
@@ -2287,7 +2318,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "lower-sloper-left",
@@ -2527,7 +2559,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4,
+      "gripType": "sloper"
     },
     {
       "id": "lower-sloper-right",
@@ -2767,7 +2801,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4,
+      "gripType": "sloper"
     }
   ],
   "presentations": [

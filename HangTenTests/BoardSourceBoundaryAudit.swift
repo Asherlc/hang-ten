@@ -5,7 +5,10 @@ enum BoardSourceBoundaryAudit {
     private static let planMappingOwnerDeclaration = "enum LegacyPlanSeedBoardMappings {"
     private static let genericPresentationVocabularyOwnerPaths: Set<String> = [
         "HangTen/Models/BoardPackageStore.swift",
-        "HangTen/Models/TrainingModels.swift"
+        "HangTen/Models/BoardPackageWriter.swift",
+        "HangTen/Models/BoardEditorStore.swift",
+        "HangTen/Models/TrainingModels.swift",
+        "HangTen/Views/BoardEditor/BoardEditorSession.swift"
     ]
     private static let genericCanonicalPresentationLiterals: Set<String> = [
         "assets/primary.png",

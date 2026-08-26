@@ -2,6 +2,241 @@ import XCTest
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
+
+    func testBoardDetailHoldMapNumbersOnlyTheHoldsOnTheVisiblePresentation() {
+        let board = TrainingBoard(
+            id: "two-sided",
+            manufacturer: "Example",
+            name: "Two Sided",
+            subtitle: "",
+            dimensions: "10 in × 5 in",
+            aspectRatio: 2,
+            holds: [
+                boardDetailHold(id: "front-a", presentationID: "front"),
+                boardDetailHold(id: "back-a", presentationID: "back"),
+                boardDetailHold(id: "front-b", presentationID: "front")
+            ],
+            productURL: URL(string: "https://example.com/two-sided")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true),
+                BoardPresentation(id: "back", name: "Back", aspectRatio: 2, isDefault: false)
+            ]
+        )
+
+        let map = BoardDetailHoldMap(board: board, presentationID: "front")
+
+        XCTAssertEqual(map.entries.map(\.hold.id), ["front-a", "front-b"])
+        XCTAssertEqual(map.entries.map(\.number), [1, 2])
+    }
+
+    func testBoardDetailContentOrderPlacesSelectedHoldBeforeHoldLegend() {
+        XCTAssertEqual(
+            BoardDetailContentOrder.sections(hasSelectedHold: true),
+            [.map, .selectedHold, .holdLegend]
+        )
+    }
+
+    func testBoardHoldSpecificationsPresentOnlyDeclaredFacts() {
+        let declaredHold = boardDetailHold(
+            id: "declared",
+            kind: .pocket,
+            sizeMillimeters: 18,
+            gripType: .openHand,
+            fingerCapacity: 3,
+            handCapacity: 1
+        )
+        let rangedHold = boardDetailHold(
+            id: "ranged",
+            kind: .edge,
+            depthRangeMillimeters: 12.5...20
+        )
+        let unspecifiedHold = boardDetailHold(id: "unspecified", kind: .sloper)
+
+        XCTAssertEqual(
+            BoardHoldSpecifications.entries(for: declaredHold),
+            [
+                .init(label: "Kind", value: "Pocket"),
+                .init(label: "Depth", value: "18 mm"),
+                .init(label: "Grip", value: "Open hand"),
+                .init(label: "Finger capacity", value: "3"),
+                .init(label: "Hand capacity", value: "1")
+            ]
+        )
+        XCTAssertEqual(
+            BoardHoldSpecifications.entries(for: rangedHold),
+            [
+                .init(label: "Kind", value: "Edge"),
+                .init(label: "Depth range", value: "12.5 mm–20 mm")
+            ]
+        )
+        XCTAssertEqual(
+            BoardHoldSpecifications.entries(for: unspecifiedHold),
+            [.init(label: "Kind", value: "Sloper")]
+        )
+    }
+    func testStoreRejectsInvertedFractionalDepthRange() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["depthRangeMillimeters"] = [
+                    "lowerBound": 12.5,
+                    "upperBound": 7.5,
+                ]
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "hold hold-left has an invalid depth range"
+                )
+            )
+        }
+    }
+
+    func testStoreRejectsNonPositiveFractionalMillimeterMeasurements() throws {
+        let invalidMeasurements: [(name: String, field: String, value: Any, reason: String)] = [
+            ("zero size", "sizeMillimeters", 0.0, "hold hold-left has a non-positive size"),
+            ("negative size", "sizeMillimeters", -7.5, "hold hold-left has a non-positive size"),
+            (
+                "zero depth",
+                "depthRangeMillimeters",
+                ["lowerBound": 0.0, "upperBound": 7.5],
+                "hold hold-left has an invalid depth range"
+            ),
+            (
+                "negative depth",
+                "depthRangeMillimeters",
+                ["lowerBound": -7.5, "upperBound": 7.5],
+                "hold hold-left has an invalid depth range"
+            ),
+        ]
+
+        for measurement in invalidMeasurements {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    holds[0][measurement.field] = measurement.value
+                    board["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), measurement.name) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .invalidPackage(boardID: "fixture.board", reason: measurement.reason)
+                )
+            }
+        }
+    }
+
+    func testStoreRejectsNonFiniteMillimeterMeasurementJSON() throws {
+        let invalidMeasurements: [
+            (name: String, finiteValue: String, nonFiniteValue: String)
+        ] = [
+            (
+                "size",
+                "\"sizeMillimeters\":7.5",
+                "\"sizeMillimeters\":1e999"
+            ),
+            (
+                "depth lower bound",
+                "\"lowerBound\":7.5",
+                "\"lowerBound\":1e999"
+            ),
+            (
+                "depth upper bound",
+                "\"upperBound\":12.5",
+                "\"upperBound\":1e999"
+            ),
+        ]
+
+        for measurement in invalidMeasurements {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                let boardURL = hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                try self.mutateBoard(at: boardURL) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    holds[0]["sizeMillimeters"] = 7.5
+                    holds[0]["depthRangeMillimeters"] = [
+                        "lowerBound": 7.5,
+                        "upperBound": 12.5,
+                    ]
+                    board["holds"] = holds
+                }
+                let finiteJSON = try XCTUnwrap(String(data: Data(contentsOf: boardURL), encoding: .utf8))
+                let nonFiniteJSON = finiteJSON.replacingOccurrences(
+                    of: measurement.finiteValue,
+                    with: measurement.nonFiniteValue
+                )
+                XCTAssertNotEqual(nonFiniteJSON, finiteJSON)
+                try Data(nonFiniteJSON.utf8).write(to: boardURL)
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), measurement.name) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+                )
+            }
+        }
+    }
+
+    func testStoreAcceptsFractionalFixedMillimeterMeasurement() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["sizeMillimeters"] = 7.5
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        let hold = try XCTUnwrap(board.holds.first)
+        XCTAssertEqual(hold.sizeMillimeters, 7.5)
+        XCTAssertNil(hold.depthRangeMillimeters)
+    }
+
+    func testStoreRejectsHoldWithFixedAndVariableDepths() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["sizeMillimeters"] = 7.5
+                holds[0]["depthRangeMillimeters"] = [
+                    "lowerBound": 7.5,
+                    "upperBound": 12.5,
+                ]
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "hold hold-left must not specify both a size and depth range"
+                )
+            )
+        }
+    }
+
     func testStoreDiscoversDirectChildPackagesWithoutCatalogAndSortsThem() throws {
         let fixture = try makeFixtureBundle(
             packages: [
@@ -1415,6 +1650,38 @@ final class BoardPackageStoreTests: XCTestCase {
         )
         try mutation(&document)
         try JSONSerialization.data(withJSONObject: document, options: [.sortedKeys]).write(to: url)
+    }
+
+    private func boardDetailHold(
+        id: String,
+        kind: HoldKind = .jug,
+        sizeMillimeters: Double? = nil,
+        gripType: GripType? = nil,
+        fingerCapacity: Int? = nil,
+        handCapacity: Int? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
+        presentationID: String = BoardPresentation.primaryID
+    ) -> BoardHold {
+        BoardHold(
+            id: id,
+            name: id,
+            kind: kind,
+            geometry: [
+                BoardHoldPiece(
+                    id: "\(id)-piece",
+                    holdID: id,
+                    frame: CGRect(x: 0.1, y: 0.1, width: 0.2, height: 0.2),
+                    shape: .roundedRect(cornerRadiusFraction: 0),
+                    treatment: .surface
+                )
+            ],
+            sizeMillimeters: sizeMillimeters,
+            gripType: gripType,
+            fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
+            depthRangeMillimeters: depthRangeMillimeters,
+            presentationID: presentationID
+        )
     }
 }
 

@@ -136,6 +136,13 @@ def _positive_integer(value: Any, source: str) -> int:
     return value
 
 
+def _positive_number(value: Any, source: str) -> float:
+    number = _number(value, source)
+    if number <= 0:
+        raise ValueError(f"{source} must be a positive number")
+    return number
+
+
 def _boolean(value: Any, source: str) -> bool:
     if not isinstance(value, bool):
         raise ValueError(f"{source} must be a boolean")
@@ -176,15 +183,15 @@ def _require_no_symlinks(root: Path) -> None:
 
 @dataclass(frozen=True)
 class MillimeterRange:
-    lower_bound: int
-    upper_bound: int
+    lower_bound: float
+    upper_bound: float
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "MillimeterRange":
         payload = _mapping(value, source)
         _closed(payload, {"lowerBound", "upperBound"}, source)
-        lower = _positive_integer(payload["lowerBound"], f"{source}.lowerBound")
-        upper = _positive_integer(payload["upperBound"], f"{source}.upperBound")
+        lower = _positive_number(payload["lowerBound"], f"{source}.lowerBound")
+        upper = _positive_number(payload["upperBound"], f"{source}.upperBound")
         if lower > upper:
             raise ValueError(f"{source}.lowerBound must not exceed upperBound")
         return cls(lower, upper)
@@ -368,7 +375,7 @@ class BoardHold:
     name: str
     kind: str
     geometry: tuple[BoardGeometryPiece, ...]
-    size_millimeters: int | None
+    size_millimeters: float | None
     depth_range_millimeters: MillimeterRange | None
     grip_type: str | None
     finger_capacity: int | None
@@ -455,9 +462,11 @@ def _load_hold(
     kind = _string(payload["kind"], f"{source}.kind")
     if kind not in _HOLD_KINDS:
         raise ValueError(f"{source}.kind must be one of {sorted(_HOLD_KINDS)}")
+    if "sizeMillimeters" in payload and "depthRangeMillimeters" in payload:
+        raise ValueError(f"{source} must not specify both a size and depth range")
     size = None
     if "sizeMillimeters" in payload:
-        size = _positive_integer(payload["sizeMillimeters"], f"{source}.sizeMillimeters")
+        size = _positive_number(payload["sizeMillimeters"], f"{source}.sizeMillimeters")
     depth_range = None
     if "depthRangeMillimeters" in payload:
         depth_range = MillimeterRange.from_json(

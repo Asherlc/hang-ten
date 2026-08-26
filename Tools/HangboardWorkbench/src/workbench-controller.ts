@@ -15,13 +15,17 @@ function isFingerCapacity(value: unknown): value is number {
   return Number.isInteger(value) && typeof value === "number" && value >= 1 && value <= 4;
 }
 
+function isPositiveFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
 function isMillimeterRange(value: unknown): value is { lowerBound: number; upperBound: number } {
   if (!isRecord(value)) return false;
   const { lowerBound, upperBound } = value;
-  return Number.isInteger(lowerBound)
-    && Number.isInteger(upperBound)
-    && typeof lowerBound === "number"
+  return typeof lowerBound === "number"
     && typeof upperBound === "number"
+    && Number.isFinite(lowerBound)
+    && Number.isFinite(upperBound)
     && lowerBound > 0
     && upperBound >= lowerBound;
 }
@@ -44,7 +48,9 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
+    && (value.sizeMillimeters === undefined || isPositiveFiniteNumber(value.sizeMillimeters))
     && (value.depthRangeMillimeters === undefined || isMillimeterRange(value.depthRangeMillimeters))
+    && !(value.sizeMillimeters !== undefined && value.depthRangeMillimeters !== undefined)
     && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
     && (value.bendableCommandIndexes === undefined
       || isBendableCommandIndexes(value.bendableCommandIndexes))
@@ -92,7 +98,9 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   }
   const keys = new Set<string>();
   const fingerCapacityByHoldId = new Map<string, number | undefined>();
+  const sizeMillimetersByHoldId = new Map<string, number | undefined>();
   const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
+  const depthRepresentationByHoldId = new Map<string, "fixed" | "variable" | "unset">();
   const handCapacityByHoldId = new Map<string, number | undefined>();
   for (const region of document.regions) {
     if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
@@ -111,9 +119,17 @@ export function validateEditorDocument(document: unknown): EditorDocument {
       && !isFingerCapacity(region.fingerCapacity)) {
       throw new Error(`Hold ${region.key} finger capacity must be between 1 and 4`);
     }
+    if (Object.hasOwn(region, "sizeMillimeters")
+      && !isPositiveFiniteNumber(region.sizeMillimeters)) {
+      throw new Error(`Hold ${region.key} fixed depth must be a positive finite number`);
+    }
     if (Object.hasOwn(region, "depthRangeMillimeters")
       && !isMillimeterRange(region.depthRangeMillimeters)) {
       throw new Error(`Hold ${region.key} depth range must be positive and ordered`);
+    }
+    if (Object.hasOwn(region, "sizeMillimeters")
+      && Object.hasOwn(region, "depthRangeMillimeters")) {
+      throw new Error(`Hold ${region.key} depth representation must be fixed or variable, not both`);
     }
     if (Object.hasOwn(region, "handCapacity")
       && !isHandCapacity(region.handCapacity)) {
@@ -132,6 +148,19 @@ export function validateEditorDocument(document: unknown): EditorDocument {
         throw new Error(`Hold ${holdID} pieces must share one finger capacity`);
       }
       fingerCapacityByHoldId.set(holdID, region.fingerCapacity);
+      const depthRepresentation = region.sizeMillimeters !== undefined
+        ? "fixed"
+        : region.depthRangeMillimeters !== undefined ? "variable" : "unset";
+      if (depthRepresentationByHoldId.has(holdID)
+        && depthRepresentationByHoldId.get(holdID) !== depthRepresentation) {
+        throw new Error(`Hold ${holdID} pieces must share one depth representation`);
+      }
+      depthRepresentationByHoldId.set(holdID, depthRepresentation);
+      if (sizeMillimetersByHoldId.has(holdID)
+        && sizeMillimetersByHoldId.get(holdID) !== region.sizeMillimeters) {
+        throw new Error(`Hold ${holdID} pieces must share one fixed depth`);
+      }
+      sizeMillimetersByHoldId.set(holdID, region.sizeMillimeters);
       const depthRange = region.depthRangeMillimeters;
       const existingDepthRange = depthRangeByHoldId.get(holdID);
       if (depthRangeByHoldId.has(holdID)

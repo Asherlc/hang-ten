@@ -638,6 +638,12 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has an unknown presentationID"
                 )
             }
+            if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) must not specify both a size and depth range"
+                )
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw BoardPackageStoreError.invalidPackage(
@@ -650,6 +656,23 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "hold \(hold.id) has an invalid hand capacity"
+                )
+            }
+            if let size = hold.sizeMillimeters, !size.isFinite || size <= 0 {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has a non-positive size"
+                )
+            }
+            if let depthRange = hold.depthRangeMillimeters,
+               !depthRange.lowerBound.isFinite ||
+               !depthRange.upperBound.isFinite ||
+               depthRange.lowerBound <= 0 ||
+               depthRange.upperBound <= 0 ||
+               depthRange.lowerBound > depthRange.upperBound {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has an invalid depth range"
                 )
             }
             let geometryValidation = BoardHoldGeometryValidator.validate(
@@ -681,21 +704,6 @@ struct BoardPackageStore {
             holds.append(
                 try hold.trainingBoardHold(geometryPieces: geometryPieces)
             )
-            if let size = hold.sizeMillimeters, size <= 0 {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has a non-positive size"
-                )
-            }
-            if let depthRange = hold.depthRangeMillimeters,
-               depthRange.lowerBound <= 0 ||
-               depthRange.upperBound <= 0 ||
-               depthRange.lowerBound > depthRange.upperBound {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "hold \(hold.id) has an invalid depth range"
-                )
-            }
             if let features = hold.features,
                Set(features).count != features.count {
                 throw BoardPackageStoreError.invalidPackage(
@@ -825,7 +833,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let name: String
     let kind: HoldKind
     let geometry: [BoardPackageGeometryDocument]
-    let sizeMillimeters: Int?
+    let sizeMillimeters: Double?
     let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
     let gripType: GripType?
     let fingerCapacity: Int?
@@ -858,7 +866,7 @@ private struct BoardPackageHoldDocument: Decodable {
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
         geometry = try container.decode([BoardPackageGeometryDocument].self, forKey: .geometry)
-        sizeMillimeters = try container.decodeIfPresent(Int.self, forKey: .sizeMillimeters)
+        sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
             BoardPackageMillimeterRangeDocument.self,
             forKey: .depthRangeMillimeters
@@ -967,8 +975,8 @@ private struct BoardPackageShapeConstraintDocument: Decodable {
 }
 
 private struct BoardPackageMillimeterRangeDocument: Decodable {
-    let lowerBound: Int
-    let upperBound: Int
+    let lowerBound: Double
+    let upperBound: Double
 
     private enum CodingKeys: String, CodingKey {
         case lowerBound
@@ -978,8 +986,8 @@ private struct BoardPackageMillimeterRangeDocument: Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys(["lowerBound", "upperBound"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        lowerBound = try container.decode(Int.self, forKey: .lowerBound)
-        upperBound = try container.decode(Int.self, forKey: .upperBound)
+        lowerBound = try container.decode(Double.self, forKey: .lowerBound)
+        upperBound = try container.decode(Double.self, forKey: .upperBound)
     }
 }
 
@@ -1093,6 +1101,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
     let control: [Double]?
     let control1: [Double]?
     let control2: [Double]?
+    var bendable: Bool?
 
     private enum CodingKeys: String, CodingKey {
         case command
@@ -1101,6 +1110,22 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case control1
         case control2
         case bendable
+    }
+
+    init(
+        command: String,
+        to: [Double]?,
+        control: [Double]?,
+        control1: [Double]?,
+        control2: [Double]?,
+        bendable: Bool? = nil
+    ) {
+        self.command = command
+        self.to = to
+        self.control = control
+        self.control1 = control1
+        self.control2 = control2
+        self.bendable = bendable
     }
 
     init(from decoder: Decoder) throws {
@@ -1132,9 +1157,22 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
                     debugDescription: "bendable must be true"
                 )
             }
+            bendable = true
+        } else {
+            bendable = nil
         }
     }
 
+    private func container(
+        keyedBy keys: CodingKeys.Type,
+        decoder: Decoder
+    ) throws -> KeyedDecodingContainer<CodingKeys> {
+        try decoder.container(keyedBy: keys)
+    }
+
+    /// Runtime encoding drops editor-only bendable metadata: the training app
+    /// never re-delivers it, while the board editor writer reads the stored
+    /// property directly when it serializes canonical packages.
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(command, forKey: .command)

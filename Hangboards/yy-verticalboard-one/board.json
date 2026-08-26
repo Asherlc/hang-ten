@@ -18,6 +18,9 @@
   "holds": [
     {
       "id": "jug-left",
+      "features": [
+        "jug"
+      ],
       "presentationID": "primary",
       "name": "Left top jug",
       "kind": "jug",
@@ -96,6 +99,9 @@
     },
     {
       "id": "jug-right",
+      "features": [
+        "jug"
+      ],
       "presentationID": "primary",
       "name": "Right top jug",
       "kind": "jug",
@@ -166,6 +172,7 @@
     },
     {
       "id": "sloper-35-left",
+      "gripType": "sloper",
       "presentationID": "primary",
       "name": "Left 35-degree sloper",
       "kind": "sloper",
@@ -244,6 +251,7 @@
     },
     {
       "id": "sloper-35-right",
+      "gripType": "sloper",
       "presentationID": "primary",
       "name": "Right 35-degree sloper",
       "kind": "sloper",
@@ -322,6 +330,7 @@
     },
     {
       "id": "sloper-20-center",
+      "gripType": "sloper",
       "presentationID": "primary",
       "name": "Center 20-degree sloper",
       "kind": "sloper",
@@ -821,6 +830,10 @@
     },
     {
       "id": "pocket-50-left",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "presentationID": "primary",
       "name": "Left 50 mm two-finger pocket",
       "kind": "pocket",
@@ -932,6 +945,10 @@
     },
     {
       "id": "pocket-50-right",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "presentationID": "primary",
       "name": "Right 50 mm two-finger pocket",
       "kind": "pocket",
@@ -1263,6 +1280,10 @@
     },
     {
       "id": "pocket-30-left",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "presentationID": "primary",
       "name": "Left 30 mm two-finger pocket",
       "kind": "pocket",
@@ -1374,6 +1395,10 @@
     },
     {
       "id": "pocket-30-right",
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "presentationID": "primary",
       "name": "Right 30 mm two-finger pocket",
       "kind": "pocket",

@@ -82,6 +82,10 @@ Each physical hold has one identifier and one or more geometry pieces embedded
 in `board.json`; each piece has one closed, contiguous contour. The editor
 exposes each piece under a stable `<hold-id>-piece-<index>` key, and runtime
 bounds are the union of all pieces belonging to the physical hold.
+Optional `sizeMillimeters` and `depthRangeMillimeters` values are positive
+finite millimeter measurements, so source-backed fractional values such as
+`7.5` are preserved. A depth range's lower bound must not exceed its upper
+bound.
 `aspectRatio` is the primary PNG's pixel width divided by height and must match
 the decoded image within 0.1% relative error.
 
@@ -114,6 +118,11 @@ The output includes one labeled PNG per board, an API-order `manifest.json`,
 and a labeled `contact-sheet.png`. It uses a dedicated capture-only loopback
 launcher rather than the browser-hosted server, then terminates its Chrome and
 server children before returning.
+
+For metadata mapping review, add `--hold-id-labels`. This overlays one
+high-contrast, non-interactive SVG label for each logical `metadata.holdID` at
+the union center of that hold's rendered pieces. The labels exist only while a
+screenshot is taken; they do not edit board data or geometry.
 
 ## Outline shape constraints
 

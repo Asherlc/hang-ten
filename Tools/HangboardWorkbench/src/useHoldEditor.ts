@@ -174,6 +174,8 @@ export interface HoldEditorActions {
   dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
   changeFingerCapacity(capacity: number | undefined): void;
+  changeHoldDepthMeasurement(mode: "unset" | "fixed" | "variable"): void;
+  changeHoldSizeMillimeters(size: number | undefined): void;
   changeHoldDepthRange(depthRange: MillimeterRange | undefined): void;
   changeHandCapacity(capacity: number | undefined): void;
   changeOutlineShape(shape: string): void;
@@ -914,17 +916,50 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     });
   }, [actions, busy, document, selectedHold, selectedKeys]);
 
+  const changeHoldDepthMeasurement = useCallback((mode: "unset" | "fixed" | "variable"): void => {
+    if (busy || !document || !selectedHold) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        if (mode !== "fixed") delete region.sizeMillimeters;
+        if (mode !== "variable") delete region.depthRangeMillimeters;
+      }
+    }, {
+      status: "Depth measurement changed. Save when ready.",
+      failureMessage: "Depth measurement is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
+  const changeHoldSizeMillimeters = useCallback((size: number | undefined): void => {
+    if (busy || !document || !selectedHold
+      || (size !== undefined && (!Number.isFinite(size) || size <= 0))) return;
+    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (!siblingKeys.has(region.key)) continue;
+        delete region.depthRangeMillimeters;
+        if (size === undefined) delete region.sizeMillimeters;
+        else region.sizeMillimeters = size;
+      }
+    }, {
+      status: "Hold depth changed. Save when ready.",
+      failureMessage: "Hold depth is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
   const changeHoldDepthRange = useCallback((depthRange: MillimeterRange | undefined): void => {
     if (busy || !document || !selectedHold
       || (depthRange !== undefined
-        && (!Number.isInteger(depthRange.lowerBound)
-          || !Number.isInteger(depthRange.upperBound)
+        && (!Number.isFinite(depthRange.lowerBound)
+          || !Number.isFinite(depthRange.upperBound)
           || depthRange.lowerBound <= 0
           || depthRange.upperBound < depthRange.lowerBound))) return;
     const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
     actions.editDocument((candidate) => {
       for (const region of candidate.regions) {
         if (!siblingKeys.has(region.key)) continue;
+        delete region.sizeMillimeters;
         if (depthRange === undefined) delete region.depthRangeMillimeters;
         else region.depthRangeMillimeters = { ...depthRange };
       }
@@ -1648,6 +1683,8 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     dismissVertexMenu,
     changeHoldType,
     changeFingerCapacity,
+    changeHoldDepthMeasurement,
+    changeHoldSizeMillimeters,
     changeHoldDepthRange,
     changeHandCapacity,
     changeOutlineShape,

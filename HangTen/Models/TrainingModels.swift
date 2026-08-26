@@ -144,6 +144,16 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         }
     }
 
+    var detailLabel: String {
+        switch self {
+        case .jug: "Jug"
+        case .edge: "Edge"
+        case .pocket: "Pocket"
+        case .pinch: "Pinch"
+        case .sloper: "Sloper"
+        }
+    }
+
     var tint: Color {
         switch self {
         case .jug: .holdBlue
@@ -391,28 +401,56 @@ struct BoardHold: Identifiable, Hashable {
     let fingerCapacity: Int?
     let handCapacity: Int?
     let frame: HoldFrame
-    let sizeMillimeters: Int?
-    let depthRangeMillimeters: ClosedRange<Int>?
+    let sizeMillimeters: Double?
+    let depthRangeMillimeters: ClosedRange<Double>?
     let features: Set<HoldFeature>?
     let presentationID: String
 
     static let validFingerCapacityRange = 1...4
     static let validHandCapacityRange = 1...2
 
+    enum DepthMeasurement: Equatable {
+        case none
+        case fixed(Double)
+        case continuous(ClosedRange<Double>)
+
+        init?(
+            sizeMillimeters: Double?,
+            depthRangeMillimeters: ClosedRange<Double>?
+        ) {
+            switch (sizeMillimeters, depthRangeMillimeters) {
+            case (nil, nil):
+                self = .none
+            case (let size?, nil):
+                self = .fixed(size)
+            case (nil, let range?):
+                self = .continuous(range)
+            case (.some, .some):
+                return nil
+            }
+        }
+    }
+
     init(
         id: String,
         name: String,
         kind: HoldKind,
         geometry: [BoardHoldPiece],
-        sizeMillimeters: Int? = nil,
+        sizeMillimeters: Double? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
-        depthRangeMillimeters: ClosedRange<Int>? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
         features: Set<HoldFeature>? = nil,
         presentationID: String = BoardPresentation.primaryID
     ) {
         precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
+        guard let depthMeasurement = DepthMeasurement(
+            sizeMillimeters: sizeMillimeters,
+            depthRangeMillimeters: depthRangeMillimeters
+        ) else {
+            preconditionFailure("BoardHold must not specify both a size and depth range.")
+        }
         if let fingerCapacity {
             precondition(
                 Self.validFingerCapacityRange.contains(fingerCapacity),
@@ -441,8 +479,17 @@ struct BoardHold: Identifiable, Hashable {
             width: union.width,
             height: union.height
         )
-        self.sizeMillimeters = sizeMillimeters
-        self.depthRangeMillimeters = depthRangeMillimeters
+        switch depthMeasurement {
+        case .none:
+            self.sizeMillimeters = nil
+            self.depthRangeMillimeters = nil
+        case .fixed(let size):
+            self.sizeMillimeters = size
+            self.depthRangeMillimeters = nil
+        case .continuous(let range):
+            self.sizeMillimeters = nil
+            self.depthRangeMillimeters = range
+        }
         self.features = features
         self.presentationID = presentationID
     }
@@ -457,12 +504,12 @@ struct BoardHold: Identifiable, Hashable {
         detail _: String,
         kind: HoldKind,
         frame: HoldFrame,
-        sizeMillimeters: Int? = nil,
+        sizeMillimeters: Double? = nil,
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         cueStyle _: HoldCueStyle? = nil,
-        depthRangeMillimeters: ClosedRange<Int>? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
         features: Set<HoldFeature>? = nil
     ) {
         self.init(
@@ -1533,7 +1580,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1544,7 +1591,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1555,7 +1602,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1566,7 +1613,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -1577,7 +1624,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · half crimp",
                 active: 7,
                 rest: 0,
-                targets: [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail, .jug)],
+                targets: [.feature(.mediumEdge, fallback: .largeEdge)],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
             ),
@@ -2280,11 +2327,8 @@ enum LegacyPlanSeedCatalog {
             if !target.holdIDs.isEmpty {
                 return Set(target.holdIDs).isSubset(of: boardHoldIDs)
             }
-            if let feature = target.feature {
-                let acceptedFeatures = [feature] + target.fallbackFeatures
-                return board.holds.contains { hold in
-                    !(hold.features ?? []).isDisjoint(with: acceptedFeatures)
-                }
+            if target.feature != nil {
+                return !BoardTargetResolver.substituteHoldIDs(for: target, on: board).isEmpty
             }
             if let kind = target.kind {
                 return board.holds.contains { $0.kind == kind }

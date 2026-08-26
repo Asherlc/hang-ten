@@ -136,7 +136,10 @@
     {
       "id": "tray",
       "name": "Tray",
-      "kind": "pocket",
+      "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "presentationID": "stepped-face",
       "geometry": [
         {

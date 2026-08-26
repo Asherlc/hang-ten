@@ -64,14 +64,22 @@ Run the repository wrapper from the checkout root:
 ```sh
 scripts/hangboard-packages.sh validate --root Hangboards
 scripts/hangboard-packages.sh status --root Hangboards
+scripts/hangboard-packages.sh audit-metadata --root Hangboards \
+  --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
 ```
 
-Both commands print the discovered complete packages and draft paths. Add
-`--final-inventory` to reject any primary-only draft:
+`validate` and `status` print the discovered complete packages and draft paths;
+`audit-metadata` prints its coverage report. Add `--final-inventory` to reject
+any primary-only draft:
 
 ```sh
 scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 ```
+
+`audit-metadata` requires a complete final package inventory, cross-checks a
+source-audited ledger against its hold metadata, and prints a sorted coverage
+report. Like the other package commands, it is source-only and read-only: it
+does not alter packages or the ledger.
 
 The current repository inventory contains 44 complete packages and zero
 drafts.

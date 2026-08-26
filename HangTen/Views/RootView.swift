@@ -148,11 +148,15 @@ enum RootTab: Hashable, CaseIterable {
 
 enum RootReviewDestination: Equatable {
     case workout
+    case boardEditor
 
     static func initial(environment: [String: String]) -> Self? {
         #if DEBUG
         if environment["HANGTEN_REVIEW_WORKOUT"] == "1" {
             return .workout
+        }
+        if environment["HANGTEN_REVIEW_BOARD_EDITOR"] == "1" {
+            return .boardEditor
         }
         #endif
         return nil
@@ -174,6 +178,10 @@ struct RootView: View {
 			if reviewDestination == .workout,
 			   let plan = store.featuredPlan {
 				WorkoutView(plan: plan)
+			} else if reviewDestination == .boardEditor {
+				NavigationStack {
+					BoardEditorListView()
+				}
 			} else {
 				TabView(selection: $selectedTab) {
 					TrainView { selectedTab = .plans }
@@ -1390,6 +1398,30 @@ enum WorkoutSessionPolicy {
         preparationState == .preparing
     }
 
+    enum PendingCountdownResolution: Equatable {
+        case none
+        case beginVisibly
+        case requestAudioCountdown
+    }
+
+    static func shouldPrepareCountdownAudio(
+        preparationState: CountdownAudioPreparationState
+    ) -> Bool {
+        preparationState == .idle || preparationState == .failed
+    }
+
+    static func consumePendingCountdown<Countdown>(
+        _ pendingCountdown: inout Countdown?,
+        afterPreparationState preparationState: CountdownAudioPreparationState
+    ) -> PendingCountdownResolution {
+        guard preparationState != .preparing, pendingCountdown != nil else {
+            return .none
+        }
+
+        pendingCountdown = nil
+        return preparationState == .failed ? .beginVisibly : .requestAudioCountdown
+    }
+
     static func countdownAudioArmLead(environment: [String: String]) -> TimeInterval {
         #if DEBUG
         if environment["HANGTEN_REVIEW_COUNTDOWN_CAPTURE"] == "1" {
@@ -1893,9 +1925,18 @@ struct WorkoutView: View {
 			pauseForInterruption()
 		}
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
-			guard state != .preparing, let pendingCountdownStart else { return }
-			self.pendingCountdownStart = nil
-			requestCountdownStart(pendingCountdownStart)
+			guard let pendingCountdownStart else { return }
+			switch WorkoutSessionPolicy.consumePendingCountdown(
+				&self.pendingCountdownStart,
+				afterPreparationState: state
+			) {
+			case .none:
+				return
+			case .beginVisibly:
+				beginVisibleCountdown(pendingCountdownStart, at: WorkoutClock.monotonicTime)
+			case .requestAudioCountdown:
+				requestCountdownStart(pendingCountdownStart)
+			}
 		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
 			let monotonicTime = WorkoutClock.monotonicTime
@@ -2431,6 +2472,12 @@ struct WorkoutView: View {
 
 	private func requestCountdownStart(_ countdown: PendingCountdownStart) {
 		if audioCuesEnabled,
+		   WorkoutSessionPolicy.shouldPrepareCountdownAudio(
+			preparationState: audioCoach.countdownPreparationState
+		   ) {
+			audioCoach.prepareCountdownAudio()
+		}
+		if audioCuesEnabled,
 		   WorkoutSessionPolicy.shouldDeferCountdownStart(
 			isFirstStart: countdown == .initial,
 			preparationState: audioCoach.countdownPreparationState
@@ -2621,6 +2668,7 @@ struct WorkoutView: View {
 			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
 			batteryValue: motherboardBluetoothService.batteryValue,
 			steps: steps,
+			stepTitles: plan.steps.map(\.title),
 			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
 			bodyweightKGF: bodyweightKGF,
 			motherboardMeasurements: motherboardMeasurementCollector.measurements,

@@ -9,6 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from .board_catalog import BoardInventory, BoardPackage, discover_board_packages
+from .metadata_audit import load_metadata_ledger, validate_metadata_ledger
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -16,8 +17,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         arguments = _parser().parse_args(argv)
         inventory = discover_board_packages(
             arguments.root,
-            require_complete_inventory=arguments.final_inventory,
+            require_complete_inventory=(
+                arguments.command == "audit-metadata" or arguments.final_inventory
+            ),
         )
+        if arguments.command == "audit-metadata":
+            report = validate_metadata_ledger(
+                load_metadata_ledger(arguments.ledger), inventory
+            )
+            print(json.dumps(report.to_json(), indent=2, sort_keys=True))
+            return 0
         print(_status_payload(inventory))
         return 0
     except SystemExit as error:
@@ -42,6 +51,11 @@ def _parser() -> argparse.ArgumentParser:
             action="store_true",
             help="reject primary-only draft directories",
         )
+    audit_metadata = subcommands.add_parser(
+        "audit-metadata", help="validate a source-audited metadata ledger"
+    )
+    audit_metadata.add_argument("--root", type=Path, required=True)
+    audit_metadata.add_argument("--ledger", type=Path, required=True)
     return parser
 
 
