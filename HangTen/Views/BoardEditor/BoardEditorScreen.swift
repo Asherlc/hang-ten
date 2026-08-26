@@ -4,6 +4,30 @@ final class HoldEditorCanvasReference {
     weak var view: HoldEditorCanvasUIView?
 }
 
+private enum EditorCanvasBackground: String, CaseIterable, Identifiable {
+    case hangBackground
+    case white
+    case charcoal
+
+    var id: Self { self }
+
+    var name: String {
+        switch self {
+        case .hangBackground: "Cream"
+        case .white: "White"
+        case .charcoal: "Charcoal"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .hangBackground: .hangBackground
+        case .white: .white
+        case .charcoal: Color(red: 0.16, green: 0.17, blue: 0.18)
+        }
+    }
+}
+
 struct BoardEditorScreen: View {
     @StateObject private var session: BoardEditorSession
     @Environment(\.dismiss) private var dismiss
@@ -11,6 +35,7 @@ struct BoardEditorScreen: View {
     @State private var showsInspector = false
     @State private var showsExportShare = false
     @State private var canvasReference = HoldEditorCanvasReference()
+    @State private var canvasBackground = EditorCanvasBackground.hangBackground
     private let store: BoardEditorStore
     private let imageURL: URL?
     private let loadFailed: Bool
@@ -123,6 +148,7 @@ struct BoardEditorScreen: View {
             HoldEditorCanvasView(
                 session: session,
                 image: imageURL.flatMap { UIImage(contentsOfFile: $0.path) },
+                editorBackgroundColor: UIColor(canvasBackground.color),
                 reference: canvasReference
             )
             .ignoresSafeArea(edges: .bottom)
@@ -150,6 +176,28 @@ struct BoardEditorScreen: View {
                     .frame(maxWidth: 150)
                     .background(Color.hangCream.opacity(0.85), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                     .accessibilityIdentifier("boardEditor.tool")
+
+                    Menu {
+                        ForEach(EditorCanvasBackground.allCases) { background in
+                            Button {
+                                canvasBackground = background
+                            } label: {
+                                Label(background.name, systemImage: background == canvasBackground ? "checkmark" : "circle.fill")
+                            }
+                        }
+                    } label: {
+                        Circle()
+                            .fill(canvasBackground.color)
+                            .frame(width: 24, height: 24)
+                            .overlay {
+                                Circle().stroke(Color.hangInk.opacity(0.5), lineWidth: 1)
+                            }
+                            .frame(width: 44, height: 44)
+                            .background(Color.hangCream.opacity(0.9), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    }
+                    .accessibilityLabel("Canvas background: \(canvasBackground.name)")
+                    .accessibilityHint("Choose a canvas background color")
+                    .accessibilityIdentifier("boardEditor.backgroundColor")
 
                     Spacer()
 

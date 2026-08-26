@@ -117,6 +117,14 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.height, 0)
     }
 
+    func testCanvasAppliesTheSessionSelectedBackgroundColor() {
+        let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+
+        canvas.editorBackgroundColor = .black
+
+        XCTAssertEqual(canvas.backgroundColor, .black)
+    }
+
     func testViewportOperationsRefreshIncompleteHoldAccessibilityFrame() throws {
         _ = try store.startEditing(slug: "zlagboard-pro")
         let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")

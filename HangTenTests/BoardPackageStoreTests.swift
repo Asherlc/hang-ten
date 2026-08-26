@@ -2,6 +2,79 @@ import XCTest
 @testable import HangTen
 
 final class BoardPackageStoreTests: XCTestCase {
+
+    func testBoardDetailHoldMapNumbersOnlyTheHoldsOnTheVisiblePresentation() {
+        let board = TrainingBoard(
+            id: "two-sided",
+            manufacturer: "Example",
+            name: "Two Sided",
+            subtitle: "",
+            dimensions: "10 in × 5 in",
+            aspectRatio: 2,
+            holds: [
+                boardDetailHold(id: "front-a", presentationID: "front"),
+                boardDetailHold(id: "back-a", presentationID: "back"),
+                boardDetailHold(id: "front-b", presentationID: "front")
+            ],
+            productURL: URL(string: "https://example.com/two-sided")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true),
+                BoardPresentation(id: "back", name: "Back", aspectRatio: 2, isDefault: false)
+            ]
+        )
+
+        let map = BoardDetailHoldMap(board: board, presentationID: "front")
+
+        XCTAssertEqual(map.entries.map(\.hold.id), ["front-a", "front-b"])
+        XCTAssertEqual(map.entries.map(\.number), [1, 2])
+    }
+
+    func testBoardDetailContentOrderPlacesSelectedHoldBeforeHoldLegend() {
+        XCTAssertEqual(
+            BoardDetailContentOrder.sections(hasSelectedHold: true),
+            [.map, .selectedHold, .holdLegend]
+        )
+    }
+
+    func testBoardHoldSpecificationsPresentOnlyDeclaredFacts() {
+        let declaredHold = boardDetailHold(
+            id: "declared",
+            kind: .pocket,
+            sizeMillimeters: 18,
+            gripType: .openHand,
+            fingerCapacity: 3,
+            handCapacity: 1
+        )
+        let rangedHold = boardDetailHold(
+            id: "ranged",
+            kind: .edge,
+            depthRangeMillimeters: 12.5...20
+        )
+        let unspecifiedHold = boardDetailHold(id: "unspecified", kind: .sloper)
+
+        XCTAssertEqual(
+            BoardHoldSpecifications.entries(for: declaredHold),
+            [
+                .init(label: "Kind", value: "Pocket"),
+                .init(label: "Depth", value: "18 mm"),
+                .init(label: "Grip", value: "Open hand"),
+                .init(label: "Finger capacity", value: "3"),
+                .init(label: "Hand capacity", value: "1")
+            ]
+        )
+        XCTAssertEqual(
+            BoardHoldSpecifications.entries(for: rangedHold),
+            [
+                .init(label: "Kind", value: "Edge"),
+                .init(label: "Depth range", value: "12.5 mm–20 mm")
+            ]
+        )
+        XCTAssertEqual(
+            BoardHoldSpecifications.entries(for: unspecifiedHold),
+            [.init(label: "Kind", value: "Sloper")]
+        )
+    }
     func testStoreRejectsInvertedFractionalDepthRange() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
@@ -1577,6 +1650,38 @@ final class BoardPackageStoreTests: XCTestCase {
         )
         try mutation(&document)
         try JSONSerialization.data(withJSONObject: document, options: [.sortedKeys]).write(to: url)
+    }
+
+    private func boardDetailHold(
+        id: String,
+        kind: HoldKind = .jug,
+        sizeMillimeters: Double? = nil,
+        gripType: GripType? = nil,
+        fingerCapacity: Int? = nil,
+        handCapacity: Int? = nil,
+        depthRangeMillimeters: ClosedRange<Double>? = nil,
+        presentationID: String = BoardPresentation.primaryID
+    ) -> BoardHold {
+        BoardHold(
+            id: id,
+            name: id,
+            kind: kind,
+            geometry: [
+                BoardHoldPiece(
+                    id: "\(id)-piece",
+                    holdID: id,
+                    frame: CGRect(x: 0.1, y: 0.1, width: 0.2, height: 0.2),
+                    shape: .roundedRect(cornerRadiusFraction: 0),
+                    treatment: .surface
+                )
+            ],
+            sizeMillimeters: sizeMillimeters,
+            gripType: gripType,
+            fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
+            depthRangeMillimeters: depthRangeMillimeters,
+            presentationID: presentationID
+        )
     }
 }
 
