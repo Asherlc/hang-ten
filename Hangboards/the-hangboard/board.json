@@ -100,7 +100,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "handCapacity": 1
     },
     {
       "id": "jug-right",
