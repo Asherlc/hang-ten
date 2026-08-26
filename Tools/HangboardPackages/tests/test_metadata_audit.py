@@ -198,6 +198,30 @@ def test_sloper_only_scope_requires_exactly_one_record_per_hold(tmp_path: Path) 
     }
 
 
+def test_sloper_only_scope_rejects_swapped_sloper_outcomes(tmp_path: Path) -> None:
+    write_board_package(tmp_path / "boards" / "full", board_id="fixture.board")
+    _supplemental_sloper_package(tmp_path)
+    records = [
+        *_complete_records("fixture.board", "hold-left"),
+        not_applicable("supplemental.board", "sloper-left", "sloper"),
+        unavailable("supplemental.board", "edge-right", "sloper"),
+    ]
+    ledger_path = _write_ledger(
+        tmp_path,
+        records,
+        sloper_only_board_ids=["supplemental.board"],
+    )
+
+    with pytest.raises(
+        MetadataAuditError,
+        match="non-sloper supplemental.board/edge-right must be notApplicable",
+    ):
+        validate_metadata_ledger(
+            load_metadata_ledger(ledger_path),
+            discover_board_packages(tmp_path / "boards"),
+        )
+
+
 def test_sloper_only_scope_rejects_missing_record(tmp_path: Path) -> None:
     write_board_package(tmp_path / "boards" / "full", board_id="fixture.board")
     _supplemental_sloper_package(tmp_path)

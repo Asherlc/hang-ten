@@ -436,6 +436,16 @@ def validate_metadata_ledger(
                 record = records_by_key.get(key)
                 if record is None:
                     raise MetadataAuditError(f"missing record for {'/'.join(key)}")
+                if board_id in ledger.sloper_only_board_ids:
+                    if hold.kind == "sloper":
+                        if record.outcome not in {"verified", "unavailable"}:
+                            raise MetadataAuditError(
+                                f"sloper {board_id}/{hold_id} must be verified or unavailable"
+                            )
+                    elif record.outcome != "notApplicable":
+                        raise MetadataAuditError(
+                            f"non-sloper {board_id}/{hold_id} must be notApplicable"
+                        )
                 actual = _hold_value(hold, field)
                 if record.outcome == "verified":
                     if actual is None:
