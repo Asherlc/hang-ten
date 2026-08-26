@@ -1758,8 +1758,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.4609375,
-            "y": 0.44140625,
+            "x": 0.104829832682,
+            "y": 0.293373121094,
             "width": 0.078125,
             "height": 0.1171875
           },
@@ -1769,35 +1769,78 @@
               {
                 "command": "move",
                 "to": [
-                  0.0,
+                  0.5,
                   0.0
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [
+                  0.776142375,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857625
+                ],
                 "to": [
                   1.0,
-                  0.0
+                  0.5
                 ]
               },
               {
-                "command": "line",
-                "to": [
+                "command": "curve",
+                "control1": [
                   1.0,
+                  0.776142375
+                ],
+                "control2": [
+                  0.776142375,
+                  1.0
+                ],
+                "to": [
+                  0.5,
                   1.0
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [
+                  0.223857625,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142375
+                ],
                 "to": [
                   0.0,
-                  1.0
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857625
+                ],
+                "control2": [
+                  0.223857625,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
                 ]
               },
               {
                 "command": "close"
               }
             ]
+          },
+          "shapeConstraint": {
+            "shape": "circle",
+            "rotationDegrees": 0.0
           }
         }
       ],
