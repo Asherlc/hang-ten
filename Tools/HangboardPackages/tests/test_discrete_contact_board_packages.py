@@ -135,6 +135,7 @@ def test_split_palm_and_training_tiles_expose_descriptive_adapted_contacts() -> 
 
     training_tiles = _board("soill-training-tiles")
     assert len(training_tiles["holds"]) == 20
+    assert training_tiles["dimensions"] == "Not published by manufacturer"
     assert {
         hold["id"]: (hold["name"], hold["kind"])
         for hold in training_tiles["holds"]
