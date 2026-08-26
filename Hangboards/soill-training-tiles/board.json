@@ -1845,6 +1845,101 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-19",
+      "name": "Hold 19",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.846790892578,
+            "y": 0.326709688477,
+            "width": 0.044168392578,
+            "height": 0.066252588867
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.50000000737,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.22385762903,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.22385762903
+                ],
+                "to": [
+                  0.0,
+                  0.49999999263
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.77614237097
+                ],
+                "control2": [
+                  0.22385762903,
+                  1.0
+                ],
+                "to": [
+                  0.50000000737,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.77614237097,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.77614237097
+                ],
+                "to": [
+                  1.0,
+                  0.49999999263
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.22385762903
+                ],
+                "control2": [
+                  0.77614237097,
+                  0.0
+                ],
+                "to": [
+                  0.50000000737,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "circle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
