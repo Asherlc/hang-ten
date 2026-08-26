@@ -214,6 +214,11 @@ use a securely installed board, avoid overtraining, and stop if you feel pain.
 Hang Ten is a timer and visual cue, not medical advice. Read the linked
 manufacturer guidance before training.
 
+## Privacy and support
+
+- [Privacy Policy](PRIVACY.md)
+- [Support and issue reports](https://github.com/Asherlc/hang-ten/issues)
+
 ## Sources and licenses
 
 - [Metolius Wood Grips II product page](https://www.metoliusclimbing.com/collections/training-boards/products/wood-grips-ii-training-boards)

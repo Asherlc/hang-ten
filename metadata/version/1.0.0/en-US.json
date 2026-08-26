@@ -1,0 +1,6 @@
+{
+  "description": "Hang Ten Training is a guided hangboard coach for climbers. Choose your board, follow the current task, and see the intended holds, grip, and fingers as you train.\n\nUse source-linked routines and a clear board map instead of translating a paper plan mid-session. Pause, resume, select steps directly, and use spoken countdown cues while you work.\n\nOptional connections let you save completed sessions as functional-strength workouts in Apple Health and receive live force readings from a compatible Bluetooth force sensor. Sensor features are optional and are not certified measurements.\n\nHangboard training can injure fingers, arms, and shoulders. Warm up, use a securely installed board, and stop if you feel pain. Hang Ten is a training timer and visual cue, not medical advice.",
+  "keywords": "hangboard,climbing,training,workout,grip,strength,bouldering",
+  "promotionalText": "Train with clear hold maps, guided routines, and optional Apple Health workout saving.",
+  "supportUrl": "https://github.com/Asherlc/hang-ten/issues"
+}
