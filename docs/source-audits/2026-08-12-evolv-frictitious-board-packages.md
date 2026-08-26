@@ -167,11 +167,23 @@ blank. Finger capacity is not applicable to the source-identified jug and
 edges. `rounded edge` has no exact `roundedEdge` schema tag, so the three edge
 feature lists remain blank rather than receiving inferred qualitative tags.
 
-### Deferred Frictitious package
+### Frictitious Megalith inventory reconciliation
 
-`frictitious.megalith` remains outside `reviewedBoardIDs`. Four stable records
-(`hold-11` through `hold-14`) duplicate geometry already represented by the
-left/right stepped 8/10/12 contacts. The primary source supports the top-row
-edge family but cannot make those overlapping records four additional physical
-contacts. A separate inventory/geometry reconciliation is required before a
-complete seven-field ledger can be honest.
+The controlling sources are the current
+[Megalith product page](https://frictitiousclimbing.com/products/megalith) and
+[official engraved front](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840).
+The product page specifies seven shoulder-width edge depths, the integrated
+two-finger pocket on the 40 mm edge, mono pockets, a 25 mm single-hand centre
+hold, and the full-width jug. The engraved front establishes that the 8, 10,
+and 12 mm labels are steps inside one uninterrupted cavity on each side.
+
+The former `hold-11` and `hold-12` paths were nested inside
+`stepped-8-10-12-left`; `hold-13` and `hold-14` were nested inside
+`stepped-8-10-12-right`. Those four records were deleted as duplicate overlays,
+leaving the ten physical contacts frozen in the 2026-08-19 mapping above. No
+surviving path, kind, or optional metadata changed.
+
+A fresh stable-ID capture was manually reviewed at
+`.context/hangboard-metadata-backfill-icky-cow/frictitious-megalith-reconciliation/frictitious.megalith--3f1c176e6ccc.png`.
+It reports ten regions and shows exactly one label over each continuous
+8/10/12 contact, with no nested top-row overlays remaining.
