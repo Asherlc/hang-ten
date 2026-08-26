@@ -57,6 +57,7 @@ export interface HoldCanvasProps {
   pathEditor: PathEditor;
   editor: HoldEditorActions;
   zoomPercent: number;
+  backgroundColor?: string;
   onZoomChange(direction: number): boolean | void;
   canZoomChange(direction: number): boolean;
   onPinchZoomChange(direction: number): boolean | void;
@@ -75,6 +76,7 @@ export function HoldCanvas({
   pathEditor,
   editor,
   zoomPercent,
+  backgroundColor = "#d6d7d3",
   onZoomChange,
   canZoomChange,
   onPinchZoomChange,
@@ -301,6 +303,7 @@ export function HoldCanvas({
         className="canvas-viewport"
         id="canvas-viewport"
         ref={viewportRef}
+        style={{ backgroundColor }}
       >
         <svg
           id="editor-svg"

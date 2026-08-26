@@ -53,6 +53,8 @@ button:disabled { cursor: default; opacity: .4; }
 .canvas-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 14px; border-bottom: 1px solid var(--line); background: #171916; }
 .canvas-controls { display: flex; align-items: center; gap: 7px; }
 .canvas-controls .tool-button { min-width: 34px; padding: 0 9px; }
+.canvas-background-selector { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 10px; font-weight: 700; }
+.canvas-background-selector select { height: 30px; padding: 0 7px; border: 1px solid var(--line); border-radius: 6px; background: #131512; color: var(--text); font: inherit; }
 #canvas-zoom-level { min-width: 40px; color: var(--muted); font-variant-numeric: tabular-nums; text-align: center; }
 .editor-heading { display: grid; gap: 2px; }
 .metadata-warning { color: #ffd08a; font-size: 10px; font-weight: 750; }
@@ -126,6 +128,8 @@ button:disabled { cursor: default; opacity: .4; }
   #editor-svg { min-height: 260px; }
   .mobile-canvas-controls { position: absolute; z-index: 10; right: max(12px, env(safe-area-inset-right)); bottom: calc(42px + env(safe-area-inset-bottom)); display: flex; gap: 8px; }
   .mobile-canvas-controls .tool-button { min-width: 48px; min-height: 48px; padding: 0 12px; border-color: #53584f; box-shadow: 0 5px 14px rgb(0 0 0 / 32%); }
+  .mobile-canvas-controls .canvas-background-selector { min-height: 48px; padding: 0 8px; border: 1px solid #53584f; border-radius: 7px; background: #20231f; box-shadow: 0 5px 14px rgb(0 0 0 / 32%); }
+  .mobile-canvas-controls .canvas-background-selector select { min-height: 32px; }
   .inspector-panel { position: fixed; z-index: 24; right: 0; bottom: 0; left: 0; max-height: min(62dvh, 520px); padding: 16px max(16px, env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); transform: translateY(105%); transition: transform 160ms ease-out; border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; box-shadow: 0 -12px 32px rgb(0 0 0 / 38%); overflow: auto; }
   .inspector-panel.mobile-sheet-open { transform: translateY(0); }
   .mobile-sheet-collapse { display: inline-flex; min-height: 44px; }
