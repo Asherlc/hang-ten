@@ -1880,6 +1880,2850 @@
       "title" : "Metolius 10-minute · Advanced"
     },
     {
+      "id" : "metolius.contact.entry.warm-up",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-1",
+          "instruction" : "1 pull-up outer jugs (2); 10 second hang center edge (17). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            }
+          ],
+          "title" : "Minute 1"
+        }
+      ],
+      "title" : "Minute 1"
+    },
+    {
+      "id" : "metolius.contact.entry.main",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-2",
+          "instruction" : "1 pull-up deep four finger edge (4), stay on — 10 s bent arm hang (90°), stay on — 1 more pull-up. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            }
+          ],
+          "title" : "Minute 2"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-3",
+          "instruction" : "2 offset pull-ups (1 arm each) outer jug (2) & deep three finger pockets (6). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-6-left",
+                    "pocket-6-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-6-left",
+                "pocket-6-right"
+              ]
+            }
+          ],
+          "title" : "Minute 3"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-4",
+          "instruction" : "6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang pinches (11). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-11-left",
+                    "pocket-11-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-11-left",
+                "pocket-11-right"
+              ]
+            }
+          ],
+          "title" : "Minute 4"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-5",
+          "instruction" : "10 s. dead hang flat sloper (15); 5 knee raises outer jug (2). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "flat-sloper-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "flat-sloper-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            }
+          ],
+          "title" : "Minute 5"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-6",
+          "instruction" : "16 s. offset hang (8 s. per side) deep edge (17) & med pocket (7). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-7-left",
+                    "pocket-7-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-7-left",
+                "pocket-7-right"
+              ]
+            }
+          ],
+          "title" : "Minute 6"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-7",
+          "instruction" : "3 pull-ups any hold. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            }
+          ],
+          "title" : "Minute 7"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-8",
+          "instruction" : "10 s. bent arm hang (elbows 90°) deep four finger (3). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 8"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-9",
+          "instruction" : "1 offset pull-up, jug & pinch (1 & 11), change hands & repeat; 10 s. dead hang deep four finger pockets (3). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-11-left",
+                    "pocket-11-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "pinch-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-11-left",
+                "pocket-11-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 9"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.entry.minute-10",
+          "instruction" : "2 pull-ups any hold; dead hang center edge (17) till failure. Fight hard & don't let go!! Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            }
+          ],
+          "title" : "Minute 10"
+        }
+      ],
+      "title" : "Metolius Contact · Entry"
+    },
+    {
+      "id" : "metolius.contact.intermediate.warm-up",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-1",
+          "instruction" : "3 pull-ups outer jugs (2); 20 second dead hang deep three finger pockets (6). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-6-left",
+                    "pocket-6-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-6-left",
+                "pocket-6-right"
+              ]
+            }
+          ],
+          "title" : "Minute 1"
+        }
+      ],
+      "title" : "Minute 1"
+    },
+    {
+      "id" : "metolius.contact.intermediate.main",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-2",
+          "instruction" : "10 s. bent arm (elbows at 90°) hang round sloper (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            }
+          ],
+          "title" : "Minute 2"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-3",
+          "instruction" : "4 offset pull-ups (each arm) outer jugs (2) & deep three finger pockets (6). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-6-left",
+                    "pocket-6-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-6-left",
+                "pocket-6-right"
+              ]
+            }
+          ],
+          "title" : "Minute 3"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-4",
+          "instruction" : "10 s. L-hang on any holds; 10 s. dead hang on pinches (11). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-11-left",
+                    "pocket-11-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-11-left",
+                "pocket-11-right"
+              ]
+            }
+          ],
+          "title" : "Minute 4"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-5",
+          "instruction" : "10 s. offset hang, deep center edge (17) & med three finger edge (8), reverse holds — repeat. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-8-left",
+                    "pocket-8-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-8-left",
+                "pocket-8-right"
+              ]
+            }
+          ],
+          "title" : "Minute 5"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-6",
+          "instruction" : "15 s. offset hang pockets (4) & (13), reverse holds — repeat. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-13-left",
+                    "pocket-13-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-13-left",
+                "pocket-13-right"
+              ]
+            }
+          ],
+          "title" : "Minute 6"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-7",
+          "instruction" : "4 pull-ups deep center edge (17); 10 knee raises any holds. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            }
+          ],
+          "title" : "Minute 7"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-8",
+          "instruction" : "15 s. dead hang, two finger pockets (7); rest 10 s.; 10 s. hang three finger pockets (9). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-7-left",
+                    "pocket-7-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-7-left",
+                "pocket-7-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            }
+          ],
+          "title" : "Minute 8"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-9",
+          "instruction" : "10 s. one arm hang jugs (3), repeat other arm; 4 pull-ups center edge (17). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            }
+          ],
+          "title" : "Minute 9"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.intermediate.minute-10",
+          "instruction" : "4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang to failure. Fight hard!! Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "flat-sloper-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "flat-sloper-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 10"
+        }
+      ],
+      "title" : "Metolius Contact · Intermediate"
+    },
+    {
+      "id" : "metolius.contact.advanced.warm-up",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-1",
+          "instruction" : "6 pull-ups round slopers (2); 20 s. dead hang deep two finger pockets (4). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            }
+          ],
+          "title" : "Minute 1"
+        }
+      ],
+      "title" : "Minute 1"
+    },
+    {
+      "id" : "metolius.contact.advanced.main",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-2",
+          "instruction" : "15 s. bent arm hang (elbows at 90°) round sloper (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            }
+          ],
+          "title" : "Minute 2"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-3",
+          "instruction" : "6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "edge-18-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "edge-18-center"
+              ]
+            }
+          ],
+          "title" : "Minute 3"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-4",
+          "instruction" : "15 s. L-hang any holds (hold good form); 15 s. dead hang on pinches (11). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "jug-left",
+                    "flat-sloper-center",
+                    "pocket-4-left",
+                    "pocket-5-left",
+                    "pocket-6-left",
+                    "pocket-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "pocket-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-14-left",
+                    "edge-16-center",
+                    "edge-17-center",
+                    "edge-18-center",
+                    "edge-19-center",
+                    "pocket-14-right",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "pocket-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "pocket-7-right",
+                    "pocket-6-right",
+                    "pocket-5-right",
+                    "pocket-4-right",
+                    "round-sloper-3-left",
+                    "round-sloper-3-right",
+                    "jug-right",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-11-left",
+                    "pocket-11-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "jug-left",
+                "flat-sloper-center",
+                "pocket-4-left",
+                "pocket-5-left",
+                "pocket-6-left",
+                "pocket-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "pocket-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-14-left",
+                "edge-16-center",
+                "edge-17-center",
+                "edge-18-center",
+                "edge-19-center",
+                "pocket-14-right",
+                "pocket-13-right",
+                "pocket-12-right",
+                "pocket-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "pocket-7-right",
+                "pocket-6-right",
+                "pocket-5-right",
+                "pocket-4-right",
+                "round-sloper-3-left",
+                "round-sloper-3-right",
+                "jug-right",
+                "pinch-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-11-left",
+                "pocket-11-right"
+              ]
+            }
+          ],
+          "title" : "Minute 4"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-5",
+          "instruction" : "10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-13-left",
+                    "pocket-13-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "jug-left",
+                    "jug-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-13-left",
+                "pocket-13-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "jug-left",
+                "jug-right"
+              ]
+            }
+          ],
+          "title" : "Minute 5"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-6",
+          "instruction" : "15 s. one arm hang center edge (17); rest 20 s.; repeat other arm. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            }
+          ],
+          "title" : "Minute 6"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-7",
+          "instruction" : "5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pinch-left",
+                    "pinch-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pinch-left",
+                "pinch-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            }
+          ],
+          "title" : "Minute 7"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-8",
+          "instruction" : "10 s. hang center edges (16, 17), reverse holds — repeat; 3 power pull-ups (use weights or helper for resistance, should just be able to complete final rep). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-16-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "edge-17-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-16-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "edge-17-center"
+              ]
+            }
+          ],
+          "title" : "Minute 8"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-9",
+          "instruction" : "20 s. slight bent arm hang, two finger pockets (7), stay on; bump to round slopers (3), 20 s. dead hang. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-7-left",
+                    "pocket-7-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-7-left",
+                "pocket-7-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 9"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.contact.advanced.minute-10",
+          "instruction" : "8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!! Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 10"
+        }
+      ],
+      "title" : "Metolius Contact · Advanced"
+    },
+    {
+      "id" : "metolius.simulator-3d.entry.warm-up",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-1",
+          "instruction" : "10 second dead hang, deep flat edge (7). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-7-left",
+                    "edge-7-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-7-left",
+                "edge-7-right"
+              ]
+            }
+          ],
+          "title" : "Minute 1"
+        }
+      ],
+      "title" : "Minute 1"
+    },
+    {
+      "id" : "metolius.simulator-3d.entry.main",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-2",
+          "instruction" : "15 second dead hang + one pull-up, outer jugs (1). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            }
+          ],
+          "title" : "Minute 2"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-3",
+          "instruction" : "2 offset pull-up (1 each arm) center jug (14) & deep three finger pockets (4). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-14-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-14-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            }
+          ],
+          "title" : "Minute 3"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-4",
+          "instruction" : "15 second dead hang, extra deep 3 finger pockets (9). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            }
+          ],
+          "title" : "Minute 4"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-5",
+          "instruction" : "12 second dead hang flat slopers (2) & 5 knee raises outer jugs (1). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            }
+          ],
+          "title" : "Minute 5"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-6",
+          "instruction" : "16 second offset hang \/ (8 sec per side), deep pocket (15) & shallow edge (5). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-15-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "edge-5-left",
+                    "edge-5-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-15-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "edge-5-left",
+                "edge-5-right"
+              ]
+            }
+          ],
+          "title" : "Minute 6"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-7",
+          "instruction" : "3 pull-ups outer jugs (1). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            }
+          ],
+          "title" : "Minute 7"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-8",
+          "instruction" : "8 second bent arm hang (elbows @ 90), round slopers (3). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 8"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-9",
+          "instruction" : "1 pull-up & then 10 second hang, ext-deep 3 finger pocket (9). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            }
+          ],
+          "title" : "Minute 9"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.entry.minute-10",
+          "instruction" : "Dead hang to failure, any holds. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "round-sloper-3-left",
+                    "jug-14-center",
+                    "round-sloper-3-right",
+                    "jug-1-right",
+                    "pocket-4-left",
+                    "edge-5-left",
+                    "edge-6-left",
+                    "edge-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "edge-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-15-center",
+                    "pocket-16-center",
+                    "pocket-17-center",
+                    "pocket-18-center",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "edge-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "edge-7-right",
+                    "edge-6-right",
+                    "edge-5-right",
+                    "pocket-4-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "round-sloper-3-left",
+                "jug-14-center",
+                "round-sloper-3-right",
+                "jug-1-right",
+                "pocket-4-left",
+                "edge-5-left",
+                "edge-6-left",
+                "edge-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "edge-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-15-center",
+                "pocket-16-center",
+                "pocket-17-center",
+                "pocket-18-center",
+                "pocket-13-right",
+                "pocket-12-right",
+                "edge-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "edge-7-right",
+                "edge-6-right",
+                "edge-5-right",
+                "pocket-4-right"
+              ]
+            }
+          ],
+          "title" : "Minute 10"
+        }
+      ],
+      "title" : "Metolius Simulator 3D · Entry"
+    },
+    {
+      "id" : "metolius.simulator-3d.intermediate.warm-up",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-1",
+          "instruction" : "25 second dead hang, medium edge (5). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-5-left",
+                    "edge-5-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-5-left",
+                "edge-5-right"
+              ]
+            }
+          ],
+          "title" : "Minute 1"
+        }
+      ],
+      "title" : "Minute 1"
+    },
+    {
+      "id" : "metolius.simulator-3d.intermediate.main",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-2",
+          "instruction" : "20 second dead hang, flat slopers (2), 3 pull-ups flat slopers. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 2"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-3",
+          "instruction" : "15 second bent arm hang, shallow edge (6) & 10 knee raises, jugs (1). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-6-left",
+                    "edge-6-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-6-left",
+                "edge-6-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            }
+          ],
+          "title" : "Minute 3"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-4",
+          "instruction" : "15 second dead hang flat slope (2), 15 second dead hang round slopers (3). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 4"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-5",
+          "instruction" : "20 second offset hang, jug (1) & shallow pocket (17), reverse holds — repeat. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-17-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-17-center"
+              ]
+            }
+          ],
+          "title" : "Minute 5"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-6",
+          "instruction" : "15 second offset hang, pockets (4 & 9), reverse holds and repeat. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            }
+          ],
+          "title" : "Minute 6"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-7",
+          "instruction" : "4 pull-ups, medium edges, 10 knee raises any holds. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-5-left",
+                    "edge-5-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "round-sloper-3-left",
+                    "jug-14-center",
+                    "round-sloper-3-right",
+                    "jug-1-right",
+                    "pocket-4-left",
+                    "edge-5-left",
+                    "edge-6-left",
+                    "edge-7-left",
+                    "pocket-8-left",
+                    "pocket-9-left",
+                    "pocket-10-left",
+                    "edge-11-left",
+                    "pocket-12-left",
+                    "pocket-13-left",
+                    "pocket-15-center",
+                    "pocket-16-center",
+                    "pocket-17-center",
+                    "pocket-18-center",
+                    "pocket-13-right",
+                    "pocket-12-right",
+                    "edge-11-right",
+                    "pocket-10-right",
+                    "pocket-9-right",
+                    "pocket-8-right",
+                    "edge-7-right",
+                    "edge-6-right",
+                    "edge-5-right",
+                    "pocket-4-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-5-left",
+                "edge-5-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "round-sloper-3-left",
+                "jug-14-center",
+                "round-sloper-3-right",
+                "jug-1-right",
+                "pocket-4-left",
+                "edge-5-left",
+                "edge-6-left",
+                "edge-7-left",
+                "pocket-8-left",
+                "pocket-9-left",
+                "pocket-10-left",
+                "edge-11-left",
+                "pocket-12-left",
+                "pocket-13-left",
+                "pocket-15-center",
+                "pocket-16-center",
+                "pocket-17-center",
+                "pocket-18-center",
+                "pocket-13-right",
+                "pocket-12-right",
+                "edge-11-right",
+                "pocket-10-right",
+                "pocket-9-right",
+                "pocket-8-right",
+                "edge-7-right",
+                "edge-6-right",
+                "edge-5-right",
+                "pocket-4-right"
+              ]
+            }
+          ],
+          "title" : "Minute 7"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-8",
+          "instruction" : "30 second dead hang, deep pockets (7). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-7-left",
+                    "edge-7-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-7-left",
+                "edge-7-right"
+              ]
+            }
+          ],
+          "title" : "Minute 8"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-9",
+          "instruction" : "10 sec one arm hang jugs (1), repeat other arm. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            }
+          ],
+          "title" : "Minute 9"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.intermediate.minute-10",
+          "instruction" : "5 pull-ups deep edges (7), without dropping off, bump up to round slopers (3) & dead hang till failure. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-7-left",
+                    "edge-7-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-7-left",
+                "edge-7-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 10"
+        }
+      ],
+      "title" : "Metolius Simulator 3D · Intermediate"
+    },
+    {
+      "id" : "metolius.simulator-3d.advanced.warm-up",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-1",
+          "instruction" : "25 second dead hang shallow edge (6), 5 pull-ups three finger pockets (9). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-6-left",
+                    "edge-6-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-6-left",
+                "edge-6-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            }
+          ],
+          "title" : "Minute 1"
+        }
+      ],
+      "title" : "Minute 1"
+    },
+    {
+      "id" : "metolius.simulator-3d.advanced.main",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-2",
+          "instruction" : "5 offset pull-ups, pockets (15 & 12), reverse holds repeat. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-15-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-12-left",
+                    "pocket-12-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-15-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-12-left",
+                "pocket-12-right"
+              ]
+            }
+          ],
+          "title" : "Minute 2"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-3",
+          "instruction" : "45 second dead hang, extra shallow edges (11). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-11-left",
+                    "edge-11-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-11-left",
+                "edge-11-right"
+              ]
+            }
+          ],
+          "title" : "Minute 3"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-4",
+          "instruction" : "5 offset pull-ups, round sloper (3) & deep pocket (4), reverse holds repeat. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-4-left",
+                    "pocket-4-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-4-left",
+                "pocket-4-right"
+              ]
+            }
+          ],
+          "title" : "Minute 4"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-5",
+          "instruction" : "10 second dead hang, x-shallow edges (11), staying on, campus to three finger pockets (9), campus to shallow edges (6), campus to flat slopers (2), hold for 15 seconds. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "edge-11-left",
+                    "edge-11-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "edge-6-left",
+                    "edge-6-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "edge-11-left",
+                "edge-11-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "edge-6-left",
+                "edge-6-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 5"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-6",
+          "instruction" : "15 second one arm hang, round sloper (3), rest 10 seconds, repeat other arm. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 6"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-7",
+          "instruction" : "5 L-sit pull-ups (bend knees if you have to), jugs (1), 20 second bent arm hang (elbows @ 90), deep two finger pockets (12). Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-12-left",
+                    "pocket-12-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-12-left",
+                "pocket-12-right"
+              ]
+            }
+          ],
+          "title" : "Minute 7"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-8",
+          "instruction" : "20 second slightly bent arm hang, shallow 3 finger pocket (8), stay on, bump to x-deep three finger pockets 25 second dead hang. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-8-left",
+                    "pocket-8-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-9-left",
+                    "pocket-9-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-8-left",
+                "pocket-8-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-9-left",
+                "pocket-9-right"
+              ]
+            }
+          ],
+          "title" : "Minute 8"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-9",
+          "instruction" : "10 second hang center pockets (18 & 17), reverse holds repeat, three power pull-ups (use weights or helper for resistance, should just be able to complete third pull). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "pocket-18-center"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "pocket-17-center"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "pocket-18-center"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "pocket-17-center"
+              ]
+            }
+          ],
+          "title" : "Minute 9"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "duration" : 60,
+          "id" : "metolius.simulator-3d.advanced.minute-10",
+          "instruction" : "8 fast pull-ups, jugs (1) (keeping form perfect), dead hang round sloper to failure (fighting hard!). Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "targets" : [
+                {
+                  "holdIDs" : [
+                    "jug-1-left",
+                    "jug-1-right"
+                  ]
+                },
+                {
+                  "holdIDs" : [
+                    "round-sloper-3-left",
+                    "round-sloper-3-right"
+                  ]
+                }
+              ],
+              "timing" : "undefined"
+            }
+          ],
+          "targets" : [
+            {
+              "holdIDs" : [
+                "jug-1-left",
+                "jug-1-right"
+              ]
+            },
+            {
+              "holdIDs" : [
+                "round-sloper-3-left",
+                "round-sloper-3-right"
+              ]
+            }
+          ],
+          "title" : "Minute 10"
+        }
+      ],
+      "title" : "Metolius Simulator 3D · Advanced"
+    },
+    {
       "id" : "research.max-hangs.warm-up",
       "steps" : [
         {
@@ -16089,8 +18933,8 @@
     "generatedAt" : "2026-08-01",
     "id" : "hang-ten.built-in",
     "notes" : [
-      "Source-linked Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
-      "Source cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
+      "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
+      "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
       "All research and coach routines are explicitly marked as adapted.",
       "Board mappings keep plan targets semantic and board-specific IDs replaceable."
     ],
@@ -16188,6 +19032,192 @@
           "manufacturer"
         ],
         "title" : "Metolius 10-minute · Advanced"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.contact.entry.warm-up"
+        },
+        {
+          "blockID" : "metolius.contact.entry.main"
+        }
+      ],
+      "boardID" : "metolius.contact",
+      "id" : "metolius.contact.entry",
+      "metadata" : {
+        "category" : "manufacturer",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Entry",
+        "notes" : [
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Metolius Contact Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/contact-training-guide",
+        "subtitle" : "Official ten-minute sequence; remaining time rests.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius Contact · Entry"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.contact.intermediate.warm-up"
+        },
+        {
+          "blockID" : "metolius.contact.intermediate.main"
+        }
+      ],
+      "boardID" : "metolius.contact",
+      "id" : "metolius.contact.intermediate",
+      "metadata" : {
+        "category" : "manufacturer",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Intermediate",
+        "notes" : [
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Metolius Contact Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/contact-training-guide",
+        "subtitle" : "Official ten-minute sequence; remaining time rests.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius Contact · Intermediate"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.contact.advanced.warm-up"
+        },
+        {
+          "blockID" : "metolius.contact.advanced.main"
+        }
+      ],
+      "boardID" : "metolius.contact",
+      "id" : "metolius.contact.advanced",
+      "metadata" : {
+        "category" : "manufacturer",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Advanced",
+        "notes" : [
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Metolius Contact Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/contact-training-guide",
+        "subtitle" : "Official ten-minute sequence; remaining time rests.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius Contact · Advanced"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.simulator-3d.entry.warm-up"
+        },
+        {
+          "blockID" : "metolius.simulator-3d.entry.main"
+        }
+      ],
+      "boardID" : "metolius.simulator-3d",
+      "id" : "metolius.simulator-3d.entry",
+      "metadata" : {
+        "category" : "manufacturer",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Entry",
+        "notes" : [
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Metolius Simulator 3D Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/simulator-3d-training-guide",
+        "subtitle" : "Official ten-minute sequence; remaining time rests. Feet on a chair may lower resistance; place it 1'–3' behind the board plane.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius Simulator 3D · Entry"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.simulator-3d.intermediate.warm-up"
+        },
+        {
+          "blockID" : "metolius.simulator-3d.intermediate.main"
+        }
+      ],
+      "boardID" : "metolius.simulator-3d",
+      "id" : "metolius.simulator-3d.intermediate",
+      "metadata" : {
+        "category" : "manufacturer",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Intermediate",
+        "notes" : [
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Metolius Simulator 3D Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/simulator-3d-training-guide",
+        "subtitle" : "Official ten-minute sequence; remaining time rests.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius Simulator 3D · Intermediate"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.simulator-3d.advanced.warm-up"
+        },
+        {
+          "blockID" : "metolius.simulator-3d.advanced.main"
+        }
+      ],
+      "boardID" : "metolius.simulator-3d",
+      "id" : "metolius.simulator-3d.advanced",
+      "metadata" : {
+        "category" : "manufacturer",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Advanced",
+        "notes" : [
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Metolius Simulator 3D Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/simulator-3d-training-guide",
+        "subtitle" : "Official ten-minute sequence; remaining time rests.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius Simulator 3D · Advanced"
       }
     },
     {

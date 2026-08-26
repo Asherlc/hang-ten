@@ -1482,8 +1482,8 @@ enum BuiltInPlanLibraryDefinition {
                 generatedAt: "2026-08-01",
                 defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,
                 notes: [
-                    "Source-linked Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
-                    "Source cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
+                    "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
+                    "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
                     "All research and coach routines are explicitly marked as adapted.",
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
@@ -1500,6 +1500,9 @@ enum BuiltInPlanLibraryDefinition {
         sharedCoolDown: WorkoutBlockDefinition?,
         existingBlockIDs: Set<String>
     ) -> (PlanDefinition, [WorkoutBlockDefinition]) {
+        let semanticHoldID: ([String]) -> String? = plan.boardID == nil
+            ? semanticID(for:)
+            : { _ in nil }
         let category: String
         if plan.id.hasPrefix("research.") {
             category = "research"
@@ -1524,6 +1527,10 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+            ]
+        } else if plan.id.hasPrefix("metolius.contact.") || plan.id.hasPrefix("metolius.simulator-3d.") {
+            notes = [
+                "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
             ]
         } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
             notes = [
@@ -1579,7 +1586,7 @@ enum BuiltInPlanLibraryDefinition {
             let block = WorkoutBlockDefinition(
                 id: "\(plan.id).warm-up",
                 title: first.title,
-                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticID(for:))]
+                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticHoldID)]
             )
             blocks.append(block)
             references.append(WorkoutBlockReference(blockID: block.id))
@@ -1600,7 +1607,7 @@ enum BuiltInPlanLibraryDefinition {
                 id: "\(plan.id).main",
                 title: plan.title,
                 steps: plan.steps[firstIndex..<lastIndex].map {
-                    WorkoutStepDefinition.from($0, semanticHoldID: semanticID(for:))
+                    WorkoutStepDefinition.from($0, semanticHoldID: semanticHoldID)
                 }
             )
             blocks.append(middleBlock)
