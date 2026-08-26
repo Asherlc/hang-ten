@@ -205,12 +205,12 @@ struct BoardDetailView: View {
                         .foregroundStyle(Color.hangMuted)
                 }
 
-                BoardDetailMapView(board: board, selectedHoldID: $selectedHoldID)
-                    .hangCard(padding: 14)
-
-                if let selectedHold {
-                    selectedHoldCard(selectedHold)
-                }
+                BoardDetailMapView(
+                    board: board,
+                    selectedHoldID: $selectedHoldID,
+                    selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
+                )
+                .hangCard(padding: 14)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 18)

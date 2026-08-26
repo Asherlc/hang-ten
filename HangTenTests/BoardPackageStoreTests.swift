@@ -30,6 +30,13 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(map.entries.map(\.number), [1, 2])
     }
 
+    func testBoardDetailContentOrderPlacesSelectedHoldBeforeHoldLegend() {
+        XCTAssertEqual(
+            BoardDetailContentOrder.sections(hasSelectedHold: true),
+            [.map, .selectedHold, .holdLegend]
+        )
+    }
+
     func testBoardHoldSpecificationsPresentOnlyDeclaredFacts() {
         let declaredHold = boardDetailHold(
             id: "declared",
@@ -49,8 +56,8 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(
             BoardHoldSpecifications.entries(for: declaredHold),
             [
-                .init(label: "Kind", value: "Pockets"),
-                .init(label: "Size", value: "18 mm"),
+                .init(label: "Kind", value: "Pocket"),
+                .init(label: "Depth", value: "18 mm"),
                 .init(label: "Grip", value: "Open hand"),
                 .init(label: "Finger capacity", value: "3"),
                 .init(label: "Hand capacity", value: "1")
@@ -59,7 +66,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(
             BoardHoldSpecifications.entries(for: rangedHold),
             [
-                .init(label: "Kind", value: "Edges"),
+                .init(label: "Kind", value: "Edge"),
                 .init(label: "Depth range", value: "12.5 mm–20 mm")
             ]
         )
