@@ -86,6 +86,55 @@ def test_adapted_record_matches_board_value(tmp_path: Path) -> None:
     assert report.fields["kind"].adapted == 1
 
 
+def test_parser_rejects_adapted_record_without_reason(tmp_path: Path) -> None:
+    records = _complete_records("fixture.board", "hold-left")
+    records[0] = _record(
+        "fixture.board", "hold-left", "kind", "adapted", "jug", "Adapted role"
+    )
+    records[0].pop("reason")
+
+    with pytest.raises(MetadataAuditError, match=r"missing keys: \['reason'\]"):
+        load_metadata_ledger(_write_ledger(tmp_path, records))
+
+
+def test_parser_rejects_adapted_record_with_blank_reason(tmp_path: Path) -> None:
+    records = _complete_records("fixture.board", "hold-left")
+    records[0] = _record(
+        "fixture.board", "hold-left", "kind", "adapted", "jug", "   "
+    )
+
+    with pytest.raises(MetadataAuditError, match="reason must be a non-empty string"):
+        load_metadata_ledger(_write_ledger(tmp_path, records))
+
+
+def test_parser_rejects_adapted_record_without_value(tmp_path: Path) -> None:
+    records = _complete_records("fixture.board", "hold-left")
+    records[0] = _record(
+        "fixture.board", "hold-left", "kind", "adapted", "jug", "Adapted role"
+    )
+    records[0].pop("value")
+
+    with pytest.raises(MetadataAuditError, match=r"missing keys: \['value'\]"):
+        load_metadata_ledger(_write_ledger(tmp_path, records))
+
+
+def test_validator_rejects_mismatched_adapted_value(tmp_path: Path) -> None:
+    package = write_board_package(tmp_path / "boards" / "fixture")
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    document["holds"][0].update({"id": "edge-left", "kind": "edge"})
+    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
+    records = _complete_records("fixture.board", "edge-left")
+    records[0] = _record(
+        "fixture.board", "edge-left", "kind", "adapted", "jug", "Adapted role"
+    )
+
+    with pytest.raises(MetadataAuditError, match="kind does not match"):
+        validate_metadata_ledger(
+            load_metadata_ledger(_write_ledger(tmp_path, records)),
+            discover_board_packages(tmp_path / "boards"),
+        )
+
+
 def _complete_records(
     board_id: str,
     hold_id: str,
@@ -752,12 +801,16 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
     assert all(
         record["outcome"] == "adapted"
         and record["source"]["url"]
-        == "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin"
-        and "per-contact map" in record["reason"]
+        == "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin"
+        and "grouped family specifications" in record["reason"]
+        and "20-contact ID map" in record["reason"]
+        and "four top-pocket regions" in record["reason"]
         for record in training_tile_kind_records
     )
 
     expected_adaptations = {
+        ("soill.training-tiles", hold_id) for hold_id in expected_training_tile_ids
+    } | {
         ("soill.split-palm", "lower-pinch-left"),
         ("soill.split-palm", "lower-pinch-right"),
         ("tension.honestone", "macro-sloper-left"),
@@ -771,7 +824,8 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         if record["field"] == "kind" and record["outcome"] == "adapted"
         for hold_id in record["holdIDs"]
     }
-    assert expected_adaptations <= adapted_kind_ids
+    assert adapted_kind_ids == expected_adaptations
+    assert len(adapted_kind_ids) == 26
 
     training_tile_pocket_sloper = next(
         record

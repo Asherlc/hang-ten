@@ -69,7 +69,7 @@ that optional value. The product URL is the current primary manufacturer page.
 | nature.stoak-board-iii | 7 | edge 6; jug 1 | [manufacturer](https://natureclimbing.com/products/stoak-board-iii) |
 | soill.iron-palm-2 | 8 | edge 3; jug 1; pinch 2; sloper 2 | [manufacturer](https://soillholds.com/products/iron-palm-2-0) |
 | soill.split-palm | 16 | edge 8; jug 2; pinch 2 adapted lower regions; sloper 4 | [manufacturer](https://soill.ca/products/split-palm) |
-| soill.training-tiles | 20 adapted visual roles | edge 10; jug 2; pocket 4; sloper 4 | [manufacturer](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin) |
+| soill.training-tiles | 20 adapted visual roles | edge 10; jug 2; pocket 4; sloper 4 | [manufacturer](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin) |
 | target10a.linebreaker-base | 24 | edge 6; jug 2; pocket 12; sloper 4 | [manufacturer](https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html) |
 | tension.flash-board | 7 | edge 7 | [manufacturer](https://tensionclimbing.com/products/flash-board-2) |
 | tension.grindstone | 14 | edge 13; jug 1 | [manufacturer](https://tensionclimbing.com/products/grindstone) |
@@ -93,9 +93,12 @@ that optional value. The product URL is the current primary manufacturer page.
 
 ## Source-limited app adaptations
 
-The current [Training Tiles listing](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin)
-supports product identity but has no manufacturer-authored per-contact map,
-count, dimensions, or contact roles. Its 20 selected jugs, pockets, slopers,
+The current [Training Tiles listing](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin)
+publishes each tile at approximately `14 × 8 in` and grouped family facts: a
+3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive
+edges, and 36/31/24 mm bottom flat edges. It has no manufacturer-authored
+20-contact ID map; its singular top-pocket group does not map one-to-one to
+Hang Ten’s four top-pocket regions. Its 20 selected jugs, pockets, slopers,
 and edges are therefore descriptive Hang Ten adaptations, with no stored
 per-contact size or capacity. The [Split Palm listing](https://soill.ca/products/split-palm)
 confirms pinches as a category but does not locate the two lower regions, so

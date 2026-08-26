@@ -135,7 +135,24 @@ def test_split_palm_and_training_tiles_expose_descriptive_adapted_contacts() -> 
 
     training_tiles = _board("soill-training-tiles")
     assert len(training_tiles["holds"]) == 20
-    assert training_tiles["dimensions"] == "Not published by manufacturer"
+    assert training_tiles["productURL"] == (
+        "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin"
+    )
+    assert training_tiles["dimensions"] == "Each tile approximately 14 \u00d7 8 in"
+    assert all(
+        all(
+            field not in hold
+            for field in (
+                "sizeMillimeters",
+                "depthRangeMillimeters",
+                "fingerCapacity",
+                "handCapacity",
+                "gripType",
+                "features",
+            )
+        )
+        for hold in training_tiles["holds"]
+    )
     assert {
         hold["id"]: (hold["name"], hold["kind"])
         for hold in training_tiles["holds"]
