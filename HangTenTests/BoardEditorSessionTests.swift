@@ -246,13 +246,26 @@ final class BoardEditorSessionTests: XCTestCase {
     func testAnchorDragRewritesTightFrame() throws {
         var session = try makeSession(slug: "zlagboard-pro")
         let target = try selectFirstPathPiece(&session)
-        session.select(handle: .anchor(commandIndex: 0))
         let pieceBefore = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         let commandsBefore = try session.boardCommands(for: pieceBefore)
-        let firstAnchor = commandsBefore[0].boardAnchor!
+        let leftmostAnchor = try XCTUnwrap(
+            commandsBefore.enumerated().compactMap { index, command in
+                command.boardAnchor.map { (index: index, point: $0) }
+            }.min { candidate, current in
+                candidate.point.x == current.point.x
+                    ? candidate.index < current.index
+                    : candidate.point.x < current.point.x
+            }
+        )
+        session.select(handle: .anchor(commandIndex: leftmostAnchor.index))
 
         session.beginInteractiveEdit()
-        try session.moveSelectedAnchor(commandIndex: 0, deltaX: -0.01, deltaY: 0, recordsHistory: false)
+        try session.moveSelectedAnchor(
+            commandIndex: leftmostAnchor.index,
+            deltaX: -0.01,
+            deltaY: 0,
+            recordsHistory: false
+        )
 
         let pieceAfter = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         XCTAssertEqual(pieceAfter.frame.x, pieceBefore.frame.x - 0.01, accuracy: 1e-9)
