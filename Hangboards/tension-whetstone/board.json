@@ -1017,6 +1017,73 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-12",
+      "name": "Hold 12",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "sizeMillimeters": 40,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.036551135049,
+            "y": 0.411368461546,
+            "width": 0.067392963909,
+            "height": 0.115387090793
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.510232229327,
+                  0.993667328082
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  1.0,
+                  1.037241970075
+                ],
+                "to": [
+                  1.0,
+                  0.78244743632
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.996968843126,
+                  0.203908702843
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.809122292492,
+                  -0.488304483841
+                ],
+                "control2": [
+                  -0.802140328614,
+                  0.7842435306
+                ],
+                "to": [
+                  0.510232229327,
+                  0.993667328082
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
