@@ -1980,7 +1980,17 @@ enum LegacyPlanSeedCatalog {
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm half crimp", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .halfCrimp),
                 ("19 mm open edge", [.feature(.mediumEdge, fallback: .largeEdge, .largeOpenHandRail)], .openHand),
-                ("Two-finger pocket", [.kind(.pocket, fingerCapacity: 2)], .openHand)
+                (
+                    "Two-finger pocket",
+                    [
+                        .kind(
+                            .pocket,
+                            fingerCapacity: 2,
+                            fallback: .mediumEdge, .largeEdge, .largeOpenHandRail
+                        )
+                    ],
+                    .openHand
+                )
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -2067,7 +2077,17 @@ enum LegacyPlanSeedCatalog {
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [HoldTarget], grip: GripType)] = [
                 ("29 mm open edge", [.feature(.largeEdge, fallback: .mediumEdge, .largeOpenHandRail)], .openHand),
-                ("Four-finger pocket", [.kind(.pocket, fingerCapacity: 4)], .openHand)
+                (
+                    "Four-finger pocket",
+                    [
+                        .kind(
+                            .pocket,
+                            fingerCapacity: 4,
+                            fallback: .mediumEdge, .largeEdge, .largeOpenHandRail
+                        )
+                    ],
+                    .openHand
+                )
             ]
 
             for (holdIndex, grip) in grips.enumerated() {

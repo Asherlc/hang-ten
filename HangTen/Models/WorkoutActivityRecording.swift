@@ -235,11 +235,23 @@ internal enum BoardTargetResolver {
             return []
         }
         guard let kind = target.kind else { return [] }
-        let sameKind = preferringFingerCapacity(
-            holds.filter { $0.kind == kind },
-            target: target
-        )
+        let sameKindCandidates = holds.filter { $0.kind == kind }
+        let sameKind = preferringFingerCapacity(sameKindCandidates, target: target)
         if !sameKind.isEmpty {
+            // A capacity-qualified pocket must not silently become a
+            // differently sized pocket when its plan declares an
+            // availability fallback. Exact-capacity pockets remain first;
+            // otherwise let the plan's stated fallback order decide before
+            // considering a mismatched pocket.
+            if kind == .pocket,
+               target.fingerCapacity != nil,
+               !target.fallbackFeatures.isEmpty,
+               !sameKindCandidates.contains(where: { $0.fingerCapacity == target.fingerCapacity }) {
+                for fallback in target.fallbackFeatures {
+                    let matches = sameKindOrGroup(fallback, target: target, among: holds)
+                    if !matches.isEmpty { return matches }
+                }
+            }
             if kind == .pocket {
                 if target.fingerCapacity != nil {
                     return oneHoldPerHand(from: sameKind).map(\.id)

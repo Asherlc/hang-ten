@@ -1584,6 +1584,76 @@ final class PlanStorageTests: XCTestCase {
     }
 
     @MainActor
+    func testCapacityQualifiedPocketPlansRetainTheirAvailabilityFallbacks() throws {
+        let expectedFallbacks: [HoldFeature] = [.mediumEdge, .largeEdge, .largeOpenHandRail]
+        let pocketTargets = [
+            (planID: "coach.horst-seven-fifty-three", fingerCapacity: 2, capacitySourceBacked: true),
+            (planID: "coach.density-hangs", fingerCapacity: 4, capacitySourceBacked: false)
+        ]
+        let audit = try loadPlanCueAudit()
+
+        for expected in pocketTargets {
+            let plan = try XCTUnwrap(LegacyPlanSeedCatalog.all.first { $0.id == expected.planID })
+            let target = try XCTUnwrap(
+                plan.steps
+                    .flatMap(\.targets)
+                    .first { $0.kind == .pocket && $0.fingerCapacity == expected.fingerCapacity }
+            )
+
+            XCTAssertEqual(target.fallbackFeatures, expectedFallbacks)
+
+            let fallbackAudit = try XCTUnwrap(
+                audit.targetFallbackRules.filter { rule in
+                    rule.planID == expected.planID &&
+                        rule.primaryKind == .pocket &&
+                        rule.fingerCapacity == expected.fingerCapacity
+                }.only,
+                "Expected one explicit fallback audit mapping for \(expected.planID)."
+            )
+            XCTAssertEqual(fallbackAudit.fallbackFeatures, expectedFallbacks)
+            XCTAssertEqual(fallbackAudit.decision, "adapt")
+            XCTAssertFalse(fallbackAudit.sourcePrescription)
+            XCTAssertEqual(
+                fallbackAudit.fingerCapacitySourcePrescription,
+                expected.capacitySourceBacked,
+                "The capacity provenance must be distinct from the fallback availability adaptation."
+            )
+            XCTAssertEqual(fallbackAudit.adaptationType, "availability")
+            XCTAssertTrue(fallbackAudit.sourceBasis.contains("app availability adaptation"))
+            XCTAssertEqual(
+                fallbackAudit.sourceURL,
+                try XCTUnwrap(audit.planSources.first { $0.planID == expected.planID }).sourceURL
+            )
+
+            let edgeOnlyBoard = TrainingBoard(
+                id: "fixture.edge-only.\(expected.fingerCapacity)",
+                manufacturer: "Fixture Maker",
+                name: "Edge-only Board",
+                subtitle: "A test board without pockets.",
+                dimensions: "10 × 5",
+                aspectRatio: 2,
+                holds: [
+                    BoardHold(
+                        id: "fixture.large-edge",
+                        name: "Large edge",
+                        shortLabel: "E",
+                        detail: "A fixture large edge.",
+                        kind: .edge,
+                        frame: .init(x: 0.1, y: 0.1, width: 0.2, height: 0.1),
+                        features: [.largeEdge]
+                    )
+                ],
+                productURL: URL(string: "https://example.com/edge-only")!,
+                photoAssetName: nil
+            )
+            XCTAssertEqual(
+                BoardTargetResolver.substituteHoldIDs(for: target, on: edgeOnlyBoard),
+                ["fixture.large-edge"]
+            )
+        }
+    }
+
+    @MainActor
     func testAuditedPlansAreBoardFlexibleAndSubstituteOnEveryRegisteredBoard() throws {
         let auditedPlanIDs: Set<String> = [
             "research.force-feedback-f80",
@@ -2257,6 +2327,20 @@ private struct CueAuditDocument: Decodable {
     let planSources: [PlanSourceManifestEntry]
     let planFieldRules: [PlanFieldRule]
     let stepFieldRules: [StepFieldRule]
+    let targetFallbackRules: [TargetFallbackAuditRule]
+}
+
+private struct TargetFallbackAuditRule: Decodable {
+    let planID: String
+    let primaryKind: HoldKind
+    let fingerCapacity: Int
+    let fallbackFeatures: [HoldFeature]
+    let decision: String
+    let sourcePrescription: Bool
+    let fingerCapacitySourcePrescription: Bool
+    let adaptationType: String
+    let sourceURL: String
+    let sourceBasis: String
 }
 
 private struct PlanSourceManifestEntry: Decodable {

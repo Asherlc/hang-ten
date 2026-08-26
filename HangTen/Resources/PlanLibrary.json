@@ -10023,6 +10023,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 2,
                   "kind" : "pocket"
                 }
@@ -10040,6 +10045,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 2,
               "kind" : "pocket"
             }
@@ -10060,6 +10070,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 2,
                   "kind" : "pocket"
                 }
@@ -10077,6 +10092,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 2,
               "kind" : "pocket"
             }
@@ -10097,6 +10117,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 2,
                   "kind" : "pocket"
                 }
@@ -10106,6 +10131,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 2,
               "kind" : "pocket"
             }
@@ -10823,6 +10853,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 4,
                   "kind" : "pocket"
                 }
@@ -10840,6 +10875,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 4,
               "kind" : "pocket"
             }
@@ -10859,6 +10899,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 4,
                   "kind" : "pocket"
                 }
@@ -10876,6 +10921,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 4,
               "kind" : "pocket"
             }
@@ -10895,6 +10945,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 4,
                   "kind" : "pocket"
                 }
@@ -10904,6 +10959,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 4,
               "kind" : "pocket"
             }
@@ -10944,6 +11004,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 4,
                   "kind" : "pocket"
                 }
@@ -10961,6 +11026,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 4,
               "kind" : "pocket"
             }
@@ -10980,6 +11050,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 4,
                   "kind" : "pocket"
                 }
@@ -10997,6 +11072,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 4,
               "kind" : "pocket"
             }
@@ -11016,6 +11096,11 @@
               "kind" : "work",
               "targets" : [
                 {
+                  "fallbackFeatures" : [
+                    "mediumEdge",
+                    "largeEdge",
+                    "largeOpenHandRail"
+                  ],
                   "fingerCapacity" : 4,
                   "kind" : "pocket"
                 }
@@ -11025,6 +11110,11 @@
           ],
           "targets" : [
             {
+              "fallbackFeatures" : [
+                "mediumEdge",
+                "largeEdge",
+                "largeOpenHandRail"
+              ],
               "fingerCapacity" : 4,
               "kind" : "pocket"
             }

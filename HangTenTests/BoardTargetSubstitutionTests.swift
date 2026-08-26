@@ -336,6 +336,77 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertEqual(result, ["generic-edge"])
     }
 
+    func testCapacityQualifiedPocketUsesDeclaredFallbackBeforeWrongCapacityPocket() {
+        let board = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "declared-fallback-edge", kind: .edge, feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: board),
+            ["declared-fallback-edge"]
+        )
+    }
+
+    func testCapacityQualifiedPocketPrefersExactCapacityPocketOverDeclaredFallback() {
+        let board = board(holds: [
+            hold(id: "exact-pocket", kind: .pocket, fingerCapacity: 2, x: 0.1),
+            hold(id: "declared-fallback-edge", kind: .edge, feature: .largeEdge, fingerCapacity: 4)
+        ])
+        let target = HoldTarget.kind(
+            .pocket,
+            fingerCapacity: 2,
+            fallback: .largeEdge
+        )
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: board),
+            ["exact-pocket"]
+        )
+    }
+
+    func testCapacityQualifiedPocketOrderingIsExactThenFallbacksThenWrongCapacity() {
+        let target = HoldTarget.kind(
+            .pocket,
+            fallbacks: [.mediumEdge, .largeEdge],
+            fingerCapacity: 2
+        )
+
+        let exactBoard = board(holds: [
+            hold(id: "exact-pocket", kind: .pocket, fingerCapacity: 2, x: 0.1),
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.2),
+            hold(id: "medium-edge", feature: .mediumEdge),
+            hold(id: "large-edge", feature: .largeEdge)
+        ])
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: exactBoard),
+            ["exact-pocket"]
+        )
+
+        let fallbackBoard = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1),
+            hold(id: "medium-edge", feature: .mediumEdge),
+            hold(id: "large-edge", feature: .largeEdge)
+        ])
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: fallbackBoard),
+            ["medium-edge"]
+        )
+
+        let wrongCapacityOnlyBoard = board(holds: [
+            hold(id: "wrong-capacity-pocket", kind: .pocket, fingerCapacity: 4, x: 0.1)
+        ])
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: target, on: wrongCapacityOnlyBoard),
+            ["wrong-capacity-pocket"]
+        )
+    }
+
     func testSubstitutionPrefersMatchingFingerCapacityWithinSameKindTier() {
         let board = board(holds: [
             hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2),
