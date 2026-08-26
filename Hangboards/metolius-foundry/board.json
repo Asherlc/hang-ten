@@ -883,6 +883,9 @@
       "id": "sloper-8-center",
       "name": "Center #8 53 mm flat sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "presentationID": "front",
       "geometry": [
         {
