@@ -22,7 +22,6 @@ _SESSION_ARTIFACT = ":memory:.ses"
 _MAX_ENCLOSED_BACKGROUND_PIXELS = 100_000
 _ENCLOSED_BACKGROUND_SEEDS = {
     "beastmaker-1000": ((215, 10), (785, 10)),
-    "soill-iron-palm-2": ((768, 425), (768, 530), (768, 635)),
     "soill-training-tiles": ((500, 450),),
     "tension-grindstone": ((887, 443),),
     "trango-rock-prodigy-pivot": (

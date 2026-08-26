@@ -31,3 +31,33 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         add(attachment)
     }
 }
+
+final class IronPalmBoardMapInteractionUITests: XCTestCase {
+    func testTappingRightSloperPathSelectsRightSloper() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_PICKER": "1",
+        ]
+        app.launch()
+
+        let search = app.searchFields["Search boards"]
+        XCTAssertTrue(search.waitForExistence(timeout: 10))
+        search.tap()
+        search.typeText("Iron Palm")
+
+        let holdSpecs = app.buttons["boardPicker.holdSpecs.soill.iron-palm-2"]
+        XCTAssertTrue(holdSpecs.waitForExistence(timeout: 10))
+        holdSpecs.tap()
+
+        let rightSloper = app.buttons["Right sloper"]
+        XCTAssertTrue(
+            rightSloper.waitForExistence(timeout: 10),
+            "The right sloper's canonical path must be exposed as the tappable board-map element."
+        )
+        rightSloper.tap()
+
+        XCTAssertTrue(
+            app.otherElements["boardDetail.selectedHold.sloper-right"].waitForExistence(timeout: 10)
+        )
+    }
+}

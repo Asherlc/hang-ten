@@ -23,14 +23,16 @@ CONTACT_BOUNDARY_FIXTURE = (
 HANGBOARDS_ROOT = Path(__file__).resolve().parents[3] / "Hangboards"
 
 
+def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -> None:
+    module = _load_script()
+    assert "soill-iron-palm-2" not in module._ENCLOSED_BACKGROUND_SEEDS
+
+
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [
         ("beastmaker-1000", (215, 10), (500, 20)),
         ("beastmaker-1000", (785, 10), (500, 20)),
-        ("soill-iron-palm-2", (768, 425), (768, 475)),
-        ("soill-iron-palm-2", (768, 530), (768, 580)),
-        ("soill-iron-palm-2", (768, 635), (768, 690)),
         ("soill-training-tiles", (500, 450), (500, 350)),
         ("tension-grindstone", (887, 443), (887, 360)),
         ("trango-rock-prodigy-pivot", (590, 310), (590, 400)),

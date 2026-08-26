@@ -281,3 +281,31 @@ already present before this batch. In particular:
   array. Non-pocket finger capacity is recorded as not applicable; every other
   unsupported optional field remains absent with a source-specific ledger
   reason.
+
+## 2026-08-26 Iron Palm 2.0 presentation-asset correction
+
+- `product`: [Iron Palm 2.0](https://soillholds.com/products/iron-palm-2-0)
+  (the accepted So iLL product source already recorded above).
+- Defect: seed-based enclosed-background clearing treated pale Iron Palm board
+  material as background and made it transparent. The package is removed from
+  `_ENCLOSED_BACKGROUND_SEEDS`; its presentation is not eligible for that
+  migration behavior.
+- Replacement-art prompt: “Create a clean, front-on, faithful simplified
+  illustration of the same So iLL Iron Palm 2.0. Preserve the wide horizontal
+  presentation, bilateral large round top slopers, bilateral lower 3-inch
+  pinches and thumb catches, and three centered horizontal rails in the same
+  positions and proportions. Keep every board surface opaque on a perfectly
+  flat solid `#00ff00` chroma-key background, with no shadows, text, or
+  watermark.” The generated chroma-key image was converted using the supported
+  chroma-key workflow; no repository backdrop-removal migration was used.
+- The final 1536 × 1024 RGBA presentation was reviewed on a dark canvas. A
+  second bounded isolated-simulator run (iPhone 17 Pro / iOS 26.3) displayed
+  the normal board plus the in-app active 25 mm flat-rail preview and active
+  round-sloper state; their overlays aligned with opaque board material. A
+  focused XCTest UI test now launches the existing Debug board picker, opens
+  Iron Palm, taps its accessibility-exposed `Right sloper` board-map button,
+  and observes `boardDetail.selectedHold.sloper-right`. The test log records
+  the deterministic `Tap "Right sloper" Button` event before that selected-hold
+  assertion passes, establishing the selected canonical path's in-app tap
+  resolution without changing geometry. The app's interaction path remains
+  the canonical `BoardHoldPathShape` used for the visual overlay.
