@@ -45,11 +45,11 @@ The two restored contacts are:
 | `mono-right` | Viewer-right 22 mm one-finger through-pocket | `x 0.799`, `y 0.586`, `w 0.026`, `h 0.036768333333` | operator-selected circle |
 
 Each restored record is a `pocket` with exact source-supported
-`sizeMillimeters: 22` and `fingerCapacity: 1`. Unsupported range, hand
-capacity, grip enum, and features remain absent. The right 8 mm edge is the
-inner-block path (`x 0.617`); it is collision-free with the outer mono and
-two-finger pocket frames. The mono frames do not overlap their adjacent
-two-finger pocket frames.
+`sizeMillimeters: 22`, `fingerCapacity: 1`, and `features: [pocket]`.
+Unsupported range, hand capacity, and grip enum remain absent. The right 8 mm
+edge is the inner-block path (`x 0.617`); it is collision-free with the outer
+mono and two-finger pocket frames. The mono frames do not overlap their
+adjacent two-finger pocket frames.
 
 Workbench visible-ID evidence is stored at
 `.context/hangboard-metadata-backfill-icky-cow/moon-armstrong-geometry-repair/capture-final/moon.armstrong--45a10ab74773.png`.

@@ -20,9 +20,11 @@ posture, feature, or path was inferred from their pixels.
 
 | Board and stable IDs | Source-backed package values |
 | --- | --- |
-| `moon.armstrong`: `sloper-{left,right}`; `jug-{left,right}`; `center-jug`; paired `edge-{25,20,15,10,8}-{left,right}`; `center-edge-{22,18}` | All 17 mandatory kinds; scalar depths on the twelve edges; no optional posture or capacity values. The source's 35-degree value remains an angle, not a depth. |
-| `moon.armstrong`: `two-finger-pocket-{left,right}` | `kind: pocket`, `sizeMillimeters: 22`, `fingerCapacity: 2`, and `gripType: twoFingerPocket`. |
-| `moon.armstrong`: `mono-{left,right}` | `kind: pocket`, `sizeMillimeters: 22`, and `fingerCapacity: 1`; the schema has no one-finger-pocket grip enum. |
+| `moon.armstrong`: `sloper-{left,right}`; `center-edge-{22,18}` | Mandatory `sloper`/`edge` kinds and the two center scalar depths. The source's 35-degree value remains an angle, not a depth. These exact terms have no supported feature tag. |
+| `moon.armstrong`: `jug-{left,right}`; `center-jug` | Mandatory `jug` kinds and exact `features: [jug]`. |
+| `moon.armstrong`: paired `edge-{25,20,15,10,8}-{left,right}` | Mandatory `edge` kinds, exact scalar depths, and exact `features: [slot]` from Moon's “slots” inventory term. |
+| `moon.armstrong`: `two-finger-pocket-{left,right}` | `kind: pocket`, `sizeMillimeters: 22`, `fingerCapacity: 2`, `gripType: twoFingerPocket`, and `features: [pocket]`. |
+| `moon.armstrong`: `mono-{left,right}` | `kind: pocket`, `sizeMillimeters: 22`, `fingerCapacity: 1`, and `features: [pocket]`; the schema has no one-finger-pocket grip enum. |
 | `escape-beta-22`: paired positions `hold-01` through `hold-11` | All 22 mandatory kinds and the numbered 38/29/12/50/31 mm scalar depths. `sloper` is the documented closed-taxonomy adaptation of Escape's exact “Sloper Edge” term. |
 | `escape-beta-22`: `hold-02-{left,right}`; `hold-03/04-{left,right}`; `hold-05-{left,right}`; `hold-06/07/08-{left,right}` | Exact `widePinch`, `jug`, `incutEdge`, and `flatEdge` feature arrays respectively. “Thin Pinch” and “Sloper Edge” have no exact supported feature tag. |
 | `frictitious.megalith`: `top-jug`; `center-edge-25`; `mono-{left,right}` | Exact `jug`, `incutEdge`, and `pocket` feature arrays respectively; `center-edge-25` also has source-stated `handCapacity: 1`; the monos retain `fingerCapacity: 1`. |
@@ -43,16 +45,19 @@ posture, feature, or path was inferred from their pixels.
   manufacturers do not prescribe a supported exact posture for the other
   contacts, and the schema has no one-finger-pocket enum.
 - Feature arrays remain absent unless an exact manufacturer term maps to a
-  supported tag. Kinds are not automatically duplicated into features.
+  supported tag. Moon's jugs, slots, and pockets receive their exact tags;
+  Moon's slopers and center edges remain blank because those source terms have
+  no supported feature enum. Kinds are not automatically duplicated into
+  features.
 
 ## Ledger outcome
 
 | Board | Holds | Verified/populated | Unavailable | Not applicable | Unaccounted |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `moon.armstrong` | 21 | 43 | 87 | 17 | 0 |
+| `moon.armstrong` | 21 | 60 | 70 | 17 | 0 |
 | `escape-beta-22` | 22 | 54 | 78 | 22 | 0 |
 | `frictitious.megalith` | 18 | 40 | 70 | 16 | 0 |
-| **Total** | **61** | **137** | **235** | **55** | **0** |
+| **Total** | **61** | **154** | **218** | **55** | **0** |
 
 All 427 required seven-field outcomes are explicit in the machine-readable
 ledger. This certification preserves the prior operator geometry rulings and

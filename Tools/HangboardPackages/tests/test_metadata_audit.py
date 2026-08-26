@@ -318,10 +318,29 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
         "mono-left": (22, 1, None),
         "mono-right": (22, 1, None),
     }
+    assert {
+        hold.id: hold.features for hold in moon.holds if hold.features is not None
+    } == {
+        "jug-left": ("jug",),
+        "jug-right": ("jug",),
+        "center-jug": ("jug",),
+        "edge-25-left": ("slot",),
+        "edge-25-right": ("slot",),
+        "edge-20-left": ("slot",),
+        "edge-20-right": ("slot",),
+        "edge-15-left": ("slot",),
+        "edge-15-right": ("slot",),
+        "edge-10-left": ("slot",),
+        "edge-10-right": ("slot",),
+        "edge-8-left": ("slot",),
+        "edge-8-right": ("slot",),
+        "two-finger-pocket-left": ("pocket",),
+        "two-finger-pocket-right": ("pocket",),
+        "mono-left": ("pocket",),
+        "mono-right": ("pocket",),
+    }
     assert all(
-        hold.depth_range_millimeters is None
-        and hold.hand_capacity is None
-        and hold.features is None
+        hold.depth_range_millimeters is None and hold.hand_capacity is None
         for hold in moon.holds
     )
 
