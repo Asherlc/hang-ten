@@ -22,6 +22,7 @@ _FIELDS = frozenset(
         "handCapacity",
         "gripType",
         "features",
+        "sloper",
     }
 )
 _OUTCOMES = frozenset({"verified", "unavailable", "notApplicable"})
@@ -197,6 +198,19 @@ def _load_verified_value(value: Any, field: str, source: str) -> object:
         return {"lowerBound": lower, "upperBound": upper}
     if field == "gripType":
         return _nonempty_string(value, source)
+    if field == "sloper":
+        payload = _mapping(value, source)
+        sloper_type = _nonempty_string(payload.get("type"), f"{source}.type")
+        if sloper_type == "flat":
+            _closed(payload, {"type", "angleDegrees"}, source)
+            angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
+            if not 0 <= angle_degrees <= 90:
+                raise MetadataAuditError(f"{source}.angleDegrees must be in 0...90")
+            return {"type": "flat", "angleDegrees": angle_degrees}
+        if sloper_type == "round":
+            _closed(payload, {"type"}, source)
+            return {"type": "round"}
+        raise MetadataAuditError(f"{source}.type must be flat or round")
     assert field == "features"
     if not isinstance(value, list):
         raise MetadataAuditError(f"{source} must be an array")
@@ -314,6 +328,13 @@ def _hold_value(hold: BoardHold, field: str) -> object | None:
         return hold.hand_capacity
     if field == "gripType":
         return hold.grip_type
+    if field == "sloper":
+        if hold.sloper is None:
+            return None
+        value: dict[str, object] = {"type": hold.sloper.type}
+        if hold.sloper.angle_degrees is not None:
+            value["angleDegrees"] = hold.sloper.angle_degrees
+        return value
     assert field == "features"
     return list(hold.features) if hold.features is not None else None
 

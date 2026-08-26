@@ -127,6 +127,115 @@ def _package_with_metadata(tmp_path: Path) -> Path:
     return package
 
 
+def _package_with_flat_sloper(tmp_path: Path) -> Path:
+    package = write_board_package(tmp_path / "boards" / "fixture")
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    document["holds"][0].update(
+        {"kind": "sloper", "sloper": {"type": "flat", "angleDegrees": 20}}
+    )
+    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
+    return package
+
+
+def _sloper_ledger_records(
+    value: object, *, source: dict[str, object] | None = None
+) -> list[dict[str, object]]:
+    records = [
+        {
+            "boardID": "fixture.board",
+            "holdIDs": ["hold-left"],
+            "field": "kind",
+            "outcome": "verified",
+            "reviewedAt": "2026-08-25",
+            "source": {
+                "kind": "manufacturer",
+                "url": "https://example.com/fixture-source",
+                "label": "Fixture manufacturer source",
+            },
+            "value": "sloper",
+        },
+        {
+            "boardID": "fixture.board",
+            "holdIDs": ["hold-left"],
+            "field": "sloper",
+            "outcome": "verified",
+            "reviewedAt": "2026-08-25",
+            "source": source
+            or {
+                "kind": "manufacturer",
+                "url": "https://example.com/fixture-source",
+                "label": "Fixture manufacturer source",
+            },
+            "value": value,
+        },
+    ]
+    records.extend(
+        unavailable("fixture.board", "hold-left", field)
+        for field in _FIELDS
+        if field != "kind"
+    )
+    return records
+
+
+def test_sloper_ledger_verified_value_matches_flat_hold(tmp_path: Path) -> None:
+    _package_with_flat_sloper(tmp_path)
+    ledger_path = _write_ledger(
+        tmp_path,
+        _sloper_ledger_records({"type": "flat", "angleDegrees": 20}),
+    )
+
+    report = validate_metadata_ledger(
+        load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
+    )
+
+    assert report.fields["sloper"].to_json() == {
+        "populated": 1,
+        "verified": 1,
+        "unavailable": 0,
+        "notApplicable": 0,
+    }
+
+
+def test_sloper_ledger_rejects_angle_that_differs_from_hold(tmp_path: Path) -> None:
+    _package_with_flat_sloper(tmp_path)
+    ledger_path = _write_ledger(
+        tmp_path,
+        _sloper_ledger_records({"type": "flat", "angleDegrees": 25}),
+    )
+
+    with pytest.raises(MetadataAuditError, match="sloper does not match"):
+        validate_metadata_ledger(
+            load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
+        )
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        {
+            "kind": "retailer",
+            "url": "https://example.com/fixture-source",
+            "label": "Retailer source",
+        },
+        {
+            "kind": "manufacturer",
+            "url": "http://example.com/fixture-source",
+            "label": "Insecure source",
+        },
+    ],
+)
+def test_sloper_ledger_rejects_non_manufacturer_or_non_https_source(
+    tmp_path: Path, source: dict[str, object]
+) -> None:
+    ledger_path = _write_ledger(
+        tmp_path,
+        _sloper_ledger_records({"type": "flat", "angleDegrees": 20}, source=source),
+    )
+
+    with pytest.raises(MetadataAuditError, match="source.(kind|url)"):
+        load_metadata_ledger(ledger_path)
+
+
 def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -> None:
     _package_with_metadata(tmp_path)
     records = _complete_records(
