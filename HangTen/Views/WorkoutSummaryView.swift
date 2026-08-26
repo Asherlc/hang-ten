@@ -10,6 +10,10 @@ enum WorkoutSummaryMode: Equatable {
 }
 
 enum WorkoutSummaryFormatting {
+    static func stepRowTitle(for session: WorkoutSessionRecord, at index: Int) -> String {
+        session.stepTitle(at: index)
+    }
+
     static func granularSampleCountText(
         for measurements: [MotherboardMeasurement],
         profile: ForceSensorProfile = .motherboard,
@@ -184,7 +188,7 @@ private struct WorkoutSummaryContent: View {
 
             Section("Measured load") {
                 ForEach(Array(session.steps.enumerated()), id: \.element.stepID) { index, step in
-                    stepRow(step, title: session.stepTitle(at: index))
+                    stepRow(step, title: WorkoutSummaryFormatting.stepRowTitle(for: session, at: index))
                 }
             }
 

@@ -51,4 +51,46 @@ final class WorkoutSummaryTests: XCTestCase {
 
         XCTAssertEqual(text, "1 granular Tindeq Progressor sample")
     }
+
+    func testStepRowTitleUsesPersistedTitleAndFallsBackForLegacySessions() {
+        let measuredStep = WorkoutStepMeasurement(
+            stepID: "edge-if-001",
+            plannedActiveDuration: 7,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured
+        )
+        let titledSession = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 60),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [measuredStep],
+            stepTitles: ["Maximum hang"]
+        )
+        let legacySession = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "legacy-plan",
+            planTitle: "Legacy plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 60),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [measuredStep]
+        )
+
+        let persistedTitle = WorkoutSummaryFormatting.stepRowTitle(for: titledSession, at: 0)
+        XCTAssertEqual(persistedTitle, "Maximum hang")
+        XCTAssertNotEqual(persistedTitle, measuredStep.stepID)
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.stepRowTitle(for: legacySession, at: 0),
+            "Step 1"
+        )
+    }
 }
