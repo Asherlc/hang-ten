@@ -156,6 +156,7 @@ def test_board_schema_exposes_strict_sloper_metadata(
             {"type": "flat", "angleDegrees": float("inf")},
             "board.json.holds[0].sloper.angleDegrees",
         ),
+        ("sloper", {"type": "angled"}, "board.json.holds[0].sloper.type"),
     ],
 )
 def test_board_schema_rejects_invalid_strict_sloper_metadata(

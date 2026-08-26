@@ -23,6 +23,7 @@ _FIELDS = (
     "handCapacity",
     "gripType",
     "features",
+    "sloper",
 )
 
 
@@ -172,7 +173,7 @@ def _sloper_ledger_records(
     records.extend(
         unavailable("fixture.board", "hold-left", field)
         for field in _FIELDS
-        if field != "kind"
+        if field not in {"kind", "sloper"}
     )
     return records
 
@@ -286,13 +287,14 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
             "handCapacity": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
             "gripType": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
             "features": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
+            "sloper": {"populated": 0, "verified": 0, "unavailable": 2, "notApplicable": 0},
         },
         "boards": [
             {
                 "boardID": "fixture.board",
                 "populated": 12,
                 "verified": 12,
-                "unavailable": 2,
+                "unavailable": 4,
                 "notApplicable": 0,
                 "unaccountedFields": 0,
             }
@@ -324,7 +326,7 @@ def test_metolius_contract_verified_kind_must_match_package(tmp_path: Path) -> N
         )
 
 
-def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
+def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     ledger_path = (
         repository_root
