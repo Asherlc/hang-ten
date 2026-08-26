@@ -253,7 +253,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "handCapacity": 2
     },
     {
       "id": "edge-40-left",
