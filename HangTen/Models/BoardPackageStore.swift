@@ -644,6 +644,12 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) must not specify both a size and depth range"
                 )
             }
+            if hold.sloper != nil && hold.kind != .sloper {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) has sloper metadata but is not a sloper"
+                )
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw BoardPackageStoreError.invalidPackage(
@@ -832,6 +838,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let id: String
     let name: String
     let kind: HoldKind
+    let sloper: SloperMetadata?
     let geometry: [BoardPackageGeometryDocument]
     let sizeMillimeters: Double?
     let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
@@ -845,6 +852,7 @@ private struct BoardPackageHoldDocument: Decodable {
         case id
         case name
         case kind
+        case sloper
         case geometry
         case sizeMillimeters
         case depthRangeMillimeters
@@ -859,12 +867,15 @@ private struct BoardPackageHoldDocument: Decodable {
         try decoder.rejectUnknownKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
             "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "presentationID"
+            "features", "presentationID", "sloper"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
+        sloper = container.contains(.sloper)
+            ? try container.decode(SloperMetadata.self, forKey: .sloper)
+            : nil
         geometry = try container.decode([BoardPackageGeometryDocument].self, forKey: .geometry)
         sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
@@ -889,6 +900,7 @@ private struct BoardPackageHoldDocument: Decodable {
             name: name,
             kind: kind,
             geometry: geometryPieces,
+            sloper: sloper,
             sizeMillimeters: sizeMillimeters,
             gripType: gripType,
             fingerCapacity: fingerCapacity,

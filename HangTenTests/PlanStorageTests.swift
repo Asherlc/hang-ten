@@ -1221,6 +1221,121 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    @MainActor
+    func testBoardSpecificMetoliusPlansAreOfficialAndVisibleOnlyOnTheirSourceBoard() throws {
+        let expectedPlans = [
+            ("metolius.contact.entry", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
+            ("metolius.contact.intermediate", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
+            ("metolius.contact.advanced", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
+            ("metolius.simulator-3d.entry", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"),
+            ("metolius.simulator-3d.intermediate", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"),
+            ("metolius.simulator-3d.advanced", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide")
+        ]
+        let expectedIDs = Set(expectedPlans.map(\.0))
+        let plans = PlanCatalog.all.filter { expectedIDs.contains($0.id) }
+        let boardSpecificFamilyPlans = PlanCatalog.all.filter {
+            $0.id.hasPrefix("metolius.contact.") || $0.id.hasPrefix("metolius.simulator-3d.")
+        }
+
+        // Detects a missing, cross-board, non-resolvable, or wrong-duration source cycle.
+        XCTAssertEqual(Set(plans.map(\.id)), expectedIDs)
+        XCTAssertEqual(plans.count, expectedPlans.count)
+        XCTAssertEqual(Set(boardSpecificFamilyPlans.map(\.id)), expectedIDs)
+        XCTAssertEqual(boardSpecificFamilyPlans.count, 6)
+
+        for (planID, boardID, sourceURL) in expectedPlans {
+            let plan = try XCTUnwrap(plans.first { $0.id == planID })
+            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == boardID })
+
+            XCTAssertEqual(plan.boardID, boardID)
+            XCTAssertEqual(plan.provenance, .official)
+            XCTAssertEqual(plan.sourceURL?.absoluteString, sourceURL)
+            if planID == "metolius.simulator-3d.entry" {
+                XCTAssertTrue(plan.subtitle.contains("Feet on a chair may lower resistance"))
+                XCTAssertTrue(plan.subtitle.contains("1'–3' behind the board plane"))
+            }
+            XCTAssertEqual(plan.steps.count, 10)
+            XCTAssertEqual(plan.duration, 600)
+            XCTAssertTrue(plan.steps.allSatisfy { $0.duration == 60 })
+            XCTAssertTrue(plan.steps.allSatisfy { $0.timedWorkDuration == nil })
+            let numberedTargets = plan.steps.flatMap(\.targets)
+            XCTAssertFalse(numberedTargets.isEmpty)
+            XCTAssertTrue(numberedTargets.allSatisfy {
+                !$0.holdIDs.isEmpty && Set($0.holdIDs).isSubset(of: Set(board.holds.map(\.id)))
+            })
+            for otherBoard in BoardCatalog.all where otherBoard.id != boardID {
+                XCTAssertFalse(
+                    plan.boardID == nil || plan.boardID == otherBoard.id,
+                    "\(planID) must not be available on \(otherBoard.id)."
+                )
+            }
+        }
+
+        let suiteName = "PlanStorageTests.boardSpecificMetoliusPlans.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        for board in BoardCatalog.all {
+            store.selectBoard(board)
+            let visiblePlanIDs = Set(store.plans.map(\.id)).intersection(expectedIDs)
+            let expectedVisibleIDs = Set(expectedPlans.compactMap { plan in
+                plan.1 == board.id ? plan.0 : nil
+            })
+            XCTAssertEqual(
+                visiblePlanIDs,
+                expectedVisibleIDs,
+                "AppStore must expose only the matching board-specific Metolius plans on \(board.id)."
+            )
+        }
+    }
+
+    func testBoardSpecificMetoliusCompoundCyclesKeepEverySourceTarget() throws {
+        // This catches a regression where a compound any-hold, bump, or campus
+        // source task loses its later numbered destination from the active holds.
+        let expectedNumberedTargets: [(String, Set<String>)] = [
+            ("metolius.contact.entry.minute-4", ["pocket-11-left", "pocket-11-right"]),
+            ("metolius.contact.entry.minute-10", ["edge-17-center"]),
+            ("metolius.contact.intermediate.minute-4", ["pocket-11-left", "pocket-11-right"]),
+            ("metolius.contact.intermediate.minute-10", ["flat-sloper-center", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.contact.advanced.minute-4", ["pocket-11-left", "pocket-11-right"]),
+            ("metolius.contact.advanced.minute-5", ["pocket-13-left", "pocket-13-right", "pocket-9-left", "pocket-9-right", "jug-left", "jug-right"]),
+            ("metolius.contact.advanced.minute-9", ["pocket-7-left", "pocket-7-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.contact.advanced.minute-10", ["round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.intermediate.minute-10", ["edge-7-left", "edge-7-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.advanced.minute-5", ["edge-11-left", "edge-11-right", "pocket-9-left", "pocket-9-right", "edge-6-left", "edge-6-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.advanced.minute-8", ["pocket-8-left", "pocket-8-right", "pocket-9-left", "pocket-9-right"])
+        ]
+        let anyHoldCycles = [
+            "metolius.contact.entry.minute-4",
+            "metolius.contact.entry.minute-10",
+            "metolius.contact.intermediate.minute-4",
+            "metolius.contact.intermediate.minute-7",
+            "metolius.contact.advanced.minute-4",
+            "metolius.simulator-3d.entry.minute-10",
+            "metolius.simulator-3d.intermediate.minute-7"
+        ]
+
+        for (stepID, expectedTargets) in expectedNumberedTargets {
+            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
+            XCTAssertTrue(
+                expectedTargets.isSubset(of: Set(step.targets.flatMap(\.holdIDs))),
+                "\(stepID) must retain every numbered target in its compound source task."
+            )
+        }
+
+        for stepID in anyHoldCycles {
+            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
+            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
+            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
+
+            XCTAssertEqual(
+                Set(step.targets.flatMap(\.holdIDs)),
+                Set(board.holds.map(\.id)),
+                "\(stepID) must keep the source's any-hold option unconstrained."
+            )
+        }
+    }
+
     func testBundledSourceSeedsClassifyExplicitWorkRestAndRecovery() throws {
         let maxHang = try XCTUnwrap(
             LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" }

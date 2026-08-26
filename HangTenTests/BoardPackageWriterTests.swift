@@ -39,12 +39,14 @@ final class BoardPackageWriterTests: XCTestCase {
         id: String = "hold-one",
         name: String = "Hold one",
         kind: HoldKind = .jug,
+        sloper: SloperMetadata? = nil,
         geometry: [BoardEditablePiece]? = nil
     ) -> BoardEditableHold {
         BoardEditableHold(
             id: id,
             name: name,
             kind: kind,
+            sloper: sloper,
             presentationID: "front",
             geometry: geometry ?? [makePiece()]
         )
@@ -116,6 +118,7 @@ final class BoardPackageWriterTests: XCTestCase {
             XCTAssertEqual(leftHold.id, rightHold.id, file: file, line: line)
             XCTAssertEqual(leftHold.name, rightHold.name, file: file, line: line)
             XCTAssertEqual(leftHold.kind, rightHold.kind, file: file, line: line)
+            XCTAssertEqual(leftHold.sloper, rightHold.sloper, file: file, line: line)
             XCTAssertEqual(leftHold.sizeMillimeters, rightHold.sizeMillimeters, file: file, line: line)
             XCTAssertEqual(
                 leftHold.depthRangeMillimeters, rightHold.depthRangeMillimeters,
@@ -179,6 +182,69 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testWriterRoundTripPreservesOptionalSloperMetadataVariants() throws {
+        let document = makeDocument(holds: [
+            makeHold(
+                id: "flat-angled",
+                kind: .sloper,
+                sloper: SloperMetadata(type: .flat, angleDegrees: 20)
+            ),
+            makeHold(
+                id: "flat-unspecified-angle",
+                kind: .sloper,
+                sloper: SloperMetadata(type: .flat, angleDegrees: nil)
+            ),
+            makeHold(
+                id: "round",
+                kind: .sloper,
+                sloper: SloperMetadata(type: .round, angleDegrees: nil)
+            ),
+            makeHold(id: "unspecified", kind: .sloper),
+        ])
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        assertSemanticallyEqual(document, redecoded)
+        XCTAssertEqual(redecoded.holds.map(\.sloper), [
+            SloperMetadata(type: .flat, angleDegrees: 20),
+            SloperMetadata(type: .flat, angleDegrees: nil),
+            SloperMetadata(type: .round, angleDegrees: nil),
+            nil,
+        ])
+    }
+
+    func testWriterRejectsInvalidSloperMetadataCombinations() throws {
+        let invalidHolds = [
+            makeHold(
+                kind: .jug,
+                sloper: SloperMetadata(type: .flat, angleDegrees: 20)
+            ),
+            makeHold(
+                kind: .sloper,
+                sloper: SloperMetadata(type: .round, angleDegrees: 20)
+            ),
+            makeHold(
+                kind: .sloper,
+                sloper: SloperMetadata(type: .flat, angleDegrees: -0.01)
+            ),
+            makeHold(
+                kind: .sloper,
+                sloper: SloperMetadata(type: .flat, angleDegrees: 90.01)
+            ),
+            makeHold(
+                kind: .sloper,
+                sloper: SloperMetadata(type: .flat, angleDegrees: .infinity)
+            ),
+        ]
+
+        for invalidHold in invalidHolds {
+            XCTAssertThrowsError(
+                try BoardPackageWriter.data(for: makeDocument(holds: [invalidHold]))
+            )
+        }
+    }
+
     private func assertOptionalDoubleEqual(
         _ lhs: Double?,
         _ rhs: Double?,
@@ -232,6 +298,7 @@ final class BoardPackageWriterTests: XCTestCase {
             if leftHold.id != rightHold.id { return "holds[\(holdIndex)].id \(leftHold.id) != \(rightHold.id)" }
             if leftHold.name != rightHold.name { return "\(leftHold.id) name differs" }
             if leftHold.kind != rightHold.kind { return "\(leftHold.id) kind differs" }
+            if leftHold.sloper != rightHold.sloper { return "\(leftHold.id) sloper metadata differs" }
             if leftHold.sizeMillimeters != rightHold.sizeMillimeters { return "\(leftHold.id) size differs" }
             if leftHold.depthRangeMillimeters != rightHold.depthRangeMillimeters { return "\(leftHold.id) depth differs" }
             if leftHold.gripType != rightHold.gripType { return "\(leftHold.id) gripType differs" }

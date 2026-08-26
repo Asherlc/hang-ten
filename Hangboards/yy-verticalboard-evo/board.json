@@ -189,6 +189,9 @@
       "id": "sloper-43-left",
       "name": "Left 43-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {
@@ -253,6 +256,9 @@
       "id": "sloper-43-right",
       "name": "Right 43-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {
@@ -325,6 +331,9 @@
       "id": "sloper-38-left",
       "name": "Left 38-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {
@@ -388,6 +397,9 @@
       "id": "sloper-38-right",
       "name": "Right 38-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {
@@ -451,6 +463,9 @@
       "id": "sloper-30-center",
       "name": "Center 30-degree sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "gripType": "sloper",
       "geometry": [
         {

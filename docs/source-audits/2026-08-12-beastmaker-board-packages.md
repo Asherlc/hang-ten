@@ -122,6 +122,14 @@ A Beastmaker-published positioned guide or direct written manufacturer
 clarification is required before this board can enter `reviewedBoardIDs`; a
 retailer diagram or a visual-width inference is not a substitute.
 
+The board is instead declared in the metadata ledger's disjoint
+`sloperOnlyBoardIDs` scope. That supplemental audit contains exactly one
+`sloper` outcome for each of the 27 canonical holds: the five source-identified
+slopers are unavailable because the manufacturer does not publish a flat or
+round subtype, and the other 22 contacts are not applicable. Records for any
+other metadata field remain forbidden in this scope, so it does not imply a
+complete source audit of the unresolved front-contact kinds.
+
 No `kind`, geometry, presentation asset, stable ID, or hold count changed in
 this cleanup. In particular, the directly reviewed compound parent paths
 `front-middle-{3,7}` and nested paths `hold-{26,27}` remain intact and

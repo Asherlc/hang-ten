@@ -833,6 +833,30 @@ test("delete and type changes apply to every piece sharing holdID", async () => 
   });
 });
 
+test("changing a sloper hold to another kind removes sloper-only metadata", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "a-piece-0", type: "sloper", sloper: { type: "flat", angleDegrees: 20 }, displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 } },
+    { id: 2, key: "a-piece-1", type: "sloper", sloper: { type: "flat", angleDegrees: 20 }, displayPath: SECOND_PATH, metadata: { holdID: "a", pieceIndex: 1 } },
+  ]));
+  const saved: EditorDocument[] = [];
+  const client = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId: string, document: EditorDocument): Promise<Board> {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  } satisfies WorkbenchClient;
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.change("#hold-type-select", "pinch");
+    await app.click("#save-button");
+
+    assert.deepEqual(saved[0]?.regions.map((region) => region.type), ["pinch", "pinch"]);
+    assert.ok(saved[0]?.regions.every((region) => !Object.hasOwn(region, "sloper")));
+  }, dependenciesFixture(board, { client }));
+});
+
 test("duplicate and mirror reflects every selected physical hold with fresh hold identities", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: "M 10 10 Q 15 5 20 10 L 20 20 Z", metadata: { holdID: "a", pieceIndex: 0 }, shapeConstraint: { shape: "oval", rotationDegrees: 15 } },

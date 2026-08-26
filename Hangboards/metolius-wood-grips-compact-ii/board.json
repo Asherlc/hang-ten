@@ -74,6 +74,9 @@
       "id": "sloper-flat-left",
       "name": "Left 56 mm flat sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "geometry": [
         {
           "frame": {
@@ -129,6 +132,9 @@
       "id": "sloper-round-center",
       "name": "Center 56 mm round sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "round"
+      },
       "geometry": [
         {
           "frame": {
@@ -191,6 +197,9 @@
       "id": "sloper-flat-right",
       "name": "Right 56 mm flat sloper",
       "kind": "sloper",
+      "sloper": {
+        "type": "flat"
+      },
       "geometry": [
         {
           "frame": {

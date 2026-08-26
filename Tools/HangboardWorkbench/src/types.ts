@@ -51,6 +51,10 @@ export interface MillimeterRange {
   upperBound: number;
 }
 
+export type SloperMetadata =
+  | { type: "flat"; angleDegrees?: number }
+  | { type: "round" };
+
 export type OutlinePreset = Exclude<ShapeConstraintShape, "roundedRectangle"> | "rounded-rectangle";
 export type ConstrainedHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
@@ -83,6 +87,7 @@ export interface HoldRegion {
     pieceIndex: number;
     presentationID?: string;
   };
+  sloper?: SloperMetadata;
   fingerCapacity?: number;
   sizeMillimeters?: number;
   depthRangeMillimeters?: MillimeterRange;
