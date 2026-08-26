@@ -19,7 +19,9 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         sizeMillimeters: Double? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
         x: Double = 0,
-        y: Double = 0
+        y: Double = 0,
+        width: Double = 0.1,
+        height: Double = 0.1
     ) -> BoardHold {
         BoardHold(
             id: id,
@@ -27,7 +29,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             shortLabel: id,
             detail: id,
             kind: kind,
-            frame: HoldFrame(x: x, y: y, width: 0.1, height: 0.1),
+            frame: HoldFrame(x: x, y: y, width: width, height: height),
             sizeMillimeters: sizeMillimeters,
             fingerCapacity: fingerCapacity,
             depthRangeMillimeters: depthRangeMillimeters,
@@ -96,6 +98,115 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
     }
 
+    func testGenericPocketExactTagsSelectOneMirroredCapacityPair() {
+        let board = board(holds: [
+            hold(
+                id: "two-left-off-row",
+                kind: .pocket,
+                feature: .pocket,
+                fingerCapacity: 2,
+                x: 0.1,
+                y: 0.1
+            ),
+            hold(
+                id: "two-right-off-row",
+                kind: .pocket,
+                feature: .pocket,
+                fingerCapacity: 2,
+                x: 0.8,
+                y: 0.5
+            ),
+            hold(
+                id: "three-left-mirrored",
+                kind: .pocket,
+                feature: .pocket,
+                fingerCapacity: 3,
+                x: 0.2,
+                y: 0.2
+            ),
+            hold(
+                id: "three-right-mirrored",
+                kind: .pocket,
+                feature: .pocket,
+                fingerCapacity: 3,
+                x: 0.7,
+                y: 0.2
+            )
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            ["three-left-mirrored", "three-right-mirrored"]
+        )
+    }
+
+    func testGenericPocketFallbackDoesNotPairUnmirroredSameCapacityCandidates() {
+        let board = board(holds: [
+            hold(
+                id: "left-off-row",
+                kind: .pocket,
+                fingerCapacity: 3,
+                x: 0.1,
+                y: 0.1
+            ),
+            hold(
+                id: "right-off-row",
+                kind: .pocket,
+                fingerCapacity: 3,
+                x: 0.65,
+                y: 0.5,
+                width: 0.2,
+                height: 0.2
+            )
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            ["left-off-row"]
+        )
+    }
+
+    func testGenericPocketFallbackDoesNotPairUnknownCapacities() {
+        let board = board(holds: [
+            hold(id: "left-unknown", kind: .pocket, x: 0.2, y: 0.2),
+            hold(id: "right-unknown", kind: .pocket, x: 0.7, y: 0.2)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            ["left-unknown"]
+        )
+    }
+
+    func testGenericPocketExactCenterOnlyReturnsUnresolved() {
+        let board = board(holds: [
+            hold(
+                id: "center",
+                kind: .pocket,
+                feature: .pocket,
+                fingerCapacity: 4,
+                x: 0.45,
+                width: 0.1
+            )
+        ])
+
+        XCTAssertTrue(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board).isEmpty
+        )
+    }
+
+    func testGenericPocketFallbackSkipsCenteredFirstCandidateWhenNoPair() {
+        let board = board(holds: [
+            hold(id: "center", kind: .pocket, fingerCapacity: 4, x: 0.45),
+            hold(id: "left", kind: .pocket, fingerCapacity: 3, x: 0.1)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            ["left"]
+        )
+    }
+
     func testGenericPocketFallbackDoesNotPairACenteredPocketAsTheOtherHand() {
         let board = board(holds: [
             hold(id: "left-three", kind: .pocket, fingerCapacity: 3, x: 0.1),
@@ -111,7 +222,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     func testGenericPocketFallbackPrefersSameRowMirroredPairOverCrossRowPair() {
         let board = board(holds: [
             hold(id: "left-same-row", kind: .pocket, fingerCapacity: 3, x: 0.1, y: 0.2),
-            hold(id: "right-same-row", kind: .pocket, fingerCapacity: 3, x: 0.75, y: 0.2),
+            hold(id: "right-same-row", kind: .pocket, fingerCapacity: 3, x: 0.8, y: 0.2),
             hold(id: "left-cross-row", kind: .pocket, fingerCapacity: 3, x: 0.2, y: 0.8),
             hold(id: "right-cross-row", kind: .pocket, fingerCapacity: 3, x: 0.7, y: 0.1)
         ])
