@@ -212,7 +212,7 @@ seven-field outcomes are explicit and all 22 mandatory kinds are verified:
 | `fingerCapacity` | 185 / 185 | 185 / 185 | 73 | 398 |
 | `handCapacity` | 1 / 1 | 1 / 1 | 655 | 0 |
 | `gripType` | 182 / 182 | 182 / 182 | 474 | 0 |
-| `features` | 88 / 88 | 88 / 88 | 568 | 0 |
+| `features` | 105 / 105 | 105 / 105 | 551 | 0 |
 
 Every optional Beastmaker 1000 field remains blank. The pass removes 17
 unsupported pocket scalar depths, 19 duplicated kind-as-feature arrays, and
