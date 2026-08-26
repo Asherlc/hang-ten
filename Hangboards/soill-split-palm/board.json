@@ -1187,6 +1187,58 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-15",
+      "name": "Hold 15",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.452153110048,
+            "y": 0.452153110048,
+            "width": 0.095693779904,
+            "height": 0.095693779904
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
