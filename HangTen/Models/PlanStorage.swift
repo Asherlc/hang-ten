@@ -1500,6 +1500,9 @@ enum BuiltInPlanLibraryDefinition {
         sharedCoolDown: WorkoutBlockDefinition?,
         existingBlockIDs: Set<String>
     ) -> (PlanDefinition, [WorkoutBlockDefinition]) {
+        let semanticHoldID: ([String]) -> String? = plan.boardID == nil
+            ? semanticID(for:)
+            : { _ in nil }
         let category: String
         if plan.id.hasPrefix("research.") {
             category = "research"
@@ -1579,7 +1582,7 @@ enum BuiltInPlanLibraryDefinition {
             let block = WorkoutBlockDefinition(
                 id: "\(plan.id).warm-up",
                 title: first.title,
-                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticID(for:))]
+                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticHoldID)]
             )
             blocks.append(block)
             references.append(WorkoutBlockReference(blockID: block.id))
@@ -1600,7 +1603,7 @@ enum BuiltInPlanLibraryDefinition {
                 id: "\(plan.id).main",
                 title: plan.title,
                 steps: plan.steps[firstIndex..<lastIndex].map {
-                    WorkoutStepDefinition.from($0, semanticHoldID: semanticID(for:))
+                    WorkoutStepDefinition.from($0, semanticHoldID: semanticHoldID)
                 }
             )
             blocks.append(middleBlock)

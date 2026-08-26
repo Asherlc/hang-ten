@@ -1221,6 +1221,47 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testBoardSpecificMetoliusPlansAreOfficialAndVisibleOnlyOnTheirSourceBoard() throws {
+        let expectedPlans = [
+            ("metolius.contact.entry", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
+            ("metolius.contact.intermediate", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
+            ("metolius.contact.advanced", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
+            ("metolius.simulator-3d.entry", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"),
+            ("metolius.simulator-3d.intermediate", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"),
+            ("metolius.simulator-3d.advanced", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide")
+        ]
+        let expectedIDs = Set(expectedPlans.map(\.0))
+        let plans = PlanCatalog.all.filter { expectedIDs.contains($0.id) }
+
+        // Detects a missing, cross-board, non-resolvable, or wrong-duration source cycle.
+        XCTAssertEqual(Set(plans.map(\.id)), expectedIDs)
+        XCTAssertEqual(plans.count, expectedPlans.count)
+
+        for (planID, boardID, sourceURL) in expectedPlans {
+            let plan = try XCTUnwrap(plans.first { $0.id == planID })
+            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == boardID })
+
+            XCTAssertEqual(plan.boardID, boardID)
+            XCTAssertEqual(plan.provenance, .official)
+            XCTAssertEqual(plan.sourceURL?.absoluteString, sourceURL)
+            XCTAssertEqual(plan.steps.count, 10)
+            XCTAssertEqual(plan.duration, 600)
+            XCTAssertTrue(plan.steps.allSatisfy { $0.duration == 60 })
+            XCTAssertTrue(plan.steps.allSatisfy { $0.timedWorkDuration == nil })
+            let numberedTargets = plan.steps.flatMap(\.targets)
+            XCTAssertFalse(numberedTargets.isEmpty)
+            XCTAssertTrue(numberedTargets.allSatisfy {
+                !$0.holdIDs.isEmpty && Set($0.holdIDs).isSubset(of: Set(board.holds.map(\.id)))
+            })
+            for otherBoard in BoardCatalog.all where otherBoard.id != boardID {
+                XCTAssertFalse(
+                    plan.boardID == nil || plan.boardID == otherBoard.id,
+                    "\(planID) must not be available on \(otherBoard.id)."
+                )
+            }
+        }
+    }
+
     func testBundledSourceSeedsClassifyExplicitWorkRestAndRecovery() throws {
         let maxHang = try XCTUnwrap(
             LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" }

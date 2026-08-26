@@ -1257,6 +1257,215 @@ enum LegacyPlanSeedCatalog {
         }
     }
 
+    private static let contactSourceURL = URL(
+        string: "https://www.metoliusclimbing.com/pages/contact-training-guide"
+    )!
+
+    private static let simulator3DSourceURL = URL(
+        string: "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"
+    )!
+
+    private static func sourceTargets(_ groups: [String]...) -> [HoldTarget] {
+        groups.map(HoldTarget.ids)
+    }
+
+    private static let contactAnyHoldTargets = sourceTargets([
+        "pinch-left", "jug-left", "flat-sloper-center", "pocket-4-left", "pocket-5-left",
+        "pocket-6-left", "pocket-7-left", "pocket-8-left", "pocket-9-left", "pocket-10-left",
+        "pocket-11-left", "pocket-12-left", "pocket-13-left", "pocket-14-left", "edge-16-center",
+        "edge-17-center", "edge-18-center", "edge-19-center", "pocket-14-right", "pocket-13-right",
+        "pocket-12-right", "pocket-11-right", "pocket-10-right", "pocket-9-right", "pocket-8-right",
+        "pocket-7-right", "pocket-6-right", "pocket-5-right", "pocket-4-right", "round-sloper-3-left",
+        "round-sloper-3-right", "jug-right", "pinch-right"
+    ])
+
+    private static let simulator3DAnyHoldTargets = sourceTargets([
+        "jug-1-left", "round-sloper-3-left", "jug-14-center", "round-sloper-3-right", "jug-1-right",
+        "pocket-4-left", "edge-5-left", "edge-6-left", "edge-7-left", "pocket-8-left", "pocket-9-left",
+        "pocket-10-left", "edge-11-left", "pocket-12-left", "pocket-13-left", "pocket-15-center",
+        "pocket-16-center", "pocket-17-center", "pocket-18-center", "pocket-13-right", "pocket-12-right",
+        "edge-11-right", "pocket-10-right", "pocket-9-right", "pocket-8-right", "edge-7-right", "edge-6-right",
+        "edge-5-right", "pocket-4-right"
+    ])
+
+    /// Keeps an unchanged manufacturer minute as one source-governed cycle.
+    /// The guide supplies the 60-second cycle and remaining-time rest, but no
+    /// app-defined per-repetition work durations.
+    private static func officialSourceCycles(
+        planID: String,
+        _ minutes: [(instruction: String, targets: [HoldTarget], phase: WorkoutPhase)]
+    ) -> [WorkoutStep] {
+        precondition(minutes.count == 10, "An official Metolius routine has ten source minutes.")
+        return minutes.enumerated().map { index, minute in
+            WorkoutStep(
+                id: "\(planID).minute-\(index + 1)",
+                number: index + 1,
+                title: "Minute \(index + 1)",
+                instruction: "\(minute.instruction) Use the remaining time to rest until the next minute.",
+                accessory: "60-second source cycle · remaining time rest",
+                duration: MetoliusCycleBuilder.cycleDuration,
+                phase: minute.phase,
+                targets: minute.targets,
+                segments: minute.targets.isEmpty ? [] : [
+                    WorkoutSegment(
+                        kind: .work,
+                        targets: minute.targets,
+                        timing: .undefined,
+                        duration: nil
+                    )
+                ]
+            )
+        }
+    }
+
+    private static func officialMetoliusPlan(
+        id: String,
+        title: String,
+        level: String,
+        sourceLabel: String,
+        sourceURL: URL,
+        boardID: String,
+        minutes: [(instruction: String, targets: [HoldTarget], phase: WorkoutPhase)]
+    ) -> TrainingPlan {
+        TrainingPlan(
+            id: id,
+            title: title,
+            subtitle: "Official ten-minute sequence; remaining time rests.",
+            level: level,
+            sourceLabel: sourceLabel,
+            sourceURL: sourceURL,
+            provenance: .official,
+            boardID: boardID,
+            steps: officialSourceCycles(planID: id, minutes)
+        )
+    }
+
+    static let metoliusContactEntry = officialMetoliusPlan(
+        id: "metolius.contact.entry",
+        title: "Metolius Contact · Entry",
+        level: "Entry",
+        sourceLabel: "Metolius Contact Training Guide",
+        sourceURL: contactSourceURL,
+        boardID: "metolius.contact",
+        minutes: [
+            ("1 pull-up outer jugs (2); 10 second hang center edge (17).", sourceTargets(["jug-left", "jug-right"], ["edge-17-center"]), .pull),
+            ("1 pull-up deep four finger edge (4), stay on — 10 s bent arm hang (90°), stay on — 1 more pull-up.", sourceTargets(["pocket-4-left", "pocket-4-right"]), .pull),
+            ("2 offset pull-ups (1 arm each) outer jug (2) & deep three finger pockets (6).", sourceTargets(["jug-left", "jug-right"], ["pocket-6-left", "pocket-6-right"]), .pull),
+            ("6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang pinches (11).", sourceTargets(["pocket-11-left", "pocket-11-right"]), .hang),
+            ("10 s. dead hang flat sloper (15); 5 knee raises outer jug (2).", sourceTargets(["flat-sloper-center"], ["jug-left", "jug-right"]), .hang),
+            ("16 s. offset hang (8 s. per side) deep edge (17) & med pocket (7).", sourceTargets(["edge-17-center"], ["pocket-7-left", "pocket-7-right"]), .hang),
+            ("3 pull-ups any hold.", contactAnyHoldTargets, .pull),
+            ("10 s. bent arm hang (elbows 90°) deep four finger (3).", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"]), .hang),
+            ("1 offset pull-up, jug & pinch (1 & 11), change hands & repeat; 10 s. dead hang deep four finger pockets (3).", sourceTargets(["pinch-left", "pinch-right"], ["pocket-11-left", "pocket-11-right"], ["round-sloper-3-left", "round-sloper-3-right"]), .pull),
+            ("2 pull-ups any hold; dead hang center edge (17) till failure. Fight hard & don't let go!!", sourceTargets(["edge-17-center"]), .hang)
+        ]
+    )
+
+    static let metoliusContactIntermediate = officialMetoliusPlan(
+        id: "metolius.contact.intermediate",
+        title: "Metolius Contact · Intermediate",
+        level: "Intermediate",
+        sourceLabel: "Metolius Contact Training Guide",
+        sourceURL: contactSourceURL,
+        boardID: "metolius.contact",
+        minutes: [
+            ("3 pull-ups outer jugs (2); 20 second dead hang deep three finger pockets (6).", sourceTargets(["jug-left", "jug-right"], ["pocket-6-left", "pocket-6-right"]), .pull),
+            ("10 s. bent arm (elbows at 90°) hang round sloper (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°).", sourceTargets(["jug-left", "jug-right"]), .hang),
+            ("4 offset pull-ups (each arm) outer jugs (2) & deep three finger pockets (6).", sourceTargets(["jug-left", "jug-right"], ["pocket-6-left", "pocket-6-right"]), .pull),
+            ("10 s. L-hang on any holds; 10 s. dead hang on pinches (11).", sourceTargets(["pocket-11-left", "pocket-11-right"]), .hang),
+            ("10 s. offset hang, deep center edge (17) & med three finger edge (8), reverse holds — repeat.", sourceTargets(["edge-17-center"], ["pocket-8-left", "pocket-8-right"]), .hang),
+            ("15 s. offset hang pockets (4) & (13), reverse holds — repeat.", sourceTargets(["pocket-4-left", "pocket-4-right"], ["pocket-13-left", "pocket-13-right"]), .hang),
+            ("4 pull-ups deep center edge (17); 10 knee raises any holds.", sourceTargets(["edge-17-center"]), .pull),
+            ("15 s. dead hang, two finger pockets (7); rest 10 s.; 10 s. hang three finger pockets (9).", sourceTargets(["pocket-7-left", "pocket-7-right"], ["pocket-9-left", "pocket-9-right"]), .hang),
+            ("10 s. one arm hang jugs (3), repeat other arm; 4 pull-ups center edge (17).", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"], ["edge-17-center"]), .hang),
+            ("4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang to failure. Fight hard!!", sourceTargets(["flat-sloper-center"], ["round-sloper-3-left", "round-sloper-3-right"]), .hang)
+        ]
+    )
+
+    static let metoliusContactAdvanced = officialMetoliusPlan(
+        id: "metolius.contact.advanced",
+        title: "Metolius Contact · Advanced",
+        level: "Advanced",
+        sourceLabel: "Metolius Contact Training Guide",
+        sourceURL: contactSourceURL,
+        boardID: "metolius.contact",
+        minutes: [
+            ("6 pull-ups round slopers (2); 20 s. dead hang deep two finger pockets (4).", sourceTargets(["jug-left", "jug-right"], ["pocket-4-left", "pocket-4-right"]), .pull),
+            ("15 s. bent arm hang (elbows at 90°) round sloper (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°).", sourceTargets(["jug-left", "jug-right"]), .hang),
+            ("6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18).", sourceTargets(["jug-left", "jug-right"], ["pocket-4-left", "pocket-4-right"], ["edge-18-center"]), .pull),
+            ("15 s. L-hang any holds (hold good form); 15 s. dead hang on pinches (11).", sourceTargets(["pocket-11-left", "pocket-11-right"]), .hang),
+            ("10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s.", sourceTargets(["pocket-13-left", "pocket-13-right"], ["pocket-9-left", "pocket-9-right"], ["jug-left", "jug-right"]), .hang),
+            ("15 s. one arm hang center edge (17); rest 20 s.; repeat other arm.", sourceTargets(["edge-17-center"]), .hang),
+            ("5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4).", sourceTargets(["pinch-left", "pinch-right"], ["pocket-4-left", "pocket-4-right"]), .pull),
+            ("10 s. hang center edges (16, 17), reverse holds — repeat; 3 power pull-ups (use weights or helper for resistance, should just be able to complete final rep).", sourceTargets(["edge-16-center"], ["edge-17-center"]), .hang),
+            ("20 s. slight bent arm hang, two finger pockets (7), stay on; bump to round slopers (3), 20 s. dead hang.", sourceTargets(["pocket-7-left", "pocket-7-right"], ["round-sloper-3-left", "round-sloper-3-right"]), .hang),
+            ("8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!!", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"]), .hang)
+        ]
+    )
+
+    static let metoliusSimulator3DEntry = officialMetoliusPlan(
+        id: "metolius.simulator-3d.entry",
+        title: "Metolius Simulator 3D · Entry",
+        level: "Entry",
+        sourceLabel: "Metolius Simulator 3D Training Guide",
+        sourceURL: simulator3DSourceURL,
+        boardID: "metolius.simulator-3d",
+        minutes: [
+            ("10 second dead hang, deep flat edge (7).", sourceTargets(["edge-7-left", "edge-7-right"]), .hang),
+            ("15 second dead hang + one pull-up, outer jugs (1).", sourceTargets(["jug-1-left", "jug-1-right"]), .hang),
+            ("2 offset pull-up (1 each arm) center jug (14) & deep three finger pockets (4).", sourceTargets(["jug-14-center"], ["pocket-4-left", "pocket-4-right"]), .pull),
+            ("15 second dead hang, extra deep 3 finger pockets (9).", sourceTargets(["pocket-9-left", "pocket-9-right"]), .hang),
+            ("12 second dead hang flat slopers (2) & 5 knee raises outer jugs (1).", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"], ["jug-1-left", "jug-1-right"]), .hang),
+            ("16 second offset hang / (8 sec per side), deep pocket (15) & shallow edge (5).", sourceTargets(["pocket-15-center"], ["edge-5-left", "edge-5-right"]), .hang),
+            ("3 pull-ups outer jugs (1).", sourceTargets(["jug-1-left", "jug-1-right"]), .pull),
+            ("8 second bent arm hang (elbows @ 90), round slopers (3).", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"]), .hang),
+            ("1 pull-up & then 10 second hang, ext-deep 3 finger pocket (9).", sourceTargets(["pocket-9-left", "pocket-9-right"]), .pull),
+            ("Dead hang to failure, any holds.", simulator3DAnyHoldTargets, .hang)
+        ]
+    )
+
+    static let metoliusSimulator3DIntermediate = officialMetoliusPlan(
+        id: "metolius.simulator-3d.intermediate",
+        title: "Metolius Simulator 3D · Intermediate",
+        level: "Intermediate",
+        sourceLabel: "Metolius Simulator 3D Training Guide",
+        sourceURL: simulator3DSourceURL,
+        boardID: "metolius.simulator-3d",
+        minutes: [
+            ("25 second dead hang, medium edge (5).", sourceTargets(["edge-5-left", "edge-5-right"]), .hang),
+            ("20 second dead hang, flat slopers (2), 3 pull-ups flat slopers.", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"]), .hang),
+            ("15 second bent arm hang, shallow edge (6) & 10 knee raises, jugs (1).", sourceTargets(["edge-6-left", "edge-6-right"], ["jug-1-left", "jug-1-right"]), .hang),
+            ("15 second dead hang flat slope (2), 15 second dead hang round slopers (3).", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"]), .hang),
+            ("20 second offset hang, jug (1) & shallow pocket (17), reverse holds — repeat.", sourceTargets(["jug-1-left", "jug-1-right"], ["pocket-17-center"]), .hang),
+            ("15 second offset hang, pockets (4 & 9), reverse holds and repeat.", sourceTargets(["pocket-4-left", "pocket-4-right"], ["pocket-9-left", "pocket-9-right"]), .hang),
+            ("4 pull-ups, medium edges, 10 knee raises any holds.", sourceTargets(["edge-5-left", "edge-5-right"]), .pull),
+            ("30 second dead hang, deep pockets (7).", sourceTargets(["edge-7-left", "edge-7-right"]), .hang),
+            ("10 sec one arm hang jugs (1), repeat other arm.", sourceTargets(["jug-1-left", "jug-1-right"]), .hang),
+            ("5 pull-ups deep edges (7), without dropping off, bump up to round slopers (3) & dead hang till failure.", sourceTargets(["edge-7-left", "edge-7-right"], ["round-sloper-3-left", "round-sloper-3-right"]), .hang)
+        ]
+    )
+
+    static let metoliusSimulator3DAdvanced = officialMetoliusPlan(
+        id: "metolius.simulator-3d.advanced",
+        title: "Metolius Simulator 3D · Advanced",
+        level: "Advanced",
+        sourceLabel: "Metolius Simulator 3D Training Guide",
+        sourceURL: simulator3DSourceURL,
+        boardID: "metolius.simulator-3d",
+        minutes: [
+            ("25 second dead hang shallow edge (6), 5 pull-ups three finger pockets (9).", sourceTargets(["edge-6-left", "edge-6-right"], ["pocket-9-left", "pocket-9-right"]), .hang),
+            ("5 offset pull-ups, pockets (15 & 12), reverse holds repeat.", sourceTargets(["pocket-15-center"], ["pocket-12-left", "pocket-12-right"]), .pull),
+            ("45 second dead hang, extra shallow edges (11).", sourceTargets(["edge-11-left", "edge-11-right"]), .hang),
+            ("5 offset pull-ups, round sloper (3) & deep pocket (4), reverse holds repeat.", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"], ["pocket-4-left", "pocket-4-right"]), .pull),
+            ("10 second dead hang, x-shallow edges (11), staying on, campus to three finger pockets (9), campus to shallow edges (6), campus to flat slopers (2), hold for 15 seconds.", sourceTargets(["edge-11-left", "edge-11-right"], ["pocket-9-left", "pocket-9-right"], ["edge-6-left", "edge-6-right"], ["round-sloper-3-left", "round-sloper-3-right"]), .hang),
+            ("15 second one arm hang, round sloper (3), rest 10 seconds, repeat other arm.", sourceTargets(["round-sloper-3-left", "round-sloper-3-right"]), .hang),
+            ("5 L-sit pull-ups (bend knees if you have to), jugs (1), 20 second bent arm hang (elbows @ 90), deep two finger pockets (12).", sourceTargets(["jug-1-left", "jug-1-right"], ["pocket-12-left", "pocket-12-right"]), .pull),
+            ("20 second slightly bent arm hang, shallow 3 finger pocket (8), stay on, bump to x-deep three finger pockets 25 second dead hang.", sourceTargets(["pocket-8-left", "pocket-8-right"]), .hang),
+            ("10 second hang center pockets (18 & 17), reverse holds repeat, three power pull-ups (use weights or helper for resistance, should just be able to complete third pull).", sourceTargets(["pocket-18-center"], ["pocket-17-center"]), .hang),
+            ("8 fast pull-ups, jugs (1) (keeping form perfect), dead hang round sloper to failure (fighting hard!).", sourceTargets(["jug-1-left", "jug-1-right"], ["round-sloper-3-left", "round-sloper-3-right"]), .hang)
+        ]
+    )
+
     static let metoliusEntry = TrainingPlan(
         id: "metolius.generic-ten-minute.entry",
         title: "Metolius 10-minute · Entry",
@@ -2262,6 +2471,14 @@ enum LegacyPlanSeedCatalog {
 
     static let all: [TrainingPlan] = {
         let metoliusPlans = [metoliusEntry, metoliusIntermediate, metoliusAdvanced]
+        let boardSpecificMetoliusPlans = [
+            metoliusContactEntry,
+            metoliusContactIntermediate,
+            metoliusContactAdvanced,
+            metoliusSimulator3DEntry,
+            metoliusSimulator3DIntermediate,
+            metoliusSimulator3DAdvanced
+        ]
         let adaptedPlans = [
             maxHangs,
             forceF80,
@@ -2309,9 +2526,20 @@ enum LegacyPlanSeedCatalog {
                 assert(cycleSteps.reduce(0) { $0 + $1.duration } == MetoliusCycleBuilder.cycleDuration)
             }
         }
+        assert(boardSpecificMetoliusPlans.count == 6, "The Contact and Simulator 3D guides have six routines")
+        for plan in boardSpecificMetoliusPlans {
+            assert(plan.provenance == .official)
+            assert(plan.duration == 600)
+            assert(plan.steps.count == 10)
+            assert(plan.steps.allSatisfy { $0.duration == MetoliusCycleBuilder.cycleDuration })
+            assert(plan.steps.allSatisfy { $0.timedWorkDuration == nil })
+            assert(plan.steps.map(\.number) == Array(1...10))
+            assert(Set(plan.steps.map(\.id)).count == 10)
+            assert(plan.boardID == "metolius.contact" || plan.boardID == "metolius.simulator-3d")
+        }
         assert(adaptedPlans.allSatisfy { $0.provenance == .adapted })
 
-        let plans = metoliusPlans + adaptedPlans
+        let plans = metoliusPlans + boardSpecificMetoliusPlans + adaptedPlans
         func targetResolves(_ target: HoldTarget, on board: TrainingBoard) -> Bool {
             let boardHoldIDs = Set(board.holds.map(\.id))
             if !target.holdIDs.isEmpty {
@@ -2355,6 +2583,6 @@ enum LegacyPlanSeedCatalog {
         }
         #endif
 
-        return metoliusPlans + adaptedPlans
+        return metoliusPlans + boardSpecificMetoliusPlans + adaptedPlans
     }()
 }
