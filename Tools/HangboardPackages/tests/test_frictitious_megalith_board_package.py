@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from hangboard_packages.board_catalog import load_board_package
 
 
@@ -27,6 +29,11 @@ EXPECTED_HOLDS = (
     ("edge-20-right", "edge", 20, None),
     ("edge-15-right", "edge", 15, None),
 )
+RIGHT_BOTTOM_LEFT_BOUND = 0.629300570964
+RIGHT_BOTTOM_DIVIDER = 0.719149326172
+RIGHT_BOTTOM_RIGHT_BOUND = 0.853922458985
+RIGHT_BOTTOM_Y = 0.572587926758
+RIGHT_BOTTOM_HEIGHT = 0.056040568359
 
 
 def test_megalith_has_eighteen_scalar_source_labelled_contacts() -> None:
@@ -38,3 +45,20 @@ def test_megalith_has_eighteen_scalar_source_labelled_contacts() -> None:
     ) == EXPECTED_HOLDS
     assert all(hold.depth_range_millimeters is None for hold in board.holds)
     assert all(len(hold.geometry) == 1 for hold in board.holds)
+
+
+def test_megalith_right_bottom_shelves_follow_the_asymmetric_source_footprint() -> None:
+    holds = {hold.id: hold for hold in load_board_package(PACKAGE_ROOT).board.holds}
+    edge_20 = holds["edge-20-right"].frame
+    edge_15 = holds["edge-15-right"].frame
+    mono = holds["mono-right"].frame
+
+    assert edge_20.x == pytest.approx(RIGHT_BOTTOM_LEFT_BOUND, abs=1e-12)
+    assert edge_20.x + edge_20.width == pytest.approx(RIGHT_BOTTOM_DIVIDER, abs=1e-12)
+    assert edge_15.x == pytest.approx(RIGHT_BOTTOM_DIVIDER, abs=1e-12)
+    assert edge_15.x + edge_15.width == pytest.approx(RIGHT_BOTTOM_RIGHT_BOUND, abs=1e-12)
+    assert edge_20.y == edge_15.y == pytest.approx(RIGHT_BOTTOM_Y, abs=1e-12)
+    assert edge_20.height == edge_15.height == pytest.approx(RIGHT_BOTTOM_HEIGHT, abs=1e-12)
+    # The source cavity ends before the distinct mono cavity starts, so their
+    # frames cannot share an interior point.
+    assert edge_15.x + edge_15.width < mono.x

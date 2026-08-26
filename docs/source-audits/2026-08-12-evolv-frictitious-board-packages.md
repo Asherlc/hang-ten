@@ -180,6 +180,10 @@ The unnamed overlapping `hold-11` through `hold-14` paths remain removed: they
 were nested overlays rather than labelled shelves. The correction replaces the
 six range records with fourteen source-labelled scalar edge records, taking the
 package from ten to eighteen logical holds without restoring those duplicates.
+The right 20/15 mm shelves use their own asymmetric source footprint
+(`x = 0.629301` through `0.853922`), split at the visible divider rather than
+mirroring the left shelf paths. That endpoint is deliberately left of the
+separate right mono cavity, so the two selectable contacts do not overlap.
 
 A fresh stable-ID capture was manually reviewed at
 `.context/hangboard-metadata-backfill-icky-cow/frictitious-megalith-reconciliation/frictitious.megalith--3f1c176e6ccc.png`.
