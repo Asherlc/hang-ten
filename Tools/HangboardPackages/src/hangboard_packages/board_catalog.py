@@ -489,9 +489,11 @@ def _load_hold(
     if kind not in _HOLD_KINDS:
         raise ValueError(f"{source}.kind must be one of {sorted(_HOLD_KINDS)}")
     if kind == "sloper":
-        if "sloper" not in payload:
-            raise ValueError(f"{source}.sloper is required for sloper holds")
-        sloper = SloperMetadata.from_json(payload["sloper"], f"{source}.sloper")
+        sloper = (
+            SloperMetadata.from_json(payload["sloper"], f"{source}.sloper")
+            if "sloper" in payload
+            else None
+        )
     else:
         if "sloper" in payload:
             raise ValueError(f"{source}.sloper is only allowed for sloper holds")

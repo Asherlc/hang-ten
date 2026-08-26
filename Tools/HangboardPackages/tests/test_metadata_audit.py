@@ -138,6 +138,14 @@ def _package_with_flat_sloper(tmp_path: Path, sloper: dict[str, object] | None =
     return package
 
 
+def _package_with_sloper_without_subtype_metadata(tmp_path: Path) -> Path:
+    package = write_board_package(tmp_path / "boards" / "fixture")
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    document["holds"][0]["kind"] = "sloper"
+    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
+    return package
+
+
 def _sloper_ledger_records(
     value: object, *, source: dict[str, object] | None = None
 ) -> list[dict[str, object]]:
@@ -211,6 +219,46 @@ def test_sloper_ledger_verified_value_matches_flat_hold_without_angle(
     )
 
     assert report.fields["sloper"].to_json()["verified"] == 1
+
+
+def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
+    tmp_path: Path,
+) -> None:
+    _package_with_sloper_without_subtype_metadata(tmp_path)
+    ledger_path = _write_ledger(
+        tmp_path,
+        [
+            {
+                "boardID": "fixture.board",
+                "holdIDs": ["hold-left"],
+                "field": "kind",
+                "outcome": "verified",
+                "reviewedAt": "2026-08-25",
+                "source": {
+                    "kind": "manufacturer",
+                    "url": "https://example.com/fixture-source",
+                    "label": "Fixture manufacturer source",
+                },
+                "value": "sloper",
+            },
+            *(
+                unavailable("fixture.board", "hold-left", field)
+                for field in _FIELDS
+                if field != "kind"
+            ),
+        ],
+    )
+
+    report = validate_metadata_ledger(
+        load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
+    )
+
+    assert report.fields["sloper"].to_json() == {
+        "populated": 0,
+        "verified": 0,
+        "unavailable": 1,
+        "notApplicable": 0,
+    }
 
 
 def test_sloper_ledger_rejects_angle_that_differs_from_hold(tmp_path: Path) -> None:

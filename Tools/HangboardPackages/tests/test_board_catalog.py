@@ -131,10 +131,19 @@ def test_board_schema_exposes_strict_sloper_metadata(
     assert board.holds[0].sloper == module.SloperMetadata(*expected)
 
 
+def test_board_schema_allows_sloper_without_subtype_metadata() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["holds"][0]["kind"] = "sloper"
+
+    board = module._load_board(document)
+
+    assert board.holds[0].sloper is None
+
+
 @pytest.mark.parametrize(
     ("kind", "sloper", "path"),
     [
-        ("sloper", None, "board.json.holds[0].sloper"),
         ("jug", {"type": "round"}, "board.json.holds[0].sloper"),
         (
             "sloper",
