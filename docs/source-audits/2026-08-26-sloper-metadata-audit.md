@@ -6,13 +6,13 @@ This audit inventories all 96 canonical `kind: "sloper"` holds in 28 package fil
 
 No `angleDegrees` value is populated. Some manufacturers publish sloper degree labels, but the reviewed evidence does not also document that those values use the package contract's board-face reference convention.
 
-The machine ledger's existing `reviewedBoardIDs` scope contains 91 of these slopers. `beastmaker-2000` is intentionally outside that scope because adding it would require a complete eight-field source audit for every one of its contacts. Its five slopers are nevertheless included below with explicit per-hold evidence and outcomes. The ledger also contains `sloper: notApplicable` coverage for the 579 manufacturer-identified non-sloper contacts on reviewed boards, as required by the closed all-fields ledger contract.
+The machine ledger's existing `reviewedBoardIDs` scope contains 91 of these slopers. `beastmaker-2000` remains outside that full eight-field scope because its mixed front-contact kinds are not completely source-mapped. The disjoint `sloperOnlyBoardIDs` scope makes its sloper audit machine-checkable without claiming full-board metadata coverage: every one of the board's 27 holds has exactly one `sloper` record, comprising five unavailable sloper outcomes and 22 not-applicable non-sloper outcomes. The ledger also contains `sloper: notApplicable` coverage for the 579 manufacturer-identified non-sloper contacts on fully reviewed boards, as required by the closed all-fields ledger contract.
 
 ## Results
 
 - Inventory: 96 slopers across 28 packages.
-- Verified canonical subtypes: 28 (22 flat, 6 round).
-- Unavailable subtype: 68 (63 machine-ledger scoped, 5 Beastmaker 2000 document-only).
+- Verified canonical subtypes: 27 (22 flat, 5 round).
+- Unavailable subtype: 69 (64 full-ledger scoped, 5 supplemental Beastmaker 2000).
 - Verified angle values: 0.
 
 ## Per-hold evidence
@@ -27,7 +27,7 @@ The machine ledger's existing `reviewedBoardIDs` scope contains 91 of these slop
 | 6 | `beastmaker-2000` | `top-sloper-2` | unavailable | omitted | Official inventory lists 45-degree, 35-degree, and 20-degree slopers. The manufacturer publishes sloper angles and general edge radiusing but does not identify any contact as a flat or round sloper. | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
 | 7 | `beastmaker-2000` | `top-sloper-3` | unavailable | omitted | Official inventory lists 45-degree, 35-degree, and 20-degree slopers. The manufacturer publishes sloper angles and general edge radiusing but does not identify any contact as a flat or round sloper. | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
 | 8 | `beastmaker-2000` | `top-sloper-4` | unavailable | omitted | Official inventory lists 45-degree, 35-degree, and 20-degree slopers. The manufacturer publishes sloper angles and general edge radiusing but does not identify any contact as a flat or round sloper. | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
-| 9 | `dewoodstok-woodbord` | `top-rim` | verified `round` | `{"type":"round"}` | All holds are nicely rounded; large declining rim | [manufacturer](https://www.dewoodstok.nl/product/hangboard-woodbord/) |
+| 9 | `dewoodstok-woodbord` | `top-rim` | unavailable | omitted | The manufacturer identifies a large declining rim and says all holds have generally rounded edges, but does not establish whether this sloper surface has the canonical flat or round subtype. | [manufacturer](https://www.dewoodstok.nl/product/hangboard-woodbord/) |
 | 10 | `escape-beta-22` | `hold-09-left` | unavailable | omitted | Numbered sloper-edge contacts; sloper is the documented closed-taxonomy adaptation. The manufacturer labels this contact only as a sloper edge and publishes no flat-or-round subtype. | [manufacturer](https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445) |
 | 11 | `escape-beta-22` | `hold-09-right` | unavailable | omitted | Numbered sloper-edge contacts; sloper is the documented closed-taxonomy adaptation. The manufacturer labels this contact only as a sloper edge and publishes no flat-or-round subtype. | [manufacturer](https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445) |
 | 12 | `escape-beta-22` | `hold-10-left` | unavailable | omitted | Numbered sloper-edge contacts; sloper is the documented closed-taxonomy adaptation. The manufacturer labels this contact only as a sloper edge and publishes no flat-or-round subtype. | [manufacturer](https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445) |
@@ -118,5 +118,4 @@ The machine ledger's existing `reviewedBoardIDs` scope contains 91 of these slop
 
 ## Audit conclusion
 
-All 96 sloper contacts have a documented manufacturer-evidence outcome. Only the 28 directly supported subtype objects were added to canonical packages; all generic, ambiguous, or mixed-surface contacts remain subtype-absent.
-
+All 96 sloper contacts have a machine-checked manufacturer-evidence outcome. Only the 27 directly supported subtype objects remain in canonical packages; all generic, ambiguous, or mixed-surface contacts are subtype-absent.

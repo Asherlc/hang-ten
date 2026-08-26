@@ -87,19 +87,162 @@ def _write_ledger(
     records: list[dict[str, object]],
     *,
     reviewed_board_ids: list[str] | None = None,
+    sloper_only_board_ids: list[str] | None = None,
 ) -> Path:
     path = tmp_path / "metadata-ledger.json"
     path.write_text(
         json.dumps(
             {
                 "schemaVersion": 1,
-                "reviewedBoardIDs": reviewed_board_ids or ["fixture.board"],
+                "reviewedBoardIDs": (
+                    ["fixture.board"]
+                    if reviewed_board_ids is None
+                    else reviewed_board_ids
+                ),
+                "sloperOnlyBoardIDs": sloper_only_board_ids or [],
                 "records": records,
             }
         ),
         encoding="utf-8",
     )
     return path
+
+
+def _supplemental_sloper_package(tmp_path: Path) -> None:
+    package = write_board_package(
+        tmp_path / "boards" / "supplemental", board_id="supplemental.board"
+    )
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    document["holds"][0].update({"id": "sloper-left", "kind": "sloper"})
+    non_sloper = dict(document["holds"][0])
+    non_sloper.update({"id": "edge-right", "kind": "edge"})
+    document["holds"].append(non_sloper)
+    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+
+def _supplemental_sloper_records() -> list[dict[str, object]]:
+    return [
+        unavailable("supplemental.board", "sloper-left", "sloper"),
+        not_applicable("supplemental.board", "edge-right", "sloper"),
+    ]
+
+
+def test_parser_declares_a_disjoint_sloper_only_board_scope(tmp_path: Path) -> None:
+    ledger_path = _write_ledger(
+        tmp_path,
+        [unavailable("supplemental.board", "sloper-left", "sloper")],
+        reviewed_board_ids=["fixture.board"],
+        sloper_only_board_ids=["supplemental.board"],
+    )
+
+    ledger = load_metadata_ledger(ledger_path)
+
+    assert ledger.reviewed_board_ids == ("fixture.board",)
+    assert ledger.sloper_only_board_ids == ("supplemental.board",)
+
+
+def test_parser_rejects_board_in_full_and_sloper_only_scopes(tmp_path: Path) -> None:
+    ledger_path = _write_ledger(
+        tmp_path,
+        [],
+        reviewed_board_ids=["fixture.board"],
+        sloper_only_board_ids=["fixture.board"],
+    )
+
+    with pytest.raises(MetadataAuditError, match="board scopes must be disjoint"):
+        load_metadata_ledger(ledger_path)
+
+
+def test_parser_rejects_unrelated_field_for_sloper_only_board(tmp_path: Path) -> None:
+    ledger_path = _write_ledger(
+        tmp_path,
+        [unavailable("supplemental.board", "sloper-left", "features")],
+        sloper_only_board_ids=["supplemental.board"],
+    )
+
+    with pytest.raises(
+        MetadataAuditError,
+        match="sloper-only board supplemental.board must use field sloper",
+    ):
+        load_metadata_ledger(ledger_path)
+
+
+def test_sloper_only_scope_requires_exactly_one_record_per_hold(tmp_path: Path) -> None:
+    write_board_package(tmp_path / "boards" / "full", board_id="fixture.board")
+    _supplemental_sloper_package(tmp_path)
+    records = [
+        *_complete_records("fixture.board", "hold-left"),
+        *_supplemental_sloper_records(),
+    ]
+    ledger_path = _write_ledger(
+        tmp_path,
+        records,
+        sloper_only_board_ids=["supplemental.board"],
+    )
+
+    report = validate_metadata_ledger(
+        load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
+    )
+
+    assert report.sloper_only_board_ids == ("supplemental.board",)
+    supplemental = next(
+        board for board in report.boards if board.board_id == "supplemental.board"
+    )
+    assert supplemental.to_json() == {
+        "boardID": "supplemental.board",
+        "populated": 0,
+        "verified": 0,
+        "unavailable": 1,
+        "notApplicable": 1,
+        "unaccountedFields": 0,
+    }
+
+
+def test_sloper_only_scope_rejects_missing_record(tmp_path: Path) -> None:
+    write_board_package(tmp_path / "boards" / "full", board_id="fixture.board")
+    _supplemental_sloper_package(tmp_path)
+    records = [
+        *_complete_records("fixture.board", "hold-left"),
+        unavailable("supplemental.board", "sloper-left", "sloper"),
+    ]
+    ledger_path = _write_ledger(
+        tmp_path,
+        records,
+        sloper_only_board_ids=["supplemental.board"],
+    )
+
+    with pytest.raises(
+        MetadataAuditError,
+        match="missing record for supplemental.board/edge-right/sloper",
+    ):
+        validate_metadata_ledger(
+            load_metadata_ledger(ledger_path),
+            discover_board_packages(tmp_path / "boards"),
+        )
+
+
+def test_sloper_only_scope_rejects_duplicate_record(tmp_path: Path) -> None:
+    write_board_package(tmp_path / "boards" / "full", board_id="fixture.board")
+    _supplemental_sloper_package(tmp_path)
+    records = [
+        *_complete_records("fixture.board", "hold-left"),
+        *_supplemental_sloper_records(),
+        unavailable("supplemental.board", "sloper-left", "sloper"),
+    ]
+    ledger_path = _write_ledger(
+        tmp_path,
+        records,
+        sloper_only_board_ids=["supplemental.board"],
+    )
+
+    with pytest.raises(
+        MetadataAuditError,
+        match="duplicate record for supplemental.board/sloper-left/sloper",
+    ):
+        validate_metadata_ledger(
+            load_metadata_ledger(ledger_path),
+            discover_board_packages(tmp_path / "boards"),
+        )
 
 
 def _package_with_metadata(tmp_path: Path) -> Path:
@@ -343,6 +486,7 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
     assert report.boards[0].unaccounted_fields == 0
     assert report.to_json() == {
         "reviewedBoardIDs": ["fixture.board"],
+        "sloperOnlyBoardIDs": [],
         "fields": {
             "kind": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
             "sizeMillimeters": {"populated": 1, "verified": 1, "unavailable": 1, "notApplicable": 0},
@@ -447,7 +591,18 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
         "zlagboard.evo",
         "zlagboard.pro",
     )
+    assert report.sloper_only_board_ids == ("beastmaker-2000",)
     assert all(board.unaccounted_fields == 0 for board in report.boards)
+    assert next(
+        board for board in report.boards if board.board_id == "beastmaker-2000"
+    ).to_json() == {
+        "boardID": "beastmaker-2000",
+        "populated": 0,
+        "verified": 0,
+        "unavailable": 5,
+        "notApplicable": 22,
+        "unaccountedFields": 0,
+    }
 
 
 def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> None:

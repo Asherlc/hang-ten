@@ -150,10 +150,14 @@ one continuous rim plus 16 physically separate front cavities.
 `sloper` is a documented closed-taxonomy adaptation of the manufacturer's
 exact “declining rim” wording. The package path represents that same one
 continuous physical top surface, so the kind correction required no geometry
-change. The product page makes `pocket` the exhaustive category for all 16
-front cavities, but it does not assign a depth or two-/four-finger capacity to
-an exact cavity. The former capacities were therefore removed; apparent cavity
-width was not used as evidence. Scalar depth, depth range, hand capacity,
+change. The separate statement that all holds have generally rounded edges
+does not establish whether the top sloper surface has the canonical flat or
+round subtype, so `sloper` subtype metadata remains omitted with an
+`unavailable` ledger outcome. The product page makes `pocket` the exhaustive
+category for all 16 front cavities, but it does not assign a depth or
+two-/four-finger capacity to an exact cavity. The former capacities were
+therefore removed; apparent cavity width was not used as evidence. Scalar
+depth, depth range, hand capacity,
 `gripType`, and `features` also remain blank for every stable ID.
 
 The review-only Workbench capture is
@@ -161,6 +165,6 @@ The review-only Workbench capture is
 Manual review confirmed one `top-rim` overlay across the visible continuous top
 surface and one non-overlapping overlay on each of the 16 front cavities. The
 capture did not alter or generate geometry. The canonical ledger accounts for
-all 119 seven-field outcomes across the board's 17 physical contacts: 17
-verified kinds, one not-applicable top-rim finger capacity, and 101 deliberate
-unavailable optional outcomes.
+all 136 eight-field outcomes across the board's 17 physical contacts: 17
+verified kinds, 17 not-applicable outcomes, and 102 deliberate unavailable
+optional outcomes.

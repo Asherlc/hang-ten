@@ -41,6 +41,7 @@ def _write_audit_ledger(
             {
                 "schemaVersion": 1,
                 "reviewedBoardIDs": ["fixture.board"],
+                "sloperOnlyBoardIDs": [],
                 "records": [
                     {
                         "boardID": "fixture.board",
@@ -124,6 +125,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     assert _json_output(result.stdout) == {
         "reviewedBoardIDs": ["fixture.board"],
+        "sloperOnlyBoardIDs": [],
         "fields": {
             "kind": {
                 "populated": 1,

@@ -11,9 +11,6 @@
       "id": "top-rim",
       "name": "Top rim",
       "kind": "sloper",
-      "sloper": {
-        "type": "round"
-      },
       "geometry": [
         {
           "frame": {

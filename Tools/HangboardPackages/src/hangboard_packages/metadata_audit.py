@@ -55,6 +55,7 @@ class MetadataRecord:
 class MetadataLedger:
     schema_version: int
     reviewed_board_ids: tuple[str, ...]
+    sloper_only_board_ids: tuple[str, ...]
     records: tuple[MetadataRecord, ...]
 
 
@@ -97,12 +98,14 @@ class BoardMetadataCoverage:
 @dataclass(frozen=True)
 class MetadataCoverageReport:
     reviewed_board_ids: tuple[str, ...]
+    sloper_only_board_ids: tuple[str, ...]
     fields: Mapping[str, MetadataFieldCoverage]
     boards: tuple[BoardMetadataCoverage, ...]
 
     def to_json(self) -> dict[str, object]:
         return {
             "reviewedBoardIDs": list(self.reviewed_board_ids),
+            "sloperOnlyBoardIDs": list(self.sloper_only_board_ids),
             "fields": {
                 field: self.fields[field].to_json() for field in sorted(self.fields)
             },
@@ -278,7 +281,11 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
         )
     except json.JSONDecodeError as error:
         raise MetadataAuditError(f"metadata ledger is invalid JSON: {ledger_path}") from error
-    _closed(payload, {"schemaVersion", "reviewedBoardIDs", "records"}, "metadata ledger")
+    _closed(
+        payload,
+        {"schemaVersion", "reviewedBoardIDs", "sloperOnlyBoardIDs", "records"},
+        "metadata ledger",
+    )
     if (
         isinstance(payload["schemaVersion"], bool)
         or not isinstance(payload["schemaVersion"], int)
@@ -294,6 +301,27 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
     )
     if len(reviewed_board_ids) != len(set(reviewed_board_ids)):
         raise MetadataAuditError("metadata ledger.reviewedBoardIDs must be unique")
+    sloper_only_value = payload["sloperOnlyBoardIDs"]
+    if not isinstance(sloper_only_value, list):
+        raise MetadataAuditError(
+            "metadata ledger.sloperOnlyBoardIDs must be an array"
+        )
+    sloper_only_board_ids = tuple(
+        _identifier(board_id, f"metadata ledger.sloperOnlyBoardIDs[{index}]")
+        for index, board_id in enumerate(sloper_only_value)
+    )
+    if len(sloper_only_board_ids) != len(set(sloper_only_board_ids)):
+        raise MetadataAuditError(
+            "metadata ledger.sloperOnlyBoardIDs must be unique"
+        )
+    overlapping_board_ids = sorted(
+        set(reviewed_board_ids) & set(sloper_only_board_ids)
+    )
+    if overlapping_board_ids:
+        raise MetadataAuditError(
+            "metadata ledger board scopes must be disjoint: "
+            f"{overlapping_board_ids}"
+        )
     records_value = payload["records"]
     if not isinstance(records_value, list):
         raise MetadataAuditError("metadata ledger.records must be an array")
@@ -301,14 +329,21 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
         _load_record(record, f"metadata ledger.records[{index}]")
         for index, record in enumerate(records_value)
     )
-    unreviewed = sorted({record.board_id for record in records} - set(reviewed_board_ids))
+    scoped_board_ids = set(reviewed_board_ids) | set(sloper_only_board_ids)
+    unreviewed = sorted({record.board_id for record in records} - scoped_board_ids)
     if unreviewed:
         raise MetadataAuditError(
             f"metadata ledger has records for unreviewed board IDs: {unreviewed}"
         )
+    for record in records:
+        if record.board_id in sloper_only_board_ids and record.field != "sloper":
+            raise MetadataAuditError(
+                f"sloper-only board {record.board_id} must use field sloper"
+            )
     return MetadataLedger(
         schema_version=1,
         reviewed_board_ids=tuple(sorted(reviewed_board_ids)),
+        sloper_only_board_ids=tuple(sorted(sloper_only_board_ids)),
         records=records,
     )
 
@@ -351,16 +386,23 @@ def _values_match(expected: object, actual: object) -> bool:
 def validate_metadata_ledger(
     ledger: MetadataLedger, inventory: BoardInventory
 ) -> MetadataCoverageReport:
-    """Cross-check every reviewed source record against its discovered package hold."""
+    """Cross-check every scoped source record against its discovered package hold."""
     packages = {package.board.id: package.board for package in inventory.packages}
     unknown_boards = sorted(set(ledger.reviewed_board_ids) - set(packages))
     if unknown_boards:
         raise MetadataAuditError(f"unknown reviewed board IDs: {unknown_boards}")
+    unknown_sloper_only_boards = sorted(
+        set(ledger.sloper_only_board_ids) - set(packages)
+    )
+    if unknown_sloper_only_boards:
+        raise MetadataAuditError(
+            f"unknown sloper-only board IDs: {unknown_sloper_only_boards}"
+        )
 
     records_by_key: dict[tuple[str, str, str], MetadataRecord] = {}
     holds_by_board = {
         board_id: {hold.id: hold for hold in packages[board_id].holds}
-        for board_id in ledger.reviewed_board_ids
+        for board_id in ledger.reviewed_board_ids + ledger.sloper_only_board_ids
     }
     for record in ledger.records:
         holds = holds_by_board[record.board_id]
@@ -378,11 +420,18 @@ def validate_metadata_ledger(
         field: {"populated": 0, "verified": 0, "unavailable": 0, "notApplicable": 0}
         for field in _FIELDS
     }
+    fields_by_board = {
+        **{board_id: _FIELDS for board_id in ledger.reviewed_board_ids},
+        **{
+            board_id: frozenset({"sloper"})
+            for board_id in ledger.sloper_only_board_ids
+        },
+    }
     board_reports: list[BoardMetadataCoverage] = []
-    for board_id in ledger.reviewed_board_ids:
+    for board_id in ledger.reviewed_board_ids + ledger.sloper_only_board_ids:
         board_totals = {"populated": 0, "verified": 0, "unavailable": 0, "notApplicable": 0}
         for hold_id, hold in sorted(holds_by_board[board_id].items()):
-            for field in sorted(_FIELDS):
+            for field in sorted(fields_by_board[board_id]):
                 key = (board_id, hold_id, field)
                 record = records_by_key.get(key)
                 if record is None:
@@ -420,6 +469,7 @@ def validate_metadata_ledger(
         )
     return MetadataCoverageReport(
         reviewed_board_ids=ledger.reviewed_board_ids,
+        sloper_only_board_ids=ledger.sloper_only_board_ids,
         fields={
             field: MetadataFieldCoverage(
                 populated=field_totals[field]["populated"],

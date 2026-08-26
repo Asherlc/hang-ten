@@ -45,6 +45,7 @@ def test_dewoodstok_woodbord_inventory_geometry_and_symmetry() -> None:
     assert tuple(holds) == EXPECTED_HOLDS
     assert Counter(hold.kind for hold in holds.values()) == {"pocket": 16, "sloper": 1}
     assert holds["top-rim"].kind == "sloper"
+    assert holds["top-rim"].sloper is None
     assert all(holds[hold_id].kind == "pocket" for hold_id in EXPECTED_HOLDS[1:])
 
     for hold in holds.values():
