@@ -268,9 +268,9 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.21,
+            "x": 0.2303,
             "y": 0.242,
-            "width": 0.58,
+            "width": 0.5597,
             "height": 0.091
           },
           "shape": {
@@ -279,25 +279,25 @@
               {
                 "command": "move",
                 "to": [
-                  0.04,
+                  0.00518134715,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.96,
+                  0.958549222798,
                   0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.975,
+                  0.974093264249,
                   0.18
                 ],
                 "control2": [
-                  0.99,
+                  0.989637305699,
                   0.39
                 ],
                 "to": [
@@ -308,14 +308,7 @@
               {
                 "command": "line",
                 "to": [
-                  0.965,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.035,
+                  0.963730569948,
                   1.0
                 ]
               },
@@ -323,21 +316,13 @@
                 "command": "line",
                 "to": [
                   0.0,
-                  0.61
+                  1.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.01,
-                  0.39
-                ],
-                "control2": [
-                  0.025,
-                  0.18
-                ],
+                "command": "line",
                 "to": [
-                  0.04,
+                  0.00518134715,
                   0.0
                 ]
               },
@@ -471,7 +456,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -595,7 +580,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -719,7 +704,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -843,7 +828,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -967,7 +952,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1091,7 +1076,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1215,7 +1200,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1339,7 +1324,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1463,7 +1448,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1587,7 +1572,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1711,7 +1696,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
@@ -1835,7 +1820,7 @@
           },
           "shapeConstraint": {
             "shape": "roundedRectangle",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ]
