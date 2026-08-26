@@ -1251,6 +1251,74 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-13",
+      "name": "Hold 13",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.745452782895,
+            "y": 0.329271317747,
+            "width": 0.23694355323,
+            "height": 0.067437136026
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.837839537424,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.057905717522
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.013013476366,
+                  0.924236394756
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.939289045083,
+                  0.687447899878
+                ],
+                "control2": [
+                  0.881906825965,
+                  0.333333322828
+                ],
+                "to": [
+                  0.837839537424,
+                  0.0
+                ],
+                "bendable": true
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
