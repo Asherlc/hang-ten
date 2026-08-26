@@ -256,8 +256,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.112,
-            "y": 0.353682110596,
+            "x": 0.191365075758,
+            "y": 0.285359132127,
             "width": 0.265,
             "height": 0.270317889404
           },
@@ -338,7 +338,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -433,7 +433,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
