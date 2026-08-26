@@ -338,6 +338,37 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(object["fingerCapacity"] as? Int, 3)
     }
 
+    func testWorkoutTargetDefinitionRejectsOutOfRangeDecodedFingerCapacities() {
+        for invalidCapacity in [0, 5] {
+            let payload = Data(#"{ "kind": "pocket", "fingerCapacity": \#(invalidCapacity) }"#.utf8)
+
+            XCTAssertThrowsError(
+                try JSONDecoder().decode(WorkoutTargetDefinition.self, from: payload)
+            ) { error in
+                guard case let DecodingError.dataCorrupted(context) = error else {
+                    return XCTFail("Expected invalid finger capacity to produce a data-corrupted decoding error, got: \(error)")
+                }
+
+                XCTAssertEqual(context.codingPath.last?.stringValue, "fingerCapacity")
+            }
+        }
+    }
+
+    func testWorkoutTargetDefinitionAcceptsValidAndAbsentDecodedFingerCapacities() throws {
+        let cases: [(Data, WorkoutTargetDefinition)] = [
+            (Data(#"{ "kind": "pocket", "fingerCapacity": 1 }"#.utf8), .kind(.pocket, fingerCapacity: 1)),
+            (Data(#"{ "kind": "pocket", "fingerCapacity": 4 }"#.utf8), .kind(.pocket, fingerCapacity: 4)),
+            (Data(#"{ "kind": "pocket" }"#.utf8), .kind(.pocket))
+        ]
+
+        for (payload, expectedTarget) in cases {
+            XCTAssertEqual(
+                try JSONDecoder().decode(WorkoutTargetDefinition.self, from: payload),
+                expectedTarget
+            )
+        }
+    }
+
     func testFingerConfigurationRejectsEmptyConstructionAndDecodedPayloads() throws {
         XCTAssertNil(FingerConfiguration(engagedFingers: []))
 

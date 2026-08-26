@@ -193,6 +193,14 @@ enum WorkoutTargetDefinition: Codable, Hashable {
             return
         }
         let fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        if let fingerCapacity,
+           !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
+            throw DecodingError.dataCorruptedError(
+                forKey: .fingerCapacity,
+                in: container,
+                debugDescription: "Workout target fingerCapacity must be in \(BoardHold.validFingerCapacityRange)."
+            )
+        }
         let fallbackRawValues = try container.decodeIfPresent(
             [String].self,
             forKey: .fallbackFeatures
