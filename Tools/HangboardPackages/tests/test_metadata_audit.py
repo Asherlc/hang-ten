@@ -488,6 +488,14 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
     assert next(
         hold for hold in training_center.holds if hold.id == "pinch-medium-left"
     ).features is None
+    large_edge = next(
+        hold for hold in training_center.holds if hold.id == "edge-large-vder-left"
+    )
+    assert large_edge.grip_type is None
+    assert large_edge.features is None
+    assert next(
+        hold for hold in training_center.holds if hold.id == "pinch-wide-left"
+    ).features is None
 
 
 def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:

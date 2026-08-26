@@ -473,10 +473,6 @@
       "id": "edge-large-vder-left",
       "name": "Left large variable-depth edge rail",
       "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "largeOpenHandRail"
-      ],
       "geometry": [
         {
           "frame": {
@@ -598,10 +594,6 @@
       "id": "edge-large-vder-right",
       "name": "Right large variable-depth edge rail",
       "kind": "edge",
-      "gripType": "openHand",
-      "features": [
-        "largeOpenHandRail"
-      ],
       "geometry": [
         {
           "frame": {
@@ -1825,9 +1817,6 @@
       "id": "pinch-wide-left",
       "name": "Left wide pinch",
       "kind": "pinch",
-      "features": [
-        "widePinch"
-      ],
       "geometry": [
         {
           "frame": {
@@ -2016,9 +2005,6 @@
       "id": "pinch-wide-right",
       "name": "Right wide pinch",
       "kind": "pinch",
-      "features": [
-        "widePinch"
-      ],
       "geometry": [
         {
           "frame": {

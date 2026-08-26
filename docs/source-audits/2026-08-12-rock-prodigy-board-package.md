@@ -58,14 +58,11 @@ was reviewed against the current first-party product image and both pages of
 the use guide. The 24 logical contacts / 28 geometry pieces still reconcile;
 no geometry or identity changed.
 
-All 24 `kind` values are source-verified. Only four unique source-to-contact
+All 24 `kind` values are source-verified. Only two unique source-to-contact
 optional mappings remain populated on each mirrored side:
 
 - `sloper-*` uses the exact `sloper` posture;
-- `jug-*` uses the literal `jug` feature;
-- `edge-large-vder-*` maps “Large Open-Hand Edge” plus the product page's
-  variable-edge-rail wording to `openHand` and `largeOpenHandRail`;
-- `pinch-wide-*` uses the literal `widePinch` feature.
+- `jug-*` uses the literal `jug` feature.
 
 The use guide has no positional hold diagram. Consequently its generic “Deep
 2 Finger Pocket” and “Shallow 3 Finger Pocket” exercises cannot be assigned to
@@ -73,7 +70,11 @@ any of the five physical pocket contacts on a half. All ten pocket
 `fingerCapacity`, `gripType`, and `features` values were removed and recorded
 as unavailable. The same evidence gap leaves `thinCrimp` and `mediumPinch`
 features blank: Trango says “small semi-closed crimp” and “wide pinch,” not
-that those schema tags apply to the corresponding stable IDs. Trango publishes
-no per-contact depths or maximum simultaneous hand capacities, so all such
-fields remain blank with exact reasons in
+that those schema tags apply to the corresponding stable IDs. It also leaves
+`openHand` and `largeOpenHandRail` blank on `edge-large-vder-*`, and
+`widePinch` blank on `pinch-wide-*`: the guide names a Large Open-Hand Edge and
+Wide Pinch but never locates either one. Those legacy stable IDs/display names
+are identity only, not positional evidence. Trango publishes no
+per-contact depths or maximum simultaneous hand capacities, so all such fields
+remain blank with exact reasons in
 `2026-08-25-hangboard-metadata-ledger.json`.

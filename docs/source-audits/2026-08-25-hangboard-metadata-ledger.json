@@ -31663,14 +31663,14 @@
         "edge-large-vder-left"
       ],
       "field": "gripType",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": "openHand"
+      "reason": "The use guide names a Large Open-Hand Edge but provides no positional diagram mapping it to this exact physical rail; the legacy stable ID and display name are identity only."
     },
     {
       "boardID": "trango.rock-prodigy-training-center",
@@ -31678,16 +31678,14 @@
         "edge-large-vder-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "largeOpenHandRail"
-      ]
+      "reason": "The use guide names a Large Open-Hand Edge but provides no positional diagram mapping it to this exact physical rail; the legacy stable ID and display name are identity only."
     },
     {
       "boardID": "trango.rock-prodigy-training-center",
@@ -31770,14 +31768,14 @@
         "edge-large-vder-right"
       ],
       "field": "gripType",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": "openHand"
+      "reason": "The use guide names a Large Open-Hand Edge but provides no positional diagram mapping it to this exact physical rail; the legacy stable ID and display name are identity only."
     },
     {
       "boardID": "trango.rock-prodigy-training-center",
@@ -31785,16 +31783,14 @@
         "edge-large-vder-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "largeOpenHandRail"
-      ]
+      "reason": "The use guide names a Large Open-Hand Edge but provides no positional diagram mapping it to this exact physical rail; the legacy stable ID and display name are identity only."
     },
     {
       "boardID": "trango.rock-prodigy-training-center",
@@ -33572,16 +33568,14 @@
         "pinch-wide-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "widePinch"
-      ]
+      "reason": "The use guide names a Wide Pinch but provides no positional diagram mapping it to this exact physical contact; the legacy stable ID and display name are identity only."
     },
     {
       "boardID": "trango.rock-prodigy-training-center",
@@ -33679,16 +33673,14 @@
         "pinch-wide-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "widePinch"
-      ]
+      "reason": "The use guide names a Wide Pinch but provides no positional diagram mapping it to this exact physical contact; the legacy stable ID and display name are identity only."
     }
   ]
 }
