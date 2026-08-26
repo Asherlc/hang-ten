@@ -94,6 +94,45 @@ finger bars have exact capacities but no corresponding three-/four-finger edge
 grip enum; and no source in this batch establishes hand capacity or an exact
 feature-tag array.
 
+### YY Vertical and Zlagboard ledger certification
+
+The final manufacturer-family batch manually reconciled 168 stable IDs across
+eight YY Vertical packages and two Zlagboard packages with the primary sources
+and labelled captures documented in the [YY
+audit](2026-08-12-yy-vertical-board-packages.md#2026-08-25-source-audited-metadata-certification)
+and [Zlagboard
+audit](2026-08-12-zlagboard-board-packages.md#2026-08-25-source-audited-metadata-certification).
+All ten captures are retained under
+`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`; no geometry
+changed.
+
+The ledger moves from 28 boards / 388 holds to 38 boards / 556 holds. All seven
+fields are accounted for and all 168 mandatory kinds are source-verified:
+
+| Field | Before populated / verified | After populated / verified | After unavailable | After not applicable |
+| --- | ---: | ---: | ---: | ---: |
+| `kind` | 388 / 388 | 556 / 556 | 0 | 0 |
+| `sizeMillimeters` | 223 / 223 | 338 / 338 | 218 | 0 |
+| `depthRangeMillimeters` | 34 / 34 | 34 / 34 | 522 | 0 |
+| `fingerCapacity` | 161 / 161 | 179 / 179 | 40 | 337 |
+| `handCapacity` | 0 / 0 | 2 / 2 | 554 | 0 |
+| `gripType` | 134 / 134 | 182 / 182 | 374 | 0 |
+| `features` | 32 / 32 | 74 / 74 | 482 | 0 |
+
+The batch certifies 393 populated outcomes: 168 kinds, 115 scalar depths, 18
+finger capacities, two one-arm hand capacities, 48 grip enums, and 42 feature
+arrays. The 92 package additions are the two hand capacities, 48 grips, and 42
+features; the other exact values were already present and are now tied to
+stable-ID evidence records. Zlagboard's compound `sloper JUG` stays
+`kind: sloper`, with `gripType: sloper` and feature `jug` preserving the whole
+manufacturer label.
+
+Remaining blanks are deliberate. YY degree labels, mono phalange wording,
+magnetic inserts, and portable-board inclination are not millimetre depth
+ranges. Zlagboard's exhaustive maps do not assign the product page's general
+`pockets` wording to any exact contact or publish finger/hand capacity. No edge
+posture or wide-contact hand count was inferred from geometry.
+
 ### Corrected source mappings
 
 The following are newly recorded structured mappings in this appendendum. The
@@ -148,7 +187,7 @@ remains blank for a specific evidence reason.
 | `beastmaker-1000` pockets; `beastmaker-2000` unmapped pockets and edges; `dewoodstok-woodbord` pockets | Per-contact capacity and/or depth | Product pages give product or family facts but no numbered per-contact mapping. The prior catalog audit explicitly prohibits applying aggregate values to a pocket ID. |
 | `beastmaker-1000`; `beastmaker-2000`; `moon.armstrong` | Full seven-field ledger certification | Beastmaker's current sources do not map every recess to an exact stable ID and the source/package counts remain unresolved. Moon's official 21-contact inventory includes two 22 mm one-finger pockets absent from the current 19-contact package. Mandatory per-ID type certification therefore remains blocked and unchanged. |
 | `frictitious.doormount-pro-7` unnamed lower records and mixed contacts | Depth and capacity | [DoorMount Pro](https://frictitiousclimbing.com/products/doormount-pro) lists the 35/25/20/15/10 mm families and pockets, but its declared seven-hold inventory does not map those facts to this package's 13 current logical records. A fresh field assignment would be an inference; the inventory discrepancy needs a separate physical-contact reconciliation. |
-| `soill.training-tiles`; `tension.flash-board`; `zlagboard.evo`; `zlagboard.pro` | Per-contact depth and, where applicable, pocket capacity | Manufacturers publish grouped size/family information or product views, not an individual ID-to-value guide. The front image establishes physical contact boundaries, not an exact value assignment. |
+| `soill.training-tiles`; `tension.flash-board` | Per-contact depth and, where applicable, pocket capacity | Manufacturers publish grouped size/family information or product views, not an individual ID-to-value guide. The front image establishes physical contact boundaries, not an exact value assignment. |
 | `trango.rock-prodigy-forge` IM pockets; `trango.rock-prodigy-natural` centre-lower and supported pockets; `trango.rock-prodigy-training-center` variable rails and pockets | Exact per-contact depth | Forge's official guide gives only an aggregate IMR range. Natural's official product markings and quick-start guide conflict on the affected values/capacities. The Training Center manual names only selected training grips and lacks a depth map for each physical package contact. |
 | `frictitious.megalith` mono pockets | Exact depth | Manufacturer material identifies the board-level pocket family but does not establish individual depths for these exact mono contacts. |
 | All other blanks on jugs, edges, pinches, and slopers | `fingerCapacity` | The reviewed primary source does not constrain a fixed number of fingers. Capacity was not guessed from a hold's apparent width or use photograph. |

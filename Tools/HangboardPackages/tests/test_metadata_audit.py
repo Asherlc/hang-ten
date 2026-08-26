@@ -235,6 +235,16 @@ def test_reviewed_catalog_ledger_has_complete_seven_field_coverage() -> None:
         "trango.rock-prodigy-natural",
         "trango.rock-prodigy-pivot",
         "trango.rock-prodigy-training-center",
+        "yy.baguette",
+        "yy.baguette-evo",
+        "yy.penta-evo",
+        "yy.travelboard",
+        "yy.verticalboard-evo",
+        "yy.verticalboard-first",
+        "yy.verticalboard-light",
+        "yy.verticalboard-one",
+        "zlagboard.evo",
+        "zlagboard.pro",
     )
     assert all(board.unaccounted_fields == 0 for board in report.boards)
 
@@ -311,6 +321,66 @@ def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() ->
     assert next(
         hold for hold in nature.holds if hold.id == "lower-composite-center"
     ).size_millimeters == 30
+
+
+def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    inventory = discover_board_packages(repository_root / "Hangboards")
+    packages = {package.board.id: package.board for package in inventory.packages}
+
+    yy_ids = (
+        "yy.baguette",
+        "yy.baguette-evo",
+        "yy.penta-evo",
+        "yy.travelboard",
+        "yy.verticalboard-evo",
+        "yy.verticalboard-first",
+        "yy.verticalboard-light",
+        "yy.verticalboard-one",
+    )
+    yy_holds = [hold for board_id in yy_ids for hold in packages[board_id].holds]
+    zlag_holds = [
+        hold
+        for board_id in ("zlagboard.evo", "zlagboard.pro")
+        for hold in packages[board_id].holds
+    ]
+
+    assert sum(hold.grip_type == "sloper" for hold in yy_holds) == 14
+    assert sum(hold.grip_type == "sloper" for hold in zlag_holds) == 24
+    assert sum(hold.grip_type == "twoFingerPocket" for hold in yy_holds) == 10
+    assert {
+        board_id: next(
+            hold.hand_capacity
+            for hold in packages[board_id].holds
+            if hold.id == "center-handle"
+        )
+        for board_id in ("yy.verticalboard-one", "yy.verticalboard-evo")
+    } == {
+        "yy.verticalboard-one": 1,
+        "yy.verticalboard-evo": 1,
+    }
+
+    for board_id in ("zlagboard.evo", "zlagboard.pro"):
+        sloper_jug = next(
+            hold
+            for hold in packages[board_id].holds
+            if hold.id == "top-sloper-jug-center"
+        )
+        assert sloper_jug.kind == "sloper"
+        assert sloper_jug.grip_type == "sloper"
+        assert sloper_jug.features == ("jug",)
+
+    assert {
+        hold.id: hold.features
+        for hold in packages["zlagboard.pro"].holds
+        if hold.id.startswith("edge-incut-")
+    } == {
+        "edge-incut-15-left": ("incutEdge",),
+        "edge-incut-30-left": ("incutEdge",),
+        "edge-incut-10-center": ("incutEdge",),
+        "edge-incut-30-right": ("incutEdge",),
+        "edge-incut-15-right": ("incutEdge",),
+    }
 
 
 def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:

@@ -28,7 +28,17 @@
     "trango.rock-prodigy-forge",
     "trango.rock-prodigy-natural",
     "trango.rock-prodigy-pivot",
-    "trango.rock-prodigy-training-center"
+    "trango.rock-prodigy-training-center",
+    "yy.baguette",
+    "yy.baguette-evo",
+    "yy.penta-evo",
+    "yy.travelboard",
+    "yy.verticalboard-evo",
+    "yy.verticalboard-first",
+    "yy.verticalboard-light",
+    "yy.verticalboard-one",
+    "zlagboard.evo",
+    "zlagboard.pro"
   ],
   "records": [
     {
@@ -21951,6 +21961,3648 @@
         "label": "Manufacturer comparison identifies the 10 mm contact as a four-finger edge"
       },
       "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-20",
+        "edge-25",
+        "edge-30",
+        "tray"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-20",
+        "edge-25",
+        "edge-30"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "tray"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-20",
+        "edge-25",
+        "edge-30",
+        "tray"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-20",
+        "edge-25",
+        "edge-30",
+        "tray"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-20",
+        "edge-25",
+        "edge-30",
+        "tray"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-20",
+        "edge-25",
+        "edge-30"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "tray"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "tray"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-20"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-25"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.baguette",
+      "holdIDs": [
+        "edge-30"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+        "label": "Official La Baguette product page and product views reviewed against stable IDs"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-12-left",
+        "edge-12-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-6-lower",
+        "edge-6-upper",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-central-20",
+        "edge-central-25",
+        "edge-central-30",
+        "edge-central-6",
+        "rounded-tray"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-12-left",
+        "edge-12-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-6-lower",
+        "edge-6-upper",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-central-20",
+        "edge-central-25",
+        "edge-central-30",
+        "edge-central-6"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "rounded-tray"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-12-left",
+        "edge-12-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-6-lower",
+        "edge-6-upper",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-central-20",
+        "edge-central-25",
+        "edge-central-30",
+        "edge-central-6",
+        "rounded-tray"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-12-left",
+        "edge-12-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-6-lower",
+        "edge-6-upper",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-central-20",
+        "edge-central-25",
+        "edge-central-30",
+        "edge-central-6",
+        "rounded-tray"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-12-left",
+        "edge-12-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-6-lower",
+        "edge-6-upper",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-central-20",
+        "edge-central-25",
+        "edge-central-30",
+        "edge-central-6",
+        "rounded-tray"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-12-left",
+        "edge-12-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-6-lower",
+        "edge-6-upper",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-central-20",
+        "edge-central-25",
+        "edge-central-30",
+        "edge-central-6"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "rounded-tray"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "rounded-tray"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-12-left",
+        "edge-12-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 12
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-central-20"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right",
+        "edge-central-25"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-central-30"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-6-lower",
+        "edge-6-upper",
+        "edge-central-6"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 6
+    },
+    {
+      "boardID": "yy.baguette-evo",
+      "holdIDs": [
+        "edge-8-left",
+        "edge-8-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/baguette-evo",
+        "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 8
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "duo-left",
+        "duo-right",
+        "edge-10-left",
+        "edge-10-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "mono-left",
+        "mono-right",
+        "tray-left",
+        "tray-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "tray-left",
+        "tray-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "duo-left",
+        "duo-right",
+        "mono-left",
+        "mono-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": [
+        "pocket"
+      ]
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "tray-left",
+        "tray-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 1
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "duo-left",
+        "duo-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "mono-left",
+        "mono-right",
+        "tray-left",
+        "tray-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "duo-left",
+        "duo-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "duo-left",
+        "duo-right",
+        "edge-10-left",
+        "edge-10-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "mono-left",
+        "mono-right",
+        "tray-left",
+        "tray-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "tray-left",
+        "tray-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "duo-left",
+        "duo-right",
+        "mono-left",
+        "mono-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "duo-left",
+        "duo-right",
+        "mono-left",
+        "mono-right",
+        "tray-left",
+        "tray-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "yy.penta-evo",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/penta-evo",
+        "label": "Official Penta Evo product page and product views reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-25",
+        "mono-left",
+        "mono-right",
+        "tray"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-25"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "tray"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": [
+        "pocket"
+      ]
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-25",
+        "tray"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": 1
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-25",
+        "mono-left",
+        "mono-right",
+        "tray"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-25",
+        "mono-left",
+        "mono-right",
+        "tray"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-10",
+        "edge-15",
+        "edge-25"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "tray"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "mono-left",
+        "mono-right",
+        "tray"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-10"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-15"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "yy.travelboard",
+      "holdIDs": [
+        "edge-25"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+        "label": "Official TravelBoard product page and product views reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-outer-left",
+        "edge-20-outer-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-inclined-30-left",
+        "edge-inclined-30-right",
+        "jug-left",
+        "jug-right",
+        "mono-lower-left",
+        "mono-lower-right",
+        "mono-upper-left",
+        "mono-upper-right",
+        "pocket-20-left",
+        "pocket-20-right",
+        "pocket-inclined-left",
+        "pocket-inclined-right",
+        "sloper-30-center",
+        "sloper-38-left",
+        "sloper-38-right",
+        "sloper-43-left",
+        "sloper-43-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-outer-left",
+        "edge-20-outer-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-inclined-30-left",
+        "edge-inclined-30-right",
+        "sloper-30-center",
+        "sloper-38-left",
+        "sloper-38-right",
+        "sloper-43-left",
+        "sloper-43-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "mono-lower-left",
+        "mono-lower-right",
+        "mono-upper-left",
+        "mono-upper-right",
+        "pocket-20-left",
+        "pocket-20-right",
+        "pocket-inclined-left",
+        "pocket-inclined-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": [
+        "pocket"
+      ]
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-outer-left",
+        "edge-20-outer-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-inclined-30-left",
+        "edge-inclined-30-right",
+        "jug-left",
+        "jug-right",
+        "sloper-30-center",
+        "sloper-38-left",
+        "sloper-38-right",
+        "sloper-43-left",
+        "sloper-43-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "mono-lower-left",
+        "mono-lower-right",
+        "mono-upper-left",
+        "mono-upper-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 1
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "pocket-20-left",
+        "pocket-20-right",
+        "pocket-inclined-left",
+        "pocket-inclined-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-outer-left",
+        "edge-20-outer-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-inclined-30-left",
+        "edge-inclined-30-right",
+        "jug-left",
+        "jug-right",
+        "mono-lower-left",
+        "mono-lower-right",
+        "mono-upper-left",
+        "mono-upper-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "sloper-30-center",
+        "sloper-38-left",
+        "sloper-38-right",
+        "sloper-43-left",
+        "sloper-43-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "pocket-20-left",
+        "pocket-20-right",
+        "pocket-inclined-left",
+        "pocket-inclined-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-outer-left",
+        "edge-20-outer-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-inclined-30-left",
+        "edge-inclined-30-right",
+        "jug-left",
+        "jug-right",
+        "mono-lower-left",
+        "mono-lower-right",
+        "mono-upper-left",
+        "mono-upper-right",
+        "pocket-20-left",
+        "pocket-20-right",
+        "pocket-inclined-left",
+        "pocket-inclined-right",
+        "sloper-30-center",
+        "sloper-38-left",
+        "sloper-38-right",
+        "sloper-43-left",
+        "sloper-43-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "center-handle"
+      ],
+      "field": "handCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 1
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-outer-left",
+        "edge-20-outer-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-inclined-30-left",
+        "edge-inclined-30-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "center-handle",
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "mono-lower-left",
+        "mono-lower-right",
+        "mono-upper-left",
+        "mono-upper-right",
+        "pocket-20-left",
+        "pocket-20-right",
+        "pocket-inclined-left",
+        "pocket-inclined-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "sloper-30-center",
+        "sloper-38-left",
+        "sloper-38-right",
+        "sloper-43-left",
+        "sloper-43-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "center-handle",
+        "jug-left",
+        "jug-right",
+        "mono-lower-left",
+        "mono-lower-right",
+        "mono-upper-left",
+        "mono-upper-right",
+        "sloper-30-center",
+        "sloper-38-left",
+        "sloper-38-right",
+        "sloper-43-left",
+        "sloper-43-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "edge-18-left",
+        "edge-18-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 18
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "edge-20-outer-left",
+        "edge-20-outer-right",
+        "pocket-20-left",
+        "pocket-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right",
+        "pocket-inclined-left",
+        "pocket-inclined-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "edge-inclined-30-left",
+        "edge-inclined-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "yy.verticalboard-evo",
+      "holdIDs": [
+        "edge-40-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
+        "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 40
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-22-left",
+        "edge-22-right",
+        "edge-24-center",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-33-left",
+        "edge-33-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-22-left",
+        "edge-22-right",
+        "edge-24-center",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-33-left",
+        "edge-33-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-22-left",
+        "edge-22-right",
+        "edge-24-center",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-33-left",
+        "edge-33-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-22-left",
+        "edge-22-right",
+        "edge-24-center",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-33-left",
+        "edge-33-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-22-left",
+        "edge-22-right",
+        "edge-24-center",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-33-left",
+        "edge-33-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-22-left",
+        "edge-22-right",
+        "edge-24-center",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-33-left",
+        "edge-33-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-22-left",
+        "edge-22-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 22
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-24-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 24
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-33-left",
+        "edge-33-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 33
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-40-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 40
+    },
+    {
+      "boardID": "yy.verticalboard-first",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-first",
+        "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 45
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-30-left",
+        "sloper-30-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "sloper-20-center",
+        "sloper-30-left",
+        "sloper-30-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-30-left",
+        "sloper-30-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "sloper-20-center",
+        "sloper-30-left",
+        "sloper-30-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-30-left",
+        "sloper-30-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-40-center",
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "sloper-20-center",
+        "sloper-30-left",
+        "sloper-30-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-30-left",
+        "sloper-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-40-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 40
+    },
+    {
+      "boardID": "yy.verticalboard-light",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-light",
+        "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 45
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-45-left",
+        "edge-45-right",
+        "edge-inclined-25-left",
+        "edge-inclined-25-right",
+        "jug-left",
+        "jug-right",
+        "pocket-30-left",
+        "pocket-30-right",
+        "pocket-50-left",
+        "pocket-50-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-45-left",
+        "edge-45-right",
+        "edge-inclined-25-left",
+        "edge-inclined-25-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "pocket-30-left",
+        "pocket-30-right",
+        "pocket-50-left",
+        "pocket-50-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": [
+        "pocket"
+      ]
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-45-left",
+        "edge-45-right",
+        "edge-inclined-25-left",
+        "edge-inclined-25-right",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "pocket-30-left",
+        "pocket-30-right",
+        "pocket-50-left",
+        "pocket-50-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 2
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "center-handle",
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-45-left",
+        "edge-45-right",
+        "edge-inclined-25-left",
+        "edge-inclined-25-right",
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "pocket-30-left",
+        "pocket-30-right",
+        "pocket-50-left",
+        "pocket-50-right"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "twoFingerPocket"
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-45-left",
+        "edge-45-right",
+        "edge-inclined-25-left",
+        "edge-inclined-25-right",
+        "jug-left",
+        "jug-right",
+        "pocket-30-left",
+        "pocket-30-right",
+        "pocket-50-left",
+        "pocket-50-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "center-handle"
+      ],
+      "field": "handCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 1
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "edge-18-left",
+        "edge-18-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-45-left",
+        "edge-45-right",
+        "edge-inclined-25-left",
+        "edge-inclined-25-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "center-handle",
+        "jug-left",
+        "jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "pocket-30-left",
+        "pocket-30-right",
+        "pocket-50-left",
+        "pocket-50-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "pocket"
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "center-handle",
+        "jug-left",
+        "jug-right",
+        "sloper-20-center",
+        "sloper-35-left",
+        "sloper-35-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "edge-18-left",
+        "edge-18-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 18
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "edge-25-left",
+        "edge-25-right",
+        "edge-inclined-25-left",
+        "edge-inclined-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "pocket-30-left",
+        "pocket-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "edge-45-left",
+        "edge-45-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 45
+    },
+    {
+      "boardID": "yy.verticalboard-one",
+      "holdIDs": [
+        "pocket-50-left",
+        "pocket-50-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.yyvertical.com/en/products/verticalboard-one",
+        "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
+      },
+      "value": 50
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
+        "edge-35-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "value": 35
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "edge-incut-10-center",
+        "edge-incut-15-left",
+        "edge-incut-15-right",
+        "edge-incut-30-left",
+        "edge-incut-30-right",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "reason": "The source publishes only fixed depths or angle/configuration states, not a depth interval for one canonical contact."
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "reason": "The source does not establish an exact supported feature tag for these contacts."
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-incut-10-center",
+        "edge-incut-15-left",
+        "edge-incut-15-right",
+        "edge-incut-30-left",
+        "edge-incut-30-right"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": [
+        "incutEdge"
+      ]
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "features",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": [
+        "jug"
+      ]
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "edge-incut-10-center",
+        "edge-incut-15-left",
+        "edge-incut-15-right",
+        "edge-incut-30-left",
+        "edge-incut-30-right",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "reason": "The manufacturer identifies these as non-pocket contacts; fixed finger capacity is not applicable."
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "edge-incut-10-center",
+        "edge-incut-15-left",
+        "edge-incut-15-right",
+        "edge-incut-30-left",
+        "edge-incut-30-right",
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "reason": "The source does not prescribe an exact supported grip-posture enum for these exact contacts."
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "gripType",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "edge-incut-10-center",
+        "edge-incut-15-left",
+        "edge-incut-15-right",
+        "edge-incut-30-left",
+        "edge-incut-30-right",
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "reason": "The source does not state maximum simultaneous hand capacity for these exact contacts."
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right",
+        "edge-20-left",
+        "edge-20-right",
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-35-center",
+        "edge-incut-10-center",
+        "edge-incut-15-left",
+        "edge-incut-15-right",
+        "edge-incut-30-left",
+        "edge-incut-30-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": "edge"
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": "jug"
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": "sloper"
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right",
+        "top-sloper-20-left",
+        "top-sloper-20-right",
+        "top-sloper-32-left",
+        "top-sloper-32-right",
+        "top-sloper-jug-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "reason": "The official per-contact source does not publish a fixed millimetre depth for these exact stable IDs; degree and phalange labels are not converted."
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-incut-10-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": 10
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-15-left",
+        "edge-15-right",
+        "edge-incut-15-left",
+        "edge-incut-15-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": 15
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": 20
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "sloper-edge-25-left",
+        "sloper-edge-25-lower-left",
+        "sloper-edge-25-lower-right",
+        "sloper-edge-25-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": 25
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-30-inner-left",
+        "edge-30-inner-right",
+        "edge-30-left",
+        "edge-30-right",
+        "edge-incut-30-left",
+        "edge-incut-30-right",
+        "sloper-edge-30-center",
+        "sloper-edge-30-left",
+        "sloper-edge-30-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": 30
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
+        "edge-35-center"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "verified",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "value": 35
     },
     {
       "boardID": "trango.rock-prodigy-forge",

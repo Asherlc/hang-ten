@@ -269,6 +269,9 @@
       "name": "Left unit mono",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -365,6 +368,10 @@
       "name": "Left unit duo",
       "kind": "pocket",
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -588,6 +595,9 @@
       "id": "tray-left",
       "name": "Left unit tray",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -1010,6 +1020,9 @@
       "name": "Right unit mono",
       "kind": "pocket",
       "fingerCapacity": 1,
+      "features": [
+        "pocket"
+      ],
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -1106,6 +1119,10 @@
       "name": "Right unit duo",
       "kind": "pocket",
       "fingerCapacity": 2,
+      "gripType": "twoFingerPocket",
+      "features": [
+        "pocket"
+      ],
       "presentationID": "front-pair",
       "geometry": [
         {
@@ -1215,6 +1232,9 @@
       "id": "tray-right",
       "name": "Right unit tray",
       "kind": "jug",
+      "features": [
+        "jug"
+      ],
       "presentationID": "front-pair",
       "geometry": [
         {

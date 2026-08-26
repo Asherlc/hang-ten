@@ -109,3 +109,78 @@ All 52 constrained pieces pass the production `+1 px` resize invariants. A
 zero-distance save can reserialize decimal precision, so they are verified for
 mathematical primitive consistency and no visible snap rather than claimed as
 byte-exact.
+
+## 2026-08-25 source-audited metadata certification
+
+This batch re-opened the eight official YY Vertical product pages, the fixed
+board comparison table, and the official product views linked above and below.
+All 119 logical contacts were manually reconciled with the visible stable IDs
+in `.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`. `icky-cow` is
+the workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset. The
+captures were review aids only; no path, measurement, capacity, or type was
+derived from pixels, and geometry did not change.
+
+The portable-board evidence set is the official [TravelBoard product
+page](https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement),
+[La Baguette product
+page](https://www.yyvertical.com/en/products/la-baguette-poutre-escalade),
+[Baguette Evo product page](https://www.yyvertical.com/en/products/baguette-evo),
+and [Penta Evo product page](https://www.yyvertical.com/en/products/penta-evo),
+together with each page's manufacturer-hosted grip views. Those exhaustive
+lists and views establish the stable-ID mappings below.
+
+### Exact stable-ID field map
+
+Every row verifies the listed `kind` from the manufacturer term. `size` is
+`sizeMillimeters`; `finger`, `hand`, `grip`, and `feature` name the matching
+optional package fields. A dash means that row adds no value for that field.
+
+| Board | Stable hold IDs | Source wording | Kind | Size | Finger / hand | Grip / feature |
+| --- | --- | --- | --- | ---: | --- | --- |
+| Light | `jug-{left,right}` | two large `bacs` | `jug` | — | — | feature `jug` |
+| Light | `sloper-30-{left,right}`, `sloper-20-center` | `plats` 30° / 20° | `sloper` | — | — | grip `sloper` |
+| Light | `edge-20-{left,right}`, `edge-45-{left,right}`, `edge-25-{left,right}`, `edge-40-center` | mapped `réglettes` 20 / 45 / 25 / 40 mm | `edge` | IDs' printed value | — | — |
+| First | `jug-{left,right}` | two large `bacs` | `jug` | — | — | feature `jug` |
+| First | `sloper-35-{left,right}`, `sloper-20-center` | structured technical/table `plats` 35° / 20° | `sloper` | — | — | grip `sloper` |
+| First | `edge-25-{left,right}`, `edge-45-{left,right}`, `edge-33-{left,right}`, `edge-40-center`, `edge-20-{left,right}`, `edge-22-{left,right}`, `edge-24-center` | mapped engraved/table `réglettes` | `edge` | IDs' printed value | — | — |
+| One | `jug-{left,right}` | large `bacs` | `jug` | — | — | feature `jug` |
+| One | `sloper-35-{left,right}`, `sloper-20-center` | `plats` 35° / 20° | `sloper` | — | — | grip `sloper` |
+| One | `edge-25-{left,right}`, `edge-45-{left,right}`, `edge-inclined-25-{left,right}`, `edge-20-{left,right}`, `edge-18-{left,right}` | mapped straight/inclined `réglettes` | `edge` | IDs' printed value | — | — |
+| One | `pocket-50-{left,right}`, `pocket-30-{left,right}` | `bidoigts` 50 / 30 mm | `pocket` | IDs' printed value | finger 2 | grip `twoFingerPocket`; feature `pocket` |
+| One | `center-handle` | central handle for unilateral pull | `jug` | — | hand 1 | — |
+| Evo | `jug-{left,right}` | `bacs x2` | `jug` | — | — | feature `jug` |
+| Evo | `sloper-43-{left,right}`, `sloper-38-{left,right}`, `sloper-30-center` | `plats` 43° / 38° / 30° | `sloper` | — | — | grip `sloper` |
+| Evo | `edge-25-{left,right}`, `edge-20-outer-{left,right}`, `edge-40-center`, `edge-inclined-30-{left,right}`, `edge-18-{left,right}` | mapped straight/inclined `réglettes` | `edge` | IDs' printed value | — | — |
+| Evo | `pocket-inclined-{left,right}`, `pocket-20-{left,right}` | 25 mm inclined / 20 mm `bidoigts` | `pocket` | 25 / 20 | finger 2 | grip `twoFingerPocket`; feature `pocket` |
+| Evo | `mono-upper-{left,right}`, `mono-lower-{left,right}` | `mono-doigts`, one/two phalanges | `pocket` | — | finger 1 | feature `pocket` |
+| Evo | `center-handle` | central one-arm handle | `jug` | — | hand 1 | — |
+| TravelBoard | `tray` | traction tray | `jug` | — | — | feature `jug` |
+| TravelBoard | `edge-25`, `edge-15`, `edge-10` | exhaustive 25 / 15 / 10 mm grips | `edge` | IDs' printed value | — | — |
+| TravelBoard | `mono-{left,right}` | isolated mono-fingers | `pocket` | — | finger 1 | feature `pocket` |
+| La Baguette | `tray` | tray | `jug` | — | — | feature `jug` |
+| La Baguette | `edge-30`, `edge-25`, `edge-20`, `edge-15`, `edge-10` | exhaustive six-grip list | `edge` | IDs' printed value | — | — |
+| Baguette Evo | `rounded-tray` | rounded tray / `bac` | `jug` | — | — | feature `jug` |
+| Baguette Evo | `edge-{25,20,15,12,10,8}-{left,right}`, `edge-6-{upper,lower}`, `edge-central-{30,25,20,6}` | doubled and central edge list | `edge` | IDs' printed value | — | — |
+| Penta Evo | `tray-{left,right}` | tray | `jug` | — | — | feature `jug` |
+| Penta Evo | `edge-{25,20,15,10}-{left,right}` | exact edge list | `edge` | IDs' printed value | — | — |
+| Penta Evo | `mono-{left,right}` | mono | `pocket` | — | finger 1 | feature `pocket` |
+| Penta Evo | `duo-{left,right}` | duo | `pocket` | — | finger 2 | grip `twoFingerPocket`; feature `pocket` |
+
+### Coverage and deliberate blanks
+
+The ledger certifies 119 kinds, 80 scalar depths, 18 finger capacities, two
+one-hand capacities, 24 grip enums, and 31 feature arrays. All other outcomes
+are explicit source-specific blanks. No YY source gives a depth interval for
+one canonical contact. Degree values, mono depth in phalanges, magnetic-insert
+states, and Turn & Pull inclination are not millimetre depth or depth ranges.
+Non-pocket contacts have `fingerCapacity: notApplicable`; no width-based hand
+capacity or edge posture was inferred.
+
+The source conflicts are retained rather than hidden: First's summary says 25°
+for lateral slopers while its technical table, comparison table, and front say
+35°; Evo's comparison table says 35° for the center sloper while the product
+technical list/front say 30°; Evo summary prose says 30 mm for the inclined
+bidoigt while the technical list/table/front map it to 25 mm; and Penta Evo's
+title says eight grips while two detailed lists enumerate seven per unit. The
+more specific agreeing mappings control. The schema has no angle field, so the
+angle wording conflicts do not create optional numeric metadata.
