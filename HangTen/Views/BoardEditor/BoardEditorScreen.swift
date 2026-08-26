@@ -192,7 +192,7 @@ struct BoardEditorScreen: View {
                             .overlay {
                                 Circle().stroke(Color.hangInk.opacity(0.5), lineWidth: 1)
                             }
-                            .frame(width: 40, height: 40)
+                            .frame(width: 44, height: 44)
                             .background(Color.hangCream.opacity(0.9), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                     }
                     .accessibilityLabel("Canvas background: \(canvasBackground.name)")
