@@ -136,14 +136,14 @@ absent when the exact source does not support them:
   does not justify a second hold, a scalar `sizeMillimeters`, or a `gripType`
   on that continuous jug.
 
-The machine-readable ledger accounts for all seven audited fields on all 49
-contacts: 132 populated/verified outcomes, 192 unavailable outcomes, 19
-not-applicable finger-capacity outcomes, and zero unaccounted fields. This
-certification intentionally excludes Beastmaker 1000, Beastmaker 2000, and
-Moon Armstrong. Beastmaker still lacks exact positioned manufacturer evidence
-for its complete recess inventory; Moon's package still lacks the two official
-22 mm one-finger pockets. Their board and ledger state remains unresolved and
-unchanged.
+At this intermediate 49-contact certification, the machine-readable ledger
+accounts for all seven audited fields: 132 populated/verified outcomes, 192
+unavailable outcomes, 19 not-applicable finger-capacity outcomes, and zero
+unaccounted fields. That intermediate scope intentionally excluded Beastmaker
+1000, Beastmaker 2000, and Moon Armstrong. Later catalog-wide work resolved
+Beastmaker 1000 and Moon Armstrong from newly mapped primary evidence;
+Beastmaker 2000 remains excluded because its complete recess inventory still
+lacks exact positioned manufacturer evidence.
 
 ## Completion verification
 

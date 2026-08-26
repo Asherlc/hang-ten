@@ -103,7 +103,9 @@ pytest coverage. Given the ledger and discovered board packages, it must:
 5. for every board in `reviewedBoardIDs`, reject a hold/field that lacks either
    a verified mapping or an explicit blank-field rule, and reject a non-verified
    `kind` record; and
-6. print deterministic per-field and per-board before/after coverage totals.
+6. print deterministic current per-field and per-board coverage totals. Capture
+   before/after comparisons as externally saved CLI snapshots in the batch
+   handoff; the validator accepts no baseline input.
 
 The validator is additive to package-schema validation. Every batch also runs
 `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`

@@ -29,6 +29,12 @@ EXPECTED_HOLDS = (
     ("edge-20-right", "edge", 20, None),
     ("edge-15-right", "edge", 15, None),
 )
+EXPECTED_FEATURES = {
+    "top-jug": ("jug",),
+    "center-edge-25": ("incutEdge",),
+    "mono-left": ("pocket",),
+    "mono-right": ("pocket",),
+}
 RIGHT_BOTTOM_LEFT_BOUND = 0.629300570964
 RIGHT_BOTTOM_DIVIDER = 0.719149326172
 RIGHT_BOTTOM_RIGHT_BOUND = 0.853922458985
@@ -45,6 +51,17 @@ def test_megalith_has_eighteen_scalar_source_labelled_contacts() -> None:
     ) == EXPECTED_HOLDS
     assert all(hold.depth_range_millimeters is None for hold in board.holds)
     assert all(len(hold.geometry) == 1 for hold in board.holds)
+    assert {
+        hold.id: tuple(hold.features)
+        for hold in board.holds
+        if hold.features is not None
+    } == EXPECTED_FEATURES
+    assert {
+        hold.id: hold.hand_capacity
+        for hold in board.holds
+        if hold.hand_capacity is not None
+    } == {"center-edge-25": 1}
+    assert all(hold.grip_type is None for hold in board.holds)
 
 
 def test_megalith_right_bottom_shelves_follow_the_asymmetric_source_footprint() -> None:

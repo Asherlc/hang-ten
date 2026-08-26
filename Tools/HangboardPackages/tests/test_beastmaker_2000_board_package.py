@@ -565,7 +565,7 @@ def _contains_point(
 
 @pytest.mark.parametrize(
     ("parent_id", "nested_id"),
-    (("front-middle-3", "hold-26"), ("front-middle-7", "hold-27")),
+    [("front-middle-3", "hold-26"), ("front-middle-7", "hold-27")],
 )
 def test_compound_pocket_parent_does_not_cover_nested_mono(
     parent_id: str, nested_id: str
@@ -575,6 +575,7 @@ def test_compound_pocket_parent_does_not_cover_nested_mono(
     nested = holds[nested_id].geometry[0]
     nested_contour = _flatten_global_contour(nested)
 
+    interior_samples = 0
     for row in range(32):
         for column in range(32):
             point = (
@@ -582,7 +583,9 @@ def test_compound_pocket_parent_does_not_cover_nested_mono(
                 nested.frame.y + (row + 0.5) / 32 * nested.frame.height,
             )
             if _contains_point(nested_contour, point):
+                interior_samples += 1
                 assert not _contains_point(parent_contour, point)
+    assert interior_samples > 0
 
 
 def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:

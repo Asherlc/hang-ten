@@ -68,8 +68,9 @@ scripts/hangboard-packages.sh audit-metadata --root Hangboards \
   --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
 ```
 
-Both commands print the discovered complete packages and draft paths. Add
-`--final-inventory` to reject any primary-only draft:
+`validate` and `status` print the discovered complete packages and draft paths;
+`audit-metadata` prints its coverage report. Add `--final-inventory` to reject
+any primary-only draft:
 
 ```sh
 scripts/hangboard-packages.sh validate --root Hangboards --final-inventory

@@ -272,11 +272,18 @@
 
 - [ ] **Step 2: Write and run the failing scope assertion.**
 
-  Require exactly these seven additional IDs in the ledger and zero unaccounted fields; confirm RED before changing package JSON.
+  Require the six certifiable additional IDs in the ledger and zero
+  unaccounted fields; keep `beastmaker-2000` outside the reviewed set unless
+  primary manufacturer evidence position-maps its complete mixed-contact
+  inventory. Confirm RED before changing package JSON.
 
 - [ ] **Step 3: Add evidence-backed ledger outcomes and package metadata.**
 
-  Add only exact source values, retain blank rules for grouped/unmapped size claims, and extend the named audits with field-by-field rationale. Do not turn board-level depth lists into per-hold values.
+  Add only exact source values, retain blank rules for grouped/unmapped size
+  claims, and extend the named audits with field-by-field rationale. Do not
+  turn board-level depth lists into per-hold values. Keep Beastmaker 2000
+  excluded and document the unsupported positioned-type evidence gap if it
+  remains unresolved.
 
 - [ ] **Step 4: Validate, report, commit, and push.**
 
@@ -301,7 +308,10 @@
 
 - [ ] **Step 3: Backfill only per-contact evidence.**
 
-  Refresh official material, map every source position to the reviewed hold IDs, create verified or blank ledger records, update matching JSON fields, and extend both source audits. Keep the documented DoorMount inventory mismatch blank until a primary source resolves it.
+  Refresh official material, map every source position to the reviewed hold IDs,
+  create verified or blank ledger records, update matching JSON fields, and
+  extend both source audits. Use the resolved official DoorMount front mapping
+  for its 13 stable contacts; keep only unsupported optional values blank.
 
 - [ ] **Step 4: Validate, report, commit, and push.**
 
@@ -366,7 +376,10 @@
 
 **Interfaces:**
 - Consumes: the final ledger and full discovered inventory.
-- Produces: one final report whose reviewed IDs equal all 44 package IDs, with no unaccounted field and a human-readable catalog coverage ledger.
+- Produces: one final report whose reviewed IDs equal all discoverable package
+  IDs except `beastmaker-2000`, with no unaccounted field and a human-readable
+  catalog coverage ledger. Beastmaker 2000 remains outside the certified set
+  until primary evidence maps every mixed contact to a type.
 
 - [ ] **Step 1: Write the final failing inventory-completeness test.**
 
@@ -374,7 +387,9 @@
   inventory_ids = tuple(package.board.id for package in discover_board_packages(HANGBOARDS_ROOT).packages)
   report = validate_metadata_ledger(load_metadata_ledger(LEDGER_PATH), discover_board_packages(HANGBOARDS_ROOT))
 
-  assert report.reviewed_board_ids == inventory_ids
+  assert report.reviewed_board_ids == tuple(
+      board_id for board_id in inventory_ids if board_id != "beastmaker-2000"
+  )
   assert sum(board.unaccounted_fields for board in report.boards) == 0
   ```
 
@@ -400,7 +415,9 @@
   rtk git status --short
   ```
 
-  Expected: all tests and both commands pass, the report covers 44 boards, and only intended tracked changes remain.
+  Expected: all tests and both commands pass, the report covers 43 boards with
+  Beastmaker 2000 explicitly excluded for its positioned-evidence gap, and only
+  intended tracked changes remain.
 
 - [ ] **Step 5: Commit, push, and prepare the final PR description.**
 

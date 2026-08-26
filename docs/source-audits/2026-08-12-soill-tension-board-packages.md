@@ -206,7 +206,7 @@ with the named manufacturer source position. So iLL's terms `rail` and `crimp
 rail` map to the schema's closed `edge` kind; that is a source-term taxonomy
 mapping, not a classification inferred from pixels.
 
-### Tension reviewed label map
+### Tension-reviewed label map
 
 | Board | Exact manufacturer label / position | Stable hold ID(s) | Verified kind | Verified optional value |
 | --- | --- | --- | --- | --- |

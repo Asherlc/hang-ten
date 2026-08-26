@@ -100,8 +100,8 @@ exact no-op.
 
 The current product pages and the exact official diagrams linked above were
 re-opened on 2026-08-25. Stable-ID overlays were manually reviewed under
-`.context/hangboard-metadata-backfill-icky-cow/metolius/`; `icky-cow` is the
-workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset. The
+`.context/hangboard-metadata-backfill-icky-cow/metolius/`, the `icky-cow`
+workspace-owned review root. The
 overlays are review aids only and did not alter geometry. Each source label
 maps to these visible stable IDs on presentation `front`:
 
