@@ -101,7 +101,8 @@
           }
         }
       ],
-      "handCapacity": 1
+      "handCapacity": 1,
+      "fingerCapacity": 4
     },
     {
       "id": "jug-right",
