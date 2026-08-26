@@ -346,6 +346,26 @@ test("mobile canvas controls open the board drawer, repository sheet, and hold i
   });
 });
 
+test("canvas background selectors share the viewport background", async () => {
+  await withApp(dependenciesFixture(), async (app) => {
+    const desktopSelector = app.document.querySelector<HTMLSelectElement>("#canvas-background-select");
+    const mobileSelector = app.document.querySelector<HTMLSelectElement>("#mobile-canvas-background-select");
+    const viewport = app.document.querySelector<HTMLElement>("#canvas-viewport");
+
+    assert.equal(desktopSelector?.value, "#d6d7d3");
+    assert.equal(mobileSelector?.value, "#d6d7d3");
+    assert.equal(viewport?.style.backgroundColor, "rgb(214, 215, 211)");
+
+    await app.change("#canvas-background-select", "#ffffff");
+    assert.equal(mobileSelector?.value, "#ffffff");
+    assert.equal(viewport?.style.backgroundColor, "rgb(255, 255, 255)");
+
+    await app.change("#mobile-canvas-background-select", "#292b2e");
+    assert.equal(desktopSelector?.value, "#292b2e");
+    assert.equal(viewport?.style.backgroundColor, "rgb(41, 43, 46)");
+  });
+});
+
 test("collapsing the mobile hold sheet retains the selected hold", async () => {
   const image = imageFixture();
   await withApp(dependenciesFixture({ runtime: image.runtime }), async (app) => {

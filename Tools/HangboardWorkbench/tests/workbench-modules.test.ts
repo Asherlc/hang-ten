@@ -284,6 +284,60 @@ test("the browser client preserves a fractional fixed depth", async () => {
   assert.equal(board.document.regions[0]?.sizeMillimeters, 7.25);
 });
 
+test("the browser client preserves valid sloper metadata", async () => {
+  const document = editorDocument([{
+    key: "hold-1-piece-0",
+    type: "sloper",
+    displayPath: "M 1 1 L 20 1 L 20 20 Z",
+    metadata: { holdID: "hold-1", pieceIndex: 0 },
+    sloper: { type: "flat", angleDegrees: 20 },
+  }]);
+  const { runtime } = runtimeFixture(async () => response({
+    ok: true,
+    board: boardFixture({ holdCount: 1, document }),
+  }));
+
+  const board = await createWorkbenchClient(runtime).getBoard("compact");
+
+  assert.deepEqual(board.document.regions[0]?.sloper, {
+    type: "flat",
+    angleDegrees: 20,
+  });
+});
+
+test("the browser client rejects invalid sloper metadata", async (context) => {
+  for (const fixture of [
+    { name: "metadata on a jug", type: "jug", sloper: { type: "flat" } },
+    { name: "round angle", type: "sloper", sloper: { type: "round", angleDegrees: 20 } },
+    { name: "out-of-range angle", type: "sloper", sloper: { type: "flat", angleDegrees: 90.01 } },
+    { name: "unknown metadata key", type: "sloper", sloper: { type: "flat", unexpected: true } },
+  ]) {
+    await context.test(fixture.name, async () => {
+      const { name: _name, ...regionFields } = fixture;
+      const { runtime } = runtimeFixture(async () => response({
+        ok: true,
+        board: boardFixture({
+          holdCount: 1,
+          document: {
+            canvas: { width: 100, height: 50 },
+            regions: [{
+              key: "hold-1-piece-0",
+              displayPath: "M 1 1 L 20 1 L 20 20 Z",
+              metadata: { holdID: "hold-1", pieceIndex: 0 },
+              ...regionFields,
+            }],
+          } as EditorDocument,
+        }),
+      }));
+
+      await assert.rejects(
+        createWorkbenchClient(runtime).getBoard("compact"),
+        /invalid board/,
+      );
+    });
+  }
+});
+
 test("the browser client rejects invalid or ambiguous fixed-depth payloads", async (context) => {
   const invalidRegionSets: Array<{ name: string; regions: unknown[] }> = [
     {
@@ -760,6 +814,69 @@ test("the editor document clones and validates bendable curve command indexes", 
       /valid hold fields/,
     );
   }
+});
+
+test("the direct editor model validates and deeply clones sloper metadata", () => {
+  const document = editorDocument([{
+    key: "hold-1-piece-0",
+    type: "sloper",
+    displayPath: "M 1 1 L 20 1 L 20 20 Z",
+    metadata: { holdID: "hold-1", pieceIndex: 0 },
+    sloper: { type: "flat", angleDegrees: 20 },
+  }]);
+
+  assert.doesNotThrow(() => validateEditorDocument(document));
+  const cloned = cloneEditorDocument(document);
+  if (cloned.regions[0]?.sloper?.type === "flat") {
+    cloned.regions[0].sloper.angleDegrees = 30;
+  }
+
+  assert.deepEqual(document.regions[0]?.sloper, {
+    type: "flat",
+    angleDegrees: 20,
+  });
+});
+
+test("the direct editor model rejects invalid and inconsistent sloper metadata", () => {
+  const fixtures: Array<{ type?: string; sloper: unknown }> = [
+    { type: "jug", sloper: { type: "flat" } },
+    { type: "sloper", sloper: { type: "round", angleDegrees: 20 } },
+    { type: "sloper", sloper: { type: "flat", angleDegrees: -0.01 } },
+    { type: "sloper", sloper: { type: "flat", angleDegrees: Number.POSITIVE_INFINITY } },
+    { type: "sloper", sloper: { type: "domed" } },
+    { type: "sloper", sloper: { type: "flat", unexpected: true } },
+  ];
+  for (const fixture of fixtures) {
+    assert.throws(
+      () => validateEditorDocument(editorDocument([{
+        key: "hold-1-piece-0",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 0 },
+        ...fixture,
+      }] as EditorDocument["regions"])),
+      /sloper|valid hold fields/i,
+    );
+  }
+
+  assert.throws(
+    () => validateEditorDocument(editorDocument([
+      {
+        key: "hold-1-piece-0",
+        type: "sloper",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 0 },
+        sloper: { type: "flat", angleDegrees: 20 },
+      },
+      {
+        key: "hold-1-piece-1",
+        type: "sloper",
+        displayPath: "M 30 1 L 40 1 L 40 20 Z",
+        metadata: { holdID: "hold-1", pieceIndex: 1 },
+        sloper: { type: "round" },
+      },
+    ])),
+    /sloper/i,
+  );
 });
 
 test("the direct editor model rejects inconsistent finger capacities for one physical hold", () => {

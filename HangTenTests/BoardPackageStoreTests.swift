@@ -3,6 +3,87 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testStoreDecodesOptionalSloperMetadataVariants() throws {
+        let variants: [(metadata: [String: Any]?, expected: SloperMetadata?)] = [
+            (["type": "flat", "angleDegrees": 20], SloperMetadata(type: .flat, angleDegrees: 20)),
+            (["type": "flat"], SloperMetadata(type: .flat, angleDegrees: nil)),
+            (["type": "round"], SloperMetadata(type: .round, angleDegrees: nil)),
+            (nil, nil),
+        ]
+
+        for variant in variants {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    holds[0]["kind"] = "sloper"
+                    if let metadata = variant.metadata {
+                        holds[0]["sloper"] = metadata
+                    }
+                    board["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            let hold = try XCTUnwrap(
+                BoardPackageStore(bundle: fixture.bundle).boards.first?.holds.first
+            )
+            XCTAssertEqual(hold.sloper, variant.expected)
+        }
+    }
+
+    func testStoreRejectsInvalidSloperMetadataCombinations() throws {
+        let invalidHolds: [(kind: String, metadata: [String: Any])] = [
+            ("jug", ["type": "flat", "angleDegrees": 20]),
+            ("sloper", ["type": "round", "angleDegrees": 20]),
+            ("sloper", ["type": "flat", "angleDegrees": -0.01]),
+            ("sloper", ["type": "flat", "angleDegrees": 90.01]),
+            ("sloper", ["type": "domed"]),
+            ("sloper", ["type": "flat", "unexpected": true]),
+        ]
+
+        for invalidHold in invalidHolds {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                    holds[0]["kind"] = invalidHold.kind
+                    holds[0]["sloper"] = invalidHold.metadata
+                    board["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
+    }
+
+    func testStoreRejectsNonFiniteSloperAngle() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let boardURL = hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            try self.mutateBoard(at: boardURL) { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["kind"] = "sloper"
+                holds[0]["sloper"] = ["type": "flat", "angleDegrees": 20]
+                board["holds"] = holds
+            }
+            let finiteJSON = try XCTUnwrap(
+                String(data: Data(contentsOf: boardURL), encoding: .utf8)
+            )
+            let nonFiniteJSON = finiteJSON.replacingOccurrences(
+                of: "\"angleDegrees\":20",
+                with: "\"angleDegrees\":1e999"
+            )
+            XCTAssertNotEqual(nonFiniteJSON, finiteJSON)
+            try Data(nonFiniteJSON.utf8).write(to: boardURL)
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
     func testBoardDetailHoldMapNumbersOnlyTheHoldsOnTheVisiblePresentation() {
         let board = TrainingBoard(
             id: "two-sided",

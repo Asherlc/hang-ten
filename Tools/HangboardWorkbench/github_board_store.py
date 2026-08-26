@@ -851,6 +851,7 @@ def _save_loaded_editor_document(
         hold_id,
         piece_index,
         kind,
+        sloper,
         path,
         shape_constraint,
         bendable_command_indexes,
@@ -863,6 +864,7 @@ def _save_loaded_editor_document(
             (
                 piece_index,
                 kind,
+                sloper,
                 path,
                 shape_constraint,
                 bendable_command_indexes,

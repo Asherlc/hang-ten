@@ -113,6 +113,7 @@ struct BoardEditableHold: Equatable, Decodable {
     /// Editor packages may omit `kind` while metadata is being completed.
     /// Training-board decoding remains strict in `BoardPackageStore`.
     var kind: HoldKind?
+    var sloper: SloperMetadata?
     var sizeMillimeters: Double?
     var depthRangeMillimeters: BoardEditableMillimeterRange?
     var gripType: GripType?
@@ -126,6 +127,7 @@ struct BoardEditableHold: Equatable, Decodable {
         case id
         case name
         case kind
+        case sloper
         case geometry
         case sizeMillimeters
         case depthRangeMillimeters
@@ -140,6 +142,7 @@ struct BoardEditableHold: Equatable, Decodable {
         id: String,
         name: String,
         kind: HoldKind?,
+        sloper: SloperMetadata? = nil,
         sizeMillimeters: Double? = nil,
         depthRangeMillimeters: BoardEditableMillimeterRange? = nil,
         gripType: GripType? = nil,
@@ -152,6 +155,7 @@ struct BoardEditableHold: Equatable, Decodable {
         self.id = id
         self.name = name
         self.kind = kind
+        self.sloper = sloper
         self.sizeMillimeters = sizeMillimeters
         self.depthRangeMillimeters = depthRangeMillimeters
         self.gripType = gripType
@@ -166,7 +170,7 @@ struct BoardEditableHold: Equatable, Decodable {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
             "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "presentationID"
+            "features", "presentationID", "sloper"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -174,6 +178,16 @@ struct BoardEditableHold: Equatable, Decodable {
         kind = container.contains(.kind)
             ? try container.decode(HoldKind.self, forKey: .kind)
             : nil
+        sloper = container.contains(.sloper)
+            ? try container.decode(SloperMetadata.self, forKey: .sloper)
+            : nil
+        if sloper != nil, kind != .sloper {
+            throw DecodingError.dataCorruptedError(
+                forKey: .sloper,
+                in: container,
+                debugDescription: "Sloper metadata is only valid for sloper holds."
+            )
+        }
         geometry = try container.decode([BoardEditablePiece].self, forKey: .geometry)
         sizeMillimeters = try container.decodeIfPresent(Double.self, forKey: .sizeMillimeters)
         depthRangeMillimeters = try container.decodeIfPresent(
@@ -386,6 +400,14 @@ enum BoardPackageWriter {
             if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
                 throw invalid("hold \(hold.id) must not specify both a size and depth range", document)
             }
+            if let sloper = hold.sloper {
+                guard hold.kind == .sloper else {
+                    throw invalid("hold \(hold.id) has sloper metadata but is not a sloper", document)
+                }
+                guard sloper.isValid else {
+                    throw invalid("hold \(hold.id) has invalid sloper metadata", document)
+                }
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw invalid("hold \(hold.id) has an invalid finger capacity", document)
@@ -514,6 +536,15 @@ enum BoardPackageWriter {
         ]
         if let kind = hold.kind {
             entries.append(("kind", .string(kind.rawValue)))
+        }
+        if let sloper = hold.sloper {
+            var sloperEntries: [(String, CanonicalJSONValue)] = [
+                ("type", .string(sloper.type.rawValue)),
+            ]
+            if let angleDegrees = sloper.angleDegrees {
+                sloperEntries.append(("angleDegrees", .double(angleDegrees)))
+            }
+            entries.append(("sloper", .object(sloperEntries)))
         }
         if let sizeMillimeters = hold.sizeMillimeters {
             entries.append(("sizeMillimeters", .double(sizeMillimeters)))

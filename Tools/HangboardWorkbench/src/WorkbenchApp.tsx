@@ -19,10 +19,16 @@ const MIN_CANVAS_ZOOM = 50;
 const MAX_CANVAS_ZOOM = 300;
 const CANVAS_ZOOM_STEP = 25;
 const CANVAS_PINCH_ZOOM_STEP = 10;
+const CANVAS_BACKGROUNDS = [
+  { label: "Cream", value: "#d6d7d3" },
+  { label: "White", value: "#ffffff" },
+  { label: "Charcoal", value: "#292b2e" },
+] as const;
 
 export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const { state, actions } = useWorkbench(dependencies);
   const [canvasZoom, setCanvasZoom] = React.useState(100);
+  const [canvasBackground, setCanvasBackground] = React.useState("#d6d7d3");
   const canvasZoomRef = React.useRef(canvasZoom);
   const [guides, setGuides] = React.useState<Guide[]>([]);
   const [mobileBoardsOpen, setMobileBoardsOpen] = React.useState(false);
@@ -199,6 +205,18 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
               )}
             </div>
             <div className="canvas-controls" aria-label="Canvas controls">
+              <label className="canvas-background-selector" htmlFor="canvas-background-select">
+                <span>Background</span>
+                <select
+                  id="canvas-background-select"
+                  value={canvasBackground}
+                  onChange={(event) => setCanvasBackground(event.target.value)}
+                >
+                  {CANVAS_BACKGROUNDS.map((background) => (
+                    <option key={background.value} value={background.value}>{background.label}</option>
+                  ))}
+                </select>
+              </label>
               {(state.board?.presentations?.length ?? 0) > 1 && (
                 <label className="surface-selector" htmlFor="presentation-select">
                   <span>Surface</span>
@@ -253,6 +271,7 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             pathEditor={dependencies.pathEditor}
             editor={editor}
             zoomPercent={canvasZoom}
+            backgroundColor={canvasBackground}
             onZoomChange={changeCanvasZoom}
             canZoomChange={canZoomChange}
             onPinchZoomChange={changeCanvasPinchZoom}
@@ -269,6 +288,18 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
             </span>
           </footer>
           <div className="mobile-canvas-controls" aria-label="Mobile canvas controls">
+            <label className="canvas-background-selector" htmlFor="mobile-canvas-background-select">
+              <span>Background</span>
+              <select
+                id="mobile-canvas-background-select"
+                value={canvasBackground}
+                onChange={(event) => setCanvasBackground(event.target.value)}
+              >
+                {CANVAS_BACKGROUNDS.map((background) => (
+                  <option key={background.value} value={background.value}>{background.label}</option>
+                ))}
+              </select>
+            </label>
             <button className="tool-button" id="mobile-zoom-out-button" type="button" aria-label="Zoom out" disabled={!state.document || canvasZoom <= MIN_CANVAS_ZOOM} onClick={() => changeCanvasZoom(-1)}>−</button>
             <button className="tool-button" id="mobile-zoom-in-button" type="button" aria-label="Zoom in" disabled={!state.document || canvasZoom >= MAX_CANVAS_ZOOM} onClick={() => changeCanvasZoom(1)}>+</button>
             <button className="tool-button" id="mobile-open-hold-sheet-button" type="button" disabled={!selectedHold} onClick={() => setMobileHoldSheetOpen(true)}>Edit hold</button>

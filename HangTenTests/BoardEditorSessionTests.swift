@@ -63,6 +63,89 @@ final class BoardEditorSessionTests: XCTestCase {
         return target
     }
 
+    private func makeSelectedSloperSession(
+        metadata: SloperMetadata? = nil
+    ) throws -> BoardEditorSession {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        document.holds[0].kind = .sloper
+        document.holds[0].sloper = metadata
+        let holdID = document.holds[0].id
+        let session = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        session.select(holdID: holdID)
+        return session
+    }
+
+    func testSelectedSloperMetadataTransitionsPreserveOnlyValidAngleState() throws {
+        let session = try makeSelectedSloperSession()
+        XCTAssertNil(session.selectedHold?.sloper)
+
+        try session.setSelectedSloperType(.flat)
+        XCTAssertEqual(
+            session.selectedHold?.sloper,
+            SloperMetadata(type: .flat, angleDegrees: nil)
+        )
+
+        try session.setSelectedSloperAngleDegrees(20)
+        XCTAssertEqual(
+            session.selectedHold?.sloper,
+            SloperMetadata(type: .flat, angleDegrees: 20)
+        )
+
+        try session.setSelectedSloperType(.round)
+        XCTAssertEqual(
+            session.selectedHold?.sloper,
+            SloperMetadata(type: .round, angleDegrees: nil)
+        )
+
+        try session.setSelectedSloperType(nil)
+        XCTAssertNil(session.selectedHold?.sloper)
+    }
+
+    func testSloperMetadataEditsUndoOneTransitionAtATime() throws {
+        let session = try makeSelectedSloperSession()
+
+        try session.setSelectedSloperType(.flat)
+        try session.setSelectedSloperAngleDegrees(20)
+        try session.setSelectedSloperType(.round)
+        try session.setSelectedSloperType(nil)
+
+        session.undo()
+        XCTAssertEqual(session.selectedHold?.sloper, SloperMetadata(type: .round, angleDegrees: nil))
+        session.undo()
+        XCTAssertEqual(session.selectedHold?.sloper, SloperMetadata(type: .flat, angleDegrees: 20))
+        session.undo()
+        XCTAssertEqual(session.selectedHold?.sloper, SloperMetadata(type: .flat, angleDegrees: nil))
+        session.undo()
+        XCTAssertNil(session.selectedHold?.sloper)
+        XCTAssertFalse(session.canUndo)
+    }
+
+    func testSloperAngleUpdateRejectsInvalidOrInapplicableValuesWithoutChangingDocument() throws {
+        let session = try makeSelectedSloperSession()
+        let unspecified = session.document
+
+        XCTAssertThrowsError(try session.setSelectedSloperAngleDegrees(20))
+        XCTAssertEqual(session.document, unspecified)
+        XCTAssertFalse(session.canUndo)
+
+        try session.setSelectedSloperType(.round)
+        let round = session.document
+        XCTAssertThrowsError(try session.setSelectedSloperAngleDegrees(20))
+        XCTAssertEqual(session.document, round)
+
+        try session.setSelectedSloperType(.flat)
+        let flat = session.document
+        for invalidAngle in [-0.01, 90.01, .infinity, .nan] {
+            XCTAssertThrowsError(try session.setSelectedSloperAngleDegrees(invalidAngle))
+            XCTAssertEqual(session.document, flat)
+        }
+    }
+
     func testBoardCommandsMapFrameIntoBoardSpaceAndBack() throws {
         var session = try makeSession()
         let target = try selectFirstPathPiece(&session)
@@ -254,13 +337,30 @@ final class BoardEditorSessionTests: XCTestCase {
     func testAnchorDragRewritesTightFrame() throws {
         var session = try makeSession(slug: "zlagboard-pro")
         let target = try selectFirstPathPiece(&session)
-        session.select(handle: .anchor(commandIndex: 0))
         let pieceBefore = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         let commandsBefore = try session.boardCommands(for: pieceBefore)
-        let firstAnchor = commandsBefore[0].boardAnchor!
+        var leftmostAnchorCandidate: (index: Int, point: CGPoint)?
+        for (index, command) in commandsBefore.enumerated() {
+            guard let point = command.boardAnchor else { continue }
+            guard let current = leftmostAnchorCandidate else {
+                leftmostAnchorCandidate = (index: index, point: point)
+                continue
+            }
+            if point.x < current.point.x ||
+                (point.x == current.point.x && index < current.index) {
+                leftmostAnchorCandidate = (index: index, point: point)
+            }
+        }
+        let leftmostAnchor = try XCTUnwrap(leftmostAnchorCandidate)
+        session.select(handle: .anchor(commandIndex: leftmostAnchor.index))
 
         session.beginInteractiveEdit()
-        try session.moveSelectedAnchor(commandIndex: 0, deltaX: -0.01, deltaY: 0, recordsHistory: false)
+        try session.moveSelectedAnchor(
+            commandIndex: leftmostAnchor.index,
+            deltaX: -0.01,
+            deltaY: 0,
+            recordsHistory: false
+        )
 
         let pieceAfter = session.hold(id: target.holdID)!.geometry[target.pieceIndex]
         XCTAssertEqual(pieceAfter.frame.x, pieceBefore.frame.x - 0.01, accuracy: 1e-9)

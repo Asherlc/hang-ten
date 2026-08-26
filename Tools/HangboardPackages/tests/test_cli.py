@@ -41,6 +41,7 @@ def _write_audit_ledger(
             {
                 "schemaVersion": 1,
                 "reviewedBoardIDs": ["fixture.board"],
+                "sloperOnlyBoardIDs": [],
                 "records": [
                     {
                         "boardID": "fixture.board",
@@ -78,6 +79,19 @@ def _write_audit_ledger(
                             "features",
                         )
                     ],
+                    {
+                        "boardID": "fixture.board",
+                        "holdIDs": [hold_id],
+                        "field": "sloper",
+                        "outcome": "notApplicable",
+                        "reviewedAt": "2026-08-25",
+                        "source": {
+                            "kind": "manufacturer",
+                            "url": "https://example.com/fixture-source",
+                            "label": "Fixture manufacturer source",
+                        },
+                        "reason": "The hold is not a sloper.",
+                    },
                 ],
             }
         ),
@@ -123,6 +137,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     assert _json_output(result.stdout) == {
         "reviewedBoardIDs": ["fixture.board"],
+        "sloperOnlyBoardIDs": [],
         "fields": {
             "kind": {
                 "populated": 1,
@@ -146,6 +161,12 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                     "features",
                 )
             },
+            "sloper": {
+                "populated": 0,
+                "verified": 0,
+                "unavailable": 0,
+                "notApplicable": 1,
+            },
         },
         "boards": [
             {
@@ -153,7 +174,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 "populated": 1,
                 "verified": 1,
                 "unavailable": 6,
-                "notApplicable": 0,
+                "notApplicable": 1,
                 "unaccountedFields": 0,
             }
         ],

@@ -766,6 +766,7 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
         "handCapacity",
         "gripType",
         "features",
+        "sloper",
         "presentationID",
     }
 

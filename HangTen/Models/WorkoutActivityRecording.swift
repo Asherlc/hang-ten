@@ -96,22 +96,39 @@ internal enum BoardTargetResolver {
         }
         if let feature = target.feature {
             let exact = matching(feature, fingerCapacity: target.fingerCapacity, among: holds)
-            if !exact.isEmpty {
+            let selectedExact = selectingGenericPocketPair(
+                from: exact,
+                feature: feature,
+                fingerCapacity: target.fingerCapacity
+            )
+            if !selectedExact.isEmpty {
                 if feature.holdKind == .pocket, target.fingerCapacity != nil {
-                    return oneHoldPerHand(from: exact).map(\.id)
+                    return oneHoldPerHand(from: selectedExact).map(\.id)
                 }
-                return exact.map(\.id)
+                return selectedExact.map(\.id)
             }
             for fallback in target.fallbackFeatures {
                 let matches = matching(fallback, fingerCapacity: target.fingerCapacity, among: holds)
-                if !matches.isEmpty { return matches.map(\.id) }
+                let selectedMatches = selectingGenericPocketPair(
+                    from: matches,
+                    feature: fallback,
+                    fingerCapacity: target.fingerCapacity
+                )
+                if !selectedMatches.isEmpty { return selectedMatches.map(\.id) }
 
                 // A fallback identifies a physically available substitute, not
                 // the source-prescribed finger capacity. Preserve capacity for
                 // the primary target, but do not reject an explicit fallback
                 // merely because that substitute has no matching capacity.
                 let capacityAgnosticMatches = matching(fallback, fingerCapacity: nil, among: holds)
-                if !capacityAgnosticMatches.isEmpty { return capacityAgnosticMatches.map(\.id) }
+                let selectedCapacityAgnosticMatches = selectingGenericPocketPair(
+                    from: capacityAgnosticMatches,
+                    feature: fallback,
+                    fingerCapacity: target.fingerCapacity
+                )
+                if !selectedCapacityAgnosticMatches.isEmpty {
+                    return selectedCapacityAgnosticMatches.map(\.id)
+                }
 
             }
             return []
@@ -122,8 +139,11 @@ internal enum BoardTargetResolver {
             guard let capacity = target.fingerCapacity else { return true }
             return hold.fingerCapacity == capacity
         }
-        if kind == .pocket, target.fingerCapacity != nil {
-            return oneHoldPerHand(from: matches).map(\.id)
+        if kind == .pocket {
+            if target.fingerCapacity != nil {
+                return oneHoldPerHand(from: matches).map(\.id)
+            }
+            return genericPocketSelection(from: matches).map(\.id)
         }
         if !matches.isEmpty { return matches.map(\.id) }
         for fallback in target.fallbackFeatures {
@@ -220,8 +240,11 @@ internal enum BoardTargetResolver {
             target: target
         )
         if !sameKind.isEmpty {
-            if kind == .pocket, target.fingerCapacity != nil {
-                return oneHoldPerHand(from: sameKind).map(\.id)
+            if kind == .pocket {
+                if target.fingerCapacity != nil {
+                    return oneHoldPerHand(from: sameKind).map(\.id)
+                }
+                return genericPocketSelection(from: sameKind).map(\.id)
             }
             return sameKind.map(\.id)
         }
@@ -267,10 +290,18 @@ internal enum BoardTargetResolver {
             return !features.isDisjoint(with: groupFeatures)
         }
         let preferredSameGroup = preferringFingerCapacity(sameGroup, target: target)
-        if !preferredSameGroup.isEmpty { return preferredSameGroup.map(\.id) }
+        let selectedSameGroup = selectingGenericPocketPair(
+            from: preferredSameGroup,
+            feature: feature,
+            fingerCapacity: target.fingerCapacity
+        )
+        if !selectedSameGroup.isEmpty { return selectedSameGroup.map(\.id) }
 
         let sameKind = holds.filter { $0.kind == feature.holdKind }
         let preferredSameKind = preferringFingerCapacity(sameKind, target: target)
+        if feature.holdKind == .pocket, target.fingerCapacity == nil {
+            return genericPocketSelection(from: preferredSameKind).map(\.id)
+        }
         // Untagged holds are only a physical-kind fallback, so they cannot
         // identify every same-kind hold as the source-prescribed target. When
         // the plan feature has a source-backed depth adaptation, prefer the
@@ -345,6 +376,87 @@ internal enum BoardTargetResolver {
     private static func crossKindEdges(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
         guard let capacity = target.fingerCapacity else { return [] }
         return holds.filter { $0.kind == .edge && $0.fingerCapacity == capacity }
+    }
+
+    private static func selectingGenericPocketPair(
+        from holds: [BoardHold],
+        feature: HoldFeature,
+        fingerCapacity: Int?
+    ) -> [BoardHold] {
+        guard feature.holdKind == .pocket, fingerCapacity == nil else { return holds }
+        return genericPocketSelection(from: holds)
+    }
+
+    /// Generic pocket cues prefer a geometry-backed bilateral pair. A lone
+    /// pocket remains usable only when its frame is wholly on one board side;
+    /// a centered or midline-crossing contact is not a hand-specific fallback.
+    private static func genericPocketSelection(from holds: [BoardHold]) -> [BoardHold] {
+        if let pair = matchingPocketPair(from: holds) { return pair }
+        return holds.first(where: isWhollyOnOneSide).map { [$0] } ?? []
+    }
+
+    private static func isWhollyOnOneSide(_ hold: BoardHold) -> Bool {
+        hold.frame.x + hold.frame.width <= 0.5 || hold.frame.x >= 0.5
+    }
+
+    /// Generic pocket cues need a usable two-handed pair. Choose known,
+    /// matching-capacity pockets with compatible rows and frames. Horizontal
+    /// reflection ranks those matches, but asymmetric board layouts remain
+    /// eligible.
+    private static func matchingPocketPair(from holds: [BoardHold]) -> [BoardHold]? {
+        let left = holds.filter { $0.frame.x + $0.frame.width <= 0.5 }
+        let right = holds.filter { $0.frame.x >= 0.5 }
+        let pairs = left.flatMap { leftHold in
+            right.compactMap { rightHold -> (BoardHold, BoardHold)? in
+                guard let capacity = leftHold.fingerCapacity,
+                      rightHold.fingerCapacity == capacity else { return nil }
+                let pair = (leftHold, rightHold)
+                return isMatchingPocketPair(pair) ? pair : nil
+            }
+        }
+        guard let pair = pairs.min(by: { symmetryScore(of: $0) < symmetryScore(of: $1) }) else {
+            return nil
+        }
+        return [pair.0, pair.1]
+    }
+
+    private static func isMatchingPocketPair(_ pair: (BoardHold, BoardHold)) -> Bool {
+        let differences = symmetryDifferences(of: pair)
+        let referenceWidth = max(pair.0.frame.width, pair.1.frame.width)
+        let referenceHeight = max(pair.0.frame.height, pair.1.frame.height)
+        guard referenceWidth > 0, referenceHeight > 0 else { return false }
+        let tolerance = 0.25
+        return differences.verticalAlignment <= referenceHeight * tolerance
+            && differences.width <= referenceWidth * tolerance
+            && differences.height <= referenceHeight * tolerance
+    }
+
+    private static func symmetryScore(of pair: (BoardHold, BoardHold)) -> Double {
+        let differences = symmetryDifferences(of: pair)
+        let referenceWidth = max(pair.0.frame.width, pair.1.frame.width)
+        let referenceHeight = max(pair.0.frame.height, pair.1.frame.height)
+        return differences.horizontalReflection / referenceWidth
+            + differences.verticalAlignment / referenceHeight
+            + differences.width / referenceWidth
+            + differences.height / referenceHeight
+    }
+
+    private static func symmetryDifferences(of pair: (BoardHold, BoardHold)) -> (
+        verticalAlignment: Double,
+        horizontalReflection: Double,
+        width: Double,
+        height: Double
+    ) {
+        let leftCenter = pair.0.frame.x + pair.0.frame.width / 2
+        let rightCenter = pair.1.frame.x + pair.1.frame.width / 2
+        let leftVerticalCenter = pair.0.frame.y + pair.0.frame.height / 2
+        let rightVerticalCenter = pair.1.frame.y + pair.1.frame.height / 2
+        return (
+            abs(leftVerticalCenter - rightVerticalCenter),
+            abs(leftCenter - (1 - rightCenter)),
+            abs(pair.0.frame.width - pair.1.frame.width),
+            abs(pair.0.frame.height - pair.1.frame.height)
+        )
     }
 
     /// A bilateral target represents a two-handed hang, so highlight one

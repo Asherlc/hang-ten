@@ -49,6 +49,7 @@ _BOARD_FIELDS = frozenset(
 _HOLD_REQUIRED_FIELDS = frozenset({"id", "name", "kind", "geometry"})
 _HOLD_OPTIONAL_FIELDS = frozenset(
     {
+        "sloper",
         "sizeMillimeters",
         "depthRangeMillimeters",
         "gripType",
@@ -58,6 +59,7 @@ _HOLD_OPTIONAL_FIELDS = frozenset(
     }
 )
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+_SLOPER_TYPES = frozenset({"flat", "round"})
 _GRIP_TYPES = frozenset(
     {
         "openHand",
@@ -179,6 +181,7 @@ class _EditorDocumentPackage(Protocol):
 _EditorPiece = tuple[
     int,
     str | None,
+    dict[str, object] | None,
     Any,
     dict[str, object] | None,
     tuple[int, ...],
@@ -377,6 +380,8 @@ def editor_document(
             }
             if "kind" in hold:
                 region["type"] = hold["kind"]
+            if "sloper" in hold:
+                region["sloper"] = dict(hold["sloper"])
             if "shapeConstraint" in piece:
                 region["shapeConstraint"] = _parse_shape_constraint(
                     piece["shapeConstraint"], f"hold {key}.shapeConstraint"
@@ -436,6 +441,7 @@ def save_editor_document(
             hold_id,
             piece_index,
             kind,
+            sloper,
             path,
             shape_constraint,
             bendable_command_indexes,
@@ -448,6 +454,7 @@ def save_editor_document(
                 (
                     piece_index,
                     kind,
+                    sloper,
                     path,
                     shape_constraint,
                     bendable_command_indexes,
@@ -528,6 +535,7 @@ def _apply_editor_document(
         for (
             piece_index,
             _kind,
+            _sloper,
             path,
             shape_constraint,
             bendable_command_indexes,
@@ -566,24 +574,28 @@ def _apply_editor_document(
             hold_json.pop("kind", None)
         else:
             hold_json["kind"] = pieces[0][1]
-        if pieces[0][5] is None:
+        if pieces[0][2] is None:
+            hold_json.pop("sloper", None)
+        else:
+            hold_json["sloper"] = dict(pieces[0][2])
+        if pieces[0][6] is None:
             hold_json.pop("fingerCapacity", None)
         else:
-            hold_json["fingerCapacity"] = pieces[0][5]
-        if pieces[0][6] is None:
-            hold_json.pop("sizeMillimeters", None)
-        else:
-            hold_json["sizeMillimeters"] = pieces[0][6]
-            hold_json.pop("depthRangeMillimeters", None)
+            hold_json["fingerCapacity"] = pieces[0][6]
         if pieces[0][7] is None:
+            hold_json.pop("sizeMillimeters", None)
+        else:
+            hold_json["sizeMillimeters"] = pieces[0][7]
+            hold_json.pop("depthRangeMillimeters", None)
+        if pieces[0][8] is None:
             hold_json.pop("depthRangeMillimeters", None)
         else:
-            hold_json["depthRangeMillimeters"] = dict(pieces[0][7])
+            hold_json["depthRangeMillimeters"] = dict(pieces[0][8])
             hold_json.pop("sizeMillimeters", None)
-        if pieces[0][8] is None:
+        if pieces[0][9] is None:
             hold_json.pop("handCapacity", None)
         else:
-            hold_json["handCapacity"] = pieces[0][8]
+            hold_json["handCapacity"] = pieces[0][9]
         hold_json["geometry"] = geometry
         if presentation_id is not None:
             hold_json["presentationID"] = presentation_id
@@ -626,6 +638,7 @@ def _current_display_paths(
         for (
             piece_index,
             _kind,
+            _sloper,
             _path,
             _shape_constraint,
             _bendable_command_indexes,
@@ -655,15 +668,17 @@ def _editor_document_is_dirty(
     for hold_id, pieces in pieces_by_hold.items():
         hold = current_holds[hold_id]
         if (hold.get("kind") != pieces[0][1]
+            or hold.get("sloper") != pieces[0][2]
             or len(hold["geometry"]) != len(pieces)
-            or hold.get("fingerCapacity") != pieces[0][5]
-            or hold.get("sizeMillimeters") != pieces[0][6]
-            or hold.get("depthRangeMillimeters") != pieces[0][7]
-            or hold.get("handCapacity") != pieces[0][8]):
+            or hold.get("fingerCapacity") != pieces[0][6]
+            or hold.get("sizeMillimeters") != pieces[0][7]
+            or hold.get("depthRangeMillimeters") != pieces[0][8]
+            or hold.get("handCapacity") != pieces[0][9]):
             return True
         for (
             piece_index,
             _kind,
+            _sloper,
             path,
             shape_constraint,
             bendable_command_indexes,
@@ -1030,8 +1045,17 @@ def _validate_hold(
     )
     hold_id = _identifier(hold.get("id"), f"{label}.id")
     _non_empty_string(hold.get("name"), f"{label}.name")
-    if "kind" in hold:
+    kind = (
         _enum(hold["kind"], _HOLD_KINDS, f"{label}.kind")
+        if "kind" in hold
+        else None
+    )
+    if "sloper" in hold:
+        if kind != "sloper":
+            raise BoardPackageError(
+                f"{label}.sloper is only allowed for sloper holds"
+            )
+        _parse_sloper_metadata(hold["sloper"], f"{label}.sloper")
     geometry = hold.get("geometry")
     if not isinstance(geometry, list) or not geometry:
         raise BoardPackageError(f"{label}.geometry must be non-empty")
@@ -1150,6 +1174,31 @@ def _validate_treatment(value: object, label: str) -> None:
         _enum(value["depth"], _RECESS_DEPTHS, f"{label}.depth")
 
 
+def _parse_sloper_metadata(value: object, label: str) -> dict[str, object]:
+    if not isinstance(value, Mapping):
+        raise BoardPackageError(f"{label} must be an object")
+    sloper_type = _enum(value.get("type"), _SLOPER_TYPES, f"{label}.type")
+    if sloper_type == "round":
+        _exact_keys(value, {"type"}, label)
+        return {"type": sloper_type}
+    _required_and_allowed_keys(value, {"type"}, {"type", "angleDegrees"}, label)
+    parsed: dict[str, object] = {"type": sloper_type}
+    if "angleDegrees" in value:
+        angle = value["angleDegrees"]
+        if isinstance(angle, bool) or not isinstance(angle, (int, float)):
+            raise BoardPackageError(f"{label}.angleDegrees must be finite and in 0...90")
+        try:
+            is_valid_angle = math.isfinite(angle) and 0 <= angle <= 90
+        except OverflowError as error:
+            raise BoardPackageError(
+                f"{label}.angleDegrees must be finite and in 0...90"
+            ) from error
+        if not is_valid_angle:
+            raise BoardPackageError(f"{label}.angleDegrees must be finite and in 0...90")
+        parsed["angleDegrees"] = angle
+    return parsed
+
+
 def _parse_shape_constraint(value: object, label: str) -> dict[str, object]:
     if not isinstance(value, Mapping):
         raise BoardPackageError(f"{label} must be an object")
@@ -1181,6 +1230,7 @@ def _validate_editor_document(
         str,
         int,
         str | None,
+        dict[str, object] | None,
         Any,
         dict[str, object] | None,
         tuple[int, ...],
@@ -1191,9 +1241,9 @@ def _validate_editor_document(
     ],
 ]:
     """Parse and cross-validate an editor document, allowing added/removed/
-    recategorized holds. Returns key -> (holdID, pieceIndex, kind, parsed path,
-    shape constraint, bendable command indexes, finger capacity, fixed depth,
-    depth range, hand capacity)."""
+    recategorized holds. Returns key -> (holdID, pieceIndex, kind, sloper
+    metadata, parsed path, shape constraint, bendable command indexes, finger
+    capacity, fixed depth, depth range, hand capacity)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
     _required_and_allowed_keys(
@@ -1221,6 +1271,7 @@ def _validate_editor_document(
             str,
             int,
             str | None,
+            dict[str, object] | None,
             Any,
             dict[str, object] | None,
             tuple[int, ...],
@@ -1232,6 +1283,7 @@ def _validate_editor_document(
     ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
     kind_by_hold: dict[str, str | None] = {}
+    sloper_by_hold: dict[str, dict[str, object] | None] = {}
     finger_capacity_by_hold: dict[str, int | None] = {}
     size_millimeters_by_hold: dict[str, int | float | None] = {}
     depth_range_by_hold: dict[str, dict[str, int | float] | None] = {}
@@ -1247,6 +1299,7 @@ def _validate_editor_document(
                 "id",
                 "key",
                 "type",
+                "sloper",
                 "displayPath",
                 "metadata",
                 "shapeConstraint",
@@ -1270,6 +1323,16 @@ def _validate_editor_document(
             if "type" in region
             else None
         )
+        if "sloper" in region:
+            if kind != "sloper":
+                raise BoardPackageError(
+                    f"editor region {key}.sloper is only allowed for sloper holds"
+                )
+            sloper = _parse_sloper_metadata(
+                region["sloper"], f"editor region {key}.sloper"
+            )
+        else:
+            sloper = None
         metadata = region.get("metadata")
         if not isinstance(metadata, Mapping):
             raise BoardPackageError(f"editor region {key}.metadata must be an object")
@@ -1384,6 +1447,11 @@ def _validate_editor_document(
         if hold_id in kind_by_hold and kind_by_hold[hold_id] != kind:
             raise BoardPackageError(f"hold {hold_id} pieces must share one kind")
         kind_by_hold[hold_id] = kind
+        if hold_id in sloper_by_hold and sloper_by_hold[hold_id] != sloper:
+            raise BoardPackageError(
+                f"hold {hold_id} pieces must share one sloper metadata value"
+            )
+        sloper_by_hold[hold_id] = sloper
         if hold_id in finger_capacity_by_hold and finger_capacity_by_hold[hold_id] != finger_capacity:
             raise BoardPackageError(f"hold {hold_id} pieces must share one finger capacity")
         finger_capacity_by_hold[hold_id] = finger_capacity
@@ -1407,6 +1475,7 @@ def _validate_editor_document(
             hold_id,
             piece_index,
             kind,
+            sloper,
             parsed_path,
             shape_constraint,
             bendable_command_indexes,
