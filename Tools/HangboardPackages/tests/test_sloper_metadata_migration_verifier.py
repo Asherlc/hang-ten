@@ -113,7 +113,7 @@ def test_uses_merge_base_when_base_and_head_have_diverged(tmp_path: Path) -> Non
 
     _run_git(repository, "switch", "--quiet", "--detach", base)
     document = copy.deepcopy(base_document)
-    document["holds"][0]["sloper"] = {"type": "flat"}
+    document["holds"][0]["sloper"] = {"type": "flat", "angleDegrees": 20}
     _write_json(repository / "Hangboards/fixture/board.json", document)
     head = _commit_head(repository)
 
@@ -150,7 +150,7 @@ def test_rejects_non_sloper_board_json_mutations(
 ) -> None:
     repository, base, base_document = _initialize_repository(tmp_path)
     document = copy.deepcopy(base_document)
-    document["holds"][0]["sloper"] = {"type": "flat"}
+    document["holds"][0]["sloper"] = {"type": "flat", "angleDegrees": 20}
     mutation(document)
     _write_json(repository / "Hangboards/fixture/board.json", document)
     head = _commit_head(repository)
@@ -184,6 +184,37 @@ def test_rejects_changes_to_pre_existing_sloper_values(
     repository, base, base_document = _initialize_repository(tmp_path)
     document = copy.deepcopy(base_document)
     mutation(document)
+    _write_json(repository / "Hangboards/fixture/board.json", document)
+    head = _commit_head(repository)
+
+    result = _run_verifier(repository, base, head)
+
+    assert result.returncode == 1
+    assert f"Hangboards/fixture/board.json: {message}" in result.stderr
+
+
+@pytest.mark.parametrize(
+    ("hold_index", "sloper", "message"),
+    [
+        (0, "flat", "holds[0].sloper must be an object"),
+        (0, {"type": "angled"}, "holds[0].sloper.type must be flat or round"),
+        (0, {"type": "round", "angleDegrees": 20}, "holds[0].sloper.angleDegrees is only allowed for flat slopers"),
+        (0, {"type": "flat"}, "holds[0].sloper.angleDegrees must be a number"),
+        (0, {"type": "flat", "angleDegrees": True}, "holds[0].sloper.angleDegrees must be a number"),
+        (0, {"type": "flat", "angleDegrees": 91}, "holds[0].sloper.angleDegrees must be in 0...90"),
+        (0, {"type": "flat", "angleDegrees": 20}, "holds[0].sloper is only allowed for kind sloper"),
+    ],
+)
+def test_rejects_invalid_new_sloper_metadata(
+    tmp_path: Path,
+    hold_index: int,
+    sloper: object,
+    message: str,
+) -> None:
+    repository, base, document = _initialize_repository(tmp_path)
+    if message.endswith("is only allowed for kind sloper"):
+        document["holds"][hold_index]["kind"] = "edge"
+    document["holds"][hold_index]["sloper"] = sloper
     _write_json(repository / "Hangboards/fixture/board.json", document)
     head = _commit_head(repository)
 
@@ -231,3 +262,16 @@ def test_rejects_training_plan_source_path_in_diff(tmp_path: Path) -> None:
         "HangTen/Resources/PlanLibrary.json: training-plan source path changed"
         in result.stderr
     )
+
+
+def test_rejects_range_without_a_changed_board_json_path(tmp_path: Path) -> None:
+    repository, base, _ = _initialize_repository(tmp_path)
+    note_path = repository / "docs/allowed-note.md"
+    note_path.parent.mkdir(parents=True)
+    note_path.write_text("Allowed non-board change.\n", encoding="utf-8")
+    head = _commit_head(repository)
+
+    result = _run_verifier(repository, base, head)
+
+    assert result.returncode == 1
+    assert "range contains no changed Hangboards/*/board.json paths" in result.stderr

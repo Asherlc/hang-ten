@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import math
 from pathlib import PurePosixPath
 import subprocess
 import sys
@@ -117,7 +118,36 @@ def _first_difference(base: object, head: object, path: str = "") -> str | None:
     return None
 
 
-def _verify_board_json(base: object, head: object, path: str) -> None:
+def _verify_added_sloper(head_hold: dict[object, object], path: str) -> None:
+    if head_hold.get("kind") != "sloper":
+        raise VerificationError(f"{path} is only allowed for kind sloper")
+
+    value = head_hold["sloper"]
+    if not isinstance(value, dict):
+        raise VerificationError(f"{path} must be an object")
+    if set(value) - {"type", "angleDegrees"}:
+        raise VerificationError(
+            f"{path} may contain only type and optional angleDegrees"
+        )
+
+    sloper_type = value.get("type")
+    if sloper_type not in {"flat", "round"}:
+        raise VerificationError(f"{path}.type must be flat or round")
+    if sloper_type == "round":
+        if "angleDegrees" in value:
+            raise VerificationError(
+                f"{path}.angleDegrees is only allowed for flat slopers"
+            )
+        return
+
+    angle_degrees = value.get("angleDegrees")
+    if isinstance(angle_degrees, bool) or not isinstance(angle_degrees, (int, float)):
+        raise VerificationError(f"{path}.angleDegrees must be a number")
+    if not math.isfinite(angle_degrees) or not 0 <= angle_degrees <= 90:
+        raise VerificationError(f"{path}.angleDegrees must be in 0...90")
+
+
+def _verify_board_json(base: object, head: object, path: str) -> int:
     if not isinstance(base, dict) or not isinstance(base.get("holds"), list):
         raise VerificationError(f"{path}: base JSON must contain a holds array")
     if not isinstance(head, dict) or not isinstance(head.get("holds"), list):
@@ -152,6 +182,7 @@ def _verify_board_json(base: object, head: object, path: str) -> None:
             if _first_difference(base_hold["sloper"], head_hold["sloper"]):
                 raise VerificationError(f"{path}: pre-existing {sloper_path} changed")
         elif "sloper" in head_hold:
+            _verify_added_sloper(head_hold, f"{path}: {sloper_path}")
             del candidate_hold["sloper"]
             added_sloper_count += 1
 
@@ -160,6 +191,7 @@ def _verify_board_json(base: object, head: object, path: str) -> None:
         raise VerificationError(f"{path}: {difference}")
     if added_sloper_count == 0:
         raise VerificationError(f"{path}: changed without adding holds[*].sloper")
+    return added_sloper_count
 
 
 def verify(base: str, head: str) -> int:
@@ -175,10 +207,16 @@ def verify(base: str, head: str) -> int:
                 )
             board_paths.append(path)
 
+    if not board_paths:
+        raise VerificationError("range contains no changed Hangboards/*/board.json paths")
+
+    added_sloper_count = 0
     for path in board_paths:
         base_document = _load_json_at(merge_base, path, "merge base")
         head_document = _load_json_at(head, path, "head")
-        _verify_board_json(base_document, head_document, path)
+        added_sloper_count += _verify_board_json(base_document, head_document, path)
+    if added_sloper_count == 0:
+        raise VerificationError("range contains no new valid holds[*].sloper values")
     return len(board_paths)
 
 
