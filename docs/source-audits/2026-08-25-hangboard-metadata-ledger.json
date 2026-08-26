@@ -15878,16 +15878,14 @@
         "top-jug"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://frictitiousclimbing.com/products/doormount-pro",
         "label": "Full-width pull-up jug"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "frictitious.doormount-pro-7",
@@ -16216,16 +16214,14 @@
         "hold-6"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://frictitiousclimbing.com/products/doormount-pro",
         "label": "Left/right circular pockets beneath the 25 mm edges"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "frictitious.doormount-pro-7",
@@ -16659,16 +16655,14 @@
         "jug-rounded"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
         "label": "Jug Rounded"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "evolv-kilter-basic-long",
@@ -22187,16 +22181,14 @@
         "tray"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
         "label": "Official La Baguette product page and product views reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.baguette",
@@ -22453,16 +22445,14 @@
         "rounded-tray"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/baguette-evo",
         "label": "Official Baguette Evo product page and product views reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.baguette-evo",
@@ -22812,16 +22802,14 @@
         "tray-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/penta-evo",
         "label": "Official Penta Evo product page and product views reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.penta-evo",
@@ -22832,16 +22820,14 @@
         "mono-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/penta-evo",
         "label": "Official Penta Evo product page and product views reviewed against stable IDs"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.penta-evo",
@@ -23152,16 +23138,14 @@
         "tray"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
         "label": "Official TravelBoard product page and product views reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.travelboard",
@@ -23170,16 +23154,14 @@
         "mono-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
         "label": "Official TravelBoard product page and product views reviewed against stable IDs"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.travelboard",
@@ -23440,16 +23422,14 @@
         "jug-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
         "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.verticalboard-evo",
@@ -23464,16 +23444,14 @@
         "pocket-inclined-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-evo",
         "label": "Official VerticalBoard Evo product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.verticalboard-evo",
@@ -23919,16 +23897,14 @@
         "jug-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-first",
         "label": "Official VerticalBoard First product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.verticalboard-first",
@@ -24282,16 +24258,14 @@
         "jug-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-light",
         "label": "Official VerticalBoard Light product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.verticalboard-light",
@@ -24590,16 +24564,14 @@
         "jug-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-one",
         "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.verticalboard-one",
@@ -24610,16 +24582,14 @@
         "pocket-50-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.yyvertical.com/en/products/verticalboard-one",
         "label": "Official VerticalBoard One product page, table, and front mapping reviewed against stable IDs"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "yy.verticalboard-one",
@@ -25044,7 +25014,21 @@
       "boardID": "zlagboard.evo",
       "holdIDs": [
         "top-jug-left",
-        "top-jug-right",
+        "top-jug-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+        "label": "Official exhaustive Zlagboard Evo hold map reviewed against stable IDs"
+      },
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "holdIDs": [
         "top-sloper-jug-center"
       ],
       "field": "features",
@@ -25433,7 +25417,21 @@
       "boardID": "zlagboard.pro",
       "holdIDs": [
         "top-jug-left",
-        "top-jug-right",
+        "top-jug-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+        "label": "Official exhaustive Zlagboard Pro 2.0 hold map reviewed against stable IDs"
+      },
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "holdIDs": [
         "top-sloper-jug-center"
       ],
       "field": "features",
@@ -27152,16 +27150,14 @@
         "mr-deep-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-forge",
@@ -27259,16 +27255,14 @@
         "mr-deep-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-forge",
@@ -27366,16 +27360,14 @@
         "mr-shallow-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-forge",
@@ -27473,16 +27465,14 @@
         "mr-shallow-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-forge",
@@ -27580,16 +27570,14 @@
         "im-deep-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-forge",
@@ -27687,16 +27675,14 @@
         "im-deep-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-forge",
@@ -27794,16 +27780,14 @@
         "im-shallow-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-forge",
@@ -27901,16 +27885,14 @@
         "im-shallow-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
         "label": "Official Forge hold-identification chart reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -28008,16 +27990,14 @@
         "top-jug-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -28115,16 +28095,14 @@
         "top-jug-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -28864,16 +28842,14 @@
         "upper-pocket-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -28971,16 +28947,14 @@
         "upper-pocket-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -29078,16 +29052,14 @@
         "center-lower-pocket-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -29185,16 +29157,14 @@
         "center-lower-pocket-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -29292,16 +29262,14 @@
         "outer-supported-pocket-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-natural",
@@ -29399,16 +29367,14 @@
         "outer-supported-pocket-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
         "label": "Official Natural position and depth guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-pivot",
@@ -30577,16 +30543,14 @@
         "two-finger-pocket-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507",
         "label": "Official Pivot orientation guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-pivot",
@@ -30687,16 +30651,14 @@
         "two-finger-pocket-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507",
         "label": "Official Pivot orientation guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-pivot",
@@ -30797,16 +30759,14 @@
         "three-finger-pocket-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507",
         "label": "Official Pivot orientation guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-pivot",
@@ -30907,16 +30867,14 @@
         "three-finger-pocket-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507",
         "label": "Official Pivot orientation guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "pocket"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-pivot",
@@ -31644,16 +31602,14 @@
         "jug-left"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-training-center",
@@ -31751,16 +31707,14 @@
         "jug-right"
       ],
       "field": "features",
-      "outcome": "verified",
+      "outcome": "unavailable",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155",
         "label": "Official Training Center use guide reviewed against the stable-ID overlay"
       },
-      "value": [
-        "jug"
-      ]
+      "reason": "The physical hold class is represented by kind; no distinct feature tag is stored."
     },
     {
       "boardID": "trango.rock-prodigy-training-center",
@@ -34196,9 +34150,9 @@
     {"boardID":"moon.armstrong","holdIDs":["sloper-left","sloper-right","jug-left","jug-right","center-jug","edge-25-left","edge-25-right","edge-20-left","edge-20-right","edge-15-left","edge-15-right","edge-10-left","edge-10-right","edge-8-left","edge-8-right","two-finger-pocket-left","two-finger-pocket-right","mono-left","mono-right","center-edge-22","center-edge-18"],"field":"handCapacity","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"Armstrong hold inventory"},"reason":"One-arm and paired-use wording does not establish maximum simultaneous hand capacity for an exact physical contact."},
     {"boardID":"moon.armstrong","holdIDs":["two-finger-pocket-left","two-finger-pocket-right"],"field":"gripType","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"22 mm two-finger pockets"},"value":"twoFingerPocket"},
     {"boardID":"moon.armstrong","holdIDs":["sloper-left","sloper-right","jug-left","jug-right","center-jug","edge-25-left","edge-25-right","edge-20-left","edge-20-right","edge-15-left","edge-15-right","edge-10-left","edge-10-right","edge-8-left","edge-8-right","mono-left","mono-right","center-edge-22","center-edge-18"],"field":"gripType","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"Contacts without an exact supported grip-posture mapping"},"reason":"The source does not prescribe one exact supported package grip posture for these contacts; the schema has no one-finger-pocket grip enum."},
-    {"boardID":"moon.armstrong","holdIDs":["jug-left","jug-right","center-jug"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"Two in-cut jugs and one center jug"},"value":["jug"]},
+    {"boardID":"moon.armstrong","holdIDs":["jug-left","jug-right","center-jug"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"Two in-cut jugs and one center jug"},"reason":"The physical hold class is represented by kind; no distinct feature tag is stored."},
     {"boardID":"moon.armstrong","holdIDs":["edge-25-left","edge-25-right","edge-20-left","edge-20-right","edge-15-left","edge-15-right","edge-10-left","edge-10-right","edge-8-left","edge-8-right"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"Paired 25, 20, 15, 10, and 8 mm slots"},"value":["slot"]},
-    {"boardID":"moon.armstrong","holdIDs":["two-finger-pocket-left","two-finger-pocket-right","mono-left","mono-right"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"22 mm two-finger and one-finger pockets"},"value":["pocket"]},
+    {"boardID":"moon.armstrong","holdIDs":["two-finger-pocket-left","two-finger-pocket-right","mono-left","mono-right"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"22 mm two-finger and one-finger pockets"},"reason":"The physical hold class is represented by kind; no distinct feature tag is stored."},
     {"boardID":"moon.armstrong","holdIDs":["sloper-left","sloper-right","center-edge-22","center-edge-18"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://moonclimbing.com/moon-armstrong-fingerboard-beech.html","label":"35-degree slopers and center edges"},"reason":"The exact source terms do not map to a supported package feature tag; generic kind values are not duplicated into inferred feature arrays."},
     {"boardID":"escape-beta-22","holdIDs":["hold-01-left","hold-01-right","hold-02-left","hold-02-right"],"field":"kind","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Numbered thin and wide pinch contacts"},"value":"pinch"},
     {"boardID":"escape-beta-22","holdIDs":["hold-03-left","hold-03-right","hold-04-left","hold-04-right"],"field":"kind","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Numbered mini-jug and incut-jug contacts"},"value":"jug"},
@@ -34215,7 +34169,7 @@
     {"boardID":"escape-beta-22","holdIDs":["hold-01-left","hold-01-right","hold-02-left","hold-02-right","hold-03-left","hold-03-right","hold-04-left","hold-04-right","hold-05-left","hold-05-right","hold-06-left","hold-06-right","hold-07-left","hold-07-right","hold-08-left","hold-08-right","hold-09-left","hold-09-right","hold-10-left","hold-10-right","hold-11-left","hold-11-right"],"field":"handCapacity","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Numbered Beta Board contacts"},"reason":"The manufacturer does not state maximum simultaneous hand capacity for any exact contact."},
     {"boardID":"escape-beta-22","holdIDs":["hold-01-left","hold-01-right","hold-02-left","hold-02-right","hold-03-left","hold-03-right","hold-04-left","hold-04-right","hold-05-left","hold-05-right","hold-06-left","hold-06-right","hold-07-left","hold-07-right","hold-08-left","hold-08-right","hold-09-left","hold-09-right","hold-10-left","hold-10-right","hold-11-left","hold-11-right"],"field":"gripType","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Numbered breakdown without per-contact posture prescription"},"reason":"The official training guide describes techniques generally but does not map one exact supported grip posture to a numbered contact."},
     {"boardID":"escape-beta-22","holdIDs":["hold-02-left","hold-02-right"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Wide Pinch"},"value":["widePinch"]},
-    {"boardID":"escape-beta-22","holdIDs":["hold-03-left","hold-03-right","hold-04-left","hold-04-right"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Mini-Jug and Incut Jug"},"value":["jug"]},
+    {"boardID":"escape-beta-22","holdIDs":["hold-03-left","hold-03-right","hold-04-left","hold-04-right"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Mini-Jug and Incut Jug"},"reason":"The physical hold class is represented by kind; no distinct feature tag is stored."},
     {"boardID":"escape-beta-22","holdIDs":["hold-05-left","hold-05-right"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Incut Edge"},"value":["incutEdge"]},
     {"boardID":"escape-beta-22","holdIDs":["hold-06-left","hold-06-right","hold-07-left","hold-07-right","hold-08-left","hold-08-right"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Flat Edge"},"value":["flatEdge"]},
     {"boardID":"escape-beta-22","holdIDs":["hold-01-left","hold-01-right","hold-09-left","hold-09-right","hold-10-left","hold-10-right","hold-11-left","hold-11-right"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2020_Website_Editorials_EscapeClimbing_Breakdown.png?v=1700454580&width=1445","label":"Thin Pinch and Sloper Edge labels"},"reason":"The exact source labels do not map to a supported package feature tag; smallPinch or a sloper-edge tag would be inferred."},
@@ -34237,9 +34191,9 @@
     {"boardID":"frictitious.megalith","holdIDs":["center-edge-25"],"field":"handCapacity","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"25 mm single-hand incut center hold"},"value":1},
     {"boardID":"frictitious.megalith","holdIDs":["top-jug","mono-left","mono-right","edge-8-left","edge-10-left","edge-12-left","edge-12-right","edge-10-right","edge-8-right","edge-30-left","edge-40-pocket-left","edge-40-pocket-right","edge-30-right","edge-15-left","edge-20-left","edge-20-right","edge-15-right"],"field":"handCapacity","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"Contacts without exact simultaneous-hand capacity"},"reason":"The manufacturer does not state maximum simultaneous hand capacity for these exact contacts; full width or shoulder width does not establish a maximum."},
     {"boardID":"frictitious.megalith","holdIDs":["top-jug","center-edge-25","mono-left","mono-right","edge-8-left","edge-10-left","edge-12-left","edge-12-right","edge-10-right","edge-8-right","edge-30-left","edge-40-pocket-left","edge-40-pocket-right","edge-30-right","edge-15-left","edge-20-left","edge-20-right","edge-15-right"],"field":"gripType","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"Megalith hold inventory"},"reason":"The manufacturer does not prescribe one exact supported package grip posture for these contacts; the schema has no one-finger-pocket grip enum and the integrated two-finger pocket does not classify the whole 40 mm edge."},
-    {"boardID":"frictitious.megalith","holdIDs":["top-jug"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"Full-width pull-up-bar jug"},"value":["jug"]},
+    {"boardID":"frictitious.megalith","holdIDs":["top-jug"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"Full-width pull-up-bar jug"},"reason":"The physical hold class is represented by kind; no distinct feature tag is stored."},
     {"boardID":"frictitious.megalith","holdIDs":["center-edge-25"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"25 mm single-hand incut center hold"},"value":["incutEdge"]},
-    {"boardID":"frictitious.megalith","holdIDs":["mono-left","mono-right"],"field":"features","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"Mono pockets"},"value":["pocket"]},
+    {"boardID":"frictitious.megalith","holdIDs":["mono-left","mono-right"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"Mono pockets"},"reason":"The physical hold class is represented by kind; no distinct feature tag is stored."},
     {"boardID":"frictitious.megalith","holdIDs":["edge-8-left","edge-10-left","edge-12-left","edge-12-right","edge-10-right","edge-8-right","edge-30-left","edge-40-pocket-left","edge-40-pocket-right","edge-30-right","edge-15-left","edge-20-left","edge-20-right","edge-15-right"],"field":"features","outcome":"unavailable","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://frictitiousclimbing.com/products/megalith","label":"Shoulder-width edge inventory"},"reason":"Flat and unlevel wording applies collectively rather than mapping an exact supported feature-tag set to these stable IDs; the integrated pocket is only a subregion of each 40 mm edge."},
     {"boardID":"beastmaker-1000","holdIDs":["jug-left","jug-right"],"field":"kind","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://www.beastmaker.co.uk/products/beastmaker-1000-series","label":"Two outer top contacts in the exhaustive 2 Jugs inventory"},"value":"jug"},
     {"boardID":"beastmaker-1000","holdIDs":["sloper-35-left","sloper-center","sloper-35-right"],"field":"kind","outcome":"verified","reviewedAt":"2026-08-25","source":{"kind":"manufacturer","url":"https://www.beastmaker.co.uk/products/beastmaker-1000-series","label":"Paired 35-degree and center 20-degree sloper inventory mapped as a three-contact top group"},"value":"sloper"},

@@ -229,6 +229,9 @@ internal enum BoardTargetResolver {
             let matches = sameKindOrGroup(fallback, target: target, among: holds)
             if !matches.isEmpty { return matches }
         }
+        if kind == .pocket, target.fingerCapacity != nil {
+            return crossKindEdges(for: target, among: holds).map(\.id)
+        }
         guard kind == .edge else { return [] }
         return crossKindPockets(for: target, among: holds).map(\.id)
     }
@@ -334,6 +337,14 @@ internal enum BoardTargetResolver {
             return oneHoldPerHand(from: pockets)
         }
         return pockets.filter { $0.fingerCapacity == capacity }
+    }
+
+    /// A capacity-qualified pocket request may use same-capacity edges only
+    /// when the board has no pocket candidate. An unqualified pocket request
+    /// must not broaden into an arbitrary edge selection.
+    private static func crossKindEdges(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
+        guard let capacity = target.fingerCapacity else { return [] }
+        return holds.filter { $0.kind == .edge && $0.fingerCapacity == capacity }
     }
 
     /// A bilateral target represents a two-handed hang, so highlight one

@@ -176,6 +176,7 @@ enum HoldCueStyle: String, Codable, Hashable {
 /// ID. Features let a board declare the closest physical match once, keeping
 /// routine content unchanged as more boards are added.
 enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
+    case jug
     case roundSloper
     case largeSlope
     case largeEdge
@@ -194,6 +195,7 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
 
     var label: String {
         switch self {
+        case .jug: "Jug"
         case .roundSloper: "Round sloper"
         case .largeSlope: "Large sloper"
         case .largeEdge: "Large edge"
@@ -230,6 +232,8 @@ enum HoldFeature: String, CaseIterable, Codable, Hashable, Identifiable {
 
     private var physicality: Physicality {
         switch self {
+        case .jug:
+            Physicality(holdKind: .sloper, featureGroup: .sloper)
         case .roundSloper:
             Physicality(holdKind: .sloper, featureGroup: .sloper)
         case .largeSlope:

@@ -342,9 +342,6 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     assert {
         hold.id: hold.features for hold in moon.holds if hold.features is not None
     } == {
-        "jug-left": ("jug",),
-        "jug-right": ("jug",),
-        "center-jug": ("jug",),
         "edge-25-left": ("slot",),
         "edge-25-right": ("slot",),
         "edge-20-left": ("slot",),
@@ -355,10 +352,6 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
         "edge-10-right": ("slot",),
         "edge-8-left": ("slot",),
         "edge-8-right": ("slot",),
-        "two-finger-pocket-left": ("pocket",),
-        "two-finger-pocket-right": ("pocket",),
-        "mono-left": ("pocket",),
-        "mono-right": ("pocket",),
     }
     assert all(
         hold.depth_range_millimeters is None and hold.hand_capacity is None
@@ -374,10 +367,6 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     } == {
         "hold-02-left": ("widePinch",),
         "hold-02-right": ("widePinch",),
-        "hold-03-left": ("jug",),
-        "hold-03-right": ("jug",),
-        "hold-04-left": ("jug",),
-        "hold-04-right": ("jug",),
         "hold-05-left": ("incutEdge",),
         "hold-05-right": ("incutEdge",),
         "hold-06-left": ("flatEdge",),
@@ -402,10 +391,7 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
         for hold in megalith.holds
         if hold.hand_capacity is not None or hold.features is not None
     } == {
-        "top-jug": (None, ("jug",)),
         "center-edge-25": (1, ("incutEdge",)),
-        "mono-left": (None, ("pocket",)),
-        "mono-right": (None, ("pocket",)),
     }
     assert all(hold.depth_range_millimeters is None for hold in megalith.holds)
     assert all(hold.grip_type is None for hold in megalith.holds)

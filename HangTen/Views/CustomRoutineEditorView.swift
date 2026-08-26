@@ -335,7 +335,7 @@ private struct CustomRoutineStepEditor: View {
                     }
                 }
                 Section("Hold feature") {
-                    ForEach(HoldFeature.allCases) { feature in
+                    ForEach(HoldFeature.allCases.filter { $0 != .jug }) { feature in
                         Text(feature.label).tag(Optional(GenericTargetChoice.feature(feature)))
                     }
                 }

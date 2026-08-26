@@ -264,6 +264,14 @@ enum WorkoutTargetDefinition: Codable, Hashable {
             }
             try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
         case let .feature(value, fallbacks, fingerCapacity):
+            if value == .jug {
+                try container.encode(HoldKind.jug, forKey: .kind)
+                if !fallbacks.isEmpty {
+                    try container.encode(fallbacks, forKey: .fallbackFeatures)
+                }
+                try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
+                return
+            }
             try container.encode(value, forKey: .feature)
             if !fallbacks.isEmpty {
                 try container.encode(fallbacks, forKey: .fallbackFeatures)

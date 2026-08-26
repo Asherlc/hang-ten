@@ -283,6 +283,15 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(object["feature"])
     }
 
+    func testJugFeatureTargetEncodesAsCanonicalKindTarget() throws {
+        let target = WorkoutTargetDefinition.feature(.jug, fallbacks: [])
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(object["kind"] as? String, "jug")
+        XCTAssertNil(object["feature"])
+    }
+
     func testLegacyDuplicateFallbackFeaturesAreDroppedWhenEncodingKindTarget() throws {
         let legacy = Data(
             #"{ "feature": "pocket", "fingerCapacity": 3, "fallbackFeatures": ["jug", "pocket"] }"#.utf8

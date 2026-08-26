@@ -115,6 +115,27 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         XCTAssertTrue(result.isEmpty)
     }
 
+    func testPocketKindWithoutFingerCapacityDoesNotSubstituteEdges() {
+        let board = board(holds: [
+            hold(id: "e2", kind: .edge, feature: nil, fingerCapacity: 2)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board)
+
+        XCTAssertTrue(result.isEmpty)
+    }
+
+    func testPocketKindWithoutFingerCapacityResolvesOnlyPockets() {
+        let board = board(holds: [
+            hold(id: "edge", kind: .edge),
+            hold(id: "pocket", kind: .pocket)
+        ])
+
+        let result = BoardTargetResolver.substituteHoldIDs(for: .kind(.pocket), on: board)
+
+        XCTAssertEqual(result, ["pocket"])
+    }
+
     func testResolveHoldIDsUsesExplicitFallbackDespiteMismatchedFingerCapacity() {
         let board = board(holds: [
             hold(id: "fallback-edge", feature: .largeEdge, fingerCapacity: 4),
@@ -135,7 +156,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let board = board(holds: [
             hold(id: "generic-edge", kind: .edge, feature: nil)
         ])
-        let target = HoldTarget.feature(
+        let target = HoldTarget.kind(
             .pocket,
             fingerCapacity: 2,
             fallback: .mediumEdge
@@ -323,8 +344,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         ])
         let target = HoldTarget.feature(
             .mediumEdge,
-            fallback: .largeOpenHandRail,
-            .jug
+            fallback: .largeOpenHandRail
         )
 
         for gripType in [GripType.halfCrimp, .fullCrimp] {

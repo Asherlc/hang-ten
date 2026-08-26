@@ -438,6 +438,7 @@
       "name": "Center top sloper jug",
       "kind": "sloper",
       "gripType": "sloper",
+      "features": ["jug"],
       "geometry": [
         {
           "frame": {
