@@ -185,10 +185,6 @@
           },
           "treatment": {
             "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "circle",
-            "rotationDegrees": 0.0
           }
         }
       ]
