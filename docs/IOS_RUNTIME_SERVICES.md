@@ -100,7 +100,7 @@ boundaries while iOS suspends the app. Returning to the app requires an
 explicit resume.
 
 `WorkoutAudioCoach` wraps `AVSpeechSynthesizer` and configures
-`AVAudioSession` as `.playback` with `.spokenAudio` and `.duckOthers`. The
+`AVAudioSession` as `.playback` with the default mode and `.duckOthers`. The
 speaker preference is persisted with `@AppStorage`. Numeric `3`, `2`, `1`
 buffers are rendered before their monotonic start boundary and host-time
 scheduled together as one sequence. Cold, empty voice renders are retried only

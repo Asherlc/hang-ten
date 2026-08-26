@@ -121,6 +121,18 @@ protocol WorkoutAudioSessionManaging: AnyObject {
     func deactivateAndNotifyOthers() throws
 }
 
+struct WorkoutAudioSessionConfiguration {
+    let category: AVAudioSession.Category
+    let mode: AVAudioSession.Mode
+    let options: AVAudioSession.CategoryOptions
+
+    static let countdownCues = WorkoutAudioSessionConfiguration(
+        category: .playback,
+        mode: .default,
+        options: [.duckOthers]
+    )
+}
+
 @MainActor
 private final class SystemWorkoutAudioSession: WorkoutAudioSessionManaging {
     private let session: AVAudioSession
@@ -130,7 +142,12 @@ private final class SystemWorkoutAudioSession: WorkoutAudioSessionManaging {
     }
 
     func configureForSpokenCues() throws {
-        try session.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+        let configuration = WorkoutAudioSessionConfiguration.countdownCues
+        try session.setCategory(
+            configuration.category,
+            mode: configuration.mode,
+            options: configuration.options
+        )
     }
 
     func activate() throws {
@@ -177,6 +194,11 @@ private final class SystemWorkoutCountdownCompletionScheduler:
 
 @MainActor
 final class WorkoutAudioCoach: NSObject, ObservableObject {
+    private struct PendingCountdownRequest {
+        let schedule: CountdownAudioSchedule
+        let startUptime: TimeInterval
+    }
+
     @Published private(set) var isSpeaking = false
     @Published private(set) var countdownPreparationState: CountdownAudioPreparationState = .idle
 
@@ -189,6 +211,8 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private var configuredAudioSession = false
     private var ownsCountdownSchedule = false
     private var countdownPreparationGeneration = 0
+    private var pendingCountdownRequest: PendingCountdownRequest?
+    private var pendingCountdownRequestResult: Bool?
     private var deactivationRetryTask: Task<Void, Never>?
     private var speechOwnership = WorkoutSpeechOwnership()
 
@@ -269,6 +293,8 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     func speak(_ phrase: String) {
         guard !phrase.isEmpty else { return }
+        cancelPendingCountdownRequest()
+        pendingCountdownRequestResult = nil
         cancelOwnedCountdownSchedule()
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
@@ -300,6 +326,30 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         _ schedule: CountdownAudioSchedule,
         startUptime: TimeInterval
     ) -> Bool {
+        guard !ownsCountdownSchedule else { return false }
+
+        switch countdownPreparationState {
+        case .ready:
+            return startPreparedCountdown(schedule, startUptime: startUptime)
+        case .idle, .failed:
+            guard pendingCountdownRequest == nil else { return false }
+            pendingCountdownRequestResult = nil
+            pendingCountdownRequest = PendingCountdownRequest(
+                schedule: schedule,
+                startUptime: startUptime
+            )
+            beginCountdownPrewarm()
+            return pendingCountdownRequestResult ?? true
+        case .preparing:
+            return false
+        }
+    }
+
+    @discardableResult
+    private func startPreparedCountdown(
+        _ schedule: CountdownAudioSchedule,
+        startUptime: TimeInterval
+    ) -> Bool {
         guard !ownsCountdownSchedule,
               countdownPreparationState == .ready,
               let countdownScheduler else { return false }
@@ -325,6 +375,8 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     }
 
     func stop() {
+        cancelPendingCountdownRequest()
+        pendingCountdownRequestResult = nil
         countdownCompletionScheduler.cancel()
         deactivationRetryTask?.cancel()
         deactivationRetryTask = nil
@@ -371,6 +423,10 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         countdownPreparationState = .idle
     }
 
+    private func cancelPendingCountdownRequest() {
+        pendingCountdownRequest = nil
+    }
+
     private func finishOwnedCountdownSchedule() {
         guard ownsCountdownSchedule else { return }
         countdownScheduler?.stop()
@@ -390,15 +446,32 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
                     guard self?.countdownPreparationState == .preparing,
                           self?.countdownPreparationGeneration == preparationGeneration else { return }
                     self?.countdownPreparationState = succeeded ? .ready : .failed
+                    self?.recordPendingCountdownRequestResultIfPrepared(succeeded: succeeded)
                 }
             } else {
                 Task { @MainActor in
                     guard self?.countdownPreparationState == .preparing,
                           self?.countdownPreparationGeneration == preparationGeneration else { return }
                     self?.countdownPreparationState = succeeded ? .ready : .failed
+                    self?.recordPendingCountdownRequestResultIfPrepared(succeeded: succeeded)
                 }
             }
         }
+    }
+
+    private func recordPendingCountdownRequestResultIfPrepared(succeeded: Bool) {
+        guard let pendingCountdownRequest else { return }
+
+        cancelPendingCountdownRequest()
+        guard succeeded else {
+            pendingCountdownRequestResult = false
+            return
+        }
+
+        pendingCountdownRequestResult = startPreparedCountdown(
+            pendingCountdownRequest.schedule,
+            startUptime: pendingCountdownRequest.startUptime
+        )
     }
 
     private func countdownSchedulerIfNeeded() -> any CountdownAudioScheduling {
