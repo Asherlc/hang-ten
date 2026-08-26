@@ -8,17 +8,16 @@
   "aspectRatio": 1.5,
   "holds": [
     {
-      "id": "pocket-left",
-      "name": "Left pocket",
-      "kind": "pocket",
-      "sizeMillimeters": 76.2,
+      "id": "hold-3",
+      "name": "Hold 3",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
-            "x": 0.022,
-            "y": 0.381961540527,
-            "width": 0.178,
-            "height": 0.118038459473
+            "x": 0.4609375,
+            "y": 0.44140625,
+            "width": 0.078125,
+            "height": 0.1171875
           },
           "shape": {
             "type": "path",
@@ -27,67 +26,28 @@
                 "command": "move",
                 "to": [
                   0.0,
-                  0.560143361478
+                  0.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.02,
-                  0.220254140801
-                ],
-                "control2": [
-                  0.22,
-                  0.020319305109
-                ],
-                "to": [
-                  0.47,
-                  0.00032582154
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.73,
-                  -0.009670920245
-                ],
-                "control2": [
-                  0.96,
-                  0.190263915447
-                ],
+                "command": "line",
                 "to": [
                   1.0,
-                  0.480169427201
+                  0.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.98,
-                  0.7400847136
-                ],
-                "control2": [
-                  0.75,
-                  0.940019549292
-                ],
+                "command": "line",
                 "to": [
-                  0.53,
+                  1.0,
                   1.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.28,
-                  0.990003258215
-                ],
-                "control2": [
-                  0.03,
-                  0.820058647877
-                ],
+                "command": "line",
                 "to": [
                   0.0,
-                  0.560143361478
+                  1.0
                 ]
               },
               {
