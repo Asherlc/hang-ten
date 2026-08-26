@@ -140,7 +140,33 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
     }
 
-    func testGenericPocketFallbackDoesNotPairUnmirroredSameCapacityCandidates() {
+    func testGenericPocketExactTagsSelectMatchingAsymmetricPair() {
+        let board = board(holds: [
+            hold(
+                id: "left-three",
+                kind: .pocket,
+                feature: .pocket,
+                fingerCapacity: 3,
+                x: 0.1,
+                y: 0.2
+            ),
+            hold(
+                id: "right-three",
+                kind: .pocket,
+                feature: .pocket,
+                fingerCapacity: 3,
+                x: 0.65,
+                y: 0.2
+            )
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(for: .feature(.pocket), on: board),
+            ["left-three", "right-three"]
+        )
+    }
+
+    func testGenericPocketFallbackDoesNotPairCrossRowMismatchedShapeCandidates() {
         let board = board(holds: [
             hold(
                 id: "left-off-row",

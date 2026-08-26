@@ -348,7 +348,7 @@ internal enum BoardTargetResolver {
     /// pocket remains usable only when its frame is wholly on one board side;
     /// a centered or midline-crossing contact is not a hand-specific fallback.
     private static func genericPocketSelection(from holds: [BoardHold]) -> [BoardHold] {
-        if let pair = symmetricPocketPair(from: holds) { return pair }
+        if let pair = matchingPocketPair(from: holds) { return pair }
         return holds.first(where: isWhollyOnOneSide).map { [$0] } ?? []
     }
 
@@ -357,9 +357,10 @@ internal enum BoardTargetResolver {
     }
 
     /// Generic pocket cues need a usable two-handed pair. Choose known,
-    /// matching-capacity pockets whose frames are close enough to an actual
-    /// horizontal reflection before ranking the eligible pairs.
-    private static func symmetricPocketPair(from holds: [BoardHold]) -> [BoardHold]? {
+    /// matching-capacity pockets with compatible rows and frames. Horizontal
+    /// reflection ranks those matches, but asymmetric board layouts remain
+    /// eligible.
+    private static func matchingPocketPair(from holds: [BoardHold]) -> [BoardHold]? {
         let left = holds.filter { $0.frame.x + $0.frame.width <= 0.5 }
         let right = holds.filter { $0.frame.x >= 0.5 }
         let pairs = left.flatMap { leftHold in
@@ -367,7 +368,7 @@ internal enum BoardTargetResolver {
                 guard let capacity = leftHold.fingerCapacity,
                       rightHold.fingerCapacity == capacity else { return nil }
                 let pair = (leftHold, rightHold)
-                return isMirrorEligible(pair) ? pair : nil
+                return isMatchingPocketPair(pair) ? pair : nil
             }
         }
         guard let pair = pairs.min(by: { symmetryScore(of: $0) < symmetryScore(of: $1) }) else {
@@ -376,14 +377,13 @@ internal enum BoardTargetResolver {
         return [pair.0, pair.1]
     }
 
-    private static func isMirrorEligible(_ pair: (BoardHold, BoardHold)) -> Bool {
+    private static func isMatchingPocketPair(_ pair: (BoardHold, BoardHold)) -> Bool {
         let differences = symmetryDifferences(of: pair)
         let referenceWidth = max(pair.0.frame.width, pair.1.frame.width)
         let referenceHeight = max(pair.0.frame.height, pair.1.frame.height)
         guard referenceWidth > 0, referenceHeight > 0 else { return false }
         let tolerance = 0.25
-        return differences.horizontalReflection <= referenceWidth * tolerance
-            && differences.verticalAlignment <= referenceHeight * tolerance
+        return differences.verticalAlignment <= referenceHeight * tolerance
             && differences.width <= referenceWidth * tolerance
             && differences.height <= referenceHeight * tolerance
     }
