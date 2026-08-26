@@ -280,14 +280,16 @@ none of the removed art or geometry was restored as a starting point.
 
 - **Sources:** [So iLL x Meagan Martin Training Tiles](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin);
   [Training Tiles workouts](https://soillholds.com/pages/meagan-martin-training-tiles-workouts).
-- **Current JSON holds:** 16.
-- **Source-backed expected physical count:** 16.
-- **Verified facts:** So iLL x Meagan Martin Training Tiles; each tile is
-  approximately `14 × 8 in`; the manufacturer enumerates eight contacts per
-  tile.
-- **Discrepancy:** resolved; grouped size values without a one-to-one location
-  mapping remain omitted from individual holds.
-- **Action:** directly authored and visually reviewed; retain as complete.
+- **Current JSON holds:** 20 descriptive app-selection roles.
+- **Source-backed expected physical count:** not established by the current
+  manufacturer listing.
+- **Verified facts:** So iLL x Meagan Martin Training Tiles product identity
+  and collaboration only; the current listing has no manufacturer-authored
+  per-contact map, count, dimensions, or contact-role inventory.
+- **Discrepancy:** the 20 visual jug, pocket, sloper, and edge roles are
+  explicitly labelled adaptations; per-contact values remain omitted.
+- **Action:** retain the app adaptations with their source-limited ledger
+  records; do not represent them as manufacturer-labelled contacts.
 
 ### `target10a-linebreaker-base`
 

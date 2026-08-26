@@ -8,8 +8,8 @@
   "aspectRatio": 1.7768331562167907,
   "holds": [
     {
-      "id": "top-macro-sloper",
-      "name": "Continuous 35\u00b0/45\u00b0 top macro sloper",
+      "id": "macro-sloper-left",
+      "name": "Left macro sloper region",
       "kind": "sloper",
       "geometry": [
         {
@@ -1253,8 +1253,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-13",
-      "name": "Hold 13",
+      "id": "macro-sloper-right-center",
+      "name": "Right-center macro sloper region",
       "kind": "sloper",
       "geometry": [
         {
@@ -1305,8 +1305,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-14",
-      "name": "Hold 14",
+      "id": "macro-sloper-left-center",
+      "name": "Left-center macro sloper region",
       "kind": "sloper",
       "geometry": [
         {
@@ -1364,8 +1364,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-15",
-      "name": "Hold 15",
+      "id": "macro-sloper-right",
+      "name": "Right macro sloper region",
       "kind": "sloper",
       "geometry": [
         {

@@ -587,8 +587,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-8",
-      "name": "Hold 8",
+      "id": "pinch-right",
+      "name": "Right 3-inch pinch",
       "kind": "pinch",
       "geometry": [
         {

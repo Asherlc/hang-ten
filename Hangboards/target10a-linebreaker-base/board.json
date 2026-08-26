@@ -689,6 +689,122 @@
       "presentationID": "primary"
     },
     {
+      "id": "edge-16-left",
+      "name": "Left 16 mm four-finger bar",
+      "kind": "edge",
+      "sizeMillimeters": 16,
+      "fingerCapacity": 4,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.086977254834,
+            "y": 0.44114690884,
+            "width": 0.14,
+            "height": 0.0165
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "edge-16-right",
+      "name": "Right 16 mm four-finger bar",
+      "kind": "edge",
+      "sizeMillimeters": 16,
+      "fingerCapacity": 4,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.773022745166,
+            "y": 0.44114690884,
+            "width": 0.14,
+            "height": 0.0165
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "rectangle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
       "id": "pocket-37-left",
       "name": "Left 37 mm four-finger pocket",
       "kind": "pocket",
@@ -698,10 +814,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.091097301796,
-            "y": 0.44444445488,
-            "width": 0.122153212017,
-            "height": 0.041407869245
+            "x": 0.086977254834,
+            "y": 0.45764690884,
+            "width": 0.14,
+            "height": 0.0165
           },
           "shape": {
             "type": "path",
@@ -709,82 +825,29 @@
               {
                 "command": "move",
                 "to": [
-                  0.127118646415,
+                  0.0,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.872881353585,
+                  1.0,
                   0.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.943087045986,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.223857614986
-                ],
+                "command": "line",
                 "to": [
                   1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.776142385014
-                ],
-                "control2": [
-                  0.943087045986,
-                  1.0
-                ],
-                "to": [
-                  0.872881353585,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.127118646415,
+                  0.0,
                   1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.056912954014,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.776142385014
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.223857614986
-                ],
-                "control2": [
-                  0.056912954014,
-                  0.0
-                ],
-                "to": [
-                  0.127118646415,
-                  0.0
                 ]
               },
               {
@@ -793,7 +856,7 @@
             ]
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "rectangle",
             "rotationDegrees": 0.0
           }
         }
@@ -810,10 +873,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.783069289365,
-            "y": 0.44372952302,
-            "width": 0.119316212707,
-            "height": 0.042532600368
+            "x": 0.773022745166,
+            "y": 0.45764690884,
+            "width": 0.14,
+            "height": 0.0165
           },
           "shape": {
             "type": "path",
@@ -821,82 +884,29 @@
               {
                 "command": "move",
                 "to": [
-                  0.133676092932,
+                  0.0,
                   0.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.866323907068,
+                  1.0,
                   0.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.940151175428,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.223857622029
-                ],
+                "command": "line",
                 "to": [
                   1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.776142377971
-                ],
-                "control2": [
-                  0.940151175428,
-                  1.0
-                ],
-                "to": [
-                  0.866323907068,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.133676092932,
+                  0.0,
                   1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.059848824572,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.776142377971
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.223857622029
-                ],
-                "control2": [
-                  0.059848824572,
-                  0.0
-                ],
-                "to": [
-                  0.133676092932,
-                  0.0
                 ]
               },
               {
@@ -905,7 +915,7 @@
             ]
           },
           "shapeConstraint": {
-            "shape": "pill",
+            "shape": "rectangle",
             "rotationDegrees": 0.0
           }
         }

@@ -163,25 +163,23 @@ draft geometry was restored or used as an input.
 - `product`: [Training Tiles • So iLL x Meagan Martin](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin)
 - `workouts`: [official workout page](https://soillholds.com/pages/meagan-martin-training-tiles-workouts)
 - `front`: [official straight-on image](https://cdn.shopify.com/s/files/1/0424/1145/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960.jpg?v=1677258630)
-- The product description establishes the two-piece collaboration. The current
-  feature metafield establishes each tile at approximately `14 × 8 in` and,
-  per tile, one pocket, two slopers, two slightly positive middle edges, and
-  three bottom flat edges. That freezes exactly eight contacts per tile and
-  sixteen total. The same metafield lists grouped sizes (3-inch pocket depth;
-  54/64 mm slopers; 44/50 mm middle edges; 36/31/24 mm bottom edges), but the
-  straight-on view does not provide a numbered one-to-one mapping for those
-  values. The package therefore uses conservative spatial names and omits the
-  per-hold scalar values rather than guessing the assignment.
+- The current product listing establishes the two-piece collaboration and
+  product identity, but does not publish a manufacturer-authored per-contact
+  map, contact count, dimensions, or role inventory. Hang Ten exposes 20
+  descriptive visual contact roles for app selection; every role is explicitly
+  recorded as an adaptation rather than a manufacturer-labelled contact. No
+  per-contact size, depth, or capacity value is retained.
 
 ## 2026-08-25 source-audited metadata batch
 
 The seven current product pages and the official gallery views linked above
 were re-opened on 2026-08-25. So iLL's current product HTML still exposes the
 manufacturer feature text used in the 2026-08-19 addendum: Iron Palm 2.0's
-40/25/15 mm crimp rails, Split Palm's exact 38.1/25.4/12.7/12.7 mm rails per
-piece, and Training Tiles' grouped pocket/sloper/edge measurements. Tension's
-current pages still publish the Flash Board's global edge list and the exact
-Grindstone, Honestone, and Whetstone feature lists.
+40/25/15 mm crimp rails and Split Palm's exact 38.1/25.4/12.7/12.7 mm rails
+per piece. Training Tiles' current listing establishes product identity but
+not a per-contact map, count, measurement, capacity, or role inventory.
+Tension's current pages still publish the Flash Board's global edge list and
+the exact Grindstone, Honestone, and Whetstone feature lists.
 
 Stable-ID overlays were generated and manually reviewed under
 `.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
@@ -191,14 +189,9 @@ presentations; the other six packages each use one presentation. The overlays
 are review aids only. They did not change geometry or establish a kind or
 measurement.
 
-The standard configured capture was refreshed for this correction. Its normal
-Training Tiles overlay has nearby labels around the upper pockets, so a second,
-review-only Workbench capture at
-`soill.training-tiles--pocket-depth-stable-ids.png` temporarily hid every
-non-pocket overlay in the browser before capture. It visibly and separately
-labels `pocket-left` and `pocket-right`; it did not change the saved paths,
-package, or source image. Together with the product page's `Pocket (3" depth),
-one per tile` text, this establishes the direct two-ID mapping.
+No review capture supplies manufacturer evidence for a Training Tiles contact
+map. The current listing is consequently used only for product identity and
+the source URL on each adapted app-role record.
 
 The tables below are the complete contact-by-contact type audit. Exact
 left/right pairs are grouped only after both visible stable IDs were compared
@@ -218,7 +211,7 @@ mapping, not a classification inferred from pixels.
 | Grindstone | `30 mm edges`; `25 mm edges` | `edge-30-25-left`, `edge-30-25-right` | `edge` | `depthRangeMillimeters` 25–30 |
 | Grindstone | `50 mm center one-arm edge` | `edge-50-center` | `edge` | `sizeMillimeters` 50 |
 | Grindstone | `20 mm edges`; `15 mm edges` | `edge-20-15-left`, `edge-20-15-right` | `edge` | `depthRangeMillimeters` 15–20 |
-| Honestone | `35° and 45° top slopers with a continuously variable curvature and macro-texture` | `top-macro-sloper` | `sloper` | none; angles/curvature are not scalar depth |
+| Honestone | One continuous `35°`/`45°` macro sloper with continuously variable curvature | `macro-sloper-left`, `macro-sloper-left-center`, `macro-sloper-right-center`, `macro-sloper-right` | adapted `sloper` regions | none; angles/curvature are not scalar depth |
 | Honestone | `25 mm 1-finger pockets` | `mono-left`, `mono-right` | `pocket` | size 25; finger capacity 1 |
 | Honestone | `20 mm edges`; `15 mm edges` | `edge-20-15-left`, `edge-20-15-right` | `edge` | `depthRangeMillimeters` 15–20 |
 | Honestone | `25 mm center edge w/10 degree incut` | `edge-25-center` | `edge` | `sizeMillimeters` 25 |
@@ -251,27 +244,21 @@ No range was collapsed to a scalar value.
 | Split Palm | `Center Flat Rail: 1" (25.4mm)` (one per piece) | `flat-edge-25-left`, `flat-edge-25-right` | `edge` | `sizeMillimeters` 25.4 |
 | Split Palm | `Outer Crimp Rail: 1/2" (12.7mm)` (one per piece) | `outer-crimp-12-left`, `outer-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
 | Split Palm | `Bottom Center Sloping Crimp Rail - 1/2" (12.7mm)` (one per piece) | `bottom-sloping-crimp-12-left`, `bottom-sloping-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
-| Training Tiles | `Top: Pocket (3" depth)`, one per tile | `pocket-left`, `pocket-right` | `pocket` | `sizeMillimeters` 76.2; no finger count |
-| Training Tiles | `Top: Slopers: 25° - 54mm; 12° - 64mm`, two per tile | `outer-sloper-left`, `outer-sloper-right`, `inner-sloper-left`, `inner-sloper-right` | `sloper` | none; positions are not numbered |
-| Training Tiles | `Middle: Slightly Positive Edges: 44mm, 50mm`, two per tile | `middle-edge-upper-left`, `middle-edge-upper-right`, `middle-edge-lower-left`, `middle-edge-lower-right` | `edge` | none; positions are not numbered |
-| Training Tiles | `Bottom Flat Edge: 36mm, 31mm, 24mm`, three per tile | `bottom-edge-outer-left`, `bottom-edge-outer-right`, `bottom-edge-center-left`, `bottom-edge-center-right`, `bottom-edge-inner-left`, `bottom-edge-inner-right` | `edge` | none; positions are not numbered |
+| Training Tiles | No current manufacturer-authored per-contact map, count, dimensions, or contact-role inventory | `top-jug-*`, `top-pocket-{outer,inner}-*`, `upper-sloper-{outer,inner}-*`, `middle-edge-{outer,inner}-*`, `bottom-edge-{outer,center,inner}-*` | adapted visual jug, pocket, sloper, and edge roles | none; all optional per-contact values remain absent |
 
 ### Field outcomes and retained package data
 
-All 69 holds have one verified ledger `kind` and an explicit outcome for each
-of the six optional fields. The refreshed evidence supports 20 scalar sizes,
-14 depth ranges, four finger capacities, and two `twoFingerPocket` grip enums.
-The two Training Tiles pockets now receive the exact 76.2 mm conversion of the
-manufacturer's one-per-tile 3-inch depth; all other package values were
-already present before this batch. In particular:
+Every reviewed hold has an explicit ledger outcome for each field. The current
+reconciliation distinguishes manufacturer-verified kinds from deliberately
+labelled app adaptations. Training Tiles has 20 adapted visual roles and no
+per-contact optional values. In particular:
 
 - the 14 Tension stepped-edge values remain ranges on continuous contacts;
 - Honestone's one-finger pockets retain size and capacity but no `gripType`,
   because the checked-in schema has no one-finger-pocket enum;
-- Training Tiles pockets receive their one-per-tile 3-inch (76.2 mm) depth;
-  its sloper and edge families remain blank because their grouped lists do not
-  number the left/right positions, and the pockets have no published finger
-  count;
+- Training Tiles has no current manufacturer-authored per-contact map, count,
+  dimensions, capacities, or roles, so its app-adapted contacts carry no
+  size, range, capacity, posture, or feature value;
 - Flash Board retains no scalar depth because the global size list is not
   mapped to its five recess IDs, and its small crimp value is only approximate
   on the separate overview page;

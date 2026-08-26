@@ -100,9 +100,7 @@
             "type": "surface"
           }
         }
-      ],
-      "handCapacity": 1,
-      "fingerCapacity": 4
+      ]
     },
     {
       "id": "jug-right",
@@ -196,8 +194,7 @@
             "type": "surface"
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "sloper-40-center",
@@ -253,8 +250,7 @@
             "type": "surface"
           }
         }
-      ],
-      "handCapacity": 2
+      ]
     },
     {
       "id": "edge-40-left",
@@ -379,8 +375,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-30-left",
@@ -505,8 +500,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-25-left",
@@ -631,8 +625,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-40-right",
@@ -757,8 +750,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-30-right",
@@ -883,8 +875,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-25-right",
@@ -1009,8 +1000,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-20-left",
@@ -1135,8 +1125,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-15-left",
@@ -1261,8 +1250,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-10-left",
@@ -1387,8 +1375,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-20-right",
@@ -1513,8 +1500,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-15-right",
@@ -1639,8 +1625,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     },
     {
       "id": "edge-10-right",
@@ -1765,8 +1750,7 @@
             "rotationDegrees": 0.0
           }
         }
-      ],
-      "handCapacity": 1
+      ]
     }
   ]
 }

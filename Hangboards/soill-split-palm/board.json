@@ -1189,8 +1189,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-15",
-      "name": "Hold 15",
+      "id": "lower-pinch-left",
+      "name": "Left lower pinch",
       "kind": "pinch",
       "geometry": [
         {
@@ -1314,8 +1314,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-16",
-      "name": "Hold 16",
+      "id": "lower-pinch-right",
+      "name": "Right lower pinch",
       "kind": "pinch",
       "geometry": [
         {

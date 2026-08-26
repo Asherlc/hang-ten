@@ -709,6 +709,71 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
     }
 
 
+def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    ledger_path = (
+        repository_root
+        / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
+    )
+    records = json.loads(ledger_path.read_text(encoding="utf-8"))["records"]
+
+    expected_training_tile_ids = {
+        "top-jug-left",
+        "top-jug-right",
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right",
+        "upper-sloper-outer-left",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right",
+        "upper-sloper-outer-right",
+        "middle-edge-outer-left",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right",
+        "middle-edge-outer-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-center-left",
+        "bottom-edge-inner-left",
+        "bottom-edge-inner-right",
+        "bottom-edge-center-right",
+        "bottom-edge-outer-right",
+    }
+    training_tile_kind_records = [
+        record
+        for record in records
+        if record["boardID"] == "soill.training-tiles" and record["field"] == "kind"
+    ]
+    assert {
+        hold_id
+        for record in training_tile_kind_records
+        for hold_id in record["holdIDs"]
+    } == expected_training_tile_ids
+    assert all(
+        record["outcome"] == "adapted"
+        and record["source"]["url"]
+        == "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin"
+        and "per-contact map" in record["reason"]
+        for record in training_tile_kind_records
+    )
+
+    expected_adaptations = {
+        ("soill.split-palm", "lower-pinch-left"),
+        ("soill.split-palm", "lower-pinch-right"),
+        ("tension.honestone", "macro-sloper-left"),
+        ("tension.honestone", "macro-sloper-left-center"),
+        ("tension.honestone", "macro-sloper-right-center"),
+        ("tension.honestone", "macro-sloper-right"),
+    }
+    adapted_kind_ids = {
+        (record["boardID"], hold_id)
+        for record in records
+        if record["field"] == "kind" and record["outcome"] == "adapted"
+        for hold_id in record["holdIDs"]
+    }
+    assert expected_adaptations <= adapted_kind_ids
+
+
 def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = discover_board_packages(repository_root / "Hangboards")
@@ -977,7 +1042,7 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
     }
 
 
-def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:
+def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     ledger_path = (
         repository_root
@@ -991,14 +1056,19 @@ def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:
         if package.board.id == "soill.training-tiles"
     )
 
-    assert {
-        hold.id: hold.size_millimeters
+    assert len(package.board.holds) == 20
+    assert all(
+        hold.size_millimeters is None
+        and hold.depth_range_millimeters is None
+        and hold.finger_capacity is None
+        and hold.hand_capacity is None
+        and hold.grip_type is None
+        and hold.features is None
         for hold in package.board.holds
-        if hold.id in {"pocket-left", "pocket-right"}
-    } == {"pocket-left": 76.2, "pocket-right": 76.2}
+    )
     assert next(
         board for board in report.boards if board.board_id == "soill.training-tiles"
-    ).populated == 18
+    ).adapted == 20
 
 
 def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
