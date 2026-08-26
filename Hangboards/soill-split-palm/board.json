@@ -1191,7 +1191,7 @@
     {
       "id": "hold-15",
       "name": "Hold 15",
-      "kind": "edge",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
