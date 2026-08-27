@@ -34,10 +34,8 @@
 	<string>Hang Ten reads your Apple Health workout history to restore your progress on a new device.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Hang Ten saves completed hangboard sessions to Apple Health.</string>
-	<key>POSTHOG_CLIENT_TOKEN</key>
-	<string>$(POSTHOG_CLIENT_TOKEN)</string>
-	<key>POSTHOG_HOST</key>
-	<string>$(POSTHOG_HOST)</string>
+	<key>ANALYTICS_API_KEY</key>
+	<string>$(ANALYTICS_API_KEY)</string>
 	<key>SENTRY_DSN</key>
 	<string>$(SENTRY_DSN)</string>
 	<key>UIApplicationSceneManifest</key>

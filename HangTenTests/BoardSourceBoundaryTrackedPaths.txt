@@ -1,6 +1,6 @@
 HangTen.xcodeproj/project.pbxproj
-HangTen/Config/PostHog.local.xcconfig.example
-HangTen/Config/PostHog.xcconfig
+HangTen/Config/Analytics.local.xcconfig.example
+HangTen/Config/Analytics.xcconfig
 HangTen/HangTen.entitlements
 HangTen/HangTenApp.swift
 HangTen/Info.plist
@@ -24,11 +24,11 @@ HangTen/Models/MotherboardModels.swift
 HangTen/Models/MotherboardProtocol.swift
 HangTen/Models/MotherboardWorkoutPreparation.swift
 HangTen/Models/MotherboardWorkoutRecorder.swift
-HangTen/Models/OpenTelemetryDiagnostics.swift
+HangTen/Models/AmplitudeAnalyticsTelemetry.swift
 HangTen/Models/PitchSixProtocol.swift
 HangTen/Models/PlanFilters.swift
 HangTen/Models/PlanStorage.swift
-HangTen/Models/PostHogTelemetry.swift
+HangTen/Models/SentryDiagnostics.swift
 HangTen/Models/ProgressorProtocol.swift
 HangTen/Models/PurchaseManager.swift
 HangTen/Models/SimulatedMotherboardTransport.swift

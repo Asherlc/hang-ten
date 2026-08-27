@@ -110,8 +110,8 @@ iOS `GITHUB_OAUTH_CLIENT_ID` build setting. It writes the setting to its
 temporary mode-`0600` xcconfig and verifies that the archived app's Info.plist
 contains a nonempty client ID.
 
-For local Xcode builds, copy `HangTen/Config/PostHog.local.xcconfig.example` to
-the ignored `HangTen/Config/PostHog.local.xcconfig` file and set
+For local Xcode builds, copy `HangTen/Config/Analytics.local.xcconfig.example` to
+the ignored `HangTen/Config/Analytics.local.xcconfig` file and set
 `GITHUB_OAUTH_CLIENT_ID` there. Do not create a `GITHUB_CLIENT_SECRET` iOS app
 build setting, `app-store-connect` Actions secret, or bundled Info.plist key:
 Device Flow uses only the public client ID. Keep the public
@@ -153,29 +153,25 @@ Add these environment variables:
   client ID; its Device Flow option must be enabled. The workflow maps it to
   the app's `GITHUB_OAUTH_CLIENT_ID` build setting. Do not configure a client
   secret.
-## PostHog CI configuration
+## Analytics CI configuration
 
-The app runs without telemetry when its PostHog client token is absent. This is
-intentional for local builds and untrusted fork pull requests. PostHog
-credentials are not provisioned by this repository: after creating the new
-Hang Ten PostHog project, an authorized maintainer must configure the following
-to enable anonymous telemetry in trusted GitHub Actions builds:
+The app runs without analytics when its API key is absent. This is intentional
+for local builds and untrusted fork pull requests. Analytics credentials are
+not provisioned by this repository: after creating the Hang Ten Amplitude
+project, an authorized maintainer must configure the following to enable
+anonymous telemetry in trusted GitHub Actions builds:
 
-- Repository secret `POSTHOG_CLIENT_TOKEN`: the Hang Ten PostHog public client
-  project key (`phc_...`). Although it is a client-side key, retain it as a
+- Repository secret `ANALYTICS_API_KEY`: the Hang Ten Amplitude API key.
+  Although it is a client-side key, retain it as a
   secret so it is not committed or exposed in workflow logs.
-- Repository variable `POSTHOG_HOST`: the PostHog ingestion host. Use
-  `https://us.i.posthog.com` unless the project is in another region.
 
 The release workflow runs in the `app-store-connect` environment, whose
 secrets and variables are scoped separately from the repository. After the
-project exists, define the same `POSTHOG_CLIENT_TOKEN` environment secret and
-`POSTHOG_HOST` environment variable there so the signed TestFlight archive
-includes telemetry. The host defaults to `https://us.i.posthog.com` when the
-variable is omitted; a missing token remains a safe no-op rather than failing
-CI. The workflows place these values in a mode-`0600` temporary xcconfig, pass
-only that file path to Xcode, and remove it when the job step exits so token
-values are not interpolated into captured build logs.
+project exists, define the same `ANALYTICS_API_KEY` environment secret there so
+the signed TestFlight archive includes analytics. A missing key remains a safe
+no-op rather than failing CI. The workflows place this value in a mode-`0600`
+temporary xcconfig, pass only that file path to Xcode, and remove it when the
+job step exits so the key is not interpolated into captured build logs.
 
 The API key needs the Admin role for provisioning-profile access, and App Store
 Connect must already contain an app record for `com.hangten.training` plus an
