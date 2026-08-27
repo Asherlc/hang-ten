@@ -1,7 +1,8 @@
 # Trango Forge, Natural, and Pivot board-package source audit
 
 Checked 2026-08-12; Forge and Natural re-audited and directly authored
-2026-08-19. This audit preserves the manufacturer material reviewed for Forge,
+2026-08-19. Amended 2026-08-25 for the stable-ID/presentation audit. This audit
+preserves the manufacturer material reviewed for Forge,
 Natural, and Pivot. The old incomplete art was removed and was not used as an
 authoring input. Pivot was completed through direct path authoring and is the
 structural/style precedent described in
@@ -95,12 +96,64 @@ compound supported pocket remain freeform.
 
 ### `trango-rock-prodigy-pivot`
 
-The completed package remains the structural and path-style precedent; its
-product-specific coordinates must not be reused. The 2026-08-25 stable-ID
-review reconciled 18 physical contacts / 22 geometry pieces. Trango's “22
-distinct grip positions” is an orientation-dependent usage count, not a claim
-of 22 separately bounded physical contacts, so it does not require geometry or
-ID changes.
+The package remains one catalog product, `trango.rock-prodigy-pivot`; the four
+manufacturer-numbered configurations are selectable presentations of that one
+physical product, not four board records. The product page says the Quad Cleat
+mounting system supports four directions. The official quick-start guide then
+labels `ORIENTATION 1` through `ORIENTATION 4` and gives the physical transition
+between them. Its separate `ORIENTATION 3 SWITCH` instruction is the required
+swap of the left and right halves when moving to Orientation 4, not a fifth numbered
+orientation.
+
+| package presentation | exact manufacturer mapping | guide key-grip examples (non-exhaustive) |
+| --- | --- | --- |
+| `orientation-1` / `assets/primary.png` | Quick-start pp. 6–7; starting horizontal position. This is the formerly generic `primary` presentation, now explicitly named `Orientation 1`. | Jug, variable-depth sloper rail, horizontal pinch, medium supported crimp, large sloped crimp. |
+| `orientation-2` / `assets/orientation-2.png` | Quick-start pp. 8–9; from Orientation 1, pivot both boards 90° outwards. | Small sloped crimp, steep gaston, shallow mono. |
+| `orientation-3` / `assets/orientation-3.png` | Quick-start pp. 10–11; from Orientation 2, pivot both boards 90° inwards to the illustrated inverted horizontal position. | Two-finger pocket, three-finger pocket, large supported crimp, sloper. |
+| `orientation-4` / `assets/orientation-4.png` | Quick-start pp. 12–15; switch the two physical boards left-to-right, then pivot both boards 90° outwards. | Compression pinch, deep mono, medium mono. |
+
+The presentation evidence is the first-party [Pivot quick-start
+guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507).
+The four-direction product claim and source raster are the first-party [Pivot
+product page](https://trango.com/products/rock-prodigy-pivot) and [Pivot main
+image](https://trango.com/cdn/shop/products/22840_RockProdigyPivot_MainImage_TopDown.jpg?v=1755037446&width=1946).
+
+The 2026-08-25 stable-ID review reconciled 18 physical contacts / 22 geometry
+pieces in Orientation 1. Trango's “22 distinct grip positions” is an
+orientation-dependent usage count, not a claim of 22 separately bounded
+physical contacts. The guide also says its key-hold list is not comprehensive.
+Accordingly, the package does not invent orientation-specific grip contacts:
+each presentation contains exactly one transformed mapping of the same complete
+18-contact audited package inventory—not a manufacturer-confirmed exhaustive
+inventory—and no duplicate contact within that presentation.
+
+| contact map | Orientation 1 IDs | Orientations 2–4 IDs |
+| --- | --- | --- |
+| edges | `upper-sloped-crimp-{left,right}`, `outer-sloped-crimp-{left,right}`, `variable-edge-{left,right}`, `medium-crimp-{left,right}`, `large-crimp-{left,right}` | The same base ID plus `-orientation-2`, `-orientation-3`, or `-orientation-4`. |
+| pockets | `two-finger-pocket-{left,right}`, `three-finger-pocket-{left,right}` | The same base ID plus the presentation suffix. |
+| pinches | `outer-wedge-pinch-{left,right}` | The same base ID plus the presentation suffix. |
+| slopers | `lower-sloper-{left,right}` | The same base ID plus the presentation suffix. |
+
+Orientation 1 retains the audited stable IDs unchanged. The package schema maps
+one hold record to one `presentationID`, so Orientations 2–4 require suffixed
+records for their distinct canonical frames. This yields 72 presentation-mapped
+records and 88 pieces while still representing only 18 physical contacts per
+presentation. Metadata is identical across copies of the same physical contact;
+only ID, display name, presentation ID, frame, and path orientation differ.
+
+Asset provenance is deterministic and contains no generated or inferred product
+pixels. The existing 1774×887 PNG is two equal 887×887 manufacturer-image
+halves and remains byte-for-byte unchanged as Orientation 1. Orientations 2 and
+3 split on that exact half boundary, apply only the guide-prescribed cardinal
+rotations to each complete half, and rejoin them on the same 1774×887 canvas.
+Orientation 4 additionally swaps the complete halves before its prescribed
+cardinal rotation, following pp. 12–15. No generative image editing, detection,
+segmentation, masking, vectorization, registration, or path inference was used.
+The canonical Orientation 2–4 paths apply the corresponding rigid transforms to
+the directly reviewed Orientation 1 paths; right-side paths are exact mirrors of
+their transformed left-side partners, as the symmetric product evidence allows.
+All four rasters and all four path sets were visually reviewed against the
+numbered guide diagrams.
 
 The depth guide maps the stable pairs exactly: `upper-sloped-crimp-*` to
 `12.5 mm`, `outer-sloped-crimp-*` to `11.5 mm`, `variable-edge-*` to
@@ -109,10 +162,10 @@ The depth guide maps the stable pairs exactly: `upper-sloped-crimp-*` to
 `17–28 mm`. The orientation guide explicitly draws four fingers on every
 non-pocket contact represented in this presentation and two or three on the
 corresponding pocket openings. Those capacities are retained; the two pocket
-postures/features and lower-sloper posture are retained where the guide has an
-exact schema representation. Supported/sloped crimp labels do not distinguish
+postures and lower-sloper posture are retained where the guide has an exact
+schema representation. Supported/sloped crimp labels do not distinguish
 the app's half- versus full-crimp postures, so those posture fields stay blank.
-The pinch changes role across orientations, so no width feature is selected.
+The source does not establish exact feature-tag arrays, so features stay blank.
 
 ## 2026-08-25 per-contact metadata ledger
 
@@ -125,7 +178,7 @@ to the first-party diagrams before the canonical ledger was written.
 | --- | --- | --- |
 | Forge | 20 kinds; rail/crimp/MR measurements; eight MR/IM two-finger capacities and pocket postures; four sloper postures; literal large-flat-edge and pocket features | IM lobe depths remain blank because `19–31 mm` is published only for the aggregate IMR area; no hand capacities; no unsupported crimper/rail postures |
 | Natural | 14 kinds; jug/rail/upper-pocket measurements; 14 diagrammed finger capacities; six pocket postures/features; jug feature; closed-crimp schema adaptation | closed-crimp, center-lower-pocket, and supported-pocket measurements remain blank because the current official sources conflict; all hand capacities and unsupported rail/jug postures remain blank |
-| Pivot | 18 kinds; all seven depth-guide measurement groups; all 18 diagrammed finger capacities; four pocket postures/features; two sloper postures | all hand capacities; generic supported/sloped crimp postures; orientation-dependent pinch features; measurements not published by the depth guide |
+| Pivot | 18 kinds; all seven depth-guide measurement groups; all 18 diagrammed finger capacities; four pocket postures; two sloper postures | all hand capacities and features; generic supported/sloped crimp postures; measurements not published by the depth guide |
 
 Every omitted field has a hold-level reason and primary source in
 `2026-08-25-hangboard-metadata-ledger.json`. No geometry, hold identity, or
@@ -140,88 +193,3 @@ All 12 constrained Forge and Natural pieces pass the production `+1 px` resize
 invariants. A zero-distance save can reserialize decimal precision, so these
 pieces are verified for mathematical oval consistency and no visible snap
 rather than claimed as byte-exact.
-
-## 2026-08-26 Pivot configuration-variation audit
-
-Reviewed 2026-08-26 against Trango's [Pivot product
-page](https://trango.com/products/rock-prodigy-pivot), [Quick Start
-Guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507),
-and [Depth
-Guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905).
-The product page says the Pivot has four usage orientations and 22 distinct
-grip positions. The Quick Start's orientation material is explicitly a guide
-to *key* holds, not a comprehensive list of all possible holds. For this audit,
-“intended orientation contacts” means the named Quick Start key grips, and the
-guide's non-comprehensive caveat limits the selection. These five packages
-therefore model only those named key grip positions for their mounting state.
-They do not claim a complete casting-wide physical-contact inventory, add
-alternate grips, derive measurements, or carry optional capacity, posture,
-feature, or coaching metadata.
-
-Neither the Pivot product page nor either cited Pivot guide provides board
-dimensions. The orientation packages consequently omit `dimensions`; the
-previous dimension string was unsupported and is not retained as a package
-fact.
-
-Each package is a direct child under `Hangboards/` and now uses the official
-configuration summary panel from its Quick Start orientation page rather than
-the base package's unrotated product image. The official PDF was rendered with
-macOS PDFKit at 2× into 912 × 1344 RGBA PNG pages. An operator then selected the
-published summary-panel rectangle listed below; the crop did not resample,
-retouch, register, align, detect, segment, vectorize, simplify, or generate any
-manufacturer artwork. To satisfy the repository's transparent-primary PNG
-contract, only the final `(0, 0)` corner pixel had its alpha set to zero; its
-RGB channels and every other source pixel were preserved.
-
-| package | Quick Start source presentation | manual source-pixel crop | final PNG identity |
-| --- | --- | --- | --- |
-| `trango-rock-prodigy-pivot-orientation-1` | printed page 6 / PDF index 5, Orientation 1 summary | `x=130, y=885, 650 × 264` | `650 × 264`; SHA-256 `9c4e31db309ffe8a554695038e463402fdc1bd6b29a4a0a380288d678a56ae61` |
-| `trango-rock-prodigy-pivot-orientation-2-90-outwards` | printed page 8 / PDF index 7, Orientation 2 90° Outwards summary | `x=302, y=833, 308 × 327` | `308 × 327`; SHA-256 `39c04d89e09fba49bcbee0803c40fdf7e843cfffeafc5ae175cf17b38f992ff9` |
-| `trango-rock-prodigy-pivot-orientation-3-90-inwards` | printed page 10 / PDF index 9, Orientation 3 90° Inwards summary | `x=130, y=825, 650 × 254` | `650 × 254`; SHA-256 `305a86c175d74b34877378511d3a062e9b3d253cdad44644f2e6be6bc401a6ee` |
-| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` | printed page 12 / PDF index 11, Orientation 3 Switch L-to-R summary | `x=130, y=825, 650 × 251` | `650 × 251`; SHA-256 `1f4d4f019df7acf52b89ce18c0af4bd60c8ac1de0df58bccb31f0855d15e8a38` |
-| `trango-rock-prodigy-pivot-orientation-4-90-outwards` | printed page 14 / PDF index 13, Orientation 4 90° Outwards summary | `x=302, y=842, 308 × 326` | `308 × 326`; SHA-256 `55cefe136fe40bf3ad06b792bbd765743e0d3da93a0732a32a11beee80fbb428` |
-
-Every normalized canonical path was deliberately redrawn and reviewed against
-its package's own orientation summary panel, with the following printed
-detail page used to identify the named surface: Orientation 1 page 7,
-Orientation 2 page 9, Orientation 3 page 11, Orientation 3 Switch page 13,
-and Orientation 4 page 15. No base-package coordinates or automated rotation
-transform were used. The official panels are bilateral mirrors for each
-mounting state, so the reviewed right-side path is an exact normalized mirror
-of the reviewed left-side path. When Trango depicts a named grip on both
-halves, each component is a separate logical hold because it is a separate
-physical contact. Orientation 1's Jug and Horizontal Pinch usages remain
-combined once per side because the Quick Start applies both usage names to the
-same wedge contact; there is no overlapping duplicate jug/pinch record.
-
-This completed direct visual geometry review against the official panels did
-not include normal, active, or hit-testing validation in a simulator.
-`CONDUCTOR_WORKSPACE_NAME` was unavailable, so no simulator was created for
-this work and none of those simulator states was performed or claimed.
-
-| package / mounting state | documented key grip | schema kind | source-page and package-asset mapping |
-| --- | --- | --- | --- |
-| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug / Horizontal Pinch | `jug` | Printed page 7 identifies the outer diagonal finger surface and lower thumb surface on both halves; both directly authored pieces remain one combined logical record per side. `jug` is the conservative allowed schema adaptation and does not claim a separate pinch contact. |
-| same | Variable Depth Sloper Rail | `sloper` | Printed page 7 identifies the long lower rail on each horizontal half. |
-| same | Medium Supported Crimp | `edge` | Printed page 7 identifies the short center crimp on each horizontal half. |
-| same | Large Sloped Crimp | `edge` | Printed page 7 identifies the upper inner sloped surface on each horizontal half. |
-| `trango-rock-prodigy-pivot-orientation-2-90-outwards` / Orientation 2, 90° Outwards | Shallow Mono | `pocket` | Printed page 9 identifies the one-finger use at the end of the long vertical rail; the directly authored path retains that continuous visible rail contact rather than inventing a sub-contour. |
-| same | Steep Gaston | `edge` | Printed page 9 identifies the lower inward-facing diagonal surface on both vertical halves. |
-| same | Small Sloped Crimp | `edge` | Printed page 9 identifies the short upper surface on both vertical halves. |
-| `trango-rock-prodigy-pivot-orientation-3-90-inwards` / Orientation 3, 90° Inwards | 2 Finger Pocket | `pocket` | Printed page 11 identifies the larger lower outside pocket opening on each horizontal half. |
-| same | 3 Finger Pocket | `pocket` | Printed page 11 identifies the smaller lower inside pocket opening on each horizontal half. |
-| same | Large Supported Crimp | `edge` | Printed page 11 identifies the lower supported crimp surface adjacent to the pocket openings. |
-| same | Sloper | `sloper` | Printed page 11 identifies the bumpy upper sloper surface on both horizontal halves. |
-| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` / Orientation 3 Switch, L-to-R | Variable Depth Incut Rail | `edge` | Printed page 13 identifies the long upper incut rail on each switched horizontal half. |
-| same | Shallow Gaston | `edge` | Printed page 13 identifies the outward diagonal surface on each switched horizontal half. |
-| `trango-rock-prodigy-pivot-orientation-4-90-outwards` / Orientation 4, 90° Outwards | Compression Pinch | `pinch` | Printed page 15 identifies the outer diagonal finger surface and inner thumb surface; both directly authored pieces remain one logical record per side. |
-| same | Deep Mono | `pocket` | Printed page 15 identifies the one-finger use at the bottom of the long vertical rail; the directly authored path retains that continuous visible rail contact rather than inventing a sub-contour. |
-| same | Medium Mono | `pocket` | Printed page 15 identifies the lower outside pocket opening on each vertical half. |
-
-“Orientation 3 Switch” is counted separately from Orientation 3 for package
-selection because the Quick Start directs an L-to-R board switch and names a
-different key-grip set. It is not a fifth physical rotation: the product page's
-four-orientation statement remains the product identity claim. Conversely,
-the 22-position statement does not justify filling the orientation packages
-with undocumented entries because the manufacturer guide says the shown key
-holds are non-comprehensive.
