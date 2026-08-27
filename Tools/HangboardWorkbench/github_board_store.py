@@ -1118,34 +1118,51 @@ def _load_package_from_entries(
     images: dict[str, bytes] = {}
     dimensions: dict[str, tuple[int, int]] = {}
     primary_entry = asset_entries.get("assets/primary.png")
-    if primary_entry is not None:
-        primary_image = _get_blob(
-            client, token, primary_entry, "package primary image"
-        )
-        images["assets/primary.png"] = primary_image
-        dimensions["assets/primary.png"] = (
-            board_package._png_header_dimensions_from_bytes(primary_image[:33])
-            if inspect_png_header_only
-            else board_package._png_dimensions_from_bytes(primary_image)
-        )
     board_entry = entries["board.json"]
-    board = _load_board_json(_get_blob(client, token, board_entry, "board.json"))
-    presentation_values = board_package._parse_board_presentations(board)
-    expected_assets = {item[2] for item in presentation_values}
-    if set(asset_entries) != expected_assets:
-        raise board_package.BoardPackageError(
-            "board package assets must exactly match its presentations"
+    with ThreadPoolExecutor(
+        max_workers=min(_MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(asset_entries)))
+    ) as executor:
+        image_futures = {
+            asset_path: executor.submit(
+                _get_blob,
+                client,
+                token,
+                image_entry,
+                (
+                    "package primary image"
+                    if asset_path == "assets/primary.png"
+                    else "package presentation image"
+                ),
+            )
+            for asset_path, image_entry in asset_entries.items()
+        }
+        if primary_entry is not None:
+            primary_image = image_futures["assets/primary.png"].result()
+            images["assets/primary.png"] = primary_image
+            dimensions["assets/primary.png"] = (
+                board_package._png_header_dimensions_from_bytes(primary_image[:33])
+                if inspect_png_header_only
+                else board_package._png_dimensions_from_bytes(primary_image)
+            )
+        board = _load_board_json(
+            _get_blob(client, token, board_entry, "board.json")
         )
-    for asset_path, image_entry in sorted(asset_entries.items()):
-        if asset_path in images:
-            continue
-        image = _get_blob(client, token, image_entry, "package presentation image")
-        images[asset_path] = image
-        dimensions[asset_path] = (
-            board_package._png_header_dimensions_from_bytes(image[:33])
-            if inspect_png_header_only
-            else board_package._png_dimensions_from_bytes(image)
-        )
+        presentation_values = board_package._parse_board_presentations(board)
+        expected_assets = {item[2] for item in presentation_values}
+        if set(asset_entries) != expected_assets:
+            raise board_package.BoardPackageError(
+                "board package assets must exactly match its presentations"
+            )
+        for asset_path in sorted(asset_entries):
+            if asset_path in images:
+                continue
+            image = image_futures[asset_path].result()
+            images[asset_path] = image
+            dimensions[asset_path] = (
+                board_package._png_header_dimensions_from_bytes(image[:33])
+                if inspect_png_header_only
+                else board_package._png_dimensions_from_bytes(image)
+            )
     presentations = tuple(
         board_package.BoardPresentation(
             id=presentation_id,
