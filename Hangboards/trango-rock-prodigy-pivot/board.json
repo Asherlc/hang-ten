@@ -4647,7 +4647,7 @@
     {
       "id": "hold-12",
       "name": "Hold 12",
-      "kind": "jug",
+      "kind": "sloper",
       "fingerCapacity": 4,
       "sizeMillimeters": 12.5,
       "geometry": [
@@ -4712,7 +4712,8 @@
           }
         }
       ],
-      "presentationID": "orientation-1"
+      "presentationID": "orientation-1",
+      "handCapacity": 1
     },
     {
       "id": "hold-2",
