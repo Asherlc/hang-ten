@@ -1696,6 +1696,58 @@
       ],
       "presentationID": "primary",
       "gripType": "twoFingerPocket"
+    },
+    {
+      "id": "hold-19",
+      "name": "Hold 19",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.144402755208,
+            "y": 0.339689657227,
+            "width": 0.157657930339,
+            "height": 0.048770345703
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.060968385109
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.966719738588,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.045038585049,
+                  0.987739872346
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
