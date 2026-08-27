@@ -153,7 +153,40 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "Nothing to restore. No lifetime unlock purchase was found."
         ].waitForExistence(timeout: 2))
-        XCTAssertTrue(app.buttons["paywall.retryProduct"].exists)
+        let retry = app.buttons["paywall.retryProduct"]
+        XCTAssertTrue(retry.exists)
+        XCTAssertTrue(retry.isEnabled)
+
+        retry.tap()
+
+        let purchase = app.buttons["paywall.purchase"]
+        XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
+        XCTAssertTrue(purchase.isEnabled)
+        XCTAssertFalse(app.navigationBars["Session"].exists)
+    }
+
+    func testRetryRemainsHittableAfterProductLoadFailureAndRestoreFailure() {
+        let app = lockedPlanApp()
+        app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_PRODUCT_LOAD_FAILURES"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_RESTORE_OUTCOME"] = "failed"
+        app.launch()
+
+        app.buttons["plan.startRoutine"].tap()
+        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 2))
+
+        app.buttons["paywall.restore"].tap()
+
+        XCTAssertTrue(app.staticTexts[
+            "Restore failed. Please try again."
+        ].waitForExistence(timeout: 2))
+        let retry = app.buttons["paywall.retryProduct"]
+        XCTAssertTrue(retry.exists)
+        XCTAssertTrue(retry.isEnabled)
+
+        retry.tap()
+
+        XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
         XCTAssertFalse(app.navigationBars["Session"].exists)
     }
 

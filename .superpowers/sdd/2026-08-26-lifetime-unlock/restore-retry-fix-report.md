@@ -73,3 +73,38 @@ were removed by the cleanup lifecycle.
 
 No live StoreKit test guards or StoreKit semantics were changed. The focused
 UI test runs emitted the pre-existing Xcode DVT device build-number warning.
+
+## Test-only completion round
+
+The review's concern is covered without changing `PurchaseManager.prepare()`:
+retry is permitted to recheck a current verified StoreKit entitlement, which
+is validation of existing access rather than granting access. No production
+code was modified in this round.
+
+- Extended `testRetryRemainsAvailableAfterProductLoadFailureAndEmptyRestore`
+  to assert retry is enabled, tap it after the no-entitlement Restore result,
+  and verify the localized `Unlock for $2.99` Buy action becomes enabled while
+  Session remains closed.
+- Added
+  `testRetryRemainsHittableAfterProductLoadFailureAndRestoreFailure`, which
+  forces Restore to fail after the metadata-load failure, verifies retry is
+  present and enabled, taps it, and confirms product metadata recovers without
+  launching Session.
+
+Command:
+
+```sh
+rtk xcodebuild test -quiet -project HangTen.xcodeproj -scheme HangTen \
+  -destination 'platform=iOS Simulator,id=F85E7391-DACF-4117-8AF5-9406996E8480' \
+  -only-testing:HangTenUITests/WorkoutPaywallUITests \
+  -derivedDataPath .context/DerivedData-restore-retry-completion
+```
+
+Result: exit 0. The tests were added against an already-correct production
+predicate, so the test-only round had no legitimate RED production failure;
+the new forced restore-failure branch passed without a production edit.
+
+Cleanup: `F85E7391-DACF-4117-8AF5-9406996E8480`
+(`Hang Ten Conductor fearless-swan restore-retry-completion`) was deleted and
+verified absent. The owned and pending simulator manifests are both 0 bytes,
+and the temporary DerivedData directory was removed.
