@@ -84,7 +84,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "variable-edge-left",
