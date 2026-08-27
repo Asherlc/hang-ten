@@ -306,7 +306,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "closed-crimp-left",
