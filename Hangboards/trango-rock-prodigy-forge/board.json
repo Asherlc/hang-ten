@@ -1943,7 +1943,7 @@
     {
       "id": "hold-30",
       "name": "Hold 30",
-      "kind": "edge",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
@@ -1990,7 +1990,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     }
   ],
   "presentations": [
