@@ -2009,6 +2009,74 @@
       "presentationID": "primary",
       "fingerCapacity": 4,
       "handCapacity": 1
+    },
+    {
+      "id": "hold-31",
+      "name": "Hold 31",
+      "kind": "pinch",
+      "fingerCapacity": 4,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.817489214844,
+            "y": 0.460881716797,
+            "width": 0.147836274089,
+            "height": 0.150470652344
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.929645609282,
+                  0.740254640342
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.432632465161
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.121145001533,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.06530989728,
+                  0.32431834909
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.556563790328
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.799025810317,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
