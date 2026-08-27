@@ -7326,6 +7326,58 @@
         }
       ],
       "presentationID": "orientation-2"
+    },
+    {
+      "id": "hold-53",
+      "name": "Hold 53",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.669773636979,
+            "y": 0.61166573168,
+            "width": 0.06,
+            "height": 0.12
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "orientation-2"
     }
   ],
   "presentations": [
