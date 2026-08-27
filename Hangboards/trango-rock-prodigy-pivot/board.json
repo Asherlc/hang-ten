@@ -1393,10 +1393,7 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "two-finger-pocket-right",
@@ -1528,10 +1525,7 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "three-finger-pocket-left",
@@ -1678,10 +1672,7 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "three-finger-pocket-right",
@@ -1828,10 +1819,7 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "outer-wedge-pinch-left",
@@ -4215,10 +4203,7 @@
         }
       ],
       "presentationID": "orientation-2",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "two-finger-pocket-right-orientation-2",
@@ -4350,10 +4335,7 @@
         }
       ],
       "presentationID": "orientation-2",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "three-finger-pocket-left-orientation-2",
@@ -4500,10 +4482,7 @@
         }
       ],
       "presentationID": "orientation-2",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "three-finger-pocket-right-orientation-2",
@@ -4650,10 +4629,7 @@
         }
       ],
       "presentationID": "orientation-2",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "outer-wedge-pinch-left-orientation-2",
@@ -7037,10 +7013,7 @@
         }
       ],
       "presentationID": "orientation-3",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "two-finger-pocket-right-orientation-3",
@@ -7172,10 +7145,7 @@
         }
       ],
       "presentationID": "orientation-3",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "three-finger-pocket-left-orientation-3",
@@ -7322,10 +7292,7 @@
         }
       ],
       "presentationID": "orientation-3",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "three-finger-pocket-right-orientation-3",
@@ -7472,10 +7439,7 @@
         }
       ],
       "presentationID": "orientation-3",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "outer-wedge-pinch-left-orientation-3",
@@ -9859,10 +9823,7 @@
         }
       ],
       "presentationID": "orientation-4",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "two-finger-pocket-right-orientation-4",
@@ -9994,10 +9955,7 @@
         }
       ],
       "presentationID": "orientation-4",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "three-finger-pocket-left-orientation-4",
@@ -10144,10 +10102,7 @@
         }
       ],
       "presentationID": "orientation-4",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "three-finger-pocket-right-orientation-4",
@@ -10294,10 +10249,7 @@
         }
       ],
       "presentationID": "orientation-4",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "outer-wedge-pinch-left-orientation-4",

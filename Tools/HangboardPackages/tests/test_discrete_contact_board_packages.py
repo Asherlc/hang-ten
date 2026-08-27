@@ -46,10 +46,31 @@ def test_grindstone_discrete_steps_are_individual_scalar_depth_holds() -> None:
     assert all("depthRangeMillimeters" not in hold for hold in board["holds"])
 
 
-def test_honestone_discrete_steps_are_individual_scalar_depth_holds() -> None:
+def test_honestone_discrete_steps_and_macro_selection_regions_are_source_safe() -> None:
     board = _board("tension-honestone")
 
-    assert len(board["holds"]) == 12
+    assert len(board["holds"]) == 15
+    assert {
+        kind: sum(hold["kind"] == kind for hold in board["holds"])
+        for kind in ("edge", "pocket", "sloper")
+    } == {"edge": 9, "pocket": 2, "sloper": 4}
+    macro_slopers = [
+        hold
+        for hold in board["holds"]
+        if hold["id"].startswith("macro-sloper-")
+    ]
+    assert [hold["id"] for hold in macro_slopers] == [
+        "macro-sloper-left",
+        "macro-sloper-right-center",
+        "macro-sloper-left-center",
+        "macro-sloper-right",
+    ]
+    assert all(
+        "sizeMillimeters" not in hold
+        and "fingerCapacity" not in hold
+        and "gripType" not in hold
+        for hold in macro_slopers
+    )
     assert _depth_inventory("tension-honestone") == {
         "mono-left": 25,
         "mono-right": 25,
@@ -99,6 +120,71 @@ def test_whetstone_source_side_shelves_have_independently_authored_paths() -> No
     }
 
     assert len(source_side_shapes) == 4
+
+
+def test_split_palm_and_training_tiles_expose_descriptive_adapted_contacts() -> None:
+    split_palm = _board("soill-split-palm")
+    assert {
+        hold["id"]: (hold["name"], hold["kind"])
+        for hold in split_palm["holds"]
+        if hold["kind"] == "pinch"
+    } == {
+        "lower-pinch-left": ("Left lower pinch", "pinch"),
+        "lower-pinch-right": ("Right lower pinch", "pinch"),
+    }
+
+    training_tiles = _board("soill-training-tiles")
+    assert len(training_tiles["holds"]) == 20
+    assert training_tiles["productURL"] == (
+        "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin"
+    )
+    assert training_tiles["dimensions"] == "Not published by manufacturer"
+    assert all(
+        all(
+            field not in hold
+            for field in (
+                "sizeMillimeters",
+                "depthRangeMillimeters",
+                "fingerCapacity",
+                "handCapacity",
+                "gripType",
+                "features",
+            )
+        )
+        for hold in training_tiles["holds"]
+    )
+    assert {
+        hold["id"]: (hold["name"], hold["kind"])
+        for hold in training_tiles["holds"]
+    } == {
+        "top-jug-left": ("Left top jug", "jug"),
+        "top-jug-right": ("Right top jug", "jug"),
+        "top-pocket-outer-left": ("Outer left top pocket", "pocket"),
+        "top-pocket-inner-left": ("Inner left top pocket", "pocket"),
+        "top-pocket-inner-right": ("Inner right top pocket", "pocket"),
+        "top-pocket-outer-right": ("Outer right top pocket", "pocket"),
+        "upper-sloper-outer-left": ("Outer left upper sloper", "sloper"),
+        "upper-sloper-inner-left": ("Inner left upper sloper", "sloper"),
+        "upper-sloper-inner-right": ("Inner right upper sloper", "sloper"),
+        "upper-sloper-outer-right": ("Outer right upper sloper", "sloper"),
+        "middle-edge-outer-left": ("Outer left middle edge", "edge"),
+        "middle-edge-inner-left": ("Inner left middle edge", "edge"),
+        "middle-edge-inner-right": ("Inner right middle edge", "edge"),
+        "middle-edge-outer-right": ("Outer right middle edge", "edge"),
+        "bottom-edge-outer-left": ("Outer left bottom edge", "edge"),
+        "bottom-edge-center-left": ("Center left bottom edge", "edge"),
+        "bottom-edge-inner-left": ("Inner left bottom edge", "edge"),
+        "bottom-edge-inner-right": ("Inner right bottom edge", "edge"),
+        "bottom-edge-center-right": ("Center right bottom edge", "edge"),
+        "bottom-edge-outer-right": ("Outer right bottom edge", "edge"),
+    }
+    assert all(
+        "sizeMillimeters" not in hold
+        and "depthRangeMillimeters" not in hold
+        and "fingerCapacity" not in hold
+        and "handCapacity" not in hold
+        for hold in training_tiles["holds"]
+    )
 
 
 def test_megalith_discrete_steps_are_individual_scalar_depth_holds() -> None:

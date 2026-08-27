@@ -177,7 +177,9 @@ struct RootView: View {
 		Group {
 			if reviewDestination == .workout,
 			   let plan = store.featuredPlan {
-				WorkoutView(plan: plan)
+				NavigationStack {
+					WorkoutAccessGate(plan: plan)
+				}
 			} else if reviewDestination == .boardEditor {
 				NavigationStack {
 					BoardEditorListView()
@@ -865,10 +867,11 @@ struct PlanDetailView: View {
                 metadata: store.metadata(for: currentPlan)
             ) {
             case .available:
-                NavigationLink(destination: WorkoutView(plan: currentPlan, startsImmediately: true)) {
+                WorkoutAccessGate(plan: currentPlan, startsImmediately: true) {
                     startRoutineLabel(for: currentPlan)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("plan.startRoutine")
             case .unavailable(let requirement):
                 VStack(alignment: .leading, spacing: 8) {
                     Button(action: {}) {

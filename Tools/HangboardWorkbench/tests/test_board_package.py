@@ -189,6 +189,190 @@ def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> Non
     ]
 
 
+def test_optional_orientation_presentation_reuses_a_declared_surface(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    shutil.copyfile(
+        PRIMARY_IMAGE,
+        package_root / "assets" / "front-inverted.png",
+    )
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"].append(
+            {
+                "id": "front-inverted",
+                "name": "Front upside down",
+                "assetPath": "assets/front-inverted.png",
+                "aspectRatio": 1774 / 457,
+                "default": False,
+                "sourcePresentationID": "front",
+                "isInverted": True,
+            }
+        ),
+    )
+
+    package = board_package.load_board_package(package_root)
+    inverted = package.presentation("front-inverted")
+
+    assert inverted.source_presentation_id == "front"
+    assert inverted.is_inverted is True
+
+
+def test_editor_document_for_an_inverted_alias_displays_its_source_holds(
+    tmp_path: Path,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    shutil.copyfile(PRIMARY_IMAGE, package_root / "assets" / "front-inverted.png")
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"].append(
+            {
+                "id": "front-inverted",
+                "name": "Front upside down",
+                "assetPath": "assets/front-inverted.png",
+                "aspectRatio": 1774 / 457,
+                "default": False,
+                "sourcePresentationID": "front",
+                "isInverted": True,
+            }
+        ),
+    )
+
+    package = board_package.load_board_package(package_root)
+    source = board_package.editor_document(package, "front")
+    inverted = board_package.editor_document(package, "front-inverted")
+
+    assert inverted["presentationID"] == "front-inverted"
+    assert [region["metadata"]["holdID"] for region in inverted["regions"]] == [
+        "hold-left",
+        "hold-left",
+    ]
+    assert {region["metadata"]["presentationID"] for region in inverted["regions"]} == {
+        "front-inverted"
+    }
+    source_path = board_package.parse_closed_path(
+        source["regions"][0]["displayPath"], 1774, 457
+    )
+    inverted_path = board_package.parse_closed_path(
+        inverted["regions"][0]["displayPath"], 1774, 457
+    )
+    source_xs, source_ys = zip(*source_path.contour)
+    inverted_xs, inverted_ys = zip(*inverted_path.contour)
+    assert min(inverted_xs) == pytest.approx(1774 - max(source_xs))
+    assert min(inverted_ys) == pytest.approx(457 - max(source_ys))
+    assert max(inverted_xs) - min(inverted_xs) == pytest.approx(
+        max(source_xs) - min(source_xs)
+    )
+    assert max(inverted_ys) - min(inverted_ys) == pytest.approx(
+        max(source_ys) - min(source_ys)
+    )
+
+
+def test_save_rejects_edits_to_an_alias_presentation(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    shutil.copyfile(PRIMARY_IMAGE, package_root / "assets" / "front-inverted.png")
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"].append(
+            {
+                "id": "front-inverted",
+                "name": "Front upside down",
+                "assetPath": "assets/front-inverted.png",
+                "aspectRatio": 1774 / 457,
+                "default": False,
+                "sourcePresentationID": "front",
+                "isInverted": True,
+            }
+        ),
+    )
+    document = board_package.editor_document(
+        board_package.load_board_package(package_root), "front-inverted"
+    )
+
+    with pytest.raises(BoardPackageError, match="alias presentations cannot be edited"):
+        board_package.save_editor_document(
+            library, "fixture-multi-presentation", document
+        )
+
+
+@pytest.mark.parametrize(
+    ("source_presentation_id", "message"),
+    [
+        ("missing", "must reference another declared presentation"),
+        ("front", "must reference another declared presentation"),
+    ],
+)
+def test_rejects_invalid_optional_orientation_source_reference(
+    tmp_path: Path,
+    source_presentation_id: str,
+    message: str,
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"][0].update(
+            {"sourcePresentationID": source_presentation_id}
+        ),
+    )
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
+
+
+def test_rejects_alias_chains_and_alias_owned_holds(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_multi_presentation_package(library)
+    shutil.copyfile(PRIMARY_IMAGE, package_root / "assets" / "front-inverted.png")
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"].append(
+            {
+                "id": "front-inverted",
+                "name": "Front upside down",
+                "assetPath": "assets/front-inverted.png",
+                "aspectRatio": 1774 / 457,
+                "default": False,
+                "sourcePresentationID": "front",
+                "isInverted": True,
+            }
+        ),
+    )
+
+    _mutate_board(
+        package_root,
+        lambda board: board["presentations"].append(
+            {
+                "id": "front-inverted-twice",
+                "name": "Front twice inverted",
+                "assetPath": "assets/front-inverted.png",
+                "aspectRatio": 1774 / 457,
+                "default": False,
+                "sourcePresentationID": "front-inverted",
+                "isInverted": False,
+            }
+        ),
+    )
+
+    with pytest.raises(BoardPackageError, match="canonical presentation"):
+        board_package.load_board_package(package_root)
+
+    _mutate_board(
+        package_root,
+        lambda board: (
+            board["presentations"].pop(),
+            board["holds"][0].__setitem__("presentationID", "front-inverted"),
+        ),
+    )
+
+    with pytest.raises(BoardPackageError, match="must be owned by a canonical presentation"):
+        board_package.load_board_package(package_root)
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [
@@ -313,6 +497,16 @@ def test_completed_packages_match_their_primary_image_aspect_ratio() -> None:
             )
 
     assert not mismatches, "\n".join(mismatches)
+
+
+def test_loads_completed_flash_board_without_unpublished_dimensions() -> None:
+    """Completed packages may omit manufacturer-unpublished dimensions."""
+    package = board_package.load_board_package(
+        REPOSITORY_ROOT / "Hangboards" / "tension-flash-board"
+    )
+
+    assert package.board["id"] == "tension.flash-board"
+    assert "dimensions" not in package.board
 
 
 def test_apply_editor_document_returns_updated_board_without_mutating_its_input() -> None:

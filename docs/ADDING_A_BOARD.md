@@ -19,6 +19,11 @@ Collect primary manufacturer evidence before naming or classifying holds:
 Do not infer measurements, finger capacity, hand capacity, or grip posture when the source does
 not establish them. Omit unknown optional fields instead of supplying defaults.
 
+Establish whether the evidence describes a genuinely different physical
+revision or another selectable surface, side, or mounting orientation of the
+same product. Different revisions get stable packages of their own so saved
+identity is never overwritten; presentation-only changes stay in one package.
+
 ## 2. Freeze the physical hold inventory
 
 List every distinct physical contact before drawing. Continuous contact surfaces

@@ -515,6 +515,48 @@ def test_unversioned_board_rejects_hold_with_an_unknown_presentation_id(tmp_path
         module.load_board_package(package_root)
 
 
+def test_unversioned_board_rejects_alias_chains_and_alias_owned_holds(
+    tmp_path: Path,
+) -> None:
+    module = load_board_catalog_module()
+    package_root = write_multi_presentation_board_package(tmp_path / "fixture-model")
+    document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    (package_root / "assets" / "front-inverted.png").write_bytes(PRIMARY_PNG_BYTES)
+    document["presentations"].append(
+        {
+            "id": "front-inverted",
+            "name": "Front upside down",
+            "assetPath": "assets/front-inverted.png",
+            "aspectRatio": 2,
+            "default": False,
+            "sourcePresentationID": "front",
+            "isInverted": True,
+        }
+    )
+    document["presentations"].append(
+        {
+            "id": "front-inverted-twice",
+            "name": "Front twice inverted",
+            "assetPath": "assets/front-inverted.png",
+            "aspectRatio": 2,
+            "default": False,
+            "sourcePresentationID": "front-inverted",
+            "isInverted": False,
+        }
+    )
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="must reference a canonical presentation"):
+        module.load_board_package(package_root)
+
+    document["presentations"].pop()
+    document["holds"][0]["presentationID"] = "front-inverted"
+    (package_root / "board.json").write_text(json.dumps(document), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="must be owned by a canonical presentation"):
+        module.load_board_package(package_root)
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [

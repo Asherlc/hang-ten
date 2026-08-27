@@ -77,6 +77,10 @@
 		AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */; };
 		AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000049 /* WorkoutStopwatch.swift */; };
 		AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000050 /* WorkoutStopwatchTests.swift */; };
+		AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000001 /* WorkoutAccessStore.swift */; };
+		AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */; };
+		AF0000000000000000000004 /* PurchaseManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000004 /* PurchaseManagerTests.swift */; };
+		AF0000000000000000000003 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000003 /* PurchaseManager.swift */; };
 		AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000051 /* AppStoreFavoritesTests.swift */; };
 		AA0000000000000000000052 /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000052 /* WorkoutHistory.swift */; };
 		AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */; };
@@ -101,16 +105,19 @@
 		AA00000000000000000000A1 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A1 /* TelemetryTests.swift */; };
 		AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */; };
 		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
-		AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* PostHogTelemetry.swift */; };
-		AB0000000000000000000003 /* OpenTelemetryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */; };
-		AB0000000000000000000004 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* PostHog */; };
-		AB0000000000000000000005 /* OpenTelemetryApi in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000002 /* OpenTelemetryApi */; };
-		AB0000000000000000000006 /* OpenTelemetrySdk in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000003 /* OpenTelemetrySdk */; };
-		AB0000000000000000000007 /* OpenTelemetryProtocolExporterHTTP in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */; };
+		AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */; };
+		AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* SentryDiagnostics.swift */; };
+		AB0000000000000000000004 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* AmplitudeSwift */; };
 		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
 		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
+		AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */; };
+		AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000005 /* WorkoutPaywallUITests.swift */; };
+		AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000006 /* WorkoutAccessGate.swift */; };
+		AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */; };
+		AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000009 /* StoreKitTest.framework */; };
+		AF0000000000000000000009 /* HangTen.storekit in Resources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000007 /* HangTen.storekit */; };
 		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
 		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
@@ -157,6 +164,12 @@
 		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
+		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
+		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000009 /* StoreKitTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKitTest.framework; path = Developer/Library/Frameworks/StoreKitTest.framework; sourceTree = SDKROOT; };
 		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
@@ -200,6 +213,10 @@
 		BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTargetSubstitutionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000049 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
 		BB0000000000000000000050 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000001 /* WorkoutAccessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStore.swift; sourceTree = "<group>"; };
+		BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStoreTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000003 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		BF0000000000000000000004 /* PurchaseManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManagerTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000051 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000052 /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
 		BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStore.swift; sourceTree = "<group>"; };
@@ -224,10 +241,10 @@
 		BB00000000000000000000A1 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPickerFiltersTests.swift; sourceTree = "<group>"; };
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
-		AC0000000000000000000002 /* PostHogTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHogTelemetry.swift; sourceTree = "<group>"; };
-		AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenTelemetryDiagnostics.swift; sourceTree = "<group>"; };
-		AC0000000000000000000004 /* PostHog.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.xcconfig; sourceTree = "<group>"; };
-		AC0000000000000000000005 /* PostHog.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PostHog.local.xcconfig.example; sourceTree = "<group>"; };
+		AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeAnalyticsTelemetry.swift; sourceTree = "<group>"; };
+		AC0000000000000000000003 /* SentryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryDiagnostics.swift; sourceTree = "<group>"; };
+		AC0000000000000000000004 /* Analytics.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.xcconfig; sourceTree = "<group>"; };
+		AC0000000000000000000005 /* Analytics.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.local.xcconfig.example; sourceTree = "<group>"; };
 		BB00000000000000000000B1 /* HoldPathEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngine.swift; sourceTree = "<group>"; };
 		BB00000000000000000000B2 /* BoardPackageWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriter.swift; sourceTree = "<group>"; };
 		BB00000000000000000000B3 /* BoardEditorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStore.swift; sourceTree = "<group>"; };
@@ -245,10 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000010 /* HealthKit.framework in Frameworks */,
-				AB0000000000000000000004 /* PostHog in Frameworks */,
-				AB0000000000000000000005 /* OpenTelemetryApi in Frameworks */,
-				AB0000000000000000000006 /* OpenTelemetrySdk in Frameworks */,
-				AB0000000000000000000007 /* OpenTelemetryProtocolExporterHTTP in Frameworks */,
+				AB0000000000000000000004 /* AmplitudeSwift in Frameworks */,
 				AB0000000000000000000008 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000017 /* XCTest.framework in Frameworks */,
+				AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +346,8 @@
 				BB0000000000000000000043 /* PlanFilters.swift */,
 				BB0000000000000000000047 /* WorkoutActivityRecording.swift */,
 				BB0000000000000000000049 /* WorkoutStopwatch.swift */,
+				BF0000000000000000000001 /* WorkoutAccessStore.swift */,
+				BF0000000000000000000003 /* PurchaseManager.swift */,
 				BB0000000000000000000052 /* WorkoutHistory.swift */,
 				BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */,
 				BB0000000000000000000054 /* WorkoutHistoryService.swift */,
@@ -344,8 +361,8 @@
 				BB00000000000000000000B3 /* BoardEditorStore.swift */,
 				BB00000000000000000000B4 /* GitHubBoardSyncService.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
-				AC0000000000000000000002 /* PostHogTelemetry.swift */,
-				AC0000000000000000000003 /* OpenTelemetryDiagnostics.swift */,
+				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
+				AC0000000000000000000003 /* SentryDiagnostics.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -353,8 +370,8 @@
 		DD0000000000000000000008 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				AC0000000000000000000004 /* PostHog.xcconfig */,
-				AC0000000000000000000005 /* PostHog.local.xcconfig.example */,
+				AC0000000000000000000004 /* Analytics.xcconfig */,
+				AC0000000000000000000005 /* Analytics.local.xcconfig.example */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -372,6 +389,7 @@
 				BB0000000000000000000097 /* HoldInspectorView.swift */,
 				BB0000000000000000000098 /* BoardEditorListView.swift */,
 				BB0000000000000000000099 /* GitHubEditorSyncViews.swift */,
+				BF0000000000000000000006 /* WorkoutAccessGate.swift */,
 				BB0000000000000000000092 /* AppSettingsView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
 				BB0000000000000000000032 /* MotherboardViews.swift */,
@@ -389,6 +407,7 @@
 				BB0000000000000000000007 /* Assets.xcassets */,
 				BB0000000000000000000017 /* PlanLibrary.json */,
 				C20000000000000000000001 /* CountdownAudio */,
+				BF0000000000000000000007 /* HangTen.storekit */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -396,6 +415,7 @@
 		DD0000000000000000000007 /* HangTenTests */ = {
 			isa = PBXGroup;
 			children = (
+				BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */,
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
 				BB0000000000000000000074 /* ForceSensorModelsTests.swift */,
@@ -419,6 +439,8 @@
 				BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */,
 				BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */,
 				BB0000000000000000000050 /* WorkoutStopwatchTests.swift */,
+				BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */,
+				BF0000000000000000000004 /* PurchaseManagerTests.swift */,
 				BB0000000000000000000051 /* AppStoreFavoritesTests.swift */,
 				BB0000000000000000000055 /* WorkoutHistoryTests.swift */,
 				BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */,
@@ -449,6 +471,8 @@
 			children = (
 				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
 				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
+				AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */,
+				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -501,10 +525,7 @@
 			);
 			name = HangTen;
 			packageProductDependencies = (
-				GG0000000000000000000001 /* PostHog */,
-				GG0000000000000000000002 /* OpenTelemetryApi */,
-				GG0000000000000000000003 /* OpenTelemetrySdk */,
-				GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */,
+				GG0000000000000000000001 /* AmplitudeSwift */,
 				GG0000000000000000000005 /* Sentry */,
 			);
 			productName = HangTen;
@@ -583,9 +604,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			packageReferences = (
-				HH0000000000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */,
-				HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */,
-				HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */,
+				HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
 				HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 				targets = (
@@ -612,6 +631,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000068 /* PlanLibrary.json in Resources */,
+				AF0000000000000000000009 /* HangTen.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -693,6 +713,8 @@
 				AA0000000000000000000043 /* PlanFilters.swift in Sources */,
 				AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */,
 				AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */,
+				AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */,
+				AF0000000000000000000003 /* PurchaseManager.swift in Sources */,
 				AA0000000000000000000052 /* WorkoutHistory.swift in Sources */,
 				AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */,
 				AA0000000000000000000054 /* WorkoutHistoryService.swift in Sources */,
@@ -708,12 +730,13 @@
 				AA0000000000000000000097 /* HoldInspectorView.swift in Sources */,
 				AA0000000000000000000098 /* BoardEditorListView.swift in Sources */,
 				AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */,
+				AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */,
 				AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */,
 				AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */,
 				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
-				AB0000000000000000000002 /* PostHogTelemetry.swift in Sources */,
-				AB0000000000000000000003 /* OpenTelemetryDiagnostics.swift in Sources */,
+				AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */,
+				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -721,6 +744,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */,
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
 				AA0000000000000000000074 /* ForceSensorModelsTests.swift in Sources */,
@@ -743,6 +767,8 @@
 				AA0000000000000000000046 /* PlanStorageTests.swift in Sources */,
 				AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */,
 				AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */,
+				AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */,
+				AF0000000000000000000004 /* PurchaseManagerTests.swift in Sources */,
 				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
 				AA0000000000000000000055 /* WorkoutHistoryTests.swift in Sources */,
 				AA0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift in Sources */,
@@ -774,34 +800,20 @@
 			files = (
 				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
 				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
+				AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */,
+				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		HH0000000000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+		HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
+			repositoryURL = "https://github.com/amplitude/Amplitude-Swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.59.3;
-			};
-		};
-		HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/open-telemetry/opentelemetry-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.0;
-			};
-		};
-		HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/open-telemetry/opentelemetry-swift-core.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.1;
+				minimumVersion = 1.15.0;
 			};
 		};
 		HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
@@ -815,25 +827,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		GG0000000000000000000001 /* PostHog */ = {
+		GG0000000000000000000001 /* AmplitudeSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = HH0000000000000000000001 /* XCRemoteSwiftPackageReference "posthog-ios" */;
-			productName = PostHog;
-		};
-		GG0000000000000000000002 /* OpenTelemetryApi */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */;
-			productName = OpenTelemetryApi;
-		};
-		GG0000000000000000000003 /* OpenTelemetrySdk */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = HH0000000000000000000003 /* XCRemoteSwiftPackageReference "opentelemetry-swift-core" */;
-			productName = OpenTelemetrySdk;
-		};
-		GG0000000000000000000004 /* OpenTelemetryProtocolExporterHTTP */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = HH0000000000000000000002 /* XCRemoteSwiftPackageReference "opentelemetry-swift" */;
-			productName = OpenTelemetryProtocolExporterHTTP;
+			package = HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
+			productName = AmplitudeSwift;
 		};
 		GG0000000000000000000005 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -924,7 +921,7 @@
 		};
 		FF0000000000000000000021 /* Debug */ = {
 			isa = XCBuildConfiguration;
-				baseConfigurationReference = AC0000000000000000000004 /* PostHog.xcconfig */;
+				baseConfigurationReference = AC0000000000000000000004 /* Analytics.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -939,8 +936,7 @@
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
-				INFOPLIST_KEY_POSTHOG_CLIENT_TOKEN = "$(POSTHOG_CLIENT_TOKEN)";
-				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
+				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_SENTRY_DSN = "$(SENTRY_DSN)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -949,6 +945,11 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0.0;
 				CODE_SIGN_ENTITLEMENTS = HangTen/HangTen.entitlements;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training";
@@ -961,7 +962,7 @@
 		};
 		FF0000000000000000000022 /* Release */ = {
 			isa = XCBuildConfiguration;
-				baseConfigurationReference = AC0000000000000000000004 /* PostHog.xcconfig */;
+				baseConfigurationReference = AC0000000000000000000004 /* Analytics.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -978,8 +979,7 @@
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
-				INFOPLIST_KEY_POSTHOG_CLIENT_TOKEN = "$(POSTHOG_CLIENT_TOKEN)";
-				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
+				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_SENTRY_DSN = "$(SENTRY_DSN)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -988,6 +988,11 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0.0;
 				CODE_SIGN_ENTITLEMENTS = HangTen/HangTen.entitlements;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training";

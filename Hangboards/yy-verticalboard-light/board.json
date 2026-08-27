@@ -11,9 +11,6 @@
       "id": "jug-left",
       "name": "Left top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -85,9 +82,6 @@
       "id": "jug-right",
       "name": "Right top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {

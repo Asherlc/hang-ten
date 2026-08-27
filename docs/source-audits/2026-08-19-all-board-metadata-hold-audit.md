@@ -42,15 +42,14 @@ is the supported Beta Board package.
 ### `beastmaker-2000`
 
 - **Source:** [Beastmaker 2000 Series](https://www.beastmaker.co.uk/products/beastmaker-2000-series).
-- **Current JSON holds:** 25.
-- **Source-backed expected physical count:** 25.
+- **Current JSON holds:** 27.
+- **Source-backed expected physical count:** 27.
 - **Verified facts:** Beastmaker 2000; `580 × 150 × 58 mm`. The grouped source
   inventory supports hold kinds; the clearly central lower edge is the official
   22 mm middle edge.
-- **Discrepancy:** current image-derived millimetre values are not mapped
-  one-to-one by the manufacturer.
-- **Action:** `correct` — retain 25 regions, preserve only the clearly mapped
-  22 mm fact, and remove unsupported derived values.
+- **Discrepancy:** none; the current 27-region inventory is source-backed.
+- **Action:** `retain` — preserve the 27 regions and only the manufacturer-
+  supported metadata mappings.
 
 ### `dewoodstok-woodbord`
 
@@ -268,26 +267,34 @@ none of the removed art or geometry was restored as a starting point.
 
 ### `soill-split-palm`
 
-- **Source:** [So iLL Split Palm](https://soillholds.com/products/split-palm).
-- **Current JSON holds:** 14.
+- **Source:** [So iLL Split Palm](https://soill.ca/products/split-palm).
+- **Current JSON holds:** 16 app-selectable contacts.
 - **Source-backed expected physical count:** 14.
 - **Verified facts:** current So iLL Split Palm identity; each piece is
   `16.5 × 11 × 3.875 in`; the manufacturer enumerates seven contacts per piece.
-- **Discrepancy:** resolved; each distinct molded contact is represented once.
-- **Action:** directly authored and visually reviewed; retain as complete.
+- **Discrepancy:** the manufacturer enumerates 14 contacts, while Hang Ten has
+  16 selectable contacts because `lower-pinch-left` and `lower-pinch-right`
+  are positional app adaptations rather than manufacturer-enumerated contacts.
+- **Action:** retain the 14 source-backed contacts plus the two explicitly
+  adapted lower-pinch selections.
 
 ### `soill-training-tiles`
 
-- **Sources:** [So iLL x Meagan Martin Training Tiles](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin);
+- **Sources:** [So iLL x Meagan Martin Training Tiles](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin);
   [Training Tiles workouts](https://soillholds.com/pages/meagan-martin-training-tiles-workouts).
-- **Current JSON holds:** 16.
-- **Source-backed expected physical count:** 16.
-- **Verified facts:** So iLL x Meagan Martin Training Tiles; each tile is
-  approximately `14 × 8 in`; the manufacturer enumerates eight contacts per
-  tile.
-- **Discrepancy:** resolved; grouped size values without a one-to-one location
-  mapping remain omitted from individual holds.
-- **Action:** directly authored and visually reviewed; retain as complete.
+- **Current JSON holds:** 20 descriptive app-selection roles.
+- **Source-backed expected physical count:** not established by the current
+  manufacturer listing.
+- **Verified facts:** So iLL x Meagan Martin Training Tiles identity; each tile
+  approximately `14 × 8 in`; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm
+  slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges.
+  The source has no manufacturer-authored 20-contact ID map.
+- **Discrepancy:** the source’s singular top-pocket group does not map
+  one-to-one to Hang Ten’s four top-pocket regions or its 20 selectable roles.
+  The visual jug, pocket, sloper, and edge roles remain explicitly adapted and
+  all per-contact values remain omitted.
+- **Action:** retain the app adaptations with their source-limited ledger
+  records; do not represent them as manufacturer-labelled contacts.
 
 ### `target10a-linebreaker-base`
 

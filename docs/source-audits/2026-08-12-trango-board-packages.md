@@ -160,10 +160,10 @@ The depth guide maps the stable pairs exactly: `upper-sloped-crimp-*` to
 `17–28 mm`. The orientation guide explicitly draws four fingers on every
 non-pocket contact represented in this presentation and two or three on the
 corresponding pocket openings. Those capacities are retained; the two pocket
-postures/features and lower-sloper posture are retained where the guide has an
-exact schema representation. Supported/sloped crimp labels do not distinguish
+postures and lower-sloper posture are retained where the guide has an exact
+schema representation. Supported/sloped crimp labels do not distinguish
 the app's half- versus full-crimp postures, so those posture fields stay blank.
-The pinch changes role across orientations, so no width feature is selected.
+The source does not establish exact feature-tag arrays, so features stay blank.
 
 ## 2026-08-25 per-contact metadata ledger
 
@@ -176,7 +176,7 @@ to the first-party diagrams before the canonical ledger was written.
 | --- | --- | --- |
 | Forge | 20 kinds; rail/crimp/MR measurements; eight MR/IM two-finger capacities and pocket postures; four sloper postures; literal large-flat-edge and pocket features | IM lobe depths remain blank because `19–31 mm` is published only for the aggregate IMR area; no hand capacities; no unsupported crimper/rail postures |
 | Natural | 14 kinds; jug/rail/upper-pocket measurements; 14 diagrammed finger capacities; six pocket postures/features; jug feature; closed-crimp schema adaptation | closed-crimp, center-lower-pocket, and supported-pocket measurements remain blank because the current official sources conflict; all hand capacities and unsupported rail/jug postures remain blank |
-| Pivot | 18 kinds; all seven depth-guide measurement groups; all 18 diagrammed finger capacities; four pocket postures/features; two sloper postures | all hand capacities; generic supported/sloped crimp postures; orientation-dependent pinch features; measurements not published by the depth guide |
+| Pivot | 18 kinds; all seven depth-guide measurement groups; all 18 diagrammed finger capacities; four pocket postures; two sloper postures | all hand capacities and features; generic supported/sloped crimp postures; measurements not published by the depth guide |
 
 Every omitted field has a hold-level reason and primary source in
 `2026-08-25-hangboard-metadata-ledger.json`. No geometry, hold identity, or

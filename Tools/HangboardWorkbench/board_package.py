@@ -33,19 +33,19 @@ from board_geometry import (
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
-_BOARD_FIELDS = frozenset(
+_BOARD_REQUIRED_FIELDS = frozenset(
     {
         "id",
         "manufacturer",
         "name",
         "subtitle",
         "productURL",
-        "dimensions",
         "aspectRatio",
         "presentations",
         "holds",
     }
 )
+_BOARD_OPTIONAL_FIELDS = frozenset({"dimensions"})
 _HOLD_REQUIRED_FIELDS = frozenset({"id", "name", "kind", "geometry"})
 _HOLD_OPTIONAL_FIELDS = frozenset(
     {
@@ -121,6 +121,8 @@ class BoardPresentation:
     is_default: bool
     image_width: int
     image_height: int
+    source_presentation_id: str | None = None
+    is_inverted: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -295,8 +297,18 @@ def _load_board_package(
             aspect_ratio,
             is_default,
             *dimensions[asset_path],
+            source_presentation_id,
+            is_inverted,
         )
-        for presentation_id, name, asset_path, aspect_ratio, is_default in presentation_values
+        for (
+            presentation_id,
+            name,
+            asset_path,
+            aspect_ratio,
+            is_default,
+            source_presentation_id,
+            is_inverted,
+        ) in presentation_values
     )
     default = next(item for item in presentations if item.is_default)
     # Discovery (header-only PNG inspection) only needs enough validation to
@@ -348,12 +360,13 @@ def editor_document(
 ) -> dict[str, object]:
     """Expose every geometry piece as an independently keyed editable region."""
     presentation = package.presentation(presentation_id)
+    source_presentation_id = presentation.source_presentation_id or presentation.id
     width, height = presentation.image_width, presentation.image_height
     regions: list[dict[str, object]] = []
     region_id = 1
     for hold in package.board["holds"]:
         hold_presentation_id = hold["presentationID"]
-        if hold_presentation_id != presentation.id:
+        if hold_presentation_id != source_presentation_id:
             continue
         hold_id = hold["id"]
         for piece_index, piece in enumerate(hold["geometry"]):
@@ -366,6 +379,8 @@ def editor_document(
                     height,
                     label=f"hold {key}",
                 )
+                if presentation.is_inverted:
+                    path = _inverted_display_path(path, width, height, label=f"hold {key}")
             except (GeometryError, KeyError, TypeError) as error:
                 raise BoardPackageError(f"hold {key} has invalid geometry") from error
             region: dict[str, object] = {
@@ -406,6 +421,25 @@ def editor_document(
     }
 
 
+def _inverted_display_path(
+    path: ClosedPath, width: int, height: int, *, label: str
+) -> ClosedPath:
+    """Rotate a source-owned display path 180 degrees for an inverted alias."""
+    commands: list[str] = []
+    for command, values in path.commands:
+        if command == "Z":
+            commands.append(command)
+            continue
+        inverted_values = tuple(
+            (width - value) if index % 2 == 0 else (height - value)
+            for index, value in enumerate(values)
+        )
+        commands.append(
+            " ".join((command, *(format(value, ".12g") for value in inverted_values)))
+        )
+    return parse_closed_path(" ".join(commands), width, height, label=label)
+
+
 def save_editor_document(
     library_root: Path, slug: str, document: Mapping[str, Any]
 ) -> BoardPackage:
@@ -425,6 +459,8 @@ def save_editor_document(
         presentation = live.presentation(
             requested_presentation_id if isinstance(requested_presentation_id, str) else None
         )
+        if presentation.source_presentation_id is not None:
+            raise BoardPackageError("alias presentations cannot be edited")
         width, height = presentation.image_width, presentation.image_height
         parsed_regions = _validate_editor_document(
             document,
@@ -891,19 +927,34 @@ def _remove_empty_recovery_directory(recovery: Path | None) -> None:
 
 def _parse_board_presentations(
     board: Mapping[str, Any],
-) -> tuple[tuple[str, str, str, float, bool], ...]:
-    _exact_keys(board, _BOARD_FIELDS, "board.json")
+) -> tuple[tuple[str, str, str, float, bool, str | None, bool], ...]:
+    _required_and_allowed_keys(
+        board,
+        _BOARD_REQUIRED_FIELDS,
+        _BOARD_REQUIRED_FIELDS | _BOARD_OPTIONAL_FIELDS,
+        "board.json",
+    )
     raw_presentations = board.get("presentations")
     if not isinstance(raw_presentations, list) or not raw_presentations:
         raise BoardPackageError("board.json.presentations must be a non-empty array")
-    presentations: list[tuple[str, str, str, float, bool]] = []
+    presentations: list[tuple[str, str, str, float, bool, str | None, bool]] = []
     identifiers: set[str] = set()
     defaults = 0
     for index, value in enumerate(raw_presentations):
         label = f"board.json.presentations[{index}]"
         if not isinstance(value, Mapping):
             raise BoardPackageError(f"{label} must be an object")
-        _exact_keys(value, {"id", "name", "assetPath", "aspectRatio", "default"}, label)
+        _required_and_allowed_keys(
+            value,
+            {
+                "id", "name", "assetPath", "aspectRatio", "default"
+            },
+            {
+                "id", "name", "assetPath", "aspectRatio", "default",
+                "sourcePresentationID", "isInverted",
+            },
+            label,
+        )
         presentation_id = _identifier(value.get("id"), f"{label}.id")
         if presentation_id in identifiers:
             raise BoardPackageError("duplicate presentation ID")
@@ -915,9 +966,37 @@ def _parse_board_presentations(
         if not isinstance(is_default, bool):
             raise BoardPackageError(f"{label}.default must be a boolean")
         defaults += int(is_default)
-        presentations.append((presentation_id, name, asset_path, aspect_ratio, is_default))
+        source_presentation_id = (
+            _identifier(value["sourcePresentationID"], f"{label}.sourcePresentationID")
+            if "sourcePresentationID" in value
+            else None
+        )
+        is_inverted = value.get("isInverted", False)
+        if not isinstance(is_inverted, bool):
+            raise BoardPackageError(f"{label}.isInverted must be a boolean")
+        presentations.append(
+            (
+                presentation_id,
+                name,
+                asset_path,
+                aspect_ratio,
+                is_default,
+                source_presentation_id,
+                is_inverted,
+            )
+        )
     if defaults != 1:
         raise BoardPackageError("board.json.presentations must have exactly one default")
+    presentations_by_id = {item[0]: item for item in presentations}
+    for presentation_id, _, _, _, _, source_presentation_id, _ in presentations:
+        if source_presentation_id is not None and (
+            source_presentation_id == presentation_id
+            or source_presentation_id not in presentations_by_id
+            or presentations_by_id[source_presentation_id][5] is not None
+        ):
+            raise BoardPackageError(
+                f"presentation {presentation_id} must reference another declared presentation and a canonical presentation"
+            )
     return tuple(presentations)
 
 
@@ -932,8 +1011,10 @@ def _validate_board(
 ) -> None:
     parsed_presentations = _parse_board_presentations(board)
     _identifier(board.get("id"), "board.json.id")
-    for field in ("manufacturer", "name", "subtitle", "dimensions"):
+    for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
+    if "dimensions" in board:
+        _non_empty_string(board["dimensions"], "board.json.dimensions")
     _https_url(board.get("productURL"), "board.json.productURL")
     aspect_ratio = _positive_number(
         board.get("aspectRatio"), "board.json.aspectRatio"
@@ -957,6 +1038,9 @@ def _validate_board(
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
     presentation_ids = {item[0] for item in parsed_presentations}
+    canonical_presentation_ids = {
+        item[0] for item in parsed_presentations if item[5] is None
+    }
     dimensions_by_id = {
         item.id: (item.image_width, item.image_height)
         for item in presentations or ()
@@ -969,9 +1053,11 @@ def _validate_board(
         )
         if hold_presentation_id not in presentation_ids:
             raise BoardPackageError(f"{label}.presentationID is unknown")
-        hold_width, hold_height = dimensions_by_id.get(
-            hold_presentation_id, (width, height)
-        )
+        if hold_presentation_id not in canonical_presentation_ids:
+            raise BoardPackageError(
+                f"{label}.presentationID must be owned by a canonical presentation"
+            )
+        hold_width, hold_height = dimensions_by_id.get(hold_presentation_id, (width, height))
         hold_id = _validate_hold(
             hold,
             hold_width,
@@ -992,8 +1078,10 @@ def validate_catalog_board(
     """Validate board metadata that does not depend on decoding its primary image."""
     parsed_presentations = _parse_board_presentations(board)
     _identifier(board.get("id"), "board.json.id")
-    for field in ("manufacturer", "name", "subtitle", "dimensions"):
+    for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
+    if "dimensions" in board:
+        _non_empty_string(board["dimensions"], "board.json.dimensions")
     _https_url(board.get("productURL"), "board.json.productURL")
     _positive_number(board.get("aspectRatio"), "board.json.aspectRatio")
     holds = board.get("holds")
@@ -1001,6 +1089,9 @@ def validate_catalog_board(
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
     presentation_ids = {item[0] for item in parsed_presentations}
+    canonical_presentation_ids = {
+        item[0] for item in parsed_presentations if item[5] is None
+    }
     for index, hold in enumerate(holds):
         label = f"board.json.holds[{index}]"
         hold_presentation_id = _identifier(
@@ -1009,6 +1100,10 @@ def validate_catalog_board(
         )
         if hold_presentation_id not in presentation_ids:
             raise BoardPackageError(f"{label}.presentationID is unknown")
+        if hold_presentation_id not in canonical_presentation_ids:
+            raise BoardPackageError(
+                f"{label}.presentationID must be owned by a canonical presentation"
+            )
         hold_id = _validate_hold(
             hold,
             1,

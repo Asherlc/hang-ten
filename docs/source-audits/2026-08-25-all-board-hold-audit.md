@@ -27,8 +27,10 @@ depth or hold guide.
 - [2026-08-12 Metolius audit](2026-08-12-metolius-board-packages.md) supplies
   the direct numbered diagrams used for the Contact correction below.
 
-`kind` is retained only where a primary product page, official labelled diagram,
-or official product view establishes the surface class. `fingerCapacity` is
+`kind` is verified where a primary product page, official labelled diagram, or
+official product view establishes the surface class; an app-specific visual
+role is marked `adapted` when the source does not identify that contact.
+`fingerCapacity` is
 retained only for explicitly named mono/duo/finger-pocket positions. Published
 edge and pocket depths are recorded as `sizeMillimeters`; the separate
 `depthRangeMillimeters` field is reserved for genuinely variable measurements.
@@ -44,8 +46,8 @@ that optional value. The product URL is the current primary manufacturer page.
 
 | Package | IDs | Kind counts | Source |
 | --- | ---: | --- | --- |
-| beastmaker-1000 | 22 | jug 2; pocket 17; sloper 3 | [manufacturer](https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series) |
-| beastmaker-2000 | 27 | edge 3; pocket 19; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
+| beastmaker-1000 | 22 | edge 9; jug 2; pocket 8; sloper 3 | [manufacturer](https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series) |
+| beastmaker-2000 | 27 | edge 6; pocket 16; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
 | dewoodstok-woodbord | 17 | pocket 16; sloper 1 | [manufacturer](https://www.dewoodstok.nl/product/hangboard-woodbord/) |
 | escape-beta-22 | 22 | edge 8; jug 4; pinch 4; sloper 6 | [manufacturer](https://escapeclimbing.com/products/ec72100) |
 | escape.unlimited | 7 | edge 6; sloper 1 | [manufacturer](https://escapeclimbing.com/products/ec72000) |
@@ -66,12 +68,12 @@ that optional value. The product URL is the current primary manufacturer page.
 | moon.armstrong | 21 | edge 12; jug 3; pocket 4; sloper 2 | [manufacturer](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html) |
 | nature.stoak-board-iii | 7 | edge 6; jug 1 | [manufacturer](https://natureclimbing.com/products/stoak-board-iii) |
 | soill.iron-palm-2 | 8 | edge 3; jug 1; pinch 2; sloper 2 | [manufacturer](https://soillholds.com/products/iron-palm-2-0) |
-| soill.split-palm | 14 | edge 8; jug 2; sloper 4 | [manufacturer](https://soillholds.com/products/split-palm) |
-| soill.training-tiles | 16 | edge 10; pocket 2; sloper 4 | [manufacturer](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin) |
+| soill.split-palm | 16 | edge 8; jug 2; pinch 2 adapted lower regions; sloper 4 | [manufacturer](https://soill.ca/products/split-palm) |
+| soill.training-tiles | 20 adapted visual roles | edge 10; jug 2; pocket 4; sloper 4 | [manufacturer](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin) |
 | target10a.linebreaker-base | 24 | edge 6; jug 2; pocket 12; sloper 4 | [manufacturer](https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html) |
 | tension.flash-board | 7 | edge 7 | [manufacturer](https://tensionclimbing.com/products/flash-board-2) |
 | tension.grindstone | 14 | edge 13; jug 1 | [manufacturer](https://tensionclimbing.com/products/grindstone) |
-| tension.honestone | 12 | edge 9; pocket 2; sloper 1 | [manufacturer](https://tensionclimbing.com/products/honestone) |
+| tension.honestone | 12 physical / 15 selectable | edge 9; pocket 2; sloper 4 selectable regions | [manufacturer](https://tensionclimbing.com/products/honestone) |
 | tension.whetstone | 12 | edge 9; jug 1; pocket 2 | [manufacturer](https://tensionclimbing.com/products/whetstone) |
 | the-hangboard.the-hangboard | 15 | edge 12; jug 2; sloper 1 | [manufacturer](https://thehangboard.com/products/hangboard) |
 | trango.rock-prodigy-forge | 20 | edge 8; pocket 8; sloper 4 | [manufacturer](https://trango.com/products/rock-prodigy-forge) |
@@ -88,6 +90,21 @@ that optional value. The product URL is the current primary manufacturer page.
 | yy.verticalboard-one | 20 | edge 10; jug 3; pocket 4; sloper 3 | [manufacturer](https://www.yyvertical.com/en/products/verticalboard-one) |
 | zlagboard.evo | 21 | edge 7; jug 2; sloper 12 | [manufacturer](https://www.zlagboard.com/hangboards) |
 | zlagboard.pro | 28 | edge 14; jug 2; sloper 12 | [manufacturer](https://www.zlagboard.com/hangboards) |
+
+## Source-limited app adaptations
+
+The current [Training Tiles listing](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin)
+publishes each tile at approximately `14 × 8 in` and grouped family facts: a
+3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive
+edges, and 36/31/24 mm bottom flat edges. It has no manufacturer-authored
+20-contact ID map; its singular top-pocket group does not map one-to-one to
+Hang Ten’s four top-pocket regions. Its 20 selected jugs, pockets, slopers,
+and edges are therefore descriptive Hang Ten adaptations, with no stored
+per-contact size or capacity. The [Split Palm listing](https://soill.ca/products/split-palm)
+confirms pinches as a category but does not locate the two lower regions, so
+`lower-pinch-left` and `lower-pinch-right` are adaptations. Honestone likewise
+describes one continuous macro sloper; its four selectable macro regions are
+adaptations rather than manufacturer-labelled contacts.
 
 ## Corrected mapping: Beastmaker 2000
 

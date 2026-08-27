@@ -296,9 +296,6 @@
       "name": "Left 38mm Mini-Jug",
       "kind": "jug",
       "sizeMillimeters": 38,
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -367,9 +364,6 @@
       "name": "Right 38mm Mini-Jug",
       "kind": "jug",
       "sizeMillimeters": 38,
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -438,9 +432,6 @@
       "name": "Left 29mm Incut Jug",
       "kind": "jug",
       "sizeMillimeters": 29,
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -509,9 +500,6 @@
       "name": "Right 29mm Incut Jug",
       "kind": "jug",
       "sizeMillimeters": 29,
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {

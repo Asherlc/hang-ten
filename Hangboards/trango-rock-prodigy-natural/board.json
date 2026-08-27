@@ -100,10 +100,7 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "top-jug-right",
@@ -198,10 +195,7 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4,
-      "features": [
-        "jug"
-      ]
+      "fingerCapacity": 4
     },
     {
       "id": "top-variable-rail-left",
@@ -933,10 +927,7 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 3,
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "upper-pocket-right",
@@ -1034,10 +1025,7 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 3,
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "center-lower-pocket-left",
@@ -1134,10 +1122,7 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 2,
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "center-lower-pocket-right",
@@ -1234,10 +1219,7 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 2,
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "outer-supported-pocket-left",
@@ -1413,10 +1395,7 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 3,
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "outer-supported-pocket-right",
@@ -1592,10 +1571,7 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 3,
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     }
   ],
   "presentations": [

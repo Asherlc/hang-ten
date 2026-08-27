@@ -86,7 +86,9 @@ struct BoardMapPresentationContent {
         let resolvedPresentation = board.presentation(id: selectedPresentationID)
             ?? board.defaultPresentation
         presentation = resolvedPresentation
-        holds = board.holds.filter { $0.presentationID == resolvedPresentation.id }
+        let sourcePresentationID = resolvedPresentation.sourcePresentationID
+            ?? resolvedPresentation.id
+        holds = board.holds.filter { $0.presentationID == sourcePresentationID }
     }
 }
 
@@ -99,13 +101,26 @@ struct BoardMapPresentationSelection: Equatable {
         activeHoldID: String?,
         highlightedHoldIDs: Set<String>
     ) {
-        presentationID = Self.presentationID(
-            for: activeHoldID,
-            on: board
-        ) ?? board.holds.first(where: {
-            highlightedHoldIDs.contains($0.id)
-        })?.presentationID ?? board.presentation(id: requestedPresentationID)?.id
+        let initialPresentationID = board.presentation(id: requestedPresentationID)?.id
             ?? board.defaultPresentation.id
+        if let activePresentationID = Self.presentationID(
+            for: activeHoldID,
+            preferring: initialPresentationID,
+            on: board
+        ) {
+            presentationID = activePresentationID
+        } else if let highlightedHoldID = board.holds.first(where: {
+            highlightedHoldIDs.contains($0.id)
+        })?.id,
+           let highlightedPresentationID = Self.presentationID(
+               for: highlightedHoldID,
+               preferring: initialPresentationID,
+               on: board
+           ) {
+            presentationID = highlightedPresentationID
+        } else {
+            presentationID = initialPresentationID
+        }
     }
 
     mutating func selectPresentation(id: String, on board: TrainingBoard) {
@@ -119,18 +134,30 @@ struct BoardMapPresentationSelection: Equatable {
         activeHoldID: String?,
         on board: TrainingBoard
     ) {
-        if let activePresentationID = Self.presentationID(for: activeHoldID, on: board) {
+        if let activePresentationID = Self.presentationID(
+            for: activeHoldID,
+            preferring: presentationID,
+            on: board
+        ) {
             presentationID = activePresentationID
             return
         }
         let addedHoldIDs = highlightedHoldIDs.subtracting(previousHoldIDs)
         if let addedHold = board.holds.first(where: { addedHoldIDs.contains($0.id) }) {
-            presentationID = addedHold.presentationID
+            presentationID = Self.presentationID(
+                for: addedHold.id,
+                preferring: presentationID,
+                on: board
+            ) ?? presentationID
         }
     }
 
     mutating func activateHold(id: String?, on board: TrainingBoard) {
-        guard let activePresentationID = Self.presentationID(for: id, on: board) else {
+        guard let activePresentationID = Self.presentationID(
+            for: id,
+            preferring: presentationID,
+            on: board
+        ) else {
             return
         }
         presentationID = activePresentationID
@@ -168,9 +195,23 @@ struct BoardMapPresentationSelection: Equatable {
         )
     }
 
-    private static func presentationID(for holdID: String?, on board: TrainingBoard) -> String? {
+    private static func presentationID(
+        for holdID: String?,
+        preferring preferredPresentationID: String,
+        on board: TrainingBoard
+    ) -> String? {
         guard let holdID else { return nil }
-        return board.holds.first(where: { $0.id == holdID })?.presentationID
+        guard let hold = board.holds.first(where: { $0.id == holdID }) else {
+            return nil
+        }
+        guard let preferredPresentation = board.presentation(id: preferredPresentationID) else {
+            return hold.presentationID
+        }
+        let preferredSourceID = preferredPresentation.sourcePresentationID
+            ?? preferredPresentation.id
+        return preferredSourceID == hold.presentationID
+            ? preferredPresentation.id
+            : hold.presentationID
     }
 }
 
@@ -249,6 +290,7 @@ struct BoardDetailMapView: View {
                         hold: entry.hold,
                         isHighlighted: selectedHoldID == entry.hold.id,
                         highlightMode: .active,
+                        isInverted: map.presentation.isInverted,
                         onTap: { select($0.id) }
                     )
                     .frame(width: boardBounds.width, height: boardBounds.height)
@@ -259,10 +301,7 @@ struct BoardDetailMapView: View {
                     ) {
                         select(entry.hold.id)
                     }
-                    .position(
-                        x: entry.hold.frame.x * boardBounds.width + entry.hold.frame.width * boardBounds.width / 2,
-                        y: entry.hold.frame.y * boardBounds.height + entry.hold.frame.height * boardBounds.height / 2
-                    )
+                    .position(markerPosition(for: entry.hold, in: boardBounds, isInverted: map.presentation.isInverted))
                 }
             }
         }
@@ -327,6 +366,19 @@ struct BoardDetailMapView: View {
 
     private func select(_ holdID: String) {
         selectedHoldID = holdID
+    }
+
+    private func markerPosition(
+        for hold: BoardHold,
+        in bounds: CGSize,
+        isInverted: Bool
+    ) -> CGPoint {
+        let center = CGPoint(
+            x: hold.frame.x * bounds.width + hold.frame.width * bounds.width / 2,
+            y: hold.frame.y * bounds.height + hold.frame.height * bounds.height / 2
+        )
+        guard isInverted else { return center }
+        return CGPoint(x: bounds.width - center.x, y: bounds.height - center.y)
     }
 }
 
@@ -424,6 +476,7 @@ struct BoardMapView: View {
                             hold: hold,
                             isHighlighted: highlightedHoldIDs.contains(hold.id),
                             highlightMode: highlightMode,
+                            isInverted: content.presentation.isInverted,
                             onTap: onHoldTap
                         )
                         .frame(width: boardBounds.width, height: boardBounds.height)
@@ -492,6 +545,7 @@ private struct PhysicalHoldVisual: View {
     let hold: BoardHold
     let isHighlighted: Bool
     let highlightMode: BoardHighlightMode
+    let isInverted: Bool
     let onTap: ((BoardHold) -> Void)?
 
     @ViewBuilder
@@ -509,6 +563,7 @@ private struct PhysicalHoldVisual: View {
         }
         if let onTap {
             visual
+                .rotationEffect(isInverted ? .degrees(180) : .zero)
                 .contentShape(.interaction, shape)
                 .contentShape(.accessibility, shape)
                 .onTapGesture {
@@ -519,6 +574,7 @@ private struct PhysicalHoldVisual: View {
                 .accessibilityAddTraits(.isButton)
         } else {
             visual
+                .rotationEffect(isInverted ? .degrees(180) : .zero)
         }
     }
 

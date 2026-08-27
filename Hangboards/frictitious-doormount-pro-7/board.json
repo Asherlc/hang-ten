@@ -11,9 +11,6 @@
       "id": "top-jug",
       "name": "Full-width top jug",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "geometry": [
         {
           "frame": {
@@ -581,9 +578,6 @@
       "id": "hold-6",
       "name": "Right pocket",
       "kind": "pocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {
@@ -693,9 +687,6 @@
       "id": "hold-7",
       "name": "Left pocket",
       "kind": "pocket",
-      "features": [
-        "pocket"
-      ],
       "geometry": [
         {
           "frame": {

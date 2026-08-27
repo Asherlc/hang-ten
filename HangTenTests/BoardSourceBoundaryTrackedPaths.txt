@@ -1,9 +1,10 @@
 HangTen.xcodeproj/project.pbxproj
-HangTen/Config/PostHog.local.xcconfig.example
-HangTen/Config/PostHog.xcconfig
+HangTen/Config/Analytics.local.xcconfig.example
+HangTen/Config/Analytics.xcconfig
 HangTen/HangTen.entitlements
 HangTen/HangTenApp.swift
 HangTen/Info.plist
+HangTen/Models/AmplitudeAnalyticsTelemetry.swift
 HangTen/Models/AppStore.swift
 HangTen/Models/BoardEditorStore.swift
 HangTen/Models/BoardPackageStore.swift
@@ -24,16 +25,17 @@ HangTen/Models/MotherboardModels.swift
 HangTen/Models/MotherboardProtocol.swift
 HangTen/Models/MotherboardWorkoutPreparation.swift
 HangTen/Models/MotherboardWorkoutRecorder.swift
-HangTen/Models/OpenTelemetryDiagnostics.swift
 HangTen/Models/PitchSixProtocol.swift
 HangTen/Models/PlanFilters.swift
 HangTen/Models/PlanStorage.swift
-HangTen/Models/PostHogTelemetry.swift
 HangTen/Models/ProgressorProtocol.swift
+HangTen/Models/PurchaseManager.swift
+HangTen/Models/SentryDiagnostics.swift
 HangTen/Models/SimulatedMotherboardTransport.swift
 HangTen/Models/Telemetry.swift
 HangTen/Models/TrainingModels.swift
 HangTen/Models/WHC06Protocol.swift
+HangTen/Models/WorkoutAccessStore.swift
 HangTen/Models/WorkoutActivityRecording.swift
 HangTen/Models/WorkoutAudioCoach.swift
 HangTen/Models/WorkoutHistory.swift
@@ -63,6 +65,7 @@ HangTen/Resources/CountdownAudio/README.md
 HangTen/Resources/CountdownAudio/countdown-1.mp3
 HangTen/Resources/CountdownAudio/countdown-2.mp3
 HangTen/Resources/CountdownAudio/countdown-3.mp3
+HangTen/Resources/HangTen.storekit
 HangTen/Resources/PlanLibrary.json
 HangTen/Views/AppSettingsView.swift
 HangTen/Views/BoardEditor/BoardEditorListView.swift
@@ -79,5 +82,6 @@ HangTen/Views/MotherboardViews.swift
 HangTen/Views/MotherboardWorkoutPreparationView.swift
 HangTen/Views/RootView.swift
 HangTen/Views/TrainView.swift
+HangTen/Views/WorkoutAccessGate.swift
 HangTen/Views/WorkoutStepPickerView.swift
 HangTen/Views/WorkoutSummaryView.swift

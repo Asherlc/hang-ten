@@ -291,6 +291,44 @@ def test_discover_and_open_remote_package_expose_the_local_editor_contract() -> 
     }
 
 
+def test_remote_package_preserves_orientation_alias_presentations() -> None:
+    board = board_document("fixture.board")
+    presentations = board["presentations"]
+    assert isinstance(presentations, list)
+    presentations.append(
+        {
+            "id": "primary-inverted",
+            "name": "Primary inverted",
+            "assetPath": "assets/primary.png",
+            "aspectRatio": 1774 / 457,
+            "default": False,
+            "sourcePresentationID": "primary",
+            "isInverted": True,
+        }
+    )
+    client = _client(("fixture-board", board))
+
+    discovered = github_board_store.discover_packages(client, TOKEN, BRANCH)
+    opened = github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+
+    assert [presentation.id for presentation in discovered[0].presentations] == [
+        "primary",
+        "primary-inverted",
+    ]
+    assert [
+        (
+            presentation.id,
+            presentation.source_presentation_id,
+            presentation.is_inverted,
+        )
+        for presentation in opened.presentations
+    ] == [
+        ("primary", None, False),
+        ("primary-inverted", "primary", True),
+    ]
+    assert opened.presentation("primary-inverted").asset_path == "assets/primary.png"
+
+
 def test_hosted_board_reads_reuse_an_unchanged_commit_snapshot() -> None:
     """Fails if opening a listed board re-downloads its immutable board.json."""
     client = _client(("fixture-board", board_document("fixture.board")))

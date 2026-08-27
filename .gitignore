@@ -8,6 +8,7 @@ xcuserdata/
 
 # Default transient hangboard workspaces
 /.context/
+/.superpowers/
 
 # Workbench's local board-library lock
 /Hangboards/.workbench.lock
@@ -28,8 +29,8 @@ xcuserdata/
 # Local implementation/git worktrees
 .worktrees/
 
-# Developer-specific PostHog project token override
-/HangTen/Config/PostHog.local.xcconfig
+# Developer-specific analytics API key override
+/HangTen/Config/Analytics.local.xcconfig
 
 # Python editable-install and bytecode cache artifacts
 __pycache__/

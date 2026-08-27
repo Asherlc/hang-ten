@@ -52,7 +52,7 @@ def test_complete_catalog_exposes_authoritative_board_facts() -> None:
     } == {
         "soill.iron-palm-2": "https://soillholds.com/products/iron-palm-2-0",
         "soill.split-palm": "https://soillholds.com/products/split-palm",
-        "soill.training-tiles": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
+        "soill.training-tiles": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
     }
 
 

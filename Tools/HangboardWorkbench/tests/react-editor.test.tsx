@@ -201,6 +201,27 @@ test("metadata warning marks every region of a physical hold missing required me
   }, dependenciesFixture(boardFixture(document)));
 });
 
+test("metadata warnings require depth only for edges and pockets", async () => {
+  const document = documentFixture([
+    { id: 1, key: "jug-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "jug", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
+    { id: 2, key: "sloper-piece-0", type: "sloper", displayPath: SECOND_PATH, metadata: { holdID: "sloper", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
+    { id: 3, key: "pinch-piece-0", type: "pinch", displayPath: OTHER_PATH, metadata: { holdID: "pinch", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
+    { id: 4, key: "fixed-edge-piece-0", type: "edge", displayPath: FIRST_PATH, metadata: { holdID: "fixed-edge", pieceIndex: 0 }, fingerCapacity: 1, sizeMillimeters: 12, handCapacity: 1 },
+    { id: 5, key: "ranged-pocket-piece-0", type: "pocket", displayPath: SECOND_PATH, metadata: { holdID: "ranged-pocket", pieceIndex: 0 }, fingerCapacity: 1, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },
+    { id: 6, key: "missing-edge-piece-0", type: "edge", displayPath: OTHER_PATH, metadata: { holdID: "missing-edge", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
+    { id: 7, key: "missing-pocket-piece-0", type: "pocket", displayPath: FIRST_PATH, metadata: { holdID: "missing-pocket", pieceIndex: 0 }, fingerCapacity: 1, handCapacity: 1 },
+  ]);
+
+  await withEditor(async (app) => {
+    assert.equal(app.text("#metadata-warning"), "2 holds need metadata");
+    assert.deepEqual(
+      [...app.document.querySelectorAll(".region-missing-metadata")]
+        .map((region) => region.getAttribute("data-hold-key")),
+      ["missing-edge-piece-0", "missing-pocket-piece-0"],
+    );
+  }, dependenciesFixture(boardFixture(document)));
+});
+
 test("metadata warning updates when an incomplete hold receives its missing field", async () => {
   const document = documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },

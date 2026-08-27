@@ -286,6 +286,116 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testWriterRoundTripPreservesOmittedDimensions() throws {
+        let source = String(decoding: try BoardPackageWriter.data(for: makeDocument()), as: UTF8.self)
+        let withoutDimensions = source.replacingOccurrences(
+            of: "  \"dimensions\": \"70 \\u00d7 25 cm\",\n",
+            with: ""
+        )
+        XCTAssertNotEqual(withoutDimensions, source)
+
+        let decoded = try BoardEditableDocument(data: Data(withoutDimensions.utf8))
+        XCTAssertNil(decoded.dimensions)
+
+        let reencoded = try BoardPackageWriter.data(for: decoded)
+        let output = String(decoding: reencoded, as: UTF8.self)
+        XCTAssertFalse(output.contains("\"dimensions\""))
+        XCTAssertNil(try BoardEditableDocument(data: reencoded).dimensions)
+    }
+
+    func testWriterRejectsExplicitlyEmptyDimensions() throws {
+        let source = String(decoding: try BoardPackageWriter.data(for: makeDocument()), as: UTF8.self)
+        let emptyDimensions = source.replacingOccurrences(
+            of: "\"dimensions\": \"70 \\u00d7 25 cm\"",
+            with: "\"dimensions\": \"\""
+        )
+        XCTAssertNotEqual(emptyDimensions, source)
+
+        let decoded = try BoardEditableDocument(data: Data(emptyDimensions.utf8))
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: decoded)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid("board test.board: dimensions must not be empty when present")
+            )
+        }
+    }
+
+    func testEditorDocumentRoundTripsFlashBoardOrientationAliases() throws {
+        let originalData = try Data(
+            contentsOf: repositoryHangboardsURL()
+                .appendingPathComponent("tension-flash-board/board.json")
+        )
+        let decoded = try BoardEditableDocument(data: originalData)
+
+        let encoded = try BoardPackageWriter.data(for: decoded)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        assertSemanticallyEqual(decoded, redecoded)
+        XCTAssertEqual(encoded, try BoardPackageWriter.data(for: redecoded))
+    }
+
+    func testWriterRejectsInvalidPresentationAliasesAndAliasOwnedHoldsInEditorDocuments() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        let source = String(decoding: encoded, as: UTF8.self)
+
+        let invalidAliasSources = ["front-inverted", "unknown"]
+        for sourcePresentationID in invalidAliasSources {
+            let document = try editorDocument(
+                source.replacingOccurrences(
+                    of: "      \"default\": true\n",
+                    with: "      \"default\": true,\n"
+                        + "      \"sourcePresentationID\": \"\(sourcePresentationID)\",\n"
+                        + "      \"isInverted\": true\n"
+                )
+            )
+
+            XCTAssertThrowsError(try BoardPackageWriter.data(for: document)) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageWriterError,
+                    .invalid(
+                        "board test.board: presentation front must reference a canonical presentation"
+                    )
+                )
+            }
+        }
+
+        let aliasPresentation = """
+            },
+            {
+              \"id\": \"front-inverted\",
+              \"name\": \"Front upside down\",
+              \"assetPath\": \"assets/front-inverted.png\",
+              \"aspectRatio\": 2.0,
+              \"default\": false,
+              \"sourcePresentationID\": \"front\",
+              \"isInverted\": true
+            }
+        """
+        let withAlias = source.replacingOccurrences(
+            of: "    }\n  ]\n}\n",
+            with: aliasPresentation + "\n  ]\n}\n"
+        )
+        let aliasOwnedHold = try editorDocument(
+            withAlias.replacingOccurrences(
+                of: "\"presentationID\": \"front\"",
+                with: "\"presentationID\": \"front-inverted\""
+            )
+        )
+
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: aliasOwnedHold)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid(
+                    "board test.board: hold hold-one must be owned by a canonical presentation"
+                )
+            )
+        }
+    }
+
+    private func editorDocument(_ source: String) throws -> BoardEditableDocument {
+        try BoardEditableDocument(data: Data(source.utf8))
+    }
+
     private static func describeFirstDifference(
         _ left: BoardEditableDocument,
         _ right: BoardEditableDocument
@@ -512,7 +622,7 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageWriter.data(for: badCapacity))
 
         var duplicateFeatures = makeDocument()
-        duplicateFeatures.holds[0].features = [.jug, .jug]
+        duplicateFeatures.holds[0].features = [.mediumEdge, .mediumEdge]
         XCTAssertThrowsError(try BoardPackageWriter.data(for: duplicateFeatures))
 
         var zeroSize = makeDocument()

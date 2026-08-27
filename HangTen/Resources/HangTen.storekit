@@ -1,0 +1,35 @@
+{
+  "identifier" : "C74EACB7-E309-4D86-BDBD-B2B199977691",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "5908895717",
+      "localizations" : [
+        {
+          "description" : "Unlock unlimited Hang Ten workouts with one purchase.",
+          "displayName" : "Lifetime Unlock",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.hangten.training.lifetime",
+      "referenceName" : "Hang Ten Lifetime Unlock",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA"
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

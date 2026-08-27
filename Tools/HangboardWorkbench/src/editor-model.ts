@@ -14,9 +14,10 @@ export interface HoldMetadataWarnings {
 }
 
 function regionHasMissingRequiredMetadata(region: HoldRegion): boolean {
+  const needsDepth = region.type === "edge" || region.type === "pocket";
   return region.type === undefined
     || region.fingerCapacity === undefined
-    || region.depthRangeMillimeters === undefined
+    || (needsDepth && region.sizeMillimeters === undefined && region.depthRangeMillimeters === undefined)
     || region.handCapacity === undefined;
 }
 

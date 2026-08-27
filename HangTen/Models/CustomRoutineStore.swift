@@ -380,8 +380,11 @@ enum CustomRoutineValidator {
             return false
         case let .holdIDs(holdIDs):
             return !holdIDs.isEmpty && Set(holdIDs).isSubset(of: Set(board.holds.map(\.id)))
-        case let .kind(kind):
-            return board.holds.contains { $0.kind == kind }
+        case let .kind(kind, fallbacks, fingerCapacity):
+            return !BoardTargetResolver.substituteHoldIDs(
+                for: .kind(kind, fallbacks: fallbacks, fingerCapacity: fingerCapacity),
+                on: board
+            ).isEmpty
         case let .feature(feature, fallbacks, fingerCapacity):
             return !BoardTargetResolver.substituteHoldIDs(
                 for: .feature(

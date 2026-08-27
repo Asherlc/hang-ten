@@ -24,6 +24,18 @@ YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
 YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
 YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
 YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
+TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
+PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
+
+
+def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
+    """A Pivot orientation added as another direct child is a duplicate product."""
+    pivot_package_roots = sorted(
+        path.parent
+        for path in HANGBOARDS_ROOT.glob("trango-rock-prodigy-pivot*/board.json")
+    )
+
+    assert pivot_package_roots == [PIVOT_ROOT]
 
 
 def _global_path_segment_signatures(
@@ -245,6 +257,8 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
             "trango-rock-prodigy-training-center",
         ),
         ("tension.grindstone", "tension-grindstone"),
+        ("tension.grindstone-original", "tension-grindstone-original"),
+        ("tension.grindstone-pro", "tension-grindstone-pro"),
         ("tension.flash-board", "tension-flash-board"),
         ("tension.honestone", "tension-honestone"),
         ("tension.whetstone", "tension-whetstone"),
@@ -412,21 +426,39 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "tension.flash-board"
-    assert board["dimensions"] == "Not published by manufacturer"
+    assert "dimensions" not in board
     assert board["presentations"] == [
         {
-            "id": "three-edge",
-            "name": "Three-edge surface",
+            "id": "three-edge-upright",
+            "name": "Three-edge surface — right side up",
             "assetPath": "assets/primary.png",
             "aspectRatio": 1.5,
             "default": True,
         },
         {
-            "id": "two-edge",
-            "name": "Two-edge surface",
+            "id": "three-edge-inverted",
+            "name": "Three-edge surface — upside down",
+            "assetPath": "assets/three-edge-inverted.png",
+            "aspectRatio": 1.5,
+            "default": False,
+            "sourcePresentationID": "three-edge-upright",
+            "isInverted": True,
+        },
+        {
+            "id": "two-edge-upright",
+            "name": "Two-edge surface — right side up",
             "assetPath": "assets/two-edge-surface.png",
             "aspectRatio": 2.0,
             "default": False,
+        },
+        {
+            "id": "two-edge-inverted",
+            "name": "Two-edge surface — upside down",
+            "assetPath": "assets/two-edge-inverted.png",
+            "aspectRatio": 2.0,
+            "default": False,
+            "sourcePresentationID": "two-edge-upright",
+            "isInverted": True,
         },
     ]
 
@@ -436,15 +468,15 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
             for hold in board["holds"]
             if hold["presentationID"] == presentation_id
         )
-        for presentation_id in ("three-edge", "two-edge")
+        for presentation_id in ("three-edge-upright", "two-edge-upright")
     }
     assert holds_by_presentation == {
-        "three-edge": (
+        "three-edge-upright": (
             "three-edge-left",
             "three-edge-center",
             "three-edge-right",
         ),
-        "two-edge": (
+        "two-edge-upright": (
             "two-edge-left",
             "two-edge-right",
             "small-crimp-left",
@@ -458,7 +490,9 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
 
     expected_sizes = {
         "assets/primary.png": (1536, 1024),
+        "assets/three-edge-inverted.png": (1536, 1024),
         "assets/two-edge-surface.png": (1774, 887),
+        "assets/two-edge-inverted.png": (1774, 887),
     }
     for asset_path, expected_size in expected_sizes.items():
         with Image.open(FLASH_BOARD_ROOT / asset_path) as image:
@@ -749,6 +783,34 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry()
     assert tuple((hold["id"], hold["name"]) for hold in holds) == COMPACT_HOLDS
     assert len(hold_ids) == len(set(hold_ids))
     assert all(hold.get("geometry") for hold in holds)
+
+
+def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
+    board = json.loads((TRAINING_TILES_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["id"] == "soill.training-tiles"
+    assert tuple((hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]) == (
+        ("upper-sloper-outer-left", "Outer left upper sloper", "sloper"),
+        ("upper-sloper-outer-right", "Outer right upper sloper", "sloper"),
+        ("upper-sloper-inner-left", "Inner left upper sloper", "sloper"),
+        ("upper-sloper-inner-right", "Inner right upper sloper", "sloper"),
+        ("middle-edge-outer-left", "Outer left middle edge", "edge"),
+        ("middle-edge-outer-right", "Outer right middle edge", "edge"),
+        ("middle-edge-inner-left", "Inner left middle edge", "edge"),
+        ("middle-edge-inner-right", "Inner right middle edge", "edge"),
+        ("bottom-edge-center-left", "Center left bottom edge", "edge"),
+        ("bottom-edge-center-right", "Center right bottom edge", "edge"),
+        ("top-pocket-outer-left", "Outer left top pocket", "pocket"),
+        ("top-pocket-outer-right", "Outer right top pocket", "pocket"),
+        ("bottom-edge-inner-left", "Inner left bottom edge", "edge"),
+        ("bottom-edge-inner-right", "Inner right bottom edge", "edge"),
+        ("bottom-edge-outer-left", "Outer left bottom edge", "edge"),
+        ("bottom-edge-outer-right", "Outer right bottom edge", "edge"),
+        ("top-pocket-inner-left", "Inner left top pocket", "pocket"),
+        ("top-pocket-inner-right", "Inner right top pocket", "pocket"),
+        ("top-jug-left", "Left top jug", "jug"),
+        ("top-jug-right", "Right top jug", "jug"),
+    )
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:

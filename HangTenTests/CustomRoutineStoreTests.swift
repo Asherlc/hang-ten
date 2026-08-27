@@ -129,7 +129,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             accessory: "10s",
             duration: 10,
             phase: .hang,
-            targets: [.feature(.pocket, fallbacks: [], fingerCapacity: 3)],
+            targets: [.kind(.pocket, fingerCapacity: 3)],
             gripType: .openHand,
             fingerConfiguration: expectedConfiguration,
             activeDuration: 10

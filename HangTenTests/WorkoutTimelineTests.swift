@@ -2438,7 +2438,7 @@ final class WorkoutStepDurationTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .pull,
-            targets: [.feature(.jug)],
+            targets: [.kind(.jug)],
             timedWorkDuration: 10
         )
 
@@ -2456,7 +2456,7 @@ final class MetoliusTaskExpansionTests: XCTestCase {
             title: "Three pull-ups",
             instruction: "Do 3 pull-ups on the jugs.",
             phase: .pull,
-            targets: [.feature(.jug)]
+            targets: [.kind(.jug)]
         )
 
         let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 1, tasks: [task])
@@ -2479,7 +2479,7 @@ final class MetoliusTaskExpansionTests: XCTestCase {
             title: "Pull-ups",
             instruction: "Do 2 pull-ups.",
             phase: .pull,
-            targets: [.feature(.jug)]
+            targets: [.kind(.jug)]
         )
 
         let steps = try MetoliusCycleBuilder.expand(planID: "test", minute: 2, tasks: [first, second])
@@ -2536,8 +2536,8 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(
             steps.prefix(2).map(\.targets),
             [
-                [.feature(.jug), .feature(.smallEdge)],
-                [.feature(.jug), .feature(.smallEdge)]
+                [.kind(.jug), .feature(.smallEdge)],
+                [.kind(.jug), .feature(.smallEdge)]
             ]
         )
         XCTAssertTrue(steps[1].instruction.lowercased().contains("change hands"))
@@ -2596,7 +2596,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         let entryMinuteSix = entry.filter { $0.id.hasPrefix("entry.minute-6.") }
         XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
         XCTAssertEqual(entryMinuteSix[0].targets, [.feature(.roundSloper)])
-        XCTAssertEqual(entryMinuteSix[1].targets, [.feature(.pocket)])
+        XCTAssertEqual(entryMinuteSix[1].targets, [.kind(.pocket)])
 
         let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
         XCTAssertEqual(advancedMinuteEight.map(\.duration), [15, 15, 30])

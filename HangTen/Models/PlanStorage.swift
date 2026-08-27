@@ -164,7 +164,7 @@ enum WorkoutTargetDefinition: Codable, Hashable {
     case semantic(String)
     case semantics([String])
     case holdIDs([String])
-    case kind(HoldKind)
+    case kind(HoldKind, fallbacks: [HoldFeature] = [], fingerCapacity: Int? = nil)
     case feature(HoldFeature, fallbacks: [HoldFeature], fingerCapacity: Int? = nil)
 
     private enum CodingKeys: String, CodingKey {
@@ -192,18 +192,60 @@ enum WorkoutTargetDefinition: Codable, Hashable {
             self = .holdIDs(value)
             return
         }
+        let fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        if let fingerCapacity,
+           !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
+            throw DecodingError.dataCorruptedError(
+                forKey: .fingerCapacity,
+                in: container,
+                debugDescription: "Workout target fingerCapacity must be in \(BoardHold.validFingerCapacityRange)."
+            )
+        }
+        let fallbackRawValues = try container.decodeIfPresent(
+            [String].self,
+            forKey: .fallbackFeatures
+        ) ?? []
+        let fallbacks = try fallbackRawValues.compactMap { rawValue -> HoldFeature? in
+            switch rawValue {
+            case HoldKind.jug.rawValue, HoldKind.pocket.rawValue:
+                // Deprecated duplicate feature aliases normalize away. A
+                // fallback list remains feature-only, so these cannot become
+                // fallback kinds.
+                return nil
+            default:
+                guard let feature = HoldFeature(rawValue: rawValue) else {
+                    throw DecodingError.dataCorruptedError(
+                        forKey: .fallbackFeatures,
+                        in: container,
+                        debugDescription: "Unknown fallback hold feature \"\(rawValue)\"."
+                    )
+                }
+                return feature
+            }
+        }
         if let value = try container.decodeIfPresent(HoldKind.self, forKey: .kind) {
-            self = .kind(value)
+            self = .kind(value, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
             return
         }
-        if let value = try container.decodeIfPresent(HoldFeature.self, forKey: .feature) {
-            let fallbacks = try container.decodeIfPresent(
-                [HoldFeature].self,
-                forKey: .fallbackFeatures
-            ) ?? []
-            let fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        if let rawValue = try container.decodeIfPresent(String.self, forKey: .feature) {
+            switch rawValue {
+            case HoldKind.jug.rawValue:
+                self = .kind(.jug, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
+                return
+            case HoldKind.pocket.rawValue:
+                self = .kind(.pocket, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
+                return
+            default:
+                guard let value = HoldFeature(rawValue: rawValue) else {
+                    throw DecodingError.dataCorruptedError(
+                        forKey: .feature,
+                        in: container,
+                        debugDescription: "Unknown hold feature \"\(rawValue)\"."
+                    )
+                }
             self = .feature(value, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
             return
+            }
         }
 
         throw DecodingError.dataCorruptedError(
@@ -223,9 +265,21 @@ enum WorkoutTargetDefinition: Codable, Hashable {
             try container.encode(values, forKey: .semantics)
         case .holdIDs(let values):
             try container.encode(values, forKey: .holdIDs)
-        case .kind(let value):
+        case let .kind(value, fallbacks, fingerCapacity):
             try container.encode(value, forKey: .kind)
+            if !fallbacks.isEmpty {
+                try container.encode(fallbacks, forKey: .fallbackFeatures)
+            }
+            try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
         case let .feature(value, fallbacks, fingerCapacity):
+            if value == .jug {
+                try container.encode(HoldKind.jug, forKey: .kind)
+                if !fallbacks.isEmpty {
+                    try container.encode(fallbacks, forKey: .fallbackFeatures)
+                }
+                try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
+                return
+            }
             try container.encode(value, forKey: .feature)
             if !fallbacks.isEmpty {
                 try container.encode(fallbacks, forKey: .fallbackFeatures)
@@ -379,7 +433,11 @@ extension WorkoutTargetDefinition {
         semanticHoldID: (([String]) -> String?)? = nil
     ) -> WorkoutTargetDefinition {
         if let kind = target.kind {
-            return .kind(kind)
+            return .kind(
+                kind,
+                fallbacks: target.fallbackFeatures,
+                fingerCapacity: target.fingerCapacity
+            )
         }
         if let feature = target.feature {
             return .feature(feature, fallbacks: target.fallbackFeatures, fingerCapacity: target.fingerCapacity)
@@ -1195,11 +1253,13 @@ struct PlanDefinitionResolver {
                 }
             case .holdIDs(let holdIDs):
                 resolved.append(.ids(holdIDs))
-            case .kind(let kind):
+            case let .kind(kind, fallbacks, fingerCapacity):
                 // Kind targets remain board-independent and retain the
                 // original fallback behavior used by AppStore.holdIDs(for:on:).
                 _ = board
-                resolved.append(.kind(kind))
+                resolved.append(
+                    .kind(kind, fallbacks: fallbacks, fingerCapacity: fingerCapacity)
+                )
             case let .feature(feature, fallbacks, fingerCapacity):
                 resolved.append(
                     HoldTarget(
@@ -1482,8 +1542,8 @@ enum BuiltInPlanLibraryDefinition {
                 generatedAt: "2026-08-01",
                 defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,
                 notes: [
-                    "Source-linked Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
-                    "Source cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
+                    "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
+                    "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
                     "All research and coach routines are explicitly marked as adapted.",
                     "Board mappings keep plan targets semantic and board-specific IDs replaceable."
                 ]
@@ -1500,6 +1560,9 @@ enum BuiltInPlanLibraryDefinition {
         sharedCoolDown: WorkoutBlockDefinition?,
         existingBlockIDs: Set<String>
     ) -> (PlanDefinition, [WorkoutBlockDefinition]) {
+        let semanticHoldID: ([String]) -> String? = plan.boardID == nil
+            ? semanticID(for:)
+            : { _ in nil }
         let category: String
         if plan.id.hasPrefix("research.") {
             category = "research"
@@ -1524,6 +1587,10 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+            ]
+        } else if plan.id.hasPrefix("metolius.contact.") || plan.id.hasPrefix("metolius.simulator-3d.") {
+            notes = [
+                "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
             ]
         } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
             notes = [
@@ -1579,7 +1646,7 @@ enum BuiltInPlanLibraryDefinition {
             let block = WorkoutBlockDefinition(
                 id: "\(plan.id).warm-up",
                 title: first.title,
-                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticID(for:))]
+                steps: [WorkoutStepDefinition.from(first, semanticHoldID: semanticHoldID)]
             )
             blocks.append(block)
             references.append(WorkoutBlockReference(blockID: block.id))
@@ -1600,7 +1667,7 @@ enum BuiltInPlanLibraryDefinition {
                 id: "\(plan.id).main",
                 title: plan.title,
                 steps: plan.steps[firstIndex..<lastIndex].map {
-                    WorkoutStepDefinition.from($0, semanticHoldID: semanticID(for:))
+                    WorkoutStepDefinition.from($0, semanticHoldID: semanticHoldID)
                 }
             )
             blocks.append(middleBlock)

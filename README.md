@@ -59,6 +59,45 @@ rtk xcodebuild -project HangTen.xcodeproj \
 All Conductor/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
 
+## Lifetime unlock StoreKit setup
+
+The shared Hang Ten scheme uses
+`HangTen/Resources/HangTen.storekit` for local Run and Test actions. It defines
+`com.hangten.training.lifetime` as a non-consumable with a $2.99 USD test price.
+In Xcode, run the app on an isolated simulator, save two free workouts, start a
+third routine, and use **Debug > StoreKit > Manage Transactions** to inspect,
+refund, or delete the local purchase. Verify both **Unlock for $2.99** and
+**Restore Purchases** transition the retained routine into Session; deleting
+the local transaction should make the paywall appear again.
+
+The real StoreKit integration tests are opt-in because Xcode 26.6 command-line
+test processes can fail to sync a local StoreKit configuration to StoreKit's
+test service. Run them only after Xcode has opened this project and successfully
+run the shared **HangTen** scheme with `HangTen.storekit` active:
+
+```sh
+HANGTEN_RUN_STOREKIT_LIVE_TESTS=1 rtk xcodebuild test \
+  -project HangTen.xcodeproj \
+  -scheme HangTen \
+  -destination 'platform=iOS Simulator,id=<isolated-simulator-uuid>' \
+  -derivedDataPath .context/DerivedData \
+  -only-testing:HangTenTests/LiveStoreKitConfigurationTests
+```
+
+For IDE execution, add `HANGTEN_RUN_STOREKIT_LIVE_TESTS=1` to the Test action's
+environment variables and use **Product > Test**. Before release, also validate
+purchase and Restore Purchases on a signed build using a Sandbox Apple Account;
+the local configuration is not a substitute for Sandbox validation.
+
+Before App Store distribution, an authorized App Store Connect operator must
+create a non-consumable for the existing `com.hangten.training` app with product
+ID `com.hangten.training.lifetime`, reference name **Hang Ten Lifetime Unlock**,
+and the $2.99 price tier. Add the product to the release, complete its required
+localization and review metadata, then use a Sandbox Apple Account to exercise
+purchase and Restore Purchases on a signed build. The product has not been
+created by this repository change; App Store Connect and Sandbox setup are an
+external release handoff.
+
 ## GitHub Device Flow release setup
 
 Before distributing a build with board-package GitHub sync, enable Device Flow
@@ -71,8 +110,8 @@ iOS `GITHUB_OAUTH_CLIENT_ID` build setting. It writes the setting to its
 temporary mode-`0600` xcconfig and verifies that the archived app's Info.plist
 contains a nonempty client ID.
 
-For local Xcode builds, copy `HangTen/Config/PostHog.local.xcconfig.example` to
-the ignored `HangTen/Config/PostHog.local.xcconfig` file and set
+For local Xcode builds, copy `HangTen/Config/Analytics.local.xcconfig.example` to
+the ignored `HangTen/Config/Analytics.local.xcconfig` file and set
 `GITHUB_OAUTH_CLIENT_ID` there. Do not create a `GITHUB_CLIENT_SECRET` iOS app
 build setting, `app-store-connect` Actions secret, or bundled Info.plist key:
 Device Flow uses only the public client ID. Keep the public
@@ -114,29 +153,25 @@ Add these environment variables:
   client ID; its Device Flow option must be enabled. The workflow maps it to
   the app's `GITHUB_OAUTH_CLIENT_ID` build setting. Do not configure a client
   secret.
-## PostHog CI configuration
+## Analytics CI configuration
 
-The app runs without telemetry when its PostHog client token is absent. This is
-intentional for local builds and untrusted fork pull requests. PostHog
-credentials are not provisioned by this repository: after creating the new
-Hang Ten PostHog project, an authorized maintainer must configure the following
-to enable anonymous telemetry in trusted GitHub Actions builds:
+The app runs without analytics when its API key is absent. This is intentional
+for local builds and untrusted fork pull requests. Analytics credentials are
+not provisioned by this repository: after creating the Hang Ten Amplitude
+project, an authorized maintainer must configure the following to enable
+anonymous telemetry in trusted GitHub Actions builds:
 
-- Repository secret `POSTHOG_CLIENT_TOKEN`: the Hang Ten PostHog public client
-  project key (`phc_...`). Although it is a client-side key, retain it as a
+- Repository secret `ANALYTICS_API_KEY`: the Hang Ten Amplitude API key.
+  Although it is a client-side key, retain it as a
   secret so it is not committed or exposed in workflow logs.
-- Repository variable `POSTHOG_HOST`: the PostHog ingestion host. Use
-  `https://us.i.posthog.com` unless the project is in another region.
 
 The release workflow runs in the `app-store-connect` environment, whose
 secrets and variables are scoped separately from the repository. After the
-project exists, define the same `POSTHOG_CLIENT_TOKEN` environment secret and
-`POSTHOG_HOST` environment variable there so the signed TestFlight archive
-includes telemetry. The host defaults to `https://us.i.posthog.com` when the
-variable is omitted; a missing token remains a safe no-op rather than failing
-CI. The workflows place these values in a mode-`0600` temporary xcconfig, pass
-only that file path to Xcode, and remove it when the job step exits so token
-values are not interpolated into captured build logs.
+project exists, define the same `ANALYTICS_API_KEY` environment secret there so
+the signed TestFlight archive includes analytics. A missing key remains a safe
+no-op rather than failing CI. The workflows place this value in a mode-`0600`
+temporary xcconfig, pass only that file path to Xcode, and remove it when the
+job step exits so the key is not interpolated into captured build logs.
 
 The API key needs the Admin role for provisioning-profile access, and App Store
 Connect must already contain an app record for `com.hangten.training` plus an
