@@ -2077,6 +2077,74 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-32",
+      "name": "Hold 32",
+      "kind": "pinch",
+      "fingerCapacity": 4,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.799054662109,
+            "y": 0.544854523437,
+            "width": 0.124145759115,
+            "height": 0.116670258789
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.540870029295
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.148491199908,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.079243481676,
+                  0.33623937388
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.457530896056
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.890111079211,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.95278075504,
+                  0.858132451195
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
