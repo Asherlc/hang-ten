@@ -198,6 +198,23 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
     }
 
+    func testGenericEdgeFallbackPrefersClosestMatchedDepthPair() {
+        let board = board(holds: [
+            hold(id: "left-33", sizeMillimeters: 33, x: 0.1, y: 0.2),
+            hold(id: "right-33", sizeMillimeters: 33, x: 0.8, y: 0.2),
+            hold(id: "left-15", sizeMillimeters: 15, x: 0.1, y: 0.6),
+            hold(id: "right-15", sizeMillimeters: 15, x: 0.8, y: 0.6)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .feature(.mediumEdge),
+                on: board
+            ),
+            ["left-15", "right-15"]
+        )
+    }
+
     func testGenericPocketKindCenterOnlyReturnsUnresolved() {
         let board = board(holds: [
             hold(
@@ -737,6 +754,35 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
 
         XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-middle-9", "front-middle-1"])
+    }
+
+    func testAbrahangsHalfFourHangUsesBothBeastmaker2000EndEdges() throws {
+        let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
+        let plan = try XCTUnwrap(PlanCatalog.all.first { $0.id == "research.abrahangs" })
+        let step = try XCTUnwrap(plan.steps.first { $0.title == "Abrahang · Half 4 Hang" })
+        let target = try XCTUnwrap(step.targets.first)
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: target,
+                on: board,
+                gripType: step.gripType
+            ),
+            ["front-lower-1", "front-lower-9"]
+        )
+    }
+
+    func testExplicitBeastmaker2000HoldIDRemainsUnchanged() throws {
+        let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .ids("front-lower-5"),
+                on: board,
+                gripType: .halfCrimp
+            ),
+            ["front-lower-5"]
+        )
     }
 
     @MainActor

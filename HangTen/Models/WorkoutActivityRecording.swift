@@ -350,12 +350,9 @@ internal enum BoardTargetResolver {
         }
 
         if feature.holdKind == .edge {
-            let representativeDepthDistance = depthDistance(of: representative, from: feature)
-            let nearestEdges = preferredSameKind.filter {
-                depthDistance(of: $0, from: feature) == representativeDepthDistance
+            if let pairedEdges = matchingEdgePair(from: preferredSameKind, feature: feature) {
+                return pairedEdges.map(\.id)
             }
-            let pairedEdges = oneHoldPerHand(from: nearestEdges)
-            if pairedEdges.count == 2 { return pairedEdges.map(\.id) }
         }
 
         return [representative.id]
@@ -394,6 +391,52 @@ internal enum BoardTargetResolver {
             return abs(size - targetDepth)
         }
         return .infinity
+    }
+
+    /// Generic edge cues may use a bilateral pair only when the two holds
+    /// share their documented physical descriptor and compatible geometry.
+    /// Rank viable pairs by the source-backed depth adaptation before visual
+    /// symmetry so a farther pair cannot win merely through board order.
+    private static func matchingEdgePair(
+        from holds: [BoardHold],
+        feature: HoldFeature
+    ) -> [BoardHold]? {
+        let left = holds.filter { $0.frame.x + $0.frame.width <= 0.5 }
+        let right = holds.filter { $0.frame.x >= 0.5 }
+        let pairs = left.flatMap { leftHold in
+            right.compactMap { rightHold -> (BoardHold, BoardHold)? in
+                let pair = (leftHold, rightHold)
+                guard hasMatchingEdgeDescriptor(pair), isMatchingPocketPair(pair) else {
+                    return nil
+                }
+                return pair
+            }
+        }
+        guard let pair = pairs.min(by: {
+            let leftDistance = depthDistance(of: $0.0, from: feature)
+            let rightDistance = depthDistance(of: $1.0, from: feature)
+            if leftDistance != rightDistance { return leftDistance < rightDistance }
+            return symmetryScore(of: $0) < symmetryScore(of: $1)
+        }) else {
+            return nil
+        }
+        return [pair.0, pair.1]
+    }
+
+    private static func hasMatchingEdgeDescriptor(_ pair: (BoardHold, BoardHold)) -> Bool {
+        let leftHasMeasurement = pair.0.sizeMillimeters != nil || pair.0.depthRangeMillimeters != nil
+        let rightHasMeasurement = pair.1.sizeMillimeters != nil || pair.1.depthRangeMillimeters != nil
+        guard pair.0.gripType == pair.1.gripType,
+              pair.0.fingerCapacity == pair.1.fingerCapacity,
+              pair.0.handCapacity == pair.1.handCapacity else {
+            return false
+        }
+        if !leftHasMeasurement && !rightHasMeasurement {
+            return true
+        }
+        guard leftHasMeasurement && rightHasMeasurement else { return false }
+        return pair.0.sizeMillimeters == pair.1.sizeMillimeters
+            && pair.0.depthRangeMillimeters == pair.1.depthRangeMillimeters
     }
 
     private static func crossKindPockets(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
