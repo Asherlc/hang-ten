@@ -8,6 +8,7 @@ xcuserdata/
 
 # Default transient hangboard workspaces
 /.context/
+/.superpowers/
 
 # Workbench's local board-library lock
 /Hangboards/.workbench.lock
