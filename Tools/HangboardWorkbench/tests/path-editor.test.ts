@@ -227,6 +227,24 @@ test("splitting a bendable cubic preserves bendability on both descendants", () 
   assert.equal(commands[2]?.bendable, true);
 });
 
+test("adding a vertex to a bendable cubic splits at the requested point without a kink", () => {
+  const commands = parsePath("M 0 0 C 0 10 10 10 10 0 L 10 10 Z");
+  commands[1]!.bendable = true;
+
+  addVertex(commands, 0, 1.5625, 5.625);
+
+  assert.equal(serializePath(commands), "M 0 0 C 0 2.5 0.625 4.375 1.5625 5.625 C 4.375 9.375 10 7.5 10 0 L 10 10 Z");
+  assert.equal(commands[1]?.bendable, true);
+  assert.equal(commands[2]?.bendable, true);
+  const join = commands[1]!.points[0]!;
+  const incoming = commands[1]!.controls[1]!;
+  const outgoing = commands[2]!.controls[0]!;
+  assertPoint(
+    { x: join.x - incoming.x, y: join.y - incoming.y },
+    { x: (outgoing.x - join.x) / 3, y: (outgoing.y - join.y) / 3 },
+  );
+});
+
 test("adding an inflection point to a bendable cubic preserves both descendant markers", () => {
   const commands = parsePath("M 0 0 C 3 0 7 0 10 0 L 10 10 Z");
   commands[1]!.bendable = true;
