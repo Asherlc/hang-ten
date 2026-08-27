@@ -1,7 +1,8 @@
 # Trango Forge, Natural, and Pivot board-package source audit
 
 Checked 2026-08-12; Forge and Natural re-audited and directly authored
-2026-08-19. This audit preserves the manufacturer material reviewed for Forge,
+2026-08-19. Amended 2026-08-25 for the stable-ID/presentation audit. This audit
+preserves the manufacturer material reviewed for Forge,
 Natural, and Pivot. The old incomplete art was removed and was not used as an
 authoring input. Pivot was completed through direct path authoring and is the
 structural/style precedent described in
@@ -101,7 +102,7 @@ physical product, not four board records. The product page says the Quad Cleat
 mounting system supports four directions. The official quick-start guide then
 labels `ORIENTATION 1` through `ORIENTATION 4` and gives the physical transition
 between them. Its separate `ORIENTATION 3 SWITCH` instruction is the required
-left/right-half swap on the way to Orientation 4, not a fifth numbered
+swap of the left and right halves when moving to Orientation 4, not a fifth numbered
 orientation.
 
 | package presentation | exact manufacturer mapping | guide key-grip examples (non-exhaustive) |
@@ -123,7 +124,8 @@ orientation-dependent usage count, not a claim of 22 separately bounded
 physical contacts. The guide also says its key-hold list is not comprehensive.
 Accordingly, the package does not invent orientation-specific grip contacts:
 each presentation contains exactly one transformed mapping of the same complete
-18-contact inventory and no duplicate contact within that presentation.
+18-contact audited package inventory—not a manufacturer-confirmed exhaustive
+inventory—and no duplicate contact within that presentation.
 
 | contact map | Orientation 1 IDs | Orientations 2–4 IDs |
 | --- | --- | --- |
