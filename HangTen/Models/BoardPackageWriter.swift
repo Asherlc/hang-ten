@@ -56,7 +56,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
         productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = try container.decode(String.self, forKey: .dimensions)
+        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions) ?? ""
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
@@ -516,17 +516,20 @@ enum BoardPackageWriter {
     }
 
     private static func canonicalValue(_ document: BoardEditableDocument) -> CanonicalJSONValue {
-        .object([
+        var entries: [(String, CanonicalJSONValue)] = [
             ("id", .string(document.id)),
             ("manufacturer", .string(document.manufacturer)),
             ("name", .string(document.name)),
             ("subtitle", .string(document.subtitle)),
             ("productURL", .string(document.productURL.absoluteString)),
-            ("dimensions", .string(document.dimensions)),
             ("aspectRatio", .double(document.aspectRatio)),
             ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
-        ])
+        ]
+        if !document.dimensions.isEmpty {
+            entries.insert(("dimensions", .string(document.dimensions)), at: 5)
+        }
+        return .object(entries)
     }
 
     private static func canonicalHoldValue(_ hold: BoardEditableHold) -> CanonicalJSONValue {

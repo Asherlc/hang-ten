@@ -159,9 +159,8 @@ ORIENTATION_PACKAGES = {
         "trango.rock-prodigy-pivot.orientation-1",
         "Rock Prodigy Pivot — Orientation 1",
         (
-            ("jug", "Jug", "jug"),
+            ("jug-horizontal-pinch", "Jug / Horizontal Pinch", "jug"),
             ("variable-depth-sloper-rail", "Variable Depth Sloper Rail", "sloper"),
-            ("horizontal-pinch", "Horizontal Pinch", "pinch"),
             ("medium-supported-crimp", "Medium Supported Crimp", "edge"),
             ("large-sloped-crimp", "Large Sloped Crimp", "edge"),
         ),
@@ -202,6 +201,38 @@ ORIENTATION_PACKAGES = {
             ("medium-mono", "Medium Mono", "pocket"),
         ),
     ),
+}
+
+# Each orientation record reuses a complete, already-reviewed physical contact
+# from the base package.  The two official Orientation 1 usage names share one
+# wedge contact, so they intentionally have one combined logical record.
+ORIENTATION_CANONICAL_CONTACTS = {
+    "trango-rock-prodigy-pivot-orientation-1": {
+        "jug-horizontal-pinch": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
+        "variable-depth-sloper-rail": ("variable-edge-left", "variable-edge-right"),
+        "medium-supported-crimp": ("medium-crimp-left", "medium-crimp-right"),
+        "large-sloped-crimp": ("upper-sloped-crimp-left", "upper-sloped-crimp-right"),
+    },
+    "trango-rock-prodigy-pivot-orientation-2-90-outwards": {
+        "shallow-mono": ("variable-edge-left", "variable-edge-right"),
+        "steep-gaston": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
+        "small-sloped-crimp": ("outer-sloped-crimp-left", "outer-sloped-crimp-right"),
+    },
+    "trango-rock-prodigy-pivot-orientation-3-90-inwards": {
+        "two-finger-pocket": ("two-finger-pocket-left", "two-finger-pocket-right"),
+        "three-finger-pocket": ("three-finger-pocket-left", "three-finger-pocket-right"),
+        "large-supported-crimp": ("medium-crimp-left", "medium-crimp-right"),
+        "sloper": ("lower-sloper-left", "lower-sloper-right"),
+    },
+    "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right": {
+        "variable-depth-incut-rail": ("variable-edge-left", "variable-edge-right"),
+        "shallow-gaston": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
+    },
+    "trango-rock-prodigy-pivot-orientation-4-90-outwards": {
+        "compression-pinch": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
+        "deep-mono": ("variable-edge-left", "variable-edge-right"),
+        "medium-mono": ("three-finger-pocket-left", "three-finger-pocket-right"),
+    },
 }
 
 
@@ -363,6 +394,7 @@ def test_documented_orientation_packages_have_exact_manual_hold_inventories() ->
         assert board["id"] == board_id
         assert board["manufacturer"] == "Trango"
         assert board["name"] == name
+        assert "dimensions" not in board
         assert board["aspectRatio"] == 2.0
         assert board_package._png_dimensions(package_root / "assets" / "primary.png") == (1774, 887)
         assert board["presentations"] == [
@@ -382,3 +414,39 @@ def test_documented_orientation_packages_have_exact_manual_hold_inventories() ->
             for hold in board["holds"]
         )
         assert FORBIDDEN_RAW_KEYS.isdisjoint(_all_keys(board))
+
+
+def test_orientation_packages_reuse_each_documented_physical_contact_once() -> None:
+    base_board = board_package.load_board_package(PACKAGE_ROOT).board
+    canonical_geometry = {
+        hold["id"]: hold["geometry"]
+        for hold in base_board["holds"]
+    }
+
+    actual_slugs = {
+        path.parent.name
+        for path in (REPOSITORY_ROOT / "Hangboards").glob(
+            "trango-rock-prodigy-pivot-orientation-*/board.json"
+        )
+    }
+    assert actual_slugs == set(ORIENTATION_PACKAGES)
+
+    for slug, expected_contacts in ORIENTATION_CANONICAL_CONTACTS.items():
+        board = board_package.load_board_package(
+            REPOSITORY_ROOT / "Hangboards" / slug
+        ).board
+        holds = {hold["id"]: hold for hold in board["holds"]}
+
+        assert set(holds) == set(expected_contacts)
+        mapped_contacts = tuple(
+            contact
+            for contacts in expected_contacts.values()
+            for contact in contacts
+        )
+        assert len(mapped_contacts) == len(set(mapped_contacts))
+        for hold_id, contact_ids in expected_contacts.items():
+            assert holds[hold_id]["geometry"] == [
+                piece
+                for contact_id in contact_ids
+                for piece in canonical_geometry[contact_id]
+            ]

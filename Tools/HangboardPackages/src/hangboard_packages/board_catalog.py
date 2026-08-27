@@ -577,15 +577,16 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "name",
         "subtitle",
         "productURL",
-        "dimensions",
         "aspectRatio",
         "presentations",
         "holds",
     }
-    _closed(value, required, "board.json")
+    _closed(value, required, "board.json", optional={"dimensions"})
     facts: dict[str, Any] = {}
-    for key in ("manufacturer", "name", "subtitle", "productURL", "dimensions"):
+    for key in ("manufacturer", "name", "subtitle", "productURL"):
         facts[key] = _string(value[key], f"board.json.{key}")
+    if "dimensions" in value:
+        facts["dimensions"] = _string(value["dimensions"], "board.json.dimensions")
     facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")

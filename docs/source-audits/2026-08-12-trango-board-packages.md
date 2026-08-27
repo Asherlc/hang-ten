@@ -156,6 +156,11 @@ claim a complete physical-contact inventory, add alternate grips, derive
 measurements, or carry optional capacity, posture, feature, or coaching
 metadata.
 
+Neither the Pivot product page nor either cited Pivot guide provides board
+dimensions. The orientation packages consequently omit `dimensions`; the
+previous dimension string was unsupported and is not retained as a package
+fact.
+
 Each package is a direct child under `Hangboards/` with the same unmodified
 official Pivot front presentation used by the completed base package. The
 image is the presentation of the same physical product, not evidence for an
@@ -169,9 +174,8 @@ surfaces are one physical opening.
 
 | package / mounting state | documented key grip | schema kind | reviewed canonical physical-contact mapping |
 | --- | --- | --- | --- |
-| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug | `jug` | `outer-wedge-pinch-left/right` |
+| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug / Horizontal Pinch | `jug` | `outer-wedge-pinch-left/right`; the Quick Start separately names Jug and Horizontal Pinch usage on this one reviewed wedge contact. The combined name preserves both source names. `jug` is the conservative allowed schema kind selected for the record; this source-to-schema adaptation does not claim a separate pinch contact. |
 | same | Variable Depth Sloper Rail | `sloper` | `variable-edge-left/right` |
-| same | Horizontal Pinch | `pinch` | `outer-wedge-pinch-left/right`; the separate Jug and Horizontal Pinch records intentionally express Trango's separately named manual choices on the same reviewed wedge surface. |
 | same | Medium Supported Crimp | `edge` | `medium-crimp-left/right` |
 | same | Large Sloped Crimp | `edge` | `upper-sloped-crimp-left/right` |
 | `trango-rock-prodigy-pivot-orientation-2-90-outwards` / Orientation 2, 90° Outwards | Shallow Mono | `pocket` | `variable-edge-left/right`; the guide identifies a one-finger use at the rail's reviewed contact, so the complete continuous rail boundary is retained instead of inventing a raster-derived sub-contour. |
