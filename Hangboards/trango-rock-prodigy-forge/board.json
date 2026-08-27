@@ -757,7 +757,8 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket"
+      "gripType": "twoFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "hold-19",
