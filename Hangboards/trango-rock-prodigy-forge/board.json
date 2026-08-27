@@ -1532,6 +1532,65 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-18",
+      "name": "Hold 18",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.552143449219,
+            "y": 0.3645643125,
+            "width": 0.117235863281,
+            "height": 0.035539137695
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.903651610761
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.630523782835,
+                  0.06271376047
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.273771703307,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.051720071793,
+                  0.450843407481
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
