@@ -5,6 +5,7 @@ import XCTest
 @MainActor
 final class LiveStoreKitConfigurationTests: XCTestCase {
     func testCheckedInConfigurationLoadsLocalizedProductAndLivePurchaseUnlocksWorkout() async throws {
+        try XCTSkipUnless(ProcessInfo.processInfo.environment["HANGTEN_RUN_STOREKIT_LIVE_TESTS"] == "1", "Requires an explicitly enabled StoreKit live-validation environment")
         let session = try makeSession()
         defer { session.clearTransactions() }
         let (accessStore, manager, defaults) = makeLockedAccessBoundary(suite: #function)
@@ -26,6 +27,7 @@ final class LiveStoreKitConfigurationTests: XCTestCase {
     }
 
     func testCheckedInConfigurationLiveRestoreRehydratesEntitlementAndUnlocksWorkout() async throws {
+        try XCTSkipUnless(ProcessInfo.processInfo.environment["HANGTEN_RUN_STOREKIT_LIVE_TESTS"] == "1", "Requires an explicitly enabled StoreKit live-validation environment")
         let session = try makeSession()
         defer { session.clearTransactions() }
         _ = try await session.buyProduct(identifier: PurchaseManager.lifetimeProductID)

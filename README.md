@@ -70,6 +70,25 @@ refund, or delete the local purchase. Verify both **Unlock for $2.99** and
 **Restore Purchases** transition the retained routine into Session; deleting
 the local transaction should make the paywall appear again.
 
+The real StoreKit integration tests are opt-in because Xcode 26.6 command-line
+test processes can fail to sync a local StoreKit configuration to StoreKit's
+test service. Run them only after Xcode has opened this project and successfully
+run the shared **HangTen** scheme with `HangTen.storekit` active:
+
+```sh
+HANGTEN_RUN_STOREKIT_LIVE_TESTS=1 rtk xcodebuild test \
+  -project HangTen.xcodeproj \
+  -scheme HangTen \
+  -destination 'platform=iOS Simulator,id=<isolated-simulator-uuid>' \
+  -derivedDataPath .context/DerivedData \
+  -only-testing:HangTenTests/LiveStoreKitConfigurationTests
+```
+
+For IDE execution, add `HANGTEN_RUN_STOREKIT_LIVE_TESTS=1` to the Test action's
+environment variables and use **Product > Test**. Before release, also validate
+purchase and Restore Purchases on a signed build using a Sandbox Apple Account;
+the local configuration is not a substitute for Sandbox validation.
+
 Before App Store distribution, an authorized App Store Connect operator must
 create a non-consumable for the existing `com.hangten.training` app with product
 ID `com.hangten.training.lifetime`, reference name **Hang Ten Lifetime Unlock**,
