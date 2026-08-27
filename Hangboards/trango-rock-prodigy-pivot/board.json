@@ -457,7 +457,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "two-finger-pocket-left",
@@ -589,7 +590,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "twoFingerPocket"
+      "gripType": "twoFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "two-finger-pocket-right",
@@ -872,7 +874,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "threeFingerPocket"
+      "gripType": "threeFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "three-finger-pocket-right",
@@ -4408,7 +4411,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "hold-10",
