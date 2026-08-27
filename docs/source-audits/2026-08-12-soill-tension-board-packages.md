@@ -164,14 +164,13 @@ draft geometry was restored or used as an input.
 - `workouts`: [official workout page](https://soillholds.com/pages/meagan-martin-training-tiles-workouts)
 - `front`: [official straight-on image](https://cdn.shopify.com/s/files/1/0424/1145/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960.jpg?v=1677258630)
 - The product description establishes the two-piece collaboration. The current
-  feature metafield establishes each tile at approximately `14 × 8 in` and,
-  per tile, one pocket, two slopers, two slightly positive middle edges, and
-  three bottom flat edges. That freezes exactly eight contacts per tile and
-  sixteen total. The same metafield lists grouped sizes (3-inch pocket depth;
-  54/64 mm slopers; 44/50 mm middle edges; 36/31/24 mm bottom edges), but the
-  straight-on view does not provide a numbered one-to-one mapping for those
-  values. The package therefore uses conservative spatial names and omits the
-  per-hold scalar values rather than guessing the assignment.
+  feature metafield establishes each tile at approximately `14 × 8 in` and
+  lists grouped families: a 3-inch top pocket; 54/64 mm slopers; 44/50 mm
+  middle edges; and 36/31/24 mm bottom edges. It does not publish a
+  manufacturer-authored map for the package's 20 descriptive contacts. The
+  package's jug, pocket, sloper, and edge selections are therefore explicitly
+  adapted contact roles, rather than directly source-mapped contacts, and no
+  grouped scalar value is assigned to an individual role.
 
 ## 2026-08-25 source-audited metadata batch
 

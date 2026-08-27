@@ -24,6 +24,7 @@ YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
 YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
 YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
 YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
+TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 
 
 def _global_path_segment_signatures(
@@ -749,6 +750,34 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry()
     assert tuple((hold["id"], hold["name"]) for hold in holds) == COMPACT_HOLDS
     assert len(hold_ids) == len(set(hold_ids))
     assert all(hold.get("geometry") for hold in holds)
+
+
+def test_training_tiles_freezes_twenty_source_audited_adapted_contacts() -> None:
+    board = json.loads((TRAINING_TILES_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["id"] == "soill.training-tiles"
+    assert tuple((hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]) == (
+        ("upper-sloper-outer-left", "Outer left upper sloper", "sloper"),
+        ("upper-sloper-outer-right", "Outer right upper sloper", "sloper"),
+        ("upper-sloper-inner-left", "Inner left upper sloper", "sloper"),
+        ("upper-sloper-inner-right", "Inner right upper sloper", "sloper"),
+        ("middle-edge-outer-left", "Outer left middle edge", "edge"),
+        ("middle-edge-outer-right", "Outer right middle edge", "edge"),
+        ("middle-edge-inner-left", "Inner left middle edge", "edge"),
+        ("middle-edge-inner-right", "Inner right middle edge", "edge"),
+        ("bottom-edge-center-left", "Center left bottom edge", "edge"),
+        ("bottom-edge-center-right", "Center right bottom edge", "edge"),
+        ("top-pocket-outer-left", "Outer left top pocket", "pocket"),
+        ("top-pocket-outer-right", "Outer right top pocket", "pocket"),
+        ("bottom-edge-inner-left", "Inner left bottom edge", "edge"),
+        ("bottom-edge-inner-right", "Inner right bottom edge", "edge"),
+        ("bottom-edge-outer-left", "Outer left bottom edge", "edge"),
+        ("bottom-edge-outer-right", "Outer right bottom edge", "edge"),
+        ("top-pocket-inner-left", "Inner left top pocket", "pocket"),
+        ("top-pocket-inner-right", "Inner right top pocket", "pocket"),
+        ("top-jug-left", "Left top jug", "jug"),
+        ("top-jug-right", "Right top jug", "jug"),
+    )
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
