@@ -424,14 +424,19 @@ internal enum BoardTargetResolver {
     }
 
     private static func hasMatchingEdgeDescriptor(_ pair: (BoardHold, BoardHold)) -> Bool {
-        guard pair.0.sizeMillimeters != nil || pair.0.depthRangeMillimeters != nil else {
+        let leftHasMeasurement = pair.0.sizeMillimeters != nil || pair.0.depthRangeMillimeters != nil
+        let rightHasMeasurement = pair.1.sizeMillimeters != nil || pair.1.depthRangeMillimeters != nil
+        guard pair.0.gripType == pair.1.gripType,
+              pair.0.fingerCapacity == pair.1.fingerCapacity,
+              pair.0.handCapacity == pair.1.handCapacity else {
             return false
         }
+        if !leftHasMeasurement && !rightHasMeasurement {
+            return true
+        }
+        guard leftHasMeasurement && rightHasMeasurement else { return false }
         return pair.0.sizeMillimeters == pair.1.sizeMillimeters
             && pair.0.depthRangeMillimeters == pair.1.depthRangeMillimeters
-            && pair.0.gripType == pair.1.gripType
-            && pair.0.fingerCapacity == pair.1.fingerCapacity
-            && pair.0.handCapacity == pair.1.handCapacity
     }
 
     private static func crossKindPockets(for target: HoldTarget, among holds: [BoardHold]) -> [BoardHold] {
