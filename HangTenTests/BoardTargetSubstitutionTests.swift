@@ -198,6 +198,23 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
     }
 
+    func testGenericEdgeFallbackPrefersClosestMatchedDepthPair() {
+        let board = board(holds: [
+            hold(id: "left-33", sizeMillimeters: 33, x: 0.1, y: 0.2),
+            hold(id: "right-33", sizeMillimeters: 33, x: 0.8, y: 0.2),
+            hold(id: "left-15", sizeMillimeters: 15, x: 0.1, y: 0.6),
+            hold(id: "right-15", sizeMillimeters: 15, x: 0.8, y: 0.6)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.substituteHoldIDs(
+                for: .feature(.mediumEdge),
+                on: board
+            ),
+            ["left-15", "right-15"]
+        )
+    }
+
     func testGenericPocketKindCenterOnlyReturnsUnresolved() {
         let board = board(holds: [
             hold(
