@@ -1748,6 +1748,72 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-20",
+      "name": "Hold 20",
+      "kind": "sloper",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.026310345703,
+            "y": 0.344827589844,
+            "width": 0.142226548828,
+            "height": 0.224468961914
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.16486566631,
+                  0.209407644606
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.847998712844,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.842027184302,
+                  0.19726558016
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.728516018342
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.128498240861,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.42392774175
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
