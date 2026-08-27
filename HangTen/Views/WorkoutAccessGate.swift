@@ -141,7 +141,7 @@ struct LifetimeUnlockPaywall: View {
                             .disabled(isTransacting)
                             .accessibilityIdentifier("paywall.restore")
 
-                        if purchaseManager.state == .productLoadFailed {
+                        if shouldShowProductLoadRetry {
                             Button("Retry Loading Purchase", action: retryProductLoad)
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.hangGreenDark)
@@ -198,6 +198,10 @@ struct LifetimeUnlockPaywall: View {
 
     private var isTransacting: Bool {
         purchaseManager.state == .loading || purchaseManager.state == .purchasing
+    }
+
+    private var shouldShowProductLoadRetry: Bool {
+        purchaseManager.product == nil && !isTransacting
     }
 
     private var statusMessage: String? {

@@ -139,6 +139,24 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertFalse(app.navigationBars["Session"].exists)
     }
 
+    func testRetryRemainsAvailableAfterProductLoadFailureAndEmptyRestore() {
+        let app = lockedPlanApp()
+        app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_PRODUCT_LOAD_FAILURES"] = "1"
+        app.launch()
+
+        app.buttons["plan.startRoutine"].tap()
+        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 2))
+
+        app.buttons["paywall.restore"].tap()
+
+        XCTAssertTrue(app.staticTexts[
+            "Nothing to restore. No lifetime unlock purchase was found."
+        ].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.buttons["paywall.retryProduct"].exists)
+        XCTAssertFalse(app.navigationBars["Session"].exists)
+    }
+
     func testRestoreWithoutEntitlementShowsNothingToRestoreFeedback() {
         let app = lockedPlanApp()
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
