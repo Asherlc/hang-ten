@@ -311,7 +311,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "bottom-variable-rail-left",
@@ -535,7 +536,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "closed-crimp-left",
@@ -743,7 +745,8 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 4,
-      "gripType": "fullCrimp"
+      "gripType": "fullCrimp",
+      "handCapacity": 1
     },
     {
       "id": "upper-pocket-left",
@@ -953,7 +956,8 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 3,
-      "gripType": "threeFingerPocket"
+      "gripType": "threeFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "center-lower-pocket-left",
@@ -1161,7 +1165,8 @@
       ],
       "presentationID": "primary",
       "fingerCapacity": 2,
-      "gripType": "twoFingerPocket"
+      "gripType": "twoFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "outer-supported-pocket-left",
@@ -1607,7 +1612,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-15",
