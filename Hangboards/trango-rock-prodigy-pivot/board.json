@@ -7330,7 +7330,7 @@
     {
       "id": "hold-53",
       "name": "Hold 53",
-      "kind": "edge",
+      "kind": "pocket",
       "geometry": [
         {
           "frame": {
