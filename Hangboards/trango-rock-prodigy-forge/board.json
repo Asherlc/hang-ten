@@ -1760,7 +1760,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 1
+      "fingerCapacity": 1,
+      "handCapacity": 1
     }
   ],
   "presentations": [
