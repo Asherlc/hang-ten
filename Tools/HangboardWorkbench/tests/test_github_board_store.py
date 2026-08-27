@@ -213,6 +213,19 @@ class _OneTimeMissingBlobClient(FakeGitHubClient):
         return content
 
 
+class _FailingPresentationBlobClient(FakeGitHubClient):
+    """Fails one presentation blob after snapshot metadata is available."""
+
+    def __init__(self, files: dict[str, bytes], failed_path: str) -> None:
+        super().__init__({BRANCH: files})
+        self._failed_sha = self._branches[BRANCH][failed_path][1]
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        if sha == self._failed_sha:
+            raise GitHubNotFoundError("blob is not available")
+        return super().get_blob(token, sha)
+
+
 class _PausedBulkClient(FakeGitHubClient):
     """Pauses a bulk blob read while exposing later control-call progress."""
 
@@ -650,6 +663,25 @@ def test_open_validates_presentation_assets_before_loading_nonprimary_images() -
     }
 
 
+def test_failed_multi_presentation_open_does_not_cache_sibling_image_blobs() -> None:
+    """Fails if a concurrent image failure leaves nondeterministic sibling cache entries."""
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"back"
+    )
+    client = _FailingPresentationBlobClient(
+        files, "Hangboards/fixture-v2/assets/back.png"
+    )
+    store = github_board_store.GitHubBoardStore(client)
+    board_sha = FakeGitHubClient._sha(files["Hangboards/fixture-v2/board.json"])
+
+    with pytest.raises(board_package.BoardPackageError, match="primary image is missing"):
+        store.open_package(TOKEN, BRANCH, "fixture.multi")
+
+    assert {key[1] for key in store._blobs} == {board_sha}
+
+
 def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
     """Fails if a transient GitHub blob failure is retained as a cache entry."""
     client = _OneTimeMissingBlobClient(
@@ -760,6 +792,35 @@ def test_cached_store_direct_board_save_opens_the_live_package_before_writing() 
     assert len(client.calls_named("get_tree")) == 1
     assert len(client.calls_named("get_blob")) == 2
     assert len(client.calls_named("put_file")) == 1
+
+
+def test_cached_store_direct_multi_presentation_save_reuses_catalog_board_blob() -> None:
+    """Fails if the cache-enabled save fallback re-downloads catalog metadata."""
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"back"
+    )
+    client = FakeGitHubClient({BRANCH: files})
+    document = copy.deepcopy(
+        board_package.editor_document(
+            github_board_store.open_package(client, TOKEN, BRANCH, "fixture.multi")
+        )
+    )
+    for region in document["regions"]:
+        region["type"] = "edge"
+    client.calls.clear()
+    store = github_board_store.GitHubBoardStore(client)
+    board_sha = FakeGitHubClient._sha(files["Hangboards/fixture-v2/board.json"])
+
+    saved, _commit = store.save_board_editor_document(
+        TOKEN, BRANCH, "fixture.multi", document
+    )
+
+    assert saved.board["holds"][0]["kind"] == "edge"
+    assert [
+        call.args[1] for call in client.calls_named("get_blob")
+    ].count(board_sha) == 1
 
 
 def test_cached_opened_package_save_rejects_a_concurrent_board_json_change() -> None:

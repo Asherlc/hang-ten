@@ -1221,23 +1221,20 @@ def _load_package_from_entries(
             _MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(concurrent_assets) + 1)
         )
     ) as executor:
-        uncached_client = (
+        uncached_image_client = (
             client.without_blob_cache()
-            if prevalidated_board is not None
-            and isinstance(client, _CachedSnapshotClient)
+            if isinstance(client, _CachedSnapshotClient)
             else client
         )
         board_future = (
-            executor.submit(
-                _get_blob, uncached_client, token, board_entry, "board.json"
-            )
+            executor.submit(_get_blob, client, token, board_entry, "board.json")
             if prevalidated_board is not None
             else None
         )
         image_futures = {
             asset_path: executor.submit(
                 _get_blob,
-                client,
+                uncached_image_client,
                 token,
                 image_entry,
                 (
