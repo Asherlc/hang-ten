@@ -241,6 +241,26 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("trango.rock-prodigy-natural", "trango-rock-prodigy-natural"),
         ("trango.rock-prodigy-pivot", "trango-rock-prodigy-pivot"),
         (
+            "trango.rock-prodigy-pivot.orientation-1",
+            "trango-rock-prodigy-pivot-orientation-1",
+        ),
+        (
+            "trango.rock-prodigy-pivot.orientation-2-90-outwards",
+            "trango-rock-prodigy-pivot-orientation-2-90-outwards",
+        ),
+        (
+            "trango.rock-prodigy-pivot.orientation-3-90-inwards",
+            "trango-rock-prodigy-pivot-orientation-3-90-inwards",
+        ),
+        (
+            "trango.rock-prodigy-pivot.orientation-3-switch-left-to-right",
+            "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right",
+        ),
+        (
+            "trango.rock-prodigy-pivot.orientation-4-90-outwards",
+            "trango-rock-prodigy-pivot-orientation-4-90-outwards",
+        ),
+        (
             "trango.rock-prodigy-training-center",
             "trango-rock-prodigy-training-center",
         ),

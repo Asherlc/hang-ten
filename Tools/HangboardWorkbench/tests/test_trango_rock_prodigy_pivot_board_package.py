@@ -154,6 +154,55 @@ MIRRORED_PAIRS = tuple(
 FORBIDDEN_RAW_KEYS = frozenset(
     {"cueStyle", "semantics", "evidence", "artwork", "catalog", "claims", "ui"}
 )
+ORIENTATION_PACKAGES = {
+    "trango-rock-prodigy-pivot-orientation-1": (
+        "trango.rock-prodigy-pivot.orientation-1",
+        "Rock Prodigy Pivot — Orientation 1",
+        (
+            ("jug", "Jug", "jug"),
+            ("variable-depth-sloper-rail", "Variable Depth Sloper Rail", "sloper"),
+            ("horizontal-pinch", "Horizontal Pinch", "pinch"),
+            ("medium-supported-crimp", "Medium Supported Crimp", "edge"),
+            ("large-sloped-crimp", "Large Sloped Crimp", "edge"),
+        ),
+    ),
+    "trango-rock-prodigy-pivot-orientation-2-90-outwards": (
+        "trango.rock-prodigy-pivot.orientation-2-90-outwards",
+        "Rock Prodigy Pivot — Orientation 2 (90° Outwards)",
+        (
+            ("shallow-mono", "Shallow Mono", "pocket"),
+            ("steep-gaston", "Steep Gaston", "edge"),
+            ("small-sloped-crimp", "Small Sloped Crimp", "edge"),
+        ),
+    ),
+    "trango-rock-prodigy-pivot-orientation-3-90-inwards": (
+        "trango.rock-prodigy-pivot.orientation-3-90-inwards",
+        "Rock Prodigy Pivot — Orientation 3 (90° Inwards)",
+        (
+            ("two-finger-pocket", "2 Finger Pocket", "pocket"),
+            ("three-finger-pocket", "3 Finger Pocket", "pocket"),
+            ("large-supported-crimp", "Large Supported Crimp", "edge"),
+            ("sloper", "Sloper", "sloper"),
+        ),
+    ),
+    "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right": (
+        "trango.rock-prodigy-pivot.orientation-3-switch-left-to-right",
+        "Rock Prodigy Pivot — Orientation 3 Switch (L-to-R)",
+        (
+            ("variable-depth-incut-rail", "Variable Depth Incut Rail", "edge"),
+            ("shallow-gaston", "Shallow Gaston", "edge"),
+        ),
+    ),
+    "trango-rock-prodigy-pivot-orientation-4-90-outwards": (
+        "trango.rock-prodigy-pivot.orientation-4-90-outwards",
+        "Rock Prodigy Pivot — Orientation 4 (90° Outwards)",
+        (
+            ("compression-pinch", "Compression Pinch", "pinch"),
+            ("deep-mono", "Deep Mono", "pocket"),
+            ("medium-mono", "Medium Mono", "pocket"),
+        ),
+    ),
+}
 
 
 def _command_points(command: dict[str, object]) -> tuple[tuple[float, float], ...]:
@@ -300,3 +349,36 @@ def test_left_and_right_geometry_are_mirrored(package: board_package.BoardPackag
 def test_board_document_omits_forbidden_keys() -> None:
     raw = json.loads((PACKAGE_ROOT / "board.json").read_text(encoding="utf-8"))
     assert FORBIDDEN_RAW_KEYS.isdisjoint(_all_keys(raw))
+
+
+def test_documented_orientation_packages_have_exact_manual_hold_inventories() -> None:
+    """A missing documented orientation package or manual grip position is a catalog bug."""
+    for slug, (board_id, name, expected_holds) in ORIENTATION_PACKAGES.items():
+        package_root = REPOSITORY_ROOT / "Hangboards" / slug
+        package = board_package.load_board_package(package_root)
+        board = package.board
+
+        assert {path.name for path in package_root.iterdir()} == {"assets", "board.json"}
+        assert {path.name for path in (package_root / "assets").iterdir()} == {"primary.png"}
+        assert board["id"] == board_id
+        assert board["manufacturer"] == "Trango"
+        assert board["name"] == name
+        assert board["aspectRatio"] == 2.0
+        assert board_package._png_dimensions(package_root / "assets" / "primary.png") == (1774, 887)
+        assert board["presentations"] == [
+            {
+                "id": "primary",
+                "name": "Primary",
+                "assetPath": "assets/primary.png",
+                "aspectRatio": board["aspectRatio"],
+                "default": True,
+            }
+        ]
+        assert tuple((hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]) == expected_holds
+        assert all(hold["geometry"] for hold in board["holds"])
+        assert all(hold["presentationID"] == "primary" for hold in board["holds"])
+        assert all(
+            set(hold).isdisjoint(OPTIONAL_HOLD_METADATA_FIELDS)
+            for hold in board["holds"]
+        )
+        assert FORBIDDEN_RAW_KEYS.isdisjoint(_all_keys(board))

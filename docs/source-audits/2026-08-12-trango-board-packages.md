@@ -140,3 +140,57 @@ All 12 constrained Forge and Natural pieces pass the production `+1 px` resize
 invariants. A zero-distance save can reserialize decimal precision, so these
 pieces are verified for mathematical oval consistency and no visible snap
 rather than claimed as byte-exact.
+
+## 2026-08-26 Pivot configuration-variation audit
+
+Reviewed 2026-08-26 against Trango's [Pivot product
+page](https://trango.com/products/rock-prodigy-pivot), [Quick Start
+Guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507),
+and [Depth
+Guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905).
+The product page says the Pivot has four usage orientations and 22 distinct
+grip positions. The Quick Start's orientation material is explicitly a guide
+to *key* holds, not a comprehensive list of all possible holds. These five
+packages therefore model only the named key grip positions below. They do not
+claim a complete physical-contact inventory, add alternate grips, derive
+measurements, or carry optional capacity, posture, feature, or coaching
+metadata.
+
+Each package is a direct child under `Hangboards/` with the same unmodified
+official Pivot front presentation used by the completed base package. The
+image is the presentation of the same physical product, not evidence for an
+unlisted contact. During review, every configuration path was deliberately
+matched to the named contact in the Quick Start orientation plate and the
+corresponding canonical physical-contact boundary in the already-reviewed base
+presentation. Left and right components are retained together when Trango's
+plate depicts the named grip on both mirrored halves. This makes each record a
+selectable manual grip position rather than a new claim that the two component
+surfaces are one physical opening.
+
+| package / mounting state | documented key grip | schema kind | reviewed canonical physical-contact mapping |
+| --- | --- | --- | --- |
+| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug | `jug` | `outer-wedge-pinch-left/right` |
+| same | Variable Depth Sloper Rail | `sloper` | `variable-edge-left/right` |
+| same | Horizontal Pinch | `pinch` | `outer-wedge-pinch-left/right`; the separate Jug and Horizontal Pinch records intentionally express Trango's separately named manual choices on the same reviewed wedge surface. |
+| same | Medium Supported Crimp | `edge` | `medium-crimp-left/right` |
+| same | Large Sloped Crimp | `edge` | `upper-sloped-crimp-left/right` |
+| `trango-rock-prodigy-pivot-orientation-2-90-outwards` / Orientation 2, 90° Outwards | Shallow Mono | `pocket` | `variable-edge-left/right`; the guide identifies a one-finger use at the rail's reviewed contact, so the complete continuous rail boundary is retained instead of inventing a raster-derived sub-contour. |
+| same | Steep Gaston | `edge` | `outer-wedge-pinch-left/right` |
+| same | Small Sloped Crimp | `edge` | `outer-sloped-crimp-left/right` |
+| `trango-rock-prodigy-pivot-orientation-3-90-inwards` / Orientation 3, 90° Inwards | 2 Finger Pocket | `pocket` | `two-finger-pocket-left/right` |
+| same | 3 Finger Pocket | `pocket` | `three-finger-pocket-left/right` |
+| same | Large Supported Crimp | `edge` | `medium-crimp-left/right` |
+| same | Sloper | `sloper` | `lower-sloper-left/right` |
+| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` / Orientation 3 Switch, L-to-R | Variable Depth Incut Rail | `edge` | `variable-edge-left/right` |
+| same | Shallow Gaston | `edge` | `outer-wedge-pinch-left/right` |
+| `trango-rock-prodigy-pivot-orientation-4-90-outwards` / Orientation 4, 90° Outwards | Compression Pinch | `pinch` | `outer-wedge-pinch-left/right` |
+| same | Deep Mono | `pocket` | `variable-edge-left/right`; the complete reviewed rail contact is kept for the documented mono use. |
+| same | Medium Mono | `pocket` | `three-finger-pocket-left/right` |
+
+“Orientation 3 Switch” is counted separately from Orientation 3 for package
+selection because the Quick Start directs an L-to-R board switch and names a
+different key-grip set. It is not a fifth physical rotation: the product page's
+four-orientation statement remains the product identity claim. Conversely,
+the 22-position statement does not justify filling the orientation packages
+with undocumented entries because the manufacturer guide says the shown key
+holds are non-comprehensive.
