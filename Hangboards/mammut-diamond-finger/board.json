@@ -21,90 +21,90 @@
       "name": "Left jug",
       "kind": "jug",
       "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.015, "y": 0.56, "width": 0.17, "height": 0.16}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.5, 0.0]}, {"command": "curve", "control1": [0.75, 0.0], "control2": [1.0, 0.2], "to": [1.0, 0.6]}, {"command": "curve", "control1": [0.92, 0.85], "control2": [0.7, 1.0], "to": [0.5, 1.0]}, {"command": "curve", "control1": [0.3, 1.0], "control2": [0.08, 0.85], "to": [0.0, 0.6]}, {"command": "curve", "control1": [0.0, 0.15], "control2": [0.25, 0.0], "to": [0.5, 0.0]}, {"command": "close"}]}}]
+      "geometry": [{"frame": {"x": 0.065, "y": 0.55, "width": 0.14, "height": 0.18}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.5, 0.0]}, {"command": "curve", "control1": [0.75, 0.0], "control2": [1.0, 0.2], "to": [1.0, 0.6]}, {"command": "curve", "control1": [0.92, 0.85], "control2": [0.7, 1.0], "to": [0.5, 1.0]}, {"command": "curve", "control1": [0.3, 1.0], "control2": [0.08, 0.85], "to": [0.0, 0.6]}, {"command": "curve", "control1": [0.0, 0.15], "control2": [0.25, 0.0], "to": [0.5, 0.0]}, {"command": "close"}]}}]
     },
     {
       "id": "sloper-45-left", "name": "Left 45 mm flat sloper", "kind": "sloper", "sloper": {"type": "flat"}, "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.225, "y": 0.245, "width": 0.2, "height": 0.09}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.25, "y": 0.065, "width": 0.16, "height": 0.18}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-30-four-left", "name": "Left 30 mm 4-finger pocket", "kind": "pocket", "sizeMillimeters": 30, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.11, "y": 0.42, "width": 0.13, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.16, "y": 0.33, "width": 0.07, "height": 0.125}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-16-two-left", "name": "Left 16 mm 2-finger pocket", "kind": "pocket", "sizeMillimeters": 16, "fingerCapacity": 2, "gripType": "twoFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.27, "y": 0.42, "width": 0.06, "height": 0.065}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.36}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.252, "y": 0.33, "width": 0.07, "height": 0.125}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.36}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-16-three-left", "name": "Left 16 mm 3-finger pocket", "kind": "pocket", "sizeMillimeters": 16, "fingerCapacity": 3, "gripType": "threeFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.35, "y": 0.42, "width": 0.07, "height": 0.065}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.33}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.339, "y": 0.33, "width": 0.07, "height": 0.125}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.33}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-20-eight-left", "name": "Left 20 mm 8-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.2, "y": 0.58, "width": 0.1, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.225, "y": 0.555, "width": 0.095, "height": 0.17}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-20-four-left", "name": "Left 20 mm 4-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.31, "y": 0.58, "width": 0.08, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.28}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.328, "y": 0.555, "width": 0.08, "height": 0.17}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.28}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-10-four-left", "name": "Left 10 mm 4-finger pocket", "kind": "pocket", "sizeMillimeters": 10, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.26, "y": 0.7, "width": 0.11, "height": 0.05}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.115, "y": 0.795, "width": 0.175, "height": 0.135}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "sloper-48-center", "name": "Center 48 mm flat sloper", "kind": "sloper", "sloper": {"type": "flat"}, "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.4, "y": 0.235, "width": 0.2, "height": 0.09}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.41, "y": 0.05, "width": 0.18, "height": 0.22}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-30-eight-center", "name": "Center 30 mm 8-finger pocket", "kind": "pocket", "sizeMillimeters": 30, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.41, "y": 0.53, "width": 0.18, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.415, "y": 0.55, "width": 0.17, "height": 0.18}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.2}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-18-eight-center", "name": "Center 18 mm 8-finger pocket", "kind": "pocket", "sizeMillimeters": 18, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.43, "y": 0.7, "width": 0.14, "height": 0.06}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.22}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.415, "y": 0.795, "width": 0.17, "height": 0.135}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.22}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-10-four-right", "name": "Right 10 mm 4-finger pocket", "kind": "pocket", "sizeMillimeters": 10, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.63, "y": 0.7, "width": 0.11, "height": 0.05}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.71, "y": 0.795, "width": 0.175, "height": 0.135}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-20-four-right", "name": "Right 20 mm 4-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.61, "y": 0.58, "width": 0.08, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.28}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.592, "y": 0.555, "width": 0.08, "height": 0.17}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.28}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-20-eight-right", "name": "Right 20 mm 8-finger pocket", "kind": "pocket", "sizeMillimeters": 20, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.7, "y": 0.58, "width": 0.1, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.68, "y": 0.555, "width": 0.095, "height": 0.17}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.25}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-16-three-right", "name": "Right 16 mm 3-finger pocket", "kind": "pocket", "sizeMillimeters": 16, "fingerCapacity": 3, "gripType": "threeFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.58, "y": 0.42, "width": 0.07, "height": 0.065}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.33}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.591, "y": 0.33, "width": 0.07, "height": 0.125}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.33}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-16-two-right", "name": "Right 16 mm 2-finger pocket", "kind": "pocket", "sizeMillimeters": 16, "fingerCapacity": 2, "gripType": "twoFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.67, "y": 0.42, "width": 0.06, "height": 0.065}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.36}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.678, "y": 0.33, "width": 0.07, "height": 0.125}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.36}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "pocket-30-four-right", "name": "Right 30 mm 4-finger pocket", "kind": "pocket", "sizeMillimeters": 30, "fingerCapacity": 4, "gripType": "fourFingerPocket", "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.76, "y": 0.42, "width": 0.13, "height": 0.07}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.77, "y": 0.33, "width": 0.07, "height": 0.125}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.3}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0.0}}]
     },
     {
       "id": "sloper-45-right", "name": "Right 45 mm flat sloper", "kind": "sloper", "sloper": {"type": "flat"}, "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.575, "y": 0.245, "width": 0.2, "height": 0.09}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.59, "y": 0.065, "width": 0.16, "height": 0.18}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
     },
     {
       "id": "jug-right",
       "name": "Right jug",
       "kind": "jug",
       "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.815, "y": 0.56, "width": 0.17, "height": 0.16}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.5, 0.0]}, {"command": "curve", "control1": [0.25, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.6]}, {"command": "curve", "control1": [0.08, 0.85], "control2": [0.3, 1.0], "to": [0.5, 1.0]}, {"command": "curve", "control1": [0.7, 1.0], "control2": [0.92, 0.85], "to": [1.0, 0.6]}, {"command": "curve", "control1": [1.0, 0.15], "control2": [0.75, 0.0], "to": [0.5, 0.0]}, {"command": "close"}]}}]
+      "geometry": [{"frame": {"x": 0.795, "y": 0.55, "width": 0.14, "height": 0.18}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.5, 0.0]}, {"command": "curve", "control1": [0.25, 0.0], "control2": [0.0, 0.2], "to": [0.0, 0.6]}, {"command": "curve", "control1": [0.08, 0.85], "control2": [0.3, 1.0], "to": [0.5, 1.0]}, {"command": "curve", "control1": [0.7, 1.0], "control2": [0.92, 0.85], "to": [1.0, 0.6]}, {"command": "curve", "control1": [1.0, 0.15], "control2": [0.75, 0.0], "to": [0.5, 0.0]}, {"command": "close"}]}}]
     },
     {
       "id": "sloper-30-left", "name": "Left 30 mm flat sloper", "kind": "sloper", "sloper": {"type": "flat"}, "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.035, "y": 0.26, "width": 0.17, "height": 0.1}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.04, "y": 0.07, "width": 0.205, "height": 0.23}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
     },
     {
       "id": "sloper-30-right", "name": "Right 30 mm flat sloper", "kind": "sloper", "sloper": {"type": "flat"}, "presentationID": "primary",
-      "geometry": [{"frame": {"x": 0.795, "y": 0.26, "width": 0.17, "height": 0.1}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
+      "geometry": [{"frame": {"x": 0.755, "y": 0.07, "width": 0.205, "height": 0.23}, "shape": {"type": "roundedRect", "cornerRadiusFraction": 0.18}, "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0.0}}]
     }
   ]
 }
