@@ -1954,7 +1954,8 @@
         }
       ],
       "presentationID": "orientation-3",
-      "gripType": "twoFingerPocket"
+      "gripType": "twoFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "two-finger-pocket-right-orientation-3",
