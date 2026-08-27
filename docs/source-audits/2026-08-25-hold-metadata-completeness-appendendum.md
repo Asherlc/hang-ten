@@ -16,7 +16,8 @@ render or photograph.
 > The current [Beastmaker audit](2026-08-12-beastmaker-board-packages.md)
 > maps its labelled values and capacities to stable IDs, records them as
 > secondary provenance in the existing ledger, and documents the 1000 center
-> 53-vs-50 mm and 2000 center 52-vs-50 mm diagram/text discrepancies. No value
+> 1000 outer-pair 10-vs-15 mm and 2000 lower-center 22-vs-21 mm
+> primary/secondary discrepancies. No value
 > is assigned to a jug or sloper from that source.
 
 ## Result

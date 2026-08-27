@@ -182,14 +182,13 @@ The same secondary diagram identifies `pocket-top-outer-{left,right}` (#1) as
 instead specifies its two small four-finger pockets as 10 mm. The ledger records
 both facts and retains the primary **10 mm** runtime value for this mapped pair.
 
-The secondary diagram labels `pocket-middle-center` (#6) **53 mm**, while its
-textual list says 50 mm. It remains 53 mm because the diagram is the positioned
-secondary evidence; the disagreement is recorded in the ledger.
+The secondary diagram and textual list both label `pocket-middle-center` (#6)
+as a 50 mm four-finger edge.
 
 ### Beastmaker 2000
 
-`front-middle-5` remains **52 mm** because the positioned secondary diagram
-labels it 52 mm while that source's text says 50 mm. Separately, the
+The secondary diagram and textual list both label `front-middle-5` (#6) as a
+50 mm four-finger edge. Separately, the
 user-provided annotated 2000 diagram received on 2026-08-26 labels
 `front-lower-5` **21 mm**. The official [Beastmaker 2000 product page](https://www.beastmaker.co.uk/products/beastmaker-2000-series)
 specifies the lower-center edge as **22 mm**; the runtime value remains 22 mm.

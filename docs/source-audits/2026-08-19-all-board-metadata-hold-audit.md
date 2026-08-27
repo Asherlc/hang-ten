@@ -32,8 +32,10 @@ is the supported Beta Board package.
 - **Verified facts:** generic/Tulipwood Beastmaker 1000; `580 × 150 × 58 mm`.
   The separate Beech page corroborates only the shared 58 mm depth, not this
   package's product identity.
-- **Discrepancy:** the secondary diagram labels the exact center contact 53 mm,
-  while its text says 50 mm. The diagram wins because it is positioned.
+- **Discrepancy:** the secondary source's positioned diagram and textual list
+  both identify the exact center contact as a 50 mm four-finger edge. Its outer
+  #1 pair instead conflicts with the primary 10 mm product-page specification;
+  the primary value is retained.
 - **Action:** retain the 22 regions and map the 17 labelled front contacts as
   secondary evidence; leave jugs/slopers unmeasured.
 
@@ -45,9 +47,10 @@ is the supported Beta Board package.
 - **Source-backed expected physical count:** 27.
 - **Verified facts:** Beastmaker 2000; `580 × 150 × 58 mm`; manufacturer-backed
   lower center 22 mm edge, plus secondary positioned front-contact values.
-- **Discrepancy:** the secondary diagram labels `front-middle-5` 52 mm while
-  its text says 50 mm. The diagram wins; the separate primary 22 mm lower
-  center edge remains unchanged.
+- **Discrepancy:** the secondary source's positioned diagram and textual list
+  both identify `front-middle-5` as a 50 mm four-finger edge. The separate
+  primary 22 mm lower-center edge remains unchanged despite a user-provided
+  secondary 21 mm annotation.
 - **Action:** retain all 27 current regions and map only the diagrammed values.
 
 ### `dewoodstok-woodbord`

@@ -154,6 +154,7 @@ def test_parser_preserves_secondary_source_provenance(tmp_path: Path) -> None:
     ledger = load_metadata_ledger(_write_ledger(tmp_path, [record]))
 
     assert ledger.records[0].source.kind == "secondary"
+    assert ledger.records[0].source.label == "Fixture community measurement"
 
 
 def test_parser_rejects_board_in_full_and_sloper_only_scopes(tmp_path: Path) -> None:

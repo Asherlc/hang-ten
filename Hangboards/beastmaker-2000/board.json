@@ -940,8 +940,8 @@
     },
     {
       "id": "front-middle-5",
-      "sizeMillimeters": 52,
-      "name": "Front Middle 5",
+      "sizeMillimeters": 50,
+      "name": "50 mm 4 Finger Edge Center",
       "kind": "edge",
       "geometry": [
         {

@@ -1086,8 +1086,8 @@
     },
     {
       "id": "pocket-middle-center",
-      "sizeMillimeters": 53,
-      "name": "Pocket Middle Center",
+      "sizeMillimeters": 50,
+      "name": "50 mm 4 Finger Edge Center",
       "kind": "edge",
       "geometry": [
         {

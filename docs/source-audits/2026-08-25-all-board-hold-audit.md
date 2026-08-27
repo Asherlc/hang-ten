@@ -95,8 +95,8 @@ The positioned [secondary comparison](https://thehangboard.com/pages/beastmaker-
 now maps exact front contacts for both Beastmakers. Its values and finger labels
 are recorded as secondary provenance in the metadata ledger, not as
 manufacturer claims. The complete stable-ID mapping and the two diagram/text
-discrepancies—1000 center **53 vs 50 mm**, 2000 `front-middle-5` **52 vs 50
-mm**—are documented in the [Beastmaker source audit](2026-08-12-beastmaker-board-packages.md).
+source-conflict rulings—1000 outer pair **10 vs 15 mm** and 2000 lower-center
+edge **22 vs 21 mm**—are documented in the [Beastmaker source audit](2026-08-12-beastmaker-board-packages.md).
 
 `front-lower-9` is the direct geometry mirror of `front-lower-1`. The
 positioned map also establishes all of the explicitly labelled mirrored pairs.

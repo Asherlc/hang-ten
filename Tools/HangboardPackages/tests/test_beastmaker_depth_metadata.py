@@ -29,7 +29,7 @@ def test_beastmaker_1000_prefers_primary_depth_for_the_conflicting_small_edge_pa
         "pocket-middle-mid-right": 50,
         "pocket-middle-inner-left": 45,
         "pocket-middle-inner-right": 45,
-        "pocket-middle-center": 53,
+        "pocket-middle-center": 50,
         "pocket-bottom-outer-left": 20,
         "pocket-bottom-outer-right": 20,
         "pocket-bottom-mid-left": 25,
@@ -53,7 +53,7 @@ def test_beastmaker_2000_exposes_positioned_secondary_source_depths() -> None:
         "hold-27": 50,
         "front-middle-4": 30,
         "front-middle-6": 30,
-        "front-middle-5": 52,
+        "front-middle-5": 50,
         "front-lower-1": 15,
         "front-lower-9": 15,
         "front-lower-2": 25,
@@ -63,6 +63,23 @@ def test_beastmaker_2000_exposes_positioned_secondary_source_depths() -> None:
         "front-lower-4": 20,
         "front-lower-6": 20,
         "front-lower-5": 22,
+    }
+
+
+def test_beastmaker_center_edges_use_the_source_labelled_50_millimeter_names() -> None:
+    assert {
+        package_slug: next(
+            hold.name
+            for hold in load_board_package(REPO_ROOT / "Hangboards" / package_slug).board.holds
+            if hold.id == hold_id
+        )
+        for package_slug, hold_id in (
+            ("beastmaker-1000", "pocket-middle-center"),
+            ("beastmaker-2000", "front-middle-5"),
+        )
+    } == {
+        "beastmaker-1000": "50 mm 4 Finger Edge Center",
+        "beastmaker-2000": "50 mm 4 Finger Edge Center",
     }
 
 
