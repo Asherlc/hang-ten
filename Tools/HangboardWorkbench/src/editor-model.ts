@@ -60,6 +60,7 @@ export function cloneEditorDocument(document: EditorDocument): EditorDocument {
       ...(region.depthRangeMillimeters ? { depthRangeMillimeters: { ...region.depthRangeMillimeters } } : {}),
       ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
       ...(region.bendableCommandIndexes ? { bendableCommandIndexes: [...region.bendableCommandIndexes] } : {}),
+      ...(region.smoothAnchorIndexes ? { smoothAnchorIndexes: [...region.smoothAnchorIndexes] } : {}),
     })),
   };
 }
