@@ -944,7 +944,7 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
     }
 
 
-def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
+def test_training_tiles_contacts_keep_only_source_mapped_pocket_measurements() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     ledger_path = (
         repository_root
@@ -958,7 +958,15 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
         if package.board.id == "soill.training-tiles"
     )
 
-    assert len(package.board.holds) == 20
+    assert len(package.board.holds) == 16
+    assert {
+        hold.id: hold.size_millimeters
+        for hold in package.board.holds
+        if hold.kind == "pocket"
+    } == {
+        "top-pocket-left": 76.2,
+        "top-pocket-right": 76.2,
+    }
     assert all(
         hold.size_millimeters is None
         and hold.depth_range_millimeters is None
@@ -967,10 +975,17 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
         and hold.grip_type is None
         and hold.features is None
         for hold in package.board.holds
+        if hold.kind != "pocket"
     )
-    assert next(
+    coverage = next(
         board for board in report.boards if board.board_id == "soill.training-tiles"
-    ).adapted == 20
+    )
+    assert (coverage.verified, coverage.adapted, coverage.unavailable, coverage.not_applicable) == (
+        18,
+        0,
+        84,
+        26,
+    )
 
 
 def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
