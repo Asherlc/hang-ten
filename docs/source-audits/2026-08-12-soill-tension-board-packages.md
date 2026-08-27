@@ -303,14 +303,21 @@ not make the three boards interchangeable.
   `https://static1.squarespace.com/static/55916a9fe4b0425743f22264/57dc1dfd3e00be77ca9522cf/595d1aa8d2b857b047ad46b4/1505839437042/DSC09266.jpg`.
   Those deleted official CDN objects are preserved here as provenance only;
   they were not recoverable as images.
-- With explicit user approval, the discontinued packages use faithful
-  third-party archival image copies: Northern Rocks' straight-on original
-  Grindstone photo for `tension-grindstone-original/assets/primary.png`, and
-  Climbing's 2017 Grindstone Pro board photo for
-  `tension-grindstone-pro/assets/primary.png`. They are archival presentation
-  assets, **not manufacturer assets**. Each was losslessly decoded and
-  re-encoded to the required PNG container; it was not cropped, registered,
-  traced, segmented, or otherwise transformed.
+- With explicit user approval, the discontinued boards use non-manufacturer
+  archival photos as provenance references only. Northern Rocks' legacy
+  [Grindstone Pro listing](https://www.northernrocks.co.nz/product/grindstone-pro/)
+  serves its front photo directly at
+  [`tension-climbing-hang-board-grindstone-pro.jpg`](https://www.northernrocks.co.nz/wp-content/uploads/2018/12/tension-climbing-hang-board-grindstone-pro.jpg);
+  despite that legacy listing and file name, the pictured layout is the
+  original Grindstone. Climbing's 2017
+  [Grindstone Pro gift-guide entry](https://www.climbing.com/gear/sponsor-content-climbing-holiday-gift-guide-tension-climbing-grindstone-pro-hangboard/)
+  identifies its board photo, available directly as
+  [`dsc09271.jpg`](https://cdn.climbing.com/wp-content/uploads/2017/11/dsc09271.jpg).
+  These are archival evidence, **not manufacturer assets**, and neither is a
+  package presentation asset. The current primary PNGs are clean, head-on,
+  simplified authored renders for their respective revisions; the archival
+  photos remain provenance references rather than files copied, decoded, or
+  re-encoded into the packages.
 - The official 2017 interview transcript, [A Better Strip of
   Wood](https://www.powercompanyclimbing.com/blog/2017/7/5/episode-49-a-better-strip-of-wood-with-tension-climbing),
   maps the original board to 35/30/25/20/15 mm paired edges plus 50 and 22 mm
@@ -336,16 +343,18 @@ not make the three boards interchangeable.
 
 ### Field mapping and deliberate geometry
 
-The archival photos establish the visible contact boundary and spatial
-placement of every listed hold. Every normalized closed path was authored
-directly against its selected archival image. Regular edge recesses use a
-human-selected pill constraint and regular pockets use a human-selected oval
-constraint; these constraints are editing metadata only and the saved paths
-remain the highlight and hit-test source of truth. The Pro is visibly
-asymmetric, so its left and right paths were drawn independently. The original
-board is symmetric in the source view, and its paired paths were mirrored
-after direct review. No dimensions are recorded because the historical
-manufacturer material reviewed here does not publish them.
+The archival photos support human review of the visible contact boundaries and
+spatial placement of every listed hold. Every normalized closed path was
+deliberately authored as independent geometry: no archival or rendered image
+was traced, registered, aligned, segmented, vectorized, or otherwise used to
+derive a path. Regular edge recesses use a human-selected pill constraint and
+regular pockets use a human-selected oval constraint; these constraints are
+editing metadata only and the saved paths remain the highlight and hit-test
+source of truth. The Pro is visibly asymmetric, so its left and right paths
+were drawn independently. The original board is symmetric in the source view,
+and its paired paths were mirrored after direct review. No dimensions are
+recorded because the historical manufacturer material reviewed here does not
+publish them.
 
 ## 2026-08-26 Iron Palm 2.0 presentation-asset correction
 
