@@ -7329,7 +7329,9 @@
           }
         }
       ],
-      "presentationID": "orientation-2"
+      "presentationID": "orientation-2",
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "hold-53",
