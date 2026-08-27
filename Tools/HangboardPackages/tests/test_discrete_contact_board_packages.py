@@ -141,11 +141,12 @@ def test_continuously_variable_forge_and_pivot_rails_remain_ranges() -> None:
         "lowerBound": 7,
         "upperBound": 20,
     }
-    assert {
+    actual_pivot_ranges = {
         hold_id: hold["depthRangeMillimeters"]
         for hold_id, hold in pivot.items()
         if "depthRangeMillimeters" in hold
-    } == {
+    }
+    base_pivot_ranges = {
         "variable-edge-left": {"lowerBound": 16, "upperBound": 31},
         "variable-edge-right": {"lowerBound": 16, "upperBound": 31},
         "medium-crimp-left": {"lowerBound": 9, "upperBound": 10},
@@ -156,4 +157,9 @@ def test_continuously_variable_forge_and_pivot_rails_remain_ranges() -> None:
         "two-finger-pocket-right": {"lowerBound": 28, "upperBound": 32},
         "three-finger-pocket-left": {"lowerBound": 17, "upperBound": 28},
         "three-finger-pocket-right": {"lowerBound": 17, "upperBound": 28},
+    }
+    assert actual_pivot_ranges == {
+        f"{hold_id}{suffix}": depth_range
+        for suffix in ("", "-orientation-2", "-orientation-3", "-orientation-4")
+        for hold_id, depth_range in base_pivot_ranges.items()
     }

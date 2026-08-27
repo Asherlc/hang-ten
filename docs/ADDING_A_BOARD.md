@@ -35,7 +35,8 @@ package and label it as an adaptation.
 
 Every board is a flat directory below `Hangboards/`. Direct discovery treats a
 directory containing `board.json` as app content. A finished package contains
-exactly:
+exactly `board.json`, an `assets/` directory, and the PNG files declared by its
+one or more named presentations:
 
 ```text
 Hangboards/
@@ -43,6 +44,7 @@ Hangboards/
     board.json
     assets/
       primary.png
+      optional-additional-presentation.png
 ```
 
 A partial directory is not an authoring workspace: Workbench does not list or
@@ -60,8 +62,21 @@ When present, `sizeMillimeters` and both `depthRangeMillimeters` bounds must be
 positive finite JSON numbers; fractional millimetre values are preserved exactly.
 The lower depth bound must not exceed the upper bound.
 
-Set `presentation.assetPath` to exactly `assets/primary.png`. Any other value is
-rejected by the loader.
+`board.json.presentations` is a nonempty array. Every presentation has a unique
+identifier, a nonempty display name, an `assetPath`, an image-matching aspect
+ratio, and a `default` flag; exactly one presentation is the default. Every
+hold's `presentationID` must name one of those presentations. Each `assetPath`
+must be a relative `.png` path beneath `assets/`, and the files beneath
+`assets/` must exactly match the set of declared presentation assets. Missing
+or undeclared asset files and any extra package-root entry are rejected.
+
+For the normal one-surface board, retain the simple convention of one `Primary`
+presentation at `assets/primary.png`. When first-party evidence establishes
+multiple selectable surfaces, sides, or physical orientations of the same
+product, keep one board package and add a clearly named presentation and PNG
+for each supported variation. Scope each hold record to the presentation whose
+image and canonical geometry it describes; do not split one physical product
+into separate catalog boards solely because its presentation changes.
 
 The Trango Rock Prodigy Pivot package is the structural and path-style
 precedent: it uses smooth normalized closed paths, exact mirroring where the
@@ -125,7 +140,12 @@ rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen \
 ## Completion checklist
 
 - Source URLs and field mappings are recorded in a source audit.
-- The package contains exactly `board.json` and `assets/primary.png`.
+- The package root contains exactly `board.json` and `assets/`; the files below
+  `assets/` exactly match the one or more presentation assets declared in
+  `board.json`.
+- Exactly one named presentation is the default. A simple one-surface package
+  uses the `Primary` / `assets/primary.png` convention; genuine sourced
+  variations remain presentations of the same board.
 - Every hold has unique identity and nonempty normalized geometry.
 - Unsupported optional physical facts remain omitted.
 - Each physical contact is represented once; disconnected pieces share a hold

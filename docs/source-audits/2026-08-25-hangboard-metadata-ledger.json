@@ -29416,7 +29416,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-left"
+        "upper-sloped-crimp-left",
+        "upper-sloped-crimp-left-orientation-2",
+        "upper-sloped-crimp-left-orientation-3",
+        "upper-sloped-crimp-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -29431,7 +29434,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-left"
+        "upper-sloped-crimp-left",
+        "upper-sloped-crimp-left-orientation-2",
+        "upper-sloped-crimp-left-orientation-3",
+        "upper-sloped-crimp-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "verified",
@@ -29446,7 +29452,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-left"
+        "upper-sloped-crimp-left",
+        "upper-sloped-crimp-left-orientation-2",
+        "upper-sloped-crimp-left-orientation-3",
+        "upper-sloped-crimp-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -29461,7 +29470,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-left"
+        "upper-sloped-crimp-left",
+        "upper-sloped-crimp-left-orientation-2",
+        "upper-sloped-crimp-left-orientation-3",
+        "upper-sloped-crimp-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -29476,7 +29488,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-left"
+        "upper-sloped-crimp-left",
+        "upper-sloped-crimp-left-orientation-2",
+        "upper-sloped-crimp-left-orientation-3",
+        "upper-sloped-crimp-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -29491,7 +29506,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-left"
+        "upper-sloped-crimp-left",
+        "upper-sloped-crimp-left-orientation-2",
+        "upper-sloped-crimp-left-orientation-3",
+        "upper-sloped-crimp-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -29506,7 +29524,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-left"
+        "upper-sloped-crimp-left",
+        "upper-sloped-crimp-left-orientation-2",
+        "upper-sloped-crimp-left-orientation-3",
+        "upper-sloped-crimp-left-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -29521,7 +29542,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-right"
+        "upper-sloped-crimp-right",
+        "upper-sloped-crimp-right-orientation-2",
+        "upper-sloped-crimp-right-orientation-3",
+        "upper-sloped-crimp-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -29536,7 +29560,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-right"
+        "upper-sloped-crimp-right",
+        "upper-sloped-crimp-right-orientation-2",
+        "upper-sloped-crimp-right-orientation-3",
+        "upper-sloped-crimp-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "verified",
@@ -29551,7 +29578,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-right"
+        "upper-sloped-crimp-right",
+        "upper-sloped-crimp-right-orientation-2",
+        "upper-sloped-crimp-right-orientation-3",
+        "upper-sloped-crimp-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -29566,7 +29596,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-right"
+        "upper-sloped-crimp-right",
+        "upper-sloped-crimp-right-orientation-2",
+        "upper-sloped-crimp-right-orientation-3",
+        "upper-sloped-crimp-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -29581,7 +29614,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-right"
+        "upper-sloped-crimp-right",
+        "upper-sloped-crimp-right-orientation-2",
+        "upper-sloped-crimp-right-orientation-3",
+        "upper-sloped-crimp-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -29596,7 +29632,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-right"
+        "upper-sloped-crimp-right",
+        "upper-sloped-crimp-right-orientation-2",
+        "upper-sloped-crimp-right-orientation-3",
+        "upper-sloped-crimp-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -29611,7 +29650,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "upper-sloped-crimp-right"
+        "upper-sloped-crimp-right",
+        "upper-sloped-crimp-right-orientation-2",
+        "upper-sloped-crimp-right-orientation-3",
+        "upper-sloped-crimp-right-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -29626,7 +29668,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-left"
+        "outer-sloped-crimp-left",
+        "outer-sloped-crimp-left-orientation-2",
+        "outer-sloped-crimp-left-orientation-3",
+        "outer-sloped-crimp-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -29641,7 +29686,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-left"
+        "outer-sloped-crimp-left",
+        "outer-sloped-crimp-left-orientation-2",
+        "outer-sloped-crimp-left-orientation-3",
+        "outer-sloped-crimp-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "verified",
@@ -29656,7 +29704,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-left"
+        "outer-sloped-crimp-left",
+        "outer-sloped-crimp-left-orientation-2",
+        "outer-sloped-crimp-left-orientation-3",
+        "outer-sloped-crimp-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -29671,7 +29722,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-left"
+        "outer-sloped-crimp-left",
+        "outer-sloped-crimp-left-orientation-2",
+        "outer-sloped-crimp-left-orientation-3",
+        "outer-sloped-crimp-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -29686,7 +29740,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-left"
+        "outer-sloped-crimp-left",
+        "outer-sloped-crimp-left-orientation-2",
+        "outer-sloped-crimp-left-orientation-3",
+        "outer-sloped-crimp-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -29701,7 +29758,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-left"
+        "outer-sloped-crimp-left",
+        "outer-sloped-crimp-left-orientation-2",
+        "outer-sloped-crimp-left-orientation-3",
+        "outer-sloped-crimp-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -29716,7 +29776,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-left"
+        "outer-sloped-crimp-left",
+        "outer-sloped-crimp-left-orientation-2",
+        "outer-sloped-crimp-left-orientation-3",
+        "outer-sloped-crimp-left-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -29731,7 +29794,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-right"
+        "outer-sloped-crimp-right",
+        "outer-sloped-crimp-right-orientation-2",
+        "outer-sloped-crimp-right-orientation-3",
+        "outer-sloped-crimp-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -29746,7 +29812,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-right"
+        "outer-sloped-crimp-right",
+        "outer-sloped-crimp-right-orientation-2",
+        "outer-sloped-crimp-right-orientation-3",
+        "outer-sloped-crimp-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "verified",
@@ -29761,7 +29830,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-right"
+        "outer-sloped-crimp-right",
+        "outer-sloped-crimp-right-orientation-2",
+        "outer-sloped-crimp-right-orientation-3",
+        "outer-sloped-crimp-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -29776,7 +29848,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-right"
+        "outer-sloped-crimp-right",
+        "outer-sloped-crimp-right-orientation-2",
+        "outer-sloped-crimp-right-orientation-3",
+        "outer-sloped-crimp-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -29791,7 +29866,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-right"
+        "outer-sloped-crimp-right",
+        "outer-sloped-crimp-right-orientation-2",
+        "outer-sloped-crimp-right-orientation-3",
+        "outer-sloped-crimp-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -29806,7 +29884,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-right"
+        "outer-sloped-crimp-right",
+        "outer-sloped-crimp-right-orientation-2",
+        "outer-sloped-crimp-right-orientation-3",
+        "outer-sloped-crimp-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -29821,7 +29902,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-sloped-crimp-right"
+        "outer-sloped-crimp-right",
+        "outer-sloped-crimp-right-orientation-2",
+        "outer-sloped-crimp-right-orientation-3",
+        "outer-sloped-crimp-right-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -29836,7 +29920,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-left"
+        "variable-edge-left",
+        "variable-edge-left-orientation-2",
+        "variable-edge-left-orientation-3",
+        "variable-edge-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -29851,7 +29938,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-left"
+        "variable-edge-left",
+        "variable-edge-left-orientation-2",
+        "variable-edge-left-orientation-3",
+        "variable-edge-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -29866,7 +29956,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-left"
+        "variable-edge-left",
+        "variable-edge-left-orientation-2",
+        "variable-edge-left-orientation-3",
+        "variable-edge-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -29884,7 +29977,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-left"
+        "variable-edge-left",
+        "variable-edge-left-orientation-2",
+        "variable-edge-left-orientation-3",
+        "variable-edge-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -29899,7 +29995,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-left"
+        "variable-edge-left",
+        "variable-edge-left-orientation-2",
+        "variable-edge-left-orientation-3",
+        "variable-edge-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -29914,7 +30013,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-left"
+        "variable-edge-left",
+        "variable-edge-left-orientation-2",
+        "variable-edge-left-orientation-3",
+        "variable-edge-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -29929,7 +30031,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-left"
+        "variable-edge-left",
+        "variable-edge-left-orientation-2",
+        "variable-edge-left-orientation-3",
+        "variable-edge-left-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -29944,7 +30049,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-right"
+        "variable-edge-right",
+        "variable-edge-right-orientation-2",
+        "variable-edge-right-orientation-3",
+        "variable-edge-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -29959,7 +30067,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-right"
+        "variable-edge-right",
+        "variable-edge-right-orientation-2",
+        "variable-edge-right-orientation-3",
+        "variable-edge-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -29974,7 +30085,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-right"
+        "variable-edge-right",
+        "variable-edge-right-orientation-2",
+        "variable-edge-right-orientation-3",
+        "variable-edge-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -29992,7 +30106,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-right"
+        "variable-edge-right",
+        "variable-edge-right-orientation-2",
+        "variable-edge-right-orientation-3",
+        "variable-edge-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30007,7 +30124,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-right"
+        "variable-edge-right",
+        "variable-edge-right-orientation-2",
+        "variable-edge-right-orientation-3",
+        "variable-edge-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30022,7 +30142,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-right"
+        "variable-edge-right",
+        "variable-edge-right-orientation-2",
+        "variable-edge-right-orientation-3",
+        "variable-edge-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -30037,7 +30160,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "variable-edge-right"
+        "variable-edge-right",
+        "variable-edge-right-orientation-2",
+        "variable-edge-right-orientation-3",
+        "variable-edge-right-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -30052,7 +30178,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-left"
+        "medium-crimp-left",
+        "medium-crimp-left-orientation-2",
+        "medium-crimp-left-orientation-3",
+        "medium-crimp-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30067,7 +30196,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-left"
+        "medium-crimp-left",
+        "medium-crimp-left-orientation-2",
+        "medium-crimp-left-orientation-3",
+        "medium-crimp-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30082,7 +30214,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-left"
+        "medium-crimp-left",
+        "medium-crimp-left-orientation-2",
+        "medium-crimp-left-orientation-3",
+        "medium-crimp-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30100,7 +30235,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-left"
+        "medium-crimp-left",
+        "medium-crimp-left-orientation-2",
+        "medium-crimp-left-orientation-3",
+        "medium-crimp-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30115,7 +30253,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-left"
+        "medium-crimp-left",
+        "medium-crimp-left-orientation-2",
+        "medium-crimp-left-orientation-3",
+        "medium-crimp-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30130,7 +30271,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-left"
+        "medium-crimp-left",
+        "medium-crimp-left-orientation-2",
+        "medium-crimp-left-orientation-3",
+        "medium-crimp-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -30145,7 +30289,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-left"
+        "medium-crimp-left",
+        "medium-crimp-left-orientation-2",
+        "medium-crimp-left-orientation-3",
+        "medium-crimp-left-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -30160,7 +30307,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-right"
+        "medium-crimp-right",
+        "medium-crimp-right-orientation-2",
+        "medium-crimp-right-orientation-3",
+        "medium-crimp-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30175,7 +30325,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-right"
+        "medium-crimp-right",
+        "medium-crimp-right-orientation-2",
+        "medium-crimp-right-orientation-3",
+        "medium-crimp-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30190,7 +30343,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-right"
+        "medium-crimp-right",
+        "medium-crimp-right-orientation-2",
+        "medium-crimp-right-orientation-3",
+        "medium-crimp-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30208,7 +30364,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-right"
+        "medium-crimp-right",
+        "medium-crimp-right-orientation-2",
+        "medium-crimp-right-orientation-3",
+        "medium-crimp-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30223,7 +30382,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-right"
+        "medium-crimp-right",
+        "medium-crimp-right-orientation-2",
+        "medium-crimp-right-orientation-3",
+        "medium-crimp-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30238,7 +30400,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-right"
+        "medium-crimp-right",
+        "medium-crimp-right-orientation-2",
+        "medium-crimp-right-orientation-3",
+        "medium-crimp-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -30253,7 +30418,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "medium-crimp-right"
+        "medium-crimp-right",
+        "medium-crimp-right-orientation-2",
+        "medium-crimp-right-orientation-3",
+        "medium-crimp-right-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -30268,7 +30436,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-left"
+        "large-crimp-left",
+        "large-crimp-left-orientation-2",
+        "large-crimp-left-orientation-3",
+        "large-crimp-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30283,7 +30454,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-left"
+        "large-crimp-left",
+        "large-crimp-left-orientation-2",
+        "large-crimp-left-orientation-3",
+        "large-crimp-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30298,7 +30472,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-left"
+        "large-crimp-left",
+        "large-crimp-left-orientation-2",
+        "large-crimp-left-orientation-3",
+        "large-crimp-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30316,7 +30493,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-left"
+        "large-crimp-left",
+        "large-crimp-left-orientation-2",
+        "large-crimp-left-orientation-3",
+        "large-crimp-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30331,7 +30511,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-left"
+        "large-crimp-left",
+        "large-crimp-left-orientation-2",
+        "large-crimp-left-orientation-3",
+        "large-crimp-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30346,7 +30529,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-left"
+        "large-crimp-left",
+        "large-crimp-left-orientation-2",
+        "large-crimp-left-orientation-3",
+        "large-crimp-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -30361,7 +30547,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-left"
+        "large-crimp-left",
+        "large-crimp-left-orientation-2",
+        "large-crimp-left-orientation-3",
+        "large-crimp-left-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -30376,7 +30565,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-right"
+        "large-crimp-right",
+        "large-crimp-right-orientation-2",
+        "large-crimp-right-orientation-3",
+        "large-crimp-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30391,7 +30583,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-right"
+        "large-crimp-right",
+        "large-crimp-right-orientation-2",
+        "large-crimp-right-orientation-3",
+        "large-crimp-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30406,7 +30601,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-right"
+        "large-crimp-right",
+        "large-crimp-right-orientation-2",
+        "large-crimp-right-orientation-3",
+        "large-crimp-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30424,7 +30622,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-right"
+        "large-crimp-right",
+        "large-crimp-right-orientation-2",
+        "large-crimp-right-orientation-3",
+        "large-crimp-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30439,7 +30640,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-right"
+        "large-crimp-right",
+        "large-crimp-right-orientation-2",
+        "large-crimp-right-orientation-3",
+        "large-crimp-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30454,7 +30658,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-right"
+        "large-crimp-right",
+        "large-crimp-right-orientation-2",
+        "large-crimp-right-orientation-3",
+        "large-crimp-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -30469,7 +30676,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "large-crimp-right"
+        "large-crimp-right",
+        "large-crimp-right-orientation-2",
+        "large-crimp-right-orientation-3",
+        "large-crimp-right-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -30484,7 +30694,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-left"
+        "two-finger-pocket-left",
+        "two-finger-pocket-left-orientation-2",
+        "two-finger-pocket-left-orientation-3",
+        "two-finger-pocket-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30499,7 +30712,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-left"
+        "two-finger-pocket-left",
+        "two-finger-pocket-left-orientation-2",
+        "two-finger-pocket-left-orientation-3",
+        "two-finger-pocket-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30514,7 +30730,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-left"
+        "two-finger-pocket-left",
+        "two-finger-pocket-left-orientation-2",
+        "two-finger-pocket-left-orientation-3",
+        "two-finger-pocket-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30532,7 +30751,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-left"
+        "two-finger-pocket-left",
+        "two-finger-pocket-left-orientation-2",
+        "two-finger-pocket-left-orientation-3",
+        "two-finger-pocket-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30547,7 +30769,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-left"
+        "two-finger-pocket-left",
+        "two-finger-pocket-left-orientation-2",
+        "two-finger-pocket-left-orientation-3",
+        "two-finger-pocket-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30562,7 +30787,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-left"
+        "two-finger-pocket-left",
+        "two-finger-pocket-left-orientation-2",
+        "two-finger-pocket-left-orientation-3",
+        "two-finger-pocket-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "verified",
@@ -30577,7 +30805,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-left"
+        "two-finger-pocket-left",
+        "two-finger-pocket-left-orientation-2",
+        "two-finger-pocket-left-orientation-3",
+        "two-finger-pocket-left-orientation-4"
       ],
       "field": "features",
       "outcome": "verified",
@@ -30594,7 +30825,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-right"
+        "two-finger-pocket-right",
+        "two-finger-pocket-right-orientation-2",
+        "two-finger-pocket-right-orientation-3",
+        "two-finger-pocket-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30609,7 +30843,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-right"
+        "two-finger-pocket-right",
+        "two-finger-pocket-right-orientation-2",
+        "two-finger-pocket-right-orientation-3",
+        "two-finger-pocket-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30624,7 +30861,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-right"
+        "two-finger-pocket-right",
+        "two-finger-pocket-right-orientation-2",
+        "two-finger-pocket-right-orientation-3",
+        "two-finger-pocket-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30642,7 +30882,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-right"
+        "two-finger-pocket-right",
+        "two-finger-pocket-right-orientation-2",
+        "two-finger-pocket-right-orientation-3",
+        "two-finger-pocket-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30657,7 +30900,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-right"
+        "two-finger-pocket-right",
+        "two-finger-pocket-right-orientation-2",
+        "two-finger-pocket-right-orientation-3",
+        "two-finger-pocket-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30672,7 +30918,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-right"
+        "two-finger-pocket-right",
+        "two-finger-pocket-right-orientation-2",
+        "two-finger-pocket-right-orientation-3",
+        "two-finger-pocket-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "verified",
@@ -30687,7 +30936,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "two-finger-pocket-right"
+        "two-finger-pocket-right",
+        "two-finger-pocket-right-orientation-2",
+        "two-finger-pocket-right-orientation-3",
+        "two-finger-pocket-right-orientation-4"
       ],
       "field": "features",
       "outcome": "verified",
@@ -30704,7 +30956,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-left"
+        "three-finger-pocket-left",
+        "three-finger-pocket-left-orientation-2",
+        "three-finger-pocket-left-orientation-3",
+        "three-finger-pocket-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30719,7 +30974,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-left"
+        "three-finger-pocket-left",
+        "three-finger-pocket-left-orientation-2",
+        "three-finger-pocket-left-orientation-3",
+        "three-finger-pocket-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30734,7 +30992,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-left"
+        "three-finger-pocket-left",
+        "three-finger-pocket-left-orientation-2",
+        "three-finger-pocket-left-orientation-3",
+        "three-finger-pocket-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30752,7 +31013,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-left"
+        "three-finger-pocket-left",
+        "three-finger-pocket-left-orientation-2",
+        "three-finger-pocket-left-orientation-3",
+        "three-finger-pocket-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30767,7 +31031,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-left"
+        "three-finger-pocket-left",
+        "three-finger-pocket-left-orientation-2",
+        "three-finger-pocket-left-orientation-3",
+        "three-finger-pocket-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30782,7 +31049,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-left"
+        "three-finger-pocket-left",
+        "three-finger-pocket-left-orientation-2",
+        "three-finger-pocket-left-orientation-3",
+        "three-finger-pocket-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "verified",
@@ -30797,7 +31067,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-left"
+        "three-finger-pocket-left",
+        "three-finger-pocket-left-orientation-2",
+        "three-finger-pocket-left-orientation-3",
+        "three-finger-pocket-left-orientation-4"
       ],
       "field": "features",
       "outcome": "verified",
@@ -30814,7 +31087,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-right"
+        "three-finger-pocket-right",
+        "three-finger-pocket-right-orientation-2",
+        "three-finger-pocket-right-orientation-3",
+        "three-finger-pocket-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30829,7 +31105,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-right"
+        "three-finger-pocket-right",
+        "three-finger-pocket-right-orientation-2",
+        "three-finger-pocket-right-orientation-3",
+        "three-finger-pocket-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30844,7 +31123,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-right"
+        "three-finger-pocket-right",
+        "three-finger-pocket-right-orientation-2",
+        "three-finger-pocket-right-orientation-3",
+        "three-finger-pocket-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "verified",
@@ -30862,7 +31144,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-right"
+        "three-finger-pocket-right",
+        "three-finger-pocket-right-orientation-2",
+        "three-finger-pocket-right-orientation-3",
+        "three-finger-pocket-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30877,7 +31162,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-right"
+        "three-finger-pocket-right",
+        "three-finger-pocket-right-orientation-2",
+        "three-finger-pocket-right-orientation-3",
+        "three-finger-pocket-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30892,7 +31180,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-right"
+        "three-finger-pocket-right",
+        "three-finger-pocket-right-orientation-2",
+        "three-finger-pocket-right-orientation-3",
+        "three-finger-pocket-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "verified",
@@ -30907,7 +31198,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "three-finger-pocket-right"
+        "three-finger-pocket-right",
+        "three-finger-pocket-right-orientation-2",
+        "three-finger-pocket-right-orientation-3",
+        "three-finger-pocket-right-orientation-4"
       ],
       "field": "features",
       "outcome": "verified",
@@ -30924,7 +31218,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-left"
+        "outer-wedge-pinch-left",
+        "outer-wedge-pinch-left-orientation-2",
+        "outer-wedge-pinch-left-orientation-3",
+        "outer-wedge-pinch-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -30939,7 +31236,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-left"
+        "outer-wedge-pinch-left",
+        "outer-wedge-pinch-left-orientation-2",
+        "outer-wedge-pinch-left-orientation-3",
+        "outer-wedge-pinch-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -30954,7 +31254,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-left"
+        "outer-wedge-pinch-left",
+        "outer-wedge-pinch-left-orientation-2",
+        "outer-wedge-pinch-left-orientation-3",
+        "outer-wedge-pinch-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -30969,7 +31272,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-left"
+        "outer-wedge-pinch-left",
+        "outer-wedge-pinch-left-orientation-2",
+        "outer-wedge-pinch-left-orientation-3",
+        "outer-wedge-pinch-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -30984,7 +31290,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-left"
+        "outer-wedge-pinch-left",
+        "outer-wedge-pinch-left-orientation-2",
+        "outer-wedge-pinch-left-orientation-3",
+        "outer-wedge-pinch-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -30999,7 +31308,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-left"
+        "outer-wedge-pinch-left",
+        "outer-wedge-pinch-left-orientation-2",
+        "outer-wedge-pinch-left-orientation-3",
+        "outer-wedge-pinch-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -31014,7 +31326,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-left"
+        "outer-wedge-pinch-left",
+        "outer-wedge-pinch-left-orientation-2",
+        "outer-wedge-pinch-left-orientation-3",
+        "outer-wedge-pinch-left-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -31029,7 +31344,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-right"
+        "outer-wedge-pinch-right",
+        "outer-wedge-pinch-right-orientation-2",
+        "outer-wedge-pinch-right-orientation-3",
+        "outer-wedge-pinch-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -31044,7 +31362,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-right"
+        "outer-wedge-pinch-right",
+        "outer-wedge-pinch-right-orientation-2",
+        "outer-wedge-pinch-right-orientation-3",
+        "outer-wedge-pinch-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -31059,7 +31380,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-right"
+        "outer-wedge-pinch-right",
+        "outer-wedge-pinch-right-orientation-2",
+        "outer-wedge-pinch-right-orientation-3",
+        "outer-wedge-pinch-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -31074,7 +31398,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-right"
+        "outer-wedge-pinch-right",
+        "outer-wedge-pinch-right-orientation-2",
+        "outer-wedge-pinch-right-orientation-3",
+        "outer-wedge-pinch-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -31089,7 +31416,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-right"
+        "outer-wedge-pinch-right",
+        "outer-wedge-pinch-right-orientation-2",
+        "outer-wedge-pinch-right-orientation-3",
+        "outer-wedge-pinch-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -31104,7 +31434,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-right"
+        "outer-wedge-pinch-right",
+        "outer-wedge-pinch-right-orientation-2",
+        "outer-wedge-pinch-right-orientation-3",
+        "outer-wedge-pinch-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -31119,7 +31452,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "outer-wedge-pinch-right"
+        "outer-wedge-pinch-right",
+        "outer-wedge-pinch-right-orientation-2",
+        "outer-wedge-pinch-right-orientation-3",
+        "outer-wedge-pinch-right-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -31134,7 +31470,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-left"
+        "lower-sloper-left",
+        "lower-sloper-left-orientation-2",
+        "lower-sloper-left-orientation-3",
+        "lower-sloper-left-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -31149,7 +31488,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-left"
+        "lower-sloper-left",
+        "lower-sloper-left-orientation-2",
+        "lower-sloper-left-orientation-3",
+        "lower-sloper-left-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -31164,7 +31506,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-left"
+        "lower-sloper-left",
+        "lower-sloper-left-orientation-2",
+        "lower-sloper-left-orientation-3",
+        "lower-sloper-left-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -31179,7 +31524,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-left"
+        "lower-sloper-left",
+        "lower-sloper-left-orientation-2",
+        "lower-sloper-left-orientation-3",
+        "lower-sloper-left-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -31194,7 +31542,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-left"
+        "lower-sloper-left",
+        "lower-sloper-left-orientation-2",
+        "lower-sloper-left-orientation-3",
+        "lower-sloper-left-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -31209,7 +31560,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-left"
+        "lower-sloper-left",
+        "lower-sloper-left-orientation-2",
+        "lower-sloper-left-orientation-3",
+        "lower-sloper-left-orientation-4"
       ],
       "field": "gripType",
       "outcome": "verified",
@@ -31224,7 +31578,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-left"
+        "lower-sloper-left",
+        "lower-sloper-left-orientation-2",
+        "lower-sloper-left-orientation-3",
+        "lower-sloper-left-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -31239,7 +31596,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-right"
+        "lower-sloper-right",
+        "lower-sloper-right-orientation-2",
+        "lower-sloper-right-orientation-3",
+        "lower-sloper-right-orientation-4"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -31254,7 +31614,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-right"
+        "lower-sloper-right",
+        "lower-sloper-right-orientation-2",
+        "lower-sloper-right-orientation-3",
+        "lower-sloper-right-orientation-4"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -31269,7 +31632,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-right"
+        "lower-sloper-right",
+        "lower-sloper-right-orientation-2",
+        "lower-sloper-right-orientation-3",
+        "lower-sloper-right-orientation-4"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -31284,7 +31650,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-right"
+        "lower-sloper-right",
+        "lower-sloper-right-orientation-2",
+        "lower-sloper-right-orientation-3",
+        "lower-sloper-right-orientation-4"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -31299,7 +31668,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-right"
+        "lower-sloper-right",
+        "lower-sloper-right-orientation-2",
+        "lower-sloper-right-orientation-3",
+        "lower-sloper-right-orientation-4"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -31314,7 +31686,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-right"
+        "lower-sloper-right",
+        "lower-sloper-right-orientation-2",
+        "lower-sloper-right-orientation-3",
+        "lower-sloper-right-orientation-4"
       ],
       "field": "gripType",
       "outcome": "verified",
@@ -31329,7 +31704,10 @@
     {
       "boardID": "trango.rock-prodigy-pivot",
       "holdIDs": [
-        "lower-sloper-right"
+        "lower-sloper-right",
+        "lower-sloper-right-orientation-2",
+        "lower-sloper-right-orientation-3",
+        "lower-sloper-right-orientation-4"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -34487,22 +34865,22 @@
     {"boardID":"trango.rock-prodigy-natural","holdIDs":["center-lower-pocket-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361","label":"Official Natural position and depth guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
     {"boardID":"trango.rock-prodigy-natural","holdIDs":["outer-supported-pocket-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361","label":"Official Natural position and depth guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
     {"boardID":"trango.rock-prodigy-natural","holdIDs":["outer-supported-pocket-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361","label":"Official Natural position and depth guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["upper-sloped-crimp-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["upper-sloped-crimp-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-sloped-crimp-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-sloped-crimp-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["variable-edge-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["variable-edge-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["medium-crimp-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["medium-crimp-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["large-crimp-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["large-crimp-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["two-finger-pocket-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["two-finger-pocket-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["three-finger-pocket-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["three-finger-pocket-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-wedge-pinch-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pinch, so sloper subtype metadata is not applicable."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-wedge-pinch-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pinch, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["upper-sloped-crimp-left","upper-sloped-crimp-left-orientation-2","upper-sloped-crimp-left-orientation-3","upper-sloped-crimp-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["upper-sloped-crimp-right","upper-sloped-crimp-right-orientation-2","upper-sloped-crimp-right-orientation-3","upper-sloped-crimp-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-sloped-crimp-left","outer-sloped-crimp-left-orientation-2","outer-sloped-crimp-left-orientation-3","outer-sloped-crimp-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-sloped-crimp-right","outer-sloped-crimp-right-orientation-2","outer-sloped-crimp-right-orientation-3","outer-sloped-crimp-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["variable-edge-left","variable-edge-left-orientation-2","variable-edge-left-orientation-3","variable-edge-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["variable-edge-right","variable-edge-right-orientation-2","variable-edge-right-orientation-3","variable-edge-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["medium-crimp-left","medium-crimp-left-orientation-2","medium-crimp-left-orientation-3","medium-crimp-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["medium-crimp-right","medium-crimp-right-orientation-2","medium-crimp-right-orientation-3","medium-crimp-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["large-crimp-left","large-crimp-left-orientation-2","large-crimp-left-orientation-3","large-crimp-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["large-crimp-right","large-crimp-right-orientation-2","large-crimp-right-orientation-3","large-crimp-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["two-finger-pocket-left","two-finger-pocket-left-orientation-2","two-finger-pocket-left-orientation-3","two-finger-pocket-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["two-finger-pocket-right","two-finger-pocket-right-orientation-2","two-finger-pocket-right-orientation-3","two-finger-pocket-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["three-finger-pocket-left","three-finger-pocket-left-orientation-2","three-finger-pocket-left-orientation-3","three-finger-pocket-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["three-finger-pocket-right","three-finger-pocket-right-orientation-2","three-finger-pocket-right-orientation-3","three-finger-pocket-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-wedge-pinch-left","outer-wedge-pinch-left-orientation-2","outer-wedge-pinch-left-orientation-3","outer-wedge-pinch-left-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pinch, so sloper subtype metadata is not applicable."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["outer-wedge-pinch-right","outer-wedge-pinch-right-orientation-2","outer-wedge-pinch-right-orientation-3","outer-wedge-pinch-right-orientation-4"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"reason":"The manufacturer identifies these contacts as pinch, so sloper subtype metadata is not applicable."},
     {"boardID":"trango.rock-prodigy-training-center","holdIDs":["jug-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://trango.com/products/rock-prodigy-training-center","label":"Official Training Center product page and front image reviewed against stable IDs"},"reason":"The manufacturer identifies these contacts as jug, so sloper subtype metadata is not applicable."},
     {"boardID":"trango.rock-prodigy-training-center","holdIDs":["jug-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://trango.com/products/rock-prodigy-training-center","label":"Official Training Center product page and front image reviewed against stable IDs"},"reason":"The manufacturer identifies these contacts as jug, so sloper subtype metadata is not applicable."},
     {"boardID":"trango.rock-prodigy-training-center","holdIDs":["edge-large-vder-left"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://trango.com/products/rock-prodigy-training-center","label":"Official Training Center product page and front image reviewed against stable IDs"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
@@ -34612,8 +34990,8 @@
     {"boardID":"trango.rock-prodigy-forge","holdIDs":["sloper-30-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203","label":"Official Forge hold-identification chart reviewed against the stable-ID overlay"},"outcome":"unavailable","reason":"The manufacturer labels this contact only by its sloper angle and publishes no flat-or-round subtype."},
     {"boardID":"trango.rock-prodigy-forge","holdIDs":["sloper-40-left"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203","label":"Official Forge hold-identification chart reviewed against the stable-ID overlay"},"outcome":"unavailable","reason":"The manufacturer labels this contact only by its sloper angle and publishes no flat-or-round subtype."},
     {"boardID":"trango.rock-prodigy-forge","holdIDs":["sloper-40-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203","label":"Official Forge hold-identification chart reviewed against the stable-ID overlay"},"outcome":"unavailable","reason":"The manufacturer labels this contact only by its sloper angle and publishes no flat-or-round subtype."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["lower-sloper-left"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"outcome":"unavailable","reason":"The manufacturer identifies this contact only as a sloper and publishes no flat-or-round subtype."},
-    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["lower-sloper-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"outcome":"unavailable","reason":"The manufacturer identifies this contact only as a sloper and publishes no flat-or-round subtype."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["lower-sloper-left","lower-sloper-left-orientation-2","lower-sloper-left-orientation-3","lower-sloper-left-orientation-4"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"outcome":"unavailable","reason":"The manufacturer identifies this contact only as a sloper and publishes no flat-or-round subtype."},
+    {"boardID":"trango.rock-prodigy-pivot","holdIDs":["lower-sloper-right","lower-sloper-right-orientation-2","lower-sloper-right-orientation-3","lower-sloper-right-orientation-4"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507","label":"Official Pivot orientation guide reviewed against the stable-ID overlay"},"outcome":"unavailable","reason":"The manufacturer identifies this contact only as a sloper and publishes no flat-or-round subtype."},
     {"boardID":"trango.rock-prodigy-training-center","holdIDs":["sloper-left"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://trango.com/products/rock-prodigy-training-center","label":"Official Training Center product page and front image reviewed against stable IDs"},"outcome":"unavailable","reason":"The manufacturer identifies this contact only as a sloper and publishes no flat-or-round subtype."},
     {"boardID":"trango.rock-prodigy-training-center","holdIDs":["sloper-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://trango.com/products/rock-prodigy-training-center","label":"Official Training Center product page and front image reviewed against stable IDs"},"outcome":"unavailable","reason":"The manufacturer identifies this contact only as a sloper and publishes no flat-or-round subtype."},
     {"boardID":"dewoodstok-woodbord","holdIDs":["top-rim"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://www.dewoodstok.nl/product/hangboard-woodbord/","label":"Large declining rim; all holds have generally rounded edges"},"outcome":"unavailable","reason":"The manufacturer identifies a declining rim and says all holds have rounded edges, but does not establish whether this sloper surface has the canonical flat or round subtype."},

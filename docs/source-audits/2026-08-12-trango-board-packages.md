@@ -95,12 +95,63 @@ compound supported pocket remain freeform.
 
 ### `trango-rock-prodigy-pivot`
 
-The completed package remains the structural and path-style precedent; its
-product-specific coordinates must not be reused. The 2026-08-25 stable-ID
-review reconciled 18 physical contacts / 22 geometry pieces. Trango's “22
-distinct grip positions” is an orientation-dependent usage count, not a claim
-of 22 separately bounded physical contacts, so it does not require geometry or
-ID changes.
+The package remains one catalog product, `trango.rock-prodigy-pivot`; the four
+manufacturer-numbered configurations are selectable presentations of that one
+physical product, not four board records. The product page says the Quad Cleat
+mounting system supports four directions. The official quick-start guide then
+labels `ORIENTATION 1` through `ORIENTATION 4` and gives the physical transition
+between them. Its separate `ORIENTATION 3 SWITCH` instruction is the required
+left/right-half swap on the way to Orientation 4, not a fifth numbered
+orientation.
+
+| package presentation | exact manufacturer mapping | guide key-grip examples (non-exhaustive) |
+| --- | --- | --- |
+| `orientation-1` / `assets/primary.png` | Quick-start pp. 6–7; starting horizontal position. This is the formerly generic `primary` presentation, now explicitly named `Orientation 1`. | Jug, variable-depth sloper rail, horizontal pinch, medium supported crimp, large sloped crimp. |
+| `orientation-2` / `assets/orientation-2.png` | Quick-start pp. 8–9; from Orientation 1, pivot both boards 90° outwards. | Small sloped crimp, steep gaston, shallow mono. |
+| `orientation-3` / `assets/orientation-3.png` | Quick-start pp. 10–11; from Orientation 2, pivot both boards 90° inwards to the illustrated inverted horizontal position. | Two-finger pocket, three-finger pocket, large supported crimp, sloper. |
+| `orientation-4` / `assets/orientation-4.png` | Quick-start pp. 12–15; switch the two physical boards left-to-right, then pivot both boards 90° outwards. | Compression pinch, deep mono, medium mono. |
+
+The presentation evidence is the first-party [Pivot quick-start
+guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507).
+The four-direction product claim and source raster are the first-party [Pivot
+product page](https://trango.com/products/rock-prodigy-pivot) and [Pivot main
+image](https://trango.com/cdn/shop/products/22840_RockProdigyPivot_MainImage_TopDown.jpg?v=1755037446&width=1946).
+
+The 2026-08-25 stable-ID review reconciled 18 physical contacts / 22 geometry
+pieces in Orientation 1. Trango's “22 distinct grip positions” is an
+orientation-dependent usage count, not a claim of 22 separately bounded
+physical contacts. The guide also says its key-hold list is not comprehensive.
+Accordingly, the package does not invent orientation-specific grip contacts:
+each presentation contains exactly one transformed mapping of the same complete
+18-contact inventory and no duplicate contact within that presentation.
+
+| contact map | Orientation 1 IDs | Orientations 2–4 IDs |
+| --- | --- | --- |
+| edges | `upper-sloped-crimp-{left,right}`, `outer-sloped-crimp-{left,right}`, `variable-edge-{left,right}`, `medium-crimp-{left,right}`, `large-crimp-{left,right}` | The same base ID plus `-orientation-2`, `-orientation-3`, or `-orientation-4`. |
+| pockets | `two-finger-pocket-{left,right}`, `three-finger-pocket-{left,right}` | The same base ID plus the presentation suffix. |
+| pinches | `outer-wedge-pinch-{left,right}` | The same base ID plus the presentation suffix. |
+| slopers | `lower-sloper-{left,right}` | The same base ID plus the presentation suffix. |
+
+Orientation 1 retains the audited stable IDs unchanged. The package schema maps
+one hold record to one `presentationID`, so Orientations 2–4 require suffixed
+records for their distinct canonical frames. This yields 72 presentation-mapped
+records and 88 pieces while still representing only 18 physical contacts per
+presentation. Metadata is identical across copies of the same physical contact;
+only ID, display name, presentation ID, frame, and path orientation differ.
+
+Asset provenance is deterministic and contains no generated or inferred product
+pixels. The existing 1774×887 PNG is two equal 887×887 manufacturer-image
+halves and remains byte-for-byte unchanged as Orientation 1. Orientations 2 and
+3 split on that exact half boundary, apply only the guide-prescribed cardinal
+rotations to each complete half, and rejoin them on the same 1774×887 canvas.
+Orientation 4 additionally swaps the complete halves before its prescribed
+cardinal rotation, following pp. 12–15. No generative image editing, detection,
+segmentation, masking, vectorization, registration, or path inference was used.
+The canonical Orientation 2–4 paths apply the corresponding rigid transforms to
+the directly reviewed Orientation 1 paths; right-side paths are exact mirrors of
+their transformed left-side partners, as the symmetric product evidence allows.
+All four rasters and all four path sets were visually reviewed against the
+numbered guide diagrams.
 
 The depth guide maps the stable pairs exactly: `upper-sloped-crimp-*` to
 `12.5 mm`, `outer-sloped-crimp-*` to `11.5 mm`, `variable-edge-*` to
