@@ -1397,10 +1397,6 @@
                 "command": "close"
               }
             ]
-          },
-          "shapeConstraint": {
-            "shape": "circle",
-            "rotationDegrees": 0.0
           }
         },
         {
@@ -1484,10 +1480,6 @@
                 "command": "close"
               }
             ]
-          },
-          "shapeConstraint": {
-            "shape": "circle",
-            "rotationDegrees": 0.0
           }
         }
       ],
