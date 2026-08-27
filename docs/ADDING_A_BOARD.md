@@ -59,13 +59,19 @@ in Workbench. Do not add a registry, sidecar JSON, source photo, README, review
 directory, generated draft, or duplicate geometry.
 
 `board.json` contains product identity and physical holds. Every hold requires
-`id`, `name`, one of `jug`, `edge`, `pocket`, `pinch`, or `sloper`, and a
+`id`, `name`, one of `jug`, `edge`, `pocket`, `pinch`, `sloper`, or `gaston`, and a
 nonempty `geometry` array. Each geometry piece contains a normalized `frame`, a
 closed supported `shape`, and optional physical treatment. Measurements, depth
 ranges, finger capacity, hand capacity, grip posture, and feature tags are optional.
 When present, `sizeMillimeters` and both `depthRangeMillimeters` bounds must be
 positive finite JSON numbers; fractional millimetre values are preserved exactly.
 The lower depth bound must not exceed the upper bound.
+
+A `gaston` hold must also declare `pairedHoldID`, the identifier of its explicit
+counterpart on the same board. The counterpart must be a different `gaston` hold
+whose `pairedHoldID` points back. No other hold kind may declare `pairedHoldID`.
+This is pairing metadata only: do not infer it from geometry or validate geometric
+symmetry.
 
 `board.json.presentations` is a nonempty array. Every presentation has a unique
 identifier, a nonempty display name, an `assetPath`, an image-matching aspect

@@ -717,4 +717,29 @@ final class BoardPackageWriterTests: XCTestCase {
         let unsupportedKind = source.replacingOccurrences(of: kind, with: "      \"kind\": \"unsupported\",\n")
         XCTAssertThrowsError(try BoardEditableDocument(data: Data(unsupportedKind.utf8)))
     }
+
+    func testWriterRoundTripsReciprocalGastonPairMetadata() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument(holds: [
+            makeHold(id: "gaston-left", name: "Left gaston"),
+            makeHold(id: "gaston-right", name: "Right gaston"),
+        ]))
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        var holds = try XCTUnwrap(payload["holds"] as? [[String: Any]])
+        holds[0]["kind"] = "gaston"
+        holds[0]["pairedHoldID"] = "gaston-right"
+        holds[1]["kind"] = "gaston"
+        holds[1]["pairedHoldID"] = "gaston-left"
+        payload["holds"] = holds
+        let gastonDocument = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+
+        let output = try BoardPackageWriter.data(for: gastonDocument)
+        let redecoded = try BoardEditableDocument(data: output)
+
+        XCTAssertEqual(redecoded.holds.map(\.pairedHoldID), ["gaston-right", "gaston-left"])
+        XCTAssertTrue(String(decoding: output, as: UTF8.self).contains("\"pairedHoldID\": \"gaston-right\""))
+    }
 }

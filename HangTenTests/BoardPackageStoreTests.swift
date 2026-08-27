@@ -1495,7 +1495,7 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testStoreAcceptsExactlySupportedPhysicalHoldKinds() throws {
-        let expectedKinds = ["jug", "edge", "pocket", "pinch", "sloper"]
+        let expectedKinds = ["jug", "edge", "pocket", "pinch", "sloper", "gaston"]
         XCTAssertEqual(HoldKind.allCases.map(\.rawValue), expectedKinds)
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
@@ -1518,6 +1518,88 @@ final class BoardPackageStoreTests: XCTestCase {
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
 
         XCTAssertEqual(board.holds.map(\.kind.rawValue), expectedKinds)
+    }
+
+    func testStoreAcceptsReciprocalGastonPairs() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                let template = try XCTUnwrap((board["holds"] as? [[String: Any]])?.first)
+                var left = template
+                left["id"] = "gaston-left"
+                left["name"] = "Left gaston"
+                left["kind"] = "gaston"
+                left["pairedHoldID"] = "gaston-right"
+                var right = template
+                right["id"] = "gaston-right"
+                right["name"] = "Right gaston"
+                right["kind"] = "gaston"
+                right["pairedHoldID"] = "gaston-left"
+                board["holds"] = [left, right]
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.holds.map(\.kind), [.gaston, .gaston])
+        XCTAssertEqual(board.holds.map(\.pairedHoldID), ["gaston-right", "gaston-left"])
+    }
+
+    func testStoreRejectsInvalidGastonPairMetadata() throws {
+        let invalidPairs: [(String, (inout [[String: Any]]) -> Void)] = [
+            ("missing pair", { holds in
+                holds[0]["kind"] = "gaston"
+            }),
+            ("invalid pair identifier", { holds in
+                holds[0]["kind"] = "gaston"
+                holds[0]["pairedHoldID"] = "not a valid identifier"
+            }),
+            ("pair on another kind", { holds in
+                holds[0]["pairedHoldID"] = "gaston-right"
+            }),
+            ("self pair", { holds in
+                holds[0]["kind"] = "gaston"
+                holds[0]["pairedHoldID"] = "gaston-left"
+            }),
+            ("unknown pair", { holds in
+                holds[0]["kind"] = "gaston"
+                holds[0]["pairedHoldID"] = "missing"
+            }),
+            ("non-gaston target", { holds in
+                holds[0]["kind"] = "gaston"
+                holds[0]["pairedHoldID"] = "gaston-right"
+            }),
+            ("non-reciprocal target", { holds in
+                holds[0]["kind"] = "gaston"
+                holds[0]["pairedHoldID"] = "gaston-right"
+                holds[1]["kind"] = "gaston"
+                holds[1]["pairedHoldID"] = "another-gaston"
+            }),
+        ]
+
+        for (_, mutation) in invalidPairs {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    let template = try XCTUnwrap((board["holds"] as? [[String: Any]])?.first)
+                    var left = template
+                    left["id"] = "gaston-left"
+                    left["name"] = "Left gaston"
+                    var right = template
+                    right["id"] = "gaston-right"
+                    right["name"] = "Right gaston"
+                    var holds = [left, right]
+                    mutation(&holds)
+                    board["holds"] = holds
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        }
     }
 
     func testStoreRejectsUnsupportedPhysicalHoldKind() throws {
