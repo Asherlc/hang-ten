@@ -131,7 +131,8 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "sloper"
+      "gripType": "sloper",
+      "fingerCapacity": 4
     },
     {
       "id": "slopey-crimper-left",
