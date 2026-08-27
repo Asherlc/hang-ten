@@ -139,6 +139,7 @@ struct BoardEditableHold: Equatable, Decodable {
     var handCapacity: Int?
     var features: [HoldFeature]?
     var pairedHoldID: String?
+    private var declaresPairedHoldID: Bool
     var presentationID: String
     var geometry: [BoardEditablePiece]
 
@@ -184,6 +185,7 @@ struct BoardEditableHold: Equatable, Decodable {
         self.handCapacity = handCapacity
         self.features = features
         self.pairedHoldID = pairedHoldID
+        declaresPairedHoldID = pairedHoldID != nil
         self.presentationID = presentationID
         self.geometry = geometry
     }
@@ -220,7 +222,10 @@ struct BoardEditableHold: Equatable, Decodable {
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
-        pairedHoldID = try container.decodeIfPresent(String.self, forKey: .pairedHoldID)
+        declaresPairedHoldID = container.contains(.pairedHoldID)
+        pairedHoldID = declaresPairedHoldID
+            ? try container.decode(String.self, forKey: .pairedHoldID)
+            : nil
         presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 }
@@ -463,7 +468,7 @@ enum BoardPackageWriter {
                         document
                     )
                 }
-            } else if hold.pairedHoldID != nil {
+            } else if hold.declaresPairedHoldID {
                 throw invalid("non-gaston hold \(hold.id) must not declare pairedHoldID", document)
             }
             if let fingerCapacity = hold.fingerCapacity,

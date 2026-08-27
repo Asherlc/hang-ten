@@ -29,7 +29,8 @@ identity is never overwritten; presentation-only changes stay in one package.
 List every distinct physical contact before drawing. Continuous contact surfaces
 are one logical hold even when they require multiple disconnected geometry
 pieces. Separate physical contacts are separate holds. Use stable descriptive
-IDs and conservative `jug`, `edge`, `pocket`, `pinch`, or `sloper` kinds.
+IDs and conservative `jug`, `edge`, `pocket`, `pinch`, `sloper`, or `gaston` kinds. A
+`gaston` requires an explicit reciprocal `pairedHoldID`; do not infer pairing from geometry.
 
 Do not infer measurements, finger capacity, hand capacity, grip posture, feature tags, or
 coaching semantics from a picture. Omit an optional field when the source does

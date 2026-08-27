@@ -164,6 +164,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         case .pocket: .holdPurple
         case .pinch: .holdRed
         case .sloper: .holdTeal
+        case .gaston: .holdGreen
         }
     }
 }

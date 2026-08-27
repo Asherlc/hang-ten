@@ -1504,20 +1504,39 @@ final class BoardPackageStoreTests: XCTestCase {
                 let template = try XCTUnwrap(
                     (board["holds"] as? [[String: Any]])?.first
                 )
-                board["holds"] = expectedKinds.map { kind in
+                board["holds"] = expectedKinds.compactMap { kind in
+                    if kind == "gaston" {
+                        return nil
+                    }
                     var hold = template
                     hold["id"] = "hold-\(kind)"
                     hold["name"] = "Fixture \(kind)"
                     hold["kind"] = kind
                     return hold
                 }
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                var left = template
+                left["id"] = "gaston-left"
+                left["name"] = "Left gaston"
+                left["kind"] = "gaston"
+                left["pairedHoldID"] = "gaston-right"
+                var right = template
+                right["id"] = "gaston-right"
+                right["name"] = "Right gaston"
+                right["kind"] = "gaston"
+                right["pairedHoldID"] = "gaston-left"
+                holds.append(contentsOf: [left, right])
+                board["holds"] = holds
             }
         }
         defer { fixture.remove() }
 
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
 
-        XCTAssertEqual(board.holds.map(\.kind.rawValue), expectedKinds)
+        XCTAssertEqual(
+            board.holds.map(\.kind.rawValue),
+            ["jug", "edge", "pocket", "pinch", "sloper", "gaston", "gaston"]
+        )
     }
 
     func testStoreAcceptsReciprocalGastonPairs() throws {
@@ -1558,6 +1577,9 @@ final class BoardPackageStoreTests: XCTestCase {
             }),
             ("pair on another kind", { holds in
                 holds[0]["pairedHoldID"] = "gaston-right"
+            }),
+            ("explicit null pair on another kind", { holds in
+                holds[0]["pairedHoldID"] = NSNull()
             }),
             ("self pair", { holds in
                 holds[0]["kind"] = "gaston"

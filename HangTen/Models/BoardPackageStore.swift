@@ -690,7 +690,7 @@ struct BoardPackageStore {
                         reason: "gaston hold \(hold.id) must declare an identifier-shaped pairedHoldID"
                     )
                 }
-            } else if hold.pairedHoldID != nil {
+            } else if hold.declaresPairedHoldID {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "non-gaston hold \(hold.id) must not declare pairedHoldID"
@@ -927,6 +927,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let handCapacity: Int?
     let features: [HoldFeature]?
     let pairedHoldID: String?
+    let declaresPairedHoldID: Bool
     let presentationID: String
 
     private enum CodingKeys: String, CodingKey {
@@ -968,7 +969,10 @@ private struct BoardPackageHoldDocument: Decodable {
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
-        pairedHoldID = try container.decodeIfPresent(String.self, forKey: .pairedHoldID)
+        declaresPairedHoldID = container.contains(.pairedHoldID)
+        pairedHoldID = declaresPairedHoldID
+            ? try container.decode(String.self, forKey: .pairedHoldID)
+            : nil
         presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 

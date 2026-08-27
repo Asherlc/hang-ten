@@ -718,6 +718,18 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertThrowsError(try BoardEditableDocument(data: Data(unsupportedKind.utf8)))
     }
 
+    func testEditorDecoderRejectsExplicitNullPairedHoldIDOnNonGaston() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        let source = String(decoding: encoded, as: UTF8.self)
+        let insertion = "      \"pairedHoldID\": null,\n"
+        let tampered = source.replacingOccurrences(
+            of: "      \"presentationID\": \"front\",\n",
+            with: insertion + "      \"presentationID\": \"front\",\n"
+        )
+
+        XCTAssertThrowsError(try BoardEditableDocument(data: Data(tampered.utf8)))
+    }
+
     func testWriterRoundTripsReciprocalGastonPairMetadata() throws {
         let encoded = try BoardPackageWriter.data(for: makeDocument(holds: [
             makeHold(id: "gaston-left", name: "Left gaston"),

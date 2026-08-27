@@ -56,9 +56,10 @@ _HOLD_OPTIONAL_FIELDS = frozenset(
         "fingerCapacity",
         "handCapacity",
         "features",
+        "pairedHoldID",
     }
 )
-_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 _SLOPER_TYPES = frozenset({"flat", "round"})
 _GRIP_TYPES = frozenset(
     {
@@ -1083,6 +1084,7 @@ def _validate_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_gaston_pairs(holds)
 
 
 def validate_catalog_board(
@@ -1129,6 +1131,7 @@ def validate_catalog_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_gaston_pairs(holds)
 
 
 def _validate_hold(
@@ -1158,6 +1161,10 @@ def _validate_hold(
         if "kind" in hold
         else None
     )
+    if kind == "gaston":
+        _identifier(hold.get("pairedHoldID"), f"{label}.pairedHoldID")
+    elif "pairedHoldID" in hold:
+        raise BoardPackageError(f"{label}.pairedHoldID is only allowed for gaston holds")
     if "sloper" in hold:
         if kind != "sloper":
             raise BoardPackageError(
@@ -1214,6 +1221,31 @@ def _validate_hold(
         if len(parsed) != len(set(parsed)):
             raise BoardPackageError(f"{label}.features must be unique")
     return hold_id
+
+
+def _validate_gaston_pairs(holds: list[object]) -> None:
+    holds_by_id = {
+        hold["id"]: hold
+        for hold in holds
+        if isinstance(hold, Mapping) and isinstance(hold.get("id"), str)
+    }
+    for hold in holds_by_id.values():
+        if hold.get("kind") != "gaston":
+            continue
+        hold_id = hold["id"]
+        paired_hold_id = hold["pairedHoldID"]
+        paired_hold = holds_by_id.get(paired_hold_id)
+        if paired_hold is None or paired_hold_id == hold_id:
+            raise BoardPackageError(
+                f"gaston hold {hold_id} must pair with a distinct existing hold"
+            )
+        if (
+            paired_hold.get("kind") != "gaston"
+            or paired_hold.get("pairedHoldID") != hold_id
+        ):
+            raise BoardPackageError(
+                f"gaston hold {hold_id} must have a reciprocal gaston pair"
+            )
 
 
 def _validate_piece(
