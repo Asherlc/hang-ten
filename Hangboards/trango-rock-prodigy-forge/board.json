@@ -84,8 +84,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.856,
-            "y": 0.424,
+            "x": 0.851172414062,
+            "y": 0.324689658203,
             "width": 0.132,
             "height": 0.103
           },
@@ -1164,7 +1164,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1262,7 +1262,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1360,7 +1360,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1458,7 +1458,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1555,7 +1555,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1652,7 +1652,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1749,7 +1749,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
@@ -1846,7 +1846,7 @@
           },
           "shapeConstraint": {
             "shape": "oval",
-            "rotationDegrees": 0
+            "rotationDegrees": 0.0
           }
         }
       ],
