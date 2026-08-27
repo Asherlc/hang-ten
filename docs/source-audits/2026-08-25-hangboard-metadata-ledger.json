@@ -12210,22 +12210,29 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "top-macro-sloper"
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
       ],
       "field": "kind",
-      "outcome": "verified",
+      "outcome": "adapted",
       "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/honestone",
         "label": "35° and 45° top slopers with continuously variable curvature and macro-texture"
       },
-      "value": "sloper"
+      "value": "sloper",
+      "reason": "The manufacturer describes one continuous macro sloper; Hang Ten exposes four practical selectable regions as an app adaptation."
     },
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "top-macro-sloper"
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
@@ -12240,7 +12247,10 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "top-macro-sloper"
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
@@ -12255,7 +12265,10 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "top-macro-sloper"
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
@@ -12270,7 +12283,10 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "top-macro-sloper"
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
@@ -12285,7 +12301,10 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "top-macro-sloper"
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
@@ -12300,7 +12319,10 @@
     {
       "boardID": "tension.honestone",
       "holdIDs": [
-        "top-macro-sloper"
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
       ],
       "field": "features",
       "outcome": "unavailable",
@@ -12808,6 +12830,91 @@
         "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
       },
       "reason": "The official source does not publish an exact package feature-tag set for these contacts."
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "mono-left",
+        "mono-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "25 mm 1-finger pockets"
+      },
+      "reason": "The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "edge-20-left",
+        "edge-20-right",
+        "edge-15-left",
+        "edge-15-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "edge-25-center"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "25 mm center edge with 10-degree incut"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "edge-10-left",
+        "edge-10-right",
+        "edge-8-left",
+        "edge-8-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "tension.honestone",
+      "holdIDs": [
+        "macro-sloper-left",
+        "macro-sloper-left-center",
+        "macro-sloper-right-center",
+        "macro-sloper-right"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://tensionclimbing.com/products/honestone",
+        "label": "35° and 45° top slopers with continuously variable curvature and macro-texture"
+      },
+      "outcome": "unavailable",
+      "reason": "The manufacturer describes one continuously variable macro surface; Hang Ten exposes four selectable regions but no flat-or-round subtype is published."
     },
     {
       "boardID": "tension.whetstone",
@@ -14056,6 +14163,112 @@
       "reason": "The official source does not publish an exact package feature-tag set for this contact."
     },
     {
+      "boardID": "soill.iron-palm-2",
+      "holdIDs": [
+        "pinch-left",
+        "pinch-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "label": "2 Pinches: 3\" Width"
+      },
+      "reason": "The manufacturer identifies these contacts as pinch, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.iron-palm-2",
+      "holdIDs": [
+        "top-incut-jug"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "label": "Top Jug Rail; product description: thicker, comfy incut top rung"
+      },
+      "reason": "The manufacturer identifies these contacts as jug, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.iron-palm-2",
+      "holdIDs": [
+        "rounded-edge-40"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "label": "Edges; First Crimp Rail (slightly rounded): 40 mm"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.iron-palm-2",
+      "holdIDs": [
+        "flat-edge-25"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "label": "Edges; Second Crimp Rail (flat): 25 mm"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.iron-palm-2",
+      "holdIDs": [
+        "flat-edge-15"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "label": "Edges; Bottom Crimp Rail (flat): 15 mm"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.iron-palm-2",
+      "holdIDs": [
+        "sloper-left"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "label": "Big Slopers; product description: Slopers"
+      },
+      "outcome": "unavailable",
+      "reason": "The manufacturer labels this contact only as a sloper and publishes no flat-or-round subtype."
+    },
+    {
+      "boardID": "soill.iron-palm-2",
+      "holdIDs": [
+        "sloper-right"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/iron-palm-2-0",
+        "label": "Big Slopers; product description: Slopers"
+      },
+      "outcome": "unavailable",
+      "reason": "The manufacturer labels this contact only as a sloper and publishes no flat-or-round subtype."
+    },
+    {
       "boardID": "soill.split-palm",
       "holdIDs": [
         "jug-left",
@@ -14840,141 +15053,403 @@
       "reason": "The official source does not publish an exact package feature-tag set for this contact."
     },
     {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
+      "boardID": "soill.split-palm",
       "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
-      ],
-      "field": "kind",
-      "outcome": "verified",
-      "value": "pocket"
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
-      "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
-      ],
-      "field": "sizeMillimeters",
-      "outcome": "verified",
-      "value": 76.2
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
-      "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
-      ],
-      "field": "depthRangeMillimeters",
-      "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
-      "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
-      ],
-      "field": "fingerCapacity",
-      "outcome": "unavailable",
-      "reason": "The manufacturer identifies the pocket but does not publish its finger capacity."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
-      "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
-      ],
-      "field": "handCapacity",
-      "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
-      "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
-      ],
-      "field": "gripType",
-      "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
-      "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
-      ],
-      "field": "features",
-      "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
-      "holdIDs": [
-        "top-pocket-left",
-        "top-pocket-right"
+        "jug-left",
+        "jug-right"
       ],
       "field": "sloper",
       "outcome": "notApplicable",
-      "reason": "Sloper treatment is not applicable to this non-sloper contact."
-    },
-    {
-      "boardID": "soill.training-tiles",
       "reviewedAt": "2026-08-26",
       "source": {
         "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Top Center Rail: Incut Jug (one per piece)"
       },
+      "reason": "The manufacturer identifies these contacts as jug, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "sloping-rail-38-left",
+        "sloping-rail-38-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Center Sloping Rail: 1.5\" (38.1 mm), mapped to schema edge (one per piece)"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "flat-edge-25-left",
+        "flat-edge-25-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Center Flat Rail: 1\" (25.4 mm), mapped to schema edge (one per piece)"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "outer-crimp-12-left",
+        "outer-crimp-12-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Outer Crimp Rail: 1/2\" (12.7 mm), mapped to schema edge (one per piece)"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "bottom-sloping-crimp-12-left",
+        "bottom-sloping-crimp-12-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Bottom Center Sloping Crimp Rail: 1/2\" (12.7 mm), mapped to schema edge (one per piece)"
+      },
+      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "large-sloper-left"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Large Sloper (one per piece)"
+      },
+      "outcome": "unavailable",
+      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "large-sloper-right"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Large Sloper (one per piece)"
+      },
+      "outcome": "unavailable",
+      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "small-sloper-left"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Smaller Sloper (one per piece)"
+      },
+      "outcome": "unavailable",
+      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "small-sloper-right"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soillholds.com/products/split-palm",
+        "label": "Smaller Sloper (one per piece)"
+      },
+      "outcome": "unavailable",
+      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "kind",
+      "outcome": "adapted",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "value": "pinch",
+      "reason": "The manufacturer listing confirms pinches as a product category but does not locate these two lower regions; Hang Ten names them as positional app adaptations."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "reason": "This field is not applicable to the adapted pinch contact role."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation."
+    },
+    {
+      "boardID": "soill.split-palm",
+      "holdIDs": [
+        "lower-pinch-left",
+        "lower-pinch-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/split-palm",
+        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
+      },
+      "reason": "This field is not applicable to the adapted pinch contact role."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "kind",
+      "outcome": "adapted",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "value": "pocket",
+      "reason": "Hang Ten assigns this visual contact role as an app adaptation because the So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "upper-sloper-outer-left",
         "upper-sloper-outer-right",
@@ -14982,17 +15457,18 @@
         "upper-sloper-inner-right"
       ],
       "field": "kind",
-      "outcome": "verified",
-      "value": "sloper"
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "outcome": "adapted",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "value": "sloper",
+      "reason": "Hang Ten assigns this visual contact role as an app adaptation because the So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "upper-sloper-outer-left",
         "upper-sloper-outer-right",
@@ -15001,16 +15477,16 @@
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
-      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "upper-sloper-outer-left",
         "upper-sloper-outer-right",
@@ -15019,16 +15495,16 @@
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "upper-sloper-outer-left",
         "upper-sloper-outer-right",
@@ -15037,16 +15513,16 @@
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
-      "reason": "Finger capacity is not applicable to this non-pocket contact."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "This field is not applicable to the Hang Ten adapted non-pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "upper-sloper-outer-left",
         "upper-sloper-outer-right",
@@ -15055,16 +15531,16 @@
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "upper-sloper-outer-left",
         "upper-sloper-outer-right",
@@ -15073,16 +15549,16 @@
       ],
       "field": "gripType",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "upper-sloper-outer-left",
         "upper-sloper-outer-right",
@@ -15091,34 +15567,16 @@
       ],
       "field": "features",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
-      "holdIDs": [
-        "upper-sloper-outer-left",
-        "upper-sloper-outer-right",
-        "upper-sloper-inner-left",
-        "upper-sloper-inner-right"
-      ],
-      "field": "sloper",
-      "outcome": "unavailable",
-      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
     },
     {
       "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
       "holdIDs": [
         "middle-edge-outer-left",
         "middle-edge-outer-right",
@@ -15126,17 +15584,18 @@
         "middle-edge-inner-right"
       ],
       "field": "kind",
-      "outcome": "verified",
-      "value": "edge"
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "outcome": "adapted",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "value": "edge",
+      "reason": "Hang Ten assigns this visual contact role as an app adaptation because the So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "middle-edge-outer-left",
         "middle-edge-outer-right",
@@ -15145,16 +15604,16 @@
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
-      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "middle-edge-outer-left",
         "middle-edge-outer-right",
@@ -15163,16 +15622,16 @@
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "middle-edge-outer-left",
         "middle-edge-outer-right",
@@ -15181,16 +15640,16 @@
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
-      "reason": "Finger capacity is not applicable to this non-pocket contact."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "This field is not applicable to the Hang Ten adapted non-pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "middle-edge-outer-left",
         "middle-edge-outer-right",
@@ -15199,16 +15658,16 @@
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "middle-edge-outer-left",
         "middle-edge-outer-right",
@@ -15217,16 +15676,16 @@
       ],
       "field": "gripType",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
         "middle-edge-outer-left",
         "middle-edge-outer-right",
@@ -15235,185 +15694,399 @@
       ],
       "field": "features",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
-      "holdIDs": [
-        "middle-edge-outer-left",
-        "middle-edge-outer-right",
-        "middle-edge-inner-left",
-        "middle-edge-inner-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reason": "Sloper treatment is not applicable to this non-sloper contact."
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
     },
     {
       "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
-      },
       "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "bottom-edge-inner-right"
       ],
       "field": "kind",
-      "outcome": "verified",
-      "value": "edge"
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "outcome": "adapted",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "value": "edge",
+      "reason": "Hang Ten assigns this visual contact role as an app adaptation because the So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "bottom-edge-inner-right"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
-      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "bottom-edge-inner-right"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "bottom-edge-inner-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
-      "reason": "Finger capacity is not applicable to this non-pocket contact."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "This field is not applicable to the Hang Ten adapted non-pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "bottom-edge-inner-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "bottom-edge-inner-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
-    },
-    {
-      "boardID": "soill.training-tiles",
-      "reviewedAt": "2026-08-26",
+      "reviewedAt": "2026-08-25",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "bottom-edge-inner-right"
       ],
       "field": "features",
       "outcome": "unavailable",
-      "reason": "The manufacturer does not publish this per-contact metadata."
+      "reviewedAt": "2026-08-25",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
     },
     {
       "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-pocket-outer-left",
+        "top-pocket-inner-left",
+        "top-pocket-inner-right",
+        "top-pocket-outer-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
       "reviewedAt": "2026-08-26",
       "source": {
         "kind": "manufacturer",
         "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
       },
+      "reason": "This field is not applicable to the Hang Ten adapted pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
       "holdIDs": [
-        "bottom-edge-center-left",
-        "bottom-edge-center-right",
-        "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right"
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "sloper",
       "outcome": "notApplicable",
-      "reason": "Sloper treatment is not applicable to this non-sloper contact."
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "This field is not applicable to the Hang Ten adapted non-pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right",
+        "bottom-edge-center-left",
+        "bottom-edge-center-right",
+        "bottom-edge-inner-left",
+        "bottom-edge-inner-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "This field is not applicable to the Hang Ten adapted non-pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "upper-sloper-outer-left"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "outcome": "unavailable",
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "upper-sloper-outer-right"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "outcome": "unavailable",
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "upper-sloper-inner-left"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "outcome": "unavailable",
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "upper-sloper-inner-right"
+      ],
+      "field": "sloper",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "outcome": "unavailable",
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "kind",
+      "outcome": "adapted",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "value": "jug",
+      "reason": "Hang Ten assigns this visual contact role as an app adaptation because the So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "sizeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "depthRangeMillimeters",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "fingerCapacity",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "This field is not applicable to the Hang Ten adapted non-pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "features",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions, so no grouped fact is assigned to this individual adapted contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "holdIDs": [
+        "top-jug-left",
+        "top-jug-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles listing: each tile approximately 14 × 8 in; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no manufacturer-authored 20-contact ID map."
+      },
+      "reason": "This field is not applicable to the Hang Ten adapted non-pocket contact role. The So iLL Canada source publishes grouped family specifications but no 20-contact ID map; its singular top-pocket group does not map one-to-one to Hang Ten’s four top-pocket regions."
     },
     {
       "boardID": "escape.unlimited",
@@ -37100,73 +37773,6 @@
       "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
     },
     {
-      "boardID": "tension.honestone",
-      "holdIDs": [
-        "mono-left",
-        "mono-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/honestone",
-        "label": "25 mm 1-finger pockets"
-      },
-      "reason": "The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "tension.honestone",
-      "holdIDs": [
-        "edge-20-left",
-        "edge-20-right",
-        "edge-15-left",
-        "edge-15-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/honestone",
-        "label": "20 mm and 15 mm edges; official labelled close view maps each value to a separate planar shelf"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "tension.honestone",
-      "holdIDs": [
-        "edge-25-center"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/honestone",
-        "label": "25 mm center edge with 10-degree incut"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "tension.honestone",
-      "holdIDs": [
-        "edge-10-left",
-        "edge-10-right",
-        "edge-8-left",
-        "edge-8-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/honestone",
-        "label": "10 mm and 8 mm edges; official labelled close view maps each value to a separate planar shelf"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
       "boardID": "tension.whetstone",
       "holdIDs": [
         "top-ergo-jug"
@@ -37245,162 +37851,6 @@
         "kind": "manufacturer",
         "url": "https://tensionclimbing.com/products/whetstone",
         "label": "25 mm and 20 mm edges; official labelled close view maps each value to a separate planar shelf"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.iron-palm-2",
-      "holdIDs": [
-        "pinch-left",
-        "pinch-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "2 Pinches: 3\" Width"
-      },
-      "reason": "The manufacturer identifies these contacts as pinch, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.iron-palm-2",
-      "holdIDs": [
-        "top-incut-jug"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Top Jug Rail; product description: thicker, comfy incut top rung"
-      },
-      "reason": "The manufacturer identifies these contacts as jug, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.iron-palm-2",
-      "holdIDs": [
-        "rounded-edge-40"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; First Crimp Rail (slightly rounded): 40 mm"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.iron-palm-2",
-      "holdIDs": [
-        "flat-edge-25"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Second Crimp Rail (flat): 25 mm"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.iron-palm-2",
-      "holdIDs": [
-        "flat-edge-15"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Bottom Crimp Rail (flat): 15 mm"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "jug-left",
-        "jug-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Top Center Rail: Incut Jug (one per piece)"
-      },
-      "reason": "The manufacturer identifies these contacts as jug, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "sloping-rail-38-left",
-        "sloping-rail-38-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Center Sloping Rail: 1.5\" (38.1 mm), mapped to schema edge (one per piece)"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "flat-edge-25-left",
-        "flat-edge-25-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Center Flat Rail: 1\" (25.4 mm), mapped to schema edge (one per piece)"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "outer-crimp-12-left",
-        "outer-crimp-12-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Outer Crimp Rail: 1/2\" (12.7 mm), mapped to schema edge (one per piece)"
-      },
-      "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "bottom-sloping-crimp-12-left",
-        "bottom-sloping-crimp-12-right"
-      ],
-      "field": "sloper",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Bottom Center Sloping Crimp Rail: 1/2\" (12.7 mm), mapped to schema edge (one per piece)"
       },
       "reason": "The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."
     },
@@ -40243,111 +40693,6 @@
       "value": {
         "type": "round"
       }
-    },
-    {
-      "boardID": "tension.honestone",
-      "holdIDs": [
-        "top-macro-sloper"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://tensionclimbing.com/products/honestone",
-        "label": "35° and 45° top slopers with continuously variable curvature and macro-texture"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer describes continuously variable curvature but does not identify the contact as the closed-schema flat or round subtype."
-    },
-    {
-      "boardID": "soill.iron-palm-2",
-      "holdIDs": [
-        "sloper-left"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Big Slopers; product description: Slopers"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer labels this contact only as a sloper and publishes no flat-or-round subtype."
-    },
-    {
-      "boardID": "soill.iron-palm-2",
-      "holdIDs": [
-        "sloper-right"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Big Slopers; product description: Slopers"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer labels this contact only as a sloper and publishes no flat-or-round subtype."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "large-sloper-left"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Large Sloper (one per piece)"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "large-sloper-right"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Large Sloper (one per piece)"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "small-sloper-left"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Smaller Sloper (one per piece)"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
-    },
-    {
-      "boardID": "soill.split-palm",
-      "holdIDs": [
-        "small-sloper-right"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/split-palm",
-        "label": "Smaller Sloper (one per piece)"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."
     },
     {
       "boardID": "escape.unlimited",

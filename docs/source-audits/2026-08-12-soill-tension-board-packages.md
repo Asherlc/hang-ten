@@ -14,7 +14,7 @@ capacity, posture, or feature values unless those facts are explicitly labeled.
 | --- | --- | --- | --- |
 | `soill-iron-palm-2` | `product`: [Iron Palm 2.0 product page](https://soillholds.com/products/iron-palm-2-0); `front-photos`: the product-page gallery | Product identity; slopers, pinches, edges, an incut top rung, thumb catches, and various edge sizes. | The reviewed page did not publish overall dimensions or a numbered/depth hold chart. |
 | `soill-split-palm` | `product`: [Split Palm product page](https://soillholds.com/products/split-palm); `front-photos`: the product-page gallery | Product identity and gallery images. | The reviewed page did not publish dimensions or a numbered hold guide. |
-| `soill-training-tiles` | `product`: [Training Tiles product page](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin); `front-photos`: product-page gallery | Product identity, approximately 14 × 8 in per tile, and the named eight-contact-per-tile specification. | The product page does not position-map the published sloper and edge values. |
+| `soill-training-tiles` | `product`: [Training Tiles • So iLL x Meagan Martin](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin); `workouts`: [official workouts](https://soillholds.com/pages/meagan-martin-training-tiles-workouts); `front-photos`: product-page gallery | Product identity; each tile approximately `14 × 8 in`; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges. | The Canada source does not map those grouped facts to Hang Ten’s 20 selectable IDs; its singular top-pocket group does not correspond one-to-one to the app’s four top-pocket regions. |
 | `tension-grindstone` | `product`: [Grindstone product page](https://tensionclimbing.com/collections/shop-all/products/grindstone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; full-width jug; 50 mm center edge; 30/25/20/15/10/8 mm edge families. | The reviewed sources did not map every listed depth to a numbered left/right contact. |
 | `tension-honestone` | `product`: [Honestone product page](https://tensionclimbing.com/products/honestone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; 35°/45° top slopers; 25 mm center edge and one-finger pockets; 20/15/10/8 mm edge families. | The reviewed sources listed families rather than a numbered contact map. |
 | `tension-whetstone` | `product`: [Whetstone product page](https://tensionclimbing.com/products/whetstone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; top jug; 40 mm center edge and two-finger pockets; 40/30/25/20 mm edge families. | The reviewed sources did not provide a numbered or dimensioned contact map. |
@@ -161,40 +161,38 @@ draft geometry was restored or used as an input.
 ### `soill-training-tiles`
 
 - `product`: [Training Tiles • So iLL x Meagan Martin](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin)
-- **Reviewed 2026-08-26:** The manufacturer specifies each of the two tiles as
-  approximately `14 × 8 in`, with one 3-inch pocket, two slopers
-  (25°/54 mm and 12°/64 mm), two slightly-positive middle edges (44/50 mm),
-  and three bottom flat edges (36/31/24 mm). This fixes the physical inventory
-  at eight contacts per tile and 16 total. The 3-inch top-pocket specification
-  maps one-to-one to `top-pocket-left` and `top-pocket-right`, so each stores
-  `sizeMillimeters: 76.2`. The named count and family map verifies all 16
-  kinds; the source does not identify which sloper or edge has each listed
-  value, so those optional values remain omitted.
+- `workouts`: [official workout page](https://soillholds.com/pages/meagan-martin-training-tiles-workouts)
+- `front`: [official straight-on image](https://cdn.shopify.com/s/files/1/0424/1145/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960.jpg?v=1677258630)
+- The Canada product listing establishes the two-piece collaboration, each tile
+  at approximately `14 × 8 in`, and grouped family facts: a 3 in top pocket;
+  25°/54 mm and 12°/64 mm slopers; 44/50 mm middle positive edges; and
+  36/31/24 mm bottom flat edges. It does not supply a 20-contact ID map. Its
+  singular top-pocket group has no one-to-one correspondence with Hang Ten’s
+  four top-pocket regions, so the app’s 20 descriptive roles remain explicitly
+  adapted and no grouped size, angle, depth, or capacity is assigned to an
+  individual contact.
 
 ## 2026-08-25 source-audited metadata batch
 
 The seven current product pages and the official gallery views linked above
-were re-opened on 2026-08-25. Training Tiles was re-reviewed on 2026-08-26
-against its current So iLL Canada product page. So iLL's current product HTML still exposes the
+were re-opened on 2026-08-25. So iLL's current product HTML still exposes the
 manufacturer feature text used in the 2026-08-19 addendum: Iron Palm 2.0's
-40/25/15 mm crimp rails, Split Palm's exact 38.1/25.4/12.7/12.7 mm rails per
-piece, and Training Tiles' grouped pocket/sloper/edge measurements. Tension's
-current pages still publish the Flash Board's global edge list and the exact
-Grindstone, Honestone, and Whetstone feature lists.
+40/25/15 mm crimp rails and Split Palm's exact 38.1/25.4/12.7/12.7 mm rails
+per piece. The Canada Training Tiles listing supplies the grouped facts recorded
+above, but not a per-contact map from them to the app’s 20 selectable IDs.
+Tension's current pages still publish the Flash Board's global edge list and
+the exact Grindstone, Honestone, and Whetstone feature lists.
 
-Stable-ID overlays were generated and manually reviewed under
-`.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
-the safe workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was
-unset. Flash Board was reviewed in both `three-edge` and `two-edge`
+Stable-ID overlays were generated and manually reviewed in a workspace-owned
+`.context` directory. Flash Board was reviewed in both `three-edge` and `two-edge`
 presentations; the other six packages each use one presentation. The overlays
 are review aids only. They did not change geometry or establish a kind or
 measurement.
 
-The Training Tiles package retains the existing directly-authored top-region
-paths as the three-piece geometry of each one-per-tile logical pocket. This
-reconciliation did not derive or alter any path from a source image. Together
-with the product page's `Pocket (3" depth), one per tile` text, it establishes
-the direct `top-pocket-left` / `top-pocket-right` mapping.
+No review capture supplies a manufacturer Training Tiles contact map. The Canada
+listing supports the grouped family facts, but they remain unassigned to
+individual app contacts because the source’s grouped pocket/contact count and
+the app’s 20 selections do not map one-to-one.
 
 The tables below are the complete contact-by-contact type audit. Exact
 left/right pairs are grouped only after both visible stable IDs were compared
@@ -214,7 +212,7 @@ mapping, not a classification inferred from pixels.
 | Grindstone | `30 mm edges`; `25 mm edges` | `edge-30-25-left`, `edge-30-25-right` | `edge` | `depthRangeMillimeters` 25–30 |
 | Grindstone | `50 mm center one-arm edge` | `edge-50-center` | `edge` | `sizeMillimeters` 50 |
 | Grindstone | `20 mm edges`; `15 mm edges` | `edge-20-15-left`, `edge-20-15-right` | `edge` | `depthRangeMillimeters` 15–20 |
-| Honestone | `35° and 45° top slopers with a continuously variable curvature and macro-texture` | `top-macro-sloper` | `sloper` | none; angles/curvature are not scalar depth |
+| Honestone | One continuous `35°`/`45°` macro sloper with continuously variable curvature | `macro-sloper-left`, `macro-sloper-left-center`, `macro-sloper-right-center`, `macro-sloper-right` | adapted `sloper` regions | none; angles/curvature are not scalar depth |
 | Honestone | `25 mm 1-finger pockets` | `mono-left`, `mono-right` | `pocket` | size 25; finger capacity 1 |
 | Honestone | `20 mm edges`; `15 mm edges` | `edge-20-15-left`, `edge-20-15-right` | `edge` | `depthRangeMillimeters` 15–20 |
 | Honestone | `25 mm center edge w/10 degree incut` | `edge-25-center` | `edge` | `sizeMillimeters` 25 |
@@ -247,27 +245,22 @@ No range was collapsed to a scalar value.
 | Split Palm | `Center Flat Rail: 1" (25.4mm)` (one per piece) | `flat-edge-25-left`, `flat-edge-25-right` | `edge` | `sizeMillimeters` 25.4 |
 | Split Palm | `Outer Crimp Rail: 1/2" (12.7mm)` (one per piece) | `outer-crimp-12-left`, `outer-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
 | Split Palm | `Bottom Center Sloping Crimp Rail - 1/2" (12.7mm)` (one per piece) | `bottom-sloping-crimp-12-left`, `bottom-sloping-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
-| Training Tiles | `Top: Pocket (3" depth)`, one per tile | `top-pocket-left`, `top-pocket-right` | `pocket` | `sizeMillimeters` 76.2; no finger count |
-| Training Tiles | `Top: Slopers: 25° - 54mm; 12° - 64mm`, two per tile | `upper-sloper-outer-left`, `upper-sloper-outer-right`, `upper-sloper-inner-left`, `upper-sloper-inner-right` | `sloper` | none; positions are not numbered |
-| Training Tiles | `Middle: Slightly Positive Edges: 44mm, 50mm`, two per tile | `middle-edge-outer-left`, `middle-edge-outer-right`, `middle-edge-inner-left`, `middle-edge-inner-right` | `edge` | none; positions are not numbered |
-| Training Tiles | `Bottom Flat Edge: 36mm, 31mm, 24mm`, three per tile | `bottom-edge-outer-left`, `bottom-edge-outer-right`, `bottom-edge-center-left`, `bottom-edge-center-right`, `bottom-edge-inner-left`, `bottom-edge-inner-right` | `edge` | none; positions are not numbered |
+| Training Tiles | Canada listing: each tile `14 × 8 in`; grouped 3 in top pocket, 25°/54 mm and 12°/64 mm slopers, 44/50 mm middle positive edges, and 36/31/24 mm bottom flat edges; no 20-contact ID map | `top-jug-*`, `top-pocket-{outer,inner}-*`, `upper-sloper-{outer,inner}-*`, `middle-edge-{outer,inner}-*`, `bottom-edge-{outer,center,inner}-*` | adapted visual jug, pocket, sloper, and edge roles | none; grouped facts are not assigned to individual contacts because the source’s top-pocket group and the app’s four top-pocket regions do not map one-to-one |
 
 ### Field outcomes and retained package data
 
-All 69 holds have one verified ledger `kind` and an explicit outcome for each
-of the six optional fields. The refreshed evidence supports 20 scalar sizes,
-14 depth ranges, four finger capacities, and two `twoFingerPocket` grip enums.
-The two Training Tiles pockets now receive the exact 76.2 mm conversion of the
-manufacturer's one-per-tile 3-inch depth; all other package values were
-already present before this batch. In particular:
+Every reviewed hold has an explicit ledger outcome for each field. The current
+reconciliation distinguishes manufacturer-verified kinds from deliberately
+labelled app adaptations. Training Tiles has 20 adapted visual roles and no
+per-contact optional values. In particular:
 
 - the 14 Tension stepped-edge values remain ranges on continuous contacts;
 - Honestone's one-finger pockets retain size and capacity but no `gripType`,
   because the checked-in schema has no one-finger-pocket enum;
-- Training Tiles pockets receive their one-per-tile 3-inch (76.2 mm) depth;
-  its sloper and edge families remain blank because their grouped lists do not
-  number the left/right positions, and the pockets have no published finger
-  count;
+- Training Tiles has Canada-source grouped family facts but no 20-contact ID
+  map; the source’s top-pocket group does not map one-to-one to the app’s four
+  top-pocket regions, so its app-adapted contacts carry no size, range,
+  capacity, posture, or feature value;
 - Flash Board retains no scalar depth because the global size list is not
   mapped to its five recess IDs, and its small crimp value is only approximate
   on the separate overview page;
