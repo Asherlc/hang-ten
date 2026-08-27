@@ -7,8 +7,8 @@
   "aspectRatio": 2.0,
   "holds": [
     {
-      "id": "shallow-mono",
-      "name": "Shallow Mono",
+      "id": "shallow-mono-left",
+      "name": "Left Shallow Mono",
       "kind": "pocket",
       "geometry": [
         {
@@ -128,7 +128,15 @@
             "rimInsetFraction": 0.08,
             "depth": "deep"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "shallow-mono-right",
+      "name": "Right Shallow Mono",
+      "kind": "pocket",
+      "geometry": [
         {
           "frame": {
             "x": 0.5395687622070313,
@@ -251,8 +259,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "steep-gaston",
-      "name": "Steep Gaston",
+      "id": "steep-gaston-left",
+      "name": "Left Steep Gaston",
       "kind": "edge",
       "geometry": [
         {
@@ -501,7 +509,15 @@
           "treatment": {
             "type": "surface"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "steep-gaston-right",
+      "name": "Right Steep Gaston",
+      "kind": "edge",
+      "geometry": [
         {
           "frame": {
             "x": 0.7669752166748797,
@@ -753,8 +769,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "small-sloped-crimp",
-      "name": "Small Sloped Crimp",
+      "id": "small-sloped-crimp-left",
+      "name": "Left Small Sloped Crimp",
       "kind": "edge",
       "geometry": [
         {
@@ -857,7 +873,15 @@
           "treatment": {
             "type": "surface"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "small-sloped-crimp-right",
+      "name": "Right Small Sloped Crimp",
+      "kind": "edge",
+      "geometry": [
         {
           "frame": {
             "x": 0.5186749999999972,

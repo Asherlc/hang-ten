@@ -7,8 +7,8 @@
   "aspectRatio": 2.0,
   "holds": [
     {
-      "id": "compression-pinch",
-      "name": "Compression Pinch",
+      "id": "compression-pinch-left",
+      "name": "Left Compression Pinch",
       "kind": "pinch",
       "geometry": [
         {
@@ -257,7 +257,15 @@
           "treatment": {
             "type": "surface"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "compression-pinch-right",
+      "name": "Right Compression Pinch",
+      "kind": "pinch",
+      "geometry": [
         {
           "frame": {
             "x": 0.7669752166748797,
@@ -509,8 +517,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "deep-mono",
-      "name": "Deep Mono",
+      "id": "deep-mono-left",
+      "name": "Left Deep Mono",
       "kind": "pocket",
       "geometry": [
         {
@@ -630,7 +638,15 @@
             "rimInsetFraction": 0.08,
             "depth": "deep"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "deep-mono-right",
+      "name": "Right Deep Mono",
+      "kind": "pocket",
+      "geometry": [
         {
           "frame": {
             "x": 0.5395687622070313,
@@ -753,8 +769,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "medium-mono",
-      "name": "Medium Mono",
+      "id": "medium-mono-left",
+      "name": "Left Medium Mono",
       "kind": "pocket",
       "geometry": [
         {
@@ -889,7 +905,15 @@
             "rimInsetFraction": 0.1,
             "depth": "deep"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "medium-mono-right",
+      "name": "Right Medium Mono",
+      "kind": "pocket",
+      "geometry": [
         {
           "frame": {
             "x": 0.6579887451171865,

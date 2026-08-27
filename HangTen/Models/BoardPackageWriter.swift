@@ -6,7 +6,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     var name: String
     var subtitle: String
     var productURL: URL
-    var dimensions: String
+    var dimensions: String?
     var aspectRatio: Double
     var holds: [BoardEditableHold]
     var presentations: [BoardEditablePresentation]
@@ -29,7 +29,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         name: String,
         subtitle: String,
         productURL: URL,
-        dimensions: String,
+        dimensions: String?,
         aspectRatio: Double,
         holds: [BoardEditableHold],
         presentations: [BoardEditablePresentation]
@@ -56,7 +56,9 @@ struct BoardEditableDocument: Equatable, Decodable {
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
         productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions) ?? ""
+        dimensions = container.contains(.dimensions)
+            ? try container.decode(String.self, forKey: .dimensions)
+            : nil
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
@@ -343,11 +345,13 @@ enum BoardPackageWriter {
         let requiredStrings = [
             document.manufacturer,
             document.name,
-            document.subtitle,
-            document.dimensions
+            document.subtitle
         ]
         guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
             throw invalid("required metadata must not be empty", document)
+        }
+        if let dimensions = document.dimensions, dimensions.isEmpty {
+            throw invalid("dimensions must not be empty when present", document)
         }
         guard document.productURL.scheme == "https", document.productURL.host != nil else {
             throw invalid("product URL must be absolute HTTPS", document)
@@ -526,8 +530,8 @@ enum BoardPackageWriter {
             ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
         ]
-        if !document.dimensions.isEmpty {
-            entries.insert(("dimensions", .string(document.dimensions)), at: 5)
+        if let dimensions = document.dimensions {
+            entries.insert(("dimensions", .string(dimensions)), at: 5)
         }
         return .object(entries)
     }

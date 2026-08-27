@@ -7,8 +7,8 @@
   "aspectRatio": 2.0,
   "holds": [
     {
-      "id": "jug-horizontal-pinch",
-      "name": "Jug / Horizontal Pinch",
+      "id": "jug-horizontal-pinch-left",
+      "name": "Left Jug / Horizontal Pinch",
       "kind": "jug",
       "geometry": [
         {
@@ -257,7 +257,15 @@
           "treatment": {
             "type": "surface"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "jug-horizontal-pinch-right",
+      "name": "Right Jug / Horizontal Pinch",
+      "kind": "jug",
+      "geometry": [
         {
           "frame": {
             "x": 0.7669752166748797,
@@ -509,8 +517,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "variable-depth-sloper-rail",
-      "name": "Variable Depth Sloper Rail",
+      "id": "variable-depth-sloper-rail-left",
+      "name": "Left Variable Depth Sloper Rail",
       "kind": "sloper",
       "geometry": [
         {
@@ -630,7 +638,15 @@
             "rimInsetFraction": 0.08,
             "depth": "deep"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "variable-depth-sloper-rail-right",
+      "name": "Right Variable Depth Sloper Rail",
+      "kind": "sloper",
+      "geometry": [
         {
           "frame": {
             "x": 0.5395687622070313,
@@ -753,8 +769,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "medium-supported-crimp",
-      "name": "Medium Supported Crimp",
+      "id": "medium-supported-crimp-left",
+      "name": "Left Medium Supported Crimp",
       "kind": "edge",
       "geometry": [
         {
@@ -873,7 +889,15 @@
             "type": "shelf",
             "rimInsetFraction": 0.1
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "medium-supported-crimp-right",
+      "name": "Right Medium Supported Crimp",
+      "kind": "edge",
+      "geometry": [
         {
           "frame": {
             "x": 0.5504021221923828,
@@ -995,8 +1019,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "large-sloped-crimp",
-      "name": "Large Sloped Crimp",
+      "id": "large-sloped-crimp-left",
+      "name": "Left Large Sloped Crimp",
       "kind": "edge",
       "geometry": [
         {
@@ -1114,7 +1138,15 @@
           "treatment": {
             "type": "surface"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "large-sloped-crimp-right",
+      "name": "Right Large Sloped Crimp",
+      "kind": "edge",
+      "geometry": [
         {
           "frame": {
             "x": 0.53813,

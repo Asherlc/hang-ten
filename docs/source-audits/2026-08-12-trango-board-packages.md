@@ -167,29 +167,33 @@ image is the presentation of the same physical product, not evidence for an
 unlisted contact. During review, every configuration path was deliberately
 matched to the named contact in the Quick Start orientation plate and the
 corresponding canonical physical-contact boundary in the already-reviewed base
-presentation. Left and right components are retained together when Trango's
-plate depicts the named grip on both mirrored halves. This makes each record a
-selectable manual grip position rather than a new claim that the two component
-surfaces are one physical opening.
+presentation. When Trango's plate depicts a named grip on both mirrored
+halves, each component is a separate logical hold because it is a separate
+physical contact. Every
+documented key grip therefore has one `-left` record mapped to the reviewed
+left contact and one `-right` record mapped to the reviewed right contact.
+Orientation 1's Jug and Horizontal Pinch usages remain combined once per side
+because the Quick Start applies both usage names to the same wedge contact;
+there is no overlapping duplicate jug/pinch record.
 
 | package / mounting state | documented key grip | schema kind | reviewed canonical physical-contact mapping |
 | --- | --- | --- | --- |
-| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug / Horizontal Pinch | `jug` | `outer-wedge-pinch-left/right`; the Quick Start separately names Jug and Horizontal Pinch usage on this one reviewed wedge contact. The combined name preserves both source names. `jug` is the conservative allowed schema kind selected for the record; this source-to-schema adaptation does not claim a separate pinch contact. |
-| same | Variable Depth Sloper Rail | `sloper` | `variable-edge-left/right` |
-| same | Medium Supported Crimp | `edge` | `medium-crimp-left/right` |
-| same | Large Sloped Crimp | `edge` | `upper-sloped-crimp-left/right` |
-| `trango-rock-prodigy-pivot-orientation-2-90-outwards` / Orientation 2, 90° Outwards | Shallow Mono | `pocket` | `variable-edge-left/right`; the guide identifies a one-finger use at the rail's reviewed contact, so the complete continuous rail boundary is retained instead of inventing a raster-derived sub-contour. |
-| same | Steep Gaston | `edge` | `outer-wedge-pinch-left/right` |
-| same | Small Sloped Crimp | `edge` | `outer-sloped-crimp-left/right` |
-| `trango-rock-prodigy-pivot-orientation-3-90-inwards` / Orientation 3, 90° Inwards | 2 Finger Pocket | `pocket` | `two-finger-pocket-left/right` |
-| same | 3 Finger Pocket | `pocket` | `three-finger-pocket-left/right` |
-| same | Large Supported Crimp | `edge` | `medium-crimp-left/right` |
-| same | Sloper | `sloper` | `lower-sloper-left/right` |
-| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` / Orientation 3 Switch, L-to-R | Variable Depth Incut Rail | `edge` | `variable-edge-left/right` |
-| same | Shallow Gaston | `edge` | `outer-wedge-pinch-left/right` |
-| `trango-rock-prodigy-pivot-orientation-4-90-outwards` / Orientation 4, 90° Outwards | Compression Pinch | `pinch` | `outer-wedge-pinch-left/right` |
-| same | Deep Mono | `pocket` | `variable-edge-left/right`; the complete reviewed rail contact is kept for the documented mono use. |
-| same | Medium Mono | `pocket` | `three-finger-pocket-left/right` |
+| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug / Horizontal Pinch | `jug` | `jug-horizontal-pinch-left` → `outer-wedge-pinch-left`; `jug-horizontal-pinch-right` → `outer-wedge-pinch-right`. The Quick Start separately names Jug and Horizontal Pinch usage on this reviewed wedge contact. The combined per-side name preserves both source names without overlapping records. `jug` is the conservative allowed schema kind selected for the record; this source-to-schema adaptation does not claim a separate pinch contact. |
+| same | Variable Depth Sloper Rail | `sloper` | `variable-depth-sloper-rail-left/right` → `variable-edge-left/right`, side for side |
+| same | Medium Supported Crimp | `edge` | `medium-supported-crimp-left/right` → `medium-crimp-left/right`, side for side |
+| same | Large Sloped Crimp | `edge` | `large-sloped-crimp-left/right` → `upper-sloped-crimp-left/right`, side for side |
+| `trango-rock-prodigy-pivot-orientation-2-90-outwards` / Orientation 2, 90° Outwards | Shallow Mono | `pocket` | `shallow-mono-left/right` → `variable-edge-left/right`, side for side; the guide identifies a one-finger use at the rail's reviewed contact, so each complete continuous rail boundary is retained instead of inventing a raster-derived sub-contour. |
+| same | Steep Gaston | `edge` | `steep-gaston-left/right` → `outer-wedge-pinch-left/right`, side for side |
+| same | Small Sloped Crimp | `edge` | `small-sloped-crimp-left/right` → `outer-sloped-crimp-left/right`, side for side |
+| `trango-rock-prodigy-pivot-orientation-3-90-inwards` / Orientation 3, 90° Inwards | 2 Finger Pocket | `pocket` | `two-finger-pocket-left/right` → base `two-finger-pocket-left/right`, side for side |
+| same | 3 Finger Pocket | `pocket` | `three-finger-pocket-left/right` → base `three-finger-pocket-left/right`, side for side |
+| same | Large Supported Crimp | `edge` | `large-supported-crimp-left/right` → `medium-crimp-left/right`, side for side |
+| same | Sloper | `sloper` | `sloper-left/right` → `lower-sloper-left/right`, side for side |
+| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` / Orientation 3 Switch, L-to-R | Variable Depth Incut Rail | `edge` | `variable-depth-incut-rail-left/right` → `variable-edge-left/right`, side for side |
+| same | Shallow Gaston | `edge` | `shallow-gaston-left/right` → `outer-wedge-pinch-left/right`, side for side |
+| `trango-rock-prodigy-pivot-orientation-4-90-outwards` / Orientation 4, 90° Outwards | Compression Pinch | `pinch` | `compression-pinch-left/right` → `outer-wedge-pinch-left/right`, side for side |
+| same | Deep Mono | `pocket` | `deep-mono-left/right` → `variable-edge-left/right`, side for side; each complete reviewed rail contact is kept for the documented mono use. |
+| same | Medium Mono | `pocket` | `medium-mono-left/right` → `three-finger-pocket-left/right`, side for side |
 
 “Orientation 3 Switch” is counted separately from Orientation 3 for package
 selection because the Quick Start directs an L-to-R board switch and names a

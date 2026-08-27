@@ -7,8 +7,8 @@
   "aspectRatio": 2.0,
   "holds": [
     {
-      "id": "two-finger-pocket",
-      "name": "2 Finger Pocket",
+      "id": "two-finger-pocket-left",
+      "name": "Left 2 Finger Pocket",
       "kind": "pocket",
       "geometry": [
         {
@@ -128,7 +128,15 @@
             "rimInsetFraction": 0.1,
             "depth": "deep"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "two-finger-pocket-right",
+      "name": "Right 2 Finger Pocket",
+      "kind": "pocket",
+      "geometry": [
         {
           "frame": {
             "x": 0.5657374609375,
@@ -251,8 +259,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "three-finger-pocket",
-      "name": "3 Finger Pocket",
+      "id": "three-finger-pocket-left",
+      "name": "Left 3 Finger Pocket",
       "kind": "pocket",
       "geometry": [
         {
@@ -387,7 +395,15 @@
             "rimInsetFraction": 0.1,
             "depth": "deep"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "three-finger-pocket-right",
+      "name": "Right 3 Finger Pocket",
+      "kind": "pocket",
+      "geometry": [
         {
           "frame": {
             "x": 0.6579887451171865,
@@ -525,8 +541,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "large-supported-crimp",
-      "name": "Large Supported Crimp",
+      "id": "large-supported-crimp-left",
+      "name": "Left Large Supported Crimp",
       "kind": "edge",
       "geometry": [
         {
@@ -645,7 +661,15 @@
             "type": "shelf",
             "rimInsetFraction": 0.1
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "large-supported-crimp-right",
+      "name": "Right Large Supported Crimp",
+      "kind": "edge",
+      "geometry": [
         {
           "frame": {
             "x": 0.5504021221923828,
@@ -767,8 +791,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "sloper",
-      "name": "Sloper",
+      "id": "sloper-left",
+      "name": "Left Sloper",
       "kind": "sloper",
       "geometry": [
         {
@@ -1002,7 +1026,15 @@
           "treatment": {
             "type": "surface"
           }
-        },
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "sloper-right",
+      "name": "Right Sloper",
+      "kind": "sloper",
+      "geometry": [
         {
           "frame": {
             "x": 0.785665050353983,

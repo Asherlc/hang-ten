@@ -159,79 +159,111 @@ ORIENTATION_PACKAGES = {
         "trango.rock-prodigy-pivot.orientation-1",
         "Rock Prodigy Pivot — Orientation 1",
         (
-            ("jug-horizontal-pinch", "Jug / Horizontal Pinch", "jug"),
-            ("variable-depth-sloper-rail", "Variable Depth Sloper Rail", "sloper"),
-            ("medium-supported-crimp", "Medium Supported Crimp", "edge"),
-            ("large-sloped-crimp", "Large Sloped Crimp", "edge"),
+            ("jug-horizontal-pinch-left", "Left Jug / Horizontal Pinch", "jug"),
+            ("jug-horizontal-pinch-right", "Right Jug / Horizontal Pinch", "jug"),
+            ("variable-depth-sloper-rail-left", "Left Variable Depth Sloper Rail", "sloper"),
+            ("variable-depth-sloper-rail-right", "Right Variable Depth Sloper Rail", "sloper"),
+            ("medium-supported-crimp-left", "Left Medium Supported Crimp", "edge"),
+            ("medium-supported-crimp-right", "Right Medium Supported Crimp", "edge"),
+            ("large-sloped-crimp-left", "Left Large Sloped Crimp", "edge"),
+            ("large-sloped-crimp-right", "Right Large Sloped Crimp", "edge"),
         ),
     ),
     "trango-rock-prodigy-pivot-orientation-2-90-outwards": (
         "trango.rock-prodigy-pivot.orientation-2-90-outwards",
         "Rock Prodigy Pivot — Orientation 2 (90° Outwards)",
         (
-            ("shallow-mono", "Shallow Mono", "pocket"),
-            ("steep-gaston", "Steep Gaston", "edge"),
-            ("small-sloped-crimp", "Small Sloped Crimp", "edge"),
+            ("shallow-mono-left", "Left Shallow Mono", "pocket"),
+            ("shallow-mono-right", "Right Shallow Mono", "pocket"),
+            ("steep-gaston-left", "Left Steep Gaston", "edge"),
+            ("steep-gaston-right", "Right Steep Gaston", "edge"),
+            ("small-sloped-crimp-left", "Left Small Sloped Crimp", "edge"),
+            ("small-sloped-crimp-right", "Right Small Sloped Crimp", "edge"),
         ),
     ),
     "trango-rock-prodigy-pivot-orientation-3-90-inwards": (
         "trango.rock-prodigy-pivot.orientation-3-90-inwards",
         "Rock Prodigy Pivot — Orientation 3 (90° Inwards)",
         (
-            ("two-finger-pocket", "2 Finger Pocket", "pocket"),
-            ("three-finger-pocket", "3 Finger Pocket", "pocket"),
-            ("large-supported-crimp", "Large Supported Crimp", "edge"),
-            ("sloper", "Sloper", "sloper"),
+            ("two-finger-pocket-left", "Left 2 Finger Pocket", "pocket"),
+            ("two-finger-pocket-right", "Right 2 Finger Pocket", "pocket"),
+            ("three-finger-pocket-left", "Left 3 Finger Pocket", "pocket"),
+            ("three-finger-pocket-right", "Right 3 Finger Pocket", "pocket"),
+            ("large-supported-crimp-left", "Left Large Supported Crimp", "edge"),
+            ("large-supported-crimp-right", "Right Large Supported Crimp", "edge"),
+            ("sloper-left", "Left Sloper", "sloper"),
+            ("sloper-right", "Right Sloper", "sloper"),
         ),
     ),
     "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right": (
         "trango.rock-prodigy-pivot.orientation-3-switch-left-to-right",
         "Rock Prodigy Pivot — Orientation 3 Switch (L-to-R)",
         (
-            ("variable-depth-incut-rail", "Variable Depth Incut Rail", "edge"),
-            ("shallow-gaston", "Shallow Gaston", "edge"),
+            ("variable-depth-incut-rail-left", "Left Variable Depth Incut Rail", "edge"),
+            ("variable-depth-incut-rail-right", "Right Variable Depth Incut Rail", "edge"),
+            ("shallow-gaston-left", "Left Shallow Gaston", "edge"),
+            ("shallow-gaston-right", "Right Shallow Gaston", "edge"),
         ),
     ),
     "trango-rock-prodigy-pivot-orientation-4-90-outwards": (
         "trango.rock-prodigy-pivot.orientation-4-90-outwards",
         "Rock Prodigy Pivot — Orientation 4 (90° Outwards)",
         (
-            ("compression-pinch", "Compression Pinch", "pinch"),
-            ("deep-mono", "Deep Mono", "pocket"),
-            ("medium-mono", "Medium Mono", "pocket"),
+            ("compression-pinch-left", "Left Compression Pinch", "pinch"),
+            ("compression-pinch-right", "Right Compression Pinch", "pinch"),
+            ("deep-mono-left", "Left Deep Mono", "pocket"),
+            ("deep-mono-right", "Right Deep Mono", "pocket"),
+            ("medium-mono-left", "Left Medium Mono", "pocket"),
+            ("medium-mono-right", "Right Medium Mono", "pocket"),
         ),
     ),
 }
 
-# Each orientation record reuses a complete, already-reviewed physical contact
-# from the base package.  The two official Orientation 1 usage names share one
-# wedge contact, so they intentionally have one combined logical record.
+# Each orientation record reuses exactly one complete, already-reviewed
+# physical contact from the base package. The two official Orientation 1 usage
+# names share one wedge contact per side, so each side has one combined record.
 ORIENTATION_CANONICAL_CONTACTS = {
     "trango-rock-prodigy-pivot-orientation-1": {
-        "jug-horizontal-pinch": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
-        "variable-depth-sloper-rail": ("variable-edge-left", "variable-edge-right"),
-        "medium-supported-crimp": ("medium-crimp-left", "medium-crimp-right"),
-        "large-sloped-crimp": ("upper-sloped-crimp-left", "upper-sloped-crimp-right"),
+        "jug-horizontal-pinch-left": "outer-wedge-pinch-left",
+        "jug-horizontal-pinch-right": "outer-wedge-pinch-right",
+        "variable-depth-sloper-rail-left": "variable-edge-left",
+        "variable-depth-sloper-rail-right": "variable-edge-right",
+        "medium-supported-crimp-left": "medium-crimp-left",
+        "medium-supported-crimp-right": "medium-crimp-right",
+        "large-sloped-crimp-left": "upper-sloped-crimp-left",
+        "large-sloped-crimp-right": "upper-sloped-crimp-right",
     },
     "trango-rock-prodigy-pivot-orientation-2-90-outwards": {
-        "shallow-mono": ("variable-edge-left", "variable-edge-right"),
-        "steep-gaston": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
-        "small-sloped-crimp": ("outer-sloped-crimp-left", "outer-sloped-crimp-right"),
+        "shallow-mono-left": "variable-edge-left",
+        "shallow-mono-right": "variable-edge-right",
+        "steep-gaston-left": "outer-wedge-pinch-left",
+        "steep-gaston-right": "outer-wedge-pinch-right",
+        "small-sloped-crimp-left": "outer-sloped-crimp-left",
+        "small-sloped-crimp-right": "outer-sloped-crimp-right",
     },
     "trango-rock-prodigy-pivot-orientation-3-90-inwards": {
-        "two-finger-pocket": ("two-finger-pocket-left", "two-finger-pocket-right"),
-        "three-finger-pocket": ("three-finger-pocket-left", "three-finger-pocket-right"),
-        "large-supported-crimp": ("medium-crimp-left", "medium-crimp-right"),
-        "sloper": ("lower-sloper-left", "lower-sloper-right"),
+        "two-finger-pocket-left": "two-finger-pocket-left",
+        "two-finger-pocket-right": "two-finger-pocket-right",
+        "three-finger-pocket-left": "three-finger-pocket-left",
+        "three-finger-pocket-right": "three-finger-pocket-right",
+        "large-supported-crimp-left": "medium-crimp-left",
+        "large-supported-crimp-right": "medium-crimp-right",
+        "sloper-left": "lower-sloper-left",
+        "sloper-right": "lower-sloper-right",
     },
     "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right": {
-        "variable-depth-incut-rail": ("variable-edge-left", "variable-edge-right"),
-        "shallow-gaston": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
+        "variable-depth-incut-rail-left": "variable-edge-left",
+        "variable-depth-incut-rail-right": "variable-edge-right",
+        "shallow-gaston-left": "outer-wedge-pinch-left",
+        "shallow-gaston-right": "outer-wedge-pinch-right",
     },
     "trango-rock-prodigy-pivot-orientation-4-90-outwards": {
-        "compression-pinch": ("outer-wedge-pinch-left", "outer-wedge-pinch-right"),
-        "deep-mono": ("variable-edge-left", "variable-edge-right"),
-        "medium-mono": ("three-finger-pocket-left", "three-finger-pocket-right"),
+        "compression-pinch-left": "outer-wedge-pinch-left",
+        "compression-pinch-right": "outer-wedge-pinch-right",
+        "deep-mono-left": "variable-edge-left",
+        "deep-mono-right": "variable-edge-right",
+        "medium-mono-left": "three-finger-pocket-left",
+        "medium-mono-right": "three-finger-pocket-right",
     },
 }
 
@@ -416,7 +448,7 @@ def test_documented_orientation_packages_have_exact_manual_hold_inventories() ->
         assert FORBIDDEN_RAW_KEYS.isdisjoint(_all_keys(board))
 
 
-def test_orientation_packages_reuse_each_documented_physical_contact_once() -> None:
+def test_orientation_packages_keep_documented_physical_contacts_separate_and_exact() -> None:
     base_board = board_package.load_board_package(PACKAGE_ROOT).board
     canonical_geometry = {
         hold["id"]: hold["geometry"]
@@ -438,15 +470,44 @@ def test_orientation_packages_reuse_each_documented_physical_contact_once() -> N
         holds = {hold["id"]: hold for hold in board["holds"]}
 
         assert set(holds) == set(expected_contacts)
-        mapped_contacts = tuple(
-            contact
-            for contacts in expected_contacts.values()
-            for contact in contacts
-        )
+        mapped_contacts = tuple(expected_contacts.values())
         assert len(mapped_contacts) == len(set(mapped_contacts))
-        for hold_id, contact_ids in expected_contacts.items():
-            assert holds[hold_id]["geometry"] == [
-                piece
-                for contact_id in contact_ids
-                for piece in canonical_geometry[contact_id]
-            ]
+        for hold_id, contact_id in expected_contacts.items():
+            assert holds[hold_id]["geometry"] == canonical_geometry[contact_id]
+
+
+def test_orientation_left_and_right_contacts_are_exact_mirrors() -> None:
+    for slug, expected_contacts in ORIENTATION_CANONICAL_CONTACTS.items():
+        board = board_package.load_board_package(
+            REPOSITORY_ROOT / "Hangboards" / slug
+        ).board
+        holds = {hold["id"]: hold for hold in board["holds"]}
+
+        for left_id in (hold_id for hold_id in expected_contacts if hold_id.endswith("-left")):
+            right_id = f"{left_id.removesuffix('-left')}-right"
+            left_geometry = holds[left_id]["geometry"]
+            right_geometry = holds[right_id]["geometry"]
+            assert len(right_geometry) == len(left_geometry)
+            for left, right in zip(left_geometry, right_geometry, strict=True):
+                left_frame = left["frame"]
+                right_frame = right["frame"]
+                assert right_frame["x"] == pytest.approx(
+                    1 - left_frame["x"] - left_frame["width"], abs=1e-12
+                )
+                assert right_frame["y"] == left_frame["y"]
+                assert right_frame["width"] == left_frame["width"]
+                assert right_frame["height"] == left_frame["height"]
+                assert right.get("treatment") == left.get("treatment")
+                for left_command, right_command in zip(
+                    left["shape"]["commands"],
+                    right["shape"]["commands"],
+                    strict=True,
+                ):
+                    assert left_command["command"] == right_command["command"]
+                    for (left_x, left_y), (right_x, right_y) in zip(
+                        _command_points(left_command),
+                        _command_points(right_command),
+                        strict=True,
+                    ):
+                        assert right_x == pytest.approx(1 - left_x, abs=1e-12)
+                        assert right_y == pytest.approx(left_y, abs=1e-12)
