@@ -703,21 +703,22 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
-    func testBeastmaker1000IsIncompatibleWithRuntimeMaxHangs() throws {
+    func testBeastmaker1000ResolvesMaxHangsOnMeasuredTwentyMillimeterEdges() throws {
         let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
 
-        XCTAssertTrue(store.isIncompatible(PlanCatalog.maxHangs, on: board))
-        XCTAssertTrue(
-            store.holdIDs(for: try XCTUnwrap(PlanCatalog.maxHangs.steps.first), on: board).isEmpty
+        XCTAssertEqual(
+            store.holdIDs(for: try XCTUnwrap(PlanCatalog.maxHangs.steps.first), on: board),
+            ["pocket-bottom-outer-left", "pocket-bottom-outer-right"]
         )
+        XCTAssertFalse(store.isIncompatible(PlanCatalog.maxHangs, on: board))
     }
 
     @MainActor
-    func testBeastmaker2000OpenHandLargeEdgeUsesTheOnlySourceMeasuredEdge() throws {
+    func testBeastmaker2000OpenHandLargeEdgePrefersMirroredThirtyThreeMillimeterEdges() throws {
         let board = try XCTUnwrap(BoardCatalog.board(for: "beastmaker-2000"))
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
@@ -735,7 +736,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             gripType: .openHand
         )
 
-        XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-lower-5"])
+        XCTAssertEqual(store.holdIDs(for: step, on: board), ["front-middle-9", "front-middle-1"])
     }
 
     @MainActor
@@ -784,14 +785,23 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     @MainActor
-    func testBeastmaker1000IsIncompatibleWithUnsupportedREIPinchRoutine() throws {
+    func testBeastmaker1000ResolvesREIMediumPinchFallbackOnMeasuredMediumEdges() throws {
         let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == "beastmaker-1000" })
         let suiteName = "BoardTargetSubstitutionTests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
+        let mediumPinchStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.reiHangboardSample.steps.first { step in
+                step.targets.contains { $0.feature == .mediumPinch }
+            }
+        )
 
-        XCTAssertTrue(store.isIncompatible(LegacyPlanSeedCatalog.reiHangboardSample, on: board))
+        XCTAssertEqual(
+            store.holdIDs(for: mediumPinchStep, on: board),
+            ["pocket-bottom-outer-left", "pocket-bottom-outer-right"]
+        )
+        XCTAssertFalse(store.isIncompatible(LegacyPlanSeedCatalog.reiHangboardSample, on: board))
     }
 
     func testEmptyBoardReturnsEmpty() {
