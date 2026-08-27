@@ -271,6 +271,8 @@
     },
     {
       "id": "front-upper-1",
+      "sizeMillimeters": 40,
+      "fingerCapacity": 3,
       "name": "Front Upper 1",
       "kind": "pocket",
       "geometry": [
@@ -380,6 +382,8 @@
     },
     {
       "id": "front-upper-2",
+      "sizeMillimeters": 20,
+      "fingerCapacity": 3,
       "name": "Front Upper 2",
       "kind": "pocket",
       "geometry": [
@@ -489,8 +493,9 @@
     },
     {
       "id": "front-middle-1",
+      "sizeMillimeters": 33,
       "name": "Front Middle 1",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -598,6 +603,8 @@
     },
     {
       "id": "front-middle-2",
+      "sizeMillimeters": 55,
+      "fingerCapacity": 1,
       "name": "Front Middle 2",
       "kind": "pocket",
       "geometry": [
@@ -693,6 +700,8 @@
     },
     {
       "id": "front-middle-3",
+      "sizeMillimeters": 35,
+      "fingerCapacity": 2,
       "name": "Front Middle 3",
       "kind": "pocket",
       "geometry": [
@@ -820,6 +829,8 @@
     },
     {
       "id": "front-middle-4",
+      "sizeMillimeters": 30,
+      "fingerCapacity": 2,
       "name": "Front Middle 4",
       "kind": "pocket",
       "geometry": [
@@ -929,8 +940,9 @@
     },
     {
       "id": "front-middle-5",
+      "sizeMillimeters": 52,
       "name": "Front Middle 5",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -1038,6 +1050,8 @@
     },
     {
       "id": "front-middle-6",
+      "sizeMillimeters": 30,
+      "fingerCapacity": 2,
       "name": "Front Middle 6",
       "kind": "pocket",
       "geometry": [
@@ -1147,6 +1161,8 @@
     },
     {
       "id": "front-middle-7",
+      "sizeMillimeters": 35,
+      "fingerCapacity": 2,
       "name": "Front Middle 7",
       "kind": "pocket",
       "geometry": [
@@ -1274,6 +1290,8 @@
     },
     {
       "id": "front-middle-8",
+      "sizeMillimeters": 55,
+      "fingerCapacity": 1,
       "name": "Front Middle 8",
       "kind": "pocket",
       "geometry": [
@@ -1369,8 +1387,9 @@
     },
     {
       "id": "front-middle-9",
+      "sizeMillimeters": 33,
       "name": "Front Middle 9",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -1478,6 +1497,7 @@
     },
     {
       "id": "front-lower-1",
+      "sizeMillimeters": 15,
       "name": "Front Lower 1",
       "kind": "edge",
       "geometry": [
@@ -1587,6 +1607,8 @@
     },
     {
       "id": "front-lower-2",
+      "sizeMillimeters": 25,
+      "fingerCapacity": 1,
       "name": "Front Lower 2",
       "kind": "pocket",
       "geometry": [
@@ -1682,6 +1704,8 @@
     },
     {
       "id": "front-lower-3",
+      "sizeMillimeters": 20,
+      "fingerCapacity": 2,
       "name": "Front Lower 3",
       "kind": "pocket",
       "geometry": [
@@ -1791,6 +1815,8 @@
     },
     {
       "id": "front-lower-4",
+      "sizeMillimeters": 20,
+      "fingerCapacity": 2,
       "name": "Front Lower 4",
       "kind": "pocket",
       "geometry": [
@@ -2010,6 +2036,8 @@
     },
     {
       "id": "front-lower-6",
+      "sizeMillimeters": 20,
+      "fingerCapacity": 2,
       "name": "Front Lower 6",
       "kind": "pocket",
       "geometry": [
@@ -2119,6 +2147,8 @@
     },
     {
       "id": "front-lower-7",
+      "sizeMillimeters": 20,
+      "fingerCapacity": 2,
       "name": "Front Lower 7",
       "kind": "pocket",
       "geometry": [
@@ -2228,6 +2258,8 @@
     },
     {
       "id": "front-lower-8",
+      "sizeMillimeters": 25,
+      "fingerCapacity": 1,
       "name": "Front Lower 8",
       "kind": "pocket",
       "geometry": [
@@ -2323,6 +2355,7 @@
     },
     {
       "id": "front-lower-9",
+      "sizeMillimeters": 15,
       "name": "Front Lower 9",
       "kind": "edge",
       "geometry": [
@@ -2432,6 +2465,8 @@
     },
     {
       "id": "hold-26",
+      "sizeMillimeters": 50,
+      "fingerCapacity": 2,
       "name": "Hold 26",
       "kind": "pocket",
       "geometry": [
@@ -2527,6 +2562,8 @@
     },
     {
       "id": "hold-27",
+      "sizeMillimeters": 50,
+      "fingerCapacity": 2,
       "name": "Hold 27",
       "kind": "pocket",
       "geometry": [

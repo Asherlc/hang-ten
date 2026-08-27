@@ -144,6 +144,18 @@ def test_parser_declares_a_disjoint_sloper_only_board_scope(tmp_path: Path) -> N
     assert ledger.sloper_only_board_ids == ("supplemental.board",)
 
 
+def test_parser_preserves_secondary_source_provenance(tmp_path: Path) -> None:
+    record = verified("fixture.board", "hold-left", "kind", "jug")
+    source = record["source"]
+    assert isinstance(source, dict)
+    source["kind"] = "secondary"
+    source["label"] = "Fixture community measurement"
+
+    ledger = load_metadata_ledger(_write_ledger(tmp_path, [record]))
+
+    assert ledger.records[0].source.kind == "secondary"
+
+
 def test_parser_rejects_board_in_full_and_sloper_only_scopes(tmp_path: Path) -> None:
     ledger_path = _write_ledger(
         tmp_path,
@@ -628,6 +640,7 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
 
     assert report.reviewed_board_ids == (
         "beastmaker-1000",
+        "beastmaker-2000",
         "dewoodstok-woodbord",
         "escape-beta-22",
         "escape.unlimited",
@@ -671,21 +684,21 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
         "zlagboard.evo",
         "zlagboard.pro",
     )
-    assert report.sloper_only_board_ids == ("beastmaker-2000",)
+    assert report.sloper_only_board_ids == ()
     assert all(board.unaccounted_fields == 0 for board in report.boards)
     assert next(
         board for board in report.boards if board.board_id == "beastmaker-2000"
     ).to_json() == {
         "boardID": "beastmaker-2000",
-        "populated": 0,
-        "verified": 0,
-        "unavailable": 5,
-        "notApplicable": 22,
+        "populated": 65,
+        "verified": 65,
+        "unavailable": 118,
+        "notApplicable": 33,
         "unaccountedFields": 0,
     }
 
 
-def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> None:
+def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = discover_board_packages(repository_root / "Hangboards")
     packages = {package.board.id: package.board for package in inventory.packages}
@@ -698,38 +711,35 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> N
     } == {
         "jug": {"jug-left", "jug-right"},
         "sloper": {"sloper-35-left", "sloper-center", "sloper-35-right"},
-        "pocket": {
+        "edge": {
             "pocket-top-outer-left",
             "pocket-top-outer-right",
-            "pocket-top-left",
-            "pocket-top-right",
             "pocket-middle-outer-left",
-            "pocket-middle-mid-left",
-            "pocket-middle-inner-left",
             "pocket-middle-center",
-            "pocket-middle-inner-right",
-            "pocket-middle-mid-right",
             "pocket-middle-outer-right",
             "pocket-bottom-outer-left",
+            "pocket-bottom-outer-right",
+        },
+        "pocket": {
+            "pocket-top-left",
+            "pocket-top-right",
+            "pocket-middle-mid-left",
+            "pocket-middle-inner-left",
+            "pocket-middle-inner-right",
+            "pocket-middle-mid-right",
             "pocket-bottom-mid-left",
             "pocket-bottom-inner-left",
             "pocket-bottom-inner-right",
             "pocket-bottom-mid-right",
-            "pocket-bottom-outer-right",
         },
     }
     assert next(hold for hold in board.holds if hold.id == "sloper-center").name == (
         "20 Degree Center Sloper"
     )
-    assert all(
-        hold.size_millimeters is None
-        and hold.depth_range_millimeters is None
-        and hold.finger_capacity is None
-        and hold.hand_capacity is None
-        and hold.grip_type is None
-        and hold.features is None
-        for hold in board.holds
-    )
+    assert all(hold.depth_range_millimeters is None for hold in board.holds)
+    assert all(hold.hand_capacity is None for hold in board.holds)
+    assert all(hold.grip_type is None for hold in board.holds)
+    assert all(hold.features is None for hold in board.holds)
 
 
 def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:

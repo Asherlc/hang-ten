@@ -26,31 +26,29 @@ is the supported Beta Board package.
 ### `beastmaker-1000`
 
 - **Sources:** [Beastmaker 1000 Series](https://www.beastmaker.co.uk/products/beastmaker-1000-series);
-  [Beastmaker FAQ](https://www.beastmaker.co.uk/pages/faq);
-  [Beech variant](https://www.beastmaker.co.uk/products/beastmaker-1000-beech)
-  (cross-variant corroboration for the 58 mm depth only).
+  [positioned secondary comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000).
 - **Current JSON holds:** 22.
 - **Source-backed expected physical count:** 22.
 - **Verified facts:** generic/Tulipwood Beastmaker 1000; `580 × 150 × 58 mm`.
   The separate Beech page corroborates only the shared 58 mm depth, not this
   package's product identity.
-- **Discrepancy:** the physical-region count is aligned, but current per-pocket
-  millimetre fields are not mapped one-to-one by the manufacturer.
-- **Action:** `correct` — retain the 22 regions and omit those unsupported
-  per-pocket measurements.
+- **Discrepancy:** the secondary diagram labels the exact center contact 53 mm,
+  while its text says 50 mm. The diagram wins because it is positioned.
+- **Action:** retain the 22 regions and map the 17 labelled front contacts as
+  secondary evidence; leave jugs/slopers unmeasured.
 
 ### `beastmaker-2000`
 
-- **Source:** [Beastmaker 2000 Series](https://www.beastmaker.co.uk/products/beastmaker-2000-series).
-- **Current JSON holds:** 25.
-- **Source-backed expected physical count:** 25.
-- **Verified facts:** Beastmaker 2000; `580 × 150 × 58 mm`. The grouped source
-  inventory supports hold kinds; the clearly central lower edge is the official
-  22 mm middle edge.
-- **Discrepancy:** current image-derived millimetre values are not mapped
-  one-to-one by the manufacturer.
-- **Action:** `correct` — retain 25 regions, preserve only the clearly mapped
-  22 mm fact, and remove unsupported derived values.
+- **Sources:** [Beastmaker 2000 Series](https://www.beastmaker.co.uk/products/beastmaker-2000-series);
+  [positioned secondary comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000).
+- **Current JSON holds:** 27.
+- **Source-backed expected physical count:** 27.
+- **Verified facts:** Beastmaker 2000; `580 × 150 × 58 mm`; manufacturer-backed
+  lower center 22 mm edge, plus secondary positioned front-contact values.
+- **Discrepancy:** the secondary diagram labels `front-middle-5` 52 mm while
+  its text says 50 mm. The diagram wins; the separate primary 22 mm lower
+  center edge remains unchanged.
+- **Action:** retain all 27 current regions and map only the diagrammed values.
 
 ### `dewoodstok-woodbord`
 

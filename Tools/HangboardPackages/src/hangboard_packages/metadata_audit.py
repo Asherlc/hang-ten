@@ -26,6 +26,7 @@ _FIELDS = frozenset(
     }
 )
 _OUTCOMES = frozenset({"verified", "unavailable", "notApplicable"})
+_SOURCE_KINDS = frozenset({"manufacturer", "secondary"})
 
 
 class MetadataAuditError(ValueError):
@@ -152,14 +153,17 @@ def _number(value: Any, source: str) -> int | float:
 def _load_source(value: Any, source: str) -> MetadataSource:
     payload = _mapping(value, source)
     _closed(payload, {"kind", "url", "label"}, source)
-    if payload["kind"] != "manufacturer":
-        raise MetadataAuditError(f"{source}.kind must be manufacturer")
+    kind = _nonempty_string(payload["kind"], f"{source}.kind")
+    if kind not in _SOURCE_KINDS:
+        raise MetadataAuditError(
+            f"{source}.kind must be one of {sorted(_SOURCE_KINDS)}"
+        )
     url = _nonempty_string(payload["url"], f"{source}.url")
     parsed = urlsplit(url)
     if parsed.scheme != "https" or not parsed.hostname:
         raise MetadataAuditError(f"{source}.url must be an HTTPS URL")
     return MetadataSource(
-        kind="manufacturer",
+        kind=kind,
         url=url,
         label=_nonempty_string(payload["label"], f"{source}.label"),
     )
