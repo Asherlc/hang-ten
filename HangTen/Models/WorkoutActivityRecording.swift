@@ -350,11 +350,7 @@ internal enum BoardTargetResolver {
         }
 
         if feature.holdKind == .edge {
-            let representativeDepthDistance = depthDistance(of: representative, from: feature)
-            let nearestEdges = preferredSameKind.filter {
-                depthDistance(of: $0, from: feature) == representativeDepthDistance
-            }
-            let pairedEdges = oneHoldPerHand(from: nearestEdges)
+            let pairedEdges = oneHoldPerHand(from: preferredSameKind)
             if pairedEdges.count == 2 { return pairedEdges.map(\.id) }
         }
 
