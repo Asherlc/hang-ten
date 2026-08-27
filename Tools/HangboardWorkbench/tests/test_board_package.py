@@ -523,9 +523,10 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 str,
                 object,
                 object,
-                object,
-                tuple[int, ...],
-                int | None,
+                    object,
+                    tuple[int, ...],
+                    tuple[int, ...],
+                    int | None,
                 int | float | None,
                 dict[str, int | float] | None,
                 int | None,
@@ -540,6 +541,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         path,
         shape_constraint,
         bendable_command_indexes,
+        smooth_anchor_indexes,
         finger_capacity,
         size_millimeters,
         depth_range,
@@ -553,6 +555,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 path,
                 shape_constraint,
                 bendable_command_indexes,
+                smooth_anchor_indexes,
                 finger_capacity,
                 size_millimeters,
                 depth_range,
@@ -571,10 +574,11 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         first_piece[4],
         first_piece[5],
         first_piece[6],
-        first_piece[7],
-        first_piece[8],
-        first_piece[9],
-    )
+            first_piece[7],
+            first_piece[8],
+            first_piece[9],
+            first_piece[10],
+        )
     original = copy.deepcopy(package.board)
 
     updated = board_package._apply_editor_document(
@@ -1431,6 +1435,65 @@ def test_save_editor_document_persists_only_selected_curve_indexes(tmp_path: Pat
     assert "bendable" not in commands[1]
     assert commands[2]["bendable"] is True
     assert "bendableCommandIndexes" not in json.dumps(_read_board(package_root))
+
+
+def test_save_editor_document_round_trips_smooth_anchor_indexes(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {"command": "curve", "control1": [0.2, 0], "control2": [0.3, 0.5], "to": [0.5, 0.5]},
+                    {"command": "curve", "control1": [0.7, 0.5], "control2": [0.8, 0], "to": [1, 0]},
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["smoothAnchorIndexes"] = [1]
+
+    board_package.save_editor_document(library, "fixture-board", document)
+
+    commands = _read_board(package_root)["holds"][0]["geometry"][0]["shape"]["commands"]
+    assert commands[1]["smooth"] is True
+    reopened = board_package.editor_document(board_package.load_board_package(package_root))
+    assert reopened["regions"][0]["smoothAnchorIndexes"] == [1]
+
+
+@pytest.mark.parametrize("indexes", [[0], [1, 1], [2], None])
+def test_save_rejects_invalid_editor_smooth_anchor_indexes(tmp_path: Path, indexes: object) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(
+        package_root,
+        lambda board: board["holds"][0]["geometry"][0].__setitem__(
+            "shape",
+            {
+                "type": "path",
+                "commands": [
+                    {"command": "move", "to": [0, 0]},
+                    {"command": "curve", "control1": [0.2, 0], "control2": [0.3, 0.5], "to": [0.5, 0.5]},
+                    {"command": "line", "to": [1, 0]},
+                    {"command": "line", "to": [1, 1]},
+                    {"command": "line", "to": [0, 1]},
+                    {"command": "close"},
+                ],
+            },
+        ),
+    )
+    document = board_package.editor_document(board_package.load_board_package(package_root))
+    document["regions"][0]["smoothAnchorIndexes"] = indexes
+
+    with pytest.raises(BoardPackageError, match="smoothAnchorIndexes"):
+        board_package.save_editor_document(library, "fixture-board", document)
 
 
 @pytest.mark.parametrize("indexes", [[1, 1], [99], [0], None])

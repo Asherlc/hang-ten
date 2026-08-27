@@ -25,7 +25,9 @@ import {
   createEditablePath,
   deleteEditableAnchor,
   insertEditableVertex,
+  insertEditableInflectionPoint,
   moveEditableAnchor,
+  moveEditableControl,
   serializeEditablePath,
 } from "../src/editable-path.ts";
 import type { EditablePath } from "../src/editable-path.ts";
@@ -253,6 +255,27 @@ test("adding an inflection point to a bendable cubic preserves both descendant m
 
   assert.equal(commands[1]?.bendable, true);
   assert.equal(commands[2]?.bendable, true);
+});
+
+test("smooth anchors couple adjacent Bezier controls while ordinary inserted anchors keep them independent", () => {
+  const smooth = createEditablePath("smooth", "M 0 0 C 0 30 30 30 30 0 L 30 40 Z", pathEditor);
+  assert.equal(insertEditableInflectionPoint(smooth, smooth.segments[0]!.id, { x: 15, y: 22.5 }, pathEditor), true);
+  const smoothIncoming = smooth.segments[1]!.controls[1]!;
+  const smoothOutgoing = smooth.segments[2]!.controls[0]!;
+  assert.equal(moveEditableControl(smooth, smoothIncoming.id, -2.5, 7.5), true);
+  const smoothAnchor = smooth.segments[1]!.anchor;
+  const incomingVector = { x: smoothIncoming.x - smoothAnchor.x, y: smoothIncoming.y - smoothAnchor.y };
+  const outgoingVector = { x: smoothOutgoing.x - smoothAnchor.x, y: smoothOutgoing.y - smoothAnchor.y };
+  assert.ok(Math.abs(incomingVector.x * outgoingVector.y - incomingVector.y * outgoingVector.x) < 1e-6);
+  assert.ok(incomingVector.x * outgoingVector.x + incomingVector.y * outgoingVector.y < 0);
+
+  const ordinary = createEditablePath("ordinary", "M 0 0 C 0 30 30 30 30 0 L 30 40 Z", pathEditor);
+  assert.equal(insertEditableVertex(ordinary, ordinary.segments[0]!.id, { x: 15, y: 22.5 }, pathEditor), true);
+  const ordinaryIncoming = ordinary.segments[1]!.controls[1]!;
+  const ordinaryOutgoing = ordinary.segments[2]!.controls[0]!;
+  const originalOutgoing = { x: ordinaryOutgoing.x, y: ordinaryOutgoing.y };
+  assert.equal(moveEditableControl(ordinary, ordinaryIncoming.id, -2.5, 7.5), true);
+  assertPoint(ordinaryOutgoing, originalOutgoing);
 });
 
 test("straightening or deleting a bendable cubic removes its marker", () => {

@@ -533,10 +533,14 @@ def _shape_commands(frame: NormalizedFrame, raw_commands: list[Any], width: int,
         allowed_keys = {"command", *fields[name][1]}
         if name == "curve":
             allowed_keys.add("bendable")
+        if name in {"quad", "curve"}:
+            allowed_keys.add("smooth")
         if set(raw) - allowed_keys or set(raw) < {"command", *fields[name][1]}:
             raise GeometryError(f"{label}.shape.commands[{index}] is invalid")
         if "bendable" in raw and raw["bendable"] is not True:
             raise GeometryError(f"{label}.shape.commands[{index}].bendable must be true")
+        if "smooth" in raw and raw["smooth"] is not True:
+            raise GeometryError(f"{label}.shape.commands[{index}].smooth must be true")
         command, point_keys = fields[name]
         values: list[float] = []
         for key in point_keys:
