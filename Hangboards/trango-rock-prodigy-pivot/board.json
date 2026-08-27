@@ -1322,137 +1322,6 @@
       "fingerCapacity": 4
     },
     {
-      "id": "variable-edge-right-orientation-3",
-      "name": "Right variable-depth edge \u2014 Orientation 3",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
-      },
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.621604029846192,
-            "y": 0.35838,
-            "width": 0.338827207946777,
-            "height": 0.113345466308594
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.06358984653084,
-                  0.90290333908345
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.246869106706884,
-                  1.018390975477845
-                ],
-                "control2": [
-                  0.725431619388777,
-                  1.028889851513699
-                ],
-                "to": [
-                  0.949439604048386,
-                  0.944898843226866
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.000350509652843,
-                  0.881905587011742
-                ],
-                "control2": [
-                  1.010532690773734,
-                  0.671928066294661
-                ],
-                "to": [
-                  0.990168328531952,
-                  0.482948297649287
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.969803966290169,
-                  0.230975272788789
-                ],
-                "control2": [
-                  0.918893060685712,
-                  0.083991008286832
-                ],
-                "to": [
-                  0.837435611718582,
-                  0.041995504143416
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.613427627058972,
-                  -0.010498876035853
-                ],
-                "control2": [
-                  0.277415650069558,
-                  -0.020997752071708
-                ],
-                "to": [
-                  0.073772027651731,
-                  0.05249438017927
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.012678940926383,
-                  0.115487636394395
-                ],
-                "control2": [
-                  -0.007685421315399,
-                  0.304467405039768
-                ],
-                "to": [
-                  0.002496759805492,
-                  0.514444925756849
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.012678940926383,
-                  0.713923570438077
-                ],
-                "control2": [
-                  0.022861122047275,
-                  0.839910082868326
-                ],
-                "to": [
-                  0.06358984653084,
-                  0.90290333908345
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "treatment": {
-            "type": "recess",
-            "rimInsetFraction": 0.08,
-            "depth": "deep"
-          }
-        }
-      ],
-      "presentationID": "orientation-3",
-      "fingerCapacity": 4
-    },
-    {
       "id": "medium-crimp-right-orientation-3",
       "name": "Right medium crimp \u2014 Orientation 3",
       "kind": "edge",
@@ -1857,7 +1726,8 @@
         }
       ],
       "presentationID": "orientation-3",
-      "gripType": "threeFingerPocket"
+      "gripType": "threeFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "upper-sloped-crimp-left-orientation-4",
