@@ -159,7 +159,12 @@ class GitHubBoardStore:
                 self._catalog(snapshot, token, branch), board_id
             )
             package = _load_selected_package(
-                snapshot.with_blob_cache(), token, branch, selected.slug, board_id
+                snapshot.with_blob_cache(),
+                token,
+                branch,
+                selected.slug,
+                board_id,
+                prevalidated_board=selected.board,
             )
             self._cache_opened_package(token, branch, package)
             return package
@@ -181,7 +186,12 @@ class GitHubBoardStore:
                 self._catalog(snapshot, token, branch), board_id
             )
             package, images = _load_selected_package_with_image(
-                snapshot.with_blob_cache(), token, branch, selected.slug, board_id
+                snapshot.with_blob_cache(),
+                token,
+                branch,
+                selected.slug,
+                board_id,
+                prevalidated_board=selected.board,
             )
             if package.board_id != board_id:
                 raise board_package.BoardNotAvailableError("board is not available")
@@ -233,7 +243,12 @@ class GitHubBoardStore:
                     self._catalog(snapshot, token, branch), board_id
                 )
                 live = _load_selected_package(
-                    snapshot, token, branch, selected.slug, board_id
+                    snapshot,
+                    token,
+                    branch,
+                    selected.slug,
+                    board_id,
+                    prevalidated_board=selected.board,
                 )
                 self._cache_opened_package(token, branch, live)
             saved = _save_loaded_editor_document(
@@ -437,23 +452,27 @@ class GitHubBoardStore:
 
         def load() -> bytes:
             blob = self._call_bulk(self._client.get_blob, token, sha)
-            if not cache or len(blob) > self._max_cached_blob_bytes:
-                return blob
-            with self._lock:
-                previous = self._blobs.pop(key, None)
-                if previous is not None:
-                    self._blob_bytes -= len(previous)
-                self._blobs[key] = blob
-                self._blob_bytes += len(blob)
-                while (
-                    len(self._blobs) > self._max_cached_blobs
-                    or self._blob_bytes > self._max_cached_blob_bytes
-                ):
-                    _discarded_key, discarded = self._blobs.popitem(last=False)
-                    self._blob_bytes -= len(discarded)
+            if cache:
+                self._cache_blob(key, blob)
             return blob
 
         return self._single_flight(self._blob_flights, key, load)
+
+    def _cache_blob(self, key: tuple[bytes, str], blob: bytes) -> None:
+        if len(blob) > self._max_cached_blob_bytes:
+            return
+        with self._lock:
+            previous = self._blobs.pop(key, None)
+            if previous is not None:
+                self._blob_bytes -= len(previous)
+            self._blobs[key] = blob
+            self._blob_bytes += len(blob)
+            while (
+                len(self._blobs) > self._max_cached_blobs
+                or self._blob_bytes > self._max_cached_blob_bytes
+            ):
+                _discarded_key, discarded = self._blobs.popitem(last=False)
+                self._blob_bytes -= len(discarded)
 
     def _call_control(
         self,
@@ -580,6 +599,23 @@ class _CachedSnapshotClient:
             self._tree,
             True,
         )
+
+    def without_blob_cache(self) -> _CachedSnapshotClient:
+        return _CachedSnapshotClient(
+            self._store,
+            self._token,
+            self._credential_key,
+            self._branch,
+            self._commit_sha,
+            self._tree,
+            False,
+        )
+
+    def cache_blobs_in_order(self, blobs: tuple[tuple[str, bytes], ...]) -> None:
+        if not self._cache_blobs:
+            return
+        for sha, blob in blobs:
+            self._store._cache_blob((self._credential_key, sha), blob)
 
     def put_file(
         self,
@@ -992,9 +1028,16 @@ def _load_selected_package(
     branch: str,
     slug: str,
     board_id: str,
+    *,
+    prevalidated_board: dict[str, Any] | None = None,
 ) -> GitHubBoardPackage:
     package = _load_slug(
-        client, token, branch, slug, inspect_png_header_only=False
+        client,
+        token,
+        branch,
+        slug,
+        inspect_png_header_only=False,
+        prevalidated_board=prevalidated_board,
     )
     if package.board_id != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
@@ -1007,8 +1050,12 @@ def _load_selected_package_with_image(
     branch: str,
     slug: str,
     board_id: str,
+    *,
+    prevalidated_board: dict[str, Any] | None = None,
 ) -> tuple[GitHubBoardPackage, dict[str, bytes]]:
-    package, images = _load_slug_with_image(client, token, branch, slug)
+    package, images = _load_slug_with_image(
+        client, token, branch, slug, prevalidated_board=prevalidated_board
+    )
     if package.board_id != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
     return package, images
@@ -1021,6 +1068,7 @@ def _load_slug(
     slug: str,
     *,
     inspect_png_header_only: bool,
+    prevalidated_board: dict[str, Any] | None = None,
 ) -> GitHubBoardPackage:
     groups = _package_groups(client.get_tree(token, branch))
     entries = groups.get(slug)
@@ -1029,7 +1077,12 @@ def _load_slug(
     if not _is_completed(entries):
         _raise_for_incomplete_layout(slug, entries)
     return _load_package_from_entries(
-        client, token, slug, entries, inspect_png_header_only=inspect_png_header_only
+        client,
+        token,
+        slug,
+        entries,
+        inspect_png_header_only=inspect_png_header_only,
+        prevalidated_board=prevalidated_board,
     )
 
 
@@ -1063,7 +1116,12 @@ def _selected_package(
 
 
 def _load_slug_with_image(
-    client: _GitHubSnapshotClient, token: str, branch: str, slug: str
+    client: _GitHubSnapshotClient,
+    token: str,
+    branch: str,
+    slug: str,
+    *,
+    prevalidated_board: dict[str, Any] | None = None,
 ) -> tuple[GitHubBoardPackage, dict[str, bytes]]:
     groups = _package_groups(client.get_tree(token, branch))
     entries = groups.get(slug)
@@ -1072,7 +1130,13 @@ def _load_slug_with_image(
     if not _is_completed(entries):
         _raise_for_incomplete_layout(slug, entries)
     package, images = _load_package_from_entries(
-        client, token, slug, entries, inspect_png_header_only=False, include_image=True
+        client,
+        token,
+        slug,
+        entries,
+        inspect_png_header_only=False,
+        include_image=True,
+        prevalidated_board=prevalidated_board,
     )
     return package, images
 
@@ -1109,7 +1173,12 @@ def _load_package_from_entries(
     *,
     inspect_png_header_only: bool,
     include_image: bool = False,
+    prevalidated_board: dict[str, Any] | None = None,
 ) -> GitHubBoardPackage | tuple[GitHubBoardPackage, dict[str, bytes]]:
+    if prevalidated_board is not None and len(
+        {item[2] for item in board_package._parse_board_presentations(prevalidated_board)}
+    ) == 1:
+        prevalidated_board = None
     asset_entries = {
         path: entry
         for path, entry in entries.items()
@@ -1119,9 +1188,52 @@ def _load_package_from_entries(
     dimensions: dict[str, tuple[int, int]] = {}
     primary_entry = asset_entries.get("assets/primary.png")
     board_entry = entries["board.json"]
+    board_blob: bytes
+    if prevalidated_board is None:
+        if primary_entry is not None:
+            primary_image = _get_blob(
+                client, token, primary_entry, "package primary image"
+            )
+            images["assets/primary.png"] = primary_image
+            dimensions["assets/primary.png"] = (
+                board_package._png_header_dimensions_from_bytes(primary_image[:33])
+                if inspect_png_header_only
+                else board_package._png_dimensions_from_bytes(primary_image)
+            )
+        board_blob = _get_blob(client, token, board_entry, "board.json")
+        board = _load_board_json(board_blob)
+        concurrent_assets = {
+            path: entry
+            for path, entry in asset_entries.items()
+            if path != "assets/primary.png"
+        }
+    else:
+        board = deepcopy(prevalidated_board)
+        concurrent_assets = asset_entries
+    presentation_values = board_package._parse_board_presentations(board)
+    expected_assets = {item[2] for item in presentation_values}
+    if set(asset_entries) != expected_assets:
+        raise board_package.BoardPackageError(
+            "board package assets must exactly match its presentations"
+        )
     with ThreadPoolExecutor(
-        max_workers=min(_MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(asset_entries)))
+        max_workers=min(
+            _MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(concurrent_assets) + 1)
+        )
     ) as executor:
+        uncached_client = (
+            client.without_blob_cache()
+            if prevalidated_board is not None
+            and isinstance(client, _CachedSnapshotClient)
+            else client
+        )
+        board_future = (
+            executor.submit(
+                _get_blob, uncached_client, token, board_entry, "board.json"
+            )
+            if prevalidated_board is not None
+            else None
+        )
         image_futures = {
             asset_path: executor.submit(
                 _get_blob,
@@ -1134,28 +1246,9 @@ def _load_package_from_entries(
                     else "package presentation image"
                 ),
             )
-            for asset_path, image_entry in asset_entries.items()
+            for asset_path, image_entry in concurrent_assets.items()
         }
-        if primary_entry is not None:
-            primary_image = image_futures["assets/primary.png"].result()
-            images["assets/primary.png"] = primary_image
-            dimensions["assets/primary.png"] = (
-                board_package._png_header_dimensions_from_bytes(primary_image[:33])
-                if inspect_png_header_only
-                else board_package._png_dimensions_from_bytes(primary_image)
-            )
-        board = _load_board_json(
-            _get_blob(client, token, board_entry, "board.json")
-        )
-        presentation_values = board_package._parse_board_presentations(board)
-        expected_assets = {item[2] for item in presentation_values}
-        if set(asset_entries) != expected_assets:
-            raise board_package.BoardPackageError(
-                "board package assets must exactly match its presentations"
-            )
-        for asset_path in sorted(asset_entries):
-            if asset_path in images:
-                continue
+        for asset_path in sorted(concurrent_assets):
             image = image_futures[asset_path].result()
             images[asset_path] = image
             dimensions[asset_path] = (
@@ -1163,6 +1256,19 @@ def _load_package_from_entries(
                 if inspect_png_header_only
                 else board_package._png_dimensions_from_bytes(image)
             )
+        if board_future is not None:
+            board_blob = board_future.result()
+    if isinstance(client, _CachedSnapshotClient):
+        cache_order: list[tuple[str, bytes]] = []
+        if primary_entry is not None:
+            cache_order.append((primary_entry.sha, images["assets/primary.png"]))
+        cache_order.append((board_entry.sha, board_blob))
+        cache_order.extend(
+            (asset_entries[asset_path].sha, images[asset_path])
+            for asset_path in sorted(asset_entries)
+            if asset_path != "assets/primary.png"
+        )
+        client.cache_blobs_in_order(tuple(cache_order))
     presentations = tuple(
         board_package.BoardPresentation(
             id=presentation_id,

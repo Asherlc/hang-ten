@@ -598,6 +598,58 @@ def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
     assert len(client.calls_named("get_blob")) == 5
 
 
+def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open() -> None:
+    """Fails if concurrent image reads leave a different blob most recently cached."""
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"back"
+    )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(
+        client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
+    )
+
+    store.open_package(TOKEN, BRANCH, "fixture.multi")
+    store.primary_image_bytes(TOKEN, BRANCH, "fixture.multi")
+
+    assert tuple(store._blobs.values()) == (
+        files["Hangboards/fixture-v2/assets/back.png"],
+    )
+
+
+def test_open_validates_presentation_assets_before_loading_nonprimary_images() -> None:
+    """Fails if an invalid presentation inventory downloads its extra image."""
+    board = multi_presentation_board_document("fixture.multi")
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list)
+    assert isinstance(holds, list)
+    presentations[:] = [presentations[0]]
+    back_hold = holds[1]
+    assert isinstance(back_hold, dict)
+    back_hold["presentationID"] = "front"
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"back"
+    )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+    nonprimary_sha = FakeGitHubClient._sha(
+        files["Hangboards/fixture-v2/assets/back.png"]
+    )
+
+    with pytest.raises(
+        board_package.BoardPackageError,
+        match="assets must exactly match its presentations",
+    ):
+        store.open_package(TOKEN, BRANCH, "fixture.multi")
+
+    assert nonprimary_sha not in {
+        call.args[1] for call in client.calls_named("get_blob")
+    }
+
+
 def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
     """Fails if a transient GitHub blob failure is retained as a cache entry."""
     client = _OneTimeMissingBlobClient(

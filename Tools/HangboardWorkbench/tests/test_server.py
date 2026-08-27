@@ -252,25 +252,26 @@ class _BlockingPresentationBlobClient(FakeGitHubClient):
         }
         self._lock = threading.Lock()
         self._all_presentation_reads_started = threading.Event()
-        self._active_presentation_reads = 0
-        self.max_active_presentation_reads = 0
+        self._active_presentation_shas: set[str] = set()
+        self.max_active_presentation_shas = 0
 
     def get_blob(self, token: str, sha: str) -> bytes:
         if sha not in self._presentation_blob_shas:
             return super().get_blob(token, sha)
         with self._lock:
-            self._active_presentation_reads += 1
-            self.max_active_presentation_reads = max(
-                self.max_active_presentation_reads, self._active_presentation_reads
+            self._active_presentation_shas.add(sha)
+            self.max_active_presentation_shas = max(
+                self.max_active_presentation_shas,
+                len(self._active_presentation_shas),
             )
-            if self._active_presentation_reads == len(self._presentation_blob_shas):
+            if self._active_presentation_shas == self._presentation_blob_shas:
                 self._all_presentation_reads_started.set()
         try:
             assert self._all_presentation_reads_started.wait(timeout=1)
             return super().get_blob(token, sha)
         finally:
             with self._lock:
-                self._active_presentation_reads -= 1
+                self._active_presentation_shas.remove(sha)
 
 
 @contextmanager
@@ -1540,7 +1541,7 @@ def test_hosted_board_open_reads_distinct_presentation_blobs_concurrently_and_re
         )
 
     assert status == 200
-    assert client.max_active_presentation_reads == 4
+    assert client.max_active_presentation_shas == 4
     opened_board = opened["board"]
     assert opened_board["selectedPresentationID"] == "front"
     assert opened_board["holdIDs"] == [
