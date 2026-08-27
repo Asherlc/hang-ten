@@ -7334,10 +7334,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.669773636979,
-            "y": 0.61166573168,
-            "width": 0.06,
-            "height": 0.12
+            "x": 0.680107546787,
+            "y": 0.682135478016,
+            "width": 0.04023390699,
+            "height": 0.08046781398
           },
           "shape": {
             "type": "path",
@@ -7345,39 +7345,84 @@
               {
                 "command": "move",
                 "to": [
-                  0.0,
+                  0.499999992995,
                   0.0
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [
+                  0.776142375215,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.223857624785
+                ],
                 "to": [
                   1.0,
-                  0.0
+                  0.499999992995
                 ]
               },
               {
-                "command": "line",
-                "to": [
+                "command": "curve",
+                "control1": [
                   1.0,
+                  0.776142375215
+                ],
+                "control2": [
+                  0.776142375215,
+                  1.0
+                ],
+                "to": [
+                  0.499999992995,
                   1.0
                 ]
               },
               {
-                "command": "line",
+                "command": "curve",
+                "control1": [
+                  0.223857624785,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.776142375215
+                ],
                 "to": [
                   0.0,
-                  1.0
+                  0.499999992995
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.223857624785
+                ],
+                "control2": [
+                  0.223857624785,
+                  0.0
+                ],
+                "to": [
+                  0.499999992995,
+                  0.0
                 ]
               },
               {
                 "command": "close"
               }
             ]
+          },
+          "shapeConstraint": {
+            "shape": "circle",
+            "rotationDegrees": 0.0
           }
         }
       ],
-      "presentationID": "orientation-2"
+      "presentationID": "orientation-2",
+      "fingerCapacity": 1,
+      "handCapacity": 1
     }
   ],
   "presentations": [
