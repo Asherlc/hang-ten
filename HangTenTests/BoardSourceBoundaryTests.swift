@@ -36,6 +36,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "target10a.linebreaker-base",
             "tension.flash-board",
             "tension.grindstone",
+            "tension.grindstone-original",
+            "tension.grindstone-pro",
             "tension.honestone",
             "tension.whetstone",
             "the-hangboard.the-hangboard",
