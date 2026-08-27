@@ -1,4 +1,4 @@
-// Copy this file to PostHog.local.xcconfig and add the project token locally.
-POSTHOG_CLIENT_TOKEN = phc_your_project_token
+// Copy this file to Analytics.local.xcconfig and add the API key locally.
+ANALYTICS_API_KEY = your_amplitude_api_key
 // Optional public client ID for GitHub OAuth Device Flow. Do not add a client secret.
 GITHUB_OAUTH_CLIENT_ID = your_github_oauth_client_id

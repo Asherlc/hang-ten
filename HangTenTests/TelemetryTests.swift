@@ -1,5 +1,5 @@
+import AmplitudeSwift
 import XCTest
-import PostHog
 @testable import HangTen
 
 final class TelemetryTests: XCTestCase {
@@ -22,58 +22,49 @@ final class TelemetryTests: XCTestCase {
         )
     }
 
-    func testConfigurationWithoutAProjectTokenBuildsNoOpDependencies() {
-        let configuration = PostHogConfiguration(
-            projectToken: "$(POSTHOG_CLIENT_TOKEN)",
-            host: ""
+    func testConfigurationWithAnUnexpandedAPIKeyBuildsNoOpDependencies() {
+        let configuration = AnalyticsConfiguration(
+            apiKey: "$(ANALYTICS_API_KEY)"
         )
 
         XCTAssertFalse(configuration.isConfigured)
         XCTAssertTrue(TelemetryComposition.make(configuration: configuration).isNoOp)
     }
 
-    func testConfiguredTraceEndpointUsesOTLPPathComponents() throws {
-        let configuration = PostHogConfiguration(
-            projectToken: "phc_test_token",
-            host: "https://us.i.posthog.com"
-        )
+    func testConfigurationWithTheDocumentedExampleAPIKeyBuildsNoOpDependencies() {
+        let configuration = AnalyticsConfiguration(apiKey: "your_amplitude_api_key")
 
-        let endpoint = try XCTUnwrap(configuration.traceEndpoint)
-
-        XCTAssertEqual(endpoint.absoluteString, "https://us.i.posthog.com/i/v1/traces")
-        XCTAssertFalse(endpoint.absoluteString.contains("phc_test_token"))
-    }
-
-    func testConfigurationRejectsInsecureHTTPHost() {
-        let configuration = PostHogConfiguration(
-            projectToken: "phc_test_token",
-            host: "http://us.i.posthog.com"
-        )
-
-        XCTAssertNil(configuration.traceEndpoint)
         XCTAssertFalse(configuration.isConfigured)
+        XCTAssertTrue(TelemetryComposition.make(configuration: configuration).isNoOp)
     }
 
-    func testSDKConfigurationDisablesAutomaticExceptionCapture() {
-        let configuration = PostHogConfiguration(
-            projectToken: "phc_test_token",
-            host: "https://us.i.posthog.com"
+    func testConfiguredAPIKeyBuildsActiveAnalyticsDependencies() {
+        let configuration = AnalyticsConfiguration(
+            apiKey: "test-api-key"
         )
 
-        let sdkConfiguration = PostHogSDKConfiguration.make(configuration: configuration)
-
-        XCTAssertFalse(sdkConfiguration.errorTrackingConfig.autoCapture)
+        XCTAssertTrue(configuration.isConfigured)
+        XCTAssertFalse(TelemetryComposition.make(configuration: configuration).isNoOp)
     }
 
-    func testPostHogAdapterTranslatesOnlyTypedProperties() {
-        let client = RecordingPostHogClient()
-        let telemetry = PostHogTelemetry(client: client)
+    func testAmplitudeAdapterTranslatesOnlyTypedProperties() {
+        let client = RecordingAmplitudeClient()
+        let telemetry = AmplitudeAnalyticsTelemetry(client: client)
 
         telemetry.track(.boardSelected(family: .compactII))
 
         XCTAssertEqual(client.captures, [
             .init(event: "board selected", properties: ["board_family": "compact_ii"])
         ])
+    }
+
+    func testAmplitudeSDKConfigurationDisablesAutocaptureAndRemoteConfiguration() {
+        let configuration = AmplitudeSDKConfiguration.make(
+            configuration: AnalyticsConfiguration(apiKey: "test-api-key")
+        )
+
+        XCTAssertEqual(configuration.autocapture, [])
+        XCTAssertFalse(configuration.enableAutoCaptureRemoteConfig)
     }
 
     func testWorkoutFinishedUsesOnlyOutcomeAndCoarseDurationBucket() {
@@ -132,7 +123,7 @@ final class TelemetryTests: XCTestCase {
 
 private struct TestError: Error {}
 
-private final class RecordingPostHogClient: PostHogCapturing {
+private final class RecordingAmplitudeClient: AmplitudeTrackingClient {
     struct Capture: Equatable {
         let event: String
         let properties: [String: String]
@@ -140,15 +131,7 @@ private final class RecordingPostHogClient: PostHogCapturing {
 
     private(set) var captures: [Capture] = []
 
-    func capture(event: String, properties: [String: String]) {
-        captures.append(.init(event: event, properties: properties))
+    func track(eventType: String, eventProperties: [String: String]) {
+        captures.append(.init(event: eventType, properties: eventProperties))
     }
-
-    func isFeatureEnabled(_ key: String, default defaultValue: Bool) -> Bool {
-        defaultValue
-    }
-
-    func startSessionReplay() {}
-
-    func stopSessionReplay() {}
 }
