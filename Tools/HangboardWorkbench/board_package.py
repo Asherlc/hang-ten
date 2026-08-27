@@ -33,19 +33,19 @@ from board_geometry import (
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _ASPECT_RATIO_RELATIVE_TOLERANCE = 0.001
-_BOARD_FIELDS = frozenset(
+_BOARD_REQUIRED_FIELDS = frozenset(
     {
         "id",
         "manufacturer",
         "name",
         "subtitle",
         "productURL",
-        "dimensions",
         "aspectRatio",
         "presentations",
         "holds",
     }
 )
+_BOARD_OPTIONAL_FIELDS = frozenset({"dimensions"})
 _HOLD_REQUIRED_FIELDS = frozenset({"id", "name", "kind", "geometry"})
 _HOLD_OPTIONAL_FIELDS = frozenset(
     {
@@ -928,7 +928,12 @@ def _remove_empty_recovery_directory(recovery: Path | None) -> None:
 def _parse_board_presentations(
     board: Mapping[str, Any],
 ) -> tuple[tuple[str, str, str, float, bool, str | None, bool], ...]:
-    _exact_keys(board, _BOARD_FIELDS, "board.json")
+    _required_and_allowed_keys(
+        board,
+        _BOARD_REQUIRED_FIELDS,
+        _BOARD_REQUIRED_FIELDS | _BOARD_OPTIONAL_FIELDS,
+        "board.json",
+    )
     raw_presentations = board.get("presentations")
     if not isinstance(raw_presentations, list) or not raw_presentations:
         raise BoardPackageError("board.json.presentations must be a non-empty array")

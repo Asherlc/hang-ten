@@ -499,6 +499,16 @@ def test_completed_packages_match_their_primary_image_aspect_ratio() -> None:
     assert not mismatches, "\n".join(mismatches)
 
 
+def test_loads_completed_flash_board_without_unpublished_dimensions() -> None:
+    """Completed packages may omit manufacturer-unpublished dimensions."""
+    package = board_package.load_board_package(
+        REPOSITORY_ROOT / "Hangboards" / "tension-flash-board"
+    )
+
+    assert package.board["id"] == "tension.flash-board"
+    assert "dimensions" not in package.board
+
+
 def test_apply_editor_document_returns_updated_board_without_mutating_its_input() -> None:
     package = board_package.load_board_package(CANONICAL_PACKAGE)
     document = board_package.editor_document(package)
