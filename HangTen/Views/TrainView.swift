@@ -71,7 +71,7 @@ struct TrainView: View {
             }
             .navigationDestination(isPresented: $showsWorkoutReview) {
                 if let plan = reviewPlan {
-                    WorkoutView(plan: plan)
+                    WorkoutAccessGate(plan: plan)
                 } else {
                     noCompatiblePlan
                 }

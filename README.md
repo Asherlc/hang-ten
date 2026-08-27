@@ -59,6 +59,26 @@ rtk xcodebuild -project HangTen.xcodeproj \
 All Conductor/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
 
+## Lifetime unlock StoreKit setup
+
+The shared Hang Ten scheme uses
+`HangTen/Resources/HangTen.storekit` for local Run and Test actions. It defines
+`com.hangten.training.lifetime` as a non-consumable with a $2.99 USD test price.
+In Xcode, run the app on an isolated simulator, save two free workouts, start a
+third routine, and use **Debug > StoreKit > Manage Transactions** to inspect,
+refund, or delete the local purchase. Verify both **Unlock for $2.99** and
+**Restore Purchases** transition the retained routine into Session; deleting
+the local transaction should make the paywall appear again.
+
+Before App Store distribution, an authorized App Store Connect operator must
+create a non-consumable for the existing `com.hangten.training` app with product
+ID `com.hangten.training.lifetime`, reference name **Hang Ten Lifetime Unlock**,
+and the $2.99 price tier. Add the product to the release, complete its required
+localization and review metadata, then use a Sandbox Apple Account to exercise
+purchase and Restore Purchases on a signed build. The product has not been
+created by this repository change; App Store Connect and Sandbox setup are an
+external release handoff.
+
 ## GitHub Device Flow release setup
 
 Before distributing a build with board-package GitHub sync, enable Device Flow

@@ -115,6 +115,8 @@
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
 		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
+		AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000005 /* WorkoutPaywallUITests.swift */; };
+		AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000006 /* WorkoutAccessGate.swift */; };
 		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
 		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
@@ -161,6 +163,9 @@
 		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
+		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
 		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
@@ -382,6 +387,7 @@
 				BB0000000000000000000097 /* HoldInspectorView.swift */,
 				BB0000000000000000000098 /* BoardEditorListView.swift */,
 				BB0000000000000000000099 /* GitHubEditorSyncViews.swift */,
+				BF0000000000000000000006 /* WorkoutAccessGate.swift */,
 				BB0000000000000000000092 /* AppSettingsView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
 				BB0000000000000000000032 /* MotherboardViews.swift */,
@@ -399,6 +405,7 @@
 				BB0000000000000000000007 /* Assets.xcassets */,
 				BB0000000000000000000017 /* PlanLibrary.json */,
 				C20000000000000000000001 /* CountdownAudio */,
+				BF0000000000000000000007 /* HangTen.storekit */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -461,6 +468,7 @@
 			children = (
 				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
 				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
+				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -722,6 +730,7 @@
 				AA0000000000000000000097 /* HoldInspectorView.swift in Sources */,
 				AA0000000000000000000098 /* BoardEditorListView.swift in Sources */,
 				AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */,
+				AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */,
 				AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */,
 				AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */,
 				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
@@ -790,6 +799,7 @@
 			files = (
 				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
 				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
+				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
