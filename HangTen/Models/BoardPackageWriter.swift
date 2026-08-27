@@ -694,6 +694,9 @@ enum BoardPackageWriter {
         if command.bendable == true {
             entries.append(("bendable", .bool(true)))
         }
+        if command.smooth == true {
+            entries.append(("smooth", .bool(true)))
+        }
         return .object(entries)
     }
 
