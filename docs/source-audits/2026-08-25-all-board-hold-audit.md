@@ -67,7 +67,7 @@ that optional value. The product URL is the current primary manufacturer page.
 | nature.stoak-board-iii | 7 | edge 6; jug 1 | [manufacturer](https://natureclimbing.com/products/stoak-board-iii) |
 | soill.iron-palm-2 | 8 | edge 3; jug 1; pinch 2; sloper 2 | [manufacturer](https://soillholds.com/products/iron-palm-2-0) |
 | soill.split-palm | 14 | edge 8; jug 2; sloper 4 | [manufacturer](https://soillholds.com/products/split-palm) |
-| soill.training-tiles | 16 | edge 10; pocket 2; sloper 4 | [manufacturer](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin) |
+| soill.training-tiles | 16 | edge 10; pocket 2; sloper 4 | [manufacturer](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin) |
 | target10a.linebreaker-base | 24 | edge 6; jug 2; pocket 12; sloper 4 | [manufacturer](https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html) |
 | tension.flash-board | 7 | edge 7 | [manufacturer](https://tensionclimbing.com/products/flash-board-2) |
 | tension.grindstone | 14 | edge 13; jug 1 | [manufacturer](https://tensionclimbing.com/products/grindstone) |

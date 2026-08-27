@@ -142,6 +142,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
             "kind": {
                 "populated": 1,
                 "verified": 1,
+                "adapted": 0,
                 "unavailable": 0,
                 "notApplicable": 0,
             },
@@ -149,6 +150,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 field: {
                     "populated": 0,
                     "verified": 0,
+                    "adapted": 0,
                     "unavailable": 1,
                     "notApplicable": 0,
                 }
@@ -164,6 +166,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
             "sloper": {
                 "populated": 0,
                 "verified": 0,
+                "adapted": 0,
                 "unavailable": 0,
                 "notApplicable": 1,
             },
@@ -173,6 +176,7 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 "boardID": "fixture.board",
                 "populated": 1,
                 "verified": 1,
+                "adapted": 0,
                 "unavailable": 6,
                 "notApplicable": 1,
                 "unaccountedFields": 0,

@@ -14,7 +14,7 @@ capacity, posture, or feature values unless those facts are explicitly labeled.
 | --- | --- | --- | --- |
 | `soill-iron-palm-2` | `product`: [Iron Palm 2.0 product page](https://soillholds.com/products/iron-palm-2-0); `front-photos`: the product-page gallery | Product identity; slopers, pinches, edges, an incut top rung, thumb catches, and various edge sizes. | The reviewed page did not publish overall dimensions or a numbered/depth hold chart. |
 | `soill-split-palm` | `product`: [Split Palm product page](https://soillholds.com/products/split-palm); `front-photos`: the product-page gallery | Product identity and gallery images. | The reviewed page did not publish dimensions or a numbered hold guide. |
-| `soill-training-tiles` | `product`: [Training Tiles product page](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin); `workouts`: [official workouts](https://soillholds.com/pages/meagan-martin-training-tiles-workouts); `front-photos`: product-page gallery | Product identity, collaboration name, gallery images, and four official workout videos. | The reviewed sources did not publish dimensions or a named/depth hold inventory. |
+| `soill-training-tiles` | `product`: [Training Tiles product page](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin); `front-photos`: product-page gallery | Product identity, approximately 14 × 8 in per tile, and the named eight-contact-per-tile specification. | The product page does not position-map the published sloper and edge values. |
 | `tension-grindstone` | `product`: [Grindstone product page](https://tensionclimbing.com/collections/shop-all/products/grindstone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; full-width jug; 50 mm center edge; 30/25/20/15/10/8 mm edge families. | The reviewed sources did not map every listed depth to a numbered left/right contact. |
 | `tension-honestone` | `product`: [Honestone product page](https://tensionclimbing.com/products/honestone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; 35°/45° top slopers; 25 mm center edge and one-finger pockets; 20/15/10/8 mm edge families. | The reviewed sources listed families rather than a numbered contact map. |
 | `tension-whetstone` | `product`: [Whetstone product page](https://tensionclimbing.com/products/whetstone); `overview`: [Tension hangboards](https://tensionclimbing.com/pages/hangboards) | Overall dimensions; top jug; 40 mm center edge and two-finger pockets; 40/30/25/20 mm edge families. | The reviewed sources did not provide a numbered or dimensioned contact map. |
@@ -160,23 +160,22 @@ draft geometry was restored or used as an input.
 
 ### `soill-training-tiles`
 
-- `product`: [Training Tiles • So iLL x Meagan Martin](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin)
-- `workouts`: [official workout page](https://soillholds.com/pages/meagan-martin-training-tiles-workouts)
-- `front`: [official straight-on image](https://cdn.shopify.com/s/files/1/0424/1145/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960.jpg?v=1677258630)
-- The product description establishes the two-piece collaboration. The current
-  feature metafield establishes each tile at approximately `14 × 8 in` and,
-  per tile, one pocket, two slopers, two slightly positive middle edges, and
-  three bottom flat edges. That freezes exactly eight contacts per tile and
-  sixteen total. The same metafield lists grouped sizes (3-inch pocket depth;
-  54/64 mm slopers; 44/50 mm middle edges; 36/31/24 mm bottom edges), but the
-  straight-on view does not provide a numbered one-to-one mapping for those
-  values. The package therefore uses conservative spatial names and omits the
-  per-hold scalar values rather than guessing the assignment.
+- `product`: [Training Tiles • So iLL x Meagan Martin](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin)
+- **Reviewed 2026-08-26:** The manufacturer specifies each of the two tiles as
+  approximately `14 × 8 in`, with one 3-inch pocket, two slopers
+  (25°/54 mm and 12°/64 mm), two slightly-positive middle edges (44/50 mm),
+  and three bottom flat edges (36/31/24 mm). This fixes the physical inventory
+  at eight contacts per tile and 16 total. The 3-inch top-pocket specification
+  maps one-to-one to `top-pocket-left` and `top-pocket-right`, so each stores
+  `sizeMillimeters: 76.2`. The named count and family map verifies all 16
+  kinds; the source does not identify which sloper or edge has each listed
+  value, so those optional values remain omitted.
 
 ## 2026-08-25 source-audited metadata batch
 
 The seven current product pages and the official gallery views linked above
-were re-opened on 2026-08-25. So iLL's current product HTML still exposes the
+were re-opened on 2026-08-25. Training Tiles was re-reviewed on 2026-08-26
+against its current So iLL Canada product page. So iLL's current product HTML still exposes the
 manufacturer feature text used in the 2026-08-19 addendum: Iron Palm 2.0's
 40/25/15 mm crimp rails, Split Palm's exact 38.1/25.4/12.7/12.7 mm rails per
 piece, and Training Tiles' grouped pocket/sloper/edge measurements. Tension's
@@ -191,14 +190,11 @@ presentations; the other six packages each use one presentation. The overlays
 are review aids only. They did not change geometry or establish a kind or
 measurement.
 
-The standard configured capture was refreshed for this correction. Its normal
-Training Tiles overlay has nearby labels around the upper pockets, so a second,
-review-only Workbench capture at
-`soill.training-tiles--pocket-depth-stable-ids.png` temporarily hid every
-non-pocket overlay in the browser before capture. It visibly and separately
-labels `pocket-left` and `pocket-right`; it did not change the saved paths,
-package, or source image. Together with the product page's `Pocket (3" depth),
-one per tile` text, this establishes the direct two-ID mapping.
+The Training Tiles package retains the existing directly-authored top-region
+paths as the three-piece geometry of each one-per-tile logical pocket. This
+reconciliation did not derive or alter any path from a source image. Together
+with the product page's `Pocket (3" depth), one per tile` text, it establishes
+the direct `top-pocket-left` / `top-pocket-right` mapping.
 
 The tables below are the complete contact-by-contact type audit. Exact
 left/right pairs are grouped only after both visible stable IDs were compared
@@ -251,9 +247,9 @@ No range was collapsed to a scalar value.
 | Split Palm | `Center Flat Rail: 1" (25.4mm)` (one per piece) | `flat-edge-25-left`, `flat-edge-25-right` | `edge` | `sizeMillimeters` 25.4 |
 | Split Palm | `Outer Crimp Rail: 1/2" (12.7mm)` (one per piece) | `outer-crimp-12-left`, `outer-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
 | Split Palm | `Bottom Center Sloping Crimp Rail - 1/2" (12.7mm)` (one per piece) | `bottom-sloping-crimp-12-left`, `bottom-sloping-crimp-12-right` | `edge` | `sizeMillimeters` 12.7 |
-| Training Tiles | `Top: Pocket (3" depth)`, one per tile | `pocket-left`, `pocket-right` | `pocket` | `sizeMillimeters` 76.2; no finger count |
-| Training Tiles | `Top: Slopers: 25° - 54mm; 12° - 64mm`, two per tile | `outer-sloper-left`, `outer-sloper-right`, `inner-sloper-left`, `inner-sloper-right` | `sloper` | none; positions are not numbered |
-| Training Tiles | `Middle: Slightly Positive Edges: 44mm, 50mm`, two per tile | `middle-edge-upper-left`, `middle-edge-upper-right`, `middle-edge-lower-left`, `middle-edge-lower-right` | `edge` | none; positions are not numbered |
+| Training Tiles | `Top: Pocket (3" depth)`, one per tile | `top-pocket-left`, `top-pocket-right` | `pocket` | `sizeMillimeters` 76.2; no finger count |
+| Training Tiles | `Top: Slopers: 25° - 54mm; 12° - 64mm`, two per tile | `upper-sloper-outer-left`, `upper-sloper-outer-right`, `upper-sloper-inner-left`, `upper-sloper-inner-right` | `sloper` | none; positions are not numbered |
+| Training Tiles | `Middle: Slightly Positive Edges: 44mm, 50mm`, two per tile | `middle-edge-outer-left`, `middle-edge-outer-right`, `middle-edge-inner-left`, `middle-edge-inner-right` | `edge` | none; positions are not numbered |
 | Training Tiles | `Bottom Flat Edge: 36mm, 31mm, 24mm`, three per tile | `bottom-edge-outer-left`, `bottom-edge-outer-right`, `bottom-edge-center-left`, `bottom-edge-center-right`, `bottom-edge-inner-left`, `bottom-edge-inner-right` | `edge` | none; positions are not numbered |
 
 ### Field outcomes and retained package data
@@ -281,6 +277,80 @@ already present before this batch. In particular:
   array. Non-pocket finger capacity is recorded as not applicable; every other
   unsupported optional field remains absent with a source-specific ledger
   reason.
+
+## 2026-08-26 legacy Tension Grindstone catalog split
+
+This correction distinguishes the discontinued 2017 **Grindstone** and
+**Grindstone Pro** from the current product, whose stable package ID remains
+`tension.grindstone` and whose display name is now **Grindstone Mk2**. It does
+not make the three boards interchangeable.
+
+### Evidence and asset provenance
+
+- Tension's captured 2017 catalog at
+  [Hangboards](https://www.tensionclimbing.com/hangboards) listed separate
+  routes for the original
+  [`/hangboards/new-board`](https://www.tensionclimbing.com/hangboards/new-board)
+  and the Pro
+  [`/hangboards/grindstone-pro`](https://www.tensionclimbing.com/hangboards/grindstone-pro).
+  Its canonical source image URLs were, respectively,
+  `https://static1.squarespace.com/static/55916a9fe4b0425743f22264/57dc1dfd3e00be77ca9522cf/595d19f178d171084cc33d7f/1505838822493/DSC09255+%281%29.jpg`
+  and
+  `https://static1.squarespace.com/static/55916a9fe4b0425743f22264/57dc1dfd3e00be77ca9522cf/595d1aa8d2b857b047ad46b4/1505839437042/DSC09266.jpg`.
+  Those deleted official CDN objects are preserved here as provenance only;
+  they were not recoverable as images.
+- With explicit user approval, the discontinued boards use non-manufacturer
+  archival photos as provenance references only. Northern Rocks' legacy
+  [Grindstone Pro listing](https://www.northernrocks.co.nz/product/grindstone-pro/)
+  serves its front photo directly at
+  [`tension-climbing-hang-board-grindstone-pro.jpg`](https://www.northernrocks.co.nz/wp-content/uploads/2018/12/tension-climbing-hang-board-grindstone-pro.jpg);
+  despite that legacy listing and file name, the pictured layout is the
+  original Grindstone. Climbing's 2017
+  [Grindstone Pro gift-guide entry](https://www.climbing.com/gear/sponsor-content-climbing-holiday-gift-guide-tension-climbing-grindstone-pro-hangboard/)
+  identifies its board photo, available directly as
+  [`dsc09271.jpg`](https://cdn.climbing.com/wp-content/uploads/2017/11/dsc09271.jpg).
+  These are archival evidence, **not manufacturer assets**, and neither is a
+  package presentation asset. The current primary PNGs are clean, head-on,
+  simplified authored renders for their respective revisions; the archival
+  photos remain provenance references rather than files copied, decoded, or
+  re-encoded into the packages.
+- The official 2017 interview transcript, [A Better Strip of
+  Wood](https://www.powercompanyclimbing.com/blog/2017/7/5/episode-49-a-better-strip-of-wood-with-tension-climbing),
+  maps the original board to 35/30/25/20/15 mm paired edges plus 50 and 22 mm
+  center edges, and confirms its phone slot. The visible front image freezes
+  the twelve selectable edge contacts. The slot is intentionally not modeled
+  as a hold because that source identifies it as a phone feature rather than a
+  climbing contact.
+- The same transcript maps Pro to 35 mm warm-up edges; paired 20/15/10 mm
+  edges; 30 and 22 mm center edges; 45 mm monos; 25 mm two-finger pockets; a
+  7 mm 15-degree incut; and a phone slot. The Pro package preserves that
+  visible utility recess as `phone-slot` so users can identify it, but assigns
+  no unsupported depth or climbing-grip claim to it. Its sixteen visible
+  recesses are the phone slot, two warm-up edges, the 7 mm incut, paired
+  20/15/10 mm edges, two center edges, two monos, and two two-finger pockets.
+  [Gear Institute's 2017
+  coverage](https://gearinstitute.com/sneak-peek-the-climbing-gear-that-wont-be-at-outdoor-retailer/)
+  independently corroborates the Pro's pockets, phone slot, and edge-focused
+  construction.
+- Current [Tension Grindstone](https://tensionclimbing.com/products/grindstone)
+  documentation establishes that `tension.grindstone` is the successor board
+  with the 8–50 mm Mk2 layout. That package's existing stable ID remains
+  unchanged; only its user-facing name was clarified.
+
+### Field mapping and deliberate geometry
+
+The archival photos support human review of the visible contact boundaries and
+spatial placement of every listed hold. Every normalized closed path was
+deliberately authored as independent geometry: no archival or rendered image
+was traced, registered, aligned, segmented, vectorized, or otherwise used to
+derive a path. Regular edge recesses use a human-selected pill constraint and
+regular pockets use a human-selected oval constraint; these constraints are
+editing metadata only and the saved paths remain the highlight and hit-test
+source of truth. The Pro is visibly asymmetric, so its left and right paths
+were drawn independently. The original board is symmetric in the source view,
+and its paired paths were mirrored after direct review. No dimensions are
+recorded because the historical manufacturer material reviewed here does not
+publish them.
 
 ## 2026-08-26 Iron Palm 2.0 presentation-asset correction
 
