@@ -1762,6 +1762,103 @@
       "presentationID": "primary",
       "fingerCapacity": 1,
       "handCapacity": 1
+    },
+    {
+      "id": "hold-28",
+      "name": "Hold 28",
+      "kind": "pocket",
+      "fingerCapacity": 1,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.742068973307,
+            "y": 0.553275880859,
+            "width": 0.024579727865,
+            "height": 0.036869591797
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.223857619796,
+                  0.0
+                ],
+                "control2": [
+                  0.0,
+                  0.223857619796
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.776142380204
+                ],
+                "control2": [
+                  0.223857619796,
+                  1.0
+                ],
+                "to": [
+                  0.5,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.776142380204,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.776142380204
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.223857619796
+                ],
+                "control2": [
+                  0.776142380204,
+                  0.0
+                ],
+                "to": [
+                  0.5,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "shapeConstraint": {
+            "shape": "circle",
+            "rotationDegrees": 0.0
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
