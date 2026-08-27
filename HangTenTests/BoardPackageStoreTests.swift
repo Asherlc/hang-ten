@@ -14,7 +14,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
-        XCTAssertEqual(board.dimensions, "")
+        XCTAssertNil(board.dimensions)
     }
 
     func testStoreRejectsExplicitlyEmptyDimensions() throws {

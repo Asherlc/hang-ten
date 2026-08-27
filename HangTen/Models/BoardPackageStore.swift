@@ -820,7 +820,7 @@ private struct BoardPackageBoardDocument: Decodable {
             manufacturer: manufacturer,
             name: name,
             subtitle: subtitle,
-            dimensions: dimensions ?? "",
+            dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
             holds: holds,
             semanticHolds: [:],
