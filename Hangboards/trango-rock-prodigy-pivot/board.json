@@ -204,7 +204,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "variable-edge-right",
@@ -323,7 +324,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "medium-crimp-left",
@@ -4644,7 +4646,8 @@
           }
         }
       ],
-      "presentationID": "orientation-1"
+      "presentationID": "orientation-1",
+      "handCapacity": 1
     },
     {
       "id": "hold-12",
