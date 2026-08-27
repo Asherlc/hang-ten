@@ -44,8 +44,8 @@ that optional value. The product URL is the current primary manufacturer page.
 
 | Package | IDs | Kind counts | Source |
 | --- | ---: | --- | --- |
-| beastmaker-1000 | 22 | jug 2; pocket 17; sloper 3 | [manufacturer](https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series) |
-| beastmaker-2000 | 27 | edge 3; pocket 19; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series) |
+| beastmaker-1000 | 22 | edge 7; jug 2; pocket 10; sloper 3 | [manufacturer](https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series); [positioned secondary comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000) |
+| beastmaker-2000 | 27 | edge 6; pocket 16; sloper 5 | [manufacturer](https://www.beastmaker.co.uk/products/beastmaker-2000-series); [positioned secondary comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000) |
 | dewoodstok-woodbord | 17 | pocket 16; sloper 1 | [manufacturer](https://www.dewoodstok.nl/product/hangboard-woodbord/) |
 | escape-beta-22 | 22 | edge 8; jug 4; pinch 4; sloper 6 | [manufacturer](https://escapeclimbing.com/products/ec72100) |
 | escape.unlimited | 7 | edge 6; sloper 1 | [manufacturer](https://escapeclimbing.com/products/ec72000) |
@@ -67,7 +67,7 @@ that optional value. The product URL is the current primary manufacturer page.
 | nature.stoak-board-iii | 7 | edge 6; jug 1 | [manufacturer](https://natureclimbing.com/products/stoak-board-iii) |
 | soill.iron-palm-2 | 8 | edge 3; jug 1; pinch 2; sloper 2 | [manufacturer](https://soillholds.com/products/iron-palm-2-0) |
 | soill.split-palm | 14 | edge 8; jug 2; sloper 4 | [manufacturer](https://soillholds.com/products/split-palm) |
-| soill.training-tiles | 16 | edge 10; pocket 2; sloper 4 | [manufacturer](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin) |
+| soill.training-tiles | 16 | edge 10; pocket 2; sloper 4 | [manufacturer](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin) |
 | target10a.linebreaker-base | 24 | edge 6; jug 2; pocket 12; sloper 4 | [manufacturer](https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html) |
 | tension.flash-board | 7 | edge 7 | [manufacturer](https://tensionclimbing.com/products/flash-board-2) |
 | tension.grindstone | 14 | edge 13; jug 1 | [manufacturer](https://tensionclimbing.com/products/grindstone) |
@@ -89,12 +89,17 @@ that optional value. The product URL is the current primary manufacturer page.
 | zlagboard.evo | 21 | edge 7; jug 2; sloper 12 | [manufacturer](https://www.zlagboard.com/hangboards) |
 | zlagboard.pro | 28 | edge 14; jug 2; sloper 12 | [manufacturer](https://www.zlagboard.com/hangboards) |
 
-## Corrected mapping: Beastmaker 2000
+## Corrected mapping: Beastmaker 1000 and 2000
+
+The positioned [secondary comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000)
+now maps exact front contacts for both Beastmakers. Its values and finger labels
+are recorded as secondary provenance in the metadata ledger, not as
+manufacturer claims. The complete stable-ID mapping and the two diagram/text
+source-conflict rulings—1000 outer pair **10 vs 15 mm** and 2000 lower-center
+edge **22 vs 21 mm**—are documented in the [Beastmaker source audit](2026-08-12-beastmaker-board-packages.md).
 
 `front-lower-9` is the direct geometry mirror of `front-lower-1`. The
-manufacturer's plural “Big and little edges” inventory supports classifying
-both mirrored outer lower contacts as edges, so `front-lower-9.kind` is
-`edge` rather than `pocket`.
+positioned map also establishes all of the explicitly labelled mirrored pairs.
 
 ## Corrected mapping: Metolius Contact
 

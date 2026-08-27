@@ -176,7 +176,7 @@ struct BoardPackageStore {
             }
             let holds = try Self.validateHolds(
                 in: boardDocument,
-                presentationIDs: Set(presentations.map(\.id))
+                presentations: presentations
             )
             guard seenBoardIDs.insert(boardDocument.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
@@ -572,6 +572,21 @@ struct BoardPackageStore {
                 in: packageURL
             )
         }
+        let presentationsByID = Dictionary(
+            uniqueKeysWithValues: presentations.map { ($0.id, $0) }
+        )
+        for presentation in presentations {
+            if let sourcePresentationID = presentation.sourcePresentationID {
+                guard sourcePresentationID != presentation.id,
+                      let sourcePresentation = presentationsByID[sourcePresentationID],
+                      sourcePresentation.sourcePresentationID == nil else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "presentation \(presentation.id) must reference a canonical presentation"
+                    )
+                }
+            }
+        }
         guard defaultCount == 1 else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
@@ -619,8 +634,14 @@ struct BoardPackageStore {
 
     private static func validateHolds(
         in document: BoardPackageBoardDocument,
-        presentationIDs: Set<String>
+        presentations: [BoardPackagePresentationDocument]
     ) throws -> [BoardHold] {
+        let presentationIDs = Set(presentations.map(\.id))
+        let canonicalPresentationIDs = Set(
+            presentations
+                .filter { $0.sourcePresentationID == nil }
+                .map(\.id)
+        )
         var holdIDs = Set<String>()
         var holds: [BoardHold] = []
         for hold in document.holds {
@@ -641,6 +662,12 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "hold \(hold.id) has an unknown presentationID"
+                )
+            }
+            guard canonicalPresentationIDs.contains(hold.presentationID) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) must be owned by a canonical presentation"
                 )
             }
             if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
@@ -768,9 +795,7 @@ private struct BoardPackageBoardDocument: Decodable {
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
         productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = container.contains(.dimensions)
-            ? try container.decode(String.self, forKey: .dimensions)
-            : nil
+        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         presentations = try container.decode(
             [BoardPackagePresentationDocument].self,
@@ -812,6 +837,8 @@ private struct BoardPackagePresentationDocument: Decodable {
     let assetPath: String
     let aspectRatio: Double
     let isDefault: Bool
+    let sourcePresentationID: String?
+    let isInverted: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -819,16 +846,26 @@ private struct BoardPackagePresentationDocument: Decodable {
         case assetPath
         case aspectRatio
         case isDefault = "default"
+        case sourcePresentationID
+        case isInverted
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "name", "assetPath", "aspectRatio", "default"])
+        try decoder.rejectUnknownKeys([
+            "id", "name", "assetPath", "aspectRatio", "default",
+            "sourcePresentationID", "isInverted"
+        ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         assetPath = try container.decode(String.self, forKey: .assetPath)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         isDefault = try container.decode(Bool.self, forKey: .isDefault)
+        sourcePresentationID = try container.decodeIfPresent(
+            String.self,
+            forKey: .sourcePresentationID
+        )
+        isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
     }
 
     var trainingPresentation: BoardPresentation {
@@ -836,7 +873,9 @@ private struct BoardPackagePresentationDocument: Decodable {
             id: id,
             name: name,
             aspectRatio: CGFloat(aspectRatio),
-            isDefault: isDefault
+            isDefault: isDefault,
+            sourcePresentationID: sourcePresentationID,
+            isInverted: isInverted
         )
     }
 }

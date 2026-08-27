@@ -25,15 +25,15 @@ EXPECTED_KINDS = {
     **{f"top-sloper-{index}": "sloper" for index in range(1, 5)},
     "front-upper-1": "pocket",
     "front-upper-2": "pocket",
-    "front-middle-1": "pocket",
+    "front-middle-1": "edge",
     "front-middle-2": "pocket",
     "front-middle-3": "pocket",
     "front-middle-4": "pocket",
-    "front-middle-5": "pocket",
+    "front-middle-5": "edge",
     "front-middle-6": "pocket",
     "front-middle-7": "pocket",
     "front-middle-8": "pocket",
-    "front-middle-9": "pocket",
+    "front-middle-9": "edge",
     "front-lower-1": "edge",
     "front-lower-2": "pocket",
     "front-lower-3": "pocket",
@@ -598,8 +598,8 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     assert {hold_id: hold.kind for hold_id, hold in holds.items()} == EXPECTED_KINDS
     assert Counter(hold.kind for hold in holds.values()) == {
         "sloper": 5,
-        "edge": 3,
-        "pocket": 19,
+        "edge": 6,
+        "pocket": 16,
     }
 
     for hold in holds.values():
@@ -651,18 +651,12 @@ def test_beastmaker_2000_inventory_shapes_and_symmetry() -> None:
     assert 0 < symmetry_axis_x < presentation_size[0]
 
 
-def test_beastmaker_2000_omits_unpositioned_optional_metadata() -> None:
+def test_beastmaker_2000_omits_unsupported_optional_metadata() -> None:
     holds = {
         hold.id: hold for hold in load_board_package(PACKAGE_ROOT).board.holds
     }
 
-    assert {
-        hold.id: hold.size_millimeters
-        for hold in holds.values()
-        if hold.size_millimeters is not None
-    } == {"front-lower-5": 22}
     assert all(hold.depth_range_millimeters is None for hold in holds.values())
-    assert all(hold.finger_capacity is None for hold in holds.values())
     assert all(hold.hand_capacity is None for hold in holds.values())
     assert all(hold.grip_type is None for hold in holds.values())
     assert all(hold.features is None for hold in holds.values())

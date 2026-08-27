@@ -160,3 +160,36 @@ The grouped angle labels are not depth measurements, and the source publishes
 no exact per-contact range, simultaneous hand capacity, supported grip enum, or
 closed feature-tag array. These blanks are intentional evidence boundaries,
 not incomplete metadata.
+
+## 2026-08-26 correction: positioned secondary mappings and primary conflicts
+
+This correction supersedes the current-state conclusions in the dated sections
+above; it does not alter their historical evidence record. The packages and
+ledger now use the positioned secondary mapping from [The Hangboard Beastmaker
+1000/2000 comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000)
+where it does not conflict with primary evidence. No stable ID, canonical path,
+or geometry changed.
+
+### Beastmaker 1000
+
+The comparison diagram identifies `pocket-top-{left,right}` (#2) as 30 mm
+three-finger **edges**, not pockets. Their runtime `kind` is consequently
+`edge`, and `fingerCapacity` is absent/not applicable; the retained stable IDs
+are historical identifiers, not type evidence.
+
+The same secondary diagram identifies `pocket-top-outer-{left,right}` (#1) as
+15 mm. The official [Beastmaker 1000 product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series)
+instead specifies its two small four-finger pockets as 10 mm. The ledger records
+both facts and retains the primary **10 mm** runtime value for this mapped pair.
+
+The secondary diagram and textual list both label `pocket-middle-center` (#6)
+as a 50 mm four-finger edge.
+
+### Beastmaker 2000
+
+The secondary diagram and textual list both label `front-middle-5` (#6) as a
+50 mm four-finger edge. Separately, the
+user-provided annotated 2000 diagram received on 2026-08-26 labels
+`front-lower-5` **21 mm**. The official [Beastmaker 2000 product page](https://www.beastmaker.co.uk/products/beastmaker-2000-series)
+specifies the lower-center edge as **22 mm**; the runtime value remains 22 mm.
+The ledger's manufacturer provenance explicitly records the 21-vs-22 conflict.

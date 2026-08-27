@@ -144,6 +144,19 @@ def test_parser_declares_a_disjoint_sloper_only_board_scope(tmp_path: Path) -> N
     assert ledger.sloper_only_board_ids == ("supplemental.board",)
 
 
+def test_parser_preserves_secondary_source_provenance(tmp_path: Path) -> None:
+    record = verified("fixture.board", "hold-left", "kind", "jug")
+    source = record["source"]
+    assert isinstance(source, dict)
+    source["kind"] = "secondary"
+    source["label"] = "Fixture community measurement"
+
+    ledger = load_metadata_ledger(_write_ledger(tmp_path, [record]))
+
+    assert ledger.records[0].source.kind == "secondary"
+    assert ledger.records[0].source.label == "Fixture community measurement"
+
+
 def test_parser_rejects_board_in_full_and_sloper_only_scopes(tmp_path: Path) -> None:
     ledger_path = _write_ledger(
         tmp_path,
@@ -195,6 +208,7 @@ def test_sloper_only_scope_requires_exactly_one_record_per_hold(tmp_path: Path) 
         "boardID": "supplemental.board",
         "populated": 0,
         "verified": 0,
+        "adapted": 0,
         "unavailable": 1,
         "notApplicable": 1,
         "unaccountedFields": 0,
@@ -231,7 +245,7 @@ def test_sloper_only_scope_rejects_swapped_sloper_outcomes(tmp_path: Path) -> No
         (
             "notApplicable",
             "notApplicable",
-            "sloper fixture.board/sloper-left must be verified or unavailable",
+            "sloper fixture.board/sloper-left must be verified, adapted, or unavailable",
         ),
         (
             "unavailable",
@@ -423,6 +437,7 @@ def test_sloper_ledger_verified_value_matches_flat_hold(tmp_path: Path) -> None:
     assert report.fields["sloper"].to_json() == {
         "populated": 1,
         "verified": 1,
+        "adapted": 0,
         "unavailable": 0,
         "notApplicable": 0,
     }
@@ -479,6 +494,7 @@ def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
     assert report.fields["sloper"].to_json() == {
         "populated": 0,
         "verified": 0,
+        "adapted": 0,
         "unavailable": 1,
         "notApplicable": 0,
     }
@@ -568,20 +584,21 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
         "reviewedBoardIDs": ["fixture.board"],
         "sloperOnlyBoardIDs": [],
         "fields": {
-            "kind": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "sizeMillimeters": {"populated": 1, "verified": 1, "unavailable": 1, "notApplicable": 0},
-            "depthRangeMillimeters": {"populated": 1, "verified": 1, "unavailable": 1, "notApplicable": 0},
-            "fingerCapacity": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "handCapacity": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "gripType": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "features": {"populated": 2, "verified": 2, "unavailable": 0, "notApplicable": 0},
-            "sloper": {"populated": 0, "verified": 0, "unavailable": 0, "notApplicable": 2},
+            "kind": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "sizeMillimeters": {"populated": 1, "verified": 1, "adapted": 0, "unavailable": 1, "notApplicable": 0},
+            "depthRangeMillimeters": {"populated": 1, "verified": 1, "adapted": 0, "unavailable": 1, "notApplicable": 0},
+            "fingerCapacity": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "handCapacity": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "gripType": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "features": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "sloper": {"populated": 0, "verified": 0, "adapted": 0, "unavailable": 0, "notApplicable": 2},
         },
         "boards": [
             {
                 "boardID": "fixture.board",
                 "populated": 12,
                 "verified": 12,
+                "adapted": 0,
                 "unavailable": 2,
                 "notApplicable": 2,
                 "unaccountedFields": 0,
@@ -628,6 +645,7 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
 
     assert report.reviewed_board_ids == (
         "beastmaker-1000",
+        "beastmaker-2000",
         "dewoodstok-woodbord",
         "escape-beta-22",
         "escape.unlimited",
@@ -671,21 +689,22 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
         "zlagboard.evo",
         "zlagboard.pro",
     )
-    assert report.sloper_only_board_ids == ("beastmaker-2000",)
+    assert report.sloper_only_board_ids == ()
     assert all(board.unaccounted_fields == 0 for board in report.boards)
     assert next(
         board for board in report.boards if board.board_id == "beastmaker-2000"
     ).to_json() == {
         "boardID": "beastmaker-2000",
-        "populated": 0,
-        "verified": 0,
-        "unavailable": 5,
-        "notApplicable": 22,
+        "populated": 65,
+        "verified": 65,
+        "adapted": 0,
+        "unavailable": 118,
+        "notApplicable": 33,
         "unaccountedFields": 0,
     }
 
 
-def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> None:
+def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = discover_board_packages(repository_root / "Hangboards")
     packages = {package.board.id: package.board for package in inventory.packages}
@@ -698,38 +717,35 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> N
     } == {
         "jug": {"jug-left", "jug-right"},
         "sloper": {"sloper-35-left", "sloper-center", "sloper-35-right"},
-        "pocket": {
+        "edge": {
             "pocket-top-outer-left",
             "pocket-top-outer-right",
             "pocket-top-left",
             "pocket-top-right",
             "pocket-middle-outer-left",
-            "pocket-middle-mid-left",
-            "pocket-middle-inner-left",
             "pocket-middle-center",
-            "pocket-middle-inner-right",
-            "pocket-middle-mid-right",
             "pocket-middle-outer-right",
             "pocket-bottom-outer-left",
+            "pocket-bottom-outer-right",
+        },
+        "pocket": {
+            "pocket-middle-mid-left",
+            "pocket-middle-inner-left",
+            "pocket-middle-inner-right",
+            "pocket-middle-mid-right",
             "pocket-bottom-mid-left",
             "pocket-bottom-inner-left",
             "pocket-bottom-inner-right",
             "pocket-bottom-mid-right",
-            "pocket-bottom-outer-right",
         },
     }
     assert next(hold for hold in board.holds if hold.id == "sloper-center").name == (
         "20 Degree Center Sloper"
     )
-    assert all(
-        hold.size_millimeters is None
-        and hold.depth_range_millimeters is None
-        and hold.finger_capacity is None
-        and hold.hand_capacity is None
-        and hold.grip_type is None
-        and hold.features is None
-        for hold in board.holds
-    )
+    assert all(hold.depth_range_millimeters is None for hold in board.holds)
+    assert all(hold.hand_capacity is None for hold in board.holds)
+    assert all(hold.grip_type is None for hold in board.holds)
+    assert all(hold.features is None for hold in board.holds)
 
 
 def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
@@ -939,7 +955,7 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
     }
 
 
-def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:
+def test_training_tiles_contacts_keep_only_source_mapped_pocket_measurements() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     ledger_path = (
         repository_root
@@ -953,14 +969,34 @@ def test_training_tiles_pockets_have_source_mapped_three_inch_depth() -> None:
         if package.board.id == "soill.training-tiles"
     )
 
+    assert len(package.board.holds) == 16
     assert {
         hold.id: hold.size_millimeters
         for hold in package.board.holds
-        if hold.id in {"pocket-left", "pocket-right"}
-    } == {"pocket-left": 76.2, "pocket-right": 76.2}
-    assert next(
+        if hold.kind == "pocket"
+    } == {
+        "top-pocket-left": 76.2,
+        "top-pocket-right": 76.2,
+    }
+    assert all(
+        hold.size_millimeters is None
+        and hold.depth_range_millimeters is None
+        and hold.finger_capacity is None
+        and hold.hand_capacity is None
+        and hold.grip_type is None
+        and hold.features is None
+        for hold in package.board.holds
+        if hold.kind != "pocket"
+    )
+    coverage = next(
         board for board in report.boards if board.board_id == "soill.training-tiles"
-    ).populated == 18
+    )
+    assert (coverage.verified, coverage.adapted, coverage.unavailable, coverage.not_applicable) == (
+        18,
+        0,
+        84,
+        26,
+    )
 
 
 def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:

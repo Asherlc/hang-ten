@@ -314,8 +314,9 @@
     },
     {
       "id": "pocket-top-outer-left",
-      "name": "Pocket Top Outer Left",
-      "kind": "pocket",
+      "sizeMillimeters": 10,
+      "name": "10 mm 4 Finger Edge Left",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -423,8 +424,9 @@
     },
     {
       "id": "pocket-top-outer-right",
-      "name": "Pocket Top Outer Right",
-      "kind": "pocket",
+      "sizeMillimeters": 10,
+      "name": "10 mm 4 Finger Edge Right",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -532,8 +534,9 @@
     },
     {
       "id": "pocket-top-left",
-      "name": "Pocket Top Left",
-      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "name": "30 mm 3 Finger Edge Left",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -641,8 +644,9 @@
     },
     {
       "id": "pocket-top-right",
-      "name": "Pocket Top Right",
-      "kind": "pocket",
+      "sizeMillimeters": 30,
+      "name": "30 mm 3 Finger Edge Right",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -750,8 +754,9 @@
     },
     {
       "id": "pocket-middle-outer-left",
+      "sizeMillimeters": 45,
       "name": "Pocket Middle Outer Left",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -859,6 +864,8 @@
     },
     {
       "id": "pocket-middle-mid-left",
+      "sizeMillimeters": 50,
+      "fingerCapacity": 2,
       "name": "Pocket Middle Mid Left",
       "kind": "pocket",
       "geometry": [
@@ -968,6 +975,8 @@
     },
     {
       "id": "pocket-middle-inner-left",
+      "sizeMillimeters": 45,
+      "fingerCapacity": 3,
       "name": "Pocket Middle Inner Left",
       "kind": "pocket",
       "geometry": [
@@ -1077,8 +1086,9 @@
     },
     {
       "id": "pocket-middle-center",
-      "name": "Pocket Middle Center",
-      "kind": "pocket",
+      "sizeMillimeters": 50,
+      "name": "50 mm 4 Finger Edge Center",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -1186,6 +1196,8 @@
     },
     {
       "id": "pocket-middle-inner-right",
+      "sizeMillimeters": 45,
+      "fingerCapacity": 3,
       "name": "Pocket Middle Inner Right",
       "kind": "pocket",
       "geometry": [
@@ -1295,6 +1307,8 @@
     },
     {
       "id": "pocket-middle-mid-right",
+      "sizeMillimeters": 50,
+      "fingerCapacity": 2,
       "name": "Pocket Middle Mid Right",
       "kind": "pocket",
       "geometry": [
@@ -1404,8 +1418,9 @@
     },
     {
       "id": "pocket-middle-outer-right",
+      "sizeMillimeters": 45,
       "name": "Pocket Middle Outer Right",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -1513,8 +1528,9 @@
     },
     {
       "id": "pocket-bottom-outer-left",
+      "sizeMillimeters": 20,
       "name": "Pocket Bottom Outer Left",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -1622,6 +1638,8 @@
     },
     {
       "id": "pocket-bottom-mid-left",
+      "sizeMillimeters": 25,
+      "fingerCapacity": 2,
       "name": "Pocket Bottom Mid Left",
       "kind": "pocket",
       "geometry": [
@@ -1731,6 +1749,8 @@
     },
     {
       "id": "pocket-bottom-inner-left",
+      "sizeMillimeters": 20,
+      "fingerCapacity": 3,
       "name": "Pocket Bottom Inner Left",
       "kind": "pocket",
       "geometry": [
@@ -1840,6 +1860,8 @@
     },
     {
       "id": "pocket-bottom-inner-right",
+      "sizeMillimeters": 20,
+      "fingerCapacity": 3,
       "name": "Pocket Bottom Inner Right",
       "kind": "pocket",
       "geometry": [
@@ -1949,6 +1971,8 @@
     },
     {
       "id": "pocket-bottom-mid-right",
+      "sizeMillimeters": 25,
+      "fingerCapacity": 2,
       "name": "Pocket Bottom Mid Right",
       "kind": "pocket",
       "geometry": [
@@ -2058,8 +2082,9 @@
     },
     {
       "id": "pocket-bottom-outer-right",
+      "sizeMillimeters": 20,
       "name": "Pocket Bottom Outer Right",
-      "kind": "pocket",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {

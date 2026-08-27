@@ -10,6 +10,16 @@ contacts with the physical contact named by each manufacturer. It is a metadata
 audit only: no measurement, finger count, or hold kind was inferred from a
 render or photograph.
 
+> **2026-08-26 correction:** the historical Beastmaker conclusions below are
+> superseded for the two Beastmaker packages by a manually positioned
+> [secondary comparison source](https://thehangboard.com/pages/beastmaker-1000-vs-2000).
+> The current [Beastmaker audit](2026-08-12-beastmaker-board-packages.md)
+> maps its labelled values and capacities to stable IDs, records them as
+> secondary provenance in the existing ledger, and documents the 1000 center
+> 1000 outer-pair 10-vs-15 mm and 2000 lower-center 22-vs-21 mm
+> primary/secondary discrepancies. No value
+> is assigned to a jug or sloper from that source.
+
 ## Result
 
 `kind` is complete: all 697 current hold records have one of the schema's five

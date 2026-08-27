@@ -99,9 +99,11 @@ struct TrainView: View {
                 Text(store.selectedBoard.name)
                     .font(.system(size: 21, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
-                Text(store.selectedBoard.dimensions)
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
+                if let dimensions = store.selectedBoard.dimensions {
+                    Text(dimensions)
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                }
             }
 
             HStack(spacing: 16) {
@@ -200,9 +202,11 @@ struct BoardDetailView: View {
                     Text(board.name)
                         .font(.system(size: 28, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    Text(board.dimensions)
-                        .font(.system(size: 14, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
+                    if let dimensions = board.dimensions {
+                        Text(dimensions)
+                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                    }
                 }
 
                 BoardDetailMapView(
@@ -400,9 +404,11 @@ private struct BoardPickerCard: View {
                                 Text(board.name)
                                     .font(.system(size: 18, weight: .bold, design: .rounded))
                                     .foregroundStyle(Color.hangInk)
-                                Text(board.dimensions)
-                                    .font(.system(size: 13, weight: .medium, design: .rounded))
-                                    .foregroundStyle(Color.hangMuted)
+                                if let dimensions = board.dimensions {
+                                    Text(dimensions)
+                                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                                        .foregroundStyle(Color.hangMuted)
+                                }
                             }
 
                             Spacer()

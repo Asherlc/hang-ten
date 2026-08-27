@@ -26,31 +26,32 @@ is the supported Beta Board package.
 ### `beastmaker-1000`
 
 - **Sources:** [Beastmaker 1000 Series](https://www.beastmaker.co.uk/products/beastmaker-1000-series);
-  [Beastmaker FAQ](https://www.beastmaker.co.uk/pages/faq);
-  [Beech variant](https://www.beastmaker.co.uk/products/beastmaker-1000-beech)
-  (cross-variant corroboration for the 58 mm depth only).
+  [positioned secondary comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000).
 - **Current JSON holds:** 22.
 - **Source-backed expected physical count:** 22.
 - **Verified facts:** generic/Tulipwood Beastmaker 1000; `580 × 150 × 58 mm`.
   The separate Beech page corroborates only the shared 58 mm depth, not this
   package's product identity.
-- **Discrepancy:** the physical-region count is aligned, but current per-pocket
-  millimetre fields are not mapped one-to-one by the manufacturer.
-- **Action:** `correct` — retain the 22 regions and omit those unsupported
-  per-pocket measurements.
+- **Discrepancy:** the secondary source's positioned diagram and textual list
+  both identify the exact center contact as a 50 mm four-finger edge. Its outer
+  #1 pair instead conflicts with the primary 10 mm product-page specification;
+  the primary value is retained.
+- **Action:** retain the 22 regions and map the 17 labelled front contacts as
+  secondary evidence; leave jugs/slopers unmeasured.
 
 ### `beastmaker-2000`
 
-- **Source:** [Beastmaker 2000 Series](https://www.beastmaker.co.uk/products/beastmaker-2000-series).
-- **Current JSON holds:** 25.
-- **Source-backed expected physical count:** 25.
-- **Verified facts:** Beastmaker 2000; `580 × 150 × 58 mm`. The grouped source
-  inventory supports hold kinds; the clearly central lower edge is the official
-  22 mm middle edge.
-- **Discrepancy:** current image-derived millimetre values are not mapped
-  one-to-one by the manufacturer.
-- **Action:** `correct` — retain 25 regions, preserve only the clearly mapped
-  22 mm fact, and remove unsupported derived values.
+- **Sources:** [Beastmaker 2000 Series](https://www.beastmaker.co.uk/products/beastmaker-2000-series);
+  [positioned secondary comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000).
+- **Current JSON holds:** 27.
+- **Source-backed expected physical count:** 27.
+- **Verified facts:** Beastmaker 2000; `580 × 150 × 58 mm`; manufacturer-backed
+  lower center 22 mm edge, plus secondary positioned front-contact values.
+- **Discrepancy:** the secondary source's positioned diagram and textual list
+  both identify `front-middle-5` as a 50 mm four-finger edge. The separate
+  primary 22 mm lower-center edge remains unchanged despite a user-provided
+  secondary 21 mm annotation.
+- **Action:** retain all 27 current regions and map only the diagrammed values.
 
 ### `dewoodstok-woodbord`
 
@@ -278,13 +279,14 @@ none of the removed art or geometry was restored as a starting point.
 
 ### `soill-training-tiles`
 
-- **Sources:** [So iLL x Meagan Martin Training Tiles](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin);
-  [Training Tiles workouts](https://soillholds.com/pages/meagan-martin-training-tiles-workouts).
+- **Source / review:** [So iLL Canada x Meagan Martin Training Tiles](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin),
+  re-reviewed 2026-08-26.
 - **Current JSON holds:** 16.
 - **Source-backed expected physical count:** 16.
-- **Verified facts:** So iLL x Meagan Martin Training Tiles; each tile is
-  approximately `14 × 8 in`; the manufacturer enumerates eight contacts per
-  tile.
+- **Verified facts:** each tile is approximately `14 × 8 in`; the manufacturer
+  enumerates one 3-inch pocket, two slopers, two middle edges, and three bottom
+  edges per tile. The logical pockets are directly mapped to the one-per-tile
+  source statement and retain the exact `76.2 mm` conversion.
 - **Discrepancy:** resolved; grouped size values without a one-to-one location
   mapping remain omitted from individual holds.
 - **Action:** directly authored and visually reviewed; retain as complete.
