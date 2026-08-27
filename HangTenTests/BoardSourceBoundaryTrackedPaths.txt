@@ -30,10 +30,12 @@ HangTen/Models/PlanFilters.swift
 HangTen/Models/PlanStorage.swift
 HangTen/Models/PostHogTelemetry.swift
 HangTen/Models/ProgressorProtocol.swift
+HangTen/Models/PurchaseManager.swift
 HangTen/Models/SimulatedMotherboardTransport.swift
 HangTen/Models/Telemetry.swift
 HangTen/Models/TrainingModels.swift
 HangTen/Models/WHC06Protocol.swift
+HangTen/Models/WorkoutAccessStore.swift
 HangTen/Models/WorkoutActivityRecording.swift
 HangTen/Models/WorkoutAudioCoach.swift
 HangTen/Models/WorkoutHistory.swift
