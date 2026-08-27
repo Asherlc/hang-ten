@@ -1080,7 +1080,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         await purchases.prepare()
         let store = AppStore(defaults: defaults, purchaseManager: purchases)
 
-        XCTAssertEqual(purchases.state, .failed)
+        XCTAssertEqual(purchases.state, .productLoadFailed)
         XCTAssertEqual(store.workoutLaunchDecision, .allowed)
     }
 

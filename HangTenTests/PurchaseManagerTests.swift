@@ -83,7 +83,7 @@ final class PurchaseManagerTests: XCTestCase {
         await manager.restore()
 
         XCTAssertFalse(manager.hasLifetimeEntitlement)
-        XCTAssertEqual(manager.state, .idle)
+        XCTAssertEqual(manager.state, .nothingToRestore)
     }
 
     func testPrepareRefreshesVerifiedEntitlementWhenProductMetadataLoadFails() async {
@@ -100,7 +100,25 @@ final class PurchaseManagerTests: XCTestCase {
         await manager.prepare()
 
         XCTAssertTrue(manager.hasLifetimeEntitlement)
-        XCTAssertEqual(manager.state, .failed)
+        XCTAssertEqual(manager.state, .productLoadFailed)
+    }
+
+    func testPrepareCanReloadProductAfterTransientMetadataFailure() async {
+        let client = FakeStoreKitClient(productLoadError: TestError.failed)
+        let manager = PurchaseManager(client: client)
+
+        await manager.prepare()
+
+        XCTAssertNil(manager.product)
+        XCTAssertFalse(manager.hasLifetimeEntitlement)
+        XCTAssertEqual(manager.state, .productLoadFailed)
+
+        client.productLoadError = nil
+        await manager.prepare()
+
+        XCTAssertEqual(manager.product?.displayPrice, "$2.99")
+        XCTAssertFalse(manager.hasLifetimeEntitlement)
+        XCTAssertEqual(manager.state, .idle)
     }
 
     func testRestoreUnlocksLifetimeAccessWhenCurrentEntitlementIsVerified() async {
@@ -113,6 +131,26 @@ final class PurchaseManagerTests: XCTestCase {
 
         XCTAssertTrue(manager.hasLifetimeEntitlement)
         XCTAssertEqual(manager.state, .idle)
+    }
+
+    func testCompletedRestoreWithoutEntitlementReportsNothingToRestore() async {
+        let manager = PurchaseManager(client: FakeStoreKitClient())
+
+        await manager.restore()
+
+        XCTAssertFalse(manager.hasLifetimeEntitlement)
+        XCTAssertEqual(manager.state, .nothingToRestore)
+    }
+
+    func testFailedRestoreReportsRestoreFailureWithoutUnlockingAccess() async {
+        let manager = PurchaseManager(
+            client: FakeStoreKitClient(restoreResult: .failure(TestError.failed))
+        )
+
+        await manager.restore()
+
+        XCTAssertFalse(manager.hasLifetimeEntitlement)
+        XCTAssertEqual(manager.state, .restoreFailed)
     }
 
     func testPendingPurchaseRemainsVisibleToThePaywall() async {
@@ -233,7 +271,7 @@ final class FakeStoreKitClient: StoreKitClient {
     let purchaseResult: StoreKitPurchaseResult
     let restoreResult: Result<Void, Error>
     let updates: [StoreKitTransaction]
-    let productLoadError: Error?
+    var productLoadError: Error?
     private(set) var finishedTransactionIDs: [UInt64] = []
     private(set) var isObservingUpdates = false
     private var updateContinuation: AsyncStream<StoreKitTransaction>.Continuation?

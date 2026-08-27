@@ -24,4 +24,23 @@ final class WorkoutAccessStoreTests: XCTestCase {
         XCTAssertEqual(store.freeWorkoutsUsed, 0)
         XCTAssertEqual(store.launchDecision(hasLifetimeEntitlement: true), .allowed)
     }
+
+    func testSavedFreeWorkoutCountPersistsAcrossStoreInstances() {
+        let suiteName = "WorkoutAccessStoreTests.persistence"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let firstStore = WorkoutAccessStore(defaults: defaults)
+
+        firstStore.recordSavedFreeWorkout(hasLifetimeEntitlement: false)
+
+        let reloadedStore = WorkoutAccessStore(
+            defaults: UserDefaults(suiteName: suiteName)!
+        )
+        XCTAssertEqual(reloadedStore.freeWorkoutsUsed, 1)
+        XCTAssertEqual(
+            reloadedStore.launchDecision(hasLifetimeEntitlement: false),
+            .allowed
+        )
+    }
 }

@@ -140,6 +140,13 @@ struct LifetimeUnlockPaywall: View {
                             .foregroundStyle(Color.hangGreenDark)
                             .disabled(isTransacting)
                             .accessibilityIdentifier("paywall.restore")
+
+                        if purchaseManager.state == .productLoadFailed {
+                            Button("Retry Loading Purchase", action: retryProductLoad)
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.hangGreenDark)
+                                .accessibilityIdentifier("paywall.retryProduct")
+                        }
                     }
 
                     if let statusMessage {
@@ -209,6 +216,12 @@ struct LifetimeUnlockPaywall: View {
             return "Purchase pending. Your workout will unlock after the App Store approves it."
         case .failed:
             return "We couldn’t complete the purchase. Please try again or restore purchases."
+        case .productLoadFailed:
+            return "We couldn’t load purchase options. Check your connection and try again."
+        case .nothingToRestore:
+            return "Nothing to restore. No lifetime unlock purchase was found."
+        case .restoreFailed:
+            return "Restore failed. Please try again."
         }
     }
 
@@ -227,6 +240,13 @@ struct LifetimeUnlockPaywall: View {
         cancellationMessage = nil
         Task {
             await purchaseManager.restore()
+        }
+    }
+
+    private func retryProductLoad() {
+        cancellationMessage = nil
+        Task {
+            await purchaseManager.prepare()
         }
     }
 }

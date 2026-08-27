@@ -118,6 +118,61 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertFalse(app.navigationBars["Session"].exists)
     }
 
+    func testRetryAfterTransientProductLoadFailureMakesBuyAvailable() {
+        let app = lockedPlanApp()
+        app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_PRODUCT_LOAD_FAILURES"] = "1"
+        app.launch()
+
+        app.buttons["plan.startRoutine"].tap()
+
+        let purchase = app.buttons["paywall.purchase"]
+        XCTAssertTrue(purchase.waitForExistence(timeout: 2))
+        XCTAssertFalse(purchase.isEnabled)
+        let retry = app.buttons["paywall.retryProduct"]
+        XCTAssertTrue(retry.waitForExistence(timeout: 2))
+
+        retry.tap()
+
+        XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
+        XCTAssertTrue(purchase.isEnabled)
+        XCTAssertFalse(app.navigationBars["Session"].exists)
+    }
+
+    func testRestoreWithoutEntitlementShowsNothingToRestoreFeedback() {
+        let app = lockedPlanApp()
+        app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
+        app.launch()
+
+        app.buttons["plan.startRoutine"].tap()
+        XCTAssertTrue(app.buttons["paywall.restore"].waitForExistence(timeout: 2))
+        app.buttons["paywall.restore"].tap()
+
+        XCTAssertTrue(app.staticTexts[
+            "Nothing to restore. No lifetime unlock purchase was found."
+        ].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.navigationBars["Session"].exists)
+    }
+
+    func testRestoreFailureUsesRestoreSpecificFeedback() {
+        let app = lockedPlanApp()
+        app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_RESTORE_OUTCOME"] = "failed"
+        app.launch()
+
+        app.buttons["plan.startRoutine"].tap()
+        XCTAssertTrue(app.buttons["paywall.restore"].waitForExistence(timeout: 2))
+        app.buttons["paywall.restore"].tap()
+
+        XCTAssertTrue(app.staticTexts[
+            "Restore failed. Please try again."
+        ].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts[
+            "We couldn’t complete the purchase. Please try again or restore purchases."
+        ].exists)
+        XCTAssertFalse(app.navigationBars["Session"].exists)
+    }
+
     private func lockedPlanApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["HANGTEN_REVIEW_FREE_WORKOUTS_USED"] = "2"

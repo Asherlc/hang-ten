@@ -42,7 +42,9 @@ struct HangTenApp: App {
 			purchaseManager = PurchaseManager(client: ReviewStoreKitClient(
 				verifiedPurchase: environment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] == "1",
 				verifiedRestore: environment["HANGTEN_REVIEW_VERIFIED_RESTORE"] == "1",
-				purchaseOutcome: environment["HANGTEN_REVIEW_PURCHASE_OUTCOME"]
+				purchaseOutcome: environment["HANGTEN_REVIEW_PURCHASE_OUTCOME"],
+				productLoadFailures: environment["HANGTEN_REVIEW_PRODUCT_LOAD_FAILURES"].flatMap(Int.init) ?? 0,
+				restoreOutcome: environment["HANGTEN_REVIEW_RESTORE_OUTCOME"]
 			))
 		} else {
 			purchaseManager = PurchaseManager()
@@ -89,21 +91,37 @@ struct HangTenApp: App {
 private final class ReviewStoreKitClient: StoreKitClient {
 	private enum ReviewError: Error {
 		case purchaseFailed
+		case productLoadFailed
+		case restoreFailed
 	}
 
 	private let verifiedPurchase: Bool
 	private let verifiedRestore: Bool
 	private let purchaseOutcome: String?
+	private var productLoadFailuresRemaining: Int
+	private let restoreOutcome: String?
 	private var hasEntitlement = false
 
-	init(verifiedPurchase: Bool, verifiedRestore: Bool, purchaseOutcome: String?) {
+	init(
+		verifiedPurchase: Bool,
+		verifiedRestore: Bool,
+		purchaseOutcome: String?,
+		productLoadFailures: Int,
+		restoreOutcome: String?
+	) {
 		self.verifiedPurchase = verifiedPurchase
 		self.verifiedRestore = verifiedRestore
 		self.purchaseOutcome = purchaseOutcome
+		productLoadFailuresRemaining = productLoadFailures
+		self.restoreOutcome = restoreOutcome
 	}
 
 	func loadProduct(id: String) async throws -> PurchaseProduct? {
-		PurchaseProduct(id: id, displayPrice: "$2.99")
+		if productLoadFailuresRemaining > 0 {
+			productLoadFailuresRemaining -= 1
+			throw ReviewError.productLoadFailed
+		}
+		return PurchaseProduct(id: id, displayPrice: "$2.99")
 	}
 
 	func currentEntitlement(for productID: String) async throws -> StoreKitTransaction? {
@@ -128,6 +146,9 @@ private final class ReviewStoreKitClient: StoreKitClient {
 	}
 
 	func restorePurchases() async throws {
+		if restoreOutcome == "failed" {
+			throw ReviewError.restoreFailed
+		}
 		hasEntitlement = verifiedRestore
 	}
 

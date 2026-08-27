@@ -157,6 +157,15 @@ final class PurchaseManager: ObservableObject {
         case purchasing
         case pending
         case failed
+        case productLoadFailed
+        case nothingToRestore
+        case restoreFailed
+    }
+
+    private enum EntitlementRefreshResult {
+        case entitled
+        case notEntitled
+        case failed
     }
 
     static let lifetimeProductID = "com.hangten.training.lifetime"
@@ -182,6 +191,7 @@ final class PurchaseManager: ObservableObject {
 
     func prepare() async {
         state = .loading
+        product = nil
         startTransactionUpdates()
 
         await refreshEntitlement()
@@ -189,11 +199,11 @@ final class PurchaseManager: ObservableObject {
         do {
             product = try await client.loadProduct(id: Self.lifetimeProductID)
             guard product != nil else {
-                state = .failed
+                state = .productLoadFailed
                 return
             }
         } catch {
-            state = .failed
+            state = .productLoadFailed
         }
     }
 
@@ -217,23 +227,36 @@ final class PurchaseManager: ObservableObject {
 
         do {
             try await client.restorePurchases()
-            await refreshEntitlement()
+            switch await refreshEntitlement() {
+            case .entitled:
+                break
+            case .notEntitled:
+                state = .nothingToRestore
+            case .failed:
+                state = .restoreFailed
+            }
         } catch {
-            state = .failed
+            state = .restoreFailed
         }
     }
 
-    private func refreshEntitlement() async {
+    @discardableResult
+    private func refreshEntitlement() async -> EntitlementRefreshResult {
         do {
             guard let transaction = try await client.currentEntitlement(for: Self.lifetimeProductID) else {
                 hasLifetimeEntitlement = false
                 state = .idle
-                return
+                return .notEntitled
             }
             hasLifetimeEntitlement = false
             await apply(transaction)
+            if hasLifetimeEntitlement {
+                return .entitled
+            }
+            return state == .failed ? .failed : .notEntitled
         } catch {
             state = .failed
+            return .failed
         }
     }
 
