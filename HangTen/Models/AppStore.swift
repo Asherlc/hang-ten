@@ -28,7 +28,9 @@ final class AppStore: ObservableObject {
     private let motherboardSettingsStore: MotherboardSettingsStore
     private let workoutSessionStore: WorkoutSessionStoring
     private let customRoutineStore: CustomRoutineStoring
+    private let workoutAccessStore: WorkoutAccessStore
     private let telemetry: TelemetryDependencies
+    let purchaseManager: PurchaseManager
     private var customDefinitions: [CustomRoutineDefinition]
     private var preservesCompletionError = false
     private var healthAuthorizationErrorKind: HealthErrorKind?
@@ -41,9 +43,13 @@ final class AppStore: ObservableObject {
         workoutHistoryStore: (any WorkoutHistoryPersistence)? = nil,
         customRoutineStore: CustomRoutineStoring? = nil,
         defaults: UserDefaults = .standard,
+        workoutAccessStore: WorkoutAccessStore? = nil,
+        purchaseManager: PurchaseManager? = nil,
         telemetry: TelemetryDependencies = .noOp()
     ) {
         self.defaults = defaults
+        self.workoutAccessStore = workoutAccessStore ?? WorkoutAccessStore(defaults: defaults)
+        self.purchaseManager = purchaseManager ?? PurchaseManager()
         let persistedBoardID = defaults.string(forKey: Self.selectedBoardIDKey)
         selectedBoard = BoardCatalog.all.first { $0.id == persistedBoardID }
             ?? BoardCatalog.defaultBoard
@@ -94,6 +100,18 @@ final class AppStore: ObservableObject {
             }
         }
         reloadCustomRoutines()
+    }
+
+    var workoutLaunchDecision: WorkoutLaunchDecision {
+        workoutAccessStore.launchDecision(
+            hasLifetimeEntitlement: purchaseManager.hasLifetimeEntitlement
+        )
+    }
+
+    func recordSavedWorkoutAccess() {
+        workoutAccessStore.recordSavedFreeWorkout(
+            hasLifetimeEntitlement: purchaseManager.hasLifetimeEntitlement
+        )
     }
 
     deinit {}
@@ -357,7 +375,11 @@ final class AppStore: ObservableObject {
         if let session {
             workoutSessionStore.append(session) { [weak self] result in
                 Task { @MainActor [weak self] in
-                    self?.recordSessionPersistence(result)
+                    guard let self else { return }
+                    self.recordSessionPersistence(result)
+                    if case .success = result {
+                        self.recordSavedWorkoutAccess()
+                    }
                 }
             }
         }

@@ -77,6 +77,10 @@
 		AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */; };
 		AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000049 /* WorkoutStopwatch.swift */; };
 		AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000050 /* WorkoutStopwatchTests.swift */; };
+		AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000001 /* WorkoutAccessStore.swift */; };
+		AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */; };
+		AF0000000000000000000004 /* PurchaseManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000004 /* PurchaseManagerTests.swift */; };
+		AF0000000000000000000003 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000003 /* PurchaseManager.swift */; };
 		AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000051 /* AppStoreFavoritesTests.swift */; };
 		AA0000000000000000000052 /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000052 /* WorkoutHistory.swift */; };
 		AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */; };
@@ -111,6 +115,11 @@
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
 		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
+		AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000005 /* WorkoutPaywallUITests.swift */; };
+		AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000006 /* WorkoutAccessGate.swift */; };
+		AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */; };
+		AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000009 /* StoreKitTest.framework */; };
+		AF0000000000000000000009 /* HangTen.storekit in Resources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000007 /* HangTen.storekit */; };
 		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
 		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
@@ -157,6 +166,11 @@
 		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
+		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
+		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000009 /* StoreKitTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKitTest.framework; path = Developer/Library/Frameworks/StoreKitTest.framework; sourceTree = SDKROOT; };
 		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
@@ -200,6 +214,10 @@
 		BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTargetSubstitutionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000049 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
 		BB0000000000000000000050 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000001 /* WorkoutAccessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStore.swift; sourceTree = "<group>"; };
+		BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStoreTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000003 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		BF0000000000000000000004 /* PurchaseManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManagerTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000051 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000052 /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
 		BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStore.swift; sourceTree = "<group>"; };
@@ -258,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000017 /* XCTest.framework in Frameworks */,
+				AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +350,8 @@
 				BB0000000000000000000043 /* PlanFilters.swift */,
 				BB0000000000000000000047 /* WorkoutActivityRecording.swift */,
 				BB0000000000000000000049 /* WorkoutStopwatch.swift */,
+				BF0000000000000000000001 /* WorkoutAccessStore.swift */,
+				BF0000000000000000000003 /* PurchaseManager.swift */,
 				BB0000000000000000000052 /* WorkoutHistory.swift */,
 				BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */,
 				BB0000000000000000000054 /* WorkoutHistoryService.swift */,
@@ -372,6 +393,7 @@
 				BB0000000000000000000097 /* HoldInspectorView.swift */,
 				BB0000000000000000000098 /* BoardEditorListView.swift */,
 				BB0000000000000000000099 /* GitHubEditorSyncViews.swift */,
+				BF0000000000000000000006 /* WorkoutAccessGate.swift */,
 				BB0000000000000000000092 /* AppSettingsView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
 				BB0000000000000000000032 /* MotherboardViews.swift */,
@@ -389,6 +411,7 @@
 				BB0000000000000000000007 /* Assets.xcassets */,
 				BB0000000000000000000017 /* PlanLibrary.json */,
 				C20000000000000000000001 /* CountdownAudio */,
+				BF0000000000000000000007 /* HangTen.storekit */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -396,6 +419,7 @@
 		DD0000000000000000000007 /* HangTenTests */ = {
 			isa = PBXGroup;
 			children = (
+				BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */,
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
 				BB0000000000000000000074 /* ForceSensorModelsTests.swift */,
@@ -419,6 +443,8 @@
 				BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */,
 				BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */,
 				BB0000000000000000000050 /* WorkoutStopwatchTests.swift */,
+				BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */,
+				BF0000000000000000000004 /* PurchaseManagerTests.swift */,
 				BB0000000000000000000051 /* AppStoreFavoritesTests.swift */,
 				BB0000000000000000000055 /* WorkoutHistoryTests.swift */,
 				BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */,
@@ -449,6 +475,7 @@
 			children = (
 				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
 				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
+				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -612,6 +639,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000068 /* PlanLibrary.json in Resources */,
+				AF0000000000000000000009 /* HangTen.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -693,6 +721,8 @@
 				AA0000000000000000000043 /* PlanFilters.swift in Sources */,
 				AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */,
 				AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */,
+				AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */,
+				AF0000000000000000000003 /* PurchaseManager.swift in Sources */,
 				AA0000000000000000000052 /* WorkoutHistory.swift in Sources */,
 				AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */,
 				AA0000000000000000000054 /* WorkoutHistoryService.swift in Sources */,
@@ -708,6 +738,7 @@
 				AA0000000000000000000097 /* HoldInspectorView.swift in Sources */,
 				AA0000000000000000000098 /* BoardEditorListView.swift in Sources */,
 				AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */,
+				AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */,
 				AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */,
 				AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */,
 				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
@@ -721,6 +752,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */,
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
 				AA0000000000000000000074 /* ForceSensorModelsTests.swift in Sources */,
@@ -743,6 +775,8 @@
 				AA0000000000000000000046 /* PlanStorageTests.swift in Sources */,
 				AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */,
 				AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */,
+				AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */,
+				AF0000000000000000000004 /* PurchaseManagerTests.swift in Sources */,
 				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
 				AA0000000000000000000055 /* WorkoutHistoryTests.swift in Sources */,
 				AA0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift in Sources */,
@@ -774,6 +808,7 @@
 			files = (
 				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
 				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
+				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
