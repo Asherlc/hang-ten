@@ -1337,7 +1337,8 @@
         }
       ],
       "presentationID": "primary",
-      "handCapacity": 1
+      "handCapacity": 1,
+      "fingerCapacity": 3
     },
     {
       "id": "hold-17",
@@ -1462,7 +1463,8 @@
         }
       ],
       "presentationID": "primary",
-      "handCapacity": 1
+      "handCapacity": 1,
+      "fingerCapacity": 3
     },
     {
       "id": "hold-25",
