@@ -112,17 +112,24 @@ export function HoldInspector({
             {HOLD_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
         </label>
-        {hold?.type === "gaston" && <label>Paired gaston hold
-          <select
-            id="gaston-pair-select"
-            disabled={busy}
-            value={hold.pairedHoldID ?? ""}
-            onChange={(event) => onPairedHoldIDChange(event.currentTarget.value || undefined)}
-          >
-            <option value="">Unset</option>
-            {gastonPairCandidates.map((holdID) => <option key={holdID} value={holdID}>{holdID}</option>)}
-          </select>
-        </label>}
+        {hold?.type === "gaston" && (hold.pairedHoldID
+          ? <div>
+              <span className="field-label">Paired gaston hold</span>
+              <output id="gaston-pair-current" aria-label={`Paired gaston hold: ${hold.pairedHoldID}`}>{hold.pairedHoldID}</output>
+            </div>
+          : gastonPairCandidates.length > 0
+            ? <label>Paired gaston hold
+                <select
+                  id="gaston-pair-select"
+                  disabled={busy}
+                  value=""
+                  onChange={(event) => onPairedHoldIDChange(event.currentTarget.value)}
+                >
+                  {gastonPairCandidates.map((holdID) => <option key={holdID} value={holdID}>{holdID}</option>)}
+                </select>
+              </label>
+            : <p id="gaston-pair-unavailable" role="status">No unpaired gaston holds are available.</p>
+        )}
         <label>Finger capacity
           <select
             id="finger-capacity-select"
