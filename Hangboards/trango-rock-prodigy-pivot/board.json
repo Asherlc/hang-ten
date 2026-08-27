@@ -10,7 +10,7 @@
     {
       "id": "upper-sloped-crimp-left",
       "name": "Left upper sloped crimp",
-      "kind": "edge",
+      "kind": "jug",
       "geometry": [
         {
           "frame": {
