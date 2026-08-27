@@ -32,10 +32,12 @@ struct AppSettingsView: View {
                     healthCard
                 }
 
+                #if DEBUG
                 VStack(alignment: .leading, spacing: 12) {
                     SectionLabel(title: "Board packages")
                     boardEditorLink
                 }
+                #endif
             }
             .padding(.horizontal, 20)
             .padding(.top, 18)

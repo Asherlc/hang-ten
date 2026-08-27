@@ -112,6 +112,7 @@
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
 		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
+		AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */; };
 		AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000005 /* WorkoutPaywallUITests.swift */; };
 		AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000006 /* WorkoutAccessGate.swift */; };
 		AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */; };
@@ -163,6 +164,7 @@
 		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
 		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 			children = (
 				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
 				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
+				AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */,
 				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
 			);
 			path = HangTenUITests;
@@ -797,6 +800,7 @@
 			files = (
 				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
 				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
+				AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */,
 				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
