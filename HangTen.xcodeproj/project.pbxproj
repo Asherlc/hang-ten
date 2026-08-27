@@ -117,6 +117,9 @@
 		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
 		AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000005 /* WorkoutPaywallUITests.swift */; };
 		AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000006 /* WorkoutAccessGate.swift */; };
+		AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */; };
+		AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000009 /* StoreKitTest.framework */; };
+		AF0000000000000000000009 /* HangTen.storekit in Resources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000007 /* HangTen.storekit */; };
 		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
 		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
@@ -166,6 +169,8 @@
 		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
 		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
+		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000009 /* StoreKitTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKitTest.framework; path = Developer/Library/Frameworks/StoreKitTest.framework; sourceTree = SDKROOT; };
 		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
@@ -271,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000017 /* XCTest.framework in Frameworks */,
+				AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +419,7 @@
 		DD0000000000000000000007 /* HangTenTests */ = {
 			isa = PBXGroup;
 			children = (
+				BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */,
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
 				BB0000000000000000000074 /* ForceSensorModelsTests.swift */,
@@ -632,6 +639,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000000000000000000068 /* PlanLibrary.json in Resources */,
+				AF0000000000000000000009 /* HangTen.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -744,6 +752,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */,
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
 				AA0000000000000000000074 /* ForceSensorModelsTests.swift in Sources */,

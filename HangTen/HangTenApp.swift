@@ -41,7 +41,8 @@ struct HangTenApp: App {
 		if environment["HANGTEN_REVIEW_STOREKIT"] == "1" {
 			purchaseManager = PurchaseManager(client: ReviewStoreKitClient(
 				verifiedPurchase: environment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] == "1",
-				verifiedRestore: environment["HANGTEN_REVIEW_VERIFIED_RESTORE"] == "1"
+				verifiedRestore: environment["HANGTEN_REVIEW_VERIFIED_RESTORE"] == "1",
+				purchaseOutcome: environment["HANGTEN_REVIEW_PURCHASE_OUTCOME"]
 			))
 		} else {
 			purchaseManager = PurchaseManager()
@@ -86,13 +87,19 @@ struct HangTenApp: App {
 #if DEBUG
 @MainActor
 private final class ReviewStoreKitClient: StoreKitClient {
+	private enum ReviewError: Error {
+		case purchaseFailed
+	}
+
 	private let verifiedPurchase: Bool
 	private let verifiedRestore: Bool
+	private let purchaseOutcome: String?
 	private var hasEntitlement = false
 
-	init(verifiedPurchase: Bool, verifiedRestore: Bool) {
+	init(verifiedPurchase: Bool, verifiedRestore: Bool, purchaseOutcome: String?) {
 		self.verifiedPurchase = verifiedPurchase
 		self.verifiedRestore = verifiedRestore
+		self.purchaseOutcome = purchaseOutcome
 	}
 
 	func loadProduct(id: String) async throws -> PurchaseProduct? {
@@ -105,9 +112,19 @@ private final class ReviewStoreKitClient: StoreKitClient {
 	}
 
 	func purchase(productID: String) async -> StoreKitPurchaseResult {
-		guard verifiedPurchase else { return .userCancelled }
-		hasEntitlement = true
-		return .success(.verified(productID: productID))
+		if verifiedPurchase {
+			hasEntitlement = true
+			return .success(.verified(productID: productID))
+		}
+
+		switch purchaseOutcome {
+		case "pending":
+			return .pending
+		case "failed":
+			return .failed(ReviewError.purchaseFailed)
+		default:
+			return .userCancelled
+		}
 	}
 
 	func restorePurchases() async throws {

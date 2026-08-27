@@ -60,7 +60,7 @@
       <Testables>
          <TestableReference
             skipped = "NO"
-            parallelizable = "YES">
+            parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EE0000000000000000000002"
@@ -91,7 +91,7 @@
          </BuildableReference>
       </MacroExpansion>
       <StoreKitConfigurationFileReference
-         identifier = "../../../HangTen/Resources/HangTen.storekit">
+         identifier = "../HangTen/Resources/HangTen.storekit">
       </StoreKitConfigurationFileReference>
    </TestAction>
    <LaunchAction
@@ -115,7 +115,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../../../HangTen/Resources/HangTen.storekit">
+         identifier = "../HangTen/Resources/HangTen.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction

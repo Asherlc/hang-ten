@@ -65,6 +65,7 @@ HangTen/Resources/CountdownAudio/README.md
 HangTen/Resources/CountdownAudio/countdown-1.mp3
 HangTen/Resources/CountdownAudio/countdown-2.mp3
 HangTen/Resources/CountdownAudio/countdown-3.mp3
+HangTen/Resources/HangTen.storekit
 HangTen/Resources/PlanLibrary.json
 HangTen/Views/AppSettingsView.swift
 HangTen/Views/BoardEditor/BoardEditorListView.swift
@@ -81,5 +82,6 @@ HangTen/Views/MotherboardViews.swift
 HangTen/Views/MotherboardWorkoutPreparationView.swift
 HangTen/Views/RootView.swift
 HangTen/Views/TrainView.swift
+HangTen/Views/WorkoutAccessGate.swift
 HangTen/Views/WorkoutStepPickerView.swift
 HangTen/Views/WorkoutSummaryView.swift
