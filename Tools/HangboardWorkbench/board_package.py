@@ -193,6 +193,7 @@ _EditorPiece = tuple[
     int | float | None,
     dict[str, int | float] | None,
     int | None,
+    str | None,
 ]
 
 
@@ -397,6 +398,8 @@ def editor_document(
             }
             if "kind" in hold:
                 region["type"] = hold["kind"]
+            if "pairedHoldID" in hold:
+                region["pairedHoldID"] = hold["pairedHoldID"]
             if "sloper" in hold:
                 region["sloper"] = dict(hold["sloper"])
             if "shapeConstraint" in piece:
@@ -491,6 +494,7 @@ def save_editor_document(
             size_millimeters,
             depth_range,
             hand_capacity,
+            paired_hold_id,
         ) in parsed_regions.values():
             pieces_by_hold.setdefault(hold_id, []).append(
                 (
@@ -505,6 +509,7 @@ def save_editor_document(
                     size_millimeters,
                     depth_range,
                     hand_capacity,
+                    paired_hold_id,
                 )
             )
         for pieces in pieces_by_hold.values():
@@ -587,6 +592,7 @@ def _apply_editor_document(
             _size_millimeters,
             _depth_range,
             _hand_capacity,
+            _paired_hold_id,
         ) in pieces:
             existing_geometry = existing["geometry"] if existing is not None else []
             if piece_index < len(existing_geometry):
@@ -642,6 +648,10 @@ def _apply_editor_document(
             hold_json.pop("handCapacity", None)
         else:
             hold_json["handCapacity"] = pieces[0][10]
+        if pieces[0][11] is None:
+            hold_json.pop("pairedHoldID", None)
+        else:
+            hold_json["pairedHoldID"] = pieces[0][11]
         hold_json["geometry"] = geometry
         if presentation_id is not None:
             hold_json["presentationID"] = presentation_id
@@ -693,6 +703,7 @@ def _current_display_paths(
             _size_millimeters,
             _depth_range,
             _hand_capacity,
+            _paired_hold_id,
         ) in pieces:
             if piece_index < len(geometry):
                 piece = geometry[piece_index]
@@ -722,6 +733,8 @@ def _editor_document_is_dirty(
             or hold.get("depthRangeMillimeters") != pieces[0][9]
             or hold.get("handCapacity") != pieces[0][10]):
             return True
+        if hold.get("pairedHoldID") != pieces[0][11]:
+            return True
         for (
             piece_index,
             _kind,
@@ -734,6 +747,7 @@ def _editor_document_is_dirty(
             _size_millimeters,
             _depth_range,
             _hand_capacity,
+            _paired_hold_id,
         ) in pieces:
             current_path = current_paths.get((hold_id, piece_index))
             if current_path is None or path.data != current_path.data:
@@ -1378,6 +1392,7 @@ def _validate_editor_document(
         int | float | None,
         dict[str, int | float] | None,
         int | None,
+        str | None,
     ],
 ]:
     """Parse and cross-validate an editor document, allowing added/removed/
@@ -1419,6 +1434,7 @@ def _validate_editor_document(
             int | float | None,
             dict[str, int | float] | None,
             int | None,
+            str | None,
         ],
     ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
@@ -1429,6 +1445,7 @@ def _validate_editor_document(
     depth_range_by_hold: dict[str, dict[str, int | float] | None] = {}
     depth_representation_by_hold: dict[str, str] = {}
     hand_capacity_by_hold: dict[str, int | None] = {}
+    paired_hold_id_by_hold: dict[str, str | None] = {}
     for region in regions:
         if not isinstance(region, Mapping):
             raise BoardPackageError("editor document contains an invalid hold piece")
@@ -1439,6 +1456,7 @@ def _validate_editor_document(
                 "id",
                 "key",
                 "type",
+                "pairedHoldID",
                 "sloper",
                 "displayPath",
                 "metadata",
@@ -1464,6 +1482,16 @@ def _validate_editor_document(
             if "type" in region
             else None
         )
+        if "pairedHoldID" in region:
+            if kind != "gaston":
+                raise BoardPackageError(
+                    f"editor region {key}.pairedHoldID is only allowed for gaston holds"
+                )
+            paired_hold_id = _identifier(
+                region["pairedHoldID"], f"editor region {key}.pairedHoldID"
+            )
+        else:
+            paired_hold_id = None
         if "sloper" in region:
             if kind != "sloper":
                 raise BoardPackageError(
@@ -1622,6 +1650,10 @@ def _validate_editor_document(
         if hold_id in hand_capacity_by_hold and hand_capacity_by_hold[hold_id] != hand_capacity:
             raise BoardPackageError(f"hold {hold_id} pieces must share one hand capacity")
         hand_capacity_by_hold[hold_id] = hand_capacity
+        if (hold_id in paired_hold_id_by_hold
+            and paired_hold_id_by_hold[hold_id] != paired_hold_id):
+            raise BoardPackageError(f"hold {hold_id} pieces must share one paired hold")
+        paired_hold_id_by_hold[hold_id] = paired_hold_id
         parsed[key] = (
             hold_id,
             piece_index,
@@ -1635,6 +1667,7 @@ def _validate_editor_document(
             size_millimeters,
             depth_range,
             hand_capacity,
+            paired_hold_id,
         )
 
     for hold_id, pieces in pieces_by_hold.items():

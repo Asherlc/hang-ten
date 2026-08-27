@@ -831,6 +831,47 @@ test("the hold type control preserves an out-of-list document value", async () =
   }, dependenciesFixture(board));
 });
 
+test("gaston pairing offers only other gaston holds and saves reciprocal pair metadata", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    { id: 3, key: "jug-piece-0", type: "jug", displayPath: OTHER_PATH, metadata: { holdID: "jug", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+
+    assert.equal(app.documentValue("#hold-type-select"), "gaston");
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="left"]'), null);
+    assert.equal(app.text('#gaston-pair-select option[value="right"]'), "right");
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="jug"]'), null);
+
+    await app.change("#gaston-pair-select", "right");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls[0]?.document.regions[0]?.pairedHoldID, "right");
+    assert.equal(client.saveCalls[0]?.document.regions[1]?.pairedHoldID, "left");
+  }, dependenciesFixture(board, { client }));
+});
+
+test("changing a gaston hold to another kind clears its pair metadata", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "right", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", pairedHoldID: "left", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+    await app.change("#hold-type-select", "jug");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls[0]?.document.regions[0]?.pairedHoldID, undefined);
+    assert.equal(client.saveCalls[0]?.document.regions[1]?.pairedHoldID, undefined);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("Add Hold creates and selects a centered square", async () => {
   await withEditor(async (app) => {
     await app.click("#add-hold-button");

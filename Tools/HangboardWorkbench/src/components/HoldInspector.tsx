@@ -10,7 +10,7 @@ function depthMeasurementMode(hold: HoldRegion | null): DepthMeasurementMode {
   return "unset";
 }
 
-const HOLD_TYPES = ["jug", "sloper", "edge", "pocket", "pinch"] as const;
+const HOLD_TYPES = ["jug", "sloper", "edge", "pocket", "pinch", "gaston"] as const;
 const OUTLINE_SHAPES = [
   ["custom", "Custom"],
   ["oval", "Oval"],
@@ -27,6 +27,8 @@ export interface HoldInspectorProps {
   rotationDegrees: string;
   onRotationDegreesChange(value: string): void;
   onTypeChange(type: string): void;
+  gastonPairCandidates: readonly string[];
+  onPairedHoldIDChange(pairedHoldID: string | undefined): void;
   onFingerCapacityChange(capacity: number | undefined): void;
   onDepthMeasurementChange(mode: DepthMeasurementMode): void;
   onSizeMillimetersChange(size: number | undefined): void;
@@ -48,6 +50,8 @@ export function HoldInspector({
   rotationDegrees,
   onRotationDegreesChange,
   onTypeChange,
+  gastonPairCandidates,
+  onPairedHoldIDChange,
   onFingerCapacityChange,
   onDepthMeasurementChange,
   onSizeMillimetersChange,
@@ -108,6 +112,17 @@ export function HoldInspector({
             {HOLD_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
         </label>
+        {hold?.type === "gaston" && <label>Paired gaston hold
+          <select
+            id="gaston-pair-select"
+            disabled={busy}
+            value={hold.pairedHoldID ?? ""}
+            onChange={(event) => onPairedHoldIDChange(event.currentTarget.value || undefined)}
+          >
+            <option value="">Unset</option>
+            {gastonPairCandidates.map((holdID) => <option key={holdID} value={holdID}>{holdID}</option>)}
+          </select>
+        </label>}
         <label>Finger capacity
           <select
             id="finger-capacity-select"

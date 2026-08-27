@@ -237,6 +237,13 @@ def test_reciprocal_gaston_pairs_round_trip_through_workbench_save(tmp_path: Pat
 
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
+    assert {
+        region["metadata"]["holdID"]: region["pairedHoldID"]
+        for region in document["regions"]
+    } == {
+        "gaston-left": "gaston-right",
+        "gaston-right": "gaston-left",
+    }
     for region in document["regions"]:
         if region["metadata"]["holdID"] == "gaston-left":
             region["fingerCapacity"] = 4
@@ -627,6 +634,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 int | float | None,
                 dict[str, int | float] | None,
                 int | None,
+                str | None,
             ]
         ],
     ] = {}
@@ -643,6 +651,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         size_millimeters,
         depth_range,
         hand_capacity,
+        paired_hold_id,
     ) in parsed.values():
         pieces_by_hold.setdefault(hold_id, []).append(
             (
@@ -657,6 +666,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 size_millimeters,
                 depth_range,
                 hand_capacity,
+                paired_hold_id,
             )
         )
     for pieces in pieces_by_hold.values():
@@ -675,6 +685,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
             first_piece[8],
             first_piece[9],
             first_piece[10],
+            first_piece[11],
         )
     original = copy.deepcopy(package.board)
 

@@ -65,6 +65,7 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
+    && (value.pairedHoldID === undefined || typeof value.pairedHoldID === "string")
     && (value.sloper === undefined
       || (value.type === "sloper" && isSloperMetadata(value.sloper)))
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
@@ -141,6 +142,10 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     if (Object.hasOwn(region, "sloper")
       && (region.type !== "sloper" || !isSloperMetadata(region.sloper))) {
       throw new Error(`Hold ${region.key} needs valid sloper metadata only on sloper holds`);
+    }
+    if (Object.hasOwn(region, "pairedHoldID")
+      && (region.type !== "gaston" || typeof region.pairedHoldID !== "string" || !region.pairedHoldID)) {
+      throw new Error(`Hold ${region.key} needs paired hold metadata only on gaston holds`);
     }
     if (Object.hasOwn(region, "fingerCapacity")
       && !isFingerCapacity(region.fingerCapacity)) {
