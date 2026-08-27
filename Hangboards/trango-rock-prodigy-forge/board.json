@@ -431,7 +431,8 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "fullCrimp"
+      "gripType": "fullCrimp",
+      "fingerCapacity": 4
     },
     {
       "id": "mr-deep-left",
