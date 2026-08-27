@@ -7422,7 +7422,8 @@
       ],
       "presentationID": "orientation-2",
       "fingerCapacity": 1,
-      "handCapacity": 1
+      "handCapacity": 1,
+      "sizeMillimeters": 31
     },
     {
       "id": "hold-6",
