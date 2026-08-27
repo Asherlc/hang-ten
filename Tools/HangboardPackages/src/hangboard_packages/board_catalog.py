@@ -374,12 +374,17 @@ class BoardPresentation:
     asset_path: str
     aspect_ratio: float
     is_default: bool
+    source_presentation_id: str | None = None
+    is_inverted: bool = False
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "BoardPresentation":
         payload = _mapping(value, source)
         _closed(
-            payload, {"id", "name", "assetPath", "aspectRatio", "default"}, source
+            payload,
+            {"id", "name", "assetPath", "aspectRatio", "default"},
+            source,
+            optional={"sourcePresentationID", "isInverted"},
         )
         aspect_ratio = _number(payload["aspectRatio"], f"{source}.aspectRatio")
         if aspect_ratio <= 0:
@@ -390,6 +395,14 @@ class BoardPresentation:
             _asset_path(payload["assetPath"], f"{source}.assetPath"),
             aspect_ratio,
             _boolean(payload["default"], f"{source}.default"),
+            (
+                _identifier(payload["sourcePresentationID"], f"{source}.sourcePresentationID")
+                if "sourcePresentationID" in payload
+                else None
+            ),
+            _boolean(payload["isInverted"], f"{source}.isInverted")
+            if "isInverted" in payload
+            else False,
         )
 
 
@@ -567,6 +580,25 @@ def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...
         raise ValueError("duplicate presentation id")
     if sum(presentation.is_default for presentation in presentations) != 1:
         raise ValueError("board.json.presentations must have exactly one default presentation")
+    presentation_ids = {presentation.id for presentation in presentations}
+    for presentation in presentations:
+        if presentation.source_presentation_id is not None:
+            source = next(
+                (
+                    candidate
+                    for candidate in presentations
+                    if candidate.id == presentation.source_presentation_id
+                ),
+                None,
+            )
+            if source is None or source.source_presentation_id is not None:
+                raise ValueError(
+                    f"presentation {presentation.id} must reference a canonical presentation"
+                )
+            if presentation.source_presentation_id == presentation.id:
+                raise ValueError(
+                    f"presentation {presentation.id} must reference a canonical presentation"
+                )
     return presentations
 
 
@@ -594,6 +626,11 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     if not isinstance(raw_holds, list) or not raw_holds:
         raise ValueError("board.json.holds must be a non-empty array")
     presentation_ids = {presentation.id for presentation in presentations}
+    canonical_presentation_ids = {
+        presentation.id
+        for presentation in presentations
+        if presentation.source_presentation_id is None
+    }
     holds: list[BoardHold] = []
     for index, item in enumerate(raw_holds):
         source = f"board.json.holds[{index}]"
@@ -603,6 +640,10 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         )
         if presentation_id not in presentation_ids:
             raise ValueError(f"{source}.presentationID is an unknown presentationID")
+        if presentation_id not in canonical_presentation_ids:
+            raise ValueError(
+                f"{source}.presentationID must be owned by a canonical presentation"
+            )
         holds.append(
             _load_hold(
                 payload,

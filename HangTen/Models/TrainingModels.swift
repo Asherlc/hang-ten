@@ -638,6 +638,26 @@ struct BoardPresentation: Identifiable, Hashable {
     let name: String
     let aspectRatio: CGFloat
     let isDefault: Bool
+    /// A presentation may show an existing physical surface in a different
+    /// mounting orientation, without duplicating the board's hold inventory.
+    let sourcePresentationID: String?
+    let isInverted: Bool
+
+    init(
+        id: String,
+        name: String,
+        aspectRatio: CGFloat,
+        isDefault: Bool,
+        sourcePresentationID: String? = nil,
+        isInverted: Bool = false
+    ) {
+        self.id = id
+        self.name = name
+        self.aspectRatio = aspectRatio
+        self.isDefault = isDefault
+        self.sourcePresentationID = sourcePresentationID
+        self.isInverted = isInverted
+    }
 }
 
 struct TrainingBoard: Identifiable, Hashable {

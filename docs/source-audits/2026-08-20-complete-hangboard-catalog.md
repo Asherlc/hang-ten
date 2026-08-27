@@ -717,6 +717,38 @@ review across both presentations; the catalog-wide evidence is consolidated
 below. Interactive Workbench canvas review remains unavailable and is not
 claimed.
 
+### 2026-08-26 mounting-orientation addendum
+
+The user requested that both source-backed Flash Board faces be selectable in
+either mounting orientation. This adds four application configurations, not
+four manufacturer-described faces and not additional physical contacts.
+
+- The current [Flash Board product page](https://tensionclimbing.com/products/flash-board-2)
+  describes a compact cylindrical board that can hang from a pull-up bar, tree,
+  bolt, or resistance anchor. The current [Tension hangboards page](https://tensionclimbing.com/pages/hangboards)
+  repeats its compact cylindrical form and its global edge list. Neither source
+  publishes a different contact inventory for inversion.
+- Therefore `three-edge-upright` and `three-edge-inverted` reuse only
+  `three-edge-left`, `three-edge-center`, and `three-edge-right`; likewise,
+  `two-edge-upright` and `two-edge-inverted` reuse only `two-edge-left`,
+  `two-edge-right`, `small-crimp-left`, and `small-crimp-right`. The
+  `sourcePresentationID` fields explicitly preserve that ownership. No hold ID,
+  kind, measurement, capacity, posture, or training claim was added.
+- `isInverted: true` and the right-side-up/upside-down display names are an
+  explicitly labeled app presentation adaptation for the requested mounting
+  choice. They do not assert a manufacturer face name or a new surface.
+- `assets/three-edge-inverted.png` and `assets/two-edge-inverted.png` are
+  deterministic 180° pixel rotations of the accepted corresponding upright
+  catalog illustrations. They preserve each canvas size and all existing visible
+  contact boundaries; no AI generation, crop, registration, segmentation,
+  contour extraction, or vectorization was used. These remain non-evidence
+  presentation art.
+- The seven already reviewed canonical paths remain the sole saved physical
+  geometry. For an inverted presentation, the board map applies the same exact
+  180° display transform to the image, hold visual, hit target, and detail-map
+  marker. It is not generated or promoted geometry, and it avoids duplicating
+  one physical contact into a second hold record.
+
 ## Metolius Light Rail 2.0
 
 Reviewed 2026-08-21.

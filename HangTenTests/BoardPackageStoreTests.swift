@@ -491,6 +491,78 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsAliasChainsAndAliasOwnedHolds() throws {
+        let aliasChainFixture = try makeMultiPresentationFixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations.append([
+                    "id": "front-inverted",
+                    "name": "Front upside down",
+                    "assetPath": "assets/front-inverted.png",
+                    "aspectRatio": 2,
+                    "default": false,
+                    "sourcePresentationID": "front",
+                    "isInverted": true
+                ])
+                presentations.append([
+                    "id": "front-inverted-twice",
+                    "name": "Front twice inverted",
+                    "assetPath": "assets/front-inverted-twice.png",
+                    "aspectRatio": 2,
+                    "default": false,
+                    "sourcePresentationID": "front-inverted",
+                    "isInverted": false
+                ])
+                board["presentations"] = presentations
+            },
+            mutateAssets: { assetsURL in
+                let primary = try Data(contentsOf: assetsURL.appendingPathComponent("primary.png"))
+                try primary.write(to: assetsURL.appendingPathComponent("front-inverted.png"))
+                try primary.write(to: assetsURL.appendingPathComponent("front-inverted-twice.png"))
+            }
+        )
+        defer { aliasChainFixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: aliasChainFixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(reason.contains("canonical presentation"), reason)
+        }
+
+        let aliasOwnedHoldFixture = try makeMultiPresentationFixtureBundle(
+            boardMutation: { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                presentations.append([
+                    "id": "front-inverted",
+                    "name": "Front upside down",
+                    "assetPath": "assets/front-inverted.png",
+                    "aspectRatio": 2,
+                    "default": false,
+                    "sourcePresentationID": "front",
+                    "isInverted": true
+                ])
+                board["presentations"] = presentations
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["presentationID"] = "front-inverted"
+                board["holds"] = holds
+            },
+            mutateAssets: { assetsURL in
+                try Data(contentsOf: assetsURL.appendingPathComponent("primary.png")).write(
+                    to: assetsURL.appendingPathComponent("front-inverted.png")
+                )
+            }
+        )
+        defer { aliasOwnedHoldFixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: aliasOwnedHoldFixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("Expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(reason.contains("canonical presentation"), reason)
+        }
+    }
+
     func testStoreAcceptsCanonicalNestedAssetsWithEqualBasenames() throws {
         let fixture = try makeMultiPresentationFixtureBundle(
             boardMutation: { board in
@@ -686,6 +758,54 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    func testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
+
+        XCTAssertEqual(
+            board.presentations.map(\.id),
+            [
+                "three-edge-upright",
+                "three-edge-inverted",
+                "two-edge-upright",
+                "two-edge-inverted",
+            ]
+        )
+
+        let expectedHoldIDsByConfiguration = [
+            "three-edge-upright": [
+                "three-edge-left",
+                "three-edge-center",
+                "three-edge-right",
+            ],
+            "three-edge-inverted": [
+                "three-edge-left",
+                "three-edge-center",
+                "three-edge-right",
+            ],
+            "two-edge-upright": [
+                "two-edge-left",
+                "two-edge-right",
+                "small-crimp-left",
+                "small-crimp-right",
+            ],
+            "two-edge-inverted": [
+                "two-edge-left",
+                "two-edge-right",
+                "small-crimp-left",
+                "small-crimp-right",
+            ],
+        ]
+
+        for (configurationID, expectedHoldIDs) in expectedHoldIDsByConfiguration {
+            let content = BoardMapPresentationContent(
+                board: board,
+                selectedPresentationID: configurationID
+            )
+            XCTAssertEqual(content.presentation.id, configurationID)
+            XCTAssertEqual(content.holds.map(\.id), expectedHoldIDs)
+        }
+    }
+
     func testBoardMapSelectionPrioritizesInitialHighlightedHoldOverRequestedSurface() throws {
         let fixture = try makeMultiPresentationFixtureBundle()
         defer { fixture.remove() }
@@ -749,6 +869,52 @@ final class BoardPackageStoreTests: XCTestCase {
             on: board
         )
         XCTAssertEqual(selection.presentationID, "back")
+    }
+
+    func testBoardMapSelectionKeepsAnInvertedAliasForItsSourceHolds() {
+        let board = TrainingBoard(
+            id: "alias-fixture",
+            manufacturer: "Example",
+            name: "Alias fixture",
+            subtitle: "",
+            dimensions: "10 in × 5 in",
+            aspectRatio: 2,
+            holds: [
+                boardDetailHold(id: "front-hold", presentationID: "front"),
+                boardDetailHold(id: "back-hold", presentationID: "back")
+            ],
+            productURL: URL(string: "https://example.com/alias-fixture")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true),
+                BoardPresentation(
+                    id: "front-inverted",
+                    name: "Front upside down",
+                    aspectRatio: 2,
+                    isDefault: false,
+                    sourcePresentationID: "front",
+                    isInverted: true
+                ),
+                BoardPresentation(id: "back", name: "Back", aspectRatio: 2, isDefault: false)
+            ]
+        )
+        var selection = BoardMapPresentationSelection(
+            board: board,
+            requestedPresentationID: "front-inverted",
+            activeHoldID: nil,
+            highlightedHoldIDs: []
+        )
+
+        selection.activateHold(id: "front-hold", on: board)
+        XCTAssertEqual(selection.presentationID, "front-inverted")
+
+        selection.updateHighlights(
+            from: [],
+            to: ["front-hold"],
+            activeHoldID: nil,
+            on: board
+        )
+        XCTAssertEqual(selection.presentationID, "front-inverted")
     }
 
     func testBoardMapSelectionAppliesCallerPresentationChangeDespiteStaleActiveHold() throws {

@@ -286,6 +286,82 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testEditorDocumentRoundTripsFlashBoardOrientationAliases() throws {
+        let originalData = try Data(
+            contentsOf: repositoryHangboardsURL()
+                .appendingPathComponent("tension-flash-board/board.json")
+        )
+        let decoded = try BoardEditableDocument(data: originalData)
+
+        let encoded = try BoardPackageWriter.data(for: decoded)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        assertSemanticallyEqual(decoded, redecoded)
+        XCTAssertEqual(encoded, try BoardPackageWriter.data(for: redecoded))
+    }
+
+    func testWriterRejectsInvalidPresentationAliasesAndAliasOwnedHoldsInEditorDocuments() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        let source = String(decoding: encoded, as: UTF8.self)
+
+        let invalidAliasSources = ["front-inverted", "unknown"]
+        for sourcePresentationID in invalidAliasSources {
+            let document = try editorDocument(
+                source.replacingOccurrences(
+                    of: "      \"default\": true\n",
+                    with: "      \"default\": true,\n"
+                        + "      \"sourcePresentationID\": \"\(sourcePresentationID)\",\n"
+                        + "      \"isInverted\": true\n"
+                )
+            )
+
+            XCTAssertThrowsError(try BoardPackageWriter.data(for: document)) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageWriterError,
+                    .invalid(
+                        "board test.board: presentation front must reference a canonical presentation"
+                    )
+                )
+            }
+        }
+
+        let aliasPresentation = """
+            },
+            {
+              \"id\": \"front-inverted\",
+              \"name\": \"Front upside down\",
+              \"assetPath\": \"assets/front-inverted.png\",
+              \"aspectRatio\": 2.0,
+              \"default\": false,
+              \"sourcePresentationID\": \"front\",
+              \"isInverted\": true
+            }
+        """
+        let withAlias = source.replacingOccurrences(
+            of: "    }\n  ]\n}\n",
+            with: aliasPresentation + "\n  ]\n}\n"
+        )
+        let aliasOwnedHold = try editorDocument(
+            withAlias.replacingOccurrences(
+                of: "\"presentationID\": \"front\"",
+                with: "\"presentationID\": \"front-inverted\""
+            )
+        )
+
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: aliasOwnedHold)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid(
+                    "board test.board: hold hold-one must be owned by a canonical presentation"
+                )
+            )
+        }
+    }
+
+    private func editorDocument(_ source: String) throws -> BoardEditableDocument {
+        try BoardEditableDocument(data: Data(source.utf8))
+    }
+
     private static func describeFirstDifference(
         _ left: BoardEditableDocument,
         _ right: BoardEditableDocument
