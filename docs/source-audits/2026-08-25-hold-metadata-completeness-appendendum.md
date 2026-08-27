@@ -22,9 +22,10 @@ render or photograph.
 
 ## Result
 
-The package catalog has 706 current hold records. The ledger reviews 679 holds:
-653 have manufacturer-verified kinds and 26 have explicitly labelled adapted
-kinds. A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
+The package catalog has 766 current hold records across 51 package files. The
+ledger reviews 706 holds across 44 boards, including Beastmaker 2000. It does
+not cover the two legacy Grindstones or the five Pivot orientation packages.
+A missing `fingerCapacity` on an edge, jug, pinch, or sloper is not a
 gap: capacity is meaningful only for a source-labelled finger pocket. Likewise,
 `sizeMillimeters` is only used for a source-mapped single depth; a continuous
 surface with several published depths uses `depthRangeMillimeters` when the
@@ -161,9 +162,10 @@ manufacturer views establish bilateral symmetry.
 | `frictitious.megalith` | `stepped-8-10-12-{left,right}`, `stepped-30-40-pocket-{left,right}`, `stepped-15-20-{left,right}` plus the overlapping unnamed `hold-11`…`hold-14` records | `edge-{8,10,12}-{left,right}`, `edge-30-{left,right}`, `edge-40-pocket-{left,right}`, `edge-{15,20}-{left,right}` | The [product page](https://frictitiousclimbing.com/products/megalith) enumerates seven shoulder-width edge sizes and identifies the two-finger pocket on the 40 mm edge. The [official labelled front](https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840) and [official oblique detail](https://frictitiousclimbing.com/cdn/shop/files/Mega-4.jpg?v=1764914587&width=3840) map every value to a visibly separate planar shelf. The integrated pocket stays part of its 40 mm edge contact; no independent depth or capacity was invented. | 18 logical holds: 14 shoulder-width scalar edges, one 25 mm centre edge, one jug, and two mono pockets. No depth ranges or unnamed duplicate holds remain. |
 
 The canonical ledger now uses the 14 replacement Tension contacts and contains
-no retired range-backed IDs. The final ledger reviews 679 holds across 43
-boards; Beastmaker 2000's 27 holds remain outside it, completing the current
-706-hold catalog inventory.
+no retired range-backed IDs. The final ledger reviews 706 holds across 44
+boards, including Beastmaker 2000; the complete catalog has 766 current hold
+records across 51 package files. The ledger does not cover the two legacy
+Grindstones or the five Pivot orientation packages.
 
 Every replacement contact has a newly reviewed, closed canonical path authored
 through Workbench. Adjacent steps share only their physical transition line;
@@ -236,8 +238,9 @@ shared-kind ruling only: it does not position Beastmaker's 10 mm pair,
 deep/medium/small labels, or two-/three-/four-finger subtypes.
 
 The final global state supersedes this intermediate migration snapshot: the
-catalog has 706 holds and the ledger reviews 679. Of the reviewed kind records,
-653 are manufacturer-verified and 26 are explicitly labelled adaptations.
+catalog has 766 current hold records across 51 package files and the ledger
+reviews 706 holds across 44 boards, including Beastmaker 2000. The ledger does
+not cover the two legacy Grindstones or the five Pivot orientation packages.
 
 Every optional Beastmaker 1000 field remains blank. The pass removes 17
 unsupported pocket scalar depths, 19 duplicated kind-as-feature arrays, and
