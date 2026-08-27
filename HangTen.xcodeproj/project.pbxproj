@@ -77,6 +77,8 @@
 		AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */; };
 		AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000049 /* WorkoutStopwatch.swift */; };
 		AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000050 /* WorkoutStopwatchTests.swift */; };
+		AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000001 /* WorkoutAccessStore.swift */; };
+		AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */; };
 		AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000051 /* AppStoreFavoritesTests.swift */; };
 		AA0000000000000000000052 /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000052 /* WorkoutHistory.swift */; };
 		AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */; };
@@ -200,6 +202,8 @@
 		BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTargetSubstitutionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000049 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
 		BB0000000000000000000050 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000001 /* WorkoutAccessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStore.swift; sourceTree = "<group>"; };
+		BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000051 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000052 /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
 		BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStore.swift; sourceTree = "<group>"; };
@@ -331,6 +335,7 @@
 				BB0000000000000000000043 /* PlanFilters.swift */,
 				BB0000000000000000000047 /* WorkoutActivityRecording.swift */,
 				BB0000000000000000000049 /* WorkoutStopwatch.swift */,
+				BF0000000000000000000001 /* WorkoutAccessStore.swift */,
 				BB0000000000000000000052 /* WorkoutHistory.swift */,
 				BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */,
 				BB0000000000000000000054 /* WorkoutHistoryService.swift */,
@@ -419,6 +424,7 @@
 				BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */,
 				BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */,
 				BB0000000000000000000050 /* WorkoutStopwatchTests.swift */,
+				BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */,
 				BB0000000000000000000051 /* AppStoreFavoritesTests.swift */,
 				BB0000000000000000000055 /* WorkoutHistoryTests.swift */,
 				BB0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift */,
@@ -693,6 +699,7 @@
 				AA0000000000000000000043 /* PlanFilters.swift in Sources */,
 				AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */,
 				AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */,
+				AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */,
 				AA0000000000000000000052 /* WorkoutHistory.swift in Sources */,
 				AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */,
 				AA0000000000000000000054 /* WorkoutHistoryService.swift in Sources */,
@@ -743,6 +750,7 @@
 				AA0000000000000000000046 /* PlanStorageTests.swift in Sources */,
 				AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */,
 				AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */,
+				AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */,
 				AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */,
 				AA0000000000000000000055 /* WorkoutHistoryTests.swift in Sources */,
 				AA0000000000000000000056 /* LocalWorkoutHistoryStoreTests.swift in Sources */,
