@@ -302,7 +302,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "mono-right",
@@ -398,7 +399,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-8-left",
@@ -488,7 +490,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-10-left",
@@ -541,7 +544,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-12-left",
@@ -624,7 +628,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-12-right",
@@ -714,7 +719,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-10-right",
@@ -767,7 +773,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-8-right",
@@ -850,7 +857,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-30-left",
@@ -940,7 +948,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-40-pocket-left",
@@ -1089,7 +1098,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-40-pocket-right",
@@ -1238,7 +1248,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-30-right",
@@ -1321,7 +1332,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-15-left",
@@ -1411,7 +1423,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-20-left",
@@ -1494,7 +1507,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-20-right",
@@ -1584,7 +1598,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-15-right",
@@ -1667,7 +1682,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     }
   ],
   "presentations": [
