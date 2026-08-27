@@ -24,6 +24,7 @@ YY_TRAVELBOARD_ROOT = HANGBOARDS_ROOT / "yy-travelboard"
 YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
 YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
 YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
+TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 
 
 def _global_path_segment_signatures(
@@ -751,6 +752,36 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry()
     assert tuple((hold["id"], hold["name"]) for hold in holds) == COMPACT_HOLDS
     assert len(hold_ids) == len(set(hold_ids))
     assert all(hold.get("geometry") for hold in holds)
+
+
+def test_training_tiles_freezes_sixteen_manufacturer_enumerated_contacts() -> None:
+    board = json.loads((TRAINING_TILES_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["id"] == "soill.training-tiles"
+    assert tuple((hold["id"], hold["name"], hold["kind"]) for hold in board["holds"]) == (
+        ("upper-sloper-outer-left", "Outer left upper sloper", "sloper"),
+        ("upper-sloper-outer-right", "Outer right upper sloper", "sloper"),
+        ("upper-sloper-inner-left", "Inner left upper sloper", "sloper"),
+        ("upper-sloper-inner-right", "Inner right upper sloper", "sloper"),
+        ("middle-edge-outer-left", "Outer left middle edge", "edge"),
+        ("middle-edge-outer-right", "Outer right middle edge", "edge"),
+        ("middle-edge-inner-left", "Inner left middle edge", "edge"),
+        ("middle-edge-inner-right", "Inner right middle edge", "edge"),
+        ("bottom-edge-center-left", "Center left bottom edge", "edge"),
+        ("bottom-edge-center-right", "Center right bottom edge", "edge"),
+        ("top-pocket-left", "Left top pocket", "pocket"),
+        ("top-pocket-right", "Right top pocket", "pocket"),
+        ("bottom-edge-inner-left", "Inner left bottom edge", "edge"),
+        ("bottom-edge-inner-right", "Inner right bottom edge", "edge"),
+        ("bottom-edge-outer-left", "Outer left bottom edge", "edge"),
+        ("bottom-edge-outer-right", "Outer right bottom edge", "edge"),
+    )
+    pockets = [hold for hold in board["holds"] if hold["kind"] == "pocket"]
+    assert [(hold["id"], hold["sizeMillimeters"]) for hold in pockets] == [
+        ("top-pocket-left", 76.2),
+        ("top-pocket-right", 76.2),
+    ]
+    assert all(len(hold["geometry"]) == 3 for hold in pockets)
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:

@@ -278,13 +278,14 @@ none of the removed art or geometry was restored as a starting point.
 
 ### `soill-training-tiles`
 
-- **Sources:** [So iLL x Meagan Martin Training Tiles](https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin);
-  [Training Tiles workouts](https://soillholds.com/pages/meagan-martin-training-tiles-workouts).
+- **Source / review:** [So iLL Canada x Meagan Martin Training Tiles](https://soill.ca/products/training-tiles-so-ill-x-meagan-martin),
+  re-reviewed 2026-08-26.
 - **Current JSON holds:** 16.
 - **Source-backed expected physical count:** 16.
-- **Verified facts:** So iLL x Meagan Martin Training Tiles; each tile is
-  approximately `14 × 8 in`; the manufacturer enumerates eight contacts per
-  tile.
+- **Verified facts:** each tile is approximately `14 × 8 in`; the manufacturer
+  enumerates one 3-inch pocket, two slopers, two middle edges, and three bottom
+  edges per tile. The logical pockets are directly mapped to the one-per-tile
+  source statement and retain the exact `76.2 mm` conversion.
 - **Discrepancy:** resolved; grouped size values without a one-to-one location
   mapping remain omitted from individual holds.
 - **Action:** directly authored and visually reviewed; retain as complete.

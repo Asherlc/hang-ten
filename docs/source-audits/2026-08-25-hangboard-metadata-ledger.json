@@ -14842,507 +14842,579 @@
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "pocket-left",
-        "pocket-right"
+        "top-pocket-left",
+        "top-pocket-right"
       ],
       "field": "kind",
       "outcome": "verified",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
-      },
       "value": "pocket"
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "pocket-left",
-        "pocket-right"
+        "top-pocket-left",
+        "top-pocket-right"
       ],
       "field": "sizeMillimeters",
       "outcome": "verified",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
-      },
       "value": 76.2
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "pocket-left",
-        "pocket-right"
+        "top-pocket-left",
+        "top-pocket-right"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
-      },
-      "reason": "The official source publishes no lower/upper depth range for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "pocket-left",
-        "pocket-right"
+        "top-pocket-left",
+        "top-pocket-right"
       ],
       "field": "fingerCapacity",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
-      },
-      "reason": "The official source calls this a pocket but does not publish a finger capacity."
+      "reason": "The manufacturer identifies the pocket but does not publish its finger capacity."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "pocket-left",
-        "pocket-right"
+        "top-pocket-left",
+        "top-pocket-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
-      },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "pocket-left",
-        "pocket-right"
+        "top-pocket-left",
+        "top-pocket-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
-      },
-      "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "pocket-left",
-        "pocket-right"
+        "top-pocket-left",
+        "top-pocket-right"
       ],
       "field": "features",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: Pocket (3\" depth), one per tile; no finger count published"
-      },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "outer-sloper-left",
-        "outer-sloper-right",
-        "inner-sloper-left",
-        "inner-sloper-right"
+        "top-pocket-left",
+        "top-pocket-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reason": "Sloper treatment is not applicable to this non-sloper contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
+      "holdIDs": [
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
       ],
       "field": "kind",
       "outcome": "verified",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: two Slopers per tile (25\u00b0/54 mm and 12\u00b0/64 mm; positions not numbered)"
-      },
       "value": "sloper"
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "outer-sloper-left",
-        "outer-sloper-right",
-        "inner-sloper-left",
-        "inner-sloper-right"
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: two Slopers per tile (25\u00b0/54 mm and 12\u00b0/64 mm; positions not numbered)"
-      },
-      "reason": "The official feature list publishes grouped family sizes without a numbered one-to-one mapping to these left/right stable IDs."
+      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "outer-sloper-left",
-        "outer-sloper-right",
-        "inner-sloper-left",
-        "inner-sloper-right"
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: two Slopers per tile (25\u00b0/54 mm and 12\u00b0/64 mm; positions not numbered)"
-      },
-      "reason": "The official source publishes no lower/upper depth range for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "outer-sloper-left",
-        "outer-sloper-right",
-        "inner-sloper-left",
-        "inner-sloper-right"
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: two Slopers per tile (25\u00b0/54 mm and 12\u00b0/64 mm; positions not numbered)"
-      },
-      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+      "reason": "Finger capacity is not applicable to this non-pocket contact."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "outer-sloper-left",
-        "outer-sloper-right",
-        "inner-sloper-left",
-        "inner-sloper-right"
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: two Slopers per tile (25\u00b0/54 mm and 12\u00b0/64 mm; positions not numbered)"
-      },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "outer-sloper-left",
-        "outer-sloper-right",
-        "inner-sloper-left",
-        "inner-sloper-right"
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: two Slopers per tile (25\u00b0/54 mm and 12\u00b0/64 mm; positions not numbered)"
-      },
-      "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "outer-sloper-left",
-        "outer-sloper-right",
-        "inner-sloper-left",
-        "inner-sloper-right"
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
       ],
       "field": "features",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Top: two Slopers per tile (25\u00b0/54 mm and 12\u00b0/64 mm; positions not numbered)"
-      },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "middle-edge-upper-left",
-        "middle-edge-upper-right",
-        "middle-edge-lower-left",
-        "middle-edge-lower-right"
+        "upper-sloper-outer-left",
+        "upper-sloper-outer-right",
+        "upper-sloper-inner-left",
+        "upper-sloper-inner-right"
+      ],
+      "field": "sloper",
+      "outcome": "unavailable",
+      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
+      "holdIDs": [
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "kind",
       "outcome": "verified",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"
-      },
       "value": "edge"
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "middle-edge-upper-left",
-        "middle-edge-upper-right",
-        "middle-edge-lower-left",
-        "middle-edge-lower-right"
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"
-      },
-      "reason": "The official feature list publishes grouped family sizes without a numbered one-to-one mapping to these left/right stable IDs."
+      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "middle-edge-upper-left",
-        "middle-edge-upper-right",
-        "middle-edge-lower-left",
-        "middle-edge-lower-right"
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"
-      },
-      "reason": "The official source publishes no lower/upper depth range for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "middle-edge-upper-left",
-        "middle-edge-upper-right",
-        "middle-edge-lower-left",
-        "middle-edge-lower-right"
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"
-      },
-      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+      "reason": "Finger capacity is not applicable to this non-pocket contact."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "middle-edge-upper-left",
-        "middle-edge-upper-right",
-        "middle-edge-lower-left",
-        "middle-edge-lower-right"
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"
-      },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "middle-edge-upper-left",
-        "middle-edge-upper-right",
-        "middle-edge-lower-left",
-        "middle-edge-lower-right"
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"
-      },
-      "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "middle-edge-upper-left",
-        "middle-edge-upper-right",
-        "middle-edge-lower-left",
-        "middle-edge-lower-right"
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
       ],
       "field": "features",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"
-      },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right",
+        "middle-edge-outer-left",
+        "middle-edge-outer-right",
+        "middle-edge-inner-left",
+        "middle-edge-inner-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reason": "Sloper treatment is not applicable to this non-sloper contact."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
+      "holdIDs": [
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right"
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
       ],
       "field": "kind",
       "outcome": "verified",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
-      },
       "value": "edge"
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right"
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
       ],
       "field": "sizeMillimeters",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
-      },
-      "reason": "The official feature list publishes grouped family sizes without a numbered one-to-one mapping to these left/right stable IDs."
+      "reason": "The manufacturer publishes grouped measurements but does not map a specific size or sloper treatment to this individual contact."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right"
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
       ],
       "field": "depthRangeMillimeters",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
-      },
-      "reason": "The official source publishes no lower/upper depth range for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right"
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
       ],
       "field": "fingerCapacity",
       "outcome": "notApplicable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
-      },
-      "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable."
+      "reason": "Finger capacity is not applicable to this non-pocket contact."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right"
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
       ],
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
-      },
-      "reason": "The official source does not state simultaneous hand capacity for this contact."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right"
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
       ],
       "field": "gripType",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
-      },
-      "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum."
+      "reason": "The manufacturer does not publish this per-contact metadata."
     },
     {
       "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
+      },
       "holdIDs": [
-        "bottom-edge-outer-left",
-        "bottom-edge-outer-right",
         "bottom-edge-center-left",
         "bottom-edge-center-right",
         "bottom-edge-inner-left",
-        "bottom-edge-inner-right"
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
       ],
       "field": "features",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
+      "reason": "The manufacturer does not publish this per-contact metadata."
+    },
+    {
+      "boardID": "soill.training-tiles",
+      "reviewedAt": "2026-08-26",
       "source": {
         "kind": "manufacturer",
-        "url": "https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin",
-        "label": "Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"
+        "url": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+        "label": "So iLL Canada Training Tiles product page, reviewed 2026-08-26: each tile has one 3 in pocket, two 25°/54 mm and 12°/64 mm slopers, two 44/50 mm slightly-positive middle edges, and three 36/31/24 mm bottom flat edges."
       },
-      "reason": "The official source does not publish an exact package feature-tag set for this contact."
+      "holdIDs": [
+        "bottom-edge-center-left",
+        "bottom-edge-center-right",
+        "bottom-edge-inner-left",
+        "bottom-edge-inner-right",
+        "bottom-edge-outer-left",
+        "bottom-edge-outer-right"
+      ],
+      "field": "sloper",
+      "outcome": "notApplicable",
+      "reason": "Sloper treatment is not applicable to this non-sloper contact."
     },
     {
       "boardID": "escape.unlimited",
@@ -34326,9 +34398,6 @@
     {"boardID":"soill.split-palm","holdIDs":["flat-edge-25-left","flat-edge-25-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/split-palm","label":"Center Flat Rail: 1\" (25.4 mm), mapped to schema edge (one per piece)"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
     {"boardID":"soill.split-palm","holdIDs":["outer-crimp-12-left","outer-crimp-12-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/split-palm","label":"Outer Crimp Rail: 1/2\" (12.7 mm), mapped to schema edge (one per piece)"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
     {"boardID":"soill.split-palm","holdIDs":["bottom-sloping-crimp-12-left","bottom-sloping-crimp-12-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/split-palm","label":"Bottom Center Sloping Crimp Rail: 1/2\" (12.7 mm), mapped to schema edge (one per piece)"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"soill.training-tiles","holdIDs":["pocket-left","pocket-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin","label":"Top: Pocket (3\" depth), one per tile; no finger count published"},"reason":"The manufacturer identifies these contacts as pocket, so sloper subtype metadata is not applicable."},
-    {"boardID":"soill.training-tiles","holdIDs":["middle-edge-upper-left","middle-edge-upper-right","middle-edge-lower-left","middle-edge-lower-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin","label":"Middle: two Slightly Positive Edges per tile (44 mm and 50 mm; positions not numbered)"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
-    {"boardID":"soill.training-tiles","holdIDs":["bottom-edge-outer-left","bottom-edge-outer-right","bottom-edge-center-left","bottom-edge-center-right","bottom-edge-inner-left","bottom-edge-inner-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin","label":"Bottom: three Flat Edges per tile (36 mm, 31 mm, and 24 mm; positions not numbered)"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
     {"boardID":"escape.unlimited","holdIDs":["edge-45-left","edge-45-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445","label":"Upper split rung: 45MM"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
     {"boardID":"escape.unlimited","holdIDs":["edge-20-left","edge-20-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445","label":"Middle split rung: 20MM"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
     {"boardID":"escape.unlimited","holdIDs":["edge-15-left","edge-15-right"],"field":"sloper","outcome":"notApplicable","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445","label":"Lower split rung: 15MM"},"reason":"The manufacturer identifies these contacts as edge, so sloper subtype metadata is not applicable."},
@@ -34514,10 +34583,6 @@
     {"boardID":"soill.split-palm","holdIDs":["large-sloper-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/split-palm","label":"Large Sloper (one per piece)"},"outcome":"unavailable","reason":"The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."},
     {"boardID":"soill.split-palm","holdIDs":["small-sloper-left"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/split-palm","label":"Smaller Sloper (one per piece)"},"outcome":"unavailable","reason":"The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."},
     {"boardID":"soill.split-palm","holdIDs":["small-sloper-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/split-palm","label":"Smaller Sloper (one per piece)"},"outcome":"unavailable","reason":"The manufacturer labels this contact only by relative sloper size and publishes no flat-or-round subtype."},
-    {"boardID":"soill.training-tiles","holdIDs":["outer-sloper-left"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin","label":"Top: two Slopers per tile (25°/54 mm and 12°/64 mm; positions not numbered)"},"outcome":"unavailable","reason":"The manufacturer publishes sloper angles and depths but does not identify either contact as flat or round."},
-    {"boardID":"soill.training-tiles","holdIDs":["outer-sloper-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin","label":"Top: two Slopers per tile (25°/54 mm and 12°/64 mm; positions not numbered)"},"outcome":"unavailable","reason":"The manufacturer publishes sloper angles and depths but does not identify either contact as flat or round."},
-    {"boardID":"soill.training-tiles","holdIDs":["inner-sloper-left"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin","label":"Top: two Slopers per tile (25°/54 mm and 12°/64 mm; positions not numbered)"},"outcome":"unavailable","reason":"The manufacturer publishes sloper angles and depths but does not identify either contact as flat or round."},
-    {"boardID":"soill.training-tiles","holdIDs":["inner-sloper-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://soillholds.com/products/training-tiles-so-ill-x-meagan-martin","label":"Top: two Slopers per tile (25°/54 mm and 12°/64 mm; positions not numbered)"},"outcome":"unavailable","reason":"The manufacturer publishes sloper angles and depths but does not identify either contact as flat or round."},
     {"boardID":"escape.unlimited","holdIDs":["top-sloper-60"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://escapeclimbing.com/cdn/shop/products/2022_Website_Editorial_EscapeClimbing_UnlimitedBoard_Progression-02.png?v=1690380978&width=1445","label":"Top tier: SLOPER, 60MM"},"outcome":"unavailable","reason":"The manufacturer labels the top contact only as a 60 mm sloper and publishes no flat-or-round subtype."},
     {"boardID":"target10a.linebreaker-base","holdIDs":["sloper-32-left"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg","label":"Official Linebreaker BASE position map: Left 32.5-degree sloper"},"outcome":"unavailable","reason":"The manufacturer publishes sloper angles and general rounded-edge construction but does not identify this contact as a flat or round sloper."},
     {"boardID":"target10a.linebreaker-base","holdIDs":["sloper-32-right"],"field":"sloper","reviewedAt":"2026-08-26","source":{"kind":"manufacturer","url":"https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg","label":"Official Linebreaker BASE position map: Right 32.5-degree sloper"},"outcome":"unavailable","reason":"The manufacturer publishes sloper angles and general rounded-edge construction but does not identify this contact as a flat or round sloper."},
