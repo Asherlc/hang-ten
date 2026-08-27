@@ -1449,8 +1449,8 @@
         },
         {
           "frame": {
-            "x": 0.814650682292,
-            "y": 0.602101514284,
+            "x": 0.85637481901,
+            "y": 0.624860134401,
             "width": 0.069173749992,
             "height": 0.057285436888
           },
@@ -1547,7 +1547,7 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 2,
+      "fingerCapacity": 1,
       "gripType": "threeFingerPocket"
     },
     {
