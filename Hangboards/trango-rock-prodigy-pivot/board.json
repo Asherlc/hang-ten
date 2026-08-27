@@ -1081,7 +1081,8 @@
       ],
       "presentationID": "orientation-2",
       "sizeMillimeters": 11.5,
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "upper-sloped-crimp-left-orientation-3",
