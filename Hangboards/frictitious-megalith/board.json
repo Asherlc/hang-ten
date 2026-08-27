@@ -76,7 +76,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "center-edge-25",
