@@ -5,6 +5,7 @@ import Sentry
 struct HangTenApp: App {
 	@StateObject private var motherboardBluetoothService: MotherboardBluetoothService
 	@StateObject private var motherboardSettingsStore: MotherboardSettingsStore
+	@StateObject private var purchaseManager: PurchaseManager
 	@StateObject private var store: AppStore
 
 	init() {
@@ -25,14 +26,19 @@ struct HangTenApp: App {
 		)
 		let motherboardSettingsStore = MotherboardSettingsStore()
 		let workoutSessionStore = WorkoutSessionStore()
+		let workoutAccessStore = WorkoutAccessStore()
+		let purchaseManager = PurchaseManager()
 		let telemetry = TelemetryComposition.make(bundle: .main)
 
 		_motherboardBluetoothService = StateObject(wrappedValue: motherboardBluetoothService)
 		_motherboardSettingsStore = StateObject(wrappedValue: motherboardSettingsStore)
+		_purchaseManager = StateObject(wrappedValue: purchaseManager)
 		_store = StateObject(wrappedValue: AppStore(
 			motherboardBluetoothService: motherboardBluetoothService,
 			motherboardSettingsStore: motherboardSettingsStore,
 			workoutSessionStore: workoutSessionStore,
+			workoutAccessStore: workoutAccessStore,
+			purchaseManager: purchaseManager,
 			telemetry: telemetry
 		))
 
@@ -49,6 +55,9 @@ struct HangTenApp: App {
                 .environmentObject(store)
 				.environmentObject(motherboardBluetoothService)
 				.environmentObject(motherboardSettingsStore)
+				.task {
+					await purchaseManager.prepare()
+				}
         }
     }
 }

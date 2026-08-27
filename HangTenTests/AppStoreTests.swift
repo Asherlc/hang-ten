@@ -1026,6 +1026,140 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         super.tearDown()
     }
 
+    func testSavingCompletedSessionsConsumesOnlyTheTwoFreeCredits() {
+        let defaults = makeDefaults()
+        let accessStore = WorkoutAccessStore(defaults: defaults)
+        let purchases = PurchaseManager(client: FakeStoreKitClient())
+        let store = AppStore(
+            defaults: defaults,
+            workoutAccessStore: accessStore,
+            purchaseManager: purchases
+        )
+
+        store.recordSavedWorkoutAccess()
+        store.recordSavedWorkoutAccess()
+        store.recordSavedWorkoutAccess()
+
+        XCTAssertEqual(accessStore.freeWorkoutsUsed, 2)
+        XCTAssertEqual(store.workoutLaunchDecision, .requiresPurchase)
+    }
+
+    func testPaidAccessDoesNotConsumeFreeWorkoutWhenSessionIsSaved() async {
+        let defaults = makeDefaults()
+        let accessStore = WorkoutAccessStore(defaults: defaults)
+        let purchases = PurchaseManager(
+            client: FakeStoreKitClient(
+                currentEntitlement: .verified(
+                    productID: PurchaseManager.lifetimeProductID
+                )
+            )
+        )
+        await purchases.prepare()
+        let store = AppStore(
+            defaults: defaults,
+            workoutAccessStore: accessStore,
+            purchaseManager: purchases
+        )
+
+        store.recordSavedWorkoutAccess()
+
+        XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
+        XCTAssertEqual(store.workoutLaunchDecision, .allowed)
+    }
+
+    func testVerifiedEntitlementAllowsLaunchWhenProductPreparationFails() async {
+        let defaults = makeDefaults()
+        let purchases = PurchaseManager(
+            client: FakeStoreKitClient(
+                product: nil,
+                currentEntitlement: .verified(
+                    productID: PurchaseManager.lifetimeProductID
+                )
+            )
+        )
+        await purchases.prepare()
+        let store = AppStore(defaults: defaults, purchaseManager: purchases)
+
+        XCTAssertEqual(purchases.state, .failed)
+        XCTAssertEqual(store.workoutLaunchDecision, .allowed)
+    }
+
+    func testSuccessfulSessionPersistenceConsumesCreditOnlyAfterCompletion() {
+        let defaults = makeDefaults()
+        let accessStore = WorkoutAccessStore(defaults: defaults)
+        let sessionStore = ControllableAppendWorkoutSessionStore()
+        let store = AppStore(
+            workoutSessionStore: sessionStore,
+            defaults: defaults,
+            workoutAccessStore: accessStore,
+            purchaseManager: PurchaseManager(client: FakeStoreKitClient())
+        )
+        let record = workoutSessionRecord()
+
+        store.markSessionComplete(
+            PlanCatalog.metoliusTenMinute,
+            startDate: record.startDate,
+            endDate: record.endDate,
+            session: record
+        )
+
+        XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
+
+        sessionStore.completeAppend(.success(()))
+        waitUntil { accessStore.freeWorkoutsUsed == 1 }
+
+        XCTAssertEqual(accessStore.freeWorkoutsUsed, 1)
+    }
+
+    func testFailedSessionPersistenceDoesNotConsumeCredit() async {
+        let defaults = makeDefaults()
+        let accessStore = WorkoutAccessStore(defaults: defaults)
+        let sessionStore = ControllableAppendWorkoutSessionStore()
+        let store = AppStore(
+            workoutSessionStore: sessionStore,
+            defaults: defaults,
+            workoutAccessStore: accessStore,
+            purchaseManager: PurchaseManager(client: FakeStoreKitClient())
+        )
+        let record = workoutSessionRecord()
+        let persistenceFailed = expectation(description: "persistence failure recorded")
+        let observation = store.$sessionPersistenceError.dropFirst().sink { error in
+            guard error != nil else { return }
+            persistenceFailed.fulfill()
+        }
+
+        store.markSessionComplete(
+            PlanCatalog.metoliusTenMinute,
+            startDate: record.startDate,
+            endDate: record.endDate,
+            session: record
+        )
+        sessionStore.completeAppend(.failure(SessionAppendTestError.failed))
+        await fulfillment(of: [persistenceFailed], timeout: 1)
+
+        XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
+        withExtendedLifetime(observation) {}
+    }
+
+    func testLoadingHistoricSessionsDoesNotConsumeCredits() {
+        let defaults = makeDefaults()
+        let accessStore = WorkoutAccessStore(defaults: defaults)
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        sessionStore.append(workoutSessionRecord())
+        sessionStore.flush()
+
+        let store = AppStore(
+            workoutSessionStore: sessionStore,
+            defaults: defaults,
+            workoutAccessStore: accessStore,
+            purchaseManager: PurchaseManager(client: FakeStoreKitClient())
+        )
+        store.flushSessionPersistenceSynchronously()
+
+        XCTAssertEqual(store.sessionHistory.count, 1)
+        XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
+    }
+
     func testLaunchRestoresDashboardCountersFromNewestSavedHistory() {
         let defaults = makeDefaults()
         let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
@@ -1332,6 +1466,44 @@ private final class FailingWorkoutSessionStore: WorkoutSessionStoring {
     }
 
     func flush() {}
+}
+
+private enum SessionAppendTestError: Error {
+    case failed
+}
+
+private final class ControllableAppendWorkoutSessionStore: WorkoutSessionStoring {
+    private(set) var sessions: [WorkoutSessionRecord] = []
+    var persistenceError: String? { nil }
+    private var appendCompletion: ((Result<Void, Error>) -> Void)?
+
+    func append(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.append(session)
+        appendCompletion = completion
+    }
+
+    func remove(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.removeAll { $0.id == session.id }
+        completion(.success(()))
+    }
+
+    func flush(completion: @escaping (Result<Void, Error>) -> Void) {
+        completion(.success(()))
+    }
+
+    func flush() {}
+
+    func completeAppend(_ result: Result<Void, Error>) {
+        let completion = appendCompletion
+        appendCompletion = nil
+        completion?(result)
+    }
 }
 
 private final class DeferredFlushWorkoutSessionStore: WorkoutSessionStoring {
