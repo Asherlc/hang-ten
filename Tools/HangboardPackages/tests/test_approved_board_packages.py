@@ -415,21 +415,39 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "tension.flash-board"
-    assert board["dimensions"] == "Not published by manufacturer"
+    assert "dimensions" not in board
     assert board["presentations"] == [
         {
-            "id": "three-edge",
-            "name": "Three-edge surface",
+            "id": "three-edge-upright",
+            "name": "Three-edge surface — right side up",
             "assetPath": "assets/primary.png",
             "aspectRatio": 1.5,
             "default": True,
         },
         {
-            "id": "two-edge",
-            "name": "Two-edge surface",
+            "id": "three-edge-inverted",
+            "name": "Three-edge surface — upside down",
+            "assetPath": "assets/three-edge-inverted.png",
+            "aspectRatio": 1.5,
+            "default": False,
+            "sourcePresentationID": "three-edge-upright",
+            "isInverted": True,
+        },
+        {
+            "id": "two-edge-upright",
+            "name": "Two-edge surface — right side up",
             "assetPath": "assets/two-edge-surface.png",
             "aspectRatio": 2.0,
             "default": False,
+        },
+        {
+            "id": "two-edge-inverted",
+            "name": "Two-edge surface — upside down",
+            "assetPath": "assets/two-edge-inverted.png",
+            "aspectRatio": 2.0,
+            "default": False,
+            "sourcePresentationID": "two-edge-upright",
+            "isInverted": True,
         },
     ]
 
@@ -439,15 +457,15 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
             for hold in board["holds"]
             if hold["presentationID"] == presentation_id
         )
-        for presentation_id in ("three-edge", "two-edge")
+        for presentation_id in ("three-edge-upright", "two-edge-upright")
     }
     assert holds_by_presentation == {
-        "three-edge": (
+        "three-edge-upright": (
             "three-edge-left",
             "three-edge-center",
             "three-edge-right",
         ),
-        "two-edge": (
+        "two-edge-upright": (
             "two-edge-left",
             "two-edge-right",
             "small-crimp-left",
@@ -461,7 +479,9 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
 
     expected_sizes = {
         "assets/primary.png": (1536, 1024),
+        "assets/three-edge-inverted.png": (1536, 1024),
         "assets/two-edge-surface.png": (1774, 887),
+        "assets/two-edge-inverted.png": (1774, 887),
     }
     for asset_path, expected_size in expected_sizes.items():
         with Image.open(FLASH_BOARD_ROOT / asset_path) as image:

@@ -6,7 +6,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     var name: String
     var subtitle: String
     var productURL: URL
-    var dimensions: String
+    var dimensions: String?
     var aspectRatio: Double
     var holds: [BoardEditableHold]
     var presentations: [BoardEditablePresentation]
@@ -29,7 +29,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         name: String,
         subtitle: String,
         productURL: URL,
-        dimensions: String,
+        dimensions: String?,
         aspectRatio: Double,
         holds: [BoardEditableHold],
         presentations: [BoardEditablePresentation]
@@ -56,7 +56,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
         productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = try container.decode(String.self, forKey: .dimensions)
+        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
@@ -73,6 +73,10 @@ struct BoardEditablePresentation: Equatable, Decodable {
     var assetPath: String
     var aspectRatio: Double
     var isDefault: Bool
+    /// An alternate rendering of a canonical presentation, such as an
+    /// upside-down mounting. Holds remain owned by the canonical source.
+    var sourcePresentationID: String?
+    var isInverted: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -80,6 +84,8 @@ struct BoardEditablePresentation: Equatable, Decodable {
         case assetPath
         case aspectRatio
         case isDefault = "default"
+        case sourcePresentationID
+        case isInverted
     }
 
     init(
@@ -87,23 +93,35 @@ struct BoardEditablePresentation: Equatable, Decodable {
         name: String,
         assetPath: String,
         aspectRatio: Double,
-        isDefault: Bool
+        isDefault: Bool,
+        sourcePresentationID: String? = nil,
+        isInverted: Bool = false
     ) {
         self.id = id
         self.name = name
         self.assetPath = assetPath
         self.aspectRatio = aspectRatio
         self.isDefault = isDefault
+        self.sourcePresentationID = sourcePresentationID
+        self.isInverted = isInverted
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownEditorKeys(["id", "name", "assetPath", "aspectRatio", "default"])
+        try decoder.rejectUnknownEditorKeys([
+            "id", "name", "assetPath", "aspectRatio", "default",
+            "sourcePresentationID", "isInverted"
+        ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         assetPath = try container.decode(String.self, forKey: .assetPath)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         isDefault = try container.decode(Bool.self, forKey: .isDefault)
+        sourcePresentationID = try container.decodeIfPresent(
+            String.self,
+            forKey: .sourcePresentationID
+        )
+        isInverted = try container.decodeIfPresent(Bool.self, forKey: .isInverted) ?? false
     }
 }
 
@@ -343,10 +361,10 @@ enum BoardPackageWriter {
         let requiredStrings = [
             document.manufacturer,
             document.name,
-            document.subtitle,
-            document.dimensions
+            document.subtitle
         ]
-        guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
+        guard requiredStrings.allSatisfy({ !$0.isEmpty }),
+              document.dimensions?.isEmpty != true else {
             throw invalid("required metadata must not be empty", document)
         }
         guard document.productURL.scheme == "https", document.productURL.host != nil else {
@@ -383,6 +401,22 @@ enum BoardPackageWriter {
             throw invalid("presentations must declare exactly one default", document)
         }
 
+        let presentationsByID = Dictionary(
+            uniqueKeysWithValues: document.presentations.map { ($0.id, $0) }
+        )
+        for presentation in document.presentations {
+            if let sourcePresentationID = presentation.sourcePresentationID {
+                guard sourcePresentationID != presentation.id,
+                      let sourcePresentation = presentationsByID[sourcePresentationID],
+                      sourcePresentation.sourcePresentationID == nil else {
+                    throw invalid(
+                        "presentation \(presentation.id) must reference a canonical presentation",
+                        document
+                    )
+                }
+            }
+        }
+
         guard !document.holds.isEmpty else {
             throw invalid("holds must not be empty", document)
         }
@@ -396,6 +430,12 @@ enum BoardPackageWriter {
             }
             guard presentationIDs.contains(hold.presentationID) else {
                 throw invalid("hold \(hold.id) references unknown presentation \(hold.presentationID)", document)
+            }
+            guard presentationsByID[hold.presentationID]?.sourcePresentationID == nil else {
+                throw invalid(
+                    "hold \(hold.id) must be owned by a canonical presentation",
+                    document
+                )
             }
             if hold.sizeMillimeters != nil && hold.depthRangeMillimeters != nil {
                 throw invalid("hold \(hold.id) must not specify both a size and depth range", document)
@@ -516,17 +556,20 @@ enum BoardPackageWriter {
     }
 
     private static func canonicalValue(_ document: BoardEditableDocument) -> CanonicalJSONValue {
-        .object([
+        var entries: [(String, CanonicalJSONValue)] = [
             ("id", .string(document.id)),
             ("manufacturer", .string(document.manufacturer)),
             ("name", .string(document.name)),
             ("subtitle", .string(document.subtitle)),
             ("productURL", .string(document.productURL.absoluteString)),
-            ("dimensions", .string(document.dimensions)),
             ("aspectRatio", .double(document.aspectRatio)),
             ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
-        ])
+        ]
+        if let dimensions = document.dimensions {
+            entries.insert(("dimensions", .string(dimensions)), at: 5)
+        }
+        return .object(entries)
     }
 
     private static func canonicalHoldValue(_ hold: BoardEditableHold) -> CanonicalJSONValue {
@@ -575,13 +618,20 @@ enum BoardPackageWriter {
     private static func canonicalPresentationValue(
         _ presentation: BoardEditablePresentation
     ) -> CanonicalJSONValue {
-        .object([
+        var entries: [(String, CanonicalJSONValue)] = [
             ("id", .string(presentation.id)),
             ("name", .string(presentation.name)),
             ("assetPath", .string(presentation.assetPath)),
             ("aspectRatio", .double(presentation.aspectRatio)),
             ("default", .bool(presentation.isDefault)),
-        ])
+        ]
+        if let sourcePresentationID = presentation.sourcePresentationID {
+            entries.append(("sourcePresentationID", .string(sourcePresentationID)))
+        }
+        if presentation.isInverted {
+            entries.append(("isInverted", .bool(true)))
+        }
+        return .object(entries)
     }
 
     private static func canonicalPieceValue(_ piece: BoardEditablePiece) -> CanonicalJSONValue {

@@ -67,7 +67,7 @@ struct BoardEditorScreen: View {
                 name: slug,
                 subtitle: "",
                 productURL: URL(string: "https://example.invalid")!,
-                dimensions: "",
+                dimensions: nil,
                 aspectRatio: 2,
                 holds: [],
                 presentations: []
