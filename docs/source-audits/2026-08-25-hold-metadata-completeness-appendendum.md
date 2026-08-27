@@ -10,6 +10,16 @@ contacts with the physical contact named by each manufacturer. It is a metadata
 audit only: no measurement, finger count, or hold kind was inferred from a
 render or photograph.
 
+> **2026-08-26 correction:** the historical Beastmaker conclusions below are
+> superseded for the two Beastmaker packages by a manually positioned
+> [secondary comparison source](https://thehangboard.com/pages/beastmaker-1000-vs-2000).
+> The current [Beastmaker audit](2026-08-12-beastmaker-board-packages.md)
+> maps its labelled values and capacities to stable IDs, records them as
+> secondary provenance in the existing ledger, and documents the 1000 center
+> 1000 outer-pair 10-vs-15 mm and 2000 lower-center 22-vs-21 mm
+> primary/secondary discrepancies. No value
+> is assigned to a jug or sloper from that source.
+
 ## Result
 
 The package catalog has 706 current hold records. The ledger reviews 679 holds:
@@ -23,9 +33,8 @@ source establishes its endpoints.
 ### Tension and So iLL ledger certification
 
 The Tension/So iLL batch re-opened the seven current manufacturer product
-pages and manually reviewed the stable IDs in
-`.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
-the workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was unset.
+pages and manually reviewed the stable IDs using overlays generated in a
+workspace-owned `.context` directory.
 Flash Board has separate labelled captures for its three-edge and two-edge
 presentations. No capture was used to create, adjust, or classify geometry.
 
@@ -95,11 +104,9 @@ and labelled captures documented in the [YY
 audit](2026-08-12-yy-vertical-board-packages.md#2026-08-25-source-audited-metadata-certification)
 and [Zlagboard
 audit](2026-08-12-zlagboard-board-packages.md#2026-08-25-source-audited-metadata-certification).
-The primary-presentation captures are retained under
-`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard/`, while the
-collision-free secondary-contact captures and manifest are under
-`.context/hangboard-metadata-backfill-icky-cow/yy-zlagboard-secondary/`. Those
-14 one-ID images are manually reviewed renderings of the Workbench API's
+The primary-presentation and collision-free secondary-contact captures and
+manifest were generated in a workspace-owned `.context` directory. Those 14
+one-ID images are manually reviewed renderings of the Workbench API's
 selected-presentation document and existing canonical paths; no geometry
 changed.
 

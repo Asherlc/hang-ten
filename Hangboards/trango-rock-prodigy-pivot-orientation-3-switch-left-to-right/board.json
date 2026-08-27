@@ -1,0 +1,81 @@
+{
+  "id": "trango.rock-prodigy-pivot.orientation-3-switch-left-to-right",
+  "manufacturer": "Trango",
+  "name": "Rock Prodigy Pivot — Orientation 3 Switch (L-to-R)",
+  "subtitle": "Orientation 3 switch documented key grips.",
+  "productURL": "https://trango.com/products/rock-prodigy-pivot?variant=33101615890537",
+  "aspectRatio": 2.589641434262948,
+  "holds": [
+    {
+      "id": "variable-depth-incut-rail-left",
+      "name": "Left Variable Depth Incut Rail",
+      "kind": "edge",
+      "geometry": [{
+        "frame": {"x": 0.207692, "y": 0.294821, "width": 0.272308, "height": 0.14741},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.0, 0.48]},
+          {"command": "curve", "control1": [0.0, 0.16], "control2": [0.1, 0.0], "to": [0.24, 0.0]},
+          {"command": "curve", "control1": [0.5, 0.0], "control2": [0.82, 0.08], "to": [1.0, 0.2]},
+          {"command": "curve", "control1": [1.0, 0.34], "control2": [1.0, 0.7], "to": [0.88, 0.84]},
+          {"command": "curve", "control1": [0.68, 1.0], "control2": [0.32, 0.98], "to": [0.5, 1.0]},
+          {"command": "curve", "control1": [0.02, 0.74], "control2": [0.0, 0.6], "to": [0.0, 0.48]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    },
+    {
+      "id": "variable-depth-incut-rail-right",
+      "name": "Right Variable Depth Incut Rail",
+      "kind": "edge",
+      "geometry": [{
+        "frame": {"x": 0.52, "y": 0.294821, "width": 0.272308, "height": 0.14741},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [1.0, 0.48]},
+          {"command": "curve", "control1": [1.0, 0.16], "control2": [0.9, 0.0], "to": [0.76, 0.0]},
+          {"command": "curve", "control1": [0.5, 0.0], "control2": [0.18, 0.08], "to": [0.0, 0.2]},
+          {"command": "curve", "control1": [0.0, 0.34], "control2": [0.0, 0.7], "to": [0.12, 0.84]},
+          {"command": "curve", "control1": [0.32, 1.0], "control2": [0.68, 0.98], "to": [0.5, 1.0]},
+          {"command": "curve", "control1": [0.98, 0.74], "control2": [1.0, 0.6], "to": [1.0, 0.48]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    },
+    {
+      "id": "shallow-gaston-left",
+      "name": "Left Shallow Gaston",
+      "kind": "edge",
+      "geometry": [{
+        "frame": {"x": 0.138462, "y": 0.36255, "width": 0.116923, "height": 0.286853},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.0, 0.18]},
+          {"command": "curve", "control1": [0.12, 0.04], "control2": [0.32, 0.0], "to": [0.52, 0.0]},
+          {"command": "curve", "control1": [0.72, 0.18], "control2": [0.9, 0.34], "to": [1.0, 0.54]},
+          {"command": "curve", "control1": [0.88, 0.76], "control2": [0.62, 0.94], "to": [0.34, 1.0]},
+          {"command": "curve", "control1": [0.12, 0.88], "control2": [0.0, 0.54], "to": [0.0, 0.18]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    },
+    {
+      "id": "shallow-gaston-right",
+      "name": "Right Shallow Gaston",
+      "kind": "edge",
+      "geometry": [{
+        "frame": {"x": 0.744615, "y": 0.36255, "width": 0.116923, "height": 0.286853},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [1.0, 0.18]},
+          {"command": "curve", "control1": [0.88, 0.04], "control2": [0.68, 0.0], "to": [0.48, 0.0]},
+          {"command": "curve", "control1": [0.28, 0.18], "control2": [0.1, 0.34], "to": [0.0, 0.54]},
+          {"command": "curve", "control1": [0.12, 0.76], "control2": [0.38, 0.94], "to": [0.66, 1.0]},
+          {"command": "curve", "control1": [0.88, 0.88], "control2": [1.0, 0.54], "to": [1.0, 0.18]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [{"id": "primary", "name": "Primary", "assetPath": "assets/primary.png", "aspectRatio": 2.589641434262948, "default": true}]
+}

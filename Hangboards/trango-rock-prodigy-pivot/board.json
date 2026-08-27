@@ -1393,10 +1393,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "two-finger-pocket-right",
@@ -1528,10 +1525,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "twoFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "twoFingerPocket"
     },
     {
       "id": "three-finger-pocket-left",
@@ -1678,10 +1672,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "three-finger-pocket-right",
@@ -1828,10 +1819,7 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "threeFingerPocket",
-      "features": [
-        "pocket"
-      ]
+      "gripType": "threeFingerPocket"
     },
     {
       "id": "outer-wedge-pinch-left",

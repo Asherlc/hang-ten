@@ -2,17 +2,17 @@
 
 ## Scope and rules
 
-This audit inventories all 96 canonical `kind: "sloper"` holds in 28 package files. Every outcome below is tied to a primary manufacturer product page, specification, or labelled hold map. A canonical subtype is populated only when the source directly establishes `flat` or `round`; names, pixels, geometry, constraints, and degree labels alone were not used to infer subtype.
+This audit inventories all 99 canonical `kind: "sloper"` hold IDs in 28 package files. Every outcome below is tied to a primary manufacturer product page, specification, or labelled hold map. A canonical subtype is populated only when the source directly establishes `flat` or `round`; names, pixels, geometry, constraints, and degree labels alone were not used to infer subtype.
 
 No `angleDegrees` value is populated. Some manufacturers publish sloper degree labels, but the reviewed evidence does not also document that those values use the package contract's board-face reference convention.
 
-The machine ledger's existing `reviewedBoardIDs` scope contains 91 of these slopers. `beastmaker-2000` remains outside that full eight-field scope because its mixed front-contact kinds are not completely source-mapped. The disjoint `sloperOnlyBoardIDs` scope makes its sloper audit machine-checkable without claiming full-board metadata coverage: every one of the board's 27 holds has exactly one `sloper` record, comprising five unavailable sloper outcomes and 22 not-applicable non-sloper outcomes. The ledger also contains `sloper: notApplicable` coverage for the 579 manufacturer-identified non-sloper contacts on fully reviewed boards, as required by the closed all-fields ledger contract.
+The machine ledger's `reviewedBoardIDs` and disjoint `sloperOnlyBoardIDs` scopes make every audited sloper machine-checkable without claiming unsupported full-board metadata coverage. The Honestone macro table row represents four selectable IDs (`macro-sloper-left`, `macro-sloper-left-center`, `macro-sloper-right-center`, and `macro-sloper-right`), which is why the visible table has three fewer rows than the individual-ID inventory.
 
 ## Results
 
-- Inventory: 96 slopers across 28 packages.
+- Inventory: 99 sloper IDs across 28 packages.
 - Verified canonical subtypes: 27 (22 flat, 5 round).
-- Unavailable subtype: 69 (64 full-ledger scoped, 5 supplemental Beastmaker 2000).
+- Unavailable subtype: 72.
 - Verified angle values: 0.
 
 ## Per-hold evidence
@@ -118,4 +118,4 @@ The machine ledger's existing `reviewedBoardIDs` scope contains 91 of these slop
 
 ## Audit conclusion
 
-All 96 sloper contacts have a machine-checked manufacturer-evidence outcome. Only the 27 directly supported subtype objects remain in canonical packages; all generic, ambiguous, or mixed-surface contacts are subtype-absent.
+All 99 sloper IDs have a machine-checked manufacturer-evidence outcome. Only the 27 directly supported subtype objects remain in canonical packages; all 72 generic, ambiguous, or mixed-surface contacts are subtype-absent. The single Honestone macro table row covers four selectable IDs.

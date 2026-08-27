@@ -557,8 +557,8 @@ Reviewed 2026-08-21.
 - [Current Flash Board product page](https://tensionclimbing.com/products/flash-board-2)
   establishes the manufacturer, exact product name, compact cylindrical form,
   portable cord suspension, and published edge list: Small Crimps, 8 mm,
-  10 mm, 15 mm, and 20 mm. It does not publish overall dimensions or map a
-  listed depth to any visible gallery position.
+  10 mm, 15 mm, and 20 mm. It does not map a listed depth to any visible
+  gallery position.
 - [Current official hangboards page](https://tensionclimbing.com/pages/hangboards)
   independently describes the Flash Board as compact and cylindrical and
   publishes the same list, spelling the first item as approximately 6 mm
@@ -576,8 +576,7 @@ Reviewed 2026-08-21.
   independently confirm the recess/crimp separation at both ends. They were
   used as relief evidence, not for inferred measurements.
 - [Official Flash Board overview page](https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board)
-  links Tension's own overview video. It supplied no additional measurement or
-  manufacturer face name.
+  links Tension's own overview video. It supplied no manufacturer face name.
 
 No reseller measurement, review claim, generated illustration, or other board
 package supplied a product fact. The official 2048 × 2048 gallery images were
@@ -592,7 +591,6 @@ mask, contour, or vectorization workflow was used.
 | `manufacturer` / `name` | `Tension` and `Flash Board`, from the manufacturer domain and product title. |
 | `subtitle` | Conservative restatement of the page's compact cylindrical description and exact edge list. |
 | `productURL` | Canonical current manufacturer product page above. |
-| `dimensions` | The schema requires a nonempty string, while no current official Tension source publishes physical dimensions. `Not published by manufacturer` records that limitation without introducing a reseller value. |
 | `aspectRatio` | Presentation-art metadata only: the default 1536 × 1024 PNG is exactly `1.5`; this is not a product dimension. |
 | `presentations` | `three-edge` and `two-edge` are concise repository display descriptions of the two official-gallery orientations, not manufacturer face names. |
 | `holds[].kind` | `edge` follows Tension's own `Edges` heading and `Crimps` label. |
@@ -716,6 +714,38 @@ Task 12 later completed in-app normal-image, all-active, and 7-of-7 hit-target
 review across both presentations; the catalog-wide evidence is consolidated
 below. Interactive Workbench canvas review remains unavailable and is not
 claimed.
+
+### 2026-08-26 mounting-orientation addendum
+
+The user requested that both source-backed Flash Board faces be selectable in
+either mounting orientation. This adds four application configurations, not
+four manufacturer-described faces and not additional physical contacts.
+
+- The current [Flash Board product page](https://tensionclimbing.com/products/flash-board-2)
+  describes a compact cylindrical board that can hang from a pull-up bar, tree,
+  bolt, or resistance anchor. The current [Tension hangboards page](https://tensionclimbing.com/pages/hangboards)
+  repeats its compact cylindrical form and its global edge list. Neither source
+  publishes a different contact inventory for inversion.
+- Therefore `three-edge-upright` and `three-edge-inverted` reuse only
+  `three-edge-left`, `three-edge-center`, and `three-edge-right`; likewise,
+  `two-edge-upright` and `two-edge-inverted` reuse only `two-edge-left`,
+  `two-edge-right`, `small-crimp-left`, and `small-crimp-right`. The
+  `sourcePresentationID` fields explicitly preserve that ownership. No hold ID,
+  kind, measurement, capacity, posture, or training claim was added.
+- `isInverted: true` and the right-side-up/upside-down display names are an
+  explicitly labeled app presentation adaptation for the requested mounting
+  choice. They do not assert a manufacturer face name or a new surface.
+- `assets/three-edge-inverted.png` and `assets/two-edge-inverted.png` are
+  deterministic 180° pixel rotations of the accepted corresponding upright
+  catalog illustrations. They preserve each canvas size and all existing visible
+  contact boundaries; no AI generation, crop, registration, segmentation,
+  contour extraction, or vectorization was used. These remain non-evidence
+  presentation art.
+- The seven already reviewed canonical paths remain the sole saved physical
+  geometry. For an inverted presentation, the board map applies the same exact
+  180° display transform to the image, hold visual, hit target, and detail-map
+  marker. It is not generated or promoted geometry, and it avoids duplicating
+  one physical contact into a second hold record.
 
 ## Metolius Light Rail 2.0
 
@@ -1248,9 +1278,8 @@ Reviewed 2026-08-21.
   “8 grips,” but both the detailed feature list and technical-details list say
   seven and enumerate exactly seven; the enumerated repeated detail controls
   this audit. The page publishes unit weight and load claims but no physical
-  dimensions. The schema requires a nonempty dimensions string, so
-  `dimensions` is explicitly `Not published by YY Vertical`; no measurement
-  was inferred from the older, different Penta product.
+  dimensions. No measurement was inferred from the older, different Penta
+  product.
 - Official packshots:
   [paired front](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-3.webp),
   [tray/mono detail](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-1.webp), and

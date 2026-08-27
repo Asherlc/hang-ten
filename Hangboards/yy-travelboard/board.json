@@ -27,9 +27,6 @@
       "id": "tray",
       "name": "Wide tray",
       "kind": "jug",
-      "features": [
-        "jug"
-      ],
       "presentationID": "front-25-15",
       "geometry": [
         {
@@ -331,9 +328,6 @@
       "name": "Left mono-finger opening",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "front-25-15",
       "geometry": [
         {
@@ -430,9 +424,6 @@
       "name": "Right mono-finger opening",
       "kind": "pocket",
       "fingerCapacity": 1,
-      "features": [
-        "pocket"
-      ],
       "presentationID": "front-25-15",
       "geometry": [
         {

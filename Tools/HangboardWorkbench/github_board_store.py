@@ -835,6 +835,8 @@ def _save_loaded_editor_document(
     presentation = live.presentation(
         requested_presentation_id if isinstance(requested_presentation_id, str) else None
     )
+    if presentation.source_presentation_id is not None:
+        raise board_package.BoardPackageError("alias presentations cannot be edited")
     width, height = presentation.image_width, presentation.image_height
     parsed_regions = board_package._validate_editor_document(
         document,
@@ -1146,14 +1148,25 @@ def _load_package_from_entries(
         )
     presentations = tuple(
         board_package.BoardPresentation(
+            id=presentation_id,
+            name=name,
+            asset_path=asset_path,
+            aspect_ratio=aspect_ratio,
+            is_default=is_default,
+            image_width=dimensions[asset_path][0],
+            image_height=dimensions[asset_path][1],
+            source_presentation_id=source_presentation_id,
+            is_inverted=is_inverted,
+        )
+        for (
             presentation_id,
             name,
             asset_path,
             aspect_ratio,
             is_default,
-            *dimensions[asset_path],
-        )
-        for presentation_id, name, asset_path, aspect_ratio, is_default in presentation_values
+            source_presentation_id,
+            is_inverted,
+        ) in presentation_values
     )
     default = next(item for item in presentations if item.is_default)
     board_package._validate_board(

@@ -609,7 +609,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(
             store.holdIDs(
-                for: step(targets: [.feature(.pocket, fingerCapacity: 3)]),
+                for: step(targets: [.kind(.pocket, fingerCapacity: 3)]),
                 on: BoardCatalog.defaultBoard
             ),
             ["pocket-29-three-left", "pocket-29-three-right"]

@@ -8,6 +8,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launchEnvironment = [
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
             "HANGTEN_REVIEW_WORKOUT": "1",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_STEP": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
         ]

@@ -183,10 +183,8 @@ above, but not a per-contact map from them to the app’s 20 selectable IDs.
 Tension's current pages still publish the Flash Board's global edge list and
 the exact Grindstone, Honestone, and Whetstone feature lists.
 
-Stable-ID overlays were generated and manually reviewed under
-`.context/hangboard-metadata-backfill-icky-cow/tension-soill/`. `icky-cow` is
-the safe workspace-owned fallback because `CONDUCTOR_WORKSPACE_NAME` was
-unset. Flash Board was reviewed in both `three-edge` and `two-edge`
+Stable-ID overlays were generated and manually reviewed in a workspace-owned
+`.context` directory. Flash Board was reviewed in both `three-edge` and `two-edge`
 presentations; the other six packages each use one presentation. The overlays
 are review aids only. They did not change geometry or establish a kind or
 measurement.

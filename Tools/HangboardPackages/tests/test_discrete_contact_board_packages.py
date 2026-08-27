@@ -138,7 +138,7 @@ def test_split_palm_and_training_tiles_expose_descriptive_adapted_contacts() -> 
     assert training_tiles["productURL"] == (
         "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin"
     )
-    assert training_tiles["dimensions"] == "Each tile approximately 14 \u00d7 8 in"
+    assert training_tiles["dimensions"] == "Not published by manufacturer"
     assert all(
         all(
             field not in hold

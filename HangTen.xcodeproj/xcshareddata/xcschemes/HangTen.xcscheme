@@ -60,7 +60,7 @@
       <Testables>
          <TestableReference
             skipped = "NO"
-            parallelizable = "YES">
+            parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EE0000000000000000000002"
@@ -90,6 +90,9 @@
             ReferencedContainer = "container:HangTen.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <StoreKitConfigurationFileReference
+         identifier = "../HangTen/Resources/HangTen.storekit">
+      </StoreKitConfigurationFileReference>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -111,6 +114,9 @@
             ReferencedContainer = "container:HangTen.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <StoreKitConfigurationFileReference
+         identifier = "../HangTen/Resources/HangTen.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

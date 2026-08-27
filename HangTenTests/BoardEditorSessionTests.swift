@@ -200,6 +200,58 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertGreaterThan(elements[1].accessibilityFrameInContainerSpace.height, 0)
     }
 
+    func testCanvasHighlightsOnlyEdgesAndPocketsMissingDepthMetadata() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        document.holds = Array(document.holds.prefix(7))
+        XCTAssertEqual(document.holds.count, 7)
+
+        let kinds: [HoldKind] = [.jug, .sloper, .pinch, .edge, .pocket, .edge, .pocket]
+        for index in document.holds.indices {
+            document.holds[index].kind = kinds[index]
+            document.holds[index].fingerCapacity = 1
+            document.holds[index].handCapacity = 1
+            document.holds[index].sizeMillimeters = nil
+            document.holds[index].depthRangeMillimeters = nil
+        }
+        document.holds[3].sizeMillimeters = 12
+        document.holds[4].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+
+        let session = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        try withExtendedLifetime(session) {
+            let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
+            canvas.session = session
+            canvas.updateMetadataWarningAccessibility()
+
+            let elements = try XCTUnwrap(canvas.accessibilityElements as? [UIAccessibilityElement])
+            XCTAssertEqual(elements.count, 3)
+            XCTAssertEqual(elements[0].accessibilityLabel, "Hangboard hold editor. 2 holds are missing required metadata.")
+            XCTAssertEqual(
+                elements[0].accessibilityValue,
+                "Incomplete holds: \(document.holds[5].id), \(document.holds[6].id)"
+            )
+            XCTAssertEqual(
+                elements.dropFirst().compactMap(\.accessibilityLabel),
+                [
+                    "Incomplete hold metadata: \(document.holds[5].id)",
+                    "Incomplete hold metadata: \(document.holds[6].id)",
+                ]
+            )
+            XCTAssertTrue(elements.dropFirst().allSatisfy {
+                $0.accessibilityValue == "Missing: depth"
+                    && $0.accessibilityFrameInContainerSpace.width > 0
+                    && $0.accessibilityFrameInContainerSpace.height > 0
+            })
+        }
+    }
+
     func testCanvasAppliesTheSessionSelectedBackgroundColor() {
         let canvas = HoldEditorCanvasUIView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
 
@@ -247,12 +299,13 @@ final class BoardEditorSessionTests: XCTestCase {
         XCTAssertNotEqual(frameAfterPinch, frameAfterPan)
     }
 
-    func testIncompleteMetadataRequiresKindFingerDepthAndHandButNotSizeOrFeatures() throws {
+    func testIncompleteMetadataRequiresKindFingerDepthAndHandForEdgesButNotSizeOrFeatures() throws {
         _ = try store.startEditing(slug: "zlagboard-pro")
         let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
         var document = loadedPackage.document
         let holdID = document.holds[0].id
         document.holds = [document.holds[0]]
+        document.holds[0].kind = .edge
         document.holds[0].fingerCapacity = 1
         document.holds[0].depthRangeMillimeters = BoardEditableMillimeterRange(
             lowerBound: 10,
@@ -276,7 +329,7 @@ final class BoardEditorSessionTests: XCTestCase {
             ).incompleteMetadataHoldIDs,
             [holdID]
         )
-        document.holds[0].kind = .jug
+        document.holds[0].kind = .edge
 
         document.holds[0].fingerCapacity = nil
         XCTAssertEqual(
@@ -308,6 +361,46 @@ final class BoardEditorSessionTests: XCTestCase {
                 store: store
             ).incompleteMetadataHoldIDs,
             [holdID]
+        )
+    }
+
+    func testIncompleteMetadataRequiresDepthOnlyForEdgesAndPockets() throws {
+        _ = try store.startEditing(slug: "zlagboard-pro")
+        let loadedPackage = try store.loadDocument(slug: "zlagboard-pro")
+        var document = loadedPackage.document
+        document.holds = Array(document.holds.prefix(5))
+        XCTAssertEqual(document.holds.count, 5)
+
+        let kinds: [HoldKind] = [.jug, .sloper, .pinch, .edge, .pocket]
+        for index in document.holds.indices {
+            document.holds[index].kind = kinds[index]
+            document.holds[index].fingerCapacity = 1
+            document.holds[index].handCapacity = 1
+            document.holds[index].sizeMillimeters = nil
+            document.holds[index].depthRangeMillimeters = nil
+        }
+
+        document.holds[3].sizeMillimeters = 12
+        document.holds[4].depthRangeMillimeters = BoardEditableMillimeterRange(
+            lowerBound: 10,
+            upperBound: 12
+        )
+
+        let completeSession = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        XCTAssertEqual(completeSession.incompleteMetadataHoldIDs, [])
+
+        document.holds[3].sizeMillimeters = nil
+        document.holds[4].depthRangeMillimeters = nil
+        let incompleteSession = BoardEditorSession(
+            package: package(loadedPackage, replacing: document),
+            store: store
+        )
+        XCTAssertEqual(
+            incompleteSession.incompleteMetadataHoldIDs,
+            [document.holds[3].id, document.holds[4].id]
         )
     }
 

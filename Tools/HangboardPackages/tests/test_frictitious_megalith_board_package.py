@@ -30,10 +30,7 @@ EXPECTED_HOLDS = (
     ("edge-15-right", "edge", 15, None),
 )
 EXPECTED_FEATURES = {
-    "top-jug": ("jug",),
     "center-edge-25": ("incutEdge",),
-    "mono-left": ("pocket",),
-    "mono-right": ("pocket",),
 }
 RIGHT_BOTTOM_LEFT_BOUND = 0.629300570964
 RIGHT_BOTTOM_DIVIDER = 0.719149326172

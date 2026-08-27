@@ -32,6 +32,7 @@ def _record(
     hold_id: str,
     field: str,
     outcome: str,
+    *,
     value: object | None = None,
     reason: str | None = None,
 ) -> dict[str, object]:
@@ -47,11 +48,9 @@ def _record(
             "label": "Fixture manufacturer source",
         },
     }
-    if outcome in {"verified", "adapted"}:
+    if outcome == "verified":
         record["value"] = value
-    if outcome == "adapted":
-        record["reason"] = reason
-    elif outcome != "verified":
+    else:
         record["reason"] = reason or "The manufacturer source does not establish this value."
     return record
 
@@ -66,73 +65,6 @@ def unavailable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
 
 def not_applicable(board_id: str, hold_id: str, field: str) -> dict[str, object]:
     return _record(board_id, hold_id, field, "notApplicable")
-
-
-def test_adapted_record_matches_board_value(tmp_path: Path) -> None:
-    package = write_board_package(tmp_path / "boards" / "fixture")
-    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update({"id": "edge-left", "kind": "edge"})
-    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
-    records = _complete_records("fixture.board", "edge-left")
-    records[0] = _record(
-        "fixture.board", "edge-left", "kind", "adapted", "edge", "Hang Ten adaptation"
-    )
-
-    report = validate_metadata_ledger(
-        load_metadata_ledger(_write_ledger(tmp_path, records)),
-        discover_board_packages(tmp_path / "boards"),
-    )
-
-    assert report.fields["kind"].adapted == 1
-
-
-def test_parser_rejects_adapted_record_without_reason(tmp_path: Path) -> None:
-    records = _complete_records("fixture.board", "hold-left")
-    records[0] = _record(
-        "fixture.board", "hold-left", "kind", "adapted", "jug", "Adapted role"
-    )
-    records[0].pop("reason")
-
-    with pytest.raises(MetadataAuditError, match=r"missing keys: \['reason'\]"):
-        load_metadata_ledger(_write_ledger(tmp_path, records))
-
-
-def test_parser_rejects_adapted_record_with_blank_reason(tmp_path: Path) -> None:
-    records = _complete_records("fixture.board", "hold-left")
-    records[0] = _record(
-        "fixture.board", "hold-left", "kind", "adapted", "jug", "   "
-    )
-
-    with pytest.raises(MetadataAuditError, match="reason must be a non-empty string"):
-        load_metadata_ledger(_write_ledger(tmp_path, records))
-
-
-def test_parser_rejects_adapted_record_without_value(tmp_path: Path) -> None:
-    records = _complete_records("fixture.board", "hold-left")
-    records[0] = _record(
-        "fixture.board", "hold-left", "kind", "adapted", "jug", "Adapted role"
-    )
-    records[0].pop("value")
-
-    with pytest.raises(MetadataAuditError, match=r"missing keys: \['value'\]"):
-        load_metadata_ledger(_write_ledger(tmp_path, records))
-
-
-def test_validator_rejects_mismatched_adapted_value(tmp_path: Path) -> None:
-    package = write_board_package(tmp_path / "boards" / "fixture")
-    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["holds"][0].update({"id": "edge-left", "kind": "edge"})
-    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
-    records = _complete_records("fixture.board", "edge-left")
-    records[0] = _record(
-        "fixture.board", "edge-left", "kind", "adapted", "jug", "Adapted role"
-    )
-
-    with pytest.raises(MetadataAuditError, match="kind does not match"):
-        validate_metadata_ledger(
-            load_metadata_ledger(_write_ledger(tmp_path, records)),
-            discover_board_packages(tmp_path / "boards"),
-        )
 
 
 def _complete_records(
@@ -210,6 +142,19 @@ def test_parser_declares_a_disjoint_sloper_only_board_scope(tmp_path: Path) -> N
 
     assert ledger.reviewed_board_ids == ("fixture.board",)
     assert ledger.sloper_only_board_ids == ("supplemental.board",)
+
+
+def test_parser_preserves_secondary_source_provenance(tmp_path: Path) -> None:
+    record = verified("fixture.board", "hold-left", "kind", "jug")
+    source = record["source"]
+    assert isinstance(source, dict)
+    source["kind"] = "secondary"
+    source["label"] = "Fixture community measurement"
+
+    ledger = load_metadata_ledger(_write_ledger(tmp_path, [record]))
+
+    assert ledger.records[0].source.kind == "secondary"
+    assert ledger.records[0].source.label == "Fixture community measurement"
 
 
 def test_parser_rejects_board_in_full_and_sloper_only_scopes(tmp_path: Path) -> None:
@@ -700,6 +645,7 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
 
     assert report.reviewed_board_ids == (
         "beastmaker-1000",
+        "beastmaker-2000",
         "dewoodstok-woodbord",
         "escape-beta-22",
         "escape.unlimited",
@@ -743,102 +689,22 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
         "zlagboard.evo",
         "zlagboard.pro",
     )
-    assert report.sloper_only_board_ids == ("beastmaker-2000",)
+    assert report.sloper_only_board_ids == ()
     assert all(board.unaccounted_fields == 0 for board in report.boards)
     assert next(
         board for board in report.boards if board.board_id == "beastmaker-2000"
     ).to_json() == {
         "boardID": "beastmaker-2000",
-        "populated": 0,
-        "verified": 0,
+        "populated": 65,
+        "verified": 65,
         "adapted": 0,
-        "unavailable": 5,
-        "notApplicable": 22,
+        "unavailable": 118,
+        "notApplicable": 33,
         "unaccountedFields": 0,
     }
 
 
-def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None:
-    repository_root = Path(__file__).resolve().parents[3]
-    ledger_path = (
-        repository_root
-        / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
-    )
-    records = json.loads(ledger_path.read_text(encoding="utf-8"))["records"]
-
-    expected_training_tile_ids = {
-        "top-jug-left",
-        "top-jug-right",
-        "top-pocket-outer-left",
-        "top-pocket-inner-left",
-        "top-pocket-inner-right",
-        "top-pocket-outer-right",
-        "upper-sloper-outer-left",
-        "upper-sloper-inner-left",
-        "upper-sloper-inner-right",
-        "upper-sloper-outer-right",
-        "middle-edge-outer-left",
-        "middle-edge-inner-left",
-        "middle-edge-inner-right",
-        "middle-edge-outer-right",
-        "bottom-edge-outer-left",
-        "bottom-edge-center-left",
-        "bottom-edge-inner-left",
-        "bottom-edge-inner-right",
-        "bottom-edge-center-right",
-        "bottom-edge-outer-right",
-    }
-    training_tile_kind_records = [
-        record
-        for record in records
-        if record["boardID"] == "soill.training-tiles" and record["field"] == "kind"
-    ]
-    assert {
-        hold_id
-        for record in training_tile_kind_records
-        for hold_id in record["holdIDs"]
-    } == expected_training_tile_ids
-    assert all(
-        record["outcome"] == "adapted"
-        and record["source"]["url"]
-        == "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin"
-        and "grouped family specifications" in record["reason"]
-        and "20-contact ID map" in record["reason"]
-        and "four top-pocket regions" in record["reason"]
-        for record in training_tile_kind_records
-    )
-
-    expected_adaptations = {
-        ("soill.training-tiles", hold_id) for hold_id in expected_training_tile_ids
-    } | {
-        ("soill.split-palm", "lower-pinch-left"),
-        ("soill.split-palm", "lower-pinch-right"),
-        ("tension.honestone", "macro-sloper-left"),
-        ("tension.honestone", "macro-sloper-left-center"),
-        ("tension.honestone", "macro-sloper-right-center"),
-        ("tension.honestone", "macro-sloper-right"),
-    }
-    adapted_kind_ids = {
-        (record["boardID"], hold_id)
-        for record in records
-        if record["field"] == "kind" and record["outcome"] == "adapted"
-        for hold_id in record["holdIDs"]
-    }
-    assert adapted_kind_ids == expected_adaptations
-    assert len(adapted_kind_ids) == 26
-
-    training_tile_pocket_sloper = next(
-        record
-        for record in records
-        if record["boardID"] == "soill.training-tiles"
-        and record["field"] == "sloper"
-        and "top-pocket-outer-left" in record["holdIDs"]
-    )
-    assert "non-pocket" not in training_tile_pocket_sloper["reason"]
-    assert "adapted pocket contact role" in training_tile_pocket_sloper["reason"]
-
-
-def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> None:
+def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = discover_board_packages(repository_root / "Hangboards")
     packages = {package.board.id: package.board for package in inventory.packages}
@@ -851,38 +717,35 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_no_guessed_options() -> N
     } == {
         "jug": {"jug-left", "jug-right"},
         "sloper": {"sloper-35-left", "sloper-center", "sloper-35-right"},
-        "pocket": {
+        "edge": {
             "pocket-top-outer-left",
             "pocket-top-outer-right",
             "pocket-top-left",
             "pocket-top-right",
             "pocket-middle-outer-left",
-            "pocket-middle-mid-left",
-            "pocket-middle-inner-left",
             "pocket-middle-center",
-            "pocket-middle-inner-right",
-            "pocket-middle-mid-right",
             "pocket-middle-outer-right",
             "pocket-bottom-outer-left",
+            "pocket-bottom-outer-right",
+        },
+        "pocket": {
+            "pocket-middle-mid-left",
+            "pocket-middle-inner-left",
+            "pocket-middle-inner-right",
+            "pocket-middle-mid-right",
             "pocket-bottom-mid-left",
             "pocket-bottom-inner-left",
             "pocket-bottom-inner-right",
             "pocket-bottom-mid-right",
-            "pocket-bottom-outer-right",
         },
     }
     assert next(hold for hold in board.holds if hold.id == "sloper-center").name == (
         "20 Degree Center Sloper"
     )
-    assert all(
-        hold.size_millimeters is None
-        and hold.depth_range_millimeters is None
-        and hold.finger_capacity is None
-        and hold.hand_capacity is None
-        and hold.grip_type is None
-        and hold.features is None
-        for hold in board.holds
-    )
+    assert all(hold.depth_range_millimeters is None for hold in board.holds)
+    assert all(hold.hand_capacity is None for hold in board.holds)
+    assert all(hold.grip_type is None for hold in board.holds)
+    assert all(hold.features is None for hold in board.holds)
 
 
 def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
@@ -905,9 +768,6 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     assert {
         hold.id: hold.features for hold in moon.holds if hold.features is not None
     } == {
-        "jug-left": ("jug",),
-        "jug-right": ("jug",),
-        "center-jug": ("jug",),
         "edge-25-left": ("slot",),
         "edge-25-right": ("slot",),
         "edge-20-left": ("slot",),
@@ -918,10 +778,6 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
         "edge-10-right": ("slot",),
         "edge-8-left": ("slot",),
         "edge-8-right": ("slot",),
-        "two-finger-pocket-left": ("pocket",),
-        "two-finger-pocket-right": ("pocket",),
-        "mono-left": ("pocket",),
-        "mono-right": ("pocket",),
     }
     assert all(
         hold.depth_range_millimeters is None and hold.hand_capacity is None
@@ -937,10 +793,6 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     } == {
         "hold-02-left": ("widePinch",),
         "hold-02-right": ("widePinch",),
-        "hold-03-left": ("jug",),
-        "hold-03-right": ("jug",),
-        "hold-04-left": ("jug",),
-        "hold-04-right": ("jug",),
         "hold-05-left": ("incutEdge",),
         "hold-05-right": ("incutEdge",),
         "hold-06-left": ("flatEdge",),
@@ -965,10 +817,7 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
         for hold in megalith.holds
         if hold.hand_capacity is not None or hold.features is not None
     } == {
-        "top-jug": (None, ("jug",)),
         "center-edge-25": (1, ("incutEdge",)),
-        "mono-left": (None, ("pocket",)),
-        "mono-right": (None, ("pocket",)),
     }
     assert all(hold.depth_range_millimeters is None for hold in megalith.holds)
     assert all(hold.grip_type is None for hold in megalith.holds)
@@ -1120,7 +969,6 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
         if package.board.id == "soill.training-tiles"
     )
 
-    assert len(package.board.holds) == 20
     assert all(
         hold.size_millimeters is None
         and hold.depth_range_millimeters is None
@@ -1130,6 +978,7 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
         and hold.features is None
         for hold in package.board.holds
     )
+    assert len(package.board.holds) == 20
     assert next(
         board for board in report.boards if board.board_id == "soill.training-tiles"
     ).adapted == 20

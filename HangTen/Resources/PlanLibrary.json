@@ -16,7 +16,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -24,7 +24,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug hang"
@@ -163,7 +163,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket"
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -171,7 +171,7 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket"
+              "kind" : "pocket"
             }
           ],
           "title" : "Pocket hang + shrugs"
@@ -283,7 +283,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket"
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -291,7 +291,7 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket"
+              "kind" : "pocket"
             }
           ],
           "title" : "Pocket knee raises"
@@ -424,7 +424,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -432,7 +432,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug pull-ups"
@@ -679,7 +679,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket"
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -687,7 +687,7 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket"
+              "kind" : "pocket"
             }
           ],
           "title" : "Bent-arm pocket hang"
@@ -799,7 +799,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket"
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -807,7 +807,7 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket"
+              "kind" : "pocket"
             }
           ],
           "title" : "Pocket pull-ups"
@@ -846,7 +846,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 },
                 {
                   "feature" : "smallEdge"
@@ -857,7 +857,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             },
             {
               "feature" : "smallEdge"
@@ -878,7 +878,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 },
                 {
                   "feature" : "smallEdge"
@@ -889,7 +889,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             },
             {
               "feature" : "smallEdge"
@@ -931,7 +931,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -939,7 +939,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug knee raises"
@@ -1077,7 +1077,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -1085,7 +1085,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug pull-ups"
@@ -1314,8 +1314,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -1323,8 +1323,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Three-finger-pocket pull-ups"
@@ -1342,8 +1342,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -1351,8 +1351,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Straight-arm three-finger-pocket hang"
@@ -1548,8 +1548,8 @@
                   "feature" : "largeSlope"
                 },
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -1560,8 +1560,8 @@
               "feature" : "largeSlope"
             },
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Offset pull-ups"
@@ -1582,8 +1582,8 @@
                   "feature" : "largeSlope"
                 },
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -1594,8 +1594,8 @@
               "feature" : "largeSlope"
             },
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Offset pull-ups · other side"
@@ -1668,8 +1668,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -1677,8 +1677,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Straight-arm three-finger-pocket hang"
@@ -1788,8 +1788,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -1797,8 +1797,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Two-finger three-finger-pocket hang"
@@ -1816,8 +1816,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -1825,8 +1825,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Power pull-ups"
@@ -4991,8 +4991,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5013,8 +5012,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5043,8 +5041,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5065,8 +5062,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5089,8 +5085,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5111,8 +5106,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5135,8 +5129,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5157,8 +5150,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5181,8 +5173,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5203,8 +5194,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5227,8 +5217,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5249,8 +5238,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5273,8 +5261,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5295,8 +5282,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5319,8 +5305,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5341,8 +5326,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5365,8 +5349,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5387,8 +5370,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5411,8 +5393,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5433,8 +5414,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5457,8 +5437,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5479,8 +5458,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5503,8 +5481,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5525,8 +5502,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5570,8 +5546,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5592,8 +5567,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5616,8 +5590,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5638,8 +5611,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5662,8 +5634,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5684,8 +5655,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5708,8 +5678,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5730,8 +5699,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5754,8 +5722,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5776,8 +5743,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5800,8 +5766,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5822,8 +5787,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5846,8 +5810,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5868,8 +5831,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5892,8 +5854,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5914,8 +5875,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5938,8 +5898,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -5960,8 +5919,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -5984,8 +5942,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6006,8 +5963,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6030,8 +5986,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6052,8 +6007,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6076,8 +6030,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6098,8 +6051,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6143,8 +6095,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6165,8 +6116,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6189,8 +6139,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6211,8 +6160,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6235,8 +6183,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6257,8 +6204,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6281,8 +6227,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6303,8 +6248,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6327,8 +6271,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6349,8 +6292,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6373,8 +6315,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6395,8 +6336,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6419,8 +6359,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6441,8 +6380,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6465,8 +6403,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6487,8 +6424,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6511,8 +6447,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6533,8 +6468,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6557,8 +6491,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6579,8 +6512,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6603,8 +6535,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6625,8 +6556,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6649,8 +6579,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6663,8 +6592,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6693,8 +6621,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6707,8 +6634,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6737,8 +6663,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6759,8 +6684,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6783,8 +6707,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6797,8 +6720,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6821,8 +6743,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6843,8 +6764,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6867,8 +6787,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6881,8 +6800,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6905,8 +6823,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6927,8 +6844,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6951,8 +6867,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -6965,8 +6880,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -6989,8 +6903,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7011,8 +6924,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7035,8 +6947,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7049,8 +6960,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7073,8 +6983,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7095,8 +7004,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7119,8 +7027,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7133,8 +7040,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7157,8 +7063,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7179,8 +7084,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7203,8 +7107,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7217,8 +7120,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7241,8 +7143,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7263,8 +7164,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7287,8 +7187,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7301,8 +7200,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7325,8 +7223,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7347,8 +7244,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7371,8 +7267,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7385,8 +7280,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7409,8 +7303,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7431,8 +7324,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7455,8 +7347,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7469,8 +7360,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7493,8 +7383,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7515,8 +7404,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7539,8 +7427,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7553,8 +7440,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7577,8 +7463,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7599,8 +7484,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7623,8 +7507,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7637,8 +7520,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7661,8 +7543,7 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "smallEdge"
                 }
@@ -7675,8 +7556,7 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "smallEdge"
             }
@@ -7704,8 +7584,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -7725,8 +7604,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -7754,8 +7632,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -7775,8 +7652,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -7798,8 +7674,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -7819,8 +7694,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -7842,8 +7716,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -7863,8 +7736,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -7886,8 +7758,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -7899,8 +7770,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -7943,8 +7813,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -7964,8 +7833,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -7987,8 +7855,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8008,8 +7875,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8031,8 +7897,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8052,8 +7917,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8075,8 +7939,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8096,8 +7959,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8119,8 +7981,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8132,8 +7993,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8176,8 +8036,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8197,8 +8056,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8220,8 +8078,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8241,8 +8098,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8264,8 +8120,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8285,8 +8140,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8308,8 +8162,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8329,8 +8182,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8352,8 +8204,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8365,8 +8216,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8395,8 +8245,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -8416,8 +8265,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -8446,8 +8294,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -8467,8 +8314,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -8491,8 +8337,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -8512,8 +8357,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -8536,8 +8380,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -8557,8 +8400,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -8581,8 +8423,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -8602,8 +8443,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -8626,8 +8466,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -8647,8 +8486,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -8671,8 +8509,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -8684,8 +8521,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -8729,8 +8565,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8750,8 +8585,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8774,8 +8608,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8795,8 +8628,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8819,8 +8651,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8840,8 +8671,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8864,8 +8694,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8885,8 +8714,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8909,8 +8737,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8930,8 +8757,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8954,8 +8780,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -8975,8 +8800,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -8999,8 +8823,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9012,8 +8835,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9057,8 +8879,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9078,8 +8899,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9102,8 +8922,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9123,8 +8942,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9147,8 +8965,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9168,8 +8985,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9192,8 +9008,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9213,8 +9028,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9237,8 +9051,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9258,8 +9071,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9282,8 +9094,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9303,8 +9114,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9327,8 +9137,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9340,8 +9149,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9392,8 +9200,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9413,8 +9220,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9444,8 +9250,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9465,8 +9270,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9496,8 +9300,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9517,8 +9320,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9548,8 +9350,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9569,8 +9370,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9600,8 +9400,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9621,8 +9420,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9652,8 +9450,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9673,8 +9470,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9704,8 +9500,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9717,8 +9512,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9769,8 +9563,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9790,8 +9583,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9821,8 +9613,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9842,8 +9633,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9873,8 +9663,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9894,8 +9683,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9925,8 +9713,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9946,8 +9733,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -9977,8 +9763,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -9998,8 +9783,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10029,8 +9813,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10050,8 +9833,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10081,8 +9863,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10094,8 +9875,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10145,8 +9925,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10166,8 +9945,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10196,8 +9974,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10217,8 +9994,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10247,8 +10023,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10268,8 +10043,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10298,8 +10072,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10319,8 +10092,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10349,8 +10121,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10370,8 +10141,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10400,8 +10170,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10421,8 +10190,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10451,8 +10219,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10464,8 +10231,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10509,8 +10275,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -10530,8 +10295,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -10554,8 +10318,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -10575,8 +10338,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -10599,8 +10361,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -10620,8 +10381,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -10644,8 +10404,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -10665,8 +10424,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -10689,8 +10447,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -10710,8 +10467,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -10734,8 +10490,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -10755,8 +10510,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -10779,8 +10533,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -10792,8 +10545,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -10837,8 +10589,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10858,8 +10609,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10882,8 +10632,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10903,8 +10652,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10927,8 +10675,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10948,8 +10695,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -10972,8 +10718,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -10993,8 +10738,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11017,8 +10761,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11038,8 +10781,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11062,8 +10804,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11083,8 +10824,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11107,8 +10847,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11120,8 +10859,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11165,8 +10903,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11186,8 +10923,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11210,8 +10946,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11231,8 +10966,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11255,8 +10989,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11276,8 +11009,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11300,8 +11032,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11321,8 +11052,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11345,8 +11075,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11366,8 +11095,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11390,8 +11118,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11411,8 +11138,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11435,8 +11161,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11448,8 +11173,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11500,8 +11224,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11521,8 +11244,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11552,8 +11274,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11573,8 +11294,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11604,8 +11324,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11625,8 +11344,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11656,8 +11374,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11677,8 +11394,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11708,8 +11424,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11729,8 +11444,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11760,8 +11474,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11781,8 +11494,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11812,8 +11524,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11825,8 +11536,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11877,8 +11587,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11898,8 +11607,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11929,8 +11637,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -11950,8 +11657,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -11981,8 +11687,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12002,8 +11707,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12033,8 +11737,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12054,8 +11757,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12085,8 +11787,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12106,8 +11807,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12137,8 +11837,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12158,8 +11857,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12189,8 +11887,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12202,8 +11899,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12253,8 +11949,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12274,8 +11969,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12304,8 +11998,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12325,8 +12018,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12355,8 +12047,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12376,8 +12067,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12406,8 +12096,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12427,8 +12116,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12457,8 +12145,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12478,8 +12165,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12508,8 +12194,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12529,8 +12214,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12559,8 +12243,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12572,8 +12255,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12602,8 +12284,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12623,8 +12304,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12660,8 +12340,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12681,8 +12360,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12711,8 +12389,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12732,8 +12409,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12762,8 +12438,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12783,8 +12458,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12814,8 +12488,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12835,8 +12508,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12866,8 +12538,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -12879,8 +12550,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -12909,8 +12579,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -12930,8 +12599,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -12960,8 +12628,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -12981,8 +12648,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13005,8 +12671,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13018,8 +12683,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13063,8 +12727,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -13084,8 +12747,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -13108,8 +12770,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -13129,8 +12790,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -13153,8 +12813,7 @@
                 {
                   "fallbackFeatures" : [
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "mediumEdge"
                 }
@@ -13166,8 +12825,7 @@
             {
               "fallbackFeatures" : [
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "mediumEdge"
             }
@@ -13212,11 +12870,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 2
+                  "fingerCapacity" : 2,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -13235,11 +12892,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 2
+              "fingerCapacity" : 2,
+              "kind" : "pocket"
             }
           ],
           "title" : "7–53 · Two-finger pocket, rep 1"
@@ -13261,11 +12917,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 2
+                  "fingerCapacity" : 2,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -13284,11 +12939,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 2
+              "fingerCapacity" : 2,
+              "kind" : "pocket"
             }
           ],
           "title" : "7–53 · Two-finger pocket, rep 2"
@@ -13310,11 +12964,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 2
+                  "fingerCapacity" : 2,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -13325,11 +12978,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 2
+              "fingerCapacity" : 2,
+              "kind" : "pocket"
             }
           ],
           "title" : "7–53 · Two-finger pocket, rep 3"
@@ -13355,8 +13007,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13376,8 +13027,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13405,8 +13055,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13426,8 +13075,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13449,8 +13097,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13462,8 +13109,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13506,8 +13152,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13527,8 +13172,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13550,8 +13194,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13571,8 +13214,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13594,8 +13236,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13607,8 +13248,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13651,8 +13291,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13672,8 +13311,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13695,8 +13333,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13716,8 +13353,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13739,8 +13375,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13752,8 +13387,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13781,8 +13415,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13802,8 +13435,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13831,8 +13463,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13852,8 +13483,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13875,8 +13505,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13888,8 +13517,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13932,8 +13560,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13953,8 +13580,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -13976,8 +13602,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -13997,8 +13622,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14020,8 +13644,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14033,8 +13656,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14078,11 +13700,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 4
+                  "fingerCapacity" : 4,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -14101,11 +13722,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 4
+              "fingerCapacity" : 4,
+              "kind" : "pocket"
             }
           ],
           "title" : "Density · Four-finger pocket, set 1, rep 1"
@@ -14126,11 +13746,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 4
+                  "fingerCapacity" : 4,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -14149,11 +13768,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 4
+              "fingerCapacity" : 4,
+              "kind" : "pocket"
             }
           ],
           "title" : "Density · Four-finger pocket, set 1, rep 2"
@@ -14174,11 +13792,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 4
+                  "fingerCapacity" : 4,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -14189,11 +13806,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 4
+              "fingerCapacity" : 4,
+              "kind" : "pocket"
             }
           ],
           "title" : "Density · Four-finger pocket, set 1, rep 3"
@@ -14235,11 +13851,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 4
+                  "fingerCapacity" : 4,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -14258,11 +13873,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 4
+              "fingerCapacity" : 4,
+              "kind" : "pocket"
             }
           ],
           "title" : "Density · Four-finger pocket, set 2, rep 1"
@@ -14283,11 +13897,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 4
+                  "fingerCapacity" : 4,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -14306,11 +13919,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 4
+              "fingerCapacity" : 4,
+              "kind" : "pocket"
             }
           ],
           "title" : "Density · Four-finger pocket, set 2, rep 2"
@@ -14331,11 +13943,10 @@
                   "fallbackFeatures" : [
                     "mediumEdge",
                     "largeEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
-                  "feature" : "pocket",
-                  "fingerCapacity" : 4
+                  "fingerCapacity" : 4,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -14346,11 +13957,10 @@
               "fallbackFeatures" : [
                 "mediumEdge",
                 "largeEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
-              "feature" : "pocket",
-              "fingerCapacity" : 4
+              "fingerCapacity" : 4,
+              "kind" : "pocket"
             }
           ],
           "title" : "Density · Four-finger pocket, set 2, rep 3"
@@ -14376,8 +13986,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14397,8 +14006,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14426,8 +14034,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14447,8 +14054,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14470,8 +14076,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14491,8 +14096,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14514,8 +14118,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14535,8 +14138,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14558,8 +14160,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14579,8 +14180,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14602,8 +14202,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14623,8 +14222,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14646,8 +14244,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14667,8 +14264,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14690,8 +14286,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14711,8 +14306,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14734,8 +14328,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14755,8 +14348,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -14778,8 +14370,7 @@
                 {
                   "fallbackFeatures" : [
                     "mediumEdge",
-                    "largeOpenHandRail",
-                    "jug"
+                    "largeOpenHandRail"
                   ],
                   "feature" : "largeEdge"
                 }
@@ -14791,8 +14382,7 @@
             {
               "fallbackFeatures" : [
                 "mediumEdge",
-                "largeOpenHandRail",
-                "jug"
+                "largeOpenHandRail"
               ],
               "feature" : "largeEdge"
             }
@@ -17272,8 +16862,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -17283,7 +16873,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17299,11 +16889,11 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             },
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Minute 2 · deep three-finger pocket + jug pull-ups"
@@ -17331,7 +16921,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17350,7 +16940,7 @@
               "feature" : "mediumEdge"
             },
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Minute 3 · 20mm hang + jug knee raises"
@@ -17415,7 +17005,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17437,7 +17027,7 @@
               "feature" : "largeSlope"
             },
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Minute 5 · sloper hang + jug pull-ups"
@@ -17455,8 +17045,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -17472,8 +17062,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Minute 6 · medium three-finger pocket"
@@ -17490,7 +17080,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17516,7 +17106,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             },
             {
               "feature" : "smallEdge"
@@ -17581,7 +17171,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17600,7 +17190,7 @@
               "feature" : "mediumEdge"
             },
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Minute 9 · 20mm hang + jug knee raises"
@@ -17676,7 +17266,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17692,7 +17282,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug · rep 1"
@@ -17711,7 +17301,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17727,7 +17317,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug · rep 2"
@@ -17746,7 +17336,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17762,7 +17352,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug · rep 3"
@@ -17781,7 +17371,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17797,7 +17387,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug · rep 4"
@@ -17816,7 +17406,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17832,7 +17422,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug · rep 5"
@@ -17851,7 +17441,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "jug"
+                  "kind" : "jug"
                 }
               ],
               "timing" : "fixed"
@@ -17859,7 +17449,7 @@
           ],
           "targets" : [
             {
-              "feature" : "jug"
+              "kind" : "jug"
             }
           ],
           "title" : "Jug · rep 6"
@@ -17899,8 +17489,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -17916,8 +17506,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Three-finger pocket · rep 1"
@@ -17936,8 +17526,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -17953,8 +17543,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Three-finger pocket · rep 2"
@@ -17973,8 +17563,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -17990,8 +17580,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Three-finger pocket · rep 3"
@@ -18010,8 +17600,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -18027,8 +17617,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Three-finger pocket · rep 4"
@@ -18047,8 +17637,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -18064,8 +17654,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Three-finger pocket · rep 5"
@@ -18084,8 +17674,8 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "feature" : "pocket",
-                  "fingerCapacity" : 3
+                  "fingerCapacity" : 3,
+                  "kind" : "pocket"
                 }
               ],
               "timing" : "fixed"
@@ -18093,8 +17683,8 @@
           ],
           "targets" : [
             {
-              "feature" : "pocket",
-              "fingerCapacity" : 3
+              "fingerCapacity" : 3,
+              "kind" : "pocket"
             }
           ],
           "title" : "Three-finger pocket · rep 6"
