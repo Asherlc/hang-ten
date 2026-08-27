@@ -27,13 +27,13 @@ Backcountry lists 2 jugs, 2 45 mm flat slopers, 1 48 mm flat sloper, 2 30 mm fla
 | `pocket-30-four-left`, `pocket-30-four-right` | 30 mm, 4 fingers, `fourFingerPocket` |
 | `pocket-16-two-left`, `pocket-16-two-right` | 16 mm, 2 fingers, `twoFingerPocket` |
 | `pocket-16-three-left`, `pocket-16-three-right` | 16 mm, 3 fingers, `threeFingerPocket` |
-| `pocket-30-eight-center` | 30 mm, 8 fingers |
-| `pocket-20-eight-left`, `pocket-20-eight-right` | 20 mm, 8 fingers |
+| `pocket-30-eight-center` | 30 mm, source-labelled 8-finger/full-width contact; represented as 4 fingers per hand, `fourFingerPocket` |
+| `pocket-20-eight-left`, `pocket-20-eight-right` | 20 mm, source-labelled 8-finger/full-width contact; represented as 4 fingers per hand, `fourFingerPocket` |
 | `pocket-20-four-left`, `pocket-20-four-right` | 20 mm, 4 fingers, `fourFingerPocket` |
 | `pocket-10-four-left`, `pocket-10-four-right` | 10 mm, 4 fingers, `fourFingerPocket` |
-| `pocket-18-eight-center` | 18 mm, 8 fingers |
+| `pocket-18-eight-center` | 18 mm, source-labelled 8-finger/full-width contact; represented as 4 fingers per hand, `fourFingerPocket` |
 
-`sizeMillimeters` is retained only for contacts explicitly named as pockets. The current schema limits both `fingerCapacity` and `gripType` to at most four fingers, so documented eight-finger pockets deliberately omit both fields rather than inventing a substitute type. No hand capacity, posture, feature tag, depth range, or sloper angle is invented.
+`sizeMillimeters` is retained only for contacts explicitly named as pockets. Backcountry's “8-finger” labels identify full-width, two-hand contacts, not an eight-finger capacity for one hand. The 30 mm, 20 mm, and 18 mm full-width pockets are therefore represented as the supported per-hand capacity of four with `fourFingerPocket`; this is an explicit two-hands-times-four adaptation of the source label. No hand capacity, posture, feature tag, depth range, sloper angle, or treatment is invented.
 
 ## Geometry, art, and unmodeled facts
 
@@ -44,6 +44,7 @@ Backcountry lists 2 jugs, 2 45 mm flat slopers, 1 48 mm flat sloper, 2 30 mm fla
 | Mount plate, silicon phone mount, tilt mechanism, one user / 100 kg, 0.6 m clearance | Mammut manual | No mount/accessory/rating safety field; not a hand contact. |
 | Single-hand rope attachment points; walnut; 19 lb 10 oz claimed weight; two-year warranty | Backcountry archive | No safe attachment/material/weight/warranty field. |
 | Zlagboard plans and reported collaboration with Jakob Schubert and Ingo Filzwieser | Climb Smart Shop archive | Retailer-reported program/development fact, not physical hold data. |
-| Eight-finger capacities for the 30 mm, 20 mm pair, and 18 mm pockets | Backcountry archive | Current `fingerCapacity` and `gripType` schemas reject capacities above four. |
+| Full-width/two-hand “8-finger” labels for the 30 mm, 20 mm pair, and 18 mm pockets | Backcountry archive | Represented as `fingerCapacity: 4` and `gripType: fourFingerPocket`: a documented two-hands-times-four adaptation, while each remains one full-width physical contact. |
+| Pocket recess depth/deep-or-shallow labels, rim insets, jug shelf insets, and generic surface treatment | No direct source mapping | The source inventory establishes contact type, size, and selected finger counts, but not these per-contact treatment values. All `treatment` metadata is intentionally absent. |
 
 `CONDUCTOR_WORKSPACE_NAME` was absent, so no owned simulator could be created under the lifecycle contract. This audit therefore claims no simulator normal, active/highlight, hit-test, or screenshot validation.

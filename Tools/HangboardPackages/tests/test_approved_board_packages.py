@@ -340,31 +340,36 @@ def test_mammut_diamond_freezes_the_documented_21_contact_inventory() -> None:
     board = json.loads((MAMMUT_DIAMOND_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "mammut.diamond-finger"
-    assert [(hold["id"], hold["kind"], hold.get("sizeMillimeters"), hold.get("fingerCapacity")) for hold in board["holds"]] == [
-        ("jug-left", "jug", None, None),
-        ("sloper-45-left", "sloper", None, None),
-        ("pocket-30-four-left", "pocket", 30, 4),
-        ("pocket-16-two-left", "pocket", 16, 2),
-        ("pocket-16-three-left", "pocket", 16, 3),
-        ("pocket-20-eight-left", "pocket", 20, None),
-        ("pocket-20-four-left", "pocket", 20, 4),
-        ("pocket-10-four-left", "pocket", 10, 4),
-        ("sloper-48-center", "sloper", None, None),
-        ("pocket-30-eight-center", "pocket", 30, None),
-        ("pocket-18-eight-center", "pocket", 18, None),
-        ("pocket-10-four-right", "pocket", 10, 4),
-        ("pocket-20-four-right", "pocket", 20, 4),
-        ("pocket-20-eight-right", "pocket", 20, None),
-        ("pocket-16-three-right", "pocket", 16, 3),
-        ("pocket-16-two-right", "pocket", 16, 2),
-        ("pocket-30-four-right", "pocket", 30, 4),
-        ("sloper-45-right", "sloper", None, None),
-        ("jug-right", "jug", None, None),
-        ("sloper-30-left", "sloper", None, None),
-        ("sloper-30-right", "sloper", None, None),
+    assert [(hold["id"], hold["kind"], hold.get("sizeMillimeters"), hold.get("fingerCapacity"), hold.get("gripType")) for hold in board["holds"]] == [
+        ("jug-left", "jug", None, None, None),
+        ("sloper-45-left", "sloper", None, None, None),
+        ("pocket-30-four-left", "pocket", 30, 4, "fourFingerPocket"),
+        ("pocket-16-two-left", "pocket", 16, 2, "twoFingerPocket"),
+        ("pocket-16-three-left", "pocket", 16, 3, "threeFingerPocket"),
+        ("pocket-20-eight-left", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-20-four-left", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-10-four-left", "pocket", 10, 4, "fourFingerPocket"),
+        ("sloper-48-center", "sloper", None, None, None),
+        ("pocket-30-eight-center", "pocket", 30, 4, "fourFingerPocket"),
+        ("pocket-18-eight-center", "pocket", 18, 4, "fourFingerPocket"),
+        ("pocket-10-four-right", "pocket", 10, 4, "fourFingerPocket"),
+        ("pocket-20-four-right", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-20-eight-right", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-16-three-right", "pocket", 16, 3, "threeFingerPocket"),
+        ("pocket-16-two-right", "pocket", 16, 2, "twoFingerPocket"),
+        ("pocket-30-four-right", "pocket", 30, 4, "fourFingerPocket"),
+        ("sloper-45-right", "sloper", None, None, None),
+        ("jug-right", "jug", None, None, None),
+        ("sloper-30-left", "sloper", None, None, None),
+        ("sloper-30-right", "sloper", None, None, None),
     ]
 
     holds = {hold["id"]: hold for hold in board["holds"]}
+    assert all(
+        "treatment" not in piece
+        for hold in board["holds"]
+        for piece in hold["geometry"]
+    )
     for left_id, right_id in (
         ("jug-left", "jug-right"),
         ("sloper-45-left", "sloper-45-right"),
