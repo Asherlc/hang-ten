@@ -1398,6 +1398,97 @@
       ],
       "presentationID": "primary",
       "handCapacity": 1
+    },
+    {
+      "id": "hold-17",
+      "name": "Hold 17",
+      "kind": "edge",
+      "sizeMillimeters": 30,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.682195962891,
+            "y": 0.441679202148,
+            "width": 0.176329850911,
+            "height": 0.0810546875
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.940925109317,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.025543168675
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.974456831325
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.940925109317,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.974154735326,
+                  1.0
+                ],
+                "control2": [
+                  1.0,
+                  0.915662650602
+                ],
+                "to": [
+                  1.0,
+                  0.807228915663
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.192771084337
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.084337349398
+                ],
+                "control2": [
+                  0.974154735326,
+                  0.0
+                ],
+                "to": [
+                  0.940925109317,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
