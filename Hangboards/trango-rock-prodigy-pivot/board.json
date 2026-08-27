@@ -5136,7 +5136,7 @@
     {
       "id": "hold-43",
       "name": "Hold 43",
-      "kind": "edge",
+      "kind": "sloper",
       "geometry": [
         {
           "frame": {
