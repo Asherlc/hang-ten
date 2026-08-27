@@ -108,3 +108,14 @@ Cleanup: `F85E7391-DACF-4117-8AF5-9406996E8480`
 (`Hang Ten Conductor fearless-swan restore-retry-completion`) was deleted and
 verified absent. The owned and pending simulator manifests are both 0 bytes,
 and the temporary DerivedData directory was removed.
+
+## Enabled-state assertion completion
+
+Added `XCTAssertTrue(app.buttons["paywall.purchase"].isEnabled)` immediately
+after tapping retry in the forced Restore-failure test, alongside the existing
+localized Buy-label assertion. This is test-only; production code is unchanged.
+
+Focused `WorkoutPaywallUITests` was rerun with
+`.context/DerivedData-restore-retry-enabled` on an exact workspace-owned
+simulator and completed with exit 0. The owned simulator and temporary
+DerivedData were removed; final owned and pending manifests are both 0 bytes.

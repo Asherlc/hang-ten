@@ -187,6 +187,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         retry.tap()
 
         XCTAssertTrue(app.buttons["Unlock for $2.99"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.buttons["paywall.purchase"].isEnabled)
         XCTAssertFalse(app.navigationBars["Session"].exists)
     }
 
