@@ -26,6 +26,17 @@ YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
 YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
 TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
+PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
+
+
+def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
+    """A Pivot orientation added as another direct child is a duplicate product."""
+    pivot_package_roots = sorted(
+        path.parent
+        for path in HANGBOARDS_ROOT.glob("trango-rock-prodigy-pivot*/board.json")
+    )
+
+    assert pivot_package_roots == [PIVOT_ROOT]
 
 
 def _global_path_segment_signatures(
@@ -243,26 +254,6 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("trango.rock-prodigy-forge", "trango-rock-prodigy-forge"),
         ("trango.rock-prodigy-natural", "trango-rock-prodigy-natural"),
         ("trango.rock-prodigy-pivot", "trango-rock-prodigy-pivot"),
-        (
-            "trango.rock-prodigy-pivot.orientation-1",
-            "trango-rock-prodigy-pivot-orientation-1",
-        ),
-        (
-            "trango.rock-prodigy-pivot.orientation-2-90-outwards",
-            "trango-rock-prodigy-pivot-orientation-2-90-outwards",
-        ),
-        (
-            "trango.rock-prodigy-pivot.orientation-3-90-inwards",
-            "trango-rock-prodigy-pivot-orientation-3-90-inwards",
-        ),
-        (
-            "trango.rock-prodigy-pivot.orientation-3-switch-left-to-right",
-            "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right",
-        ),
-        (
-            "trango.rock-prodigy-pivot.orientation-4-90-outwards",
-            "trango-rock-prodigy-pivot-orientation-4-90-outwards",
-        ),
         (
             "trango.rock-prodigy-training-center",
             "trango-rock-prodigy-training-center",

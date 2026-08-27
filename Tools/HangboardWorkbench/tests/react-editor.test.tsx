@@ -1836,6 +1836,23 @@ test("double-click inserts a vertex while right-click selects it and waits for a
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("double-click adds a smooth point at the clicked location on a bendable cubic", async () => {
+  const curve = documentFixture([{
+    id: 1,
+    key: "curve",
+    type: "jug",
+    displayPath: "M 0 0 C 0 10 10 10 10 0 L 10 10 Z",
+    bendableCommandIndexes: [1],
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="curve"]');
+    await app.mouse("#editor-svg", "dblclick", { clientX: 1.5625, clientY: 5.625 });
+
+    assert.equal(paths(app)[0], "M 0 0 C 0 2.5 0.625 4.375 1.5625 5.625 C 4.375 9.375 10 7.5 10 0 L 10 10 Z");
+  }, dependenciesFixture(boardFixture(curve)));
+});
+
 test("vertex menu rounds a corner as a persisted quadratic", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
@@ -2124,7 +2141,7 @@ test("curved-segment menu makes a quadratic segment straight and removes its con
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("curved-segment menu adds an inflection point at the right-click location and labels its reversible removal", async () => {
+test("curved-segment menu presents adding a smooth point at the right-click location", async () => {
   const square = documentFixture([
     { id: 1, key: "square", type: "jug", displayPath: "M 10 10 Q 10 50 50 50 L 50 10 Z" },
   ]);
@@ -2133,7 +2150,7 @@ test("curved-segment menu adds an inflection point at the right-click location a
     await app.click('[data-hold-key="square"]');
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 12.5, clientY: 27.5 });
 
-    assert.equal(app.text("#add-inflection-point-action"), "Add inflection point");
+    assert.equal(app.text("#add-inflection-point-action"), "Add smooth point");
     await app.click("#add-inflection-point-action");
     assert.match(paths(app)[0]!, /^M 10 10 Q 10 20(?:\.\d+)? 12\.5 27\.5/);
 

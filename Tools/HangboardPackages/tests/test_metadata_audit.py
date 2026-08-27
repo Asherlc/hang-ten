@@ -1207,23 +1207,34 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
 
     pivot = packages["trango.rock-prodigy-pivot"]
     assert all(hold.finger_capacity is not None for hold in pivot.holds)
-    assert {
-        hold.id: hold.size_millimeters
-        for hold in pivot.holds
-        if hold.id.startswith(("upper-sloped-crimp-", "outer-sloped-crimp-"))
-    } == {
+    pivot_suffixes = ("", "-orientation-2", "-orientation-3", "-orientation-4")
+    base_crimp_sizes = {
         "upper-sloped-crimp-left": 12.5,
         "upper-sloped-crimp-right": 12.5,
         "outer-sloped-crimp-left": 11.5,
         "outer-sloped-crimp-right": 11.5,
     }
     assert {
-        hold.id: hold.grip_type for hold in pivot.holds if hold.kind == "pocket"
+        hold.id: hold.size_millimeters
+        for hold in pivot.holds
+        if hold.id.startswith(("upper-sloped-crimp-", "outer-sloped-crimp-"))
     } == {
+        f"{hold_id}{suffix}": size
+        for suffix in pivot_suffixes
+        for hold_id, size in base_crimp_sizes.items()
+    }
+    base_pocket_grip_types = {
         "two-finger-pocket-left": "twoFingerPocket",
         "two-finger-pocket-right": "twoFingerPocket",
         "three-finger-pocket-left": "threeFingerPocket",
         "three-finger-pocket-right": "threeFingerPocket",
+    }
+    assert {
+        hold.id: hold.grip_type for hold in pivot.holds if hold.kind == "pocket"
+    } == {
+        f"{hold_id}{suffix}": grip_type
+        for suffix in pivot_suffixes
+        for hold_id, grip_type in base_pocket_grip_types.items()
     }
 
     training_center = packages["trango.rock-prodigy-training-center"]

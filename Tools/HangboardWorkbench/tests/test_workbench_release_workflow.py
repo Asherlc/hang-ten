@@ -371,7 +371,7 @@ def test_generated_bundle_is_built_before_every_python_suite():
     for workflow in workflows:
         job = workflow["jobs"]["test-python"]
         setup = _step(job, "Set up Node")
-        assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+        assert setup["uses"] == "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"
         assert setup["with"]["node-version"] == "22.14.0"
         assert setup["with"]["cache"] == "npm"
         assert (
@@ -393,7 +393,7 @@ def test_generated_bundle_is_built_before_every_python_suite():
 def test_generated_bundle_is_built_before_signed_release_packaging():
     release = _workflow()["jobs"]["release"]
     setup = _step(release, "Set up Node")
-    assert setup["uses"] == "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+    assert setup["uses"] == "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"
     assert setup["with"]["node-version"] == "22.14.0"
     assert setup["with"]["cache"] == "npm"
     assert (
