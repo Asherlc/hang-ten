@@ -1223,7 +1223,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     },
     {
       "id": "hold-24",
