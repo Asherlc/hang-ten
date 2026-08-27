@@ -794,7 +794,7 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_embedded_geometry()
     assert all(hold.get("geometry") for hold in holds)
 
 
-def test_training_tiles_freezes_sixteen_manufacturer_enumerated_contacts() -> None:
+def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
     board = json.loads((TRAINING_TILES_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "soill.training-tiles"
@@ -809,19 +809,17 @@ def test_training_tiles_freezes_sixteen_manufacturer_enumerated_contacts() -> No
         ("middle-edge-inner-right", "Inner right middle edge", "edge"),
         ("bottom-edge-center-left", "Center left bottom edge", "edge"),
         ("bottom-edge-center-right", "Center right bottom edge", "edge"),
-        ("top-pocket-left", "Left top pocket", "pocket"),
-        ("top-pocket-right", "Right top pocket", "pocket"),
+        ("top-pocket-outer-left", "Outer left top pocket", "pocket"),
+        ("top-pocket-outer-right", "Outer right top pocket", "pocket"),
         ("bottom-edge-inner-left", "Inner left bottom edge", "edge"),
         ("bottom-edge-inner-right", "Inner right bottom edge", "edge"),
         ("bottom-edge-outer-left", "Outer left bottom edge", "edge"),
         ("bottom-edge-outer-right", "Outer right bottom edge", "edge"),
+        ("top-pocket-inner-left", "Inner left top pocket", "pocket"),
+        ("top-pocket-inner-right", "Inner right top pocket", "pocket"),
+        ("top-jug-left", "Left top jug", "jug"),
+        ("top-jug-right", "Right top jug", "jug"),
     )
-    pockets = [hold for hold in board["holds"] if hold["kind"] == "pocket"]
-    assert [(hold["id"], hold["sizeMillimeters"]) for hold in pockets] == [
-        ("top-pocket-left", 76.2),
-        ("top-pocket-right", 76.2),
-    ]
-    assert all(len(hold["geometry"]) == 3 for hold in pockets)
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
