@@ -836,6 +836,8 @@ test("an unpaired gaston offers only actionable pairing candidates and saves the
     { id: 1, key: "left-piece-0", type: "gaston", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
     { id: 2, key: "right-piece-0", type: "gaston", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
     { id: 3, key: "jug-piece-0", type: "jug", displayPath: OTHER_PATH, metadata: { holdID: "jug", pieceIndex: 0 } },
+    { id: 4, key: "other-a-piece-0", type: "gaston", pairedHoldID: "other-b", displayPath: "M 10 30 L 20 30 L 20 40 Z", metadata: { holdID: "other-a", pieceIndex: 0 } },
+    { id: 5, key: "other-b-piece-0", type: "gaston", pairedHoldID: "other-a", displayPath: "M 30 30 L 40 30 L 40 40 Z", metadata: { holdID: "other-b", pieceIndex: 0 } },
   ]));
   const client = clientFixture([board]);
 
@@ -847,6 +849,8 @@ test("an unpaired gaston offers only actionable pairing candidates and saves the
     assert.equal(app.document.querySelector('#gaston-pair-select option[value="left"]'), null);
     assert.equal(app.text('#gaston-pair-select option[value="right"]'), "right");
     assert.equal(app.document.querySelector('#gaston-pair-select option[value="jug"]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="other-a"]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="other-b"]'), null);
 
     await app.change("#gaston-pair-select", "right");
     await app.click("#save-button");
