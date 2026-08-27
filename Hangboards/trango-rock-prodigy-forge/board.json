@@ -1407,103 +1407,6 @@
       "gripType": "twoFingerPocket"
     },
     {
-      "id": "im-shallow-left",
-      "name": "Left IM shallow pocket",
-      "kind": "pocket",
-      "fingerCapacity": 2,
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.246,
-            "y": 0.562,
-            "width": 0.069,
-            "height": 0.029
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.5,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.776142374915,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.223857625085
-                ],
-                "to": [
-                  1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.776142374915
-                ],
-                "control2": [
-                  0.776142374915,
-                  1.0
-                ],
-                "to": [
-                  0.5,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.223857625085,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.776142374915
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.223857625085
-                ],
-                "control2": [
-                  0.223857625085,
-                  0.0
-                ],
-                "to": [
-                  0.5,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "shapeConstraint": {
-            "shape": "oval",
-            "rotationDegrees": 0.0
-          }
-        }
-      ],
-      "presentationID": "primary",
-      "gripType": "twoFingerPocket"
-    },
-    {
       "id": "im-shallow-right",
       "name": "Right IM shallow pocket",
       "kind": "pocket",
@@ -1731,8 +1634,8 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.224167382671,
-            "y": 0.554758621094,
+            "x": 0.262098415874,
+            "y": 0.633896549805,
             "width": 0.077766549364,
             "height": 0.034689655273
           },
