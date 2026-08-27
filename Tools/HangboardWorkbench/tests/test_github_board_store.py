@@ -734,7 +734,7 @@ def test_cached_store_skips_catalogs_larger_than_its_configured_byte_limit() -> 
 
 
 def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
-    """Fails if cache capacity lets immutable blobs grow without eviction."""
+    """Four reads prove LRU eviction with one blob slot; no eviction needs only two."""
     client = _client(("fixture-board", board_document("fixture.board")))
     store = github_board_store.GitHubBoardStore(
         client, max_cached_blobs=1, max_cached_blob_bytes=1024 * 1024
@@ -744,11 +744,11 @@ def test_cached_store_evicts_old_blobs_at_its_configured_capacity() -> None:
     store.open_package(TOKEN, BRANCH, "fixture.board")
     store.primary_image_bytes(TOKEN, BRANCH, "fixture.board")
 
-    assert len(client.calls_named("get_blob")) == 5
+    assert len(client.calls_named("get_blob")) == 4
 
 
 def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open() -> None:
-    """Fails if concurrent image reads leave a different blob most recently cached."""
+    """Fails if an image read does not make its requested blob most recent."""
     board = multi_presentation_board_document("fixture.multi")
     files = _complete_package("fixture-v2", board)
     files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
@@ -763,7 +763,7 @@ def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open(
     store.primary_image_bytes(TOKEN, BRANCH, "fixture.multi")
 
     assert tuple(store._blobs.values()) == (
-        files["Hangboards/fixture-v2/assets/back.png"],
+        files["Hangboards/fixture-v2/assets/primary.png"],
     )
 
 
