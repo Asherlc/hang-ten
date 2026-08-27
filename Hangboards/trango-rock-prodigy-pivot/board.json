@@ -10448,13 +10448,13 @@
     {
       "id": "hold-69",
       "name": "Hold 69",
-      "kind": "edge",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
             "x": 0.106531368095,
             "y": 0.277638377678,
-            "width": 0.06,
+            "width": 0.113816728861,
             "height": 0.12
           },
           "shape": {
@@ -10470,14 +10470,21 @@
               {
                 "command": "line",
                 "to": [
-                  1.0,
-                  0.0
+                  0.968087053577,
+                  0.043050432168
                 ]
               },
               {
                 "command": "line",
                 "to": [
                   1.0,
+                  0.373144889139
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.527163279074,
                   1.0
                 ]
               },
@@ -10495,7 +10502,8 @@
           }
         }
       ],
-      "presentationID": "orientation-1"
+      "presentationID": "orientation-1",
+      "fingerCapacity": 4
     }
   ],
   "presentations": [
