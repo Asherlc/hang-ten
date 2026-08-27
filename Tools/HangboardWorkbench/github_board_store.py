@@ -459,7 +459,8 @@ class GitHubBoardStore:
             with self._lock:
                 blob = self._blobs.get(key)
                 if blob is not None:
-                    self._blobs.move_to_end(key)
+                    if not stage_cache_miss:
+                        self._blobs.move_to_end(key)
                     return blob
 
         with self._lock:
@@ -475,7 +476,12 @@ class GitHubBoardStore:
                     flight.cache_on_success = True
                 owner = False
         if not owner:
-            return flight.future.result()
+            blob = flight.future.result()
+            if cache and not stage_cache_miss:
+                with self._lock:
+                    if key not in self._blobs:
+                        self._cache_blob(key, blob)
+            return blob
         try:
             blob = self._call_bulk(self._client.get_blob, token, sha)
             with self._lock:

@@ -252,6 +252,32 @@ class _PausedBulkClient(FakeGitHubClient):
         return super().get_blob(token, sha)
 
 
+class _FourthOwnerAcquireGate:
+    """Pauses a named thread before its fourth lock acquisition."""
+
+    def __init__(self, owner_name: str) -> None:
+        self._lock = threading.RLock()
+        self._counter_lock = threading.Lock()
+        self._owner_name = owner_name
+        self._owner_acquires = 0
+        self.fourth_acquire_started = threading.Event()
+        self.release_fourth_acquire = threading.Event()
+
+    def __enter__(self):
+        if threading.current_thread().name == self._owner_name:
+            with self._counter_lock:
+                self._owner_acquires += 1
+                owner_acquires = self._owner_acquires
+            if owner_acquires == 4:
+                self.fourth_acquire_started.set()
+                assert self.release_fourth_acquire.wait(timeout=5)
+        self._lock.acquire()
+        return self
+
+    def __exit__(self, _error_type, _error, _traceback) -> None:
+        self._lock.release()
+
+
 def _local_package_error(
     tmp_path: Path,
     *,
@@ -708,6 +734,52 @@ def test_staged_blob_single_flight_caches_for_a_concurrent_normal_reader() -> No
     assert len(client.calls_named("get_blob")) == 1
 
 
+def test_completed_staged_blob_flight_caches_for_a_late_normal_reader() -> None:
+    """Fails if a late cache-enabled flight waiter misses cache insertion."""
+    client = _PausedBulkClient(
+        _complete_package("fixture-board", board_document("fixture.board"))
+    )
+    store = github_board_store.GitHubBoardStore(client)
+    snapshot = store._snapshot(TOKEN, BRANCH, cache_blobs=True)
+    primary_entry = next(
+        entry
+        for entry in snapshot.get_tree(TOKEN, BRANCH)
+        if entry.path == "Hangboards/fixture-board/assets/primary.png"
+    )
+    staged_result: list[bytes] = []
+    cached_result: list[bytes] = []
+    gate = _FourthOwnerAcquireGate("staged-owner")
+    store._lock = gate
+    staged_reader = threading.Thread(
+        name="staged-owner",
+        target=lambda: staged_result.append(
+            snapshot.get_staged_blob(TOKEN, primary_entry.sha)
+        ),
+    )
+    cached_reader = threading.Thread(
+        target=lambda: cached_result.append(
+            snapshot.get_blob(TOKEN, primary_entry.sha)
+        )
+    )
+
+    staged_reader.start()
+    assert client.bulk_started.wait(timeout=5)
+    client.release_bulk.set()
+    assert gate.fourth_acquire_started.wait(timeout=5)
+    try:
+        cached_reader.start()
+        cached_reader.join(timeout=5)
+        assert not cached_reader.is_alive()
+        assert cached_result == [PRIMARY_IMAGE.read_bytes()]
+    finally:
+        gate.release_fourth_acquire.set()
+        staged_reader.join(timeout=5)
+
+    assert staged_result == [PRIMARY_IMAGE.read_bytes()]
+    assert len(client.calls_named("get_blob")) == 1
+    assert tuple(store._blobs.values()) == (PRIMARY_IMAGE.read_bytes(),)
+
+
 def test_open_validates_presentation_assets_before_loading_nonprimary_images() -> None:
     """Fails if an invalid presentation inventory downloads its extra image."""
     board = multi_presentation_board_document("fixture.multi")
@@ -757,6 +829,37 @@ def test_failed_multi_presentation_open_does_not_cache_sibling_image_blobs() -> 
         store.open_package(TOKEN, BRANCH, "fixture.multi")
 
     assert {key[1] for key in store._blobs} == {board_sha}
+
+
+def test_failed_multi_presentation_open_preserves_cached_sibling_recency() -> None:
+    """Fails if a staged cache hit changes LRU order before package success."""
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    primary_path = "Hangboards/fixture-v2/assets/primary.png"
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"back"
+    )
+    client = _FailingPresentationBlobClient(
+        files, "Hangboards/fixture-v2/assets/back.png"
+    )
+    store = github_board_store.GitHubBoardStore(client)
+    store.discover_packages(TOKEN, BRANCH)
+    credential_key = next(iter(store._blobs))[0]
+    primary_key = (credential_key, FakeGitHubClient._sha(files[primary_path]))
+    sentinel_key = (credential_key, "sentinel")
+    with store._lock:
+        store._blobs.clear()
+        store._blob_bytes = 0
+    store._cache_blob(primary_key, files[primary_path])
+    store._cache_blob(sentinel_key, b"sentinel")
+
+    with pytest.raises(
+        board_package.BoardPackageError, match="primary image is missing"
+    ):
+        store.open_package(TOKEN, BRANCH, "fixture.multi")
+
+    cached_keys = tuple(store._blobs)
+    assert cached_keys.index(primary_key) < cached_keys.index(sentinel_key)
 
 
 def test_cached_store_does_not_reuse_a_failed_blob_read() -> None:
