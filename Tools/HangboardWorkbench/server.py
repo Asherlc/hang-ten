@@ -452,7 +452,9 @@ class EditorRequestHandler(BaseHTTPRequestHandler):
             if self.server.allow_remote:
                 session = self._github_session()
                 store = self._github_board_store()
-                package = store.open_package(session.token, session.branch, board_id)
+                package = store.open_presentation(
+                    session.token, session.branch, board_id, presentation_id
+                )
             else:
                 package = open_package(self.server.library_root, board_id)
             payload = _board_payload(

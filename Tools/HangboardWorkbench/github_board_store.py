@@ -175,6 +175,31 @@ class GitHubBoardStore:
             self._cache_opened_package(token, branch, package)
             return package
 
+    def open_presentation(
+        self,
+        token: str,
+        branch: str,
+        board_id: str,
+        presentation_id: str | None,
+    ) -> GitHubBoardPackage:
+        """Read one presentation for the editor without warming the save cache."""
+        with self._operation():
+            board_id = board_package._identifier(board_id, "board ID")
+            snapshot = self._snapshot(token, branch, cache_blobs=False)
+            selected = _selected_package(
+                self._catalog(snapshot, token, branch), board_id
+            )
+            package, _image = _load_selected_presentation(
+                snapshot,
+                token,
+                branch,
+                selected.slug,
+                board_id,
+                presentation_id,
+                prevalidated_board=selected.board,
+            )
+            return package
+
     def primary_image_bytes(self, token: str, branch: str, board_id: str) -> bytes:
         return self.presentation_image_bytes(token, branch, board_id, None)
 
@@ -191,18 +216,16 @@ class GitHubBoardStore:
             selected = _selected_package(
                 self._catalog(snapshot, token, branch), board_id
             )
-            package, images = _load_selected_package_with_image(
-                snapshot.with_blob_cache(),
+            _package, image = _load_selected_presentation(
+                snapshot,
                 token,
                 branch,
                 selected.slug,
                 board_id,
+                presentation_id,
                 prevalidated_board=selected.board,
             )
-            if package.board_id != board_id:
-                raise board_package.BoardNotAvailableError("board is not available")
-            presentation = package.presentation(presentation_id)
-            return images[presentation.asset_path]
+            return image
 
     def save_editor_document(
         self,
@@ -1082,6 +1105,97 @@ def _load_selected_package(
     if package.board_id != board_id:
         raise board_package.BoardNotAvailableError("board is not available")
     return package
+
+
+def _load_selected_presentation(
+    client: _GitHubSnapshotClient,
+    token: str,
+    branch: str,
+    slug: str,
+    board_id: str,
+    presentation_id: str | None,
+    *,
+    prevalidated_board: dict[str, Any],
+) -> tuple[GitHubBoardPackage, bytes]:
+    groups = _package_groups(client.get_tree(token, branch))
+    entries = groups.get(slug)
+    if entries is None:
+        raise board_package.BoardPackageError("board package is not available")
+    if not _is_completed(entries):
+        _raise_for_incomplete_layout(slug, entries)
+
+    board_entry = entries["board.json"]
+    board = _load_board_json(_get_blob(client, token, board_entry, "board.json"))
+    board_package.validate_catalog_board(board, allow_missing_kind=True)
+    if board != prevalidated_board:
+        raise board_package.BoardPackageError("board.json changed during loading")
+    if board.get("id") != board_id:
+        raise board_package.BoardNotAvailableError("board is not available")
+
+    asset_entries = {
+        path: entry
+        for path, entry in entries.items()
+        if path.startswith("assets/") and entry.type == "blob"
+    }
+    presentation_values = board_package._parse_board_presentations(board)
+    if set(asset_entries) != {item[2] for item in presentation_values}:
+        raise board_package.BoardPackageError(
+            "board package assets must exactly match its presentations"
+        )
+    selected_value = (
+        next(item for item in presentation_values if item[4])
+        if presentation_id is None
+        else next(
+            (item for item in presentation_values if item[0] == presentation_id),
+            None,
+        )
+    )
+    if selected_value is None:
+        raise board_package.BoardPackageError("presentation is not available")
+    selected_asset = selected_value[2]
+    image = _get_blob(
+        client, token, asset_entries[selected_asset], "package presentation image"
+    )
+    width, height = board_package._png_dimensions_from_bytes(image)
+    image_aspect_ratio = width / height
+    relative_error = abs(selected_value[3] - image_aspect_ratio) / image_aspect_ratio
+    if relative_error > board_package._ASPECT_RATIO_RELATIVE_TOLERANCE:
+        raise board_package.BoardPackageError(
+            f"board.json presentation {selected_value[0]}.aspectRatio must match its image width/height within 0.1%"
+        )
+    source_presentation_id = selected_value[5] or selected_value[0]
+    for index, hold in enumerate(board["holds"]):
+        if hold["presentationID"] != source_presentation_id:
+            continue
+        board_package._validate_hold(
+            hold,
+            width,
+            height,
+            f"board.json.holds[{index}]",
+            requires_presentation_id=True,
+            allow_missing_kind=True,
+        )
+
+    # Only the selected presentation reaches the editor document.  Sibling
+    # dimensions are deliberately deferred to their own image request or save.
+    presentations = tuple(
+        board_package.BoardPresentation(
+            id=item[0],
+            name=item[1],
+            asset_path=item[2],
+            aspect_ratio=item[3],
+            is_default=item[4],
+            image_width=width,
+            image_height=height,
+            source_presentation_id=item[5],
+            is_inverted=item[6],
+        )
+        for item in presentation_values
+    )
+    return (
+        GitHubBoardPackage(slug, board, width, height, board_entry.sha, presentations),
+        image,
+    )
 
 
 def _load_selected_package_with_image(
