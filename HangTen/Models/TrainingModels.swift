@@ -665,7 +665,7 @@ struct TrainingBoard: Identifiable, Hashable {
     let manufacturer: String
     let name: String
     let subtitle: String
-    let dimensions: String
+    let dimensions: String?
     let aspectRatio: CGFloat
     let holds: [BoardHold]
     let presentations: [BoardPresentation]
@@ -682,7 +682,7 @@ struct TrainingBoard: Identifiable, Hashable {
         manufacturer: String,
         name: String,
         subtitle: String,
-        dimensions: String,
+        dimensions: String?,
         aspectRatio: CGFloat,
         holds: [BoardHold],
         semanticHolds: [String: SemanticHoldMappingDefinition] = [:],

@@ -6,7 +6,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     var name: String
     var subtitle: String
     var productURL: URL
-    var dimensions: String
+    var dimensions: String?
     var aspectRatio: Double
     var holds: [BoardEditableHold]
     var presentations: [BoardEditablePresentation]
@@ -29,7 +29,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         name: String,
         subtitle: String,
         productURL: URL,
-        dimensions: String,
+        dimensions: String?,
         aspectRatio: Double,
         holds: [BoardEditableHold],
         presentations: [BoardEditablePresentation]
@@ -56,7 +56,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
         productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = try container.decode(String.self, forKey: .dimensions)
+        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
@@ -361,10 +361,10 @@ enum BoardPackageWriter {
         let requiredStrings = [
             document.manufacturer,
             document.name,
-            document.subtitle,
-            document.dimensions
+            document.subtitle
         ]
-        guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
+        guard requiredStrings.allSatisfy({ !$0.isEmpty }),
+              document.dimensions?.isEmpty != true else {
             throw invalid("required metadata must not be empty", document)
         }
         guard document.productURL.scheme == "https", document.productURL.host != nil else {
@@ -556,17 +556,20 @@ enum BoardPackageWriter {
     }
 
     private static func canonicalValue(_ document: BoardEditableDocument) -> CanonicalJSONValue {
-        .object([
+        var entries: [(String, CanonicalJSONValue)] = [
             ("id", .string(document.id)),
             ("manufacturer", .string(document.manufacturer)),
             ("name", .string(document.name)),
             ("subtitle", .string(document.subtitle)),
             ("productURL", .string(document.productURL.absoluteString)),
-            ("dimensions", .string(document.dimensions)),
             ("aspectRatio", .double(document.aspectRatio)),
             ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
-        ])
+        ]
+        if let dimensions = document.dimensions {
+            entries.insert(("dimensions", .string(dimensions)), at: 5)
+        }
+        return .object(entries)
     }
 
     private static func canonicalHoldValue(_ hold: BoardEditableHold) -> CanonicalJSONValue {

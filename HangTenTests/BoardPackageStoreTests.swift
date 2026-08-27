@@ -3,6 +3,19 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testStoreAcceptsPackageWithoutOptionalDimensions() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board.removeValue(forKey: "dimensions")
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+    }
+
     func testStoreDecodesOptionalSloperMetadataVariants() throws {
         let variants: [(metadata: [String: Any]?, expected: SloperMetadata?)] = [
             (["type": "flat", "angleDegrees": 20], SloperMetadata(type: .flat, angleDegrees: 20)),

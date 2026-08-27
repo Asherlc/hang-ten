@@ -1006,8 +1006,10 @@ def _validate_board(
 ) -> None:
     parsed_presentations = _parse_board_presentations(board)
     _identifier(board.get("id"), "board.json.id")
-    for field in ("manufacturer", "name", "subtitle", "dimensions"):
+    for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
+    if "dimensions" in board:
+        _non_empty_string(board["dimensions"], "board.json.dimensions")
     _https_url(board.get("productURL"), "board.json.productURL")
     aspect_ratio = _positive_number(
         board.get("aspectRatio"), "board.json.aspectRatio"
@@ -1071,8 +1073,10 @@ def validate_catalog_board(
     """Validate board metadata that does not depend on decoding its primary image."""
     parsed_presentations = _parse_board_presentations(board)
     _identifier(board.get("id"), "board.json.id")
-    for field in ("manufacturer", "name", "subtitle", "dimensions"):
+    for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
+    if "dimensions" in board:
+        _non_empty_string(board["dimensions"], "board.json.dimensions")
     _https_url(board.get("productURL"), "board.json.productURL")
     _positive_number(board.get("aspectRatio"), "board.json.aspectRatio")
     holds = board.get("holds")

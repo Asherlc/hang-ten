@@ -557,8 +557,8 @@ Reviewed 2026-08-21.
 - [Current Flash Board product page](https://tensionclimbing.com/products/flash-board-2)
   establishes the manufacturer, exact product name, compact cylindrical form,
   portable cord suspension, and published edge list: Small Crimps, 8 mm,
-  10 mm, 15 mm, and 20 mm. It does not publish overall dimensions or map a
-  listed depth to any visible gallery position.
+  10 mm, 15 mm, and 20 mm. It does not map a listed depth to any visible
+  gallery position.
 - [Current official hangboards page](https://tensionclimbing.com/pages/hangboards)
   independently describes the Flash Board as compact and cylindrical and
   publishes the same list, spelling the first item as approximately 6 mm
@@ -576,8 +576,7 @@ Reviewed 2026-08-21.
   independently confirm the recess/crimp separation at both ends. They were
   used as relief evidence, not for inferred measurements.
 - [Official Flash Board overview page](https://tensionclimbing.com/blogs/training-tools/hangboard-overview-the-flash-board)
-  links Tension's own overview video. It supplied no additional measurement or
-  manufacturer face name.
+  links Tension's own overview video. It supplied no manufacturer face name.
 
 No reseller measurement, review claim, generated illustration, or other board
 package supplied a product fact. The official 2048 × 2048 gallery images were
@@ -592,7 +591,6 @@ mask, contour, or vectorization workflow was used.
 | `manufacturer` / `name` | `Tension` and `Flash Board`, from the manufacturer domain and product title. |
 | `subtitle` | Conservative restatement of the page's compact cylindrical description and exact edge list. |
 | `productURL` | Canonical current manufacturer product page above. |
-| `dimensions` | The schema requires a nonempty string, while no current official Tension source publishes physical dimensions. `Not published by manufacturer` records that limitation without introducing a reseller value. |
 | `aspectRatio` | Presentation-art metadata only: the default 1536 × 1024 PNG is exactly `1.5`; this is not a product dimension. |
 | `presentations` | `three-edge` and `two-edge` are concise repository display descriptions of the two official-gallery orientations, not manufacturer face names. |
 | `holds[].kind` | `edge` follows Tension's own `Edges` heading and `Crimps` label. |
@@ -1280,9 +1278,8 @@ Reviewed 2026-08-21.
   “8 grips,” but both the detailed feature list and technical-details list say
   seven and enumerate exactly seven; the enumerated repeated detail controls
   this audit. The page publishes unit weight and load claims but no physical
-  dimensions. The schema requires a nonempty dimensions string, so
-  `dimensions` is explicitly `Not published by YY Vertical`; no measurement
-  was inferred from the older, different Penta product.
+  dimensions. No measurement was inferred from the older, different Penta
+  product.
 - Official packshots:
   [paired front](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-3.webp),
   [tray/mono detail](https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-penta-evo-1.webp), and

@@ -502,10 +502,10 @@ struct BoardPackageStore {
             boardDocument.manufacturer,
             boardDocument.name,
             boardDocument.subtitle,
-            boardDocument.dimensions,
             boardDocument.productURL.absoluteString
         ]
-        guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
+        guard requiredStrings.allSatisfy({ !$0.isEmpty }),
+              boardDocument.dimensions?.isEmpty != true else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardDocument.id,
                 reason: "required metadata must not be empty"
@@ -762,7 +762,7 @@ private struct BoardPackageBoardDocument: Decodable {
     let name: String
     let subtitle: String
     let productURL: URL
-    let dimensions: String
+    let dimensions: String?
     let aspectRatio: Double
     let presentations: [BoardPackagePresentationDocument]
     let holds: [BoardPackageHoldDocument]
@@ -790,7 +790,7 @@ private struct BoardPackageBoardDocument: Decodable {
         name = try container.decode(String.self, forKey: .name)
         subtitle = try container.decode(String.self, forKey: .subtitle)
         productURL = try container.decode(URL.self, forKey: .productURL)
-        dimensions = try container.decode(String.self, forKey: .dimensions)
+        dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         presentations = try container.decode(
             [BoardPackagePresentationDocument].self,

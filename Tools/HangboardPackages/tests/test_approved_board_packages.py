@@ -412,7 +412,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
     board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "tension.flash-board"
-    assert board["dimensions"] == "Not published by manufacturer"
+    assert "dimensions" not in board
     assert board["presentations"] == [
         {
             "id": "three-edge-upright",
