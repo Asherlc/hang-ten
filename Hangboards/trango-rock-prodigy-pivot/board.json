@@ -5615,7 +5615,8 @@
       "depthRangeMillimeters": {
         "lowerBound": 11,
         "upperBound": 12
-      }
+      },
+      "handCapacity": 1
     }
   ],
   "presentations": [
