@@ -1009,6 +1009,7 @@ def _load_completed_packages(
     max_concurrent_package_loads: int,
 ) -> list[GitHubBoardPackage]:
     window = min(max_concurrent_package_loads, len(completed))
+    blob_slots = threading.BoundedSemaphore(max_concurrent_package_loads)
     pending = [
         executor.submit(
             _load_package_from_entries,
@@ -1017,6 +1018,7 @@ def _load_completed_packages(
             slug,
             entries,
             inspect_png_header_only=True,
+            blob_slots=blob_slots,
         )
         for slug, entries in completed[:window]
     ]
@@ -1036,6 +1038,7 @@ def _load_completed_packages(
                         slug,
                         entries,
                         inspect_png_header_only=True,
+                        blob_slots=blob_slots,
                     )
                 )
                 next_index += 1
@@ -1187,6 +1190,8 @@ def _load_package_from_entries(
     *,
     inspect_png_header_only: bool,
     include_image: Literal[False] = False,
+    prevalidated_board: dict[str, Any] | None = None,
+    blob_slots: threading.BoundedSemaphore | None = None,
 ) -> GitHubBoardPackage: ...
 
 
@@ -1199,6 +1204,8 @@ def _load_package_from_entries(
     *,
     inspect_png_header_only: bool,
     include_image: Literal[True],
+    prevalidated_board: dict[str, Any] | None = None,
+    blob_slots: threading.BoundedSemaphore | None = None,
 ) -> tuple[GitHubBoardPackage, dict[str, bytes]]: ...
 
 
@@ -1211,6 +1218,7 @@ def _load_package_from_entries(
     inspect_png_header_only: bool,
     include_image: bool = False,
     prevalidated_board: dict[str, Any] | None = None,
+    blob_slots: threading.BoundedSemaphore | None = None,
 ) -> GitHubBoardPackage | tuple[GitHubBoardPackage, dict[str, bytes]]:
     if prevalidated_board is not None and len(
         {item[2] for item in board_package._parse_board_presentations(prevalidated_board)}
@@ -1229,7 +1237,11 @@ def _load_package_from_entries(
     if prevalidated_board is None:
         if primary_entry is not None:
             primary_image = _get_blob(
-                client, token, primary_entry, "package primary image"
+                client,
+                token,
+                primary_entry,
+                "package primary image",
+                blob_slots=blob_slots,
             )
             images["assets/primary.png"] = primary_image
             dimensions["assets/primary.png"] = (
@@ -1237,7 +1249,9 @@ def _load_package_from_entries(
                 if inspect_png_header_only
                 else board_package._png_dimensions_from_bytes(primary_image)
             )
-        board_blob = _get_blob(client, token, board_entry, "board.json")
+        board_blob = _get_blob(
+            client, token, board_entry, "board.json", blob_slots=blob_slots
+        )
         board = _load_board_json(board_blob)
         concurrent_assets = {
             path: entry
@@ -1259,7 +1273,14 @@ def _load_package_from_entries(
         )
     ) as executor:
         board_future = (
-            executor.submit(_get_blob, client, token, board_entry, "board.json")
+            executor.submit(
+                _get_blob,
+                client,
+                token,
+                board_entry,
+                "board.json",
+                blob_slots=blob_slots,
+            )
             if prevalidated_board is not None
             else None
         )
@@ -1275,6 +1296,7 @@ def _load_package_from_entries(
                     else "package presentation image"
                 ),
                 stage_cache_miss=True,
+                blob_slots=blob_slots,
             )
             for asset_path, image_entry in concurrent_assets.items()
         }
@@ -1446,11 +1468,17 @@ def _get_blob(
     label: str,
     *,
     stage_cache_miss: bool = False,
+    blob_slots: threading.BoundedSemaphore | None = None,
 ) -> bytes:
     try:
         if stage_cache_miss and isinstance(client, _CachedSnapshotClient):
-            return client.get_staged_blob(token, entry.sha)
-        return client.get_blob(token, entry.sha)
+            read_blob = client.get_staged_blob
+        else:
+            read_blob = client.get_blob
+        if blob_slots is None:
+            return read_blob(token, entry.sha)
+        with blob_slots:
+            return read_blob(token, entry.sha)
     except GitHubNotFoundError as error:
         if label == "board.json":
             raise board_package.BoardPackageError("board.json is missing") from error

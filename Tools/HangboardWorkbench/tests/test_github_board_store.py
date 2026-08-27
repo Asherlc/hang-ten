@@ -199,6 +199,44 @@ class _OverlappingBlobClient(FakeGitHubClient):
                 self._active_blob_reads -= 1
 
 
+class _BoundedBlobConcurrencyClient(FakeGitHubClient):
+    """Blocks non-primary images while tracking aggregate blob concurrency."""
+
+    def __init__(self, files: dict[str, bytes], ceiling: int) -> None:
+        super().__init__({BRANCH: files})
+        self._presentation_blob_shas = {
+            sha
+            for path, (_content, sha) in self._branches[BRANCH].items()
+            if path.endswith(".png") and not path.endswith("/primary.png")
+        }
+        self._ceiling = ceiling
+        self._lock = threading.Lock()
+        self._active_blob_reads = 0
+        self.max_active_blob_reads = 0
+        self.ceiling_reached = threading.Event()
+        self.ceiling_exceeded = threading.Event()
+        self.release_blob_reads = threading.Event()
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        if sha not in self._presentation_blob_shas:
+            return super().get_blob(token, sha)
+        with self._lock:
+            self._active_blob_reads += 1
+            self.max_active_blob_reads = max(
+                self.max_active_blob_reads, self._active_blob_reads
+            )
+            if self._active_blob_reads >= self._ceiling:
+                self.ceiling_reached.set()
+            if self._active_blob_reads > self._ceiling:
+                self.ceiling_exceeded.set()
+        try:
+            assert self.release_blob_reads.wait(timeout=5)
+            return super().get_blob(token, sha)
+        finally:
+            with self._lock:
+                self._active_blob_reads -= 1
+
+
 class _OneTimeMissingBlobClient(FakeGitHubClient):
     """Makes the first blob lookup unavailable, then serves the same blob."""
 
@@ -479,6 +517,77 @@ def test_cold_discovery_loads_completed_packages_concurrently_in_sorted_order() 
         "zeta.board",
     ]
     assert 2 <= client.max_active_blob_reads <= 4
+
+
+def test_cold_discovery_bounds_nested_presentation_blob_concurrency() -> None:
+    """Fails if per-package asset pools multiply the configured global bound."""
+    files: dict[str, bytes] = {}
+    for package_index, slug in enumerate(("alpha", "bravo", "charlie", "delta")):
+        board = multi_presentation_board_document(f"{slug}.board")
+        presentations = board["presentations"]
+        holds = board["holds"]
+        assert isinstance(presentations, list)
+        assert isinstance(holds, list)
+        for presentation_id in ("profile", "detail"):
+            presentations.append(
+                {
+                    "id": presentation_id,
+                    "name": presentation_id.title(),
+                    "assetPath": f"assets/{presentation_id}.png",
+                    "aspectRatio": 1774 / 457,
+                    "default": False,
+                }
+            )
+            hold = copy.deepcopy(holds[0])
+            assert isinstance(hold, dict)
+            hold.update(
+                id=f"hold-{presentation_id}",
+                name=f"{presentation_id.title()} hold",
+                presentationID=presentation_id,
+            )
+            holds.append(hold)
+        files.update(_complete_package(slug, board))
+        for asset_index, asset_name in enumerate(("back", "profile", "detail")):
+            files[f"Hangboards/{slug}/assets/{asset_name}.png"] = (
+                _primary_image_with_text_chunk(
+                    f"{package_index}-{asset_index}".encode("utf-8")
+                )
+            )
+    client = _BoundedBlobConcurrencyClient(files, ceiling=4)
+    discovered: list[tuple[github_board_store.GitHubBoardPackage, ...]] = []
+    errors: list[BaseException] = []
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        def discover() -> None:
+            try:
+                discovered.append(
+                    github_board_store.discover_packages(
+                        client,
+                        TOKEN,
+                        BRANCH,
+                        executor=executor,
+                        max_concurrent_package_loads=4,
+                    )
+                )
+            except BaseException as error:
+                errors.append(error)
+
+        worker = threading.Thread(target=discover)
+        worker.start()
+        try:
+            assert client.ceiling_reached.wait(timeout=5)
+            exceeded = client.ceiling_exceeded.wait(timeout=1)
+        finally:
+            client.release_blob_reads.set()
+            worker.join(timeout=5)
+
+    assert not worker.is_alive()
+    assert errors == []
+    assert not exceeded
+    assert client.max_active_blob_reads == 4
+    assert [[package.board_id for package in packages] for packages in discovered] == [
+        ["alpha.board", "bravo.board", "charlie.board", "delta.board"]
+    ]
 
 
 def test_cached_catalog_avoids_rescanning_over_capacity_images_for_open_and_image() -> None:
