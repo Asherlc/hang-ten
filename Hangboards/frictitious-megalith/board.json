@@ -1557,6 +1557,104 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-18",
+      "name": "Hold 18",
+      "kind": "edge",
+      "sizeMillimeters": 40,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.632260075114,
+            "y": 0.4541015625,
+            "width": 0.121709526449,
+            "height": 0.076913900391
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.999999994651,
+                  0.013459157367
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.086381880774,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  -0.02223886094,
+                  0.154681242726
+                ],
+                "control2": [
+                  -0.040134584813,
+                  0.753514869013
+                ],
+                "to": [
+                  0.100738456485,
+                  0.787063644649
+                ],
+                "bendable": true
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.345178518927,
+                  0.825030878049
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.413953205259,
+                  0.707946667333
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.69917438538,
+                  0.652848239878
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.769034418186,
+                  0.932704187772
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.013459157367
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
