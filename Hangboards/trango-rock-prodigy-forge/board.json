@@ -61,7 +61,9 @@
         }
       ],
       "presentationID": "primary",
-      "gripType": "sloper"
+      "gripType": "sloper",
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "sloper-40-right",
