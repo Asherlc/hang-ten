@@ -74,6 +74,8 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
     && (value.bendableCommandIndexes === undefined
       || isBendableCommandIndexes(value.bendableCommandIndexes))
+    && (value.smoothAnchorIndexes === undefined
+      || isBendableCommandIndexes(value.smoothAnchorIndexes))
     && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)

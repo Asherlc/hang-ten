@@ -69,6 +69,7 @@ interface DragState {
     pivot?: Point;
     shapeConstraint?: ShapeConstraint;
     bendableCommandIndexes?: number[];
+    smoothAnchorIndexes?: number[];
   }> | null;
   originalConstraint: ShapeConstraint | null;
   originalDocument: EditorDocument | null;
@@ -209,11 +210,33 @@ function writeBendableCommandIndexes(region: HoldRegion, commands: readonly Path
   else delete region.bendableCommandIndexes;
 }
 
+function writeSmoothAnchorIndexes(region: HoldRegion, commands: readonly PathCommand[]): void {
+  const smoothAnchorIndexes = commands.flatMap((command, index) => command.smooth === true ? [index] : []);
+  if (smoothAnchorIndexes.length > 0) region.smoothAnchorIndexes = smoothAnchorIndexes;
+  else delete region.smoothAnchorIndexes;
+}
+
+function writeEditablePathMetadata(region: HoldRegion, path: EditablePath): void {
+  const commands = path.segments.map((segment) => ({
+    type: segment.type,
+    ...(segment.bendable === true ? { bendable: true } : {}),
+    ...(segment.anchor.smooth === true ? { smooth: true } : {}),
+    points: [{ x: segment.anchor.x, y: segment.anchor.y }],
+    controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
+  }));
+  writeBendableCommandIndexes(region, commands);
+  writeSmoothAnchorIndexes(region, commands);
+}
+
 function pathCommandsForHold(region: HoldRegion, pathEditor: PathEditor): PathCommand[] {
   const commands = pathEditor.parsePath(region.displayPath);
   for (const index of region.bendableCommandIndexes ?? []) {
     const command = commands[index];
     if (command?.type === "C") command.bendable = true;
+  }
+  for (const index of region.smoothAnchorIndexes ?? []) {
+    const command = commands[index];
+    if (command && command.type !== "M" && command.type !== "Z") command.smooth = true;
   }
   return commands;
 }
@@ -379,6 +402,7 @@ function mirrorHoldPath(
   }
   target.displayPath = pathEditor.serializePath(commands);
   writeBendableCommandIndexes(target, commands);
+  writeSmoothAnchorIndexes(target, commands);
 }
 
 function uniqueRegionKey(document: EditorDocument, baseKey: string): string {
@@ -473,6 +497,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           selectedHold.displayPath,
           pathEditor,
           selectedHold.bendableCommandIndexes,
+          selectedHold.smoothAnchorIndexes,
         );
         editablePathRef.current = {
           document,
@@ -556,11 +581,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       const hold = candidate.regions.find((region) => region.key === selectedHold.key);
       if (hold && !hold.shapeConstraint) {
         hold.displayPath = displayPath;
-        const bendableCommandIndexes = path.segments.flatMap((segment, index) => (
-          segment.bendable === true ? [index] : []
-        ));
-        if (bendableCommandIndexes.length > 0) hold.bendableCommandIndexes = bendableCommandIndexes;
-        else delete hold.bendableCommandIndexes;
+        writeEditablePathMetadata(hold, path);
       }
     }, { status: nextStatus });
     if (!edited) return false;
@@ -998,6 +1019,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         } else {
           hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
           delete hold.bendableCommandIndexes;
+          delete hold.smoothAnchorIndexes;
           hold.shapeConstraint = { shape, rotationDegrees: 0 };
         }
       }
@@ -1038,6 +1060,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           } else {
             delete region.bendableCommandIndexes;
           }
+          if (original.smoothAnchorIndexes) {
+            region.smoothAnchorIndexes = [...original.smoothAnchorIndexes];
+          } else {
+            delete region.smoothAnchorIndexes;
+          }
           if (original.shapeConstraint) region.shapeConstraint = { ...original.shapeConstraint };
           else delete region.shapeConstraint;
         }
@@ -1051,6 +1078,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           region.bendableCommandIndexes = [...originalRegion.bendableCommandIndexes];
         } else {
           delete region.bendableCommandIndexes;
+        }
+        if (originalRegion?.smoothAnchorIndexes) {
+          region.smoothAnchorIndexes = [...originalRegion.smoothAnchorIndexes];
+        } else {
+          delete region.smoothAnchorIndexes;
         }
         if (drag.originalConstraint) region.shapeConstraint = { ...drag.originalConstraint };
         else delete region.shapeConstraint;
@@ -1173,9 +1205,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             path: region.displayPath,
             pivot: holdPivot,
             ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
-            ...(region.bendableCommandIndexes ? {
-              bendableCommandIndexes: [...region.bendableCommandIndexes],
-            } : {}),
+          ...(region.bendableCommandIndexes ? {
+            bendableCommandIndexes: [...region.bendableCommandIndexes],
+          } : {}),
+          ...(region.smoothAnchorIndexes ? {
+            smoothAnchorIndexes: [...region.smoothAnchorIndexes],
+          } : {}),
           }));
         }),
         editablePath: editablePath ? cloneEditablePath(editablePath) : null,
@@ -1209,6 +1244,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             selectedHold.displayPath,
             pathEditor,
             selectedHold.bendableCommandIndexes,
+            selectedHold.smoothAnchorIndexes,
           );
         } catch (error: unknown) {
           reportInvalidPath(error);
@@ -1295,12 +1331,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             pathEditor,
           );
           region.displayPath = serializeEditablePath(rotatedEditablePath, pathEditor);
-          writeBendableCommandIndexes(region, rotatedEditablePath.segments.map((segment) => ({
-            type: segment.type,
-            ...(segment.bendable === true ? { bendable: true } : {}),
-            points: [{ x: segment.anchor.x, y: segment.anchor.y }],
-            controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
-          })));
+          writeEditablePathMetadata(region, rotatedEditablePath);
           editablePathRef.current = {
             document: candidate,
             holdKey: original.key,
@@ -1314,9 +1345,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             const command = commands[index];
             if (command?.type === "C") command.bendable = true;
           }
+          for (const index of original.smoothAnchorIndexes ?? []) {
+            const command = commands[index];
+            if (command && command.type !== "M" && command.type !== "Z") command.smooth = true;
+          }
           pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
           region.displayPath = pathEditor.serializePath(commands);
           writeBendableCommandIndexes(region, commands);
+          writeSmoothAnchorIndexes(region, commands);
         }
         if (original.shapeConstraint) {
           region.shapeConstraint = {
@@ -1340,6 +1376,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         );
         hold.displayPath = resized.displayPath;
         delete hold.bendableCommandIndexes;
+        delete hold.smoothAnchorIndexes;
         hold.shapeConstraint = resized.shapeConstraint;
       } catch (error: unknown) {
         restoreDrag(
@@ -1376,12 +1413,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         translateEditablePath(editable, deltaX, deltaY);
       }
       hold.displayPath = serializeEditablePath(editable, pathEditor);
-      writeBendableCommandIndexes(hold, editable.segments.map((segment) => ({
-        type: segment.type,
-        ...(segment.bendable === true ? { bendable: true } : {}),
-        points: [{ x: segment.anchor.x, y: segment.anchor.y }],
-        controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
-      })));
+      writeEditablePathMetadata(hold, editable);
       editablePathRef.current = {
         document: candidate,
         holdKey: drag.holdKey ?? selectedHold?.key ?? "",
@@ -1612,12 +1644,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           const hold = candidate.regions.find((region) => region.key === selectedHold.key);
           if (hold) {
             hold.displayPath = nextPath;
-            writeBendableCommandIndexes(hold, next.segments.map((segment) => ({
-              type: segment.type,
-              ...(segment.bendable === true ? { bendable: true } : {}),
-              points: [{ x: segment.anchor.x, y: segment.anchor.y }],
-              controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
-            })));
+            writeEditablePathMetadata(hold, next);
           }
         }, {
           status: "Hold nudged. Save when ready.",
