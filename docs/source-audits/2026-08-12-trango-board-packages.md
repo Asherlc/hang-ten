@@ -150,50 +150,68 @@ and [Depth
 Guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905).
 The product page says the Pivot has four usage orientations and 22 distinct
 grip positions. The Quick Start's orientation material is explicitly a guide
-to *key* holds, not a comprehensive list of all possible holds. These five
-packages therefore model only the named key grip positions below. They do not
-claim a complete physical-contact inventory, add alternate grips, derive
-measurements, or carry optional capacity, posture, feature, or coaching
-metadata.
+to *key* holds, not a comprehensive list of all possible holds. For this audit,
+“intended orientation contacts” means the named Quick Start key grips, and the
+guide's non-comprehensive caveat limits the selection. These five packages
+therefore model only those named key grip positions for their mounting state.
+They do not claim a complete casting-wide physical-contact inventory, add
+alternate grips, derive measurements, or carry optional capacity, posture,
+feature, or coaching metadata.
 
 Neither the Pivot product page nor either cited Pivot guide provides board
 dimensions. The orientation packages consequently omit `dimensions`; the
 previous dimension string was unsupported and is not retained as a package
 fact.
 
-Each package is a direct child under `Hangboards/` with the same unmodified
-official Pivot front presentation used by the completed base package. The
-image is the presentation of the same physical product, not evidence for an
-unlisted contact. During review, every configuration path was deliberately
-matched to the named contact in the Quick Start orientation plate and the
-corresponding canonical physical-contact boundary in the already-reviewed base
-presentation. When Trango's plate depicts a named grip on both mirrored
-halves, each component is a separate logical hold because it is a separate
-physical contact. Every
-documented key grip therefore has one `-left` record mapped to the reviewed
-left contact and one `-right` record mapped to the reviewed right contact.
-Orientation 1's Jug and Horizontal Pinch usages remain combined once per side
-because the Quick Start applies both usage names to the same wedge contact;
-there is no overlapping duplicate jug/pinch record.
+Each package is a direct child under `Hangboards/` and now uses the official
+configuration summary panel from its Quick Start orientation page rather than
+the base package's unrotated product image. The official PDF was rendered with
+macOS PDFKit at 2× into 912 × 1344 RGBA PNG pages. An operator then selected the
+published summary-panel rectangle listed below; the crop did not resample,
+retouch, register, align, detect, segment, vectorize, simplify, or generate any
+manufacturer artwork. To satisfy the repository's transparent-primary PNG
+contract, only the final `(0, 0)` corner pixel had its alpha set to zero; its
+RGB channels and every other source pixel were preserved.
 
-| package / mounting state | documented key grip | schema kind | reviewed canonical physical-contact mapping |
+| package | Quick Start source presentation | manual source-pixel crop | final PNG identity |
 | --- | --- | --- | --- |
-| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug / Horizontal Pinch | `jug` | `jug-horizontal-pinch-left` → `outer-wedge-pinch-left`; `jug-horizontal-pinch-right` → `outer-wedge-pinch-right`. The Quick Start separately names Jug and Horizontal Pinch usage on this reviewed wedge contact. The combined per-side name preserves both source names without overlapping records. `jug` is the conservative allowed schema kind selected for the record; this source-to-schema adaptation does not claim a separate pinch contact. |
-| same | Variable Depth Sloper Rail | `sloper` | `variable-depth-sloper-rail-left/right` → `variable-edge-left/right`, side for side |
-| same | Medium Supported Crimp | `edge` | `medium-supported-crimp-left/right` → `medium-crimp-left/right`, side for side |
-| same | Large Sloped Crimp | `edge` | `large-sloped-crimp-left/right` → `upper-sloped-crimp-left/right`, side for side |
-| `trango-rock-prodigy-pivot-orientation-2-90-outwards` / Orientation 2, 90° Outwards | Shallow Mono | `pocket` | `shallow-mono-left/right` → `variable-edge-left/right`, side for side; the guide identifies a one-finger use at the rail's reviewed contact, so each complete continuous rail boundary is retained instead of inventing a raster-derived sub-contour. |
-| same | Steep Gaston | `edge` | `steep-gaston-left/right` → `outer-wedge-pinch-left/right`, side for side |
-| same | Small Sloped Crimp | `edge` | `small-sloped-crimp-left/right` → `outer-sloped-crimp-left/right`, side for side |
-| `trango-rock-prodigy-pivot-orientation-3-90-inwards` / Orientation 3, 90° Inwards | 2 Finger Pocket | `pocket` | `two-finger-pocket-left/right` → base `two-finger-pocket-left/right`, side for side |
-| same | 3 Finger Pocket | `pocket` | `three-finger-pocket-left/right` → base `three-finger-pocket-left/right`, side for side |
-| same | Large Supported Crimp | `edge` | `large-supported-crimp-left/right` → `medium-crimp-left/right`, side for side |
-| same | Sloper | `sloper` | `sloper-left/right` → `lower-sloper-left/right`, side for side |
-| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` / Orientation 3 Switch, L-to-R | Variable Depth Incut Rail | `edge` | `variable-depth-incut-rail-left/right` → `variable-edge-left/right`, side for side |
-| same | Shallow Gaston | `edge` | `shallow-gaston-left/right` → `outer-wedge-pinch-left/right`, side for side |
-| `trango-rock-prodigy-pivot-orientation-4-90-outwards` / Orientation 4, 90° Outwards | Compression Pinch | `pinch` | `compression-pinch-left/right` → `outer-wedge-pinch-left/right`, side for side |
-| same | Deep Mono | `pocket` | `deep-mono-left/right` → `variable-edge-left/right`, side for side; each complete reviewed rail contact is kept for the documented mono use. |
-| same | Medium Mono | `pocket` | `medium-mono-left/right` → `three-finger-pocket-left/right`, side for side |
+| `trango-rock-prodigy-pivot-orientation-1` | printed page 6 / PDF index 5, Orientation 1 summary | `x=130, y=885, 650 × 264` | `650 × 264`; SHA-256 `9c4e31db309ffe8a554695038e463402fdc1bd6b29a4a0a380288d678a56ae61` |
+| `trango-rock-prodigy-pivot-orientation-2-90-outwards` | printed page 8 / PDF index 7, Orientation 2 90° Outwards summary | `x=302, y=833, 308 × 327` | `308 × 327`; SHA-256 `39c04d89e09fba49bcbee0803c40fdf7e843cfffeafc5ae175cf17b38f992ff9` |
+| `trango-rock-prodigy-pivot-orientation-3-90-inwards` | printed page 10 / PDF index 9, Orientation 3 90° Inwards summary | `x=130, y=825, 650 × 254` | `650 × 254`; SHA-256 `305a86c175d74b34877378511d3a062e9b3d253cdad44644f2e6be6bc401a6ee` |
+| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` | printed page 12 / PDF index 11, Orientation 3 Switch L-to-R summary | `x=130, y=825, 650 × 251` | `650 × 251`; SHA-256 `1f4d4f019df7acf52b89ce18c0af4bd60c8ac1de0df58bccb31f0855d15e8a38` |
+| `trango-rock-prodigy-pivot-orientation-4-90-outwards` | printed page 14 / PDF index 13, Orientation 4 90° Outwards summary | `x=302, y=842, 308 × 326` | `308 × 326`; SHA-256 `55cefe136fe40bf3ad06b792bbd765743e0d3da93a0732a32a11beee80fbb428` |
+
+Every normalized canonical path was deliberately redrawn and reviewed against
+its package's own orientation summary panel, with the following printed
+detail page used to identify the named surface: Orientation 1 page 7,
+Orientation 2 page 9, Orientation 3 page 11, Orientation 3 Switch page 13,
+and Orientation 4 page 15. No base-package coordinates or automated rotation
+transform were used. The official panels are bilateral mirrors for each
+mounting state, so the reviewed right-side path is an exact normalized mirror
+of the reviewed left-side path. When Trango depicts a named grip on both
+halves, each component is a separate logical hold because it is a separate
+physical contact. Orientation 1's Jug and Horizontal Pinch usages remain
+combined once per side because the Quick Start applies both usage names to the
+same wedge contact; there is no overlapping duplicate jug/pinch record.
+
+| package / mounting state | documented key grip | schema kind | source-page and package-asset mapping |
+| --- | --- | --- | --- |
+| `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug / Horizontal Pinch | `jug` | Printed page 7 identifies the outer diagonal finger surface and lower thumb surface on both halves; both directly authored pieces remain one combined logical record per side. `jug` is the conservative allowed schema adaptation and does not claim a separate pinch contact. |
+| same | Variable Depth Sloper Rail | `sloper` | Printed page 7 identifies the long lower rail on each horizontal half. |
+| same | Medium Supported Crimp | `edge` | Printed page 7 identifies the short center crimp on each horizontal half. |
+| same | Large Sloped Crimp | `edge` | Printed page 7 identifies the upper inner sloped surface on each horizontal half. |
+| `trango-rock-prodigy-pivot-orientation-2-90-outwards` / Orientation 2, 90° Outwards | Shallow Mono | `pocket` | Printed page 9 identifies the one-finger use at the end of the long vertical rail; the directly authored path retains that continuous visible rail contact rather than inventing a sub-contour. |
+| same | Steep Gaston | `edge` | Printed page 9 identifies the lower inward-facing diagonal surface on both vertical halves. |
+| same | Small Sloped Crimp | `edge` | Printed page 9 identifies the short upper surface on both vertical halves. |
+| `trango-rock-prodigy-pivot-orientation-3-90-inwards` / Orientation 3, 90° Inwards | 2 Finger Pocket | `pocket` | Printed page 11 identifies the larger lower outside pocket opening on each horizontal half. |
+| same | 3 Finger Pocket | `pocket` | Printed page 11 identifies the smaller lower inside pocket opening on each horizontal half. |
+| same | Large Supported Crimp | `edge` | Printed page 11 identifies the lower supported crimp surface adjacent to the pocket openings. |
+| same | Sloper | `sloper` | Printed page 11 identifies the bumpy upper sloper surface on both horizontal halves. |
+| `trango-rock-prodigy-pivot-orientation-3-switch-left-to-right` / Orientation 3 Switch, L-to-R | Variable Depth Incut Rail | `edge` | Printed page 13 identifies the long upper incut rail on each switched horizontal half. |
+| same | Shallow Gaston | `edge` | Printed page 13 identifies the outward diagonal surface on each switched horizontal half. |
+| `trango-rock-prodigy-pivot-orientation-4-90-outwards` / Orientation 4, 90° Outwards | Compression Pinch | `pinch` | Printed page 15 identifies the outer diagonal finger surface and inner thumb surface; both directly authored pieces remain one logical record per side. |
+| same | Deep Mono | `pocket` | Printed page 15 identifies the one-finger use at the bottom of the long vertical rail; the directly authored path retains that continuous visible rail contact rather than inventing a sub-contour. |
+| same | Medium Mono | `pocket` | Printed page 15 identifies the lower outside pocket opening on each vertical half. |
 
 “Orientation 3 Switch” is counted separately from Orientation 3 for package
 selection because the Quick Start directs an L-to-R board switch and names a

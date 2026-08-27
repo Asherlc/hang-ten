@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -219,51 +220,75 @@ ORIENTATION_PACKAGES = {
     ),
 }
 
-# Each orientation record reuses exactly one complete, already-reviewed
-# physical contact from the base package. The two official Orientation 1 usage
-# names share one wedge contact per side, so each side has one combined record.
-ORIENTATION_CANONICAL_CONTACTS = {
+ORIENTATION_PRESENTATION_EXPECTATIONS = {
+    "trango-rock-prodigy-pivot-orientation-1": (
+        (650, 264),
+        "9c4e31db309ffe8a554695038e463402fdc1bd6b29a4a0a380288d678a56ae61",
+    ),
+    "trango-rock-prodigy-pivot-orientation-2-90-outwards": (
+        (308, 327),
+        "39c04d89e09fba49bcbee0803c40fdf7e843cfffeafc5ae175cf17b38f992ff9",
+    ),
+    "trango-rock-prodigy-pivot-orientation-3-90-inwards": (
+        (650, 254),
+        "305a86c175d74b34877378511d3a062e9b3d253cdad44644f2e6be6bc401a6ee",
+    ),
+    "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right": (
+        (650, 251),
+        "1f4d4f019df7acf52b89ce18c0af4bd60c8ac1de0df58bccb31f0855d15e8a38",
+    ),
+    "trango-rock-prodigy-pivot-orientation-4-90-outwards": (
+        (308, 326),
+        "55cefe136fe40bf3ad06b792bbd765743e0d3da93a0732a32a11beee80fbb428",
+    ),
+}
+
+# Literal operator-reviewed normalized bounds on the official Quick Start
+# orientation summary panels. A tuple contains one frame per visible contact
+# surface; Orientation 1's combined jug/pinch and Orientation 4's compression
+# pinch each have a second thumb-contact surface.
+ORIENTATION_GEOMETRY_FRAMES = {
     "trango-rock-prodigy-pivot-orientation-1": {
-        "jug-horizontal-pinch-left": "outer-wedge-pinch-left",
-        "jug-horizontal-pinch-right": "outer-wedge-pinch-right",
-        "variable-depth-sloper-rail-left": "variable-edge-left",
-        "variable-depth-sloper-rail-right": "variable-edge-right",
-        "medium-supported-crimp-left": "medium-crimp-left",
-        "medium-supported-crimp-right": "medium-crimp-right",
-        "large-sloped-crimp-left": "upper-sloped-crimp-left",
-        "large-sloped-crimp-right": "upper-sloped-crimp-right",
+        "jug-horizontal-pinch-left": ((0.107692, 0.257576, 0.169231, 0.356061), (0.223077, 0.590909, 0.075385, 0.159091)),
+        "jug-horizontal-pinch-right": ((0.723077, 0.257576, 0.169231, 0.356061), (0.701538, 0.590909, 0.075385, 0.159091)),
+        "variable-depth-sloper-rail-left": ((0.173846, 0.556818, 0.298462, 0.147727),),
+        "variable-depth-sloper-rail-right": ((0.527692, 0.556818, 0.298462, 0.147727),),
+        "medium-supported-crimp-left": ((0.278462, 0.424242, 0.186154, 0.090909),),
+        "medium-supported-crimp-right": ((0.535384, 0.424242, 0.186154, 0.090909),),
+        "large-sloped-crimp-left": ((0.321538, 0.246212, 0.147692, 0.098485),),
+        "large-sloped-crimp-right": ((0.53077, 0.246212, 0.147692, 0.098485),),
     },
     "trango-rock-prodigy-pivot-orientation-2-90-outwards": {
-        "shallow-mono-left": "variable-edge-left",
-        "shallow-mono-right": "variable-edge-right",
-        "steep-gaston-left": "outer-wedge-pinch-left",
-        "steep-gaston-right": "outer-wedge-pinch-right",
-        "small-sloped-crimp-left": "outer-sloped-crimp-left",
-        "small-sloped-crimp-right": "outer-sloped-crimp-right",
+        "shallow-mono-left": ((0.337662, 0.204893, 0.087662, 0.449541),),
+        "shallow-mono-right": ((0.574676, 0.204893, 0.087662, 0.449541),),
+        "steep-gaston-left": ((0.233766, 0.412844, 0.224026, 0.299694),),
+        "steep-gaston-right": ((0.542208, 0.412844, 0.224026, 0.299694),),
+        "small-sloped-crimp-left": ((0.152597, 0.174312, 0.275974, 0.082569),),
+        "small-sloped-crimp-right": ((0.571429, 0.174312, 0.275974, 0.082569),),
     },
     "trango-rock-prodigy-pivot-orientation-3-90-inwards": {
-        "two-finger-pocket-left": "two-finger-pocket-left",
-        "two-finger-pocket-right": "two-finger-pocket-right",
-        "three-finger-pocket-left": "three-finger-pocket-left",
-        "three-finger-pocket-right": "three-finger-pocket-right",
-        "large-supported-crimp-left": "medium-crimp-left",
-        "large-supported-crimp-right": "medium-crimp-right",
-        "sloper-left": "lower-sloper-left",
-        "sloper-right": "lower-sloper-right",
+        "two-finger-pocket-left": ((0.170769, 0.543307, 0.058462, 0.110236),),
+        "two-finger-pocket-right": ((0.770769, 0.543307, 0.058462, 0.110236),),
+        "three-finger-pocket-left": ((0.236923, 0.551181, 0.046154, 0.098425),),
+        "three-finger-pocket-right": ((0.716923, 0.551181, 0.046154, 0.098425),),
+        "large-supported-crimp-left": ((0.223077, 0.559055, 0.123077, 0.11811),),
+        "large-supported-crimp-right": ((0.653846, 0.559055, 0.123077, 0.11811),),
+        "sloper-left": ((0.230769, 0.228346, 0.130769, 0.094488),),
+        "sloper-right": ((0.638462, 0.228346, 0.130769, 0.094488),),
     },
     "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right": {
-        "variable-depth-incut-rail-left": "variable-edge-left",
-        "variable-depth-incut-rail-right": "variable-edge-right",
-        "shallow-gaston-left": "outer-wedge-pinch-left",
-        "shallow-gaston-right": "outer-wedge-pinch-right",
+        "variable-depth-incut-rail-left": ((0.207692, 0.294821, 0.272308, 0.14741),),
+        "variable-depth-incut-rail-right": ((0.52, 0.294821, 0.272308, 0.14741),),
+        "shallow-gaston-left": ((0.138462, 0.36255, 0.116923, 0.286853),),
+        "shallow-gaston-right": ((0.744615, 0.36255, 0.116923, 0.286853),),
     },
     "trango-rock-prodigy-pivot-orientation-4-90-outwards": {
-        "compression-pinch-left": "outer-wedge-pinch-left",
-        "compression-pinch-right": "outer-wedge-pinch-right",
-        "deep-mono-left": "variable-edge-left",
-        "deep-mono-right": "variable-edge-right",
-        "medium-mono-left": "three-finger-pocket-left",
-        "medium-mono-right": "three-finger-pocket-right",
+        "compression-pinch-left": ((0.165584, 0.196319, 0.185065, 0.266871), (0.376623, 0.41411, 0.074675, 0.144172)),
+        "compression-pinch-right": ((0.649351, 0.196319, 0.185065, 0.266871), (0.548702, 0.41411, 0.074675, 0.144172)),
+        "deep-mono-left": ((0.344156, 0.294479, 0.084416, 0.435583),),
+        "deep-mono-right": ((0.571428, 0.294479, 0.084416, 0.435583),),
+        "medium-mono-left": ((0.12987, 0.552147, 0.087662, 0.162577),),
+        "medium-mono-right": ((0.782468, 0.552147, 0.087662, 0.162577),),
     },
 }
 
@@ -427,8 +452,16 @@ def test_documented_orientation_packages_have_exact_manual_hold_inventories() ->
         assert board["manufacturer"] == "Trango"
         assert board["name"] == name
         assert "dimensions" not in board
-        assert board["aspectRatio"] == 2.0
-        assert board_package._png_dimensions(package_root / "assets" / "primary.png") == (1774, 887)
+        expected_pixel_size, expected_sha256 = ORIENTATION_PRESENTATION_EXPECTATIONS[slug]
+        asset_path = package_root / "assets" / "primary.png"
+        assert board_package._png_dimensions(asset_path) == expected_pixel_size
+        assert hashlib.sha256(asset_path.read_bytes()).hexdigest() == expected_sha256
+        assert hashlib.sha256(asset_path.read_bytes()).hexdigest() != hashlib.sha256(
+            (PACKAGE_ROOT / "assets" / "primary.png").read_bytes()
+        ).hexdigest()
+        assert board["aspectRatio"] == pytest.approx(
+            expected_pixel_size[0] / expected_pixel_size[1]
+        )
         assert board["presentations"] == [
             {
                 "id": "primary",
@@ -448,13 +481,7 @@ def test_documented_orientation_packages_have_exact_manual_hold_inventories() ->
         assert FORBIDDEN_RAW_KEYS.isdisjoint(_all_keys(board))
 
 
-def test_orientation_packages_keep_documented_physical_contacts_separate_and_exact() -> None:
-    base_board = board_package.load_board_package(PACKAGE_ROOT).board
-    canonical_geometry = {
-        hold["id"]: hold["geometry"]
-        for hold in base_board["holds"]
-    }
-
+def test_orientation_packages_use_source_specific_operator_reviewed_geometry() -> None:
     actual_slugs = {
         path.parent.name
         for path in (REPOSITORY_ROOT / "Hangboards").glob(
@@ -463,27 +490,47 @@ def test_orientation_packages_keep_documented_physical_contacts_separate_and_exa
     }
     assert actual_slugs == set(ORIENTATION_PACKAGES)
 
-    for slug, expected_contacts in ORIENTATION_CANONICAL_CONTACTS.items():
+    for slug, expected_frames in ORIENTATION_GEOMETRY_FRAMES.items():
         board = board_package.load_board_package(
             REPOSITORY_ROOT / "Hangboards" / slug
         ).board
         holds = {hold["id"]: hold for hold in board["holds"]}
 
-        assert set(holds) == set(expected_contacts)
-        mapped_contacts = tuple(expected_contacts.values())
-        assert len(mapped_contacts) == len(set(mapped_contacts))
-        for hold_id, contact_id in expected_contacts.items():
-            assert holds[hold_id]["geometry"] == canonical_geometry[contact_id]
+        assert set(holds) == set(expected_frames)
+        for hold_id, literal_frames in expected_frames.items():
+            actual_frames = tuple(
+                (
+                    piece["frame"]["x"],
+                    piece["frame"]["y"],
+                    piece["frame"]["width"],
+                    piece["frame"]["height"],
+                )
+                for piece in holds[hold_id]["geometry"]
+            )
+            assert len(actual_frames) == len(literal_frames)
+            for actual_frame, literal_frame in zip(
+                actual_frames, literal_frames, strict=True
+            ):
+                assert actual_frame == pytest.approx(literal_frame, abs=5e-7)
+
+        base_geometries = {
+            json.dumps(hold["geometry"], sort_keys=True)
+            for hold in board_package.load_board_package(PACKAGE_ROOT).board["holds"]
+        }
+        assert all(
+            json.dumps(hold["geometry"], sort_keys=True) not in base_geometries
+            for hold in holds.values()
+        )
 
 
 def test_orientation_left_and_right_contacts_are_exact_mirrors() -> None:
-    for slug, expected_contacts in ORIENTATION_CANONICAL_CONTACTS.items():
+    for slug, expected_frames in ORIENTATION_GEOMETRY_FRAMES.items():
         board = board_package.load_board_package(
             REPOSITORY_ROOT / "Hangboards" / slug
         ).board
         holds = {hold["id"]: hold for hold in board["holds"]}
 
-        for left_id in (hold_id for hold_id in expected_contacts if hold_id.endswith("-left")):
+        for left_id in (hold_id for hold_id in expected_frames if hold_id.endswith("-left")):
             right_id = f"{left_id.removesuffix('-left')}-right"
             left_geometry = holds[left_id]["geometry"]
             right_geometry = holds[right_id]["geometry"]
