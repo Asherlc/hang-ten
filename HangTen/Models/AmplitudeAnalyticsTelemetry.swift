@@ -15,7 +15,9 @@ struct AnalyticsConfiguration {
     }
 
     var isConfigured: Bool {
-        !apiKey.isEmpty && !apiKey.hasPrefix("$(")
+        !apiKey.isEmpty
+            && !apiKey.hasPrefix("$(")
+            && apiKey != "your_amplitude_api_key"
     }
 }
 
@@ -81,11 +83,21 @@ private final class AmplitudeSDKClient: AmplitudeTrackingClient {
 
     init(configuration: AnalyticsConfiguration) {
         sdk = Amplitude(
-            configuration: Configuration(apiKey: configuration.apiKey)
+            configuration: AmplitudeSDKConfiguration.make(configuration: configuration)
         )
     }
 
     func track(eventType: String, eventProperties: [String: String]) {
         sdk.track(eventType: eventType, eventProperties: eventProperties)
+    }
+}
+
+enum AmplitudeSDKConfiguration {
+    static func make(configuration: AnalyticsConfiguration) -> Configuration {
+        Configuration(
+            apiKey: configuration.apiKey,
+            autocapture: [],
+            enableAutoCaptureRemoteConfig: false
+        )
     }
 }

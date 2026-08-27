@@ -1,3 +1,4 @@
+import AmplitudeSwift
 import XCTest
 @testable import HangTen
 
@@ -30,6 +31,13 @@ final class TelemetryTests: XCTestCase {
         XCTAssertTrue(TelemetryComposition.make(configuration: configuration).isNoOp)
     }
 
+    func testConfigurationWithTheDocumentedExampleAPIKeyBuildsNoOpDependencies() {
+        let configuration = AnalyticsConfiguration(apiKey: "your_amplitude_api_key")
+
+        XCTAssertFalse(configuration.isConfigured)
+        XCTAssertTrue(TelemetryComposition.make(configuration: configuration).isNoOp)
+    }
+
     func testConfiguredAPIKeyBuildsActiveAnalyticsDependencies() {
         let configuration = AnalyticsConfiguration(
             apiKey: "test-api-key"
@@ -48,6 +56,15 @@ final class TelemetryTests: XCTestCase {
         XCTAssertEqual(client.captures, [
             .init(event: "board selected", properties: ["board_family": "compact_ii"])
         ])
+    }
+
+    func testAmplitudeSDKConfigurationDisablesAutocaptureAndRemoteConfiguration() {
+        let configuration = AmplitudeSDKConfiguration.make(
+            configuration: AnalyticsConfiguration(apiKey: "test-api-key")
+        )
+
+        XCTAssertEqual(configuration.autocapture, [])
+        XCTAssertFalse(configuration.enableAutoCaptureRemoteConfig)
     }
 
     func testWorkoutFinishedUsesOnlyOutcomeAndCoarseDurationBucket() {

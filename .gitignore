@@ -28,8 +28,8 @@ xcuserdata/
 # Local implementation/git worktrees
 .worktrees/
 
-# Developer-specific PostHog project token override
-/HangTen/Config/PostHog.local.xcconfig
+# Developer-specific analytics API key override
+/HangTen/Config/Analytics.local.xcconfig
 
 # Python editable-install and bytecode cache artifacts
 __pycache__/
