@@ -7118,6 +7118,68 @@
         }
       ],
       "presentationID": "orientation-1"
+    },
+    {
+      "id": "hold-2",
+      "name": "Hold 2",
+      "kind": "edge",
+      "fingerCapacity": 4,
+      "sizeMillimeters": 11.5,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.758124181511,
+            "y": 0.049323033822,
+            "width": 0.106468001127,
+            "height": 0.032517977452
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.045035195219,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.85240863505,
+                  0.567460316635
+                ],
+                "control2": [
+                  0.311713200648,
+                  0.026696983433
+                ],
+                "to": [
+                  0.045035195219,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "orientation-2"
     }
   ],
   "presentations": [
