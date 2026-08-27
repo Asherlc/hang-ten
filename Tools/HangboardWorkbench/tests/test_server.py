@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import http.cookiejar
 import json
 import os
@@ -237,6 +238,40 @@ class _ConcurrentHostedBlobClient(FakeGitHubClient):
         finally:
             with self._lock:
                 self._active_blob_reads -= 1
+
+
+class _BlockingPresentationBlobClient(FakeGitHubClient):
+    """Serves presentation images only after every distinct image read begins."""
+
+    def __init__(self, files: dict[str, bytes]) -> None:
+        super().__init__({"main": files, HOSTED_BRANCH: files, "feature": files})
+        self._presentation_blob_shas = {
+            self._branches[HOSTED_BRANCH][path][1]
+            for path in files
+            if path.startswith("Hangboards/fixture-v2/assets/")
+        }
+        self._lock = threading.Lock()
+        self._all_presentation_reads_started = threading.Event()
+        self._active_presentation_shas: set[str] = set()
+        self.max_active_presentation_shas = 0
+
+    def get_blob(self, token: str, sha: str) -> bytes:
+        if sha not in self._presentation_blob_shas:
+            return super().get_blob(token, sha)
+        with self._lock:
+            self._active_presentation_shas.add(sha)
+            self.max_active_presentation_shas = max(
+                self.max_active_presentation_shas,
+                len(self._active_presentation_shas),
+            )
+            if self._active_presentation_shas == self._presentation_blob_shas:
+                self._all_presentation_reads_started.set()
+        try:
+            assert self._all_presentation_reads_started.wait(timeout=1)
+            return super().get_blob(token, sha)
+        finally:
+            with self._lock:
+                self._active_presentation_shas.remove(sha)
 
 
 @contextmanager
@@ -1443,6 +1478,109 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
     assert {
         call.args[0] for call in client.calls_named("get_blob")
     } == {HOSTED_TOKEN}
+
+
+def test_hosted_board_open_reads_distinct_presentation_blobs_concurrently_and_returns_editor_contract() -> None:
+    """Fails if selected-board presentation blob reads are serialized."""
+    board = multi_presentation_board_document("fixture.multi")
+    presentations = board["presentations"]
+    holds = board["holds"]
+    assert isinstance(presentations, list)
+    assert isinstance(holds, list)
+    for presentation_id, name, asset_path in (
+        ("profile", "Profile", "assets/profile.png"),
+        ("detail", "Detail", "assets/detail.png"),
+    ):
+        presentations.append(
+            {
+                "id": presentation_id,
+                "name": name,
+                "assetPath": asset_path,
+                "aspectRatio": 1774 / 457,
+                "default": False,
+            }
+        )
+        hold = copy.deepcopy(holds[0])
+        assert isinstance(hold, dict)
+        hold.update(
+            id=f"hold-{presentation_id}",
+            name=f"{name} hold",
+            presentationID=presentation_id,
+        )
+        holds.append(hold)
+    files: dict[str, bytes | tuple[bytes, str]] = {
+        "Hangboards/fixture-v2/board.json": (
+            json.dumps(board, indent=2) + "\n"
+        ).encode("utf-8"),
+        "Hangboards/fixture-v2/assets/primary.png": (
+            PRIMARY_IMAGE.read_bytes(),
+            "primary-presentation",
+        ),
+        "Hangboards/fixture-v2/assets/back.png": (
+            PRIMARY_IMAGE.read_bytes(),
+            "back-presentation",
+        ),
+        "Hangboards/fixture-v2/assets/profile.png": (
+            PRIMARY_IMAGE.read_bytes(),
+            "profile-presentation",
+        ),
+        "Hangboards/fixture-v2/assets/detail.png": (
+            PRIMARY_IMAGE.read_bytes(),
+            "detail-presentation",
+        ),
+    }
+    client = _BlockingPresentationBlobClient(files)
+
+    with running_server_with_github_backend(files, github_client=client) as (
+        base,
+        _client,
+        session,
+    ):
+        status, opened, _headers = hosted_request_json(
+            base, session, "GET", "/api/boards/fixture.multi"
+        )
+
+    assert status == 200
+    assert client.max_active_presentation_shas == 4
+    opened_board = opened["board"]
+    assert opened_board["selectedPresentationID"] == "front"
+    assert opened_board["holdIDs"] == [
+        "hold-left",
+        "hold-back",
+        "hold-profile",
+        "hold-detail",
+    ]
+    assert opened_board["presentations"] == [
+        {
+            "presentationID": "front",
+            "displayName": "Front",
+            "imageUrl": "/api/boards/fixture.multi/image?presentationID=front",
+            "default": True,
+        },
+        {
+            "presentationID": "back",
+            "displayName": "Back",
+            "imageUrl": "/api/boards/fixture.multi/image?presentationID=back",
+            "default": False,
+        },
+        {
+            "presentationID": "profile",
+            "displayName": "Profile",
+            "imageUrl": "/api/boards/fixture.multi/image?presentationID=profile",
+            "default": False,
+        },
+        {
+            "presentationID": "detail",
+            "displayName": "Detail",
+            "imageUrl": "/api/boards/fixture.multi/image?presentationID=detail",
+            "default": False,
+        },
+    ]
+    assert opened_board["document"]["canvas"] == {"width": 1774, "height": 457}
+    assert {
+        region["metadata"]["presentationID"]
+        for region in opened_board["document"]["regions"]
+    } == {"front"}
 
 
 def test_hosted_board_catalog_reads_metadata_without_primary_image_blobs() -> None:
