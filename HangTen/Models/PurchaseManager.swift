@@ -8,18 +8,35 @@ struct PurchaseProduct: Equatable {
 }
 
 enum StoreKitTransaction: Equatable, Sendable {
-    case verified(productID: String)
-    case unverified(productID: String)
+    case verified(productID: String, transactionID: UInt64 = 0)
+    case revoked(productID: String, transactionID: UInt64 = 0)
+    case unverified(productID: String, transactionID: UInt64 = 0)
 
     var productID: String {
         switch self {
-        case .verified(let productID), .unverified(let productID):
+        case .verified(let productID, _), .revoked(let productID, _), .unverified(let productID, _):
             return productID
         }
     }
 
+    var transactionID: UInt64 {
+        switch self {
+        case .verified(_, let transactionID), .revoked(_, let transactionID), .unverified(_, let transactionID):
+            return transactionID
+        }
+    }
+
     var isVerified: Bool {
-        if case .verified = self {
+        switch self {
+        case .verified, .revoked:
+            return true
+        case .unverified:
+            return false
+        }
+    }
+
+    var isRevoked: Bool {
+        if case .revoked = self {
             return true
         }
         return false
@@ -51,7 +68,7 @@ final class LiveStoreKitClient: StoreKitClient {
     }
 
     private var products: [String: Product] = [:]
-    private var verifiedTransactions: [String: Transaction] = [:]
+    private var verifiedTransactions: [UInt64: Transaction] = [:]
 
     func loadProduct(id: String) async throws -> PurchaseProduct? {
         let loadedProducts = try await Product.products(for: [id])
@@ -111,7 +128,7 @@ final class LiveStoreKitClient: StoreKitClient {
 
     func finish(_ transaction: StoreKitTransaction) async {
         guard transaction.isVerified,
-              let storeKitTransaction = verifiedTransactions.removeValue(forKey: transaction.productID)
+              let storeKitTransaction = verifiedTransactions.removeValue(forKey: transaction.transactionID)
         else {
             return
         }
@@ -121,10 +138,13 @@ final class LiveStoreKitClient: StoreKitClient {
     private func transaction(from verificationResult: VerificationResult<Transaction>) -> StoreKitTransaction {
         switch verificationResult {
         case .verified(let transaction):
-            verifiedTransactions[transaction.productID] = transaction
-            return .verified(productID: transaction.productID)
+            verifiedTransactions[transaction.id] = transaction
+            if transaction.revocationDate != nil {
+                return .revoked(productID: transaction.productID, transactionID: transaction.id)
+            }
+            return .verified(productID: transaction.productID, transactionID: transaction.id)
         case .unverified(let transaction, _):
-            return .unverified(productID: transaction.productID)
+            return .unverified(productID: transaction.productID, transactionID: transaction.id)
         }
     }
 }
@@ -164,13 +184,14 @@ final class PurchaseManager: ObservableObject {
         state = .loading
         startTransactionUpdates()
 
+        await refreshEntitlement()
+
         do {
             product = try await client.loadProduct(id: Self.lifetimeProductID)
             guard product != nil else {
                 state = .failed
                 return
             }
-            await refreshEntitlement()
         } catch {
             state = .failed
         }
@@ -205,9 +226,11 @@ final class PurchaseManager: ObservableObject {
     private func refreshEntitlement() async {
         do {
             guard let transaction = try await client.currentEntitlement(for: Self.lifetimeProductID) else {
+                hasLifetimeEntitlement = false
                 state = .idle
                 return
             }
+            hasLifetimeEntitlement = false
             await apply(transaction)
         } catch {
             state = .failed
@@ -226,14 +249,18 @@ final class PurchaseManager: ObservableObject {
 
     private func apply(_ transaction: StoreKitTransaction) async {
         guard transaction.productID == Self.lifetimeProductID else {
-            if transaction.isVerified {
-                await client.finish(transaction)
-            }
             return
         }
 
         guard transaction.isVerified else {
             state = .failed
+            return
+        }
+
+        guard !transaction.isRevoked else {
+            hasLifetimeEntitlement = false
+            state = .idle
+            await client.finish(transaction)
             return
         }
 
