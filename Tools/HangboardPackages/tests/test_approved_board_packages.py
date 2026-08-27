@@ -245,6 +245,8 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
             "trango-rock-prodigy-training-center",
         ),
         ("tension.grindstone", "tension-grindstone"),
+        ("tension.grindstone-original", "tension-grindstone-original"),
+        ("tension.grindstone-pro", "tension-grindstone-pro"),
         ("tension.flash-board", "tension-flash-board"),
         ("tension.honestone", "tension-honestone"),
         ("tension.whetstone", "tension-whetstone"),
