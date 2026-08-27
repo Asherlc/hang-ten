@@ -292,6 +292,54 @@ ORIENTATION_GEOMETRY_FRAMES = {
     },
 }
 
+# Each digest is computed from the literal authored path-command objects using
+# canonical JSON (sorted keys and compact separators).  This pins the contour
+# within its reviewed frame, so a replacement path with identical bounds fails.
+ORIENTATION_PATH_COMMAND_SHA256 = {
+    "trango-rock-prodigy-pivot-orientation-1": {
+        "jug-horizontal-pinch-left": ("cdd15a9dc551e45b0bea26325fba9dcc5982685d1cd350102836552cb8e5f56d", "cee171ee032ee2d8c59c6b632365d156c46ca0aba1b35aeedcdc18a58759cf65"),
+        "jug-horizontal-pinch-right": ("0804e1e9ab8f6c3e5e85517e0ccb8deeb9a7d23c521bf57c665e91a2763ce7f8", "7c04c53bbdc844d45e7599de53c361cafb1aba125dea9345cf50cdcf7d78be38"),
+        "variable-depth-sloper-rail-left": ("d02f7c02f09cf698be213374e4d01857822e5ae13e1c72f7923f83882c713911",),
+        "variable-depth-sloper-rail-right": ("5fafbcc227f0f41b219937f2933396fab4afa67ba26078830d94de38814dc161",),
+        "medium-supported-crimp-left": ("89f8798e399f0669f2cbf3c1af47501325f055b84a2732d52512cfc179f90219",),
+        "medium-supported-crimp-right": ("c9cb219036edb61691bee440c27dccc6ac14cb653dc73c0833c29c0046616d84",),
+        "large-sloped-crimp-left": ("3143b585af8a0428e60ae0468bc468783fed7f46c53b95eafef0fc71997496c8",),
+        "large-sloped-crimp-right": ("1b1a4db9f2b4dd0588bbce602a7b1c982c963e04d196e8017e1e89b788e7fa81",),
+    },
+    "trango-rock-prodigy-pivot-orientation-2-90-outwards": {
+        "shallow-mono-left": ("0e60a96fbd9a1048f8b20b6da5bbe4909ec78c40a335a6c77c00860e78839c47",),
+        "shallow-mono-right": ("a9ca488134e5d4b847aa80719e51f05e2e577687cf42104db1b31bb12fba923d",),
+        "steep-gaston-left": ("5657760072dae8e23943a8e6d464393996b949918cd86985b95291f852492926",),
+        "steep-gaston-right": ("5c18c2920a58bbec2905002aa244141d65e64155ead580f55ecc4de3e5905e72",),
+        "small-sloped-crimp-left": ("e0e41816ca8b11b7738eca05954e20188c22eb3db375f2eadf3eb5354b5019b4",),
+        "small-sloped-crimp-right": ("663f7c029d01f47e1b5c3092a934677e5b1bf68a8677bba7bdbfa7505549d98d",),
+    },
+    "trango-rock-prodigy-pivot-orientation-3-90-inwards": {
+        "two-finger-pocket-left": ("3deb931662761ceec0541ed60b836531c2bd2ca4327c9dc7448b9dda4e5ab261",),
+        "two-finger-pocket-right": ("90b32755205b0ba83478d62b1034163e31bd42ecb39f2b7c95a0c561c3af31d2",),
+        "three-finger-pocket-left": ("a6b166bc9c9d6b7d8c7e422c149991b15a1e3aafe034f65df4805515b9cdc71b",),
+        "three-finger-pocket-right": ("05d3b4ed3eef536e4eee1728ab188f640e90073a270d357a7d9d9e91b1cd3d8f",),
+        "large-supported-crimp-left": ("4f15448e779052fff53078e9d4c3cea083aed6d1abd44f198f74a9ad65c865d6",),
+        "large-supported-crimp-right": ("d31fdbe3fbcafa0acf5dbc4436441f347fc75b55bb92f8b3105dcc47a94a6229",),
+        "sloper-left": ("825007e3c87d0e20ed81a4ccff0d50fce021494267ff124be0cdc60862e9fc18",),
+        "sloper-right": ("0179f1125f8c63949c182d31e07ec177e2c00116c73ed4c03cf9b84d61f5b340",),
+    },
+    "trango-rock-prodigy-pivot-orientation-3-switch-left-to-right": {
+        "variable-depth-incut-rail-left": ("5d044c5f6fb673ab479319b4bb3abec0b19798181ecb11e9b07241fa72150453",),
+        "variable-depth-incut-rail-right": ("0b702680316b121d3efb33702799b96a411c0eedf128668e396c0d5b6894af32",),
+        "shallow-gaston-left": ("0edd458c8f67109f20bdf83f1154da604fa440bf3ce1f19c1b632de0dcbd97c6",),
+        "shallow-gaston-right": ("6666da2b7336879276f0e0727ae68a6b9da6d304f9ab8c751c46f2ee7093dde7",),
+    },
+    "trango-rock-prodigy-pivot-orientation-4-90-outwards": {
+        "compression-pinch-left": ("238f58f3b0d3ccd0f99df1f101ab1f7eb79d6865483ca515704a223993555666", "0dbfa7b238c6fdb5e319be91a3a7015c4bf29c3b5431006c45daae32b6ee447a"),
+        "compression-pinch-right": ("757eeb0f648431aeb6a1150c3a41643f6133cf78c444c021ff67c8c8f5483cd2", "b34b8ca4bfec6444f121df4ce8b9d2d1b5d276623ca1f2d939a501848bc5b745"),
+        "deep-mono-left": ("3f6d11f246d63159655d2d69179d16848960ef6c4ff87d7d0c1bc56e6902b7e4",),
+        "deep-mono-right": ("4b5f433ec665a36119049417d14a4fb279dbaca0ae0dfb479610db34fab0d86f",),
+        "medium-mono-left": ("a6b166bc9c9d6b7d8c7e422c149991b15a1e3aafe034f65df4805515b9cdc71b",),
+        "medium-mono-right": ("05d3b4ed3eef536e4eee1728ab188f640e90073a270d357a7d9d9e91b1cd3d8f",),
+    },
+}
+
 
 def _command_points(command: dict[str, object]) -> tuple[tuple[float, float], ...]:
     return tuple(
@@ -299,6 +347,12 @@ def _command_points(command: dict[str, object]) -> tuple[tuple[float, float], ..
         for key in ("to", "control", "control1", "control2")
         if (point := command.get(key)) is not None
     )
+
+
+def _path_command_sha256(commands: list[dict[str, object]]) -> str:
+    return hashlib.sha256(
+        json.dumps(commands, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
 
 
 def _all_keys(value: object) -> set[str]:
@@ -521,6 +575,22 @@ def test_orientation_packages_use_source_specific_operator_reviewed_geometry() -
             json.dumps(hold["geometry"], sort_keys=True) not in base_geometries
             for hold in holds.values()
         )
+
+
+def test_orientation_paths_match_operator_reviewed_command_signatures() -> None:
+    """Replacing a reviewed contour inside its existing frame is a geometry bug."""
+    for slug in ORIENTATION_PACKAGES:
+        board = board_package.load_board_package(
+            REPOSITORY_ROOT / "Hangboards" / slug
+        ).board
+        actual_hold_signatures = {
+            hold["id"]: tuple(
+                _path_command_sha256(piece["shape"]["commands"])
+                for piece in hold["geometry"]
+            )
+            for hold in board["holds"]
+        }
+        assert actual_hold_signatures == ORIENTATION_PATH_COMMAND_SHA256.get(slug, {})
 
 
 def test_orientation_left_and_right_contacts_are_exact_mirrors() -> None:

@@ -194,6 +194,11 @@ physical contact. Orientation 1's Jug and Horizontal Pinch usages remain
 combined once per side because the Quick Start applies both usage names to the
 same wedge contact; there is no overlapping duplicate jug/pinch record.
 
+This completed direct visual geometry review against the official panels did
+not include normal, active, or hit-testing validation in a simulator.
+`CONDUCTOR_WORKSPACE_NAME` was unavailable, so no simulator was created for
+this work and none of those simulator states was performed or claimed.
+
 | package / mounting state | documented key grip | schema kind | source-page and package-asset mapping |
 | --- | --- | --- | --- |
 | `trango-rock-prodigy-pivot-orientation-1` / Orientation 1 | Jug / Horizontal Pinch | `jug` | Printed page 7 identifies the outer diagonal finger surface and lower thumb surface on both halves; both directly authored pieces remain one combined logical record per side. `jug` is the conservative allowed schema adaptation and does not claim a separate pinch contact. |
