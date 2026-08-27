@@ -504,11 +504,16 @@ struct BoardPackageStore {
             boardDocument.subtitle,
             boardDocument.productURL.absoluteString
         ]
-        guard requiredStrings.allSatisfy({ !$0.isEmpty }),
-              boardDocument.dimensions?.isEmpty != true else {
+        guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardDocument.id,
                 reason: "required metadata must not be empty"
+            )
+        }
+        if let dimensions = boardDocument.dimensions, dimensions.isEmpty {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardDocument.id,
+                reason: "dimensions must not be empty when present"
             )
         }
         guard boardDocument.id.isBoardPackageIdentifier else {

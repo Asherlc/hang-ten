@@ -1,0 +1,139 @@
+{
+  "id": "trango.rock-prodigy-pivot.orientation-4-90-outwards",
+  "manufacturer": "Trango",
+  "name": "Rock Prodigy Pivot — Orientation 4 (90° Outwards)",
+  "subtitle": "Orientation 4 documented key grips.",
+  "productURL": "https://trango.com/products/rock-prodigy-pivot?variant=33101615890537",
+  "aspectRatio": 0.9447852760736196,
+  "holds": [
+    {
+      "id": "compression-pinch-left",
+      "name": "Left Compression Pinch",
+      "kind": "pinch",
+      "geometry": [
+        {
+          "frame": {"x": 0.165584, "y": 0.196319, "width": 0.185065, "height": 0.266871},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.0, 0.86]},
+            {"command": "curve", "control1": [0.04, 0.58], "control2": [0.16, 0.3], "to": [0.34, 0.0]},
+            {"command": "curve", "control1": [0.5, 0.0], "control2": [0.7, 0.02], "to": [1.0, 0.14]},
+            {"command": "curve", "control1": [1.0, 0.34], "control2": [0.96, 0.62], "to": [0.78, 0.8]},
+            {"command": "curve", "control1": [0.58, 1.0], "control2": [0.22, 1.0], "to": [0.5, 1.0]},
+            {"command": "close"}
+          ]}, "treatment": {"type": "surface"}
+        },
+        {
+          "frame": {"x": 0.376623, "y": 0.41411, "width": 0.074675, "height": 0.144172},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [0.0, 0.42]},
+            {"command": "curve", "control1": [0.04, 0.14], "control2": [0.24, 0.0], "to": [0.5, 0.0]},
+            {"command": "curve", "control1": [0.8, 0.0], "control2": [1.0, 0.18], "to": [1.0, 0.5]},
+            {"command": "curve", "control1": [0.96, 0.82], "control2": [0.72, 1.0], "to": [0.42, 1.0]},
+            {"command": "curve", "control1": [0.14, 0.96], "control2": [0.0, 0.74], "to": [0.0, 0.42]},
+            {"command": "close"}
+          ]}, "treatment": {"type": "surface"}
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "compression-pinch-right",
+      "name": "Right Compression Pinch",
+      "kind": "pinch",
+      "geometry": [
+        {
+          "frame": {"x": 0.649351, "y": 0.196319, "width": 0.185065, "height": 0.266871},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [1.0, 0.86]},
+            {"command": "curve", "control1": [0.96, 0.58], "control2": [0.84, 0.3], "to": [0.66, 0.0]},
+            {"command": "curve", "control1": [0.5, 0.0], "control2": [0.3, 0.02], "to": [0.0, 0.14]},
+            {"command": "curve", "control1": [0.0, 0.34], "control2": [0.04, 0.62], "to": [0.22, 0.8]},
+            {"command": "curve", "control1": [0.42, 1.0], "control2": [0.78, 1.0], "to": [0.5, 1.0]},
+            {"command": "close"}
+          ]}, "treatment": {"type": "surface"}
+        },
+        {
+          "frame": {"x": 0.548702, "y": 0.41411, "width": 0.074675, "height": 0.144172},
+          "shape": {"type": "path", "commands": [
+            {"command": "move", "to": [1.0, 0.42]},
+            {"command": "curve", "control1": [0.96, 0.14], "control2": [0.76, 0.0], "to": [0.5, 0.0]},
+            {"command": "curve", "control1": [0.2, 0.0], "control2": [0.0, 0.18], "to": [0.0, 0.5]},
+            {"command": "curve", "control1": [0.04, 0.82], "control2": [0.28, 1.0], "to": [0.58, 1.0]},
+            {"command": "curve", "control1": [0.86, 0.96], "control2": [1.0, 0.74], "to": [1.0, 0.42]},
+            {"command": "close"}
+          ]}, "treatment": {"type": "surface"}
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "deep-mono-left",
+      "name": "Left Deep Mono",
+      "kind": "pocket",
+      "geometry": [{
+        "frame": {"x": 0.344156, "y": 0.294479, "width": 0.084416, "height": 0.435583},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.0, 0.0]},
+          {"command": "curve", "control1": [0.46, 0.02], "control2": [0.78, 0.08], "to": [1.0, 0.22]},
+          {"command": "curve", "control1": [1.0, 0.48], "control2": [0.98, 0.76], "to": [0.82, 1.0]},
+          {"command": "curve", "control1": [0.6, 1.0], "control2": [0.3, 1.0], "to": [0.08, 0.88]},
+          {"command": "curve", "control1": [0.0, 0.62], "control2": [0.0, 0.24], "to": [0.12, 0.0]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    },
+    {
+      "id": "deep-mono-right",
+      "name": "Right Deep Mono",
+      "kind": "pocket",
+      "geometry": [{
+        "frame": {"x": 0.571428, "y": 0.294479, "width": 0.084416, "height": 0.435583},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [1.0, 0.0]},
+          {"command": "curve", "control1": [0.54, 0.02], "control2": [0.22, 0.08], "to": [0.0, 0.22]},
+          {"command": "curve", "control1": [0.0, 0.48], "control2": [0.02, 0.76], "to": [0.18, 1.0]},
+          {"command": "curve", "control1": [0.4, 1.0], "control2": [0.7, 1.0], "to": [0.92, 0.88]},
+          {"command": "curve", "control1": [1.0, 0.62], "control2": [1.0, 0.24], "to": [0.88, 0.0]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    },
+    {
+      "id": "medium-mono-left",
+      "name": "Left Medium Mono",
+      "kind": "pocket",
+      "geometry": [{
+        "frame": {"x": 0.12987, "y": 0.552147, "width": 0.087662, "height": 0.162577},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.0, 0.46]},
+          {"command": "curve", "control1": [0.04, 0.16], "control2": [0.22, 0.0], "to": [0.52, 0.0]},
+          {"command": "curve", "control1": [0.82, 0.02], "control2": [1.0, 0.22], "to": [1.0, 0.54]},
+          {"command": "curve", "control1": [0.96, 0.84], "control2": [0.76, 1.0], "to": [0.46, 1.0]},
+          {"command": "curve", "control1": [0.16, 0.96], "control2": [0.0, 0.76], "to": [0.0, 0.46]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    },
+    {
+      "id": "medium-mono-right",
+      "name": "Right Medium Mono",
+      "kind": "pocket",
+      "geometry": [{
+        "frame": {"x": 0.782468, "y": 0.552147, "width": 0.087662, "height": 0.162577},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [1.0, 0.46]},
+          {"command": "curve", "control1": [0.96, 0.16], "control2": [0.78, 0.0], "to": [0.48, 0.0]},
+          {"command": "curve", "control1": [0.18, 0.02], "control2": [0.0, 0.22], "to": [0.0, 0.54]},
+          {"command": "curve", "control1": [0.04, 0.84], "control2": [0.24, 1.0], "to": [0.54, 1.0]},
+          {"command": "curve", "control1": [0.84, 0.96], "control2": [1.0, 0.76], "to": [1.0, 0.46]},
+          {"command": "close"}
+        ]}, "treatment": {"type": "surface"}
+      }],
+      "presentationID": "primary"
+    }
+  ],
+  "presentations": [{"id": "primary", "name": "Primary", "assetPath": "assets/primary.png", "aspectRatio": 0.9447852760736196, "default": true}]
+}

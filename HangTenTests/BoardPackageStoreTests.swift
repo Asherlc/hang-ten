@@ -3,7 +3,7 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
-    func testStoreAcceptsPackageWithoutOptionalDimensions() throws {
+    func testStoreLoadsPackageWithOmittedDimensions() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
@@ -13,7 +13,29 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
 
-        XCTAssertNoThrow(try BoardPackageStore(bundle: fixture.bundle))
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        XCTAssertNil(board.dimensions)
+    }
+
+    func testStoreRejectsExplicitlyEmptyDimensions() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["dimensions"] = ""
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "dimensions must not be empty when present"
+                )
+            )
+        }
     }
 
     func testStoreDecodesOptionalSloperMetadataVariants() throws {

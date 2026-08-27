@@ -76,9 +76,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "edge-35-left",
@@ -202,8 +200,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "edge-35-right",
@@ -327,8 +324,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "mixed-25-pocket-left",
@@ -452,8 +448,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "mixed-25-pocket-right",
@@ -577,8 +572,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-6",
@@ -687,8 +681,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-7",
@@ -797,8 +790,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-8",
@@ -922,8 +914,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-9",
@@ -1047,8 +1038,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-10",
@@ -1172,8 +1162,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-11",
@@ -1297,8 +1286,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-12",
@@ -1422,8 +1410,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "hold-13",
@@ -1547,8 +1534,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 1
+      "presentationID": "primary"
     }
   ],
   "presentations": [

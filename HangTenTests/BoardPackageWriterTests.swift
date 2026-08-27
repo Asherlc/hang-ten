@@ -286,6 +286,40 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testWriterRoundTripPreservesOmittedDimensions() throws {
+        let source = String(decoding: try BoardPackageWriter.data(for: makeDocument()), as: UTF8.self)
+        let withoutDimensions = source.replacingOccurrences(
+            of: "  \"dimensions\": \"70 \\u00d7 25 cm\",\n",
+            with: ""
+        )
+        XCTAssertNotEqual(withoutDimensions, source)
+
+        let decoded = try BoardEditableDocument(data: Data(withoutDimensions.utf8))
+        XCTAssertNil(decoded.dimensions)
+
+        let reencoded = try BoardPackageWriter.data(for: decoded)
+        let output = String(decoding: reencoded, as: UTF8.self)
+        XCTAssertFalse(output.contains("\"dimensions\""))
+        XCTAssertNil(try BoardEditableDocument(data: reencoded).dimensions)
+    }
+
+    func testWriterRejectsExplicitlyEmptyDimensions() throws {
+        let source = String(decoding: try BoardPackageWriter.data(for: makeDocument()), as: UTF8.self)
+        let emptyDimensions = source.replacingOccurrences(
+            of: "\"dimensions\": \"70 \\u00d7 25 cm\"",
+            with: "\"dimensions\": \"\""
+        )
+        XCTAssertNotEqual(emptyDimensions, source)
+
+        let decoded = try BoardEditableDocument(data: Data(emptyDimensions.utf8))
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: decoded)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageWriterError,
+                .invalid("board test.board: dimensions must not be empty when present")
+            )
+        }
+    }
+
     func testEditorDocumentRoundTripsFlashBoardOrientationAliases() throws {
         let originalData = try Data(
             contentsOf: repositoryHangboardsURL()

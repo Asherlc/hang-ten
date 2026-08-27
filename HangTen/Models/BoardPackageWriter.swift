@@ -363,9 +363,11 @@ enum BoardPackageWriter {
             document.name,
             document.subtitle
         ]
-        guard requiredStrings.allSatisfy({ !$0.isEmpty }),
-              document.dimensions?.isEmpty != true else {
+        guard requiredStrings.allSatisfy({ !$0.isEmpty }) else {
             throw invalid("required metadata must not be empty", document)
+        }
+        if let dimensions = document.dimensions, dimensions.isEmpty {
+            throw invalid("dimensions must not be empty when present", document)
         }
         guard document.productURL.scheme == "https", document.productURL.host != nil else {
             throw invalid("product URL must be absolute HTTPS", document)
