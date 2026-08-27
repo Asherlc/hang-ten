@@ -882,7 +882,7 @@
       "id": "hold-21",
       "name": "Hold 21",
       "kind": "pocket",
-      "fingerCapacity": 2,
+      "fingerCapacity": 3,
       "geometry": [
         {
           "frame": {
