@@ -719,7 +719,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "twoFingerPocket"
+      "gripType": "twoFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "three-finger-pocket-left",
