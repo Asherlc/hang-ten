@@ -76,9 +76,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "front-upper-1",
