@@ -202,7 +202,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "edge-35-right",
@@ -326,7 +327,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "mixed-25-pocket-left",
@@ -450,7 +452,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "mixed-25-pocket-right",
@@ -574,7 +577,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-6",
@@ -683,7 +687,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-7",
@@ -792,7 +797,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-8",
@@ -916,7 +922,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-9",
@@ -1040,7 +1047,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-10",
@@ -1164,7 +1172,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-11",
@@ -1288,7 +1297,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-12",
@@ -1412,7 +1422,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     },
     {
       "id": "hold-13",
@@ -1536,7 +1547,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 1
     }
   ],
   "presentations": [
