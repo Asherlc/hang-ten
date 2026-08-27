@@ -42,15 +42,14 @@ is the supported Beta Board package.
 ### `beastmaker-2000`
 
 - **Source:** [Beastmaker 2000 Series](https://www.beastmaker.co.uk/products/beastmaker-2000-series).
-- **Current JSON holds:** 25.
-- **Source-backed expected physical count:** 25.
+- **Current JSON holds:** 27.
+- **Source-backed expected physical count:** 27.
 - **Verified facts:** Beastmaker 2000; `580 × 150 × 58 mm`. The grouped source
   inventory supports hold kinds; the clearly central lower edge is the official
   22 mm middle edge.
-- **Discrepancy:** current image-derived millimetre values are not mapped
-  one-to-one by the manufacturer.
-- **Action:** `correct` — retain 25 regions, preserve only the clearly mapped
-  22 mm fact, and remove unsupported derived values.
+- **Discrepancy:** none; the current 27-region inventory is source-backed.
+- **Action:** `retain` — preserve the 27 regions and only the manufacturer-
+  supported metadata mappings.
 
 ### `dewoodstok-woodbord`
 
