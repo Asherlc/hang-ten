@@ -885,7 +885,8 @@
         }
       ],
       "presentationID": "primary",
-      "handCapacity": 1
+      "handCapacity": 1,
+      "fingerCapacity": 4
     },
     {
       "id": "hold-21",
