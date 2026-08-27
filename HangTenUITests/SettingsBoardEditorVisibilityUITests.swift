@@ -9,7 +9,7 @@ final class SettingsBoardEditorVisibilityUITests: XCTestCase {
         XCTAssertTrue(settings.waitForExistence(timeout: 10))
         settings.tap()
 
-        let boardPackages = app.staticTexts["Board packages"]
+        let boardPackages = app.staticTexts["BOARD PACKAGES"]
         let boardEditor = app.buttons["settings.boardEditor"]
 
         #if DEBUG
