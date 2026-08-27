@@ -1,7 +1,7 @@
 import XCTest
 
 final class SettingsBoardEditorVisibilityUITests: XCTestCase {
-    func testBoardEditorControlMatchesBuildConfiguration() throws {
+    func testBoardPackagesSectionMatchesBuildConfiguration() throws {
         let app = XCUIApplication()
         app.launch()
 
@@ -9,11 +9,14 @@ final class SettingsBoardEditorVisibilityUITests: XCTestCase {
         XCTAssertTrue(settings.waitForExistence(timeout: 10))
         settings.tap()
 
+        let boardPackages = app.staticTexts["Board packages"]
         let boardEditor = app.buttons["settings.boardEditor"]
 
         #if DEBUG
+        XCTAssertTrue(boardPackages.waitForExistence(timeout: 5))
         XCTAssertTrue(boardEditor.waitForExistence(timeout: 5))
         #else
+        XCTAssertFalse(boardPackages.waitForExistence(timeout: 2))
         XCTAssertFalse(boardEditor.waitForExistence(timeout: 2))
         #endif
     }
