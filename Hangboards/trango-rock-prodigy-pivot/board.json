@@ -4649,7 +4649,6 @@
       "name": "Hold 12",
       "kind": "sloper",
       "fingerCapacity": 4,
-      "sizeMillimeters": 12.5,
       "geometry": [
         {
           "frame": {
