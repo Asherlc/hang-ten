@@ -5611,7 +5611,11 @@
         }
       ],
       "presentationID": "orientation-3",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "depthRangeMillimeters": {
+        "lowerBound": 11,
+        "upperBound": 12
+      }
     }
   ],
   "presentations": [
