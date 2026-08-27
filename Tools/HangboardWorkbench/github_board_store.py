@@ -190,7 +190,7 @@ class GitHubBoardStore:
                 self._catalog(snapshot, token, branch), board_id
             )
             package, _image = _load_selected_presentation(
-                snapshot,
+                snapshot.with_blob_cache(),
                 token,
                 branch,
                 selected.slug,
@@ -217,7 +217,7 @@ class GitHubBoardStore:
                 self._catalog(snapshot, token, branch), board_id
             )
             _package, image = _load_selected_presentation(
-                snapshot,
+                snapshot.with_blob_cache(),
                 token,
                 branch,
                 selected.slug,
