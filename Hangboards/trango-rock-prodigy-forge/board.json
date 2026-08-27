@@ -1687,10 +1687,6 @@
                 "command": "close"
               }
             ]
-          },
-          "shapeConstraint": {
-            "shape": "oval",
-            "rotationDegrees": 0.0
           }
         }
       ],
