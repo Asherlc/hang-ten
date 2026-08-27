@@ -1480,8 +1480,8 @@ def test_hosted_board_routes_read_packages_and_images_from_github() -> None:
     } == {HOSTED_TOKEN}
 
 
-def test_hosted_board_open_reads_distinct_presentation_blobs_concurrently_and_returns_editor_contract() -> None:
-    """Fails if selected-board presentation blob reads are serialized."""
+def test_hosted_board_open_reads_only_the_selected_presentation_asset() -> None:
+    """Fails if opening one presentation downloads sibling image blobs."""
     board = multi_presentation_board_document("fixture.multi")
     presentations = board["presentations"]
     holds = board["holds"]
@@ -1529,7 +1529,10 @@ def test_hosted_board_open_reads_distinct_presentation_blobs_concurrently_and_re
             "detail-presentation",
         ),
     }
-    client = _BlockingPresentationBlobClient(files)
+    client = FakeGitHubClient(
+        {"main": files, HOSTED_BRANCH: files, "feature": files},
+        default_branch=HOSTED_BRANCH,
+    )
 
     with running_server_with_github_backend(files, github_client=client) as (
         base,
@@ -1537,13 +1540,24 @@ def test_hosted_board_open_reads_distinct_presentation_blobs_concurrently_and_re
         session,
     ):
         status, opened, _headers = hosted_request_json(
-            base, session, "GET", "/api/boards/fixture.multi"
+            base, session, "GET", "/api/boards/fixture.multi?presentationID=back"
         )
 
     assert status == 200
-    assert client.max_active_presentation_shas == 4
+    image_shas = {
+        name: content[1]
+        for name, content in files.items()
+        if name.startswith("Hangboards/fixture-v2/assets/")
+        and isinstance(content, tuple)
+    }
+    loaded_image_shas = {
+        call.args[1]
+        for call in client.calls_named("get_blob")
+        if call.args[1] in image_shas.values()
+    }
+    assert loaded_image_shas == {image_shas["Hangboards/fixture-v2/assets/back.png"]}
     opened_board = opened["board"]
-    assert opened_board["selectedPresentationID"] == "front"
+    assert opened_board["selectedPresentationID"] == "back"
     assert opened_board["holdIDs"] == [
         "hold-left",
         "hold-back",
@@ -1580,7 +1594,7 @@ def test_hosted_board_open_reads_distinct_presentation_blobs_concurrently_and_re
     assert {
         region["metadata"]["presentationID"]
         for region in opened_board["document"]["regions"]
-    } == {"front"}
+    } == {"back"}
 
 
 def test_hosted_board_catalog_reads_metadata_without_primary_image_blobs() -> None:

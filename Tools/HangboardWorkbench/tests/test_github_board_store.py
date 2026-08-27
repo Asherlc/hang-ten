@@ -793,6 +793,34 @@ def test_cached_multi_presentation_open_reuses_presentation_blob_cache() -> None
     assert set(image_reads) == image_shas
 
 
+def test_hosted_presentation_image_reads_only_the_requested_asset() -> None:
+    """Fails if an image route downloads sibling presentation blobs."""
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"back"
+    )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+    image_shas = {
+        path: FakeGitHubClient._sha(content)
+        for path, content in files.items()
+        if path.startswith("Hangboards/fixture-v2/assets/")
+    }
+
+    image = store.presentation_image_bytes(TOKEN, BRANCH, "fixture.multi", "back")
+
+    loaded_image_shas = {
+        call.args[1]
+        for call in client.calls_named("get_blob")
+        if call.args[1] in image_shas.values()
+    }
+    assert image == files["Hangboards/fixture-v2/assets/back.png"]
+    assert loaded_image_shas == {
+        image_shas["Hangboards/fixture-v2/assets/back.png"]
+    }
+
+
 def test_staged_blob_single_flight_caches_for_a_concurrent_normal_reader() -> None:
     """Fails if a staged blob owner prevents a cache-enabled waiter from caching it."""
     client = _PausedBulkClient(
