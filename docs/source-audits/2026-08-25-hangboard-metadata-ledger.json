@@ -41375,6 +41375,8 @@
         "pocket-middle-center",
         "pocket-middle-outer-left",
         "pocket-middle-outer-right",
+        "pocket-top-left",
+        "pocket-top-right",
         "pocket-top-outer-left",
         "pocket-top-outer-right"
       ],
@@ -41384,7 +41386,7 @@
       "source": {
         "kind": "secondary",
         "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
-        "label": "Positioned Beastmaker 1000 comparison diagram; its text says 50 mm for center #6 while the annotated diagram labels that exact contact 53 mm."
+        "label": "Positioned Beastmaker 1000 comparison diagram; #2 labels pocket-top-{left,right} as three-finger 30 mm edges, and its text says 50 mm for center #6 while the annotated diagram labels that exact contact 53 mm."
       },
       "value": "edge"
     },
@@ -41398,9 +41400,7 @@
         "pocket-middle-inner-left",
         "pocket-middle-inner-right",
         "pocket-middle-mid-left",
-        "pocket-middle-mid-right",
-        "pocket-top-left",
-        "pocket-top-right"
+        "pocket-middle-mid-right"
       ],
       "field": "kind",
       "outcome": "verified",
@@ -41441,11 +41441,11 @@
       "outcome": "verified",
       "reviewedAt": "2026-08-26",
       "source": {
-        "kind": "secondary",
-        "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
-        "label": "Positioned Beastmaker 1000 comparison diagram; its text says 50 mm for center #6 while the annotated diagram labels that exact contact 53 mm."
+        "kind": "manufacturer",
+        "url": "https://www.beastmaker.co.uk/products/beastmaker-1000-series",
+        "label": "Manufacturer specifies the two small four-finger pockets as 10 mm; the secondary positioned comparison diagram conflicts by labelling this mapped pair 15 mm. Primary value retained."
       },
-      "value": 15
+      "value": 10
     },
     {
       "boardID": "beastmaker-1000",
@@ -41609,6 +41609,8 @@
         "pocket-middle-center",
         "pocket-middle-outer-left",
         "pocket-middle-outer-right",
+        "pocket-top-left",
+        "pocket-top-right",
         "pocket-top-outer-left",
         "pocket-top-outer-right"
       ],
@@ -41618,7 +41620,7 @@
       "source": {
         "kind": "secondary",
         "url": "https://thehangboard.com/pages/beastmaker-1000-vs-2000",
-        "label": "Positioned Beastmaker 1000 comparison diagram; its text says 50 mm for center #6 while the annotated diagram labels that exact contact 53 mm."
+        "label": "Positioned Beastmaker 1000 comparison diagram; #2 labels pocket-top-{left,right} as three-finger 30 mm edges, and its text says 50 mm for center #6 while the annotated diagram labels that exact contact 53 mm."
       },
       "reason": "Finger capacity applies only to the source-labelled pocket contacts."
     },
@@ -41628,9 +41630,7 @@
         "pocket-bottom-inner-left",
         "pocket-bottom-inner-right",
         "pocket-middle-inner-left",
-        "pocket-middle-inner-right",
-        "pocket-top-left",
-        "pocket-top-right"
+        "pocket-middle-inner-right"
       ],
       "field": "fingerCapacity",
       "outcome": "verified",
@@ -42090,7 +42090,7 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://www.beastmaker.co.uk/products/beastmaker-2000-series",
-        "label": "Official Beastmaker 2000 central 22 mm edge specification."
+        "label": "Official Beastmaker 2000 central 22 mm edge specification; the user-supplied secondary annotated diagram labels the same lower-center contact 21 mm. Primary value retained."
       },
       "value": 22
     },

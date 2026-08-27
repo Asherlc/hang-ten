@@ -1,74 +1,196 @@
 # Beastmaker board-package source audit
 
-Updated 2026-08-26. This audit records the evidence behind the canonical
-metadata; it does not change the directly authored hold paths.
+Checked 2026-08-12. This is a historical evidence audit, not current package
+or runtime state. Its old readiness conclusions are superseded by the current
+flat-package schema and `docs/ADDING_A_BOARD.md`; unsupported optional metadata
+is omitted, while visible paths are directly authored from primary evidence.
 
-## Sources and evidence tiers
+## Candidates
 
-| Board | Primary identity source | Positioned depth/type source |
-| --- | --- | --- |
-| Beastmaker 1000 | [Beastmaker 1000 Series](https://www.beastmaker.co.uk/products/beastmaker-1000-series) | [The Hangboard comparison page](https://thehangboard.com/pages/beastmaker-1000-vs-2000) — **secondary**, not manufacturer evidence. |
-| Beastmaker 2000 | [Beastmaker 2000 Series](https://www.beastmaker.co.uk/products/beastmaker-2000-series) | [The Hangboard comparison page](https://thehangboard.com/pages/beastmaker-1000-vs-2000) — **secondary**, not manufacturer evidence. |
+| slug | board id | official product URL | official front image URL |
+| --- | --- | --- | --- |
+| `beastmaker-1000` | `beastmaker.1000` | https://www.beastmaker.co.uk/products/beastmaker-1000-series | https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068 |
+| `beastmaker-2000` | `beastmaker.2000` | https://www.beastmaker.co.uk/products/beastmaker-2000-series | https://cdn.shopify.com/s/files/1/0107/6442/files/2000_Small_Tulip.jpg?v=1756734230 |
 
-The Beastmaker pages establish product identity, overall dimensions, and the
-top jug/sloper inventory. They do not publish a numbered per-contact depth
-guide. The positioned comparison diagrams supply the stable-ID mapping used for
-the exact front contacts below. The metadata ledger records those mapped facts
-as `secondary`; it does not represent them as manufacturer claims.
+The official product pages establish each board's identity, published overall
+dimensions, a grouped inventory of hold types, and the associated official
+front image. The audit found no Beastmaker-published numbered hold guide,
+depth diagram, manual, or measurement source for either board. No official
+oblique image or per-hold measurement source was found that could assign every
+individual depth or capacity.
 
-## Beastmaker 1000 mapping
+## Current authoring interpretation
 
-The secondary diagram maps all 17 front contacts. Mirrored pairs share a value:
+- For `beastmaker-1000`, the grouped inventory supports pocket families and
+  one 10 mm pair at product level, but does not position a capacity or depth on
+  an individual stable ID. Unsupported per-contact values remain omitted.
+- For `beastmaker-2000`, the grouped description supports the clearly central
+  22 mm edge, but not a complete depth assignment. Unsupported values remain
+  omitted.
+- Visible contact boundaries may be directly authored from the official front
+  imagery and reviewed by a person. They are not measurements.
 
-| Diagram family | Canonical IDs | Type/capacity | Depth |
-| --- | --- | --- | ---: |
-| #1 | `pocket-top-outer-{left,right}` | 4-finger edge | 15 mm |
-| #2 | `pocket-top-{left,right}` | 3-finger pocket | 30 mm |
-| #3 | `pocket-middle-outer-{left,right}` | 4-finger edge | 45 mm |
-| #4 | `pocket-middle-mid-{left,right}` | 2-finger pocket | 50 mm |
-| #5 | `pocket-middle-inner-{left,right}` | 3-finger pocket | 45 mm |
-| #6 | `pocket-middle-center` | 4-finger edge | 53 mm |
-| #7 | `pocket-bottom-outer-{left,right}` | 4-finger edge | 20 mm |
-| #8 | `pocket-bottom-mid-{left,right}` | 2-finger pocket | 25 mm |
-| #9 | `pocket-bottom-inner-{left,right}` | 3-finger pocket | 20 mm |
+Both completed packages were later authored and visually reviewed independently
+of the removed draft art.
 
-### Recorded discrepancy
+## 2026-08-25 Beastmaker 1000 source-audited metadata certification
 
-For #6, the comparison page's textual list says **50 mm**, while its
-positioned annotated diagram says **53 mm**. The package uses **53 mm** because
-the diagram identifies the exact canonical contact; the secondary provenance
-label preserves the disagreement.
+The current [Beastmaker 1000 product
+page](https://www.beastmaker.co.uk/products/beastmaker-1000-series) and its
+linked [official straight-on
+front](https://cdn.shopify.com/s/files/1/0107/6442/files/1000_Small_Tulip.jpg?v=1756733068)
+were manually reconciled with the stable-ID capture at
+`.context/hangboard-metadata-backfill-icky-cow/beastmaker-1000-certification/beastmaker-1000--4fee18798954.png`.
+The capture is a review aid for existing canonical paths only; it supplied no
+measurement, capacity, posture, feature, kind, or geometry.
 
-No depth or capacity is assigned to the two jugs or three slopers.
+### Inventory conflict and ruling
 
-## Beastmaker 2000 mapping
+The official front visibly contains 22 separate physical contacts: two outer
+top jugs, three top sloper surfaces, and 17 front cavities. The product copy
+instead lists two jugs, a paired 35-degree sloper, a 20-degree sloper, and
+pocket families whose quantities total only 15. The copy is therefore short by
+two pockets relative to the manufacturer's own current front.
 
-The comparison diagram and list identify the following stable contacts. The
-manufacturer-backed `front-lower-5: 22 mm` center edge remains unchanged.
+All 22 existing records and canonical paths remain unchanged. Deleting two
+visible cavities to force agreement with the marketing arithmetic would make
+the package less faithful to the physical product. The mandatory kinds use an
+explicit group-level ruling:
 
-| Diagram family | Canonical IDs | Type/capacity | Depth |
-| --- | --- | --- | ---: |
-| 4-finger edge | `front-middle-{1,9}` | edge | 33 mm |
-| mono | `front-middle-{2,8}` | 1-finger pocket | 55 mm |
-| back-2 pocket | `front-middle-{3,7}` | 2-finger pocket | 35 mm |
-| back-2 pocket | `hold-{26,27}` | 2-finger pocket | 50 mm |
-| 2-finger pocket | `front-middle-{4,6}` | 2-finger pocket | 30 mm |
-| 4-finger edge | `front-middle-5` | edge | 52 mm |
-| 3-finger pocket | `front-upper-1` | 3-finger pocket | 40 mm |
-| 3-finger pocket | `front-upper-2` | 3-finger pocket | 20 mm |
-| 4-finger edge | `front-lower-{1,9}` | edge | 15 mm |
-| mono | `front-lower-{2,8}` | 1-finger pocket | 25 mm |
-| 2-finger pocket | `front-lower-{3,7}` | 2-finger pocket | 20 mm |
-| 2-finger pocket | `front-lower-{4,6}` | 2-finger pocket | 20 mm |
-| manufacturer center edge | `front-lower-5` | edge | 22 mm |
+| Stable IDs | Source-backed `kind` ruling |
+| --- | --- |
+| `jug-{left,right}` | `jug`, from the exact “2 Jugs” family mapped to the two outer top contacts. |
+| `sloper-35-{left,right}`, `sloper-center` | `sloper`, from the paired 35-degree and center 20-degree sloper families mapped to the only three top sloper surfaces. The degrees are angles, not depths. |
+| All 17 `pocket-*` IDs | `pocket`, because the exhaustive front-contact inventory is pocket-only and the official front shows 17 separate cavities. This certifies the shared kind, not a per-position depth or finger subtype. |
 
-### Recorded discrepancy
+`sloper-center` keeps its stable ID and is display-labelled “20 Degree Center
+Sloper.” No geometry or presentation asset changed.
 
-For `front-middle-5`, the comparison page's textual list calls the center
-four-finger edge **50 mm** while its positioned annotated diagram labels it
-**52 mm**. The package uses the diagram's **52 mm** value because it is the
-positioned evidence. The existing primary-source 22 mm lower center edge is a
-different contact and is retained as manufacturer-backed.
+### Deliberate optional blanks
 
-No depth or finger capacity is inferred for any 2000 sloper. The ledger also
-keeps its unsupported range, hand-capacity, posture, and feature fields blank.
+Every optional field is absent on all 22 contacts. In particular:
+
+- The product page does not publish an exact scalar or lower/upper depth range
+  for a jug or sloper. Sloper degrees are not millimetre depth.
+- Its sole numeric depth claim is an unpositioned 10 mm pocket pair; no stable
+  ID receives that value.
+- The listed two-, three-, and four-finger pocket families are neither
+  positioned nor reconcilable with the 17 visible cavities, so no exact pocket
+  gets `fingerCapacity` or a pocket grip enum. Finger capacity is not
+  applicable to the five source-identified jugs/slopers.
+- The source does not state simultaneous hand capacity, prescribe one exact
+  supported grip posture, or publish an exact supported feature-tag array for
+  any stable ID. Existing guessed jug posture/capacity/features, pocket scalar
+  depths, and duplicated pocket feature tags were removed.
+
+The canonical ledger accounts for all 154 required outcomes: 22 verified
+mandatory kinds, 127 unavailable optional fields, five not-applicable finger
+capacities, and zero unaccounted fields. Beastmaker 2000 remains outside this
+certification; no value or ruling from the 1000 was transferred to it.
+
+## 2026-08-25 Beastmaker 2000 conservative metadata cleanup
+
+The current [Beastmaker 2000 product
+page](https://www.beastmaker.co.uk/products/beastmaker-2000-series), its linked
+[official straight-on
+front](https://cdn.shopify.com/s/files/1/0107/6442/files/2000_Small_Tulip.jpg?v=1756734230),
+and the post-repair stable-ID capture at
+`.context/hangboard-metadata-backfill-icky-cow/beastmaker-2000-geometry-repair/beastmaker-2000--305c473cc719.png`
+were manually reconciled. The capture identifies existing canonical paths; it
+does not supply a physical type, measurement, capacity, posture, or feature.
+
+### Mandatory-kind blocker
+
+The package remains deliberately excluded from the canonical reviewed metadata
+ledger. Beastmaker publishes a grouped inventory, but no numbered or positioned
+type guide for the 17 mixed front contacts below:
+
+- `front-middle-1` through `front-middle-9`;
+- `front-lower-2` through `front-lower-4` and `front-lower-6` through
+  `front-lower-8`; and
+- the nested contacts `hold-26` and `hold-27`.
+
+Those source families mix a four-finger jug, big and little edges, several
+pocket families, and monos. The official unlabelled front does not establish
+which stable ID belongs to which family. Therefore their existing mandatory
+`kind` values are unchanged but not certified. The already source-mapped
+exceptions are the five top slopers, the two upper “Back 2 Pockets,” and the
+central 22 mm middle edge. A later source re-review also established
+`front-lower-{1,9}` as the mirrored outer “Big and little edges” pair, as
+recorded in the [all-board audit](2026-08-25-all-board-hold-audit.md#corrected-mapping-beastmaker-2000).
+A Beastmaker-published positioned guide or direct written manufacturer
+clarification is required before this board can enter `reviewedBoardIDs`; a
+retailer diagram or a visual-width inference is not a substitute.
+
+The board is instead declared in the metadata ledger's disjoint
+`sloperOnlyBoardIDs` scope. That supplemental audit contains exactly one
+`sloper` outcome for each of the 27 canonical holds: the five source-identified
+slopers are unavailable because the manufacturer does not publish a flat or
+round subtype, and the other 22 contacts are not applicable. Records for any
+other metadata field remain forbidden in this scope, so it does not imply a
+complete source audit of the unresolved front-contact kinds.
+
+No `kind`, geometry, presentation asset, stable ID, or hold count changed in
+this cleanup. In particular, the directly reviewed compound parent paths
+`front-middle-{3,7}` and nested paths `hold-{26,27}` remain intact and
+non-overlapping.
+
+### Deliberate optional blanks
+
+All 24 existing `fingerCapacity` values were removed because the grouped source
+does not position a capacity on an exact stable ID. This includes four top
+slopers (`top-sloper-1`, `top-sloper-2`, `top-sloper-4`, and `hold-28`), all 19
+unmapped mixed front contacts (including both compound parents and both nested
+contacts), and `front-lower-5`. The latter remains the source-backed
+`sizeMillimeters: 22` center edge, but an edge depth does not establish its
+three-finger capacity.
+
+The exact package state after cleanup is:
+
+| Optional field | Populated contacts | Intentionally blank contacts |
+| --- | --- | ---: |
+| `sizeMillimeters` | `front-lower-5`: 22 mm | 26 |
+| `depthRangeMillimeters` | none | 27 |
+| `fingerCapacity` | none | 27 |
+| `handCapacity` | none | 27 |
+| `gripType` | none | 27 |
+| `features` | none | 27 |
+
+The grouped angle labels are not depth measurements, and the source publishes
+no exact per-contact range, simultaneous hand capacity, supported grip enum, or
+closed feature-tag array. These blanks are intentional evidence boundaries,
+not incomplete metadata.
+
+## 2026-08-26 correction: positioned secondary mappings and primary conflicts
+
+This correction supersedes the current-state conclusions in the dated sections
+above; it does not alter their historical evidence record. The packages and
+ledger now use the positioned secondary mapping from [The Hangboard Beastmaker
+1000/2000 comparison](https://thehangboard.com/pages/beastmaker-1000-vs-2000)
+where it does not conflict with primary evidence. No stable ID, canonical path,
+or geometry changed.
+
+### Beastmaker 1000
+
+The comparison diagram identifies `pocket-top-{left,right}` (#2) as 30 mm
+three-finger **edges**, not pockets. Their runtime `kind` is consequently
+`edge`, and `fingerCapacity` is absent/not applicable; the retained stable IDs
+are historical identifiers, not type evidence.
+
+The same secondary diagram identifies `pocket-top-outer-{left,right}` (#1) as
+15 mm. The official [Beastmaker 1000 product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series)
+instead specifies its two small four-finger pockets as 10 mm. The ledger records
+both facts and retains the primary **10 mm** runtime value for this mapped pair.
+
+The secondary diagram labels `pocket-middle-center` (#6) **53 mm**, while its
+textual list says 50 mm. It remains 53 mm because the diagram is the positioned
+secondary evidence; the disagreement is recorded in the ledger.
+
+### Beastmaker 2000
+
+`front-middle-5` remains **52 mm** because the positioned secondary diagram
+labels it 52 mm while that source's text says 50 mm. Separately, the
+user-provided annotated 2000 diagram received on 2026-08-26 labels
+`front-lower-5` **21 mm**. The official [Beastmaker 2000 product page](https://www.beastmaker.co.uk/products/beastmaker-2000-series)
+specifies the lower-center edge as **22 mm**; the runtime value remains 22 mm.
+The ledger's manufacturer provenance explicitly records the 21-vs-22 conflict.

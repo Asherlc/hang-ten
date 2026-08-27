@@ -17,10 +17,10 @@ def _depths(package_slug: str) -> dict[str, float]:
     }
 
 
-def test_beastmaker_1000_exposes_positioned_secondary_source_depths() -> None:
+def test_beastmaker_1000_prefers_primary_depth_for_the_conflicting_small_edge_pair() -> None:
     assert _depths("beastmaker-1000") == {
-        "pocket-top-outer-left": 15,
-        "pocket-top-outer-right": 15,
+        "pocket-top-outer-left": 10,
+        "pocket-top-outer-right": 10,
         "pocket-top-left": 30,
         "pocket-top-right": 30,
         "pocket-middle-outer-left": 45,
@@ -71,6 +71,8 @@ def test_beastmaker_positioned_secondary_sources_correct_hold_types_and_capaciti
         "beastmaker-1000": {
             "pocket-top-outer-left",
             "pocket-top-outer-right",
+            "pocket-top-left",
+            "pocket-top-right",
             "pocket-middle-outer-left",
             "pocket-middle-outer-right",
             "pocket-middle-center",
@@ -85,8 +87,6 @@ def test_beastmaker_positioned_secondary_sources_correct_hold_types_and_capaciti
     }
     expected_capacities = {
         "beastmaker-1000": {
-            "pocket-top-left": 3,
-            "pocket-top-right": 3,
             "pocket-middle-mid-left": 2,
             "pocket-middle-mid-right": 2,
             "pocket-middle-inner-left": 3,

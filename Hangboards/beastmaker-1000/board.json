@@ -314,8 +314,8 @@
     },
     {
       "id": "pocket-top-outer-left",
-      "sizeMillimeters": 15,
-      "name": "Pocket Top Outer Left",
+      "sizeMillimeters": 10,
+      "name": "10 mm 4 Finger Edge Left",
       "kind": "edge",
       "geometry": [
         {
@@ -424,8 +424,8 @@
     },
     {
       "id": "pocket-top-outer-right",
-      "sizeMillimeters": 15,
-      "name": "Pocket Top Outer Right",
+      "sizeMillimeters": 10,
+      "name": "10 mm 4 Finger Edge Right",
       "kind": "edge",
       "geometry": [
         {
@@ -535,9 +535,8 @@
     {
       "id": "pocket-top-left",
       "sizeMillimeters": 30,
-      "fingerCapacity": 3,
-      "name": "Pocket Top Left",
-      "kind": "pocket",
+      "name": "30 mm 3 Finger Edge Left",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {
@@ -646,9 +645,8 @@
     {
       "id": "pocket-top-right",
       "sizeMillimeters": 30,
-      "fingerCapacity": 3,
-      "name": "Pocket Top Right",
-      "kind": "pocket",
+      "name": "30 mm 3 Finger Edge Right",
+      "kind": "edge",
       "geometry": [
         {
           "frame": {

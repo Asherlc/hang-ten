@@ -714,6 +714,8 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> N
         "edge": {
             "pocket-top-outer-left",
             "pocket-top-outer-right",
+            "pocket-top-left",
+            "pocket-top-right",
             "pocket-middle-outer-left",
             "pocket-middle-center",
             "pocket-middle-outer-right",
@@ -721,8 +723,6 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> N
             "pocket-bottom-outer-right",
         },
         "pocket": {
-            "pocket-top-left",
-            "pocket-top-right",
             "pocket-middle-mid-left",
             "pocket-middle-inner-left",
             "pocket-middle-inner-right",
