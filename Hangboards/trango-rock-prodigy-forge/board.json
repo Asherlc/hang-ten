@@ -661,7 +661,7 @@
       "id": "im-shallow-right",
       "name": "Right IM shallow pocket",
       "kind": "pocket",
-      "fingerCapacity": 2,
+      "fingerCapacity": 3,
       "geometry": [
         {
           "frame": {
