@@ -1022,7 +1022,8 @@
         }
       ],
       "presentationID": "orientation-1",
-      "gripType": "threeFingerPocket"
+      "gripType": "threeFingerPocket",
+      "handCapacity": 1
     },
     {
       "id": "outer-sloped-crimp-left-orientation-2",
