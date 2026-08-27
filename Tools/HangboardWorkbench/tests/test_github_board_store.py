@@ -7,6 +7,7 @@ import shutil
 import struct
 import sys
 import threading
+import time
 import zlib
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
@@ -629,6 +630,82 @@ def test_cached_store_keeps_presentation_cache_recency_after_a_multi_image_open(
     assert tuple(store._blobs.values()) == (
         files["Hangboards/fixture-v2/assets/back.png"],
     )
+
+
+def test_cached_multi_presentation_open_reuses_presentation_blob_cache() -> None:
+    """Fails if staged presentation reads bypass cache hits on a later open."""
+    board = multi_presentation_board_document("fixture.multi")
+    files = _complete_package("fixture-v2", board)
+    files["Hangboards/fixture-v2/assets/back.png"] = _primary_image_with_text_chunk(
+        b"back"
+    )
+    client = FakeGitHubClient({BRANCH: files})
+    store = github_board_store.GitHubBoardStore(client)
+    image_shas = {
+        FakeGitHubClient._sha(files["Hangboards/fixture-v2/assets/primary.png"]),
+        FakeGitHubClient._sha(files["Hangboards/fixture-v2/assets/back.png"]),
+    }
+
+    store.open_package(TOKEN, BRANCH, "fixture.multi")
+    store.open_package(TOKEN, BRANCH, "fixture.multi")
+
+    image_reads = [
+        call.args[1]
+        for call in client.calls_named("get_blob")
+        if call.args[1] in image_shas
+    ]
+    assert len(image_reads) == 2
+    assert set(image_reads) == image_shas
+
+
+def test_staged_blob_single_flight_caches_for_a_concurrent_normal_reader() -> None:
+    """Fails if a staged blob owner prevents a cache-enabled waiter from caching it."""
+    client = _PausedBulkClient(
+        _complete_package("fixture-board", board_document("fixture.board"))
+    )
+    store = github_board_store.GitHubBoardStore(client)
+    snapshot = store._snapshot(TOKEN, BRANCH, cache_blobs=True)
+    primary_entry = next(
+        entry
+        for entry in snapshot.get_tree(TOKEN, BRANCH)
+        if entry.path == "Hangboards/fixture-board/assets/primary.png"
+    )
+    staged_result: list[bytes] = []
+    cached_result: list[bytes] = []
+
+    staged_reader = threading.Thread(
+        target=lambda: staged_result.append(
+            snapshot.get_staged_blob(TOKEN, primary_entry.sha)
+        )
+    )
+    cached_reader = threading.Thread(
+        target=lambda: cached_result.append(
+            snapshot.get_blob(TOKEN, primary_entry.sha)
+        )
+    )
+    staged_reader.start()
+    assert client.bulk_started.wait(timeout=5)
+    cached_reader.start()
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        with store._lock:
+            flight = store._blob_flights.get(
+                (snapshot.credential_key, primary_entry.sha)
+            )
+            if flight is not None and flight.cache_on_success:
+                break
+        time.sleep(0.01)
+    else:
+        pytest.fail("cache-enabled reader did not join the staged blob flight")
+    client.release_bulk.set()
+    staged_reader.join(timeout=5)
+    cached_reader.join(timeout=5)
+
+    assert staged_result == [PRIMARY_IMAGE.read_bytes()]
+    assert cached_result == [PRIMARY_IMAGE.read_bytes()]
+    assert len(client.calls_named("get_blob")) == 1
+    assert snapshot.get_blob(TOKEN, primary_entry.sha) == PRIMARY_IMAGE.read_bytes()
+    assert len(client.calls_named("get_blob")) == 1
 
 
 def test_open_validates_presentation_assets_before_loading_nonprimary_images() -> None:

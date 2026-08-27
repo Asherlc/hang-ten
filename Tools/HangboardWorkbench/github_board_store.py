@@ -35,6 +35,12 @@ _Result = TypeVar("_Result")
 _FlightKey = TypeVar("_FlightKey", bound=Hashable)
 
 
+@dataclass(slots=True)
+class _BlobFlight:
+    future: Future[bytes]
+    cache_on_success: bool
+
+
 class _GitHubSnapshotClient(Protocol):
     def get_tree(self, token: str, branch: str) -> tuple[TreeEntry, ...]: ...
 
@@ -136,7 +142,7 @@ class GitHubBoardStore:
         self._catalog_flights: dict[
             tuple[bytes, str], Future[tuple[GitHubBoardListing, ...]]
         ] = {}
-        self._blob_flights: dict[tuple[bytes, str], Future[bytes]] = {}
+        self._blob_flights: dict[tuple[bytes, str], _BlobFlight] = {}
         self._operations = threading.Condition(self._lock)
         self._active_operations = 0
         self._closing = False
@@ -440,7 +446,13 @@ class GitHubBoardStore:
                 )
 
     def _blob(
-        self, token: str, credential_key: bytes, sha: str, *, cache: bool
+        self,
+        token: str,
+        credential_key: bytes,
+        sha: str,
+        *,
+        cache: bool,
+        stage_cache_miss: bool = False,
     ) -> bytes:
         key = (credential_key, sha)
         if cache:
@@ -450,13 +462,33 @@ class GitHubBoardStore:
                     self._blobs.move_to_end(key)
                     return blob
 
-        def load() -> bytes:
+        with self._lock:
+            flight = self._blob_flights.get(key)
+            if flight is None:
+                flight = _BlobFlight(
+                    Future(), cache and not stage_cache_miss
+                )
+                self._blob_flights[key] = flight
+                owner = True
+            else:
+                if cache and not stage_cache_miss:
+                    flight.cache_on_success = True
+                owner = False
+        if not owner:
+            return flight.future.result()
+        try:
             blob = self._call_bulk(self._client.get_blob, token, sha)
-            if cache:
-                self._cache_blob(key, blob)
+            with self._lock:
+                if flight.cache_on_success:
+                    self._cache_blob(key, blob)
+                flight.future.set_result(blob)
             return blob
-
-        return self._single_flight(self._blob_flights, key, load)
+        except BaseException as error:
+            flight.future.set_exception(error)
+            raise
+        finally:
+            with self._lock:
+                self._blob_flights.pop(key, None)
 
     def _cache_blob(self, key: tuple[bytes, str], blob: bytes) -> None:
         if len(blob) > self._max_cached_blob_bytes:
@@ -589,6 +621,16 @@ class _CachedSnapshotClient:
             token, self._credential_key, sha, cache=self._cache_blobs
         )
 
+    def get_staged_blob(self, token: str, sha: str) -> bytes:
+        self._require_token(token)
+        return self._store._blob(
+            token,
+            self._credential_key,
+            sha,
+            cache=self._cache_blobs,
+            stage_cache_miss=True,
+        )
+
     def with_blob_cache(self) -> _CachedSnapshotClient:
         return _CachedSnapshotClient(
             self._store,
@@ -598,17 +640,6 @@ class _CachedSnapshotClient:
             self._commit_sha,
             self._tree,
             True,
-        )
-
-    def without_blob_cache(self) -> _CachedSnapshotClient:
-        return _CachedSnapshotClient(
-            self._store,
-            self._token,
-            self._credential_key,
-            self._branch,
-            self._commit_sha,
-            self._tree,
-            False,
         )
 
     def cache_blobs_in_order(self, blobs: tuple[tuple[str, bytes], ...]) -> None:
@@ -1221,11 +1252,6 @@ def _load_package_from_entries(
             _MAX_CONCURRENT_PACKAGE_LOADS, max(1, len(concurrent_assets) + 1)
         )
     ) as executor:
-        uncached_image_client = (
-            client.without_blob_cache()
-            if isinstance(client, _CachedSnapshotClient)
-            else client
-        )
         board_future = (
             executor.submit(_get_blob, client, token, board_entry, "board.json")
             if prevalidated_board is not None
@@ -1234,7 +1260,7 @@ def _load_package_from_entries(
         image_futures = {
             asset_path: executor.submit(
                 _get_blob,
-                uncached_image_client,
+                client,
                 token,
                 image_entry,
                 (
@@ -1242,6 +1268,7 @@ def _load_package_from_entries(
                     if asset_path == "assets/primary.png"
                     else "package presentation image"
                 ),
+                stage_cache_miss=True,
             )
             for asset_path, image_entry in concurrent_assets.items()
         }
@@ -1407,9 +1434,16 @@ def _load_board_json(data: bytes) -> dict[str, Any]:
 
 
 def _get_blob(
-    client: _GitHubSnapshotClient, token: str, entry: TreeEntry, label: str
+    client: _GitHubSnapshotClient,
+    token: str,
+    entry: TreeEntry,
+    label: str,
+    *,
+    stage_cache_miss: bool = False,
 ) -> bytes:
     try:
+        if stage_cache_miss and isinstance(client, _CachedSnapshotClient):
+            return client.get_staged_blob(token, entry.sha)
         return client.get_blob(token, entry.sha)
     except GitHubNotFoundError as error:
         if label == "board.json":
