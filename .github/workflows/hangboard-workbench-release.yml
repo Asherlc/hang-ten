@@ -25,9 +25,9 @@ jobs:
         with:
           persist-credentials: false
 
-      # actions/setup-node v4.4.0
+      # actions/setup-node v7.0.0
       - name: Set up Node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '22.14.0'
           cache: npm
@@ -52,9 +52,9 @@ jobs:
         with:
           persist-credentials: false
 
-      # actions/setup-node v4.4.0
+      # actions/setup-node v7.0.0
       - name: Set up Node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '22.14.0'
           cache: npm
@@ -143,9 +143,9 @@ jobs:
           cd release
           shasum -a 256 -c hangboard-workbench-macos-arm64.sha256
 
-      # actions/setup-node v4.4.0
+      # actions/setup-node v7.0.0
       - name: Set up Node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '22.14.0'
           cache: npm
