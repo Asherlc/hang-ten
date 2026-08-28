@@ -1017,7 +1017,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 2
     },
     {
       "id": "pocket-middle-ring-deep-right",
@@ -1037,7 +1038,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 2
     },
     {
       "id": "pocket-index-middle-medium-shallow-left",
@@ -1057,7 +1059,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 2
     },
     {
       "id": "pocket-index-middle-medium-shallow-right",
@@ -1077,7 +1080,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 2
     },
     {
       "id": "pocket-middle-ring-shallow-left",
@@ -1097,7 +1101,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 2
     },
     {
       "id": "pocket-middle-ring-shallow-right",
@@ -1117,7 +1122,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "handCapacity": 2
     },
     {
       "id": "pinch-medium-right",
