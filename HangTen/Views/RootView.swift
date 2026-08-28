@@ -2887,7 +2887,7 @@ struct WorkoutView: View {
 			uniqueKeysWithValues: recorder.finish(at: plan.duration).map { ($0.stepID, $0) }
 		)
 		let steps = plan.steps.map { step in
-			completedMeasurements[step.id] ?? WorkoutStepMeasurement(
+			let measurement = completedMeasurements[step.id] ?? WorkoutStepMeasurement(
 				stepID: step.id,
 				plannedActiveDuration: step.activeDuration,
 				intervals: [],
@@ -2895,6 +2895,7 @@ struct WorkoutView: View {
 				sampleCount: 0,
 				status: .unmeasured
 			)
+			return measurement.applyingSemantics(from: step)
 		}
 		let recordedAt = Date()
 		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-plan.duration)

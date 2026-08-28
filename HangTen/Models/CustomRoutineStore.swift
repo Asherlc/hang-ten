@@ -138,6 +138,9 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case duplicateStepID(stepIndex: Int)
     case invalidDuration(stepIndex: Int)
     case invalidActiveDuration(stepIndex: Int)
+    case invalidHandUseSide(stepIndex: Int)
+    case invalidActionRepetitions(stepIndex: Int)
+    case invalidExternalLoad(stepIndex: Int)
     case terminalRestStep
     case missingTargets(stepIndex: Int)
     case restStepHasTargets(stepIndex: Int)
@@ -196,6 +199,15 @@ enum CustomRoutineValidator {
             if let activeDuration = step.activeDuration,
                !activeDuration.isFinite || activeDuration <= 0 || activeDuration > step.duration {
                 issues.append(.invalidActiveDuration(stepIndex: stepIndex))
+            }
+            if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
+                issues.append(.invalidHandUseSide(stepIndex: stepIndex))
+            }
+            if !WorkoutStepSemantics.hasValidActionAndRepetitions(step.action, step.repetitions) {
+                issues.append(.invalidActionRepetitions(stepIndex: stepIndex))
+            }
+            if !WorkoutStepSemantics.hasValidExternalLoad(step.externalLoadKGF) {
+                issues.append(.invalidExternalLoad(stepIndex: stepIndex))
             }
 
             if step.phase == .rest {

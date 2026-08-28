@@ -2587,6 +2587,67 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
+    func testPlanResolutionPreservesUnilateralStepSemantics() throws {
+        let step = WorkoutStepDefinition(id: "left-lift", title: "Left lift", instruction: "Lift.", accessory: "", duration: 10, phase: .pull, targets: [.kind(.jug)], handUse: .single, side: .left, action: .loadedLift, repetitions: 7, externalLoadKGF: -8)
+        let library = unilateralTestLibrary(step: step)
+
+        let resolved = try PlanDefinitionResolver(library: library).resolve(library.plans[0])
+
+        XCTAssertEqual(resolved.steps[0].handUse, .single)
+        XCTAssertEqual(resolved.steps[0].side, .left)
+        XCTAssertEqual(resolved.steps[0].action, .loadedLift)
+        XCTAssertEqual(resolved.steps[0].repetitions, 7)
+        XCTAssertEqual(resolved.steps[0].externalLoadKGF, -8)
+    }
+
+    func testPlanValidationRejectsInvalidUnilateralStepSemantics() {
+        let step = WorkoutStepDefinition(id: "invalid", title: "Invalid", instruction: "", accessory: "", duration: 10, phase: .pull, targets: [.kind(.jug)], handUse: .single, side: .both, action: .loadedLift, repetitions: 0)
+
+        let issues = PlanLibraryValidator.issues(
+            for: unilateralTestLibrary(step: step),
+            availableBoards: BoardCatalog.all
+        )
+
+        XCTAssertTrue(issues.contains { $0.path.hasSuffix(".side") })
+        XCTAssertTrue(issues.contains { $0.path.hasSuffix(".repetitions") })
+    }
+
+    func testLegacyStepDefinitionDefaultsToBilateralTimedHang() throws {
+        let data = Data(
+            #"{"id":"legacy-step","title":"Legacy step","instruction":"Hang.","accessory":"10s","duration":10,"phase":"hang","targets":[]}"#.utf8
+        )
+
+        let step = try JSONDecoder().decode(WorkoutStepDefinition.self, from: data)
+
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.action, .hang)
+        XCTAssertNil(step.repetitions)
+        XCTAssertNil(step.externalLoadKGF)
+    }
+
+    func testSingleArmLoadedLiftRoundTripsSignedLoad() throws {
+        let step = WorkoutStepDefinition(id: "single-arm-loaded-lift", title: "Loaded lift", instruction: "Lift.", accessory: "", duration: 20, phase: .pull, targets: [], handUse: .single, side: .left, action: .loadedLift, repetitions: 7, externalLoadKGF: -8)
+
+        let decoded = try JSONDecoder().decode(WorkoutStepDefinition.self, from: JSONEncoder().encode(step))
+
+        XCTAssertEqual(decoded, step)
+    }
+
+    private func unilateralTestLibrary(step: WorkoutStepDefinition) -> PlanLibraryDefinition {
+        PlanLibraryDefinition(
+            metadata: PlanLibraryMetadata(id: "test", title: "Test", generatedAt: "local"),
+            boardMappings: [],
+            blocks: [WorkoutBlockDefinition(id: "block", steps: [step])],
+            plans: [PlanDefinition(
+                id: "plan",
+                metadata: PlanMetadata(title: "Test", subtitle: "", level: "Test", sourceLabel: "Created in Hang Ten", sourceURL: nil, provenance: .custom),
+                boardID: nil,
+                blocks: [WorkoutBlockReference(blockID: "block")]
+            )]
+        )
+    }
+
     private func loadPlanCueAudit() throws -> CueAuditDocument {
         let fileURL = try planCueAuditURL()
         let markdown = try String(contentsOf: fileURL, encoding: .utf8)
@@ -2740,6 +2801,7 @@ private extension String {
         !trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
+
 
 private struct PlanFieldRule: Decodable, CueAuditDecision {
     let planID: String

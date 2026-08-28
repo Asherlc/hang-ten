@@ -900,6 +900,39 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertFalse(PlanLibraryValidator.issues(for: library(metadata: adapted), availableBoards: BoardCatalog.all).isEmpty)
     }
 
+    func testValidationRejectsInvalidUnilateralStepSemantics() {
+        let definition = CustomRoutineDefinition(
+            id: "custom.invalid-unilateral",
+            title: "Invalid unilateral",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "invalid",
+                title: "Invalid",
+                instruction: "",
+                accessory: "",
+                duration: 10,
+                phase: .pull,
+                targets: [.kind(.jug)],
+                handUse: .single,
+                side: .both,
+                action: .loadedLift,
+                repetitions: 0
+            )]
+        )
+
+        let issues = CustomRoutineValidator.issues(
+            for: definition,
+            availableBoards: BoardCatalog.all
+        )
+
+        XCTAssertTrue(issues.contains(.invalidHandUseSide(stepIndex: 0)))
+        XCTAssertTrue(issues.contains(.invalidActionRepetitions(stepIndex: 0)))
+    }
+
     private func genericDefinition(
         id: String = "custom.generic",
         subtitle: String = "",

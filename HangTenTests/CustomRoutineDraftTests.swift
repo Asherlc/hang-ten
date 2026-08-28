@@ -581,6 +581,39 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(CustomRoutineDraft(editing: source).definition(), source)
     }
 
+    func testEditingDraftPreservesUnilateralStepSemantics() {
+        let source = CustomRoutineDefinition(
+            id: "custom.unilateral",
+            title: "Unilateral",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "left-pull",
+                title: "Left pull",
+                instruction: "Pull.",
+                accessory: "",
+                duration: 10,
+                phase: .pull,
+                targets: [.kind(.jug)],
+                handUse: .single,
+                side: .left,
+                action: .isometricPull,
+                externalLoadKGF: -4
+            )]
+        )
+
+        let definition = CustomRoutineDraft(editing: source).definition()
+
+        XCTAssertEqual(definition.steps[0].handUse, .single)
+        XCTAssertEqual(definition.steps[0].side, .left)
+        XCTAssertEqual(definition.steps[0].action, .isometricPull)
+        XCTAssertNil(definition.steps[0].repetitions)
+        XCTAssertEqual(definition.steps[0].externalLoadKGF, -4)
+    }
+
     private func makeStep(
         id: String,
         title: String,

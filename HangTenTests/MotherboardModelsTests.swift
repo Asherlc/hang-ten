@@ -619,6 +619,42 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertFalse(hang.isRestStep)
     }
 
+    func testSessionStepMeasurementDefaultsAndRoundTripsUnilateralSemantics() throws {
+        let measurement = WorkoutStepMeasurement(
+            stepID: "left-lift",
+            plannedActiveDuration: 10,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured,
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: 7,
+            externalLoadKGF: -8
+        )
+        let data = try JSONEncoder().encode(measurement)
+        var legacyObject = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        legacyObject.removeValue(forKey: "handUse")
+        legacyObject.removeValue(forKey: "side")
+        legacyObject.removeValue(forKey: "action")
+        legacyObject.removeValue(forKey: "repetitions")
+        legacyObject.removeValue(forKey: "externalLoadKGF")
+
+        let decoded = try JSONDecoder().decode(WorkoutStepMeasurement.self, from: data)
+        let legacy = try JSONDecoder().decode(
+            WorkoutStepMeasurement.self,
+            from: JSONSerialization.data(withJSONObject: legacyObject)
+        )
+
+        XCTAssertEqual(decoded, measurement)
+        XCTAssertEqual(legacy.handUse, .double)
+        XCTAssertEqual(legacy.side, .both)
+        XCTAssertEqual(legacy.action, .hang)
+        XCTAssertNil(legacy.repetitions)
+        XCTAssertNil(legacy.externalLoadKGF)
+    }
+
     private func measurement(sensorLoads: [Double], aggregate: Double) -> MotherboardMeasurement {
         MotherboardMeasurement(
             timestamp: Date(timeIntervalSince1970: 0),

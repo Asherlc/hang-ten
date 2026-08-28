@@ -921,6 +921,48 @@ enum WorkoutPhase: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum WorkoutHandUse: String, Codable, CaseIterable, Hashable {
+    case single
+    case double
+}
+
+enum WorkoutSide: String, Codable, CaseIterable, Hashable {
+    case left
+    case right
+    case both
+}
+
+enum WorkoutAction: String, Codable, CaseIterable, Hashable {
+    case hang
+    case isometricPull
+    case loadedLift
+}
+
+enum WorkoutStepSemantics {
+    static func hasValidHandUseAndSide(_ handUse: WorkoutHandUse, _ side: WorkoutSide) -> Bool {
+        switch handUse {
+        case .single:
+            side == .left || side == .right
+        case .double:
+            side == .both
+        }
+    }
+
+    static func hasValidActionAndRepetitions(_ action: WorkoutAction, _ repetitions: Int?) -> Bool {
+        switch action {
+        case .loadedLift:
+            guard let repetitions else { return false }
+            return repetitions > 0
+        case .hang, .isometricPull:
+            return repetitions == nil
+        }
+    }
+
+    static func hasValidExternalLoad(_ externalLoadKGF: Double?) -> Bool {
+        externalLoadKGF?.isFinite ?? true
+    }
+}
+
 struct WorkoutStep: Identifiable, Hashable {
     let id: String
     let number: Int
@@ -933,6 +975,11 @@ struct WorkoutStep: Identifiable, Hashable {
     let segments: [WorkoutSegment]
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
+    let handUse: WorkoutHandUse
+    let side: WorkoutSide
+    let action: WorkoutAction
+    let repetitions: Int?
+    let externalLoadKGF: Double?
     /// When set, the app splits the minute into timed work and timed rest.
     /// Manufacturer task cycles leave this nil because the athlete completes
     /// the listed reps/hangs, then rests for whatever remains in the minute.
@@ -950,6 +997,11 @@ struct WorkoutStep: Identifiable, Hashable {
         segments: [WorkoutSegment] = [],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
+        handUse: WorkoutHandUse = .double,
+        side: WorkoutSide = .both,
+        action: WorkoutAction = .hang,
+        repetitions: Int? = nil,
+        externalLoadKGF: Double? = nil,
         timedWorkDuration: TimeInterval? = nil
     ) {
         self.id = id
@@ -963,6 +1015,11 @@ struct WorkoutStep: Identifiable, Hashable {
         self.segments = segments
         self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
+        self.handUse = handUse
+        self.side = side
+        self.action = action
+        self.repetitions = repetitions
+        self.externalLoadKGF = externalLoadKGF
         self.timedWorkDuration = timedWorkDuration
     }
 
@@ -1009,6 +1066,11 @@ struct WorkoutStep: Identifiable, Hashable {
             segments: segments,
             gripType: gripType,
             fingerConfiguration: fingerConfiguration,
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF,
             timedWorkDuration: timedWorkDuration
         )
     }

@@ -10,6 +10,11 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var targets: [WorkoutTargetDefinition]
     var timing: WorkoutSegmentTiming
     let activeDuration: TimeInterval?
+    var handUse: WorkoutHandUse
+    var side: WorkoutSide
+    var action: WorkoutAction
+    var repetitions: Int?
+    var externalLoadKGF: Double?
 
     init(
         id: String,
@@ -20,7 +25,12 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         phase: WorkoutPhase,
         targets: [WorkoutTargetDefinition],
         timing: WorkoutSegmentTiming,
-        activeDuration: TimeInterval? = nil
+        activeDuration: TimeInterval? = nil,
+        handUse: WorkoutHandUse = .double,
+        side: WorkoutSide = .both,
+        action: WorkoutAction = .hang,
+        repetitions: Int? = nil,
+        externalLoadKGF: Double? = nil
     ) {
         self.id = id
         self.title = title
@@ -31,6 +41,11 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         self.targets = targets
         self.timing = timing
         self.activeDuration = activeDuration
+        self.handUse = handUse
+        self.side = side
+        self.action = action
+        self.repetitions = repetitions
+        self.externalLoadKGF = externalLoadKGF
     }
 
     var isRest: Bool {
@@ -205,7 +220,12 @@ struct CustomRoutineDraft: Equatable {
             phase: definition.phase,
             targets: definition.targets,
             timing: definition.segments.first?.timing ?? .fixed,
-            activeDuration: definition.activeDuration
+            activeDuration: definition.activeDuration,
+            handUse: definition.handUse,
+            side: definition.side,
+            action: definition.action,
+            repetitions: definition.repetitions,
+            externalLoadKGF: definition.externalLoadKGF
         )
     }
 
@@ -228,7 +248,12 @@ struct CustomRoutineDraft: Equatable {
             phase: step.phase,
             targets: targets,
             segments: [segment],
-            activeDuration: step.activeDuration
+            activeDuration: step.activeDuration,
+            handUse: step.handUse,
+            side: step.side,
+            action: step.action,
+            repetitions: step.repetitions,
+            externalLoadKGF: step.externalLoadKGF
         )
     }
 
