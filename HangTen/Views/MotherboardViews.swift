@@ -151,15 +151,6 @@ struct MotherboardSettingsView: View {
                 Text("Disconnect before changing the profile.")
             }
 
-            Section("Force unit") {
-                Picker("Unit", selection: $settings.forceUnit) {
-                    ForEach(MotherboardForceUnit.allCases) { unit in
-                        Text(unit.label).tag(unit)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
-
             Section("Detection threshold") {
                 Slider(value: $settings.thresholdKGF, in: 0.1...50, step: 0.1)
 

@@ -3,6 +3,11 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testPortraitTimerLayoutKeepsTimerOnOneLineWithoutSupportingStatus() {
+        XCTAssertEqual(WorkoutPresentationContent.portraitTimerLineLimit, 1)
+        XCTAssertNil(WorkoutPresentationContent.portraitTimerSupportingStatus)
+    }
+
     func testMetadataRoundTripsCurrentSchema() throws {
         let metadata = PlanMetadata(
             title: "Test plan",

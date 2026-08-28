@@ -60,7 +60,8 @@ final class AppStoreTests: XCTestCase {
             id: UUID(uuidString: "BBBBBBBB-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
             planTitle: "Another plan",
             recordedAt: 200,
-            loadAdjustmentKGF: -12
+            loadAdjustmentKGF: -12,
+            loadAdjustmentDisplayUnit: .pounds
         )
         let sessionStore = PreloadedWorkoutSessionStore(sessions: [olderSession, latestSession])
         let store = AppStore(
@@ -69,6 +70,7 @@ final class AppStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(store.mostRecentSavedLoadAdjustmentKGF, -12, accuracy: 0.0001)
+        XCTAssertEqual(store.mostRecentSavedLoadAdjustmentDisplayUnit, .pounds)
     }
 
     func testSelectingBoardDerivesTelemetryFamilyFromBoardIDSuffix() {
@@ -1375,7 +1377,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         id: UUID = UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
         planTitle: String = "Plan",
         recordedAt: TimeInterval = 20,
-        loadAdjustmentKGF: Double = 0
+        loadAdjustmentKGF: Double = 0,
+        loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit = .kilograms
     ) -> WorkoutSessionRecord {
         WorkoutSessionRecord(
             id: id,
@@ -1387,7 +1390,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             motherboardIdentifier: nil,
             batteryValue: nil,
             steps: [],
-            loadAdjustmentKGF: loadAdjustmentKGF
+            loadAdjustmentKGF: loadAdjustmentKGF,
+            loadAdjustmentDisplayUnit: loadAdjustmentDisplayUnit
         )
     }
 }
