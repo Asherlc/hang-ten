@@ -706,6 +706,13 @@ enum PlanLibraryValidator {
 
         let mappingByBoardID = planMappingByBoardID
 
+        var plansReferencingBlockID: [String: [PlanDefinition]] = [:]
+        for plan in library.plans {
+            for reference in plan.blocks {
+                plansReferencingBlockID[reference.blockID, default: []].append(plan)
+            }
+        }
+
         var blockByID: [String: WorkoutBlockDefinition] = [:]
         for (index, block) in library.blocks.enumerated() {
             let path = "blocks[\(index)]"
@@ -713,7 +720,12 @@ enum PlanLibraryValidator {
                 issues.append(PlanValidationIssue(path: path, message: "Duplicate block ID \"\(block.id)\"."))
             }
             blockByID[block.id] = block
-            validateBlock(block, path: path, issues: &issues)
+            validateBlock(
+                block,
+                path: path,
+                plansReferencingBlock: plansReferencingBlockID[block.id, default: []],
+                issues: &issues
+            )
         }
 
         var planIDs = Set<String>()
@@ -756,6 +768,7 @@ enum PlanLibraryValidator {
     private static func validateBlock(
         _ block: WorkoutBlockDefinition,
         path: String,
+        plansReferencingBlock: [PlanDefinition],
         issues: inout [PlanValidationIssue]
     ) {
         if block.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -771,13 +784,23 @@ enum PlanLibraryValidator {
             if !stepIDs.insert(step.id).inserted {
                 issues.append(PlanValidationIssue(path: stepPath, message: "Duplicate step ID \"\(step.id)\" in block."))
             }
-            validateStep(step, path: stepPath, issues: &issues)
+            let allowsUntargetedStep = !plansReferencingBlock.isEmpty &&
+                plansReferencingBlock.allSatisfy {
+                    allowsUntargetedRPTCSelfSelectedHang(step, in: $0)
+                }
+            validateStep(
+                step,
+                path: stepPath,
+                allowsUntargetedStep: allowsUntargetedStep,
+                issues: &issues
+            )
         }
     }
 
     private static func validateStep(
         _ step: WorkoutStepDefinition,
         path: String,
+        allowsUntargetedStep: Bool,
         issues: inout [PlanValidationIssue]
     ) {
         if step.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -796,6 +819,12 @@ enum PlanLibraryValidator {
             if step.phase != .hang && step.phase != .pull {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration is only valid for hang or pull steps."))
             }
+        }
+        if step.phase != .rest,
+           step.phase != .conditioning,
+           step.targets.isEmpty,
+           !allowsUntargetedStep {
+            issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
         let isCompoundStep = step.segments.count > 1
         for (index, segment) in step.segments.enumerated() {
@@ -966,12 +995,6 @@ enum PlanLibraryValidator {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : step.id
                     let suffix = repetitions > 1 ? "-\(repetition + 1)" : ""
                     let resolvedID = sourceID + suffix
-                    validateStepTargetRequirement(
-                        step,
-                        plan: plan,
-                        stepPath: "\(referencePath).steps[\(stepIndex)]",
-                        issues: &issues
-                    )
                     for expandedID in expandedIDsEmittedByNormalizer(
                         for: step,
                         resolvedID: resolvedID
@@ -1022,40 +1045,33 @@ enum PlanLibraryValidator {
         }
     }
 
-    /// Only the official RPTC importer may retain its manufacturer-required,
-    /// athlete-selected grip. All other active steps must declare a target.
-    private static func validateStepTargetRequirement(
-        _ step: WorkoutStepDefinition,
-        plan: PlanDefinition,
-        stepPath: String,
-        issues: inout [PlanValidationIssue]
-    ) {
-        guard step.phase != .rest, step.phase != .conditioning, step.targets.isEmpty else {
-            return
-        }
-        guard allowsUntargetedRPTCSelfSelectedHang(step, in: plan) else {
-            issues.append(
-                PlanValidationIssue(
-                    path: "\(stepPath).targets",
-                    message: "Non-rest steps need at least one target."
-                )
-            )
-            return
-        }
-    }
-
     private static func allowsUntargetedRPTCSelfSelectedHang(
         _ step: WorkoutStepDefinition,
         in plan: PlanDefinition
     ) -> Bool {
-        plan.id == "rptc.seven-three-repeaters" &&
+        let expectedDuration: TimeInterval
+        switch step.id {
+        case "rptc-repeaters-set-rep-1",
+            "rptc-repeaters-set-rep-2",
+            "rptc-repeaters-set-rep-3",
+            "rptc-repeaters-set-rep-4",
+            "rptc-repeaters-set-rep-5",
+            "rptc-repeaters-set-rep-6":
+            expectedDuration = 10
+        case "rptc-repeaters-set-rep-7":
+            expectedDuration = 180
+        default:
+            return false
+        }
+
+        return plan.id == "rptc.seven-three-repeaters" &&
             plan.metadata.provenance == .official &&
             plan.metadata.sourceURL == URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155") &&
             plan.boardID == nil &&
-            step.id.hasPrefix("rptc-repeaters-set-rep-") &&
             step.phase == .hang &&
             step.segments.isEmpty &&
-            step.activeDuration == 7
+            step.activeDuration == 7 &&
+            step.duration == expectedDuration
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {

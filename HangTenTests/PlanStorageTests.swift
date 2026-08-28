@@ -1229,9 +1229,70 @@ final class PlanStorageTests: XCTestCase {
         ).validationIssues(availableBoards: BoardCatalog.all)
 
         XCTAssertTrue(issues.contains {
-            $0.path == "plans[0].blocks[0].steps[0].targets" &&
+            $0.path == "blocks[0].steps[0].targets" &&
                 $0.message == "Non-rest steps need at least one target."
         })
+    }
+
+    func testPlanLibraryRejectsUntargetedActiveStepInUnreferencedBlock() {
+        let untargetedHang = WorkoutStepDefinition(
+            id: "unreferenced-self-selected-hang",
+            title: "Self-selected hang",
+            instruction: "Hang on a self-selected grip.",
+            accessory: "7s hang",
+            duration: 7,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+        var library = makeLibrary(steps: [makeStep(id: "referenced-step")])
+        library = PlanLibraryDefinition(
+            metadata: library.metadata,
+            boardMappings: library.boardMappings,
+            blocks: library.blocks + [
+                WorkoutBlockDefinition(id: "unreferenced.block", steps: [untargetedHang])
+            ],
+            plans: library.plans
+        )
+
+        let issues = library.validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[1].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testOfficialRPTCImporterRejectsUntargetedRepeaterWithUnknownIDOrTiming() {
+        let cases = [
+            (id: "rptc-repeaters-set-rep-extra", duration: 10.0, activeDuration: 7.0),
+            (id: "rptc-repeaters-set-rep-1", duration: 11.0, activeDuration: 7.0),
+            (id: "rptc-repeaters-set-rep-1", duration: 10.0, activeDuration: 6.0)
+        ]
+
+        for testCase in cases {
+            let step = WorkoutStepDefinition(
+                id: testCase.id,
+                title: "RPTC repeater",
+                instruction: "Hang on the grip you selected.",
+                accessory: "7s hang",
+                duration: testCase.duration,
+                phase: .hang,
+                targets: [],
+                activeDuration: testCase.activeDuration
+            )
+            let issues = makeLibrary(
+                steps: [step],
+                provenance: .official,
+                planID: "rptc.seven-three-repeaters",
+                sourceURL: URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155")
+            ).validationIssues(availableBoards: BoardCatalog.all)
+
+            XCTAssertTrue(issues.contains {
+                $0.path == "blocks[0].steps[0].targets" &&
+                    $0.message == "Non-rest steps need at least one target."
+            }, "Expected \(testCase.id) with timing \(testCase.activeDuration)s/\(testCase.duration)s to be rejected.")
+        }
     }
 
     func testRPTCRepeatersPreserveTheSourceSetTimingWithoutInventedGripTargets() {
@@ -2191,7 +2252,9 @@ final class PlanStorageTests: XCTestCase {
         steps: [WorkoutStepDefinition],
         boardID: String? = nil,
         boardMappings: [BoardMappingDefinition] = [],
-        provenance: RoutineProvenance = .adapted
+        provenance: RoutineProvenance = .adapted,
+        planID: String = "test.plan",
+        sourceURL: URL? = URL(string: "https://example.com/test")
     ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
@@ -2203,13 +2266,13 @@ final class PlanStorageTests: XCTestCase {
             blocks: [WorkoutBlockDefinition(id: "test.block", steps: steps)],
             plans: [
                 PlanDefinition(
-                    id: "test.plan",
+                    id: planID,
                     metadata: PlanMetadata(
                         title: "Test plan",
                         subtitle: "Storage tests",
                         level: "Test",
                         sourceLabel: "Test fixture",
-                        sourceURL: URL(string: "https://example.com/test")!,
+                        sourceURL: sourceURL,
                         provenance: provenance
                     ),
                     boardID: boardID,
