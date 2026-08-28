@@ -850,7 +850,7 @@ private struct BoardPackageBoardDocument: Decodable {
     let productURL: URL
     let dimensions: String?
     let aspectRatio: Double
-    let equipmentObjects: [EquipmentObject]
+    let equipmentObjects: [BoardPackageEquipmentObjectDocument]
     let presentations: [BoardPackagePresentationDocument]
     let holds: [BoardPackageHoldDocument]
 
@@ -880,10 +880,12 @@ private struct BoardPackageBoardDocument: Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        equipmentObjects = try container.decodeIfPresent(
-            [EquipmentObject].self,
-            forKey: .equipmentObjects
-        ) ?? [.init(id: "primary")]
+        equipmentObjects = container.contains(.equipmentObjects)
+            ? try container.decode(
+                [BoardPackageEquipmentObjectDocument].self,
+                forKey: .equipmentObjects
+            )
+            : [.init(id: "primary")]
         presentations = try container.decode(
             [BoardPackagePresentationDocument].self,
             forKey: .presentations
@@ -909,13 +911,35 @@ private struct BoardPackageBoardDocument: Decodable {
             subtitle: subtitle,
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
-            equipmentObjects: equipmentObjects,
+            equipmentObjects: equipmentObjects.map(\.equipmentObject),
             holds: holds,
             semanticHolds: [:],
             productURL: productURL,
             photoAssetName: nil,
             presentations: presentations
         )
+    }
+}
+
+private struct BoardPackageEquipmentObjectDocument: Decodable {
+    let id: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+    }
+
+    init(id: String) {
+        self.id = id
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["id"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+    }
+
+    var equipmentObject: EquipmentObject {
+        EquipmentObject(id: id)
     }
 }
 
@@ -1030,10 +1054,9 @@ private struct BoardPackageHoldDocument: Decodable {
             ? try container.decode(String.self, forKey: .pairedHoldID)
             : nil
         presentationID = try container.decode(String.self, forKey: .presentationID)
-        equipmentObjectID = try container.decodeIfPresent(
-            String.self,
-            forKey: .equipmentObjectID
-        ) ?? "primary"
+        equipmentObjectID = container.contains(.equipmentObjectID)
+            ? try container.decode(String.self, forKey: .equipmentObjectID)
+            : "primary"
     }
 
     func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardHold {

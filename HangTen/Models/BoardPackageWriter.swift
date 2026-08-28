@@ -62,10 +62,9 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        equipmentObjects = try container.decodeIfPresent(
-            [EquipmentObject].self,
-            forKey: .equipmentObjects
-        ) ?? [.init(id: "primary")]
+        equipmentObjects = container.contains(.equipmentObjects)
+            ? try container.decode([EquipmentObject].self, forKey: .equipmentObjects)
+            : [.init(id: "primary")]
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
     }
@@ -238,10 +237,9 @@ struct BoardEditableHold: Equatable, Decodable {
         pairedHoldID = declaresPairedHoldID
             ? try container.decode(String.self, forKey: .pairedHoldID)
             : nil
-        equipmentObjectID = try container.decodeIfPresent(
-            String.self,
-            forKey: .equipmentObjectID
-        ) ?? "primary"
+        equipmentObjectID = container.contains(.equipmentObjectID)
+            ? try container.decode(String.self, forKey: .equipmentObjectID)
+            : "primary"
         presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 }

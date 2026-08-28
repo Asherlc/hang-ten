@@ -37,6 +37,54 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertTrue(board.holds.allSatisfy { $0.equipmentObjectID == "primary" })
     }
 
+    func testStoreRejectsExplicitNullEquipmentObjectFields() throws {
+        let mutations: [(String, (inout [String: Any]) throws -> Void)] = [
+            ("board objects", { board in
+                board["equipmentObjects"] = NSNull()
+            }),
+            ("hold object", { board in
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["equipmentObjectID"] = NSNull()
+                board["holds"] = holds
+            }),
+        ]
+
+        for (name, mutation) in mutations {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json"),
+                    mutation: mutation
+                )
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+                )
+            }
+        }
+    }
+
+    func testStoreRejectsUnknownKeysInEquipmentObjects() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["equipmentObjects"] = [["id": "primary", "unexpected": true]]
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
+    }
+
     func testStoreLoadsPackageWithOmittedDimensions() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(

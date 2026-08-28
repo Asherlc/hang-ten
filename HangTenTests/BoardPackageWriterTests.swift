@@ -310,6 +310,29 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testEveryBundledPackageExplicitlyAssignsEveryHoldToAnEquipmentObject() throws {
+        for slug in try bundledSlugs() {
+            let data = try Data(
+                contentsOf: repositoryHangboardsURL().appendingPathComponent("\(slug)/board.json")
+            )
+            let document = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: data) as? [String: Any],
+                "\(slug) board document"
+            )
+            let objects = try XCTUnwrap(document["equipmentObjects"] as? [[String: Any]])
+            XCTAssertFalse(objects.isEmpty, "\(slug) must declare equipment objects")
+            let holds = try XCTUnwrap(document["holds"] as? [[String: Any]])
+
+            for hold in holds {
+                let holdID = try XCTUnwrap(hold["id"] as? String)
+                XCTAssertNotNil(
+                    hold["equipmentObjectID"] as? String,
+                    "\(slug) hold \(holdID) must explicitly declare equipmentObjectID"
+                )
+            }
+        }
+    }
+
     func testWriterRoundTripPreservesOmittedDimensions() throws {
         let source = String(decoding: try BoardPackageWriter.data(for: makeDocument()), as: UTF8.self)
         let withoutDimensions = source.replacingOccurrences(
