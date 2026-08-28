@@ -81,6 +81,9 @@ struct PlanMetadata: Codable, Hashable {
     let sourceURL: URL?
     let provenance: RoutineProvenance
     let category: String
+    /// Curated athlete-facing labels. Unlike `tags`, these never expose
+    /// library provenance or runtime requirements in the Plans filter.
+    let workoutLabels: [String]
     let tags: [String]
     let equipment: [String]
     let notes: [String]
@@ -93,6 +96,7 @@ struct PlanMetadata: Codable, Hashable {
         sourceURL: URL?,
         provenance: RoutineProvenance,
         category: String = "general",
+        workoutLabels: [String] = [],
         tags: [String] = [],
         equipment: [String] = [],
         notes: [String] = []
@@ -104,9 +108,63 @@ struct PlanMetadata: Codable, Hashable {
         self.sourceURL = sourceURL
         self.provenance = provenance
         self.category = category
+        self.workoutLabels = workoutLabels
         self.tags = tags
         self.equipment = equipment
         self.notes = notes
+    }
+
+    var athleteFacingLabels: [String] {
+        if provenance == .custom {
+            return tags
+        }
+        return workoutLabels
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case title
+        case subtitle
+        case level
+        case sourceLabel
+        case sourceURL
+        case provenance
+        case category
+        case workoutLabels
+        case tags
+        case equipment
+        case notes
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        title = try container.decode(String.self, forKey: .title)
+        subtitle = try container.decode(String.self, forKey: .subtitle)
+        level = try container.decode(String.self, forKey: .level)
+        sourceLabel = try container.decode(String.self, forKey: .sourceLabel)
+        sourceURL = try container.decodeIfPresent(URL.self, forKey: .sourceURL)
+        provenance = try container.decode(RoutineProvenance.self, forKey: .provenance)
+        category = try container.decodeIfPresent(String.self, forKey: .category) ?? "general"
+        workoutLabels = try container.decodeIfPresent([String].self, forKey: .workoutLabels) ?? []
+        tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
+        equipment = try container.decodeIfPresent([String].self, forKey: .equipment) ?? []
+        notes = try container.decodeIfPresent([String].self, forKey: .notes) ?? []
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(title, forKey: .title)
+        try container.encode(subtitle, forKey: .subtitle)
+        try container.encode(level, forKey: .level)
+        try container.encode(sourceLabel, forKey: .sourceLabel)
+        try container.encodeIfPresent(sourceURL, forKey: .sourceURL)
+        try container.encode(provenance, forKey: .provenance)
+        try container.encode(category, forKey: .category)
+        if !workoutLabels.isEmpty {
+            try container.encode(workoutLabels, forKey: .workoutLabels)
+        }
+        try container.encode(tags, forKey: .tags)
+        try container.encode(equipment, forKey: .equipment)
+        try container.encode(notes, forKey: .notes)
     }
 }
 
@@ -1477,6 +1535,36 @@ private final class PlanLibraryBundleToken {}
 
 // MARK: - Built-in plan library definition
 
+/// Source-audited workout labels for the built-in library. These are assigned
+/// from documented routine steps, never inferred from a plan title.
+private enum PlanWorkoutLabelAudit {
+    static func labels(for planID: String) -> [String] {
+        labelsByPlanID[planID] ?? []
+    }
+
+    private static let labelsByPlanID: [String: [String]] = [
+        "metolius.generic-ten-minute.entry": ["max-effort", "pull-ups", "core"],
+        "metolius.generic-ten-minute.intermediate": ["max-effort", "pull-ups", "core"],
+        "metolius.generic-ten-minute.advanced": ["max-effort", "pull-ups"],
+        "metolius.contact.entry": ["max-effort", "pull-ups", "core"],
+        "metolius.contact.intermediate": ["max-effort", "pull-ups", "core"],
+        "metolius.contact.advanced": ["max-effort", "pull-ups", "core"],
+        "metolius.simulator-3d.entry": ["max-effort", "pull-ups", "core"],
+        "metolius.simulator-3d.intermediate": ["max-effort", "pull-ups", "core"],
+        "metolius.simulator-3d.advanced": ["max-effort", "pull-ups", "core"],
+        "research.max-hangs": ["max-effort"],
+        "research.force-feedback-f100": ["max-effort"],
+        "research.seven-three-repeaters": ["repeaters"],
+        "coach.horst-seven-fifty-three": ["max-effort"],
+        "coach.bechtel-three-six-nine": ["max-effort"],
+        "device.zlagboard-sixty-sixty": ["endurance"],
+        "hoopers-beta.introductory-home-hangboard": ["warm-up", "pull-ups", "core"],
+        "method.intermediate-hangboarding.repeaters": ["repeaters"],
+        "method.intermediate-hangboarding.emom": ["max-effort", "pull-ups", "core"],
+        "rei.hangboard-sample-workout": ["warm-up", "pull-ups"]
+    ]
+}
+
 /// Converts the seed routines into the bundled plan library without changing
 /// their resolved timing or order.
 enum BuiltInPlanLibraryDefinition {
@@ -1624,6 +1712,7 @@ enum BuiltInPlanLibraryDefinition {
             sourceURL: plan.sourceURL,
             provenance: plan.provenance,
             category: category,
+            workoutLabels: PlanWorkoutLabelAudit.labels(for: plan.id),
             tags: tags,
             equipment: ["hangboard"],
             notes: notes
