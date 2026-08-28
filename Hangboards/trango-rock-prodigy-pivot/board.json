@@ -5057,7 +5057,8 @@
           }
         }
       ],
-      "presentationID": "orientation-3"
+      "presentationID": "orientation-3",
+      "fingerCapacity": 4
     },
     {
       "id": "hold-44",
