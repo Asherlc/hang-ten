@@ -127,6 +127,62 @@ class HoldTargetResolverTest {
     }
 
     @Test
+    fun unknownSemanticResolvesNoHolds() {
+        val board = boardWith(
+            BoardHold(id = "edge", name = "Edge", kind = "edge", presentationId = "primary", geometry = emptyList()),
+        )
+
+        assertEquals(emptySet<String>(), resolveTargets(listOf(HoldTarget(semantic = "unknown-semantic")), board))
+    }
+
+    @Test
+    fun semanticListWithOnlyUnknownMappingsResolvesNoHolds() {
+        val board = boardWith(
+            BoardHold(id = "edge", name = "Edge", kind = "edge", presentationId = "primary", geometry = emptyList()),
+        )
+
+        assertEquals(
+            emptySet<String>(),
+            resolveTargets(listOf(HoldTarget(semantics = listOf("unknown-left", "unknown-right"))), board),
+        )
+    }
+
+    @Test
+    fun absentFeatureWithoutFallbackResolvesNoHolds() {
+        val board = boardWith(
+            BoardHold(
+                id = "large-edge",
+                name = "Large edge",
+                kind = "edge",
+                features = setOf("largeEdge"),
+                presentationId = "primary",
+                geometry = emptyList(),
+            ),
+        )
+
+        assertEquals(emptySet<String>(), resolveTargets(listOf(HoldTarget(feature = "mediumEdge")), board))
+    }
+
+    @Test
+    fun fingerCapacityWithoutAQualifyingHoldResolvesNoHolds() {
+        val board = boardWith(
+            BoardHold(
+                id = "three-finger-pocket",
+                name = "Three finger pocket",
+                kind = "pocket",
+                fingerCapacity = 3,
+                presentationId = "primary",
+                geometry = emptyList(),
+            ),
+        )
+
+        assertEquals(
+            emptySet<String>(),
+            resolveTargets(listOf(HoldTarget(kind = "pocket", fingerCapacity = 2)), board),
+        )
+    }
+
+    @Test
     fun explicitHoldIdsUseBoardOrderAndIgnoreIdsFromAnotherBoard() {
         val board = boardWith(
             BoardHold(id = "left", name = "Left", kind = "edge", presentationId = "primary", geometry = emptyList()),
