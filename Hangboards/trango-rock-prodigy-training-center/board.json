@@ -579,7 +579,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "edge-thin-crimp-left",
@@ -1912,7 +1913,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     }
   ],
   "presentations": [
