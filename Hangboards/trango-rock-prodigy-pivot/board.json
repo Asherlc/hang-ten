@@ -1861,7 +1861,7 @@
     {
       "id": "hold-51",
       "name": "Hold 51",
-      "kind": "pinch",
+      "kind": "gaston",
       "geometry": [
         {
           "frame": {
@@ -1931,12 +1931,13 @@
       ],
       "presentationID": "orientation-2",
       "fingerCapacity": 4,
-      "handCapacity": 1
+      "handCapacity": 1,
+      "pairedHoldID": "hold-4"
     },
     {
       "id": "hold-4",
       "name": "Hold 4",
-      "kind": "pinch",
+      "kind": "gaston",
       "geometry": [
         {
           "frame": {
@@ -2006,7 +2007,8 @@
       ],
       "presentationID": "orientation-2",
       "fingerCapacity": 4,
-      "handCapacity": 1
+      "handCapacity": 1,
+      "pairedHoldID": "hold-51"
     },
     {
       "id": "hold-53",
