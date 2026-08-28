@@ -684,7 +684,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "edge-thin-crimp-right",
@@ -705,7 +706,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "pocket-three-finger-slot-left",
@@ -827,7 +829,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "pocket-three-finger-slot-right",
@@ -949,7 +952,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     },
     {
       "id": "pocket-index-middle-deep-left",
