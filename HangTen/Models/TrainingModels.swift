@@ -2762,13 +2762,13 @@ enum LegacyPlanSeedCatalog {
             metoliusSimulator3DIntermediate,
             metoliusSimulator3DAdvanced
         ]
+        let officialPlans = boardSpecificMetoliusPlans + [rptcRepeaters]
         let adaptedPlans = [
             maxHangs,
             forceF80,
             forceF100,
             evaIntHangs,
             repeaters,
-            rptcRepeaters,
             abrahangs,
             horst753,
             ladders,
@@ -2824,9 +2824,10 @@ enum LegacyPlanSeedCatalog {
                     plan.boardID == LegacyPlanSeedBoardMappings.metoliusSimulator3DBoardID
             )
         }
+        assert(officialPlans.allSatisfy { $0.provenance == .official })
         assert(adaptedPlans.allSatisfy { $0.provenance == .adapted })
 
-        let plans = metoliusPlans + boardSpecificMetoliusPlans + adaptedPlans
+        let plans = metoliusPlans + officialPlans + adaptedPlans
         func targetResolves(_ target: HoldTarget, on board: TrainingBoard) -> Bool {
             let boardHoldIDs = Set(board.holds.map(\.id))
             if !target.holdIDs.isEmpty {
@@ -2870,6 +2871,6 @@ enum LegacyPlanSeedCatalog {
         }
         #endif
 
-        return metoliusPlans + boardSpecificMetoliusPlans + adaptedPlans
+        return metoliusPlans + officialPlans + adaptedPlans
     }()
 }

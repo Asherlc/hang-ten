@@ -1322,6 +1322,14 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(plan.steps[7].instruction.contains("3-minute rest period between sets"))
     }
 
+    func testRoutineCatalogIncludesRPTCAsAnOfficialPlan() throws {
+        let plan = try XCTUnwrap(
+            LegacyPlanSeedCatalog.all.first { $0.id == "rptc.seven-three-repeaters" }
+        )
+
+        XCTAssertEqual(plan.provenance, .official)
+    }
+
     func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
         let terminalSteps = try LegacyPlanSeedCatalog.all
             .filter { $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id }

@@ -4724,6 +4724,137 @@
       "title" : "Metolius Simulator 3D · Advanced"
     },
     {
+      "id" : "rptc.seven-three-repeaters.warm-up",
+      "steps" : [
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-1",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 1 of 7"
+        }
+      ],
+      "title" : "RPTC repeater set · rep 1 of 7"
+    },
+    {
+      "id" : "rptc.seven-three-repeaters.main",
+      "steps" : [
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-2",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 2 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-3",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 3 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-4",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 4 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-5",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 5 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-6",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 6 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 2m 53s rest to 4:00",
+          "activeDuration" : 7,
+          "duration" : 180,
+          "id" : "rptc-repeaters-set-rep-7",
+          "instruction" : "Complete the seventh 7-second two-handed dead hang on the grip you selected, then use the table's 2:53 recovery to reach 4:00 from the first hang. The source separately prescribes the following 3-minute rest period between sets; do not treat the table recovery as that rest. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 7 of 7"
+        },
+        {
+          "accessory" : "3-minute rest period between sets",
+          "duration" : 180,
+          "id" : "rptc-repeaters-between-sets-rest",
+          "instruction" : "Rest 3 minutes between sets. If you chose another of the source-permitted 1–3 sets on this grip, begin it after this rest; then move to the next of approximately 5–10 grips.",
+          "phase" : "rest",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · between-set rest"
+        }
+      ],
+      "title" : "RPTC · 7\/3 Repeaters"
+    },
+    {
       "id" : "research.max-hangs.warm-up",
       "steps" : [
         {
@@ -12266,137 +12397,6 @@
       "title" : "7\/3 Repeaters"
     },
     {
-      "id" : "rptc.seven-three-repeaters.warm-up",
-      "steps" : [
-        {
-          "accessory" : "7s two-handed deadhang · 3s rest",
-          "activeDuration" : 7,
-          "duration" : 10,
-          "id" : "rptc-repeaters-set-rep-1",
-          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
-          "phase" : "hang",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · rep 1 of 7"
-        }
-      ],
-      "title" : "RPTC repeater set · rep 1 of 7"
-    },
-    {
-      "id" : "rptc.seven-three-repeaters.main",
-      "steps" : [
-        {
-          "accessory" : "7s two-handed deadhang · 3s rest",
-          "activeDuration" : 7,
-          "duration" : 10,
-          "id" : "rptc-repeaters-set-rep-2",
-          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
-          "phase" : "hang",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · rep 2 of 7"
-        },
-        {
-          "accessory" : "7s two-handed deadhang · 3s rest",
-          "activeDuration" : 7,
-          "duration" : 10,
-          "id" : "rptc-repeaters-set-rep-3",
-          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
-          "phase" : "hang",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · rep 3 of 7"
-        },
-        {
-          "accessory" : "7s two-handed deadhang · 3s rest",
-          "activeDuration" : 7,
-          "duration" : 10,
-          "id" : "rptc-repeaters-set-rep-4",
-          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
-          "phase" : "hang",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · rep 4 of 7"
-        },
-        {
-          "accessory" : "7s two-handed deadhang · 3s rest",
-          "activeDuration" : 7,
-          "duration" : 10,
-          "id" : "rptc-repeaters-set-rep-5",
-          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
-          "phase" : "hang",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · rep 5 of 7"
-        },
-        {
-          "accessory" : "7s two-handed deadhang · 3s rest",
-          "activeDuration" : 7,
-          "duration" : 10,
-          "id" : "rptc-repeaters-set-rep-6",
-          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
-          "phase" : "hang",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · rep 6 of 7"
-        },
-        {
-          "accessory" : "7s two-handed deadhang · 2m 53s rest to 4:00",
-          "activeDuration" : 7,
-          "duration" : 180,
-          "id" : "rptc-repeaters-set-rep-7",
-          "instruction" : "Complete the seventh 7-second two-handed dead hang on the grip you selected, then use the table's 2:53 recovery to reach 4:00 from the first hang. The source separately prescribes the following 3-minute rest period between sets; do not treat the table recovery as that rest. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout.",
-          "phase" : "hang",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · rep 7 of 7"
-        },
-        {
-          "accessory" : "3-minute rest period between sets",
-          "duration" : 180,
-          "id" : "rptc-repeaters-between-sets-rest",
-          "instruction" : "Rest 3 minutes between sets. If you chose another of the source-permitted 1–3 sets on this grip, begin it after this rest; then move to the next of approximately 5–10 grips.",
-          "phase" : "rest",
-          "segments" : [
-
-          ],
-          "targets" : [
-
-          ],
-          "title" : "RPTC repeater set · between-set rest"
-        }
-      ],
-      "title" : "RPTC · 7\/3 Repeaters"
-    },
-    {
       "id" : "research.abrahangs.warm-up",
       "steps" : [
         {
@@ -18944,6 +18944,37 @@
     {
       "blocks" : [
         {
+          "blockID" : "rptc.seven-three-repeaters.warm-up"
+        },
+        {
+          "blockID" : "rptc.seven-three-repeaters.main"
+        }
+      ],
+      "id" : "rptc.seven-three-repeaters",
+      "metadata" : {
+        "category" : "manufacturer",
+        "equipment" : [
+          "hangboard"
+        ],
+        "level" : "Self-selected",
+        "notes" : [
+          "Official Rock Prodigy set template: seven 7s\/3s two-handed dead-hang repetitions, the table's 2m 53s recovery to 4:00, then a separate 3-minute between-set rest.",
+          "The source leaves the 5–10 grips and 1–3 sets per grip to the athlete, so the app intentionally supplies no target, grip order, or fixed workout duration."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Rock Prodigy Training Center Use Instructions",
+        "sourceURL" : "https:\/\/cdn.shopify.com\/s\/files\/1\/0282\/7557\/2841\/files\/RPTC_Use_Instructions.pdf?v=1588608155",
+        "subtitle" : "Self-selected 5–10 grip routine; 1–3 sets per grip.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "RPTC · 7\/3 Repeaters"
+      }
+    },
+    {
+      "blocks" : [
+        {
           "blockID" : "research.max-hangs.warm-up"
         },
         {
@@ -19091,37 +19122,6 @@
           "research"
         ],
         "title" : "7\/3 Repeaters"
-      }
-    },
-    {
-      "blocks" : [
-        {
-          "blockID" : "rptc.seven-three-repeaters.warm-up"
-        },
-        {
-          "blockID" : "rptc.seven-three-repeaters.main"
-        }
-      ],
-      "id" : "rptc.seven-three-repeaters",
-      "metadata" : {
-        "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
-        "level" : "Self-selected",
-        "notes" : [
-          "Official Rock Prodigy set template: seven 7s\/3s two-handed dead-hang repetitions, the table's 2m 53s recovery to 4:00, then a separate 3-minute between-set rest.",
-          "The source leaves the 5–10 grips and 1–3 sets per grip to the athlete, so the app intentionally supplies no target, grip order, or fixed workout duration."
-        ],
-        "provenance" : "official",
-        "sourceLabel" : "Rock Prodigy Training Center Use Instructions",
-        "sourceURL" : "https:\/\/cdn.shopify.com\/s\/files\/1\/0282\/7557\/2841\/files\/RPTC_Use_Instructions.pdf?v=1588608155",
-        "subtitle" : "Self-selected 5–10 grip routine; 1–3 sets per grip.",
-        "tags" : [
-          "built-in",
-          "manufacturer"
-        ],
-        "title" : "RPTC · 7\/3 Repeaters"
       }
     },
     {
