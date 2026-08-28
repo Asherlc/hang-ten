@@ -1316,10 +1316,10 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(plan.steps.prefix(7).map(\.timedWorkDuration), Array(repeating: 7, count: 7))
         XCTAssertEqual(plan.steps[6].duration, 180)
         XCTAssertTrue(plan.steps[6].instruction.contains("2:53"))
-        XCTAssertTrue(plan.steps[6].instruction.contains("not the between-set rest"))
+        XCTAssertTrue(plan.steps[6].instruction.contains("do not treat the table recovery as that rest"))
         XCTAssertEqual(plan.steps[7].phase, .rest)
         XCTAssertEqual(plan.steps[7].duration, 180)
-        XCTAssertTrue(plan.steps[7].instruction.contains("3-minute rest period between sets"))
+        XCTAssertTrue(plan.steps[7].instruction.contains("Rest 3 minutes between sets."))
     }
 
     func testRoutineCatalogIncludesRPTCAsAnOfficialPlan() throws {
