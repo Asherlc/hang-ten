@@ -8,6 +8,8 @@ final class SettingsBoardEditorVisibilityUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["Choose your session."].waitForExistence(timeout: 10))
         XCTAssertFalse(app.staticTexts["Learn more"].exists)
+        XCTAssertFalse(app.staticTexts["Each routine includes its source link."].exists)
+        XCTAssertFalse(app.staticTexts["Read the evidence overview"].exists)
     }
 
     func testBoardPackagesSectionMatchesBuildConfiguration() throws {
