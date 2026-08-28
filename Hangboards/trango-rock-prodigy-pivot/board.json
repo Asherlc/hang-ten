@@ -1861,7 +1861,7 @@
     {
       "id": "hold-51",
       "name": "Hold 51",
-      "kind": "edge",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
@@ -1936,7 +1936,7 @@
     {
       "id": "hold-4",
       "name": "Hold 4",
-      "kind": "edge",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
