@@ -1793,10 +1793,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.046834479319,
-            "y": 0.272100517241,
-            "width": 0.042335766423,
-            "height": 0.12
+            "x": 0.011369171127,
+            "y": 0.088694395402,
+            "width": 0.105909218167,
+            "height": 0.303406121839
           },
           "shape": {
             "type": "path",
@@ -1805,7 +1805,7 @@
                 "command": "move",
                 "to": [
                   0.0,
-                  0.0
+                  0.370096230717
                 ]
               },
               {
@@ -1818,14 +1818,14 @@
               {
                 "command": "line",
                 "to": [
-                  1.0,
+                  0.734601538575,
                   1.0
                 ]
               },
               {
                 "command": "line",
                 "to": [
-                  0.0,
+                  0.334865168539,
                   1.0
                 ]
               },
@@ -1837,7 +1837,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4
+      "fingerCapacity": 4,
+      "handCapacity": 1
     }
   ],
   "presentations": [
