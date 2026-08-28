@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repo_root=${0:A:h:h:h}
-cleanup_script="$repo_root/scripts/conductor-resource-cleanup.sh"
+cleanup_script="$repo_root/scripts/paseo-resource-cleanup.sh"
 temp_dir=$(mktemp -d)
 trap 'rm -rf "$temp_dir"' EXIT
 
@@ -31,13 +31,13 @@ case "$2" in
     if [[ -n "$prune_requery_uuid" && "$list_count" -eq 1 ]]; then
       print -- '== Devices =='
       print -- '-- iOS 26.5 --'
-      print -r -- "    Hang Ten Conductor alpha Review Transition ($prune_requery_uuid) (Shutdown)"
+      print -r -- "    Hang Ten Paseo alpha Review Transition ($prune_requery_uuid) (Shutdown)"
       exit 0
     fi
     if [[ "$list_count" -eq 2 && -n "${PRUNE_TRANSITION_UUID:-}" ]]; then
       print -- '== Devices =='
       print -- '-- iOS 26.5 --'
-      print -r -- "    Hang Ten Conductor alpha Review Transition ($PRUNE_TRANSITION_UUID) (Booted)"
+      print -r -- "    Hang Ten Paseo alpha Review Transition ($PRUNE_TRANSITION_UUID) (Booted)"
       exit 0
     fi
     if [[ "$list_count" -eq 2 && -n "${PRUNE_RENAME_UUID:-}" ]]; then
@@ -49,25 +49,25 @@ case "$2" in
     if [[ "$list_count" -eq 2 && -n "${PRUNE_NAME_UUID:-}" ]]; then
       print -- '== Devices =='
       print -- '-- iOS 26.5 --'
-      print -r -- "    Hang Ten Conductor alpha Review named $PRUNE_NAME_UUID (77777777-7777-7777-7777-777777777777) (Shutdown)"
+      print -r -- "    Hang Ten Paseo alpha Review named $PRUNE_NAME_UUID (77777777-7777-7777-7777-777777777777) (Shutdown)"
       exit 0
     fi
     cat <<'DEVICES'
 == Devices ==
 -- iOS 26.5 --
-    Hang Ten Conductor alpha Review (11111111-1111-1111-1111-111111111111) (Shutdown)
-    Hang Ten Conductor alpha Review Lowercase (ABABABAB-ABAB-ABAB-ABAB-ABABABABABAB) (Shutdown)
-    Hang Ten Conductor alpha Lowercase Device (cdcdcdcd-cdcd-cdcd-cdcd-cdcdcdcdcdcd) (Shutdown)
-    Hang Ten Conductor alpha Review Booted (74747474-7474-7474-7474-747474747474) (Booted)
-    Hang Ten Conductor alpha Running (22222222-2222-2222-2222-222222222222) (Booted)
-    Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333) (Shutdown)
+    Hang Ten Paseo alpha Review (11111111-1111-1111-1111-111111111111) (Shutdown)
+    Hang Ten Paseo alpha Review Lowercase (ABABABAB-ABAB-ABAB-ABAB-ABABABABABAB) (Shutdown)
+    Hang Ten Paseo alpha Lowercase Device (cdcdcdcd-cdcd-cdcd-cdcd-cdcdcdcdcdcd) (Shutdown)
+    Hang Ten Paseo alpha Review Booted (74747474-7474-7474-7474-747474747474) (Booted)
+    Hang Ten Paseo alpha Running (22222222-2222-2222-2222-222222222222) (Booted)
+    Hang Ten Paseo beta Review (33333333-3333-3333-3333-333333333333) (Shutdown)
     iPhone 17 Pro (44444444-4444-4444-4444-444444444444) (Shutdown)
-    Hang Ten Conductor alphabet Review (55555555-5555-5555-5555-555555555555) (Shutdown)
-    Hang Ten Conductor alpha Scratch (66666666-6666-6666-6666-666666666666) (Shutdown)
+    Hang Ten Paseo alphabet Review (55555555-5555-5555-5555-555555555555) (Shutdown)
+    Hang Ten Paseo alpha Scratch (66666666-6666-6666-6666-666666666666) (Shutdown)
     iPhone Review (abababab-abab-abab-abab-abababababab) (Shutdown)
-    Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888) (Shutdown)
-    Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999) (Shutdown)
-    Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212) (Shutdown)
+    Hang Ten Paseo alpha Review 263 (88888888-8888-8888-8888-888888888888) (Shutdown)
+    Hang Ten Paseo alpha Review 20260803 (99999999-9999-9999-9999-999999999999) (Shutdown)
+    Hang Ten Paseo alpha Review Transition (12121212-1212-1212-1212-121212121212) (Shutdown)
     HangTen bariloche Task5 Review1 20260802 (10101010-1010-1010-1010-101010101010) (Shutdown)
     Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020) (Shutdown)
     Hang Ten Worcester Validation (30303030-3030-3030-3030-303030303030) (Shutdown)
@@ -83,9 +83,9 @@ case "$2" in
     HangTennis Review (31313131-3131-3131-3131-313131313131) (Shutdown)
     Hang Tenacious Review (32323232-3232-3232-3232-323232323232) (Shutdown)
 DEVICES
-    print -r -- '    Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777) (Shutdown)   '
+    print -r -- '    Hang Ten Paseo alpha Review 2 (77777777-7777-7777-7777-777777777777) (Shutdown)   '
     if [[ -n "${ARCHIVE_MALFORMED_UUID:-}" ]]; then
-      print -r -- "    Hang Ten Conductor alpha Review ($ARCHIVE_MALFORMED_UUID) [malformed-state]"
+      print -r -- "    Hang Ten Paseo alpha Review ($ARCHIVE_MALFORMED_UUID) [malformed-state]"
     fi
     ;;
   shutdown)
@@ -146,9 +146,20 @@ run_cleanup() {
   PATH="$fake_bin:$PATH" XCRUN_CALL_LOG="$call_log" XCRUN_ALL_CALL_LOG="$all_call_log" "$cleanup_script" "$@"
 }
 
-workspace="$temp_dir/workspace"
-manifest="$workspace/.context/conductor-owned-simulators"
-pending_manifest="$workspace/.context/conductor-pending-simulators"
+: > "$call_log"
+: > "$all_call_log"
+if run_cleanup archive; then
+  print -u2 -- 'archive accepted a missing PASEO_WORKTREE_PATH'
+  exit 1
+fi
+[[ ! -s "$all_call_log" ]] || {
+  print -u2 -- 'archive invoked xcrun without PASEO_WORKTREE_PATH'
+  exit 1
+}
+
+workspace="$temp_dir/alpha"
+manifest="$workspace/.context/paseo-owned-simulators"
+pending_manifest="$workspace/.context/paseo-pending-simulators"
 mkdir -p "${manifest:h}"
 
 print -r -- '11111111-1111-1111-1111-111111111111
@@ -156,7 +167,7 @@ print -r -- '11111111-1111-1111-1111-111111111111
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive
+PASEO_WORKTREE_PATH="$workspace" run_cleanup archive
 archive_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$archive_calls"
 assert_contains 'shutdown 22222222-2222-2222-2222-222222222222' "$archive_calls"
@@ -168,7 +179,7 @@ assert_all_call_log_contains_list_devices
 print -r -- 'abababab-abab-abab-abab-abababababab' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive
+PASEO_WORKTREE_PATH="$workspace" run_cleanup archive
 lowercase_uuid_calls=$(<"$call_log")
 assert_contains 'delete ABABABAB-ABAB-ABAB-ABAB-ABABABABABAB' "$lowercase_uuid_calls"
 assert_not_contains 'delete abababab-abab-abab-abab-abababababab' "$lowercase_uuid_calls"
@@ -180,7 +191,7 @@ assert_not_contains 'delete abababab-abab-abab-abab-abababababab' "$lowercase_uu
 print -r -- 'CDCDCDCD-CDCD-CDCD-CDCD-CDCDCDCDCDCD' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive
+PASEO_WORKTREE_PATH="$workspace" run_cleanup archive
 lowercase_device_record_calls=$(<"$call_log")
 assert_contains 'delete CDCDCDCD-CDCD-CDCD-CDCD-CDCDCDCDCDCD' "$lowercase_device_record_calls"
 [[ ! -s "$manifest" ]] || {
@@ -194,7 +205,7 @@ print -r -- '74747474-7474-7474-7474-747474747474
 bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' > "$pending_manifest"
 : > "$call_log"
 : > "$all_call_log"
-if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+if PASEO_WORKTREE_PATH="$workspace" run_cleanup archive; then
   print -u2 -- 'archive accepted a pending simulator owned by another workspace'
   exit 1
 fi
@@ -210,7 +221,7 @@ assert_all_call_log_contains_list_devices
 print -r -- 'not-a-uuid' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+if PASEO_WORKTREE_PATH="$workspace" run_cleanup archive; then
   print -u2 -- 'archive accepted a malformed manifest entry'
   exit 1
 fi
@@ -223,7 +234,7 @@ malformed_uuid=DEDEDEDE-DEDE-DEDE-DEDE-DEDEDEDEDEDE
 print -r -- "$malformed_uuid" > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-if malformed_output=$(ARCHIVE_MALFORMED_UUID="$malformed_uuid" CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive 2>&1); then
+if malformed_output=$(ARCHIVE_MALFORMED_UUID="$malformed_uuid" PASEO_WORKTREE_PATH="$workspace" run_cleanup archive 2>&1); then
   print -u2 -- 'archive accepted a present but malformed simulator record'
   exit 1
 fi
@@ -240,7 +251,7 @@ assert_contains "Skipping simulator with an unparseable device record: $malforme
 print -r -- '33333333-3333-3333-3333-333333333333' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+if PASEO_WORKTREE_PATH="$workspace" run_cleanup archive; then
   print -u2 -- 'archive accepted another workspace device'
   exit 1
 fi
@@ -250,7 +261,7 @@ assert_not_contains 'delete 33333333-3333-3333-3333-333333333333' "$mismatched_c
 print -r -- '55555555-5555-5555-5555-555555555555' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-if CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+if PASEO_WORKTREE_PATH="$workspace" run_cleanup archive; then
   print -u2 -- 'archive accepted a workspace name with alpha as a substring'
   exit 1
 fi
@@ -260,7 +271,7 @@ assert_not_contains 'delete 55555555-5555-5555-5555-555555555555' "$alphabet_cal
 print -r -- '22222222-2222-2222-2222-222222222222' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-if SHUTDOWN_FAIL_UUID=22222222-2222-2222-2222-222222222222 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+if SHUTDOWN_FAIL_UUID=22222222-2222-2222-2222-222222222222 PASEO_WORKTREE_PATH="$workspace" run_cleanup archive; then
   print -u2 -- 'archive returned success after a shutdown failure'
   exit 1
 fi
@@ -271,7 +282,7 @@ assert_not_contains 'delete 22222222-2222-2222-2222-222222222222' "$shutdown_fai
 print -r -- '11111111-1111-1111-1111-111111111111' > "$manifest"
 : > "$call_log"
 : > "$all_call_log"
-if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+if DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 PASEO_WORKTREE_PATH="$workspace" run_cleanup archive; then
   print -u2 -- 'archive returned success after a delete failure'
   exit 1
 fi
@@ -283,7 +294,7 @@ print -r -- '11111111-1111-1111-1111-111111111111' > "$pending_manifest"
 duplicate_delete_count_file="$temp_dir/duplicate-delete-count"
 : > "$call_log"
 : > "$all_call_log"
-CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha SECOND_DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 SECOND_DELETE_COUNT_FILE="$duplicate_delete_count_file" run_cleanup archive
+PASEO_WORKTREE_PATH="$workspace" SECOND_DELETE_FAIL_UUID=11111111-1111-1111-1111-111111111111 SECOND_DELETE_COUNT_FILE="$duplicate_delete_count_file" run_cleanup archive
 duplicate_archive_calls=$(<"$call_log")
 duplicate_archive_delete_count=$(grep -c '^delete 11111111-1111-1111-1111-111111111111$' "$call_log" || true)
 [[ "$duplicate_archive_delete_count" -eq 1 ]] || {
@@ -307,7 +318,7 @@ print -r -- '11111111-1111-1111-1111-111111111111
 bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' > "$pending_manifest"
 : > "$call_log"
 : > "$all_call_log"
-if DELETE_FAIL_UUID=22222222-2222-2222-2222-222222222222 CONDUCTOR_WORKSPACE_PATH="$workspace" CONDUCTOR_WORKSPACE_NAME=alpha run_cleanup archive; then
+if DELETE_FAIL_UUID=22222222-2222-2222-2222-222222222222 PASEO_WORKTREE_PATH="$workspace" run_cleanup archive; then
   print -u2 -- 'archive accepted a delete failure in mixed manifest test'
   exit 1
 fi
@@ -320,12 +331,12 @@ assert_not_contains 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' "$(<"$pending_manifes
 : > "$call_log"
 : > "$all_call_log"
 dry_run=$(run_cleanup prune)
-assert_contains 'Would delete Hang Ten Conductor alpha Review (11111111-1111-1111-1111-111111111111)' "$dry_run"
-assert_contains 'Would delete Hang Ten Conductor beta Review (33333333-3333-3333-3333-333333333333)' "$dry_run"
-assert_contains 'Would delete Hang Ten Conductor alpha Review 2 (77777777-7777-7777-7777-777777777777)' "$dry_run"
-assert_contains 'Would delete Hang Ten Conductor alpha Review 263 (88888888-8888-8888-8888-888888888888)' "$dry_run"
-assert_contains 'Would delete Hang Ten Conductor alpha Review 20260803 (99999999-9999-9999-9999-999999999999)' "$dry_run"
-assert_contains 'Would delete Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212)' "$dry_run"
+assert_contains 'Would delete Hang Ten Paseo alpha Review (11111111-1111-1111-1111-111111111111)' "$dry_run"
+assert_contains 'Would delete Hang Ten Paseo beta Review (33333333-3333-3333-3333-333333333333)' "$dry_run"
+assert_contains 'Would delete Hang Ten Paseo alpha Review 2 (77777777-7777-7777-7777-777777777777)' "$dry_run"
+assert_contains 'Would delete Hang Ten Paseo alpha Review 263 (88888888-8888-8888-8888-888888888888)' "$dry_run"
+assert_contains 'Would delete Hang Ten Paseo alpha Review 20260803 (99999999-9999-9999-9999-999999999999)' "$dry_run"
+assert_contains 'Would delete Hang Ten Paseo alpha Review Transition (12121212-1212-1212-1212-121212121212)' "$dry_run"
 assert_contains 'Would delete Hang Ten Worcester Review ff8fa93 (20202020-2020-2020-2020-202020202020)' "$dry_run"
 assert_not_contains '74747474-7474-7474-7474-747474747474' "$dry_run"
 assert_not_contains '10101010-1010-1010-1010-101010101010' "$dry_run"
@@ -426,7 +437,7 @@ if transition_output=$(PRUNE_TRANSITION_UUID=12121212-1212-1212-1212-12121212121
 fi
 transition_calls=$(<"$call_log")
 assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$transition_calls"
-assert_contains 'Skipping simulator no longer Shutdown: Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212) is Booted' "$transition_output"
+assert_contains 'Skipping simulator no longer Shutdown: Hang Ten Paseo alpha Review Transition (12121212-1212-1212-1212-121212121212) is Booted' "$transition_output"
 assert_no_filtered_list_devices
 
 : > "$call_log"
@@ -448,7 +459,7 @@ if name_output=$(PRUNE_NAME_UUID=12121212-1212-1212-1212-121212121212 run_cleanu
 fi
 name_calls=$(<"$call_log")
 assert_not_contains 'delete 12121212-1212-1212-1212-121212121212' "$name_calls"
-assert_contains 'Skipping simulator no longer available: Hang Ten Conductor alpha Review Transition (12121212-1212-1212-1212-121212121212)' "$name_output"
+assert_contains 'Skipping simulator no longer available: Hang Ten Paseo alpha Review Transition (12121212-1212-1212-1212-121212121212)' "$name_output"
 assert_no_filtered_list_devices
 
-print -- 'conductor resource cleanup tests passed'
+print -- 'paseo resource cleanup tests passed'

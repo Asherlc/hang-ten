@@ -1,6 +1,6 @@
 # Isolated iOS Simulator validation
 
-Conductor can run several agents against the same Mac simultaneously. A device
+Paseo can run several agents against the same Mac simultaneously. A device
 addressed as `booted` is therefore shared mutable state: another agent can
 install a different build under the same bundle ID while a review is in
 progress. Hang Ten validation must use a dedicated device and its explicit
@@ -26,20 +26,20 @@ xcrun simctl list runtimes
 ```
 
 Create a uniquely named device using identifiers copied from those lists. The
-name must begin with the exact workspace marker `Hang Ten Conductor
-$CONDUCTOR_WORKSPACE_NAME`, and its UUID must be recorded before any boot or
+name must begin with the exact workspace marker `Hang Ten Paseo
+$workspace_name`, and its UUID must be recorded before any boot or
 build work:
 
 ```zsh
 set -euo pipefail
 
-workspace_path="$PWD"
-workspace_name="$CONDUCTOR_WORKSPACE_NAME"
+workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"
+workspace_name="${workspace_path:t}"
 test -n "$workspace_name"
 mkdir -p "$workspace_path/.context"
-manifest="$workspace_path/.context/conductor-owned-simulators"
-pending_manifest="$workspace_path/.context/conductor-pending-simulators"
-simulator_name="Hang Ten Conductor $workspace_name Review"
+manifest="$workspace_path/.context/paseo-owned-simulators"
+pending_manifest="$workspace_path/.context/paseo-pending-simulators"
+simulator_name="Hang Ten Paseo $workspace_name Review"
 device_type_id="${DEVICE_TYPE_ID:?Set DEVICE_TYPE_ID from xcrun simctl list devicetypes}"
 runtime_id="${RUNTIME_ID:?Set RUNTIME_ID from xcrun simctl list runtimes}"
 uuid_regex='^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
@@ -47,9 +47,8 @@ pending_simulator_uuid=""
 pending_recorded_simulator_uuid=""
 
 cleanup() {
-  CONDUCTOR_WORKSPACE_PATH="$workspace_path" \
-  CONDUCTOR_WORKSPACE_NAME="$workspace_name" \
-  "$workspace_path/scripts/conductor-resource-cleanup.sh" archive
+  PASEO_WORKTREE_PATH="$workspace_path" \
+  "$workspace_path/scripts/paseo-resource-cleanup.sh" archive
 }
 remove_pending_record() {
   if [[ -z "$pending_recorded_simulator_uuid" || ! -f "$pending_manifest" ]]; then
@@ -99,7 +98,7 @@ cleanup_pending_simulator() {
     }
   ')"
   IFS=$'\t' read -r simulator_name simulator_state <<< "$simulator_record"
-  if [[ -z "$simulator_record" || "$simulator_name" != "Hang Ten Conductor $workspace_name "* ]]; then
+  if [[ -z "$simulator_record" || "$simulator_name" != "Hang Ten Paseo $workspace_name "* ]]; then
     printf 'pending simulator %s failed exact UUID/name ownership check\n' "$pending_simulator_uuid" >&2
     return 1
   fi
@@ -443,19 +442,19 @@ See `docs/IOS_RUNTIME_SERVICES.md` for the implementation contract.
 
 ## Cleanup
 
-The creation trap calls `scripts/conductor-resource-cleanup.sh archive`; leave
+The creation trap calls `scripts/paseo-resource-cleanup.sh archive`; leave
 it installed for the whole validation. The created UUID is written to the
 pending manifest before the owned manifest so the archive mode can retry cleanup
 after an interrupted setup. Archive cleanup verifies each pending or owned
-manifest entry against the exact `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME `
+manifest entry against the exact `Hang Ten Paseo $workspace_name `
 name prefix, shuts down the matching device if necessary, and runs
 `xcrun simctl delete` on that exact UUID. Pending state is removed only after
 archive cleanup succeeds; the direct delete fallback is limited to a validated
 UUID whose pending record could not be written, and it must re-query that exact
 UUID, parse the exact device-name field, and require the exact
-`Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME ` marker before deleting. If the
+`Hang Ten Paseo $workspace_name ` marker before deleting. If the
 lookup or ownership check fails, it does not delete and returns failure. This is
-immediate workspace cleanup, while the Conductor archive hook is a failsafe for
+immediate workspace cleanup, while the Paseo workspace archive hook is a failsafe for
 an abandoned workspace; both manifests remain available for archive retry.
 
 Do not delete or shut down a shared/unknown simulator. The cleanup script must

@@ -64,21 +64,27 @@ device_uuid_present_in_output() {
 }
 
 run_archive_cleanup() {
-  local workspace_path=${CONDUCTOR_WORKSPACE_PATH:-}
-  local workspace_name=${CONDUCTOR_WORKSPACE_NAME:-}
+  local workspace_path=${PASEO_WORKTREE_PATH:-}
+  local workspace_name
   local owned_manifest pending_manifest manifest devices uuid record device_name device_state workspace_prefix line line_uuid temp_manifest
   local manifests=()
   local result_status=0
   typeset -A seen uuid_status
 
-  if [[ -z "$workspace_path" || -z "$workspace_name" ]]; then
-    print -u2 -- 'archive requires CONDUCTOR_WORKSPACE_PATH and CONDUCTOR_WORKSPACE_NAME'
+  if [[ -z "$workspace_path" ]]; then
+    print -u2 -- 'archive requires PASEO_WORKTREE_PATH'
     return 1
   fi
 
-  owned_manifest="$workspace_path/.context/conductor-owned-simulators"
-  pending_manifest="$workspace_path/.context/conductor-pending-simulators"
-  workspace_prefix="Hang Ten Conductor ${workspace_name} "
+  workspace_name=${workspace_path:t}
+  if [[ -z "$workspace_name" || "$workspace_name" == / ]]; then
+    print -u2 -- "archive could not derive a workspace name from PASEO_WORKTREE_PATH: $workspace_path"
+    return 1
+  fi
+
+  owned_manifest="$workspace_path/.context/paseo-owned-simulators"
+  pending_manifest="$workspace_path/.context/paseo-pending-simulators"
+  workspace_prefix="Hang Ten Paseo ${workspace_name} "
 
   [[ -f "$owned_manifest" ]] && manifests+=("$owned_manifest")
   [[ -f "$pending_manifest" ]] && manifests+=("$pending_manifest")

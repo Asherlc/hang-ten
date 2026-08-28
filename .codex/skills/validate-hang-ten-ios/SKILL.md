@@ -1,6 +1,6 @@
 ---
 name: validate-hang-ten-ios
-description: Build, install, launch, and visually validate Hang Ten on an isolated iOS Simulator, including DEBUG review routes, landscape screenshots, spoken countdowns, and HealthKit permission wiring. Use after board, routine, workout, audio, orientation, or Apple Health changes, especially in parallel Conductor workspaces.
+description: Build, install, launch, and visually validate Hang Ten on an isolated iOS Simulator, including DEBUG review routes, landscape screenshots, spoken countdowns, and HealthKit permission wiring. Use after board, routine, workout, audio, orientation, or Apple Health changes, especially in parallel Paseo workspaces.
 ---
 
 # Validate Hang Ten iOS
@@ -10,14 +10,14 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
 
 ## Workflow
 
-1. Capture `workspace_path="$PWD"` and
-   `workspace_name="$CONDUCTOR_WORKSPACE_NAME"`, require the workspace name, and
-   create `.context`. Define `manifest="$workspace_path/.context/conductor-owned-simulators"`
-   and `pending_manifest="$workspace_path/.context/conductor-pending-simulators"`.
+1. Capture `workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"` and derive
+   `workspace_name="${workspace_path:t}"` from its final path component, then
+   create `.context`. Define `manifest="$workspace_path/.context/paseo-owned-simulators"`
+   and `pending_manifest="$workspace_path/.context/paseo-pending-simulators"`.
    Install `EXIT`, `INT`, and `TERM` traps before any `simctl create`. The traps
-   must call `scripts/conductor-resource-cleanup.sh archive` with the current
-   workspace path and name. Create a simulator named
-   `Hang Ten Conductor $CONDUCTOR_WORKSPACE_NAME Review`, validate the returned
+   must call `scripts/paseo-resource-cleanup.sh archive` with
+   `PASEO_WORKTREE_PATH` set to that path. Create a simulator named
+   `Hang Ten Paseo $workspace_name Review`, validate the returned
    UUID, and append that exact UUID to the pending manifest before any owned
    manifest write, boot, or build. Only after the pending append succeeds append
    the UUID to the owned manifest. Keep the pending record until archive cleanup
@@ -26,8 +26,8 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    If pending registration fails, retain the validated UUID in memory and permit
    direct deletion only as the last-resort trap fallback. Before that delete,
    re-query the exact UUID with `xcrun simctl list devices`, parse the matching
-   record's name field, and require the exact prefix `Hang Ten Conductor
-   $CONDUCTOR_WORKSPACE_NAME `; if lookup or ownership verification fails, do not
+   record's name field, and require the exact prefix `Hang Ten Paseo $workspace_name `;
+   if lookup or ownership verification fails, do not
    delete and return failure. Use that UUID for every simulator operation; never
    target `booted`.
 2. Wait for launch services, then build with the local workspace-specific
