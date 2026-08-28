@@ -139,7 +139,7 @@ struct BoardEditableHold: Equatable, Decodable {
     var handCapacity: Int?
     var features: [HoldFeature]?
     var pairedHoldID: String?
-    private var declaresPairedHoldID: Bool
+    var declaresPairedHoldID: Bool
     var presentationID: String
     var geometry: [BoardEditablePiece]
 
