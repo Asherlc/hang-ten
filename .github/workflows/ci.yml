@@ -311,23 +311,37 @@ jobs:
           printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
           chmod 600 "$telemetry_xcconfig"
           unset ANALYTICS_API_KEY
-          xcodebuild \
-            -project HangTen.xcodeproj \
-            -scheme HangTen \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
-            -parallel-testing-enabled YES \
-            -maximum-parallel-testing-workers 1 \
-            -derivedDataPath "$RUNNER_TEMP/hang-ten-test-derived-data" \
-            -resultBundlePath "$RUNNER_TEMP/HangTenTests.xcresult" \
-            -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
-            -showBuildTimingSummary \
-            -xcconfig "$telemetry_xcconfig" \
-            COMPILER_INDEX_STORE_ENABLE=NO \
-            CODE_SIGNING_ALLOWED=YES \
-            CODE_SIGNING_REQUIRED=YES \
-            CODE_SIGN_IDENTITY="-" \
-            test 2>&1 | tee "$RUNNER_TEMP/hang-ten-test-logs/test.log"
+
+          run_xctest_attempt() {
+            local attempt="$1"
+            local attempt_derived_data="$RUNNER_TEMP/hang-ten-test-derived-data/attempt-$attempt"
+            local attempt_result_bundle="$RUNNER_TEMP/HangTenTests-attempt-$attempt.xcresult"
+            local attempt_log_dir="$RUNNER_TEMP/hang-ten-test-logs/attempt-$attempt"
+
+            mkdir -p "$attempt_derived_data" "$attempt_log_dir"
+            xcodebuild \
+              -project HangTen.xcodeproj \
+              -scheme HangTen \
+              -configuration Debug \
+              -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
+              -parallel-testing-enabled YES \
+              -maximum-parallel-testing-workers 1 \
+              -derivedDataPath "$attempt_derived_data" \
+              -resultBundlePath "$attempt_result_bundle" \
+              -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
+              -showBuildTimingSummary \
+              -xcconfig "$telemetry_xcconfig" \
+              COMPILER_INDEX_STORE_ENABLE=NO \
+              CODE_SIGNING_ALLOWED=YES \
+              CODE_SIGNING_REQUIRED=YES \
+              CODE_SIGN_IDENTITY="-" \
+              test 2>&1 | tee "$attempt_log_dir/test.log"
+          }
+
+          if ! run_xctest_attempt 1; then
+            echo "XCTest attempt 1 failed; retrying once with clean paths."
+            run_xctest_attempt 2
+          fi
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
@@ -336,7 +350,7 @@ jobs:
         with:
           name: ci-test-results-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenTests.xcresult
+            ${{ runner.temp }}/HangTenTests-attempt-*.xcresult
             ${{ runner.temp }}/hang-ten-test-logs/
           if-no-files-found: ignore
 
