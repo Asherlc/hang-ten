@@ -1504,7 +1504,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 let template = try XCTUnwrap(
                     (board["holds"] as? [[String: Any]])?.first
                 )
-                board["holds"] = expectedKinds.compactMap { kind in
+                let supportedHolds: [[String: Any]] = expectedKinds.compactMap { kind in
                     if kind == "gaston" {
                         return nil
                     }
@@ -1514,6 +1514,7 @@ final class BoardPackageStoreTests: XCTestCase {
                     hold["kind"] = kind
                     return hold
                 }
+                board["holds"] = supportedHolds
                 var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
                 var left = template
                 left["id"] = "gaston-left"
@@ -1534,7 +1535,7 @@ final class BoardPackageStoreTests: XCTestCase {
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
 
         XCTAssertEqual(
-            board.holds.map(\.kind.rawValue),
+            board.holds.map { $0.kind.rawValue },
             ["jug", "edge", "pocket", "pinch", "sloper", "gaston", "gaston"]
         )
     }
