@@ -14,6 +14,7 @@ final class SettingsBoardEditorVisibilityUITests: XCTestCase {
         XCTAssertTrue(app.segmentedControls["settings.loadAdjustmentUnit"].exists)
 
         app.buttons["settings.sensor"].tap()
+        XCTAssertTrue(app.navigationBars["Sensor settings"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.segmentedControls["settings.forceUnit"].exists)
         XCTAssertFalse(app.segmentedControls["settings.loadAdjustmentUnit"].exists)
     }
