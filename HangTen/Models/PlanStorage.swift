@@ -797,7 +797,10 @@ enum PlanLibraryValidator {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration is only valid for hang or pull steps."))
             }
         }
-        if step.phase != .rest && step.phase != .conditioning && step.targets.isEmpty {
+        let isTimedSelfSelectedHang = step.phase == .hang
+            && step.targets.isEmpty
+            && step.activeDuration != nil
+        if step.phase != .rest && step.phase != .conditioning && !isTimedSelfSelectedHang && step.targets.isEmpty {
             issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
         let isCompoundStep = step.segments.count > 1
@@ -1004,7 +1007,8 @@ enum PlanLibraryValidator {
 
         if let index = plan.blocks.indices.last {
             let reference = plan.blocks[index]
-            if reference.repeatCount > 0,
+            if plan.metadata.provenance != .official,
+               reference.repeatCount > 0,
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
                stepEndsInRestAfterNormalization(terminalStep) {
@@ -1606,6 +1610,11 @@ enum BuiltInPlanLibraryDefinition {
             notes = [
                 "Source warm-up alternatives, five grip groups, 7–10s/5s interval guidance, six repeats, recovery, and pain warning are retained.",
                 "The app defaults the source ranges to 7 seconds and uses a manual 25-minute warm-up preview."
+            ]
+        } else if plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id {
+            notes = [
+                "Official Rock Prodigy set template: seven 7s/3s two-handed dead-hang repetitions, then 2m 53s rest to 4:00.",
+                "The source leaves the 5–10 grips and 1–3 sets per grip to the athlete, so the app intentionally supplies no target, grip order, or fixed workout duration."
             ]
         } else {
             notes = ["Preserved from the original Hang Ten routine catalog."]

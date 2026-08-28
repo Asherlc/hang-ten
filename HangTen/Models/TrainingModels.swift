@@ -2239,6 +2239,42 @@ enum LegacyPlanSeedCatalog {
         }())
     )
 
+    /// The Rock Prodigy instructions leave grip identity, grip order, and set
+    /// count to the athlete. This one-set template deliberately has no board
+    /// target: selecting one would turn a manufacturer choice into an app
+    /// prescription. Repeat the template manually for the source's 1–3 sets
+    /// on each of approximately 5–10 chosen grips.
+    static let rptcRepeaters = TrainingPlan(
+        id: "rptc.seven-three-repeaters",
+        title: "RPTC · 7/3 Repeaters",
+        subtitle: "Self-selected 5–10 grip routine; 1–3 sets per grip.",
+        level: "Self-selected",
+        sourceLabel: "Rock Prodigy Training Center Use Instructions",
+        sourceURL: URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155")!,
+        provenance: .official,
+        boardID: nil,
+        steps: numbered({
+            (1...7).map { rep in
+                let finalRep = rep == 7
+                return WorkoutStep(
+                    id: "rptc-repeaters-set-rep-\(rep)",
+                    number: 0,
+                    title: "RPTC repeater set · rep \(rep) of 7",
+                    instruction: finalRep
+                        ? "Complete the seventh 7-second two-handed dead hang on the grip you selected, then rest until 4:00 from the first hang (2:53). This is the source table's between-set recovery; if you chose another of the source-permitted 1–3 sets on this grip, begin it after this recovery, then move to the next of approximately 5–10 grips. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout."
+                        : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+                    accessory: finalRep
+                        ? "7s two-handed deadhang · 2m 53s rest to 4:00"
+                        : "7s two-handed deadhang · 3s rest",
+                    duration: finalRep ? 180 : 10,
+                    phase: .hang,
+                    targets: [],
+                    timedWorkDuration: 7
+                )
+            }
+        }())
+    )
+
     static let abrahangs = TrainingPlan(
         id: "research.abrahangs",
         title: "Abrahangs",
@@ -2721,6 +2757,7 @@ enum LegacyPlanSeedCatalog {
             forceF100,
             evaIntHangs,
             repeaters,
+            rptcRepeaters,
             abrahangs,
             horst753,
             ladders,

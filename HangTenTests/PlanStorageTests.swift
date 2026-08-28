@@ -1211,6 +1211,41 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
+    func testOfficialSelfSelectedHangSetAllowsUntargetedTerminalRecovery() {
+        let repeaterSet = WorkoutStepDefinition(
+            id: "rptc-repeater-set",
+            title: "RPTC repeater set",
+            instruction: "Use one self-selected grip for seven 7-second two-handed dead hangs with 3 seconds between hangs, then rest to 4:00.",
+            accessory: "7 × (7s hang · 3s rest) · then 2m 53s rest",
+            duration: 180,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+
+        let issues = makeLibrary(
+            steps: [repeaterSet],
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.isEmpty, "A manufacturer-selected grip cannot be replaced with an invented target, and its stated terminal rest remains part of the set.")
+    }
+
+    func testRPTCRepeatersPreserveTheSourceSetTimingWithoutInventedGripTargets() {
+        let plan = LegacyPlanSeedCatalog.rptcRepeaters
+
+        XCTAssertEqual(plan.provenance, .official)
+        XCTAssertNil(plan.boardID)
+        XCTAssertEqual(plan.duration, 240)
+        XCTAssertEqual(plan.steps.count, 7)
+        XCTAssertTrue(plan.steps.allSatisfy(\.targets.isEmpty))
+        XCTAssertEqual(plan.steps.dropLast().map(\.duration), Array(repeating: 10, count: 6))
+        XCTAssertEqual(plan.steps.map(\.timedWorkDuration), Array(repeating: 7, count: 7))
+        XCTAssertEqual(plan.steps.last?.duration, 180)
+        XCTAssertTrue(plan.steps.last?.instruction.contains("2:53") == true)
+        XCTAssertTrue(plan.steps.last?.instruction.contains("3 minutes") == false)
+    }
+
     func testShippedRoutineSeedsExpandToTerminalWorkSteps() throws {
         let terminalSteps = try LegacyPlanSeedCatalog.all.map { plan in
             try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
@@ -2147,7 +2182,8 @@ final class PlanStorageTests: XCTestCase {
     private func makeLibrary(
         steps: [WorkoutStepDefinition],
         boardID: String? = nil,
-        boardMappings: [BoardMappingDefinition] = []
+        boardMappings: [BoardMappingDefinition] = [],
+        provenance: RoutineProvenance = .adapted
     ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
@@ -2166,7 +2202,7 @@ final class PlanStorageTests: XCTestCase {
                         level: "Test",
                         sourceLabel: "Test fixture",
                         sourceURL: URL(string: "https://example.com/test")!,
-                        provenance: .adapted
+                        provenance: provenance
                     ),
                     boardID: boardID,
                     blocks: [WorkoutBlockReference(blockID: "test.block")]
