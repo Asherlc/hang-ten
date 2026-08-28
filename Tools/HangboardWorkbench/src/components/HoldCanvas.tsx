@@ -593,7 +593,7 @@ export function HoldCanvas({
               type="button"
               role="menuitem"
               onClick={() => editor.addInflectionPoint()}
-            >Add inflection point</button>}
+            >Add smooth point</button>}
             {editor.canMakeSelectedSegmentBendable && <button
               id="make-bendable-action"
               type="button"

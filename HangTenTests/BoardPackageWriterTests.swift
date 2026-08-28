@@ -682,6 +682,35 @@ final class BoardPackageWriterTests: XCTestCase {
         )
     }
 
+    func testSmoothMarkSurvivesRoundTrip() throws {
+        var document = makeDocument()
+        document.holds[0].geometry[0].shape = BoardGeometryShapeDocument(
+            type: "path",
+            commands: [
+                BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
+                BoardGeometryPathCommandDocument(
+                    command: "curve",
+                    to: [1, 1],
+                    control: nil,
+                    control1: [0.25, 0],
+                    control2: [0.75, 0.5],
+                    smooth: true
+                ),
+                BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
+            ],
+            cornerRadiusFraction: nil
+        )
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let output = String(decoding: encoded, as: UTF8.self)
+        XCTAssertTrue(output.contains("\"smooth\": true"))
+        let redecoded = try BoardEditableDocument(data: encoded)
+        XCTAssertEqual(
+            redecoded.holds[0].geometry[0].shape.commands?[1].smooth,
+            true
+        )
+    }
+
     func testStrictDecoderRejectsUnknownKeys() throws {
         var document = makeDocument()
         let encoded = try BoardPackageWriter.data(for: document)
@@ -716,5 +745,42 @@ final class BoardPackageWriterTests: XCTestCase {
 
         let unsupportedKind = source.replacingOccurrences(of: kind, with: "      \"kind\": \"unsupported\",\n")
         XCTAssertThrowsError(try BoardEditableDocument(data: Data(unsupportedKind.utf8)))
+    }
+
+    func testEditorDecoderRejectsExplicitNullPairedHoldIDOnNonGaston() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        let source = String(decoding: encoded, as: UTF8.self)
+        let insertion = "      \"pairedHoldID\": null,\n"
+        let tampered = source.replacingOccurrences(
+            of: "      \"presentationID\": \"front\",\n",
+            with: insertion + "      \"presentationID\": \"front\",\n"
+        )
+
+        XCTAssertThrowsError(try BoardEditableDocument(data: Data(tampered.utf8)))
+    }
+
+    func testWriterRoundTripsReciprocalGastonPairMetadata() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument(holds: [
+            makeHold(id: "gaston-left", name: "Left gaston"),
+            makeHold(id: "gaston-right", name: "Right gaston"),
+        ]))
+        var payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        var holds = try XCTUnwrap(payload["holds"] as? [[String: Any]])
+        holds[0]["kind"] = "gaston"
+        holds[0]["pairedHoldID"] = "gaston-right"
+        holds[1]["kind"] = "gaston"
+        holds[1]["pairedHoldID"] = "gaston-left"
+        payload["holds"] = holds
+        let gastonDocument = try BoardEditableDocument(
+            data: JSONSerialization.data(withJSONObject: payload)
+        )
+
+        let output = try BoardPackageWriter.data(for: gastonDocument)
+        let redecoded = try BoardEditableDocument(data: output)
+
+        XCTAssertEqual(redecoded.holds.map(\.pairedHoldID), ["gaston-right", "gaston-left"])
+        XCTAssertTrue(String(decoding: output, as: UTF8.self).contains("\"pairedHoldID\": \"gaston-right\""))
     }
 }

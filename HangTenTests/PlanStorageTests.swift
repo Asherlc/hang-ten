@@ -2,6 +2,114 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+
+    func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {
+        let step = WorkoutStep(
+            id: "stopwatch-step",
+            number: 1,
+            title: "Maximum hang",
+            instruction: "Hang with both hands.",
+            accessory: "Record the observed duration.",
+            duration: 60,
+            phase: .hang,
+            targets: [],
+            segments: [
+                WorkoutSegment(kind: .work, target: nil, timing: .stopwatch, duration: nil)
+            ]
+        )
+        let stopwatchKey = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: 0)
+
+        let presentation = WorkoutLandscapePreStartPresentation.content(
+            for: step,
+            countdown: 0,
+            isResting: false,
+            isComplete: false,
+            currentStopwatchKey: stopwatchKey
+        )
+
+        XCTAssertEqual(
+            presentation.cueCardRows,
+            [
+                .init(kind: .instruction, text: "Hang with both hands."),
+                .init(kind: .accessory, text: "Record the observed duration.")
+            ]
+        )
+        XCTAssertEqual(presentation.stopwatchKey, stopwatchKey)
+    }
+
+    func testLandscapePreStartPresentationHidesStopwatchOutsideActiveWork() {
+        let stopwatchKey = WorkoutActivitySegmentKey(stepID: "stopwatch-step", segmentIndex: 0)
+        let step = WorkoutStep(
+            id: "stopwatch-step",
+            number: 1,
+            title: "Maximum hang",
+            instruction: "Hang with both hands.",
+            accessory: "",
+            duration: 60,
+            phase: .hang,
+            targets: []
+        )
+
+        XCTAssertNil(
+            WorkoutLandscapePreStartPresentation.content(
+                for: step,
+                countdown: 3,
+                isResting: false,
+                isComplete: false,
+                currentStopwatchKey: stopwatchKey
+            ).stopwatchKey
+        )
+        XCTAssertNil(
+            WorkoutLandscapePreStartPresentation.content(
+                for: step,
+                countdown: 0,
+                isResting: true,
+                isComplete: false,
+                currentStopwatchKey: stopwatchKey
+            ).stopwatchKey
+        )
+        XCTAssertNil(
+            WorkoutLandscapePreStartPresentation.content(
+                for: step,
+                countdown: 0,
+                isResting: false,
+                isComplete: true,
+                currentStopwatchKey: stopwatchKey
+            ).stopwatchKey
+        )
+    }
+
+    func testLandscapeControlLayoutUsesCompactControlsBeforeTheFirstStart() {
+        XCTAssertTrue(
+            WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+                isFirstStart: true,
+                countdown: 0,
+                isComplete: false
+            )
+        )
+        XCTAssertFalse(
+            WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+                isFirstStart: false,
+                countdown: 0,
+                isComplete: false
+            )
+        )
+        XCTAssertFalse(
+            WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+                isFirstStart: true,
+                countdown: 3,
+                isComplete: false
+            )
+        )
+        XCTAssertFalse(
+            WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+                isFirstStart: true,
+                countdown: 0,
+                isComplete: true
+            )
+        )
+    }
+
     func testPlanLibraryStoreRejectsFormerSchemaVersionField() throws {
         let data = Data(
             #"""

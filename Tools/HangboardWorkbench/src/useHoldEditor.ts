@@ -69,6 +69,7 @@ interface DragState {
     pivot?: Point;
     shapeConstraint?: ShapeConstraint;
     bendableCommandIndexes?: number[];
+    smoothAnchorIndexes?: number[];
   }> | null;
   originalConstraint: ShapeConstraint | null;
   originalDocument: EditorDocument | null;
@@ -161,6 +162,7 @@ export interface HoldEditorActions {
   canMakeSelectedSegmentHorizontal: boolean;
   canMakeSelectedSegmentVertical: boolean;
   addHold(): void;
+  addHoldSegment(): void;
   duplicateAndMirrorHold(): void;
   deleteHold(): void;
   selectAnchor(anchorID: string): void;
@@ -173,6 +175,7 @@ export interface HoldEditorActions {
   makeSelectedSegmentVertical(): void;
   dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
+  changePairedHoldID(pairedHoldID: string | undefined): void;
   changeFingerCapacity(capacity: number | undefined): void;
   changeHoldDepthMeasurement(mode: "unset" | "fixed" | "variable"): void;
   changeHoldSizeMillimeters(size: number | undefined): void;
@@ -209,11 +212,33 @@ function writeBendableCommandIndexes(region: HoldRegion, commands: readonly Path
   else delete region.bendableCommandIndexes;
 }
 
+function writeSmoothAnchorIndexes(region: HoldRegion, commands: readonly PathCommand[]): void {
+  const smoothAnchorIndexes = commands.flatMap((command, index) => command.smooth === true ? [index] : []);
+  if (smoothAnchorIndexes.length > 0) region.smoothAnchorIndexes = smoothAnchorIndexes;
+  else delete region.smoothAnchorIndexes;
+}
+
+function writeEditablePathMetadata(region: HoldRegion, path: EditablePath): void {
+  const commands = path.segments.map((segment) => ({
+    type: segment.type,
+    ...(segment.bendable === true ? { bendable: true } : {}),
+    ...(segment.anchor.smooth === true ? { smooth: true } : {}),
+    points: [{ x: segment.anchor.x, y: segment.anchor.y }],
+    controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
+  }));
+  writeBendableCommandIndexes(region, commands);
+  writeSmoothAnchorIndexes(region, commands);
+}
+
 function pathCommandsForHold(region: HoldRegion, pathEditor: PathEditor): PathCommand[] {
   const commands = pathEditor.parsePath(region.displayPath);
   for (const index of region.bendableCommandIndexes ?? []) {
     const command = commands[index];
     if (command?.type === "C") command.bendable = true;
+  }
+  for (const index of region.smoothAnchorIndexes ?? []) {
+    const command = commands[index];
+    if (command && command.type !== "M" && command.type !== "Z") command.smooth = true;
   }
   return commands;
 }
@@ -379,6 +404,7 @@ function mirrorHoldPath(
   }
   target.displayPath = pathEditor.serializePath(commands);
   writeBendableCommandIndexes(target, commands);
+  writeSmoothAnchorIndexes(target, commands);
 }
 
 function uniqueRegionKey(document: EditorDocument, baseKey: string): string {
@@ -473,6 +499,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           selectedHold.displayPath,
           pathEditor,
           selectedHold.bendableCommandIndexes,
+          selectedHold.smoothAnchorIndexes,
         );
         editablePathRef.current = {
           document,
@@ -556,11 +583,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       const hold = candidate.regions.find((region) => region.key === selectedHold.key);
       if (hold && !hold.shapeConstraint) {
         hold.displayPath = displayPath;
-        const bendableCommandIndexes = path.segments.flatMap((segment, index) => (
-          segment.bendable === true ? [index] : []
-        ));
-        if (bendableCommandIndexes.length > 0) hold.bendableCommandIndexes = bendableCommandIndexes;
-        else delete hold.bendableCommandIndexes;
+        writeEditablePathMetadata(hold, path);
       }
     }, { status: nextStatus });
     if (!edited) return false;
@@ -809,6 +832,57 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     });
   }, [actions, busy, document, reservedHoldIDs]);
 
+  const addHoldSegment = useCallback((): void => {
+    if (busy || !document || !selectedHold) return;
+    const source = selectedHold;
+    const sourceMetadata = source.metadata;
+    if (!sourceMetadata?.holdID) return;
+    const holdId = sourceMetadata.holdID;
+    const pieceIndex = Math.max(
+      -1,
+      ...document.regions.flatMap((region) => (
+        region.metadata?.holdID === holdId ? [region.metadata.pieceIndex] : []
+      )),
+    ) + 1;
+    const key = uniqueRegionKey(document, `${holdId}-piece-${pieceIndex}`);
+    const commands = pathCommandsForHold(source, pathEditor);
+    const bounds = pathEditor.pathBounds(commands);
+    const width = Math.max(1, bounds.maxX - bounds.minX);
+    const height = Math.max(1, bounds.maxY - bounds.minY);
+    const gap = Math.max(6, Math.min(width, height) / 2);
+    const offset = bounds.maxX + width + gap <= document.canvas.width
+      ? { x: width + gap, y: 0 }
+      : bounds.minX - width - gap >= 0
+        ? { x: -(width + gap), y: 0 }
+        : bounds.maxY + height + gap <= document.canvas.height
+          ? { x: 0, y: height + gap }
+          : { x: 0, y: -(height + gap) };
+    translateCommands(commands, offset.x, offset.y);
+    const displayPath = pathEditor.serializePath(commands);
+    const added = actions.editDocument((candidate) => {
+      candidate.regions.push({
+        ...source,
+        id: nextRegionId(candidate),
+        key,
+        displayPath,
+        metadata: {
+          ...sourceMetadata,
+          holdID: holdId,
+          pieceIndex,
+          ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+        },
+      });
+    }, {
+      selectedKey: key,
+      selectedKeys: [key],
+      status: "Hold segment added. Drag it into place and save when ready.",
+      failureMessage: "Could not add hold segment.",
+    });
+    if (!added) return;
+    setVertexSelection(null);
+    setVertexMenuState(null);
+  }, [actions, busy, document, pathEditor, selectedHold]);
+
   const duplicateAndMirrorHold = useCallback((): void => {
     if (busy || !document || !selectedHold) return;
     const holds = selectedPhysicalHolds(document, selectedKeys);
@@ -816,7 +890,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const duplicates: Array<{ source: HoldRegion; id: number; key: string; holdId: string; pieceIndex: number }> = [];
     const duplicateKeyBySourceKey = new Map<string, string>();
     for (const hold of holds) {
-      const holdId = nextHoldId(planningDocument);
+      const holdId = nextHoldId(planningDocument, reservedHoldIDs);
       for (let index = 0; index < hold.length; index += 1) {
         const source = hold[index]!;
         const pieceIndex = source.metadata?.pieceIndex ?? index;
@@ -868,7 +942,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!edited) return;
     setVertexSelection(null);
     setVertexMenuState(null);
-  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
+  }, [actions, busy, document, pathEditor, reservedHoldIDs, selectedHold, selectedKeys]);
 
   const deleteHold = useCallback((): void => {
     if (busy || !document || !selectedHold) return;
@@ -890,18 +964,84 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const changeHoldType = useCallback((type: string): void => {
     if (busy || !document || !selectedHold) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    const selectedHolds = selectedPhysicalHolds(document, selectedKeys);
+    const siblingKeys = new Set(selectedHolds.flatMap((hold) => hold.map((region) => region.key)));
+    const gastonPairHoldIDs = type === "gaston" ? selectedHolds.map((hold) => hold[0]?.metadata?.holdID) : [];
+    const [firstGastonHoldID, secondGastonHoldID] = gastonPairHoldIDs;
+    const createsGastonPair = selectedHolds.length === 2
+      && firstGastonHoldID !== undefined
+      && secondGastonHoldID !== undefined
+      && firstGastonHoldID !== secondGastonHoldID;
+    if (type === "gaston" && !createsGastonPair) {
+      actions.replaceDocument(document, {
+        dirty,
+        validation: "Select exactly two physical holds with two distinct hold IDs to create a Gaston pair.",
+        status: "Gaston conversion needs two distinct hold IDs.",
+      });
+      return;
+    }
+    const selectedGastonHoldIDs = new Set([firstGastonHoldID, secondGastonHoldID]);
+    const displacedGaston = type === "gaston" ? document.regions.find((region) => (
+      !selectedGastonHoldIDs.has(region.metadata?.holdID)
+      && region.pairedHoldID !== undefined
+      && selectedGastonHoldIDs.has(region.pairedHoldID)
+    )) : undefined;
+    if (displacedGaston) {
+      const displacedHoldID = displacedGaston.metadata?.holdID ?? displacedGaston.key;
+      actions.replaceDocument(document, {
+        dirty,
+        validation: `Creating this Gaston pair would orphan paired Gaston hold ${displacedHoldID}. Select it instead or recategorize it first.`,
+        status: "Gaston conversion would orphan an existing pair.",
+      });
+      return;
+    }
     actions.editDocument((candidate) => {
       for (const region of candidate.regions) {
         if (!siblingKeys.has(region.key)) continue;
         region.type = type;
         if (type !== "sloper") delete region.sloper;
+        if (type !== "gaston") delete region.pairedHoldID;
+        if (createsGastonPair && region.metadata?.holdID === firstGastonHoldID) {
+          region.pairedHoldID = secondGastonHoldID;
+        }
+        if (createsGastonPair && region.metadata?.holdID === secondGastonHoldID) {
+          region.pairedHoldID = firstGastonHoldID;
+        }
+      }
+      if (type !== "gaston") {
+        const selectedHoldIDs = new Set([...siblingKeys]
+          .map((key) => candidate.regions.find((region) => region.key === key)?.metadata?.holdID)
+          .filter((holdID): holdID is string => holdID !== undefined));
+        for (const region of candidate.regions) {
+          if (region.pairedHoldID && selectedHoldIDs.has(region.pairedHoldID)) delete region.pairedHoldID;
+        }
       }
     }, {
       status: "Hold recategorized. Save when ready.",
       failureMessage: "Hold type is invalid.",
     });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
+  }, [actions, busy, dirty, document, selectedHold, selectedKeys]);
+
+  const changePairedHoldID = useCallback((pairedHoldID: string | undefined): void => {
+    if (busy || !document || !selectedHold || selectedHold.type !== "gaston") return;
+    const holdID = selectedHold.metadata?.holdID;
+    if (!holdID || !pairedHoldID || pairedHoldID === holdID) return;
+    const pairedHold = document.regions.find((region) => (
+      region.metadata?.holdID === pairedHoldID && region.type === "gaston"
+    ));
+    if (!pairedHold
+      || (selectedHold.pairedHoldID !== undefined && selectedHold.pairedHoldID !== pairedHoldID)
+      || (pairedHold.pairedHoldID !== undefined && pairedHold.pairedHoldID !== holdID)) return;
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (region.metadata?.holdID === holdID) region.pairedHoldID = pairedHoldID;
+        if (region.metadata?.holdID === pairedHoldID) region.pairedHoldID = holdID;
+      }
+    }, {
+      status: "Gaston pair changed. Save when ready.",
+      failureMessage: "Gaston pair is invalid.",
+    });
+  }, [actions, busy, document, selectedHold]);
 
   const changeFingerCapacity = useCallback((capacity: number | undefined): void => {
     if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 4))) return;
@@ -998,6 +1138,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         } else {
           hold.displayPath = pathEditor.createOutlineShapePath(hold.displayPath, outlinePreset(shape));
           delete hold.bendableCommandIndexes;
+          delete hold.smoothAnchorIndexes;
           hold.shapeConstraint = { shape, rotationDegrees: 0 };
         }
       }
@@ -1038,6 +1179,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           } else {
             delete region.bendableCommandIndexes;
           }
+          if (original.smoothAnchorIndexes) {
+            region.smoothAnchorIndexes = [...original.smoothAnchorIndexes];
+          } else {
+            delete region.smoothAnchorIndexes;
+          }
           if (original.shapeConstraint) region.shapeConstraint = { ...original.shapeConstraint };
           else delete region.shapeConstraint;
         }
@@ -1051,6 +1197,11 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           region.bendableCommandIndexes = [...originalRegion.bendableCommandIndexes];
         } else {
           delete region.bendableCommandIndexes;
+        }
+        if (originalRegion?.smoothAnchorIndexes) {
+          region.smoothAnchorIndexes = [...originalRegion.smoothAnchorIndexes];
+        } else {
+          delete region.smoothAnchorIndexes;
         }
         if (drag.originalConstraint) region.shapeConstraint = { ...drag.originalConstraint };
         else delete region.shapeConstraint;
@@ -1173,9 +1324,12 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             path: region.displayPath,
             pivot: holdPivot,
             ...(region.shapeConstraint ? { shapeConstraint: { ...region.shapeConstraint } } : {}),
-            ...(region.bendableCommandIndexes ? {
-              bendableCommandIndexes: [...region.bendableCommandIndexes],
-            } : {}),
+          ...(region.bendableCommandIndexes ? {
+            bendableCommandIndexes: [...region.bendableCommandIndexes],
+          } : {}),
+          ...(region.smoothAnchorIndexes ? {
+            smoothAnchorIndexes: [...region.smoothAnchorIndexes],
+          } : {}),
           }));
         }),
         editablePath: editablePath ? cloneEditablePath(editablePath) : null,
@@ -1209,6 +1363,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             selectedHold.displayPath,
             pathEditor,
             selectedHold.bendableCommandIndexes,
+            selectedHold.smoothAnchorIndexes,
           );
         } catch (error: unknown) {
           reportInvalidPath(error);
@@ -1295,12 +1450,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             pathEditor,
           );
           region.displayPath = serializeEditablePath(rotatedEditablePath, pathEditor);
-          writeBendableCommandIndexes(region, rotatedEditablePath.segments.map((segment) => ({
-            type: segment.type,
-            ...(segment.bendable === true ? { bendable: true } : {}),
-            points: [{ x: segment.anchor.x, y: segment.anchor.y }],
-            controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
-          })));
+          writeEditablePathMetadata(region, rotatedEditablePath);
           editablePathRef.current = {
             document: candidate,
             holdKey: original.key,
@@ -1314,9 +1464,14 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
             const command = commands[index];
             if (command?.type === "C") command.bendable = true;
           }
+          for (const index of original.smoothAnchorIndexes ?? []) {
+            const command = commands[index];
+            if (command && command.type !== "M" && command.type !== "Z") command.smooth = true;
+          }
           pathEditor.rotatePath(commands, drag.totalAngle, original.pivot ?? drag.pivot);
           region.displayPath = pathEditor.serializePath(commands);
           writeBendableCommandIndexes(region, commands);
+          writeSmoothAnchorIndexes(region, commands);
         }
         if (original.shapeConstraint) {
           region.shapeConstraint = {
@@ -1340,6 +1495,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         );
         hold.displayPath = resized.displayPath;
         delete hold.bendableCommandIndexes;
+        delete hold.smoothAnchorIndexes;
         hold.shapeConstraint = resized.shapeConstraint;
       } catch (error: unknown) {
         restoreDrag(
@@ -1376,12 +1532,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         translateEditablePath(editable, deltaX, deltaY);
       }
       hold.displayPath = serializeEditablePath(editable, pathEditor);
-      writeBendableCommandIndexes(hold, editable.segments.map((segment) => ({
-        type: segment.type,
-        ...(segment.bendable === true ? { bendable: true } : {}),
-        points: [{ x: segment.anchor.x, y: segment.anchor.y }],
-        controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
-      })));
+      writeEditablePathMetadata(hold, editable);
       editablePathRef.current = {
         document: candidate,
         holdKey: drag.holdKey ?? selectedHold?.key ?? "",
@@ -1612,12 +1763,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
           const hold = candidate.regions.find((region) => region.key === selectedHold.key);
           if (hold) {
             hold.displayPath = nextPath;
-            writeBendableCommandIndexes(hold, next.segments.map((segment) => ({
-              type: segment.type,
-              ...(segment.bendable === true ? { bendable: true } : {}),
-              points: [{ x: segment.anchor.x, y: segment.anchor.y }],
-              controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
-            })));
+            writeEditablePathMetadata(hold, next);
           }
         }, {
           status: "Hold nudged. Save when ready.",
@@ -1672,6 +1818,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     canMakeSelectedSegmentHorizontal,
     canMakeSelectedSegmentVertical,
     addHold,
+    addHoldSegment,
     duplicateAndMirrorHold,
     deleteHold,
     selectAnchor,
@@ -1684,6 +1831,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     makeSelectedSegmentVertical,
     dismissVertexMenu,
     changeHoldType,
+    changePairedHoldID,
     changeFingerCapacity,
     changeHoldDepthMeasurement,
     changeHoldSizeMillimeters,

@@ -6,6 +6,7 @@ import {
   loadBoardAtomically,
   saveBoardAtomically,
   validateEditorDocument,
+  validateEditorDocumentForSave,
 } from "../src/workbench-controller.ts";
 import { createWorkbenchClient } from "../src/workbench-client.ts";
 import { cloneEditorDocument } from "../src/editor-model.ts";
@@ -791,6 +792,28 @@ test("the direct editor model rejects invalid optional hold-region fields", () =
   }
 });
 
+test("the direct editor model rejects malformed gaston pair identifiers before saving", () => {
+  assert.throws(
+    () => validateEditorDocumentForSave(editorDocument([
+      {
+        key: "left-piece-0",
+        type: "gaston",
+        pairedHoldID: "not an identifier",
+        displayPath: "M 1 1 L 20 1 L 20 20 Z",
+        metadata: { holdID: "left", pieceIndex: 0 },
+      },
+      {
+        key: "right-piece-0",
+        type: "gaston",
+        pairedHoldID: "left",
+        displayPath: "M 30 1 L 40 1 L 40 20 Z",
+        metadata: { holdID: "right", pieceIndex: 0 },
+      },
+    ])),
+    /paired gaston hold ID must be identifier-shaped/i,
+  );
+});
+
 test("the editor document clones and validates bendable curve command indexes", () => {
   const document = editorDocument([{
     key: "hold-1",
@@ -1106,6 +1129,7 @@ const dialogsFixture: Dialogs = {
 const pathEditorFixture: PathEditor = pathEditor;
 const controllerFixture: WorkbenchController = {
   validateEditorDocument,
+  validateEditorDocumentForSave,
   loadBoardAtomically,
   saveBoardAtomically,
   createBoardOperationCoordinator,

@@ -498,11 +498,16 @@ export function addVertex(
   }
 
   if (next.type === "C") {
+    const amount = next.bendable === true
+      ? nearestCurveAmount(start, next, { x, y })
+      : 0.5;
+    if (amount <= 0 || amount >= 1) return;
     const { left, right } = subdivideCubic(
       start,
       next.controls[0]!,
       next.controls[1]!,
       next.points[0]!,
+      amount,
     );
     if (next.bendable === true) {
       left.bendable = true;

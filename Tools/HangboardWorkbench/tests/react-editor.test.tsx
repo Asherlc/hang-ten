@@ -831,6 +831,146 @@ test("the hold type control preserves an out-of-list document value", async () =
   }, dependenciesFixture(board));
 });
 
+test("changing exactly two selected physical holds to gastons creates a reciprocal pair that saves", async () => {
+  const client = clientFixture([boardFixture()]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+
+    await app.change("#hold-type-select", "gaston");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.regions.map((region) => [region.type, region.pairedHoldID]), [
+      ["gaston", "b"],
+      ["gaston", "b"],
+      ["gaston", "a"],
+    ]);
+  }, dependenciesFixture(boardFixture(), { client }));
+});
+
+test("converting a selected gaston would orphan its unselected counterpart, so it leaves the pair unchanged", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "outside", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    { id: 3, key: "outside-piece-0", type: "gaston", pairedHoldID: "left", displayPath: OTHER_PATH, metadata: { holdID: "outside", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+    await app.mouse('[data-hold-key="right-piece-0"]', "click", { ctrlKey: true });
+
+    await app.change("#hold-type-select", "gaston");
+
+    assert.match(app.text("#validation-list"), /would orphan.*outside/i);
+
+    await app.click("#save-button");
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.regions.map((region) => [region.type, region.pairedHoldID]), [
+      ["gaston", "outside"],
+      ["jug", undefined],
+      ["gaston", "left"],
+    ]);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("converting two holds with the same hold ID to gastons leaves them unchanged with validation", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "same-a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "same", pieceIndex: 0 } },
+    { id: 2, key: "same-b-piece-0", type: "edge", displayPath: SECOND_PATH, metadata: { holdID: "same", pieceIndex: 1 } },
+  ]));
+  const client = clientFixture([board]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="same-a-piece-0"]');
+    await app.mouse('[data-hold-key="same-b-piece-0"]', "click", { ctrlKey: true });
+
+    await app.change("#hold-type-select", "gaston");
+
+    assert.equal(app.documentValue("#hold-type-select"), "edge");
+    assert.match(app.text("#validation-list"), /two distinct hold IDs/i);
+
+    await app.click("#save-button");
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.regions.map((region) => region.type), ["jug", "edge"]);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("an unpaired gaston offers only actionable pairing candidates and saves the initial reciprocal pair", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    { id: 3, key: "jug-piece-0", type: "jug", displayPath: OTHER_PATH, metadata: { holdID: "jug", pieceIndex: 0 } },
+    { id: 4, key: "other-a-piece-0", type: "gaston", pairedHoldID: "other-b", displayPath: "M 10 30 L 20 30 L 20 40 Z", metadata: { holdID: "other-a", pieceIndex: 0 } },
+    { id: 5, key: "other-b-piece-0", type: "gaston", pairedHoldID: "other-a", displayPath: "M 30 30 L 40 30 L 40 40 Z", metadata: { holdID: "other-b", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+
+    assert.equal(app.documentValue("#hold-type-select"), "gaston");
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value=""]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="left"]'), null);
+    assert.equal(app.text('#gaston-pair-select option[value="right"]'), "right");
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="jug"]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="other-a"]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="other-b"]'), null);
+
+    await app.change("#gaston-pair-select", "right");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls[0]?.document.regions[0]?.pairedHoldID, "right");
+    assert.equal(client.saveCalls[0]?.document.regions[1]?.pairedHoldID, "left");
+  }, dependenciesFixture(board, { client }));
+});
+
+test("saving an unpaired gaston stays local and explains that it needs a pair", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls.length, 0);
+    assert.match(app.text("#validation-list"), /gaston hold left needs a paired gaston hold/i);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("an established gaston pair shows its counterpart without offering reassignment or unset", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "right", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", pairedHoldID: "left", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    { id: 3, key: "other-piece-0", type: "gaston", displayPath: OTHER_PATH, metadata: { holdID: "other", pieceIndex: 0 } },
+  ]));
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+
+    assert.equal(app.document.querySelector("#gaston-pair-select"), null);
+    assert.equal(app.text("#gaston-pair-current"), "right");
+    assert.equal(app.document.querySelector("#gaston-pair-current")?.getAttribute("aria-label"), "Paired gaston hold: right");
+  }, dependenciesFixture(board));
+});
+
+test("changing a gaston hold to another kind clears its pair metadata", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "right", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", pairedHoldID: "left", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+    await app.change("#hold-type-select", "jug");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls[0]?.document.regions[0]?.pairedHoldID, undefined);
+    assert.equal(client.saveCalls[0]?.document.regions[1]?.pairedHoldID, undefined);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("Add Hold creates and selects a centered square", async () => {
   await withEditor(async (app) => {
     await app.click("#add-hold-button");
@@ -838,6 +978,37 @@ test("Add Hold creates and selects a centered square", async () => {
     assert.equal(app.text("#hold-heading"), "hold-3-piece-0");
     assert.equal(app.documentValue("#hold-type-select"), "edge");
   });
+});
+
+test("Add segment creates and selects a separately editable piece of the selected hold", async () => {
+  const board = boardFixture();
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.click("#add-hold-segment-button");
+
+    assert.equal(app.text("#hold-heading"), "a-piece-2");
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-2"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(paths(app).at(-1), "M 26 10 L 36 10 L 36 20 Z");
+
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.at(-1), {
+      id: 4,
+      key: "a-piece-2",
+      type: "jug",
+      displayPath: "M 26 10 L 36 10 L 36 20 Z",
+      metadata: { holdID: "a", pieceIndex: 2 },
+    });
+  }, dependenciesFixture(board, { client }));
 });
 
 test("delete and type changes apply to every piece sharing holdID", async () => {
@@ -992,6 +1163,42 @@ test("duplicate and mirror preserves the selected presentation on the new hold",
       pieceIndex: 0,
       presentationID: "front",
     });
+  }, dependenciesFixture(board, { client }));
+});
+
+test("duplicate and mirror reserves hold IDs used by other presentations", async () => {
+  const document: EditorDocument = {
+    presentationID: "front",
+    canvas: { width: 100, height: 50 },
+    regions: [{
+      id: 1,
+      key: "front-piece-0",
+      type: "jug",
+      displayPath: FIRST_PATH,
+      metadata: { holdID: "front", pieceIndex: 0, presentationID: "front" },
+    }],
+  };
+  const board: Board = {
+    ...boardFixture(document),
+    holdIDs: ["front", "hold-2"],
+    selectedPresentationID: "front",
+  };
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, savedDocument) {
+      saved.push(structuredClone(savedDocument));
+      return { ...board, document: savedDocument };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="front-piece-0"]');
+    await app.click("#duplicate-mirror-hold-button");
+
+    assert.equal(app.text("#hold-heading"), "hold-3-piece-0");
+    await app.click("#save-button");
+    assert.equal(saved[0]?.regions[1]?.metadata?.holdID, "hold-3");
   }, dependenciesFixture(board, { client }));
 });
 
@@ -1836,6 +2043,23 @@ test("double-click inserts a vertex while right-click selects it and waits for a
   }, dependenciesFixture(boardFixture(square)));
 });
 
+test("double-click adds a smooth point at the clicked location on a bendable cubic", async () => {
+  const curve = documentFixture([{
+    id: 1,
+    key: "curve",
+    type: "jug",
+    displayPath: "M 0 0 C 0 10 10 10 10 0 L 10 10 Z",
+    bendableCommandIndexes: [1],
+  }]);
+  await withEditor(async (app) => {
+    app.setSvgGeometry("#editor-svg", { rect: { left: 0, top: 0, width: 100, height: 50 } });
+    await app.click('[data-hold-key="curve"]');
+    await app.mouse("#editor-svg", "dblclick", { clientX: 1.5625, clientY: 5.625 });
+
+    assert.equal(paths(app)[0], "M 0 0 C 0 2.5 0.625 4.375 1.5625 5.625 C 4.375 9.375 10 7.5 10 0 L 10 10 Z");
+  }, dependenciesFixture(boardFixture(curve)));
+});
+
 test("vertex menu rounds a corner as a persisted quadratic", async () => {
   const square = documentFixture([{ id: 1, key: "square", type: "jug", displayPath: "M 10 10 L 30 10 L 30 30 L 10 30 Z" }]);
   await withEditor(async (app) => {
@@ -2124,7 +2348,7 @@ test("curved-segment menu makes a quadratic segment straight and removes its con
   }, dependenciesFixture(boardFixture(square)));
 });
 
-test("curved-segment menu adds an inflection point at the right-click location and labels its reversible removal", async () => {
+test("curved-segment menu presents adding a smooth point at the right-click location", async () => {
   const square = documentFixture([
     { id: 1, key: "square", type: "jug", displayPath: "M 10 10 Q 10 50 50 50 L 50 10 Z" },
   ]);
@@ -2133,7 +2357,7 @@ test("curved-segment menu adds an inflection point at the right-click location a
     await app.click('[data-hold-key="square"]');
     await app.mouse('[data-hold-key="square"]', "contextmenu", { button: 2, clientX: 12.5, clientY: 27.5 });
 
-    assert.equal(app.text("#add-inflection-point-action"), "Add inflection point");
+    assert.equal(app.text("#add-inflection-point-action"), "Add smooth point");
     await app.click("#add-inflection-point-action");
     assert.match(paths(app)[0]!, /^M 10 10 Q 10 20(?:\.\d+)? 12\.5 27\.5/);
 

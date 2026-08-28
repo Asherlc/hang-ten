@@ -179,6 +179,12 @@ final class AppStore: ObservableObject {
         healthAuthorizationState == .notDetermined
     }
 
+    var mostRecentSavedLoadAdjustmentKGF: Double {
+        sessionHistory.max { lhs, rhs in
+            lhs.recordedAt < rhs.recordedAt
+        }?.loadAdjustmentKGF ?? 0
+    }
+
     var plans: [TrainingPlan] {
         (PlanCatalog.all + customPlans).filter { plan in
             plan.boardID == nil || plan.boardID == selectedBoard.id

@@ -41,6 +41,7 @@ function createSegment(regionKey: string, command: PathCommand, ordinal: number)
       id: `${regionKey}:anchor:${ordinal}`,
       ordinal,
       isStart: command.type === "M",
+      ...(command.smooth === true ? { smooth: true } : {}),
       x: endpoint.x,
       y: endpoint.y,
     },
@@ -105,6 +106,7 @@ function retainSegment(path: EditablePath, command: PathCommand, prior: Editable
     anchor: {
       ...prior.anchor,
       isStart: command.type === "M",
+      ...(command.smooth === true || prior.anchor.smooth === true ? { smooth: true } : {}),
       x: endpoint.x,
       y: endpoint.y,
     },
@@ -121,6 +123,7 @@ function toPathCommands(path: EditablePath): PathCommand[] {
   const commands: PathCommand[] = path.segments.map((segment) => ({
     type: segment.type,
     ...(segment.bendable === true ? { bendable: true } : {}),
+    ...(segment.anchor.smooth === true ? { smooth: true } : {}),
     points: [{ x: segment.anchor.x, y: segment.anchor.y }],
     controls: segment.controls.map((control) => ({ x: control.x, y: control.y })),
   }));
@@ -169,11 +172,16 @@ export function createEditablePath(
   pathString: string,
   pathEditor: PathEditor,
   bendableCommandIndexes: readonly number[] = [],
+  smoothAnchorIndexes: readonly number[] = [],
 ): EditablePath {
   const commands = pathEditor.parsePath(pathString);
   for (const index of bendableCommandIndexes) {
     const command = commands[index];
     if (command?.type === "C") command.bendable = true;
+  }
+  for (const index of smoothAnchorIndexes) {
+    const command = commands[index];
+    if (command && command.type !== "M" && command.type !== "Z") command.smooth = true;
   }
   const segments = editableSegments(commands).map((command, index) => createSegment(regionKey, command, index));
   const path: EditablePath = {
@@ -228,10 +236,32 @@ export function moveEditableAnchor(path: EditablePath, anchorID: string, deltaX:
 }
 
 export function moveEditableControl(path: EditablePath, controlID: string, deltaX: number, deltaY: number): boolean {
-  const control = editablePathControl(path, controlID);
-  if (!control) return false;
+  const ownerIndex = path.segments.findIndex((segment) => segment.controls.some((control) => control.id === controlID));
+  if (ownerIndex === -1) return false;
+  const owner = path.segments[ownerIndex]!;
+  const control = owner.controls.find((candidate) => candidate.id === controlID)!;
   control.x += deltaX;
   control.y += deltaY;
+  const controlIndex = owner.controls.indexOf(control);
+  const endpointAnchor = owner.anchor.smooth === true && controlIndex === owner.controls.length - 1
+    ? owner.anchor
+    : controlIndex === 0 && ownerIndex > 0 && path.segments[ownerIndex - 1]!.anchor.smooth === true
+      ? path.segments[ownerIndex - 1]!.anchor
+      : null;
+  if (!endpointAnchor) return true;
+  const anchorIndex = path.segments.indexOf(path.segments.find((segment) => segment.anchor.id === endpointAnchor.id)!);
+  const counterpart = anchorIndex === ownerIndex
+    ? path.segments[ownerIndex + 1]?.controls[0]
+    : path.segments[ownerIndex - 1]?.controls.at(-1);
+  if (!counterpart) return true;
+  const vectorX = control.x - endpointAnchor.x;
+  const vectorY = control.y - endpointAnchor.y;
+  const length = Math.hypot(counterpart.x - endpointAnchor.x, counterpart.y - endpointAnchor.y);
+  const vectorLength = Math.hypot(vectorX, vectorY);
+  if (length > 0 && vectorLength > 0) {
+    counterpart.x = endpointAnchor.x - vectorX / vectorLength * length;
+    counterpart.y = endpointAnchor.y - vectorY / vectorLength * length;
+  }
   return true;
 }
 
@@ -278,7 +308,7 @@ export function insertEditableInflectionPoint(
     path,
     pathEditor,
     (commands) => {
-      pathEditor.addInflectionPoint(commands, afterIndex, point);
+      if (pathEditor.addInflectionPoint(commands, afterIndex, point)) commands[afterIndex + 1]!.smooth = true;
     },
     (resultIndex) => resultIndex <= afterIndex
       ? original[resultIndex]

@@ -49,6 +49,28 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(store.selectedBoard.id, BoardCatalog.defaultBoard.id)
     }
 
+    func testMostRecentSavedLoadAdjustmentUsesLatestLocalSessionRegardlessOfPlan() {
+        let olderSession = workoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planTitle: "Older plan",
+            recordedAt: 100,
+            loadAdjustmentKGF: 7.5
+        )
+        let latestSession = workoutSessionRecord(
+            id: UUID(uuidString: "BBBBBBBB-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planTitle: "Another plan",
+            recordedAt: 200,
+            loadAdjustmentKGF: -12
+        )
+        let sessionStore = PreloadedWorkoutSessionStore(sessions: [olderSession, latestSession])
+        let store = AppStore(
+            workoutSessionStore: sessionStore,
+            defaults: makeDefaults()
+        )
+
+        XCTAssertEqual(store.mostRecentSavedLoadAdjustmentKGF, -12, accuracy: 0.0001)
+    }
+
     func testSelectingBoardDerivesTelemetryFamilyFromBoardIDSuffix() {
         let telemetry = RecordingTelemetry()
         let store = AppStore(
@@ -1352,7 +1374,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
     private func workoutSessionRecord(
         id: UUID = UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
         planTitle: String = "Plan",
-        recordedAt: TimeInterval = 20
+        recordedAt: TimeInterval = 20,
+        loadAdjustmentKGF: Double = 0
     ) -> WorkoutSessionRecord {
         WorkoutSessionRecord(
             id: id,
@@ -1363,7 +1386,8 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             endDate: Date(timeIntervalSince1970: recordedAt),
             motherboardIdentifier: nil,
             batteryValue: nil,
-            steps: []
+            steps: [],
+            loadAdjustmentKGF: loadAdjustmentKGF
         )
     }
 }
@@ -1463,6 +1487,37 @@ private final class FailingWorkoutSessionStore: WorkoutSessionStoring {
         DispatchQueue.main.async {
             completion(.failure(Failure()))
         }
+    }
+
+    func flush() {}
+}
+
+private final class PreloadedWorkoutSessionStore: WorkoutSessionStoring {
+    private(set) var sessions: [WorkoutSessionRecord]
+    var persistenceError: String? { nil }
+
+    init(sessions: [WorkoutSessionRecord]) {
+        self.sessions = sessions
+    }
+
+    func append(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.append(session)
+        completion(.success(()))
+    }
+
+    func remove(
+        _ session: WorkoutSessionRecord,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        sessions.removeAll { $0.id == session.id }
+        completion(.success(()))
+    }
+
+    func flush(completion: @escaping (Result<Void, Error>) -> Void) {
+        completion(.success(()))
     }
 
     func flush() {}

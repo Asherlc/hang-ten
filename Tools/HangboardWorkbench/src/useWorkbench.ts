@@ -434,7 +434,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
     const current = stateRef.current;
     if (!current.board || !current.document) return;
     try {
-      controller.validateEditorDocument(current.document);
+      controller.validateEditorDocumentForSave(current.document);
     } catch (error: unknown) {
       updateState((value) => ({
         ...value,
@@ -811,7 +811,7 @@ export function useWorkbench(dependencies: WorkbenchDependencies): UseWorkbenchR
       || !state.document
       || autosaveAttemptedDocumentRef.current === state.document) return;
     try {
-      controller.validateEditorDocument(state.document);
+      controller.validateEditorDocumentForSave(state.document);
     } catch {
       return;
     }

@@ -682,6 +682,20 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has sloper metadata but is not a sloper"
                 )
             }
+            if hold.kind == .gaston {
+                guard let pairedHoldID = hold.pairedHoldID,
+                      pairedHoldID.isBoardPackageIdentifier else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "gaston hold \(hold.id) must declare an identifier-shaped pairedHoldID"
+                    )
+                }
+            } else if hold.declaresPairedHoldID {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "non-gaston hold \(hold.id) must not declare pairedHoldID"
+                )
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw BoardPackageStoreError.invalidPackage(
@@ -755,6 +769,26 @@ struct BoardPackageStore {
                 boardID: document.id,
                 reason: "holds must not be empty"
             )
+        }
+        let documentsByHoldID = Dictionary(
+            uniqueKeysWithValues: document.holds.map { ($0.id, $0) }
+        )
+        for hold in document.holds where hold.kind == .gaston {
+            let pairedHoldID = hold.pairedHoldID!
+            guard pairedHoldID != hold.id,
+                  let pairedHold = documentsByHoldID[pairedHoldID] else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "gaston hold \(hold.id) must pair with a distinct existing hold"
+                )
+            }
+            guard pairedHold.kind == .gaston,
+                  pairedHold.pairedHoldID == hold.id else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "gaston hold \(hold.id) must have a reciprocal gaston pair"
+                )
+            }
         }
         return holds
     }
@@ -892,6 +926,8 @@ private struct BoardPackageHoldDocument: Decodable {
     let fingerCapacity: Int?
     let handCapacity: Int?
     let features: [HoldFeature]?
+    let pairedHoldID: String?
+    let declaresPairedHoldID: Bool
     let presentationID: String
 
     private enum CodingKeys: String, CodingKey {
@@ -906,6 +942,7 @@ private struct BoardPackageHoldDocument: Decodable {
         case fingerCapacity
         case handCapacity
         case features
+        case pairedHoldID
         case presentationID
     }
 
@@ -913,7 +950,7 @@ private struct BoardPackageHoldDocument: Decodable {
         try decoder.rejectUnknownKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
             "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "presentationID", "sloper"
+            "features", "pairedHoldID", "presentationID", "sloper"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -932,6 +969,10 @@ private struct BoardPackageHoldDocument: Decodable {
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
+        declaresPairedHoldID = container.contains(.pairedHoldID)
+        pairedHoldID = declaresPairedHoldID
+            ? try container.decode(String.self, forKey: .pairedHoldID)
+            : nil
         presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 
@@ -955,6 +996,7 @@ private struct BoardPackageHoldDocument: Decodable {
                 $0.lowerBound...$0.upperBound
             },
             features: features.map(Set.init),
+            pairedHoldID: pairedHoldID,
             presentationID: presentationID
         )
     }
@@ -1160,6 +1202,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
     let control1: [Double]?
     let control2: [Double]?
     var bendable: Bool?
+    var smooth: Bool?
 
     private enum CodingKeys: String, CodingKey {
         case command
@@ -1168,6 +1211,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case control1
         case control2
         case bendable
+        case smooth
     }
 
     init(
@@ -1176,7 +1220,8 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         control: [Double]?,
         control1: [Double]?,
         control2: [Double]?,
-        bendable: Bool? = nil
+        bendable: Bool? = nil,
+        smooth: Bool? = nil
     ) {
         self.command = command
         self.to = to
@@ -1184,6 +1229,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         self.control1 = control1
         self.control2 = control2
         self.bendable = bendable
+        self.smooth = smooth
     }
 
     init(from decoder: Decoder) throws {
@@ -1196,7 +1242,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case "quad":
             allowedKeys = ["command", "to", "control"]
         case "curve":
-            allowedKeys = ["command", "to", "control1", "control2", "bendable"]
+            allowedKeys = ["command", "to", "control1", "control2", "bendable", "smooth"]
         case "close":
             allowedKeys = ["command"]
         default:
@@ -1219,6 +1265,18 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         } else {
             bendable = nil
         }
+        if container.contains(.smooth) {
+            guard try container.decode(Bool.self, forKey: .smooth) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .smooth,
+                    in: container,
+                    debugDescription: "smooth must be true"
+                )
+            }
+            smooth = true
+        } else {
+            smooth = nil
+        }
     }
 
     private func container(
@@ -1228,7 +1286,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         try decoder.container(keyedBy: keys)
     }
 
-    /// Runtime encoding drops editor-only bendable metadata: the training app
+    /// Runtime encoding drops editor-only bendable and smooth metadata: the training app
     /// never re-delivers it, while the board editor writer reads the stored
     /// property directly when it serializes canonical packages.
     func encode(to encoder: Encoder) throws {

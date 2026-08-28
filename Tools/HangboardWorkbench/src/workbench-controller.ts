@@ -7,6 +7,8 @@ import type {
 } from "./types.ts";
 import { isShapeConstraint, validateShapeConstraint } from "./shape-constraints.ts";
 
+const IDENTIFIER = /^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$/;
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -65,6 +67,7 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
+    && (value.pairedHoldID === undefined || typeof value.pairedHoldID === "string")
     && (value.sloper === undefined
       || (value.type === "sloper" && isSloperMetadata(value.sloper)))
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
@@ -74,6 +77,8 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && (value.handCapacity === undefined || isHandCapacity(value.handCapacity))
     && (value.bendableCommandIndexes === undefined
       || isBendableCommandIndexes(value.bendableCommandIndexes))
+    && (value.smoothAnchorIndexes === undefined
+      || isBendableCommandIndexes(value.smoothAnchorIndexes))
     && (value.shapeConstraint === undefined || isShapeConstraint(value.shapeConstraint))
     && (metadata === undefined
       || (isRecord(metadata)
@@ -139,6 +144,10 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     if (Object.hasOwn(region, "sloper")
       && (region.type !== "sloper" || !isSloperMetadata(region.sloper))) {
       throw new Error(`Hold ${region.key} needs valid sloper metadata only on sloper holds`);
+    }
+    if (Object.hasOwn(region, "pairedHoldID")
+      && (region.type !== "gaston" || typeof region.pairedHoldID !== "string" || !region.pairedHoldID)) {
+      throw new Error(`Hold ${region.key} needs paired hold metadata only on gaston holds`);
     }
     if (Object.hasOwn(region, "fingerCapacity")
       && !isFingerCapacity(region.fingerCapacity)) {
@@ -212,6 +221,38 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   return document;
 }
 
+export function validateEditorDocumentForSave(document: unknown): EditorDocument {
+  const validated = validateEditorDocument(document);
+  const pairedHoldIdByGastonHoldId = new Map<string, string>();
+  for (const region of validated.regions) {
+    if (region.type !== "gaston") continue;
+    const holdID = region.metadata?.holdID;
+    if (!holdID) throw new Error(`Gaston hold ${region.key} needs a hold ID to pair`);
+    if (!region.pairedHoldID) throw new Error(`Gaston hold ${holdID} needs a paired gaston hold`);
+    if (!IDENTIFIER.test(region.pairedHoldID)) {
+      throw new Error(`Gaston hold ${holdID} paired gaston hold ID must be identifier-shaped`);
+    }
+    if (region.pairedHoldID === holdID) {
+      throw new Error(`Gaston hold ${holdID} must pair with a distinct gaston hold`);
+    }
+    const existingPair = pairedHoldIdByGastonHoldId.get(holdID);
+    if (existingPair !== undefined && existingPair !== region.pairedHoldID) {
+      throw new Error(`Gaston hold ${holdID} pieces must share one paired gaston hold`);
+    }
+    pairedHoldIdByGastonHoldId.set(holdID, region.pairedHoldID);
+  }
+  for (const [holdID, pairedHoldID] of pairedHoldIdByGastonHoldId) {
+    const reciprocalPair = pairedHoldIdByGastonHoldId.get(pairedHoldID);
+    if (reciprocalPair === undefined) {
+      throw new Error(`Gaston hold ${holdID} needs paired gaston hold ${pairedHoldID}`);
+    }
+    if (reciprocalPair !== holdID) {
+      throw new Error(`Gaston hold ${holdID} needs a reciprocal gaston pair`);
+    }
+  }
+  return validated;
+}
+
 export async function loadBoardAtomically<ImageType>(options: {
   boardId: string;
   getBoard(boardId: string): Promise<import("./types.ts").Board>;
@@ -259,12 +300,12 @@ export async function saveBoardAtomically(options: {
 }): Promise<SavedBoard> {
   const { boardId, document, save, commit } = options;
   if (!boardId) throw new TypeError("Board ID is required");
-  validateEditorDocument(document);
+  validateEditorDocumentForSave(document);
   const board = await save(boardId, document);
   if (!board || board.boardId !== boardId || !board.document) {
     throw new Error("Workbench returned an invalid saved board");
   }
-  validateEditorDocument(board.document);
+  validateEditorDocumentForSave(board.document);
   const saved = Object.freeze({ board, document: board.document });
   commit(saved);
   return saved;

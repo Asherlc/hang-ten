@@ -18,6 +18,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "frictitious.doormount-pro-7",
             "frictitious.megalith",
             "lattice-triple-rung",
+            "mammut.diamond-finger",
             "metolius.climbers-edge",
             "metolius.contact",
             "metolius.foundry",

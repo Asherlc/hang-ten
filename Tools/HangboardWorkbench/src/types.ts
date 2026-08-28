@@ -10,6 +10,7 @@ export interface PathCommand {
   points: Point[];
   controls: Point[];
   bendable?: boolean;
+  smooth?: boolean;
 }
 
 /** Editor-session identity for a path endpoint. Never persisted in board geometry. */
@@ -17,6 +18,7 @@ export interface EditableAnchor extends Point {
   readonly id: string;
   readonly ordinal: number;
   readonly isStart: boolean;
+  smooth?: boolean;
 }
 
 /** Editor-session identity for a Bézier control point. Never persisted in board geometry. */
@@ -81,6 +83,7 @@ export interface HoldRegion {
   id?: number;
   key: string;
   type?: string;
+  pairedHoldID?: string;
   displayPath: string;
   metadata?: {
     holdID: string;
@@ -94,6 +97,7 @@ export interface HoldRegion {
   handCapacity?: number;
   shapeConstraint?: ShapeConstraint;
   bendableCommandIndexes?: number[];
+  smoothAnchorIndexes?: number[];
 }
 
 export interface EditorDocument {
@@ -214,6 +218,7 @@ export interface SavedBoard {
 
 export interface WorkbenchController {
   validateEditorDocument(document: unknown): EditorDocument;
+  validateEditorDocumentForSave(document: unknown): EditorDocument;
   loadBoardAtomically<ImageType>(options: {
     boardId: string;
     getBoard(boardId: string): Promise<Board>;

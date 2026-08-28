@@ -142,7 +142,7 @@ OPTIONAL_HOLD_METADATA_FIELDS = (
     "gripType",
     "features",
 )
-ALLOWED_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+ALLOWED_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 EXPECTED_KIND_COUNTS = Counter({"edge": 10, "pocket": 4, "pinch": 2, "sloper": 2})
 EXPECTED_PIECE_COUNT = 22
 EXPECTED_PIXEL_SIZE = (1774, 887)
@@ -389,6 +389,19 @@ def test_piece_geometry_fills_declared_frames(
             assert path.commands[0][0] == "M"
             assert path.commands[-1][0] == "Z"
             assert path.data.endswith(" Z")
+
+
+def test_left_three_finger_pocket_exposes_a_smooth_bezier_junction(
+    package: board_package.BoardPackage,
+) -> None:
+    document = board_package.editor_document(package)
+    region = next(
+        region
+        for region in document["regions"]
+        if region["key"] == "three-finger-pocket-left-piece-0"
+    )
+
+    assert region["smoothAnchorIndexes"] == [6]
 
 
 def test_secondary_presentation_pixels_are_exact_manufacturer_transforms() -> None:

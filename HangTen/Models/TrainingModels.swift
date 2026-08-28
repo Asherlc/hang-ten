@@ -131,6 +131,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     case pocket
     case pinch
     case sloper
+    case gaston
 
     var id: String { rawValue }
 
@@ -141,6 +142,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         case .pocket: "Pockets"
         case .pinch: "Pinches"
         case .sloper: "Sloper"
+        case .gaston: "Gastons"
         }
     }
 
@@ -151,6 +153,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         case .pocket: "Pocket"
         case .pinch: "Pinch"
         case .sloper: "Sloper"
+        case .gaston: "Gaston"
         }
     }
 
@@ -161,6 +164,7 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
         case .pocket: .holdPurple
         case .pinch: .holdRed
         case .sloper: .holdTeal
+        case .gaston: .holdGreen
         }
     }
 }
@@ -488,6 +492,7 @@ struct BoardHold: Identifiable, Hashable {
     let sizeMillimeters: Double?
     let depthRangeMillimeters: ClosedRange<Double>?
     let features: Set<HoldFeature>?
+    let pairedHoldID: String?
     let presentationID: String
 
     static let validFingerCapacityRange = 1...4
@@ -527,6 +532,7 @@ struct BoardHold: Identifiable, Hashable {
         handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
         features: Set<HoldFeature>? = nil,
+        pairedHoldID: String? = nil,
         presentationID: String = BoardPresentation.primaryID
     ) {
         precondition(!geometry.isEmpty, "BoardHold geometry must include at least one piece.")
@@ -577,6 +583,7 @@ struct BoardHold: Identifiable, Hashable {
             self.depthRangeMillimeters = range
         }
         self.features = features
+        self.pairedHoldID = pairedHoldID
         self.presentationID = presentationID
     }
 

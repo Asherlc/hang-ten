@@ -109,6 +109,58 @@ def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
     assert board.holds[0].depth_range_millimeters == module.MillimeterRange(7.5, 12.5)
 
 
+def test_board_schema_accepts_reciprocal_gaston_pairs() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    template = document["holds"][0]
+    left = {**template, "id": "gaston-left", "name": "Left gaston", "kind": "gaston", "pairedHoldID": "gaston-right"}
+    right = {**template, "id": "gaston-right", "name": "Right gaston", "kind": "gaston", "pairedHoldID": "gaston-left"}
+    document["holds"] = [left, right]
+
+    board = module._load_board(document)
+
+    assert [hold.kind for hold in board.holds] == ["gaston", "gaston"]
+    assert [hold.paired_hold_id for hold in board.holds] == ["gaston-right", "gaston-left"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda holds: holds[0].__setitem__("kind", "gaston"),
+        lambda holds: holds[0].update(kind="gaston", pairedHoldID="not a valid identifier"),
+        lambda holds: holds[0].__setitem__("pairedHoldID", "gaston-right"),
+        lambda holds: holds[0].update(kind="gaston", pairedHoldID="gaston-left"),
+        lambda holds: holds[0].update(kind="gaston", pairedHoldID="missing"),
+        lambda holds: holds[0].update(kind="gaston", pairedHoldID="gaston-right"),
+        lambda holds: (
+            holds[0].update(kind="gaston", pairedHoldID="gaston-right"),
+            holds[1].update(kind="gaston", pairedHoldID="another-gaston"),
+        ),
+    ],
+    ids=[
+        "missing-pair",
+        "invalid-pair-identifier",
+        "pair-on-non-gaston",
+        "self-pair",
+        "unknown-target",
+        "non-gaston-target",
+        "non-reciprocal-target",
+    ],
+)
+def test_board_schema_rejects_invalid_gaston_pair_metadata(mutate) -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    template = document["holds"][0]
+    document["holds"] = [
+        {**template, "id": "gaston-left", "name": "Left gaston"},
+        {**template, "id": "gaston-right", "name": "Right gaston"},
+    ]
+    mutate(document["holds"])
+
+    with pytest.raises(ValueError):
+        module._load_board(document)
+
+
 @pytest.mark.parametrize(
     ("sloper", "expected"),
     [

@@ -56,9 +56,10 @@ _HOLD_OPTIONAL_FIELDS = frozenset(
         "fingerCapacity",
         "handCapacity",
         "features",
+        "pairedHoldID",
     }
 )
-_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 _SLOPER_TYPES = frozenset({"flat", "round"})
 _GRIP_TYPES = frozenset(
     {
@@ -187,10 +188,12 @@ _EditorPiece = tuple[
     Any,
     dict[str, object] | None,
     tuple[int, ...],
+    tuple[int, ...],
     int | None,
     int | float | None,
     dict[str, int | float] | None,
     int | None,
+    str | None,
 ]
 
 
@@ -395,6 +398,8 @@ def editor_document(
             }
             if "kind" in hold:
                 region["type"] = hold["kind"]
+            if "pairedHoldID" in hold:
+                region["pairedHoldID"] = hold["pairedHoldID"]
             if "sloper" in hold:
                 region["sloper"] = dict(hold["sloper"])
             if "shapeConstraint" in piece:
@@ -404,6 +409,9 @@ def editor_document(
             bendable_command_indexes = _bendable_command_indexes(piece)
             if bendable_command_indexes:
                 region["bendableCommandIndexes"] = bendable_command_indexes
+            smooth_anchor_indexes = _smooth_anchor_indexes(piece)
+            if smooth_anchor_indexes:
+                region["smoothAnchorIndexes"] = smooth_anchor_indexes
             if "fingerCapacity" in hold:
                 region["fingerCapacity"] = hold["fingerCapacity"]
             if "sizeMillimeters" in hold:
@@ -481,10 +489,12 @@ def save_editor_document(
             path,
             shape_constraint,
             bendable_command_indexes,
+            smooth_anchor_indexes,
             finger_capacity,
             size_millimeters,
             depth_range,
             hand_capacity,
+            paired_hold_id,
         ) in parsed_regions.values():
             pieces_by_hold.setdefault(hold_id, []).append(
                 (
@@ -494,10 +504,12 @@ def save_editor_document(
                     path,
                     shape_constraint,
                     bendable_command_indexes,
+                    smooth_anchor_indexes,
                     finger_capacity,
                     size_millimeters,
                     depth_range,
                     hand_capacity,
+                    paired_hold_id,
                 )
             )
         for pieces in pieces_by_hold.values():
@@ -575,10 +587,12 @@ def _apply_editor_document(
             path,
             shape_constraint,
             bendable_command_indexes,
+            smooth_anchor_indexes,
             _finger_capacity,
             _size_millimeters,
             _depth_range,
             _hand_capacity,
+            _paired_hold_id,
         ) in pieces:
             existing_geometry = existing["geometry"] if existing is not None else []
             if piece_index < len(existing_geometry):
@@ -593,6 +607,7 @@ def _apply_editor_document(
                 else:
                     piece["shapeConstraint"] = dict(shape_constraint)
                 _apply_bendable_command_indexes(piece, bendable_command_indexes)
+                _apply_smooth_anchor_indexes(piece, smooth_anchor_indexes)
                 geometry.append(piece)
             else:
                 frame, shape = shape_for_path(path, width, height)
@@ -600,6 +615,7 @@ def _apply_editor_document(
                 if shape_constraint is not None:
                     piece["shapeConstraint"] = dict(shape_constraint)
                 _apply_bendable_command_indexes(piece, bendable_command_indexes)
+                _apply_smooth_anchor_indexes(piece, smooth_anchor_indexes)
                 geometry.append(piece)
         hold_json = (
             existing
@@ -614,24 +630,28 @@ def _apply_editor_document(
             hold_json.pop("sloper", None)
         else:
             hold_json["sloper"] = dict(pieces[0][2])
-        if pieces[0][6] is None:
+        if pieces[0][7] is None:
             hold_json.pop("fingerCapacity", None)
         else:
-            hold_json["fingerCapacity"] = pieces[0][6]
-        if pieces[0][7] is None:
-            hold_json.pop("sizeMillimeters", None)
-        else:
-            hold_json["sizeMillimeters"] = pieces[0][7]
-            hold_json.pop("depthRangeMillimeters", None)
+            hold_json["fingerCapacity"] = pieces[0][7]
         if pieces[0][8] is None:
+            hold_json.pop("sizeMillimeters", None)
+        else:
+            hold_json["sizeMillimeters"] = pieces[0][8]
+            hold_json.pop("depthRangeMillimeters", None)
+        if pieces[0][9] is None:
             hold_json.pop("depthRangeMillimeters", None)
         else:
-            hold_json["depthRangeMillimeters"] = dict(pieces[0][8])
+            hold_json["depthRangeMillimeters"] = dict(pieces[0][9])
             hold_json.pop("sizeMillimeters", None)
-        if pieces[0][9] is None:
+        if pieces[0][10] is None:
             hold_json.pop("handCapacity", None)
         else:
-            hold_json["handCapacity"] = pieces[0][9]
+            hold_json["handCapacity"] = pieces[0][10]
+        if pieces[0][11] is None:
+            hold_json.pop("pairedHoldID", None)
+        else:
+            hold_json["pairedHoldID"] = pieces[0][11]
         hold_json["geometry"] = geometry
         if presentation_id is not None:
             hold_json["presentationID"] = presentation_id
@@ -678,10 +698,12 @@ def _current_display_paths(
             _path,
             _shape_constraint,
             _bendable_command_indexes,
+            _smooth_anchor_indexes,
             _finger_capacity,
             _size_millimeters,
             _depth_range,
             _hand_capacity,
+            _paired_hold_id,
         ) in pieces:
             if piece_index < len(geometry):
                 piece = geometry[piece_index]
@@ -706,10 +728,12 @@ def _editor_document_is_dirty(
         if (hold.get("kind") != pieces[0][1]
             or hold.get("sloper") != pieces[0][2]
             or len(hold["geometry"]) != len(pieces)
-            or hold.get("fingerCapacity") != pieces[0][6]
-            or hold.get("sizeMillimeters") != pieces[0][7]
-            or hold.get("depthRangeMillimeters") != pieces[0][8]
-            or hold.get("handCapacity") != pieces[0][9]):
+            or hold.get("fingerCapacity") != pieces[0][7]
+            or hold.get("sizeMillimeters") != pieces[0][8]
+            or hold.get("depthRangeMillimeters") != pieces[0][9]
+            or hold.get("handCapacity") != pieces[0][10]):
+            return True
+        if hold.get("pairedHoldID") != pieces[0][11]:
             return True
         for (
             piece_index,
@@ -718,10 +742,12 @@ def _editor_document_is_dirty(
             path,
             shape_constraint,
             bendable_command_indexes,
+            smooth_anchor_indexes,
             _finger_capacity,
             _size_millimeters,
             _depth_range,
             _hand_capacity,
+            _paired_hold_id,
         ) in pieces:
             current_path = current_paths.get((hold_id, piece_index))
             if current_path is None or path.data != current_path.data:
@@ -738,6 +764,8 @@ def _editor_document_is_dirty(
             if current_constraint != shape_constraint:
                 return True
             if _bendable_command_indexes(piece) != list(bendable_command_indexes):
+                return True
+            if _smooth_anchor_indexes(piece) != list(smooth_anchor_indexes):
                 return True
     return False
 
@@ -1070,6 +1098,7 @@ def _validate_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_gaston_pairs(holds)
 
 
 def validate_catalog_board(
@@ -1116,6 +1145,7 @@ def validate_catalog_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_gaston_pairs(holds)
 
 
 def _validate_hold(
@@ -1145,6 +1175,10 @@ def _validate_hold(
         if "kind" in hold
         else None
     )
+    if kind == "gaston":
+        _identifier(hold.get("pairedHoldID"), f"{label}.pairedHoldID")
+    elif "pairedHoldID" in hold:
+        raise BoardPackageError(f"{label}.pairedHoldID is only allowed for gaston holds")
     if "sloper" in hold:
         if kind != "sloper":
             raise BoardPackageError(
@@ -1201,6 +1235,31 @@ def _validate_hold(
         if len(parsed) != len(set(parsed)):
             raise BoardPackageError(f"{label}.features must be unique")
     return hold_id
+
+
+def _validate_gaston_pairs(holds: list[object]) -> None:
+    holds_by_id = {
+        hold["id"]: hold
+        for hold in holds
+        if isinstance(hold, Mapping) and isinstance(hold.get("id"), str)
+    }
+    for hold in holds_by_id.values():
+        if hold.get("kind") != "gaston":
+            continue
+        hold_id = hold["id"]
+        paired_hold_id = hold["pairedHoldID"]
+        paired_hold = holds_by_id.get(paired_hold_id)
+        if paired_hold is None or paired_hold_id == hold_id:
+            raise BoardPackageError(
+                f"gaston hold {hold_id} must pair with a distinct existing hold"
+            )
+        if (
+            paired_hold.get("kind") != "gaston"
+            or paired_hold.get("pairedHoldID") != hold_id
+        ):
+            raise BoardPackageError(
+                f"gaston hold {hold_id} must have a reciprocal gaston pair"
+            )
 
 
 def _validate_piece(
@@ -1333,6 +1392,7 @@ def _validate_editor_document(
         int | float | None,
         dict[str, int | float] | None,
         int | None,
+        str | None,
     ],
 ]:
     """Parse and cross-validate an editor document, allowing added/removed/
@@ -1374,6 +1434,7 @@ def _validate_editor_document(
             int | float | None,
             dict[str, int | float] | None,
             int | None,
+            str | None,
         ],
     ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
@@ -1384,6 +1445,7 @@ def _validate_editor_document(
     depth_range_by_hold: dict[str, dict[str, int | float] | None] = {}
     depth_representation_by_hold: dict[str, str] = {}
     hand_capacity_by_hold: dict[str, int | None] = {}
+    paired_hold_id_by_hold: dict[str, str | None] = {}
     for region in regions:
         if not isinstance(region, Mapping):
             raise BoardPackageError("editor document contains an invalid hold piece")
@@ -1394,11 +1456,13 @@ def _validate_editor_document(
                 "id",
                 "key",
                 "type",
+                "pairedHoldID",
                 "sloper",
                 "displayPath",
                 "metadata",
                 "shapeConstraint",
-                "bendableCommandIndexes",
+            "bendableCommandIndexes",
+            "smoothAnchorIndexes",
                 "fingerCapacity",
                 "sizeMillimeters",
                 "depthRangeMillimeters",
@@ -1418,6 +1482,16 @@ def _validate_editor_document(
             if "type" in region
             else None
         )
+        if "pairedHoldID" in region:
+            if kind != "gaston":
+                raise BoardPackageError(
+                    f"editor region {key}.pairedHoldID is only allowed for gaston holds"
+                )
+            paired_hold_id = _identifier(
+                region["pairedHoldID"], f"editor region {key}.pairedHoldID"
+            )
+        else:
+            paired_hold_id = None
         if "sloper" in region:
             if kind != "sloper":
                 raise BoardPackageError(
@@ -1481,6 +1555,16 @@ def _validate_editor_document(
                 shape_constraint,
             )
             if "bendableCommandIndexes" in region
+            else ()
+        )
+        smooth_anchor_indexes = (
+            _parse_smooth_anchor_indexes(
+                region["smoothAnchorIndexes"],
+                f"editor region {key}.smoothAnchorIndexes",
+                parsed_path,
+                shape_constraint,
+            )
+            if "smoothAnchorIndexes" in region
             else ()
         )
         if "fingerCapacity" in region:
@@ -1566,6 +1650,10 @@ def _validate_editor_document(
         if hold_id in hand_capacity_by_hold and hand_capacity_by_hold[hold_id] != hand_capacity:
             raise BoardPackageError(f"hold {hold_id} pieces must share one hand capacity")
         hand_capacity_by_hold[hold_id] = hand_capacity
+        if (hold_id in paired_hold_id_by_hold
+            and paired_hold_id_by_hold[hold_id] != paired_hold_id):
+            raise BoardPackageError(f"hold {hold_id} pieces must share one paired hold")
+        paired_hold_id_by_hold[hold_id] = paired_hold_id
         parsed[key] = (
             hold_id,
             piece_index,
@@ -1574,10 +1662,12 @@ def _validate_editor_document(
             parsed_path,
             shape_constraint,
             bendable_command_indexes,
+            smooth_anchor_indexes,
             finger_capacity,
             size_millimeters,
             depth_range,
             hand_capacity,
+            paired_hold_id,
         )
 
     for hold_id, pieces in pieces_by_hold.items():
@@ -1605,6 +1695,16 @@ def _bendable_command_indexes(piece: Mapping[str, Any]) -> list[int]:
     ]
 
 
+def _smooth_anchor_indexes(piece: Mapping[str, Any]) -> list[int]:
+    if "shapeConstraint" in piece:
+        return []
+    shape = piece.get("shape")
+    commands = shape.get("commands") if isinstance(shape, Mapping) else None
+    if not isinstance(commands, list):
+        return []
+    return [index for index, command in enumerate(commands) if isinstance(command, Mapping) and command.get("smooth") is True]
+
+
 def _parse_bendable_command_indexes(
     value: object,
     label: str,
@@ -1625,6 +1725,28 @@ def _parse_bendable_command_indexes(
     return tuple(value)
 
 
+def _parse_smooth_anchor_indexes(
+    value: object,
+    label: str,
+    path: ClosedPath,
+    shape_constraint: dict[str, object] | None,
+) -> tuple[int, ...]:
+    if shape_constraint is not None:
+        raise BoardPackageError(f"{label} cannot be used with a shapeConstraint")
+    if not isinstance(value, list):
+        raise BoardPackageError(f"{label} must be an array")
+    if any(isinstance(index, bool) or not isinstance(index, int) or index < 0 for index in value):
+        raise BoardPackageError(f"{label} must contain non-negative integers")
+    if len(value) != len(set(value)):
+        raise BoardPackageError(f"{label} must not contain duplicates")
+    for index in value:
+        if (index <= 0 or index + 1 >= len(path.commands)
+                or path.commands[index][0] not in {"Q", "C"}
+                or path.commands[index + 1][0] not in {"Q", "C"}):
+            raise BoardPackageError(f"{label} must identify an anchor between editable Bezier segments")
+    return tuple(value)
+
+
 def _apply_bendable_command_indexes(
     piece: dict[str, Any], indexes: tuple[int, ...],
 ) -> None:
@@ -1639,6 +1761,19 @@ def _apply_bendable_command_indexes(
             command.pop("bendable", None)
     for index in indexes:
         commands[index]["bendable"] = True
+
+
+def _apply_smooth_anchor_indexes(piece: dict[str, Any], indexes: tuple[int, ...]) -> None:
+    shape = piece["shape"]
+    commands = shape.get("commands") if isinstance(shape, Mapping) else None
+    if not isinstance(commands, list):
+        if indexes:
+            raise BoardPackageError("smoothAnchorIndexes must select editable Bezier anchors")
+        return
+    for command in commands:
+        command.pop("smooth", None)
+    for index in indexes:
+        commands[index]["smooth"] = True
 
 
 def _piece_key(hold_id: str, piece_index: int) -> str:

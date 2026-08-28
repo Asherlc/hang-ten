@@ -128,9 +128,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "jug-right",
@@ -253,9 +251,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "edge-large-vder-left",
@@ -364,9 +360,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "edge-shallow-vder-left",
@@ -475,9 +469,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "edge-thin-crimp-left",
@@ -580,9 +572,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "edge-thin-crimp-right",
@@ -591,20 +581,101 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.6828872668288729,
-            "y": 0.4904826261274042,
-            "width": 0.10137875101378718,
-            "height": 0.07268988703566268
+            "x": 0.678688326743,
+            "y": 0.485297050285,
+            "width": 0.101558916668,
+            "height": 0.082020588946
           },
           "shape": {
-            "type": "roundedRect",
-            "cornerRadiusFraction": 0.387411793974
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.906046297192,
+                  0.113963819574
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.10412380497,
+                  0.000515741713
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  0.006377028047,
+                  -0.013312521574
+                ],
+                "to": [
+                  0.002437014058,
+                  0.329748551579
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.000146947859,
+                  0.529146845684
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  -0.003793074115,
+                  0.872207918837
+                ],
+                "to": [
+                  0.093953702808,
+                  0.886036154096
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.89587619503,
+                  0.999484259984
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  0.993622971953,
+                  1.013312495243
+                ],
+                "to": [
+                  0.997562985942,
+                  0.670251450118
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.999853052141,
+                  0.470853127985
+                ]
+              },
+              {
+                "command": "quad",
+                "control": [
+                  1.003793074115,
+                  0.12779208286
+                ],
+                "to": [
+                  0.906046297192,
+                  0.113963819574
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "pocket-three-finger-slot-left",
@@ -725,9 +796,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "pocket-three-finger-slot-right",
@@ -848,9 +917,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-deep-left",
@@ -870,9 +937,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 3,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-deep-right",
@@ -892,9 +957,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 3,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-deep-left",
@@ -914,8 +977,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-deep-right",
@@ -935,8 +997,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-medium-shallow-left",
@@ -956,8 +1017,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "pocket-index-middle-medium-shallow-right",
@@ -977,8 +1037,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-shallow-left",
@@ -998,8 +1057,7 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
       "id": "pocket-middle-ring-shallow-right",
@@ -1019,13 +1077,12 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "handCapacity": 2
+      "presentationID": "primary"
     },
     {
-      "id": "hold-25",
-      "name": "Hold 25",
-      "kind": "sloper",
+      "id": "pinch-medium-left",
+      "name": "Left medium pinch",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
@@ -1070,15 +1127,71 @@
               }
             ]
           }
+        },
+        {
+          "frame": {
+            "x": 0.052871127332,
+            "y": 0.25682688046,
+            "width": 0.123264581509,
+            "height": 0.320283894253
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.707137548531
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.821104891713,
+                  0.32694206621
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.758195337522,
+                  0.007619978293
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.833018641568,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.624364071719
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.068868416154,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
-      "id": "hold-26",
-      "name": "Hold 26",
+      "id": "pinch-wide-left",
+      "name": "Left wide pinch",
       "kind": "pinch",
       "geometry": [
         {
@@ -1140,84 +1253,12 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
-      "id": "hold-27",
-      "name": "Hold 27",
-      "kind": "pinch",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.052871127332,
-            "y": 0.25682688046,
-            "width": 0.123264581509,
-            "height": 0.320283894253
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.0,
-                  0.707137548531
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.821104891713,
-                  0.32694206621
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.758195337522,
-                  0.007619978293
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.833018641568,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.624364071719
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.068868416154,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        }
-      ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
-    },
-    {
-      "id": "hold-28",
-      "name": "Hold 28",
+      "id": "edge-large-vder-right",
+      "name": "Right large variable-depth edge rail",
       "kind": "edge",
-      "fingerCapacity": 4,
-      "handCapacity": 1,
       "geometry": [
         {
           "frame": {
@@ -1324,8 +1365,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-29",
-      "name": "Hold 29",
+      "id": "edge-shallow-vder-right",
+      "name": "Right shallow variable-depth edge rail",
       "kind": "edge",
       "geometry": [
         {
@@ -1430,16 +1471,12 @@
           }
         }
       ],
-      "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "presentationID": "primary"
     },
     {
-      "id": "hold-30",
-      "name": "Hold 30",
-      "kind": "sloper",
-      "fingerCapacity": 4,
-      "handCapacity": 1,
+      "id": "pinch-medium-right",
+      "name": "Right medium pinch",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
@@ -1484,16 +1521,72 @@
               }
             ]
           }
+        },
+        {
+          "frame": {
+            "x": 0.82386429116,
+            "y": 0.25682688046,
+            "width": 0.123264581509,
+            "height": 0.320283894253
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.707137548531
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.178895108287,
+                  0.32694206621
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.241804662478,
+                  0.007619978293
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.166981358432,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.624364071719
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.931131583846,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
         }
       ],
       "presentationID": "primary"
     },
     {
-      "id": "hold-31",
-      "name": "Hold 31",
+      "id": "pinch-wide-right",
+      "name": "Right wide pinch",
       "kind": "pinch",
-      "fingerCapacity": 4,
-      "handCapacity": 1,
       "geometry": [
         {
           "frame": {
@@ -1557,76 +1650,8 @@
       "presentationID": "primary"
     },
     {
-      "id": "hold-32",
-      "name": "Hold 32",
-      "kind": "pinch",
-      "fingerCapacity": 4,
-      "handCapacity": 1,
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.82386429116,
-            "y": 0.25682688046,
-            "width": 0.123264581509,
-            "height": 0.320283894253
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  1.0,
-                  0.707137548531
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.178895108287,
-                  0.32694206621
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.241804662478,
-                  0.007619978293
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.166981358432,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.624364071719
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.931131583846,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        }
-      ],
-      "presentationID": "primary"
-    },
-    {
-      "id": "hold-33",
-      "name": "Hold 33",
+      "id": "sloper-left",
+      "name": "Left sloper",
       "kind": "sloper",
       "geometry": [
         {
@@ -1679,15 +1704,12 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 4,
-      "handCapacity": 1
+      "gripType": "sloper"
     },
     {
-      "id": "hold-34",
-      "name": "Hold 34",
+      "id": "sloper-right",
+      "name": "Right sloper",
       "kind": "sloper",
-      "fingerCapacity": 4,
-      "handCapacity": 1,
       "geometry": [
         {
           "frame": {
@@ -1738,7 +1760,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "gripType": "sloper"
     }
   ],
   "presentations": [

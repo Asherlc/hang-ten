@@ -25,6 +25,7 @@ YY_BAGUETTE_ROOT = HANGBOARDS_ROOT / "yy-baguette"
 YY_BAGUETTE_EVO_ROOT = HANGBOARDS_ROOT / "yy-baguette-evo"
 YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
 TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
+MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
 
 
@@ -234,6 +235,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("frictitious.doormount-pro-7", "frictitious-doormount-pro-7"),
         ("frictitious.megalith", "frictitious-megalith"),
         ("lattice-triple-rung", "lattice-triple-rung"),
+        ("mammut.diamond-finger", "mammut-diamond-finger"),
         ("metolius.climbers-edge", "metolius-climbers-edge"),
         ("metolius.contact", "metolius-contact"),
         ("metolius.foundry", "metolius-foundry"),
@@ -323,6 +325,68 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
     }
 
     assert relative_paths == {"assets", "assets/primary.png", "board.json"}
+
+
+def test_mammut_diamond_freezes_the_documented_21_contact_inventory() -> None:
+    board = json.loads((MAMMUT_DIAMOND_ROOT / "board.json").read_text(encoding="utf-8"))
+
+    assert board["id"] == "mammut.diamond-finger"
+    assert [(hold["id"], hold["kind"], hold.get("sizeMillimeters"), hold.get("fingerCapacity"), hold.get("gripType")) for hold in board["holds"]] == [
+        ("jug-left", "jug", None, None, None),
+        ("sloper-45-left", "sloper", None, None, None),
+        ("pocket-30-four-left", "pocket", 30, 4, "fourFingerPocket"),
+        ("pocket-16-two-left", "pocket", 16, 2, "twoFingerPocket"),
+        ("pocket-16-three-left", "pocket", 16, 3, "threeFingerPocket"),
+        ("pocket-20-eight-left", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-20-four-left", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-10-four-left", "pocket", 10, 4, "fourFingerPocket"),
+        ("sloper-48-center", "sloper", None, None, None),
+        ("pocket-30-eight-center", "pocket", 30, 4, "fourFingerPocket"),
+        ("pocket-18-eight-center", "pocket", 18, 4, "fourFingerPocket"),
+        ("pocket-10-four-right", "pocket", 10, 4, "fourFingerPocket"),
+        ("pocket-20-four-right", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-20-eight-right", "pocket", 20, 4, "fourFingerPocket"),
+        ("pocket-16-three-right", "pocket", 16, 3, "threeFingerPocket"),
+        ("pocket-16-two-right", "pocket", 16, 2, "twoFingerPocket"),
+        ("pocket-30-four-right", "pocket", 30, 4, "fourFingerPocket"),
+        ("sloper-45-right", "sloper", None, None, None),
+        ("jug-right", "jug", None, None, None),
+        ("sloper-30-left", "sloper", None, None, None),
+        ("sloper-30-right", "sloper", None, None, None),
+    ]
+
+    holds = {hold["id"]: hold for hold in board["holds"]}
+    assert all(
+        "treatment" not in piece
+        for hold in board["holds"]
+        for piece in hold["geometry"]
+    )
+    for left_id, right_id in (
+        ("jug-left", "jug-right"),
+        ("sloper-45-left", "sloper-45-right"),
+        ("sloper-30-left", "sloper-30-right"),
+        ("pocket-30-four-left", "pocket-30-four-right"),
+        ("pocket-16-two-left", "pocket-16-two-right"),
+        ("pocket-16-three-left", "pocket-16-three-right"),
+        ("pocket-20-eight-left", "pocket-20-eight-right"),
+        ("pocket-20-four-left", "pocket-20-four-right"),
+        ("pocket-10-four-left", "pocket-10-four-right"),
+    ):
+        left_piece = holds[left_id]["geometry"][0]
+        right_piece = holds[right_id]["geometry"][0]
+        left_frame = left_piece["frame"]
+        right_frame = right_piece["frame"]
+        assert right_frame["x"] == pytest.approx(
+            1 - left_frame["x"] - left_frame["width"], abs=1e-12
+        )
+        assert right_frame["y"] == left_frame["y"]
+        assert right_frame["width"] == left_frame["width"]
+        assert right_frame["height"] == left_frame["height"]
+        assert right_piece.get("shapeConstraint") == left_piece.get("shapeConstraint")
+
+    _assert_global_paths_are_horizontal_mirrors(
+        holds["jug-left"]["geometry"][0], holds["jug-right"]["geometry"][0]
+    )
 
 
 def test_foundry_package_freezes_the_official_numbered_inventory() -> None:

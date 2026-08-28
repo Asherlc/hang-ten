@@ -176,7 +176,7 @@ stopwatch values to `AppStore`; the recorder does not substitute a default
 board or infer one from the plan. Each work target is resolved against that
 board through the same semantic, ID, and fallback mapping used by the board
 highlights. Recorded work therefore carries the resolved physical hold IDs,
-the hold kind (`jug`, `edge`, `pocket`, `pinch`, or `sloper`), and the board's
+the hold kind (`jug`, `edge`, `pocket`, `pinch`, `sloper`, or `gaston`), and the board's
 explicit `sizeMillimeters` value when present. Physical size is never parsed
 from a display name. Matching left/right holds are grouped only within their
 source segment; separate repetitions remain separate records.
