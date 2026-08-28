@@ -39,6 +39,16 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["lb"].exists || app.staticTexts["kg"].exists)
         XCTAssertFalse(app.staticTexts["Load"].exists)
     }
+
+    func testLandscapePreStartLoadAdjustmentIsDisabledWhileScaleStreams() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        app.launch()
+
+        let loadAdjustment = app.textFields["Workout load adjustment"]
+        XCTAssertTrue(loadAdjustment.waitForExistence(timeout: 10))
+        XCTAssertFalse(loadAdjustment.isEnabled)
+    }
 }
 
 final class IronPalmBoardMapInteractionUITests: XCTestCase {

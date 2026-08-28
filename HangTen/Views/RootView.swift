@@ -2358,6 +2358,7 @@ struct WorkoutView: View {
 			VStack(spacing: 6) {
 				HStack(spacing: 10) {
 					loadAdjustmentField(compact: true)
+						.disabled(motherboardBluetoothService.state.disablesManualLoadAdjustment)
 
 					Spacer(minLength: 0)
 

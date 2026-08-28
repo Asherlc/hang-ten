@@ -26,7 +26,7 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    If pending registration fails, retain the validated UUID in memory and permit
    direct deletion only as the last-resort trap fallback. Before that delete,
    re-query the exact UUID with `xcrun simctl list devices`, parse the matching
-   record's name field, and require the exact prefix `Hang Ten Paseo $workspace_name `;
+   record's name field, and require the exact prefix `Hang Ten Paseo $workspace_name` followed by a space;
    if lookup or ownership verification fails, do not
    delete and return failure. Use that UUID for every simulator operation; never
    target `booted`.

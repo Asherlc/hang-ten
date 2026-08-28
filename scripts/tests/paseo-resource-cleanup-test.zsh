@@ -154,6 +154,13 @@ run_archive_wrapper() {
   )
 }
 
+run_archive_wrapper_with_forwarded_workspace_path() {
+  (
+    cd "$temp_dir"
+    PASEO_WORKTREE_PATH="$workspace" PATH="$fake_bin:$PATH" XCRUN_CALL_LOG="$call_log" XCRUN_ALL_CALL_LOG="$all_call_log" "$archive_script"
+  )
+}
+
 : > "$call_log"
 : > "$all_call_log"
 if run_cleanup archive; then
@@ -179,6 +186,17 @@ wrapper_calls=$(<"$call_log")
 assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$wrapper_calls"
 [[ ! -s "$manifest" ]] || {
   print -u2 -- 'archive wrapper did not consume the workspace manifest'
+  exit 1
+}
+
+print -r -- '11111111-1111-1111-1111-111111111111' > "$manifest"
+: > "$call_log"
+: > "$all_call_log"
+run_archive_wrapper_with_forwarded_workspace_path
+forwarded_wrapper_calls=$(<"$call_log")
+assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$forwarded_wrapper_calls"
+[[ ! -s "$manifest" ]] || {
+  print -u2 -- 'archive wrapper did not forward PASEO_WORKTREE_PATH'
   exit 1
 }
 

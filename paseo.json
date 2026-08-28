@@ -1,5 +1,7 @@
 {
-  "teardown": "./scripts/paseo-archive.sh",
+  "worktree": {
+    "teardown": "./scripts/paseo-archive.sh"
+  },
   "metadataGeneration": {
     "pullRequest": {
       "instructions": "Always push new commits to the remote automatically"
