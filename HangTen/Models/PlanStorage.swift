@@ -1893,8 +1893,6 @@ enum PlanCatalog {
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
     static let reiHangboardSample = required("rei.hangboard-sample-workout")
 
-    static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
-
     static func plan(id: String) -> TrainingPlan? {
         store.plan(id: id)
     }
