@@ -30,10 +30,17 @@ data class BoardGeometry(
     val shape: HoldShape,
 )
 
+data class SemanticHoldMapping(
+    val holdIds: List<String> = emptyList(),
+    val kind: String? = null,
+)
+
 data class BoardHold(
     val id: String,
     val name: String,
     val kind: String,
+    val features: Set<String> = emptySet(),
+    val fingerCapacity: Int? = null,
     val presentationId: String,
     val geometry: List<BoardGeometry>,
 )
@@ -55,6 +62,7 @@ data class Board(
     val aspectRatio: Float,
     val presentations: List<BoardPresentation>,
     val holds: List<BoardHold>,
+    val semanticHolds: Map<String, SemanticHoldMapping> = emptyMap(),
 )
 
 internal class ContentDecodingException(message: String) : IllegalArgumentException(message)

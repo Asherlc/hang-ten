@@ -20,6 +20,7 @@ class BoardRepositoryTest {
         val board = result.getOrThrow().single()
         assertEquals("demo.board", board.id)
         assertEquals("path-hold", board.holds[0].id)
+        assertEquals(setOf("mediumEdge"), board.holds[0].features)
         assertTrue(board.holds[0].geometry.single().shape is HoldShape.Path)
         assertEquals(
             listOf(
@@ -31,6 +32,7 @@ class BoardRepositoryTest {
             (board.holds[0].geometry.single().shape as HoldShape.Path).commands,
         )
         assertEquals("rounded-hold", board.holds[1].id)
+        assertEquals(2, board.holds[1].fingerCapacity)
         assertEquals(
             HoldShape.RoundedRect(0.25f),
             board.holds[1].geometry.single().shape,
@@ -53,6 +55,55 @@ class BoardRepositoryTest {
         ).loadBoards()
 
         assertTrueFailureContaining(result, "Malformed JSON")
+    }
+
+    @Test
+    fun attachesValidatedCanonicalSemanticMappingsToTheirBoard() {
+        val result = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to boardJson(),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                    "PlanLibrary.json" to
+                        """
+                        {
+                          "boardMappings": [
+                            {
+                              "boardID": "demo.board",
+                              "semanticHolds": {
+                                "outer-edge": { "holdIDs": ["path-hold"] },
+                                "pockets": { "kind": "pocket" }
+                              }
+                            }
+                          ]
+                        }
+                        """.trimIndent(),
+                ),
+            ),
+        ).loadBoards()
+
+        assertEquals(
+            SemanticHoldMapping(holdIds = listOf("path-hold")),
+            result.getOrThrow().single().semanticHolds["outer-edge"],
+        )
+        assertEquals(
+            SemanticHoldMapping(kind = "pocket"),
+            result.getOrThrow().single().semanticHolds["pockets"],
+        )
+    }
+
+    @Test
+    fun rejectsOutOfRangeCanonicalFingerCapacity() {
+        val result = AssetBoardRepository(
+            FixtureAssets(
+                mapOf(
+                    "Hangboards/demo/board.json" to boardJson().replace("\"fingerCapacity\": 2", "\"fingerCapacity\": 5"),
+                    "Hangboards/demo/assets/primary.png" to "png",
+                ),
+            ),
+        ).loadBoards()
+
+        assertTrueFailureContaining(result, "fingerCapacity")
     }
 
     private fun boardJson(): String =
@@ -78,6 +129,7 @@ class BoardRepositoryTest {
               "id": "path-hold",
               "name": "Path hold",
               "kind": "edge",
+              "features": ["mediumEdge"],
               "presentationID": "primary",
               "geometry": [
                 {
@@ -98,6 +150,7 @@ class BoardRepositoryTest {
               "id": "rounded-hold",
               "name": "Rounded hold",
               "kind": "pocket",
+              "fingerCapacity": 2,
               "presentationID": "primary",
               "geometry": [
                 {

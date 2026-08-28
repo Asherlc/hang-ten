@@ -19,13 +19,15 @@ class AssetBoardRepository(
             ?.also { if (it.isEmpty()) fail("$BOARDS_ROOT contains no board packages.") }
             ?: fail("Missing $BOARDS_ROOT asset directory.")
         val boardIds = mutableSetOf<String>()
-        packages.map { packageName ->
+        val boards = packages.map { packageName ->
             val boardPath = "$BOARDS_ROOT/$packageName/board.json"
             val source = assets.read(boardPath) ?: fail("Missing board document $boardPath.")
             val board = decodeBoard(JsonParser(source).parse().asObject(boardPath), boardPath, packageName)
             if (!boardIds.add(board.id)) fail("Duplicate board ID \"${board.id}\".")
             board
         }
+        val semanticHoldsByBoardId = decodeSemanticHoldsByBoardId(boards)
+        boards.map { board -> board.copy(semanticHolds = semanticHoldsByBoardId[board.id].orEmpty()) }
     }
 
     private fun decodeBoard(
@@ -94,9 +96,63 @@ class AssetBoardRepository(
             id = objectValue.requiredString("id", path),
             name = objectValue.requiredString("name", path),
             kind = objectValue.requiredString("kind", path),
+            features = decodeFeatures(objectValue.optional("features"), "$path.features"),
+            fingerCapacity = objectValue.optional("fingerCapacity")?.asFingerCapacity("$path.fingerCapacity"),
             presentationId = objectValue.requiredString("presentationID", path),
             geometry = geometry,
         )
+    }
+
+    private fun decodeFeatures(value: JsonValue?, path: String): Set<String> {
+        val features = value?.asArray(path)?.mapIndexed { index, feature ->
+            feature.asString("$path[$index]").also { requireContentId(it, "$path[$index]") }
+        } ?: emptyList()
+        if (features.toSet().size != features.size) fail("$path must not contain duplicates.")
+        return features.toSet()
+    }
+
+    private fun decodeSemanticHoldsByBoardId(boards: List<Board>): Map<String, Map<String, SemanticHoldMapping>> {
+        val source = assets.read(PLAN_LIBRARY_PATH) ?: return emptyMap()
+        val root = JsonParser(source).parse().asObject(PLAN_LIBRARY_PATH)
+        val mappings = root.optional("boardMappings")?.asArray("$PLAN_LIBRARY_PATH.boardMappings") ?: return emptyMap()
+        val boardsById = boards.associateBy { it.id }
+        val result = linkedMapOf<String, Map<String, SemanticHoldMapping>>()
+        mappings.forEachIndexed { index, value ->
+            val mappingPath = "$PLAN_LIBRARY_PATH.boardMappings[$index]"
+            val objectValue = value.asObject(mappingPath)
+            val boardId = objectValue.requiredString("boardID", mappingPath)
+            val board = boardsById[boardId] ?: fail("$mappingPath references unknown board $boardId.")
+            if (result.containsKey(boardId)) fail("$PLAN_LIBRARY_PATH.boardMappings contains duplicate board ID $boardId.")
+            val semanticHolds = objectValue.required("semanticHolds", mappingPath)
+                .asObject("$mappingPath.semanticHolds")
+                .fields
+                .mapValues { (semanticId, semanticValue) ->
+                    requireContentId(semanticId, "$mappingPath.semanticHolds")
+                    decodeSemanticHoldMapping(
+                        semanticValue.asObject("$mappingPath.semanticHolds.$semanticId"),
+                        "$mappingPath.semanticHolds.$semanticId",
+                        board,
+                    )
+                }
+            result[boardId] = semanticHolds
+        }
+        return result
+    }
+
+    private fun decodeSemanticHoldMapping(
+        objectValue: JsonValue.Object,
+        path: String,
+        board: Board,
+    ): SemanticHoldMapping {
+        val holdIds = objectValue.optional("holdIDs")?.asArray("$path.holdIDs")?.mapIndexed { index, value ->
+            value.asString("$path.holdIDs[$index]").also { requireContentId(it, "$path.holdIDs[$index]") }
+        } ?: emptyList()
+        val kind = objectValue.optional("kind")?.asString("$path.kind")
+        if (holdIds.isEmpty() == (kind == null)) fail("$path must contain exactly one of holdIDs or kind.")
+        if (holdIds.toSet().size != holdIds.size) fail("$path.holdIDs must not contain duplicates.")
+        val knownHoldIds = board.holds.mapTo(mutableSetOf()) { it.id }
+        holdIds.firstOrNull { it !in knownHoldIds }?.let { fail("$path references unknown hold $it.") }
+        return SemanticHoldMapping(holdIds = holdIds, kind = kind)
     }
 
     private fun decodeGeometry(objectValue: JsonValue.Object, path: String): BoardGeometry =
@@ -166,9 +222,19 @@ class AssetBoardRepository(
     private fun positiveFiniteFloat(value: JsonValue, path: String): Float =
         value.asFiniteFloat(path).also { if (it <= 0f) fail("$path must be positive.") }
 
+    private fun JsonValue.asFingerCapacity(path: String): Int {
+        val value = (this as? JsonValue.Number)?.value ?: fail("$path must be a number.")
+        if (!value.isFinite() || value != value.toInt().toDouble() || value.toInt() !in FINGER_CAPACITY_RANGE) {
+            fail("$path must be an integer within $FINGER_CAPACITY_RANGE.")
+        }
+        return value.toInt()
+    }
+
     private fun fail(message: String): Nothing = throw ContentDecodingException(message)
 
     private companion object {
         const val BOARDS_ROOT = "Hangboards"
+        const val PLAN_LIBRARY_PATH = "PlanLibrary.json"
+        val FINGER_CAPACITY_RANGE = 1..4
     }
 }
