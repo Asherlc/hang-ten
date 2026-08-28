@@ -300,6 +300,7 @@ jobs:
         run: scripts/validate-app-store-metadata.sh
 
       - name: Run XCTest suite
+        id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
         run: |
@@ -339,13 +340,14 @@ jobs:
           }
 
           if ! run_xctest_attempt 1; then
+            echo "attempt_1_failed=true" >> "$GITHUB_OUTPUT"
             echo "XCTest attempt 1 failed; retrying once with clean paths."
             run_xctest_attempt 2
           fi
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled()
+        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-${{ github.run_id }}
