@@ -162,6 +162,7 @@ export interface HoldEditorActions {
   canMakeSelectedSegmentHorizontal: boolean;
   canMakeSelectedSegmentVertical: boolean;
   addHold(): void;
+  addHoldSegment(): void;
   duplicateAndMirrorHold(): void;
   deleteHold(): void;
   selectAnchor(anchorID: string): void;
@@ -829,6 +830,57 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       failureMessage: "Could not add hold.",
     });
   }, [actions, busy, document, reservedHoldIDs]);
+
+  const addHoldSegment = useCallback((): void => {
+    if (busy || !document || !selectedHold) return;
+    const source = selectedHold;
+    const sourceMetadata = source.metadata;
+    if (!sourceMetadata?.holdID) return;
+    const holdId = sourceMetadata.holdID;
+    const pieceIndex = Math.max(
+      -1,
+      ...document.regions.flatMap((region) => (
+        region.metadata?.holdID === holdId ? [region.metadata.pieceIndex] : []
+      )),
+    ) + 1;
+    const key = uniqueRegionKey(document, `${holdId}-piece-${pieceIndex}`);
+    const commands = pathCommandsForHold(source, pathEditor);
+    const bounds = pathEditor.pathBounds(commands);
+    const width = Math.max(1, bounds.maxX - bounds.minX);
+    const height = Math.max(1, bounds.maxY - bounds.minY);
+    const gap = Math.max(6, Math.min(width, height) / 2);
+    const offset = bounds.maxX + width + gap <= document.canvas.width
+      ? { x: width + gap, y: 0 }
+      : bounds.minX - width - gap >= 0
+        ? { x: -(width + gap), y: 0 }
+        : bounds.maxY + height + gap <= document.canvas.height
+          ? { x: 0, y: height + gap }
+          : { x: 0, y: -(height + gap) };
+    translateCommands(commands, offset.x, offset.y);
+    const displayPath = pathEditor.serializePath(commands);
+    const added = actions.editDocument((candidate) => {
+      candidate.regions.push({
+        ...source,
+        id: nextRegionId(candidate),
+        key,
+        displayPath,
+        metadata: {
+          ...sourceMetadata,
+          holdID: holdId,
+          pieceIndex,
+          ...(document.presentationID ? { presentationID: document.presentationID } : {}),
+        },
+      });
+    }, {
+      selectedKey: key,
+      selectedKeys: [key],
+      status: "Hold segment added. Drag it into place and save when ready.",
+      failureMessage: "Could not add hold segment.",
+    });
+    if (!added) return;
+    setVertexSelection(null);
+    setVertexMenuState(null);
+  }, [actions, busy, document, pathEditor, selectedHold]);
 
   const duplicateAndMirrorHold = useCallback((): void => {
     if (busy || !document || !selectedHold) return;
@@ -1699,6 +1751,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     canMakeSelectedSegmentHorizontal,
     canMakeSelectedSegmentVertical,
     addHold,
+    addHoldSegment,
     duplicateAndMirrorHold,
     deleteHold,
     selectAnchor,
