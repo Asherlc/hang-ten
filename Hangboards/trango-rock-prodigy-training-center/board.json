@@ -1789,7 +1789,7 @@
     {
       "id": "hold-25",
       "name": "Hold 25",
-      "kind": "edge",
+      "kind": "sloper",
       "geometry": [
         {
           "frame": {
@@ -1836,7 +1836,8 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4
     }
   ],
   "presentations": [
