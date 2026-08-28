@@ -28,6 +28,11 @@ struct AppSettingsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
+                    SectionLabel(title: "Units")
+                    unitsCard
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
                     SectionLabel(title: "Apple Health")
                     healthCard
                 }
@@ -87,6 +92,38 @@ struct AppSettingsView: View {
         .buttonStyle(.plain)
         .hangCard()
         .accessibilityIdentifier("settings.sensor")
+    }
+
+    private var unitsCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Weight unit")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Picker("Weight unit", selection: $motherboardSettingsStore.loadAdjustmentUnit) {
+                    ForEach(WorkoutLoadAdjustmentDisplayUnit.allCases) { unit in
+                        Text(unit.label).tag(unit)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("settings.loadAdjustmentUnit")
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Force unit")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Picker("Force unit", selection: $motherboardSettingsStore.forceUnit) {
+                    ForEach(MotherboardForceUnit.allCases) { unit in
+                        Text(unit.label).tag(unit)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("settings.forceUnit")
+            }
+        }
+        .padding(16)
+        .hangCard()
     }
 
     private var boardEditorLink: some View {
