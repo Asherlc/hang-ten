@@ -1390,123 +1390,6 @@
       "presentationID": "primary"
     },
     {
-      "id": "pinch-medium-left",
-      "name": "Left medium pinch",
-      "kind": "pinch",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.0124647794,
-            "y": 0.09541494023,
-            "width": 0.146332123277,
-            "height": 0.400829285057
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.723861363756,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.959231299697,
-                  0.401299664141
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.685778740591
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.295510250022,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.140899590544,
-                  0.851600927202
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.302567087652
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        },
-        {
-          "frame": {
-            "x": 0.069141261152,
-            "y": 0.24072511954,
-            "width": 0.113452364964,
-            "height": 0.350461370115
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.0,
-                  0.790191039862
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.746206506768,
-                  0.271531984347
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.624895460089,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.41938027623
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.217795213023,
-                  1.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          }
-        }
-      ],
-      "presentationID": "primary"
-    },
-    {
       "id": "pinch-medium-right",
       "name": "Right medium pinch",
       "kind": "pinch",
@@ -1892,6 +1775,58 @@
                 "to": [
                   0,
                   0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "hold-25",
+      "name": "Hold 25",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.478832116788,
+            "y": 0.44,
+            "width": 0.042335766423,
+            "height": 0.12
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
                 ]
               },
               {
