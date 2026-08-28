@@ -64,7 +64,7 @@ final class MotherboardModelsTests: XCTestCase {
             .failed
         ]
 
-        XCTAssertTrue(enabledStates.allSatisfy { !$0.disablesManualLoadAdjustment == false })
+        XCTAssertTrue(enabledStates.allSatisfy { !$0.disablesManualLoadAdjustment })
     }
 
     func testForceUnitConversionUsesKilogramsForceAsCanonicalValue() {
@@ -380,6 +380,22 @@ final class MotherboardModelsTests: XCTestCase {
         let second = MotherboardSettingsStore(defaults: defaults)
         XCTAssertEqual(second.forceUnit, .newtons)
         XCTAssertEqual(second.thresholdKGF, 4.25, accuracy: 0.0001)
+    }
+
+    func testLoadAdjustmentUnitDefaultsToKilogramsAndRoundTripsIndependentlyOfForceUnit() {
+        let suite = "MotherboardModelsLoadAdjustmentUnitTests"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+
+        let first = MotherboardSettingsStore(defaults: defaults)
+        XCTAssertEqual(first.loadAdjustmentUnit, .kilograms)
+
+        first.loadAdjustmentUnit = .pounds
+        first.forceUnit = .newtons
+
+        let second = MotherboardSettingsStore(defaults: defaults)
+        XCTAssertEqual(second.loadAdjustmentUnit, .pounds)
+        XCTAssertEqual(second.forceUnit, .newtons)
     }
 
     func testForceSensorProfileDefaultsToAutomaticAndRoundTripsThroughUserDefaults() {

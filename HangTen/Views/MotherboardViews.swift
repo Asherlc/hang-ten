@@ -160,6 +160,15 @@ struct MotherboardSettingsView: View {
                 .pickerStyle(.segmented)
             }
 
+            Section("Load adjustment unit") {
+                Picker("Unit", selection: $settings.loadAdjustmentUnit) {
+                    ForEach(WorkoutLoadAdjustmentDisplayUnit.allCases) { unit in
+                        Text(unit.label).tag(unit)
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
+
             Section("Detection threshold") {
                 Slider(value: $settings.thresholdKGF, in: 0.1...50, step: 0.1)
 

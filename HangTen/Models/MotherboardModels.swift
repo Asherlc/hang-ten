@@ -365,6 +365,7 @@ final class MotherboardSettingsStore: ObservableObject {
     private enum Key {
         static let forceSensorProfile = "motherboard.forceSensorProfile"
         static let forceUnit = "motherboard.forceUnit"
+        static let loadAdjustmentUnit = "motherboard.loadAdjustmentUnit"
         static let thresholdKGF = "motherboard.thresholdKGF"
         static let bodyweightCaptureDuration = "motherboard.bodyweightCaptureDuration"
     }
@@ -377,6 +378,10 @@ final class MotherboardSettingsStore: ObservableObject {
 
     @Published var forceUnit: MotherboardForceUnit {
         didSet { defaults.set(forceUnit.rawValue, forKey: Key.forceUnit) }
+    }
+
+    @Published var loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit {
+        didSet { defaults.set(loadAdjustmentUnit.rawValue, forKey: Key.loadAdjustmentUnit) }
     }
 
     @Published var thresholdKGF: Double {
@@ -414,6 +419,13 @@ final class MotherboardSettingsStore: ObservableObject {
             forceUnit = storedForceUnit
         } else {
             forceUnit = .kgf
+        }
+
+        if let rawValue = defaults.string(forKey: Key.loadAdjustmentUnit),
+           let storedLoadAdjustmentUnit = WorkoutLoadAdjustmentDisplayUnit(rawValue: rawValue) {
+            loadAdjustmentUnit = storedLoadAdjustmentUnit
+        } else {
+            loadAdjustmentUnit = .kilograms
         }
 
         let normalizedThreshold = Self.normalizedThreshold(defaults.object(forKey: Key.thresholdKGF) as? Double ?? 2.5)

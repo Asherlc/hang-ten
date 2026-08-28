@@ -36,7 +36,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         let loadAdjustment = app.textFields["Workout load adjustment"]
 
         XCTAssertTrue(loadAdjustment.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["lbf"].exists || app.staticTexts["kgf"].exists)
+        XCTAssertTrue(app.staticTexts["lb"].exists || app.staticTexts["kg"].exists)
         XCTAssertFalse(app.staticTexts["Load"].exists)
     }
 }

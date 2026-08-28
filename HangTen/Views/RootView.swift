@@ -1758,7 +1758,6 @@ struct WorkoutView: View {
 	    @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
 	    @State private var bodyweightKGF: Double?
 	    @State private var loadAdjustmentKGF: Double = 0
-	    @State private var loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit = .kilograms
 	    @State private var didLoadInitialLoadAdjustment = false
 	    @State private var didSetLoadAdjustment = false
 	    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
@@ -1935,6 +1934,7 @@ struct WorkoutView: View {
 			WorkoutSummaryView(
 				session: session,
 				unit: motherboardSettingsStore.forceUnit,
+				loadAdjustmentUnit: motherboardSettingsStore.loadAdjustmentUnit,
 				onSave: { save(session) },
 				onDiscard: { discard(session) }
 			)
@@ -1964,7 +1964,6 @@ struct WorkoutView: View {
 			UIApplication.shared.isIdleTimerDisabled = true
 			if !didLoadInitialLoadAdjustment {
 				loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
-				loadAdjustmentDisplayUnit = store.mostRecentSavedLoadAdjustmentDisplayUnit
 				didLoadInitialLoadAdjustment = true
 			}
 			configureRecorder()
@@ -2005,7 +2004,6 @@ struct WorkoutView: View {
 			guard WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
 			      !didSetLoadAdjustment else { return }
 			loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
-			loadAdjustmentDisplayUnit = store.mostRecentSavedLoadAdjustmentDisplayUnit
 		}
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
 			guard let pendingCountdownStart else { return }
@@ -2566,24 +2564,19 @@ struct WorkoutView: View {
 			.accessibilityLabel("Workout load adjustment")
 			.accessibilityHint("Use a positive value for added weight or a negative value for pulley assistance. This starts from your latest saved session.")
 
-			Picker("Workout load unit", selection: $loadAdjustmentDisplayUnit) {
-				ForEach(WorkoutLoadAdjustmentDisplayUnit.allCases) { unit in
-					Text(unit.label).tag(unit)
-				}
-			}
-			.pickerStyle(.segmented)
-			.frame(width: compact ? 72 : 88)
-			.accessibilityIdentifier("workout.loadAdjustment.unit")
+			Text(motherboardSettingsStore.loadAdjustmentUnit.label)
+				.font(.system(size: compact ? 14 : 17, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangMuted)
 		}
 		.accessibilityElement(children: .contain)
 	}
 
 	private var loadAdjustmentBinding: Binding<Double> {
 		Binding(
-			get: { loadAdjustmentDisplayUnit.value(fromKilogramsForce: loadAdjustmentKGF) },
+			get: { motherboardSettingsStore.loadAdjustmentUnit.value(fromKilogramsForce: loadAdjustmentKGF) },
 			set: { displayedValue in
 				didSetLoadAdjustment = true
-				loadAdjustmentKGF = loadAdjustmentDisplayUnit.kilogramsForce(fromDisplayedForce: displayedValue)
+				loadAdjustmentKGF = motherboardSettingsStore.loadAdjustmentUnit.kilogramsForce(fromDisplayedForce: displayedValue)
 			}
 		)
 	}
@@ -2956,7 +2949,7 @@ struct WorkoutView: View {
 			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
 			bodyweightKGF: bodyweightKGF,
 			loadAdjustmentKGF: loadAdjustmentKGF,
-			loadAdjustmentDisplayUnit: loadAdjustmentDisplayUnit,
+			loadAdjustmentDisplayUnit: motherboardSettingsStore.loadAdjustmentUnit,
 			motherboardMeasurements: motherboardMeasurementCollector.measurements,
 			motherboardMeasurementsTruncated: motherboardMeasurementCollector.didTruncate
 		)

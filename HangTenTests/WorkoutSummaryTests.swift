@@ -33,19 +33,19 @@ final class WorkoutSummaryTests: XCTestCase {
         XCTAssertNil(WorkoutSummaryFormatting.bodyweightBaselineText(for: nil, unit: .kgf))
     }
 
-    func testLoadAdjustmentTextDescribesAddedWeightAndPulleyAssistanceInSelectedUnit() {
+    func testLoadAdjustmentTextDescribesAddedWeightAndPulleyAssistanceInGlobalLoadAdjustmentUnit() {
         XCTAssertEqual(
-            WorkoutSummaryFormatting.loadAdjustmentText(for: 10, unit: .lbf),
-            "Added weight: +22.0 lbf"
+            WorkoutSummaryFormatting.loadAdjustmentText(for: 10, unit: .pounds),
+            "Added weight: +22.0 lb"
         )
         XCTAssertEqual(
-            WorkoutSummaryFormatting.loadAdjustmentText(for: -10, unit: .newtons),
-            "Pulley assistance: -98.1 N"
+            WorkoutSummaryFormatting.loadAdjustmentText(for: -10, unit: .kilograms),
+            "Pulley assistance: -10.0 kg"
         )
     }
 
     func testLoadAdjustmentTextOmitsNoAdjustment() {
-        XCTAssertNil(WorkoutSummaryFormatting.loadAdjustmentText(for: 0, unit: .kgf))
+        XCTAssertNil(WorkoutSummaryFormatting.loadAdjustmentText(for: 0, unit: .kilograms))
     }
 
     func testGranularSampleTextUsesTheRecordedSensorProfile() throws {

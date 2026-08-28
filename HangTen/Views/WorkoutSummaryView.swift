@@ -42,7 +42,7 @@ enum WorkoutSummaryFormatting {
 
     static func loadAdjustmentText(
         for loadAdjustmentKGF: Double,
-        unit: MotherboardForceUnit
+        unit: WorkoutLoadAdjustmentDisplayUnit
     ) -> String? {
         guard loadAdjustmentKGF.isFinite, loadAdjustmentKGF != 0 else { return nil }
         let displayedValue = unit.value(fromKilogramsForce: abs(loadAdjustmentKGF))
@@ -58,6 +58,7 @@ enum WorkoutSummaryFormatting {
 struct WorkoutSummaryView: View {
     let session: WorkoutSessionRecord
     let unit: MotherboardForceUnit
+    let loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit
     let onSave: () -> Void
     let onDiscard: () -> Void
     let mode: WorkoutSummaryMode
@@ -65,11 +66,13 @@ struct WorkoutSummaryView: View {
     init(
         session: WorkoutSessionRecord,
         unit: MotherboardForceUnit,
+        loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit,
         onSave: @escaping () -> Void,
         onDiscard: @escaping () -> Void
     ) {
         self.session = session
         self.unit = unit
+        self.loadAdjustmentUnit = loadAdjustmentUnit
         self.onSave = onSave
         self.onDiscard = onDiscard
         mode = .pending
@@ -80,6 +83,7 @@ struct WorkoutSummaryView: View {
             WorkoutSummaryContent(
                 session: session,
                 unit: unit,
+                loadAdjustmentUnit: loadAdjustmentUnit,
                 mode: mode,
                 onSave: mode.isReadOnly ? nil : onSave,
                 onDiscard: mode.isReadOnly ? nil : onDiscard
@@ -100,6 +104,7 @@ struct HistoryView: View {
             WorkoutSessionHistoryView(
                 sessions: store.sessionHistory,
                 unit: settings.forceUnit,
+                loadAdjustmentUnit: settings.loadAdjustmentUnit,
                 persistenceError: store.sessionPersistenceError
             )
         }
@@ -117,6 +122,7 @@ struct HistoryView: View {
 struct WorkoutSessionHistoryView: View {
     let sessions: [WorkoutSessionRecord]
     let unit: MotherboardForceUnit
+    let loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit
     var persistenceError: String? = nil
 
     var body: some View {
@@ -139,6 +145,7 @@ struct WorkoutSessionHistoryView: View {
                         WorkoutSummaryContent(
                             session: session,
                             unit: unit,
+                            loadAdjustmentUnit: loadAdjustmentUnit,
                             mode: .history
                         )
                         .navigationTitle("Session summary")
@@ -168,6 +175,7 @@ struct WorkoutSessionHistoryView: View {
 private struct WorkoutSummaryContent: View {
     let session: WorkoutSessionRecord
     let unit: MotherboardForceUnit
+    let loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit
     let mode: WorkoutSummaryMode
     var onSave: (() -> Void)?
     var onDiscard: (() -> Void)?
@@ -175,12 +183,14 @@ private struct WorkoutSummaryContent: View {
     init(
         session: WorkoutSessionRecord,
         unit: MotherboardForceUnit,
+        loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit,
         mode: WorkoutSummaryMode = .history,
         onSave: (() -> Void)? = nil,
         onDiscard: (() -> Void)? = nil
     ) {
         self.session = session
         self.unit = unit
+        self.loadAdjustmentUnit = loadAdjustmentUnit
         self.mode = mode
         self.onSave = onSave
         self.onDiscard = onDiscard
@@ -214,7 +224,7 @@ private struct WorkoutSummaryContent: View {
 
             if let loadAdjustmentText = WorkoutSummaryFormatting.loadAdjustmentText(
                 for: session.loadAdjustmentKGF,
-                unit: unit
+                unit: loadAdjustmentUnit
             ) {
                 Section("Load adjustment") {
                     Text(loadAdjustmentText)
