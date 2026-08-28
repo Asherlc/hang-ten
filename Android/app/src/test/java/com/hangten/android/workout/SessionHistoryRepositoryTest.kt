@@ -1,6 +1,8 @@
 package com.hangten.android.workout
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,6 +64,33 @@ class SessionHistoryRepositoryTest {
         }
 
         assertEquals((21L downTo 2L).toList(), repository.completedSessions().map { it.completedAtWallClockMs })
+        file.delete()
+    }
+
+    @Test
+    fun malformedPersistedEntriesAreIgnoredWhileValidHistoryIsSortedNewestFirst() = runTest {
+        val file = File.createTempFile("session-history", ".preferences_pb").also(File::delete)
+        val dataStore = PreferenceDataStoreFactory.create(
+            scope = backgroundScope,
+            produceFile = { file },
+        )
+        dataStore.edit { preferences ->
+            preferences[stringPreferencesKey("completed_session_history")] = listOf(
+                "ZWFybHk,10,100",
+                "not-a-record",
+                "bGF0ZXI,20,200",
+                "dGhyZWU,not-a-clock,300",
+                "bmVnYXRpdmU,30,-1",
+            ).joinToString("\n")
+        }
+
+        assertEquals(
+            listOf(
+                CompletedSession(planId = "later", completedAtWallClockMs = 20, elapsedDurationMs = 200),
+                CompletedSession(planId = "early", completedAtWallClockMs = 10, elapsedDurationMs = 100),
+            ),
+            SessionHistoryRepository(dataStore).completedSessions(),
+        )
         file.delete()
     }
 }
