@@ -1911,7 +1911,7 @@
     {
       "id": "hold-27",
       "name": "Hold 27",
-      "kind": "edge",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
@@ -1958,7 +1958,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4,
+      "handCapacity": 1
     }
   ],
   "presentations": [
