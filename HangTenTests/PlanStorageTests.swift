@@ -1211,24 +1211,27 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testOfficialSelfSelectedHangSetAllowsUntargetedTerminalRecovery() {
-        let repeaterSet = WorkoutStepDefinition(
-            id: "rptc-repeater-set",
-            title: "RPTC repeater set",
-            instruction: "Use one self-selected grip for seven 7-second two-handed dead hangs with 3 seconds between hangs, then rest to 4:00.",
-            accessory: "7 × (7s hang · 3s rest) · then 2m 53s rest",
-            duration: 180,
+    func testPlanLibraryRejectsUntargetedTimedHangOutsideOfficialRPTCImporter() {
+        let selfSelectedHang = WorkoutStepDefinition(
+            id: "self-selected-hang",
+            title: "Self-selected hang",
+            instruction: "Hang on a self-selected grip.",
+            accessory: "7s hang",
+            duration: 7,
             phase: .hang,
             targets: [],
             activeDuration: 7
         )
 
         let issues = makeLibrary(
-            steps: [repeaterSet],
+            steps: [selfSelectedHang],
             provenance: .official
         ).validationIssues(availableBoards: BoardCatalog.all)
 
-        XCTAssertTrue(issues.isEmpty, "A manufacturer-selected grip cannot be replaced with an invented target, and its stated terminal rest remains part of the set.")
+        XCTAssertTrue(issues.contains {
+            $0.path == "plans[0].blocks[0].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
     }
 
     func testRPTCRepeatersPreserveTheSourceSetTimingWithoutInventedGripTargets() {
@@ -1236,20 +1239,25 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertEqual(plan.provenance, .official)
         XCTAssertNil(plan.boardID)
-        XCTAssertEqual(plan.duration, 240)
-        XCTAssertEqual(plan.steps.count, 7)
-        XCTAssertTrue(plan.steps.allSatisfy(\.targets.isEmpty))
-        XCTAssertEqual(plan.steps.dropLast().map(\.duration), Array(repeating: 10, count: 6))
-        XCTAssertEqual(plan.steps.map(\.timedWorkDuration), Array(repeating: 7, count: 7))
-        XCTAssertEqual(plan.steps.last?.duration, 180)
-        XCTAssertTrue(plan.steps.last?.instruction.contains("2:53") == true)
-        XCTAssertTrue(plan.steps.last?.instruction.contains("3 minutes") == false)
+        XCTAssertEqual(plan.duration, 420)
+        XCTAssertEqual(plan.steps.count, 8)
+        XCTAssertTrue(plan.steps.dropLast().allSatisfy { $0.targets.isEmpty })
+        XCTAssertEqual(plan.steps.prefix(6).map(\.duration), Array(repeating: 10, count: 6))
+        XCTAssertEqual(plan.steps.prefix(7).map(\.timedWorkDuration), Array(repeating: 7, count: 7))
+        XCTAssertEqual(plan.steps[6].duration, 180)
+        XCTAssertTrue(plan.steps[6].instruction.contains("2:53"))
+        XCTAssertTrue(plan.steps[6].instruction.contains("not the between-set rest"))
+        XCTAssertEqual(plan.steps[7].phase, .rest)
+        XCTAssertEqual(plan.steps[7].duration, 180)
+        XCTAssertTrue(plan.steps[7].instruction.contains("3-minute rest period between sets"))
     }
 
-    func testShippedRoutineSeedsExpandToTerminalWorkSteps() throws {
-        let terminalSteps = try LegacyPlanSeedCatalog.all.map { plan in
-            try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
-        }
+    func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
+        let terminalSteps = try LegacyPlanSeedCatalog.all
+            .filter { $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id }
+            .map { plan in
+                try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
+            }
 
         XCTAssertTrue(terminalSteps.allSatisfy { $0.phase != .rest })
     }

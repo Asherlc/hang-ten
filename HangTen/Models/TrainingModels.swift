@@ -2254,14 +2254,14 @@ enum LegacyPlanSeedCatalog {
         provenance: .official,
         boardID: nil,
         steps: numbered({
-            (1...7).map { rep in
+            return (1...7).map { rep in
                 let finalRep = rep == 7
                 return WorkoutStep(
                     id: "rptc-repeaters-set-rep-\(rep)",
                     number: 0,
                     title: "RPTC repeater set · rep \(rep) of 7",
                     instruction: finalRep
-                        ? "Complete the seventh 7-second two-handed dead hang on the grip you selected, then rest until 4:00 from the first hang (2:53). This is the source table's between-set recovery; if you chose another of the source-permitted 1–3 sets on this grip, begin it after this recovery, then move to the next of approximately 5–10 grips. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout."
+                        ? "Complete the seventh 7-second two-handed dead hang on the grip you selected, then use the table's 2:53 recovery to reach 4:00 from the first hang. The source separately prescribes the following 3-minute rest period between sets; do not treat the table recovery as that rest. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout."
                         : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
                     accessory: finalRep
                         ? "7s two-handed deadhang · 2m 53s rest to 4:00"
@@ -2271,7 +2271,18 @@ enum LegacyPlanSeedCatalog {
                     targets: [],
                     timedWorkDuration: 7
                 )
-            }
+            } + [
+                WorkoutStep(
+                    id: "rptc-repeaters-between-sets-rest",
+                    number: 0,
+                    title: "RPTC repeater set · between-set rest",
+                    instruction: "Rest 3 minutes between sets. If you chose another of the source-permitted 1–3 sets on this grip, begin it after this rest; then move to the next of approximately 5–10 grips.",
+                    accessory: "3-minute rest period between sets",
+                    duration: 180,
+                    phase: .rest,
+                    targets: []
+                )
+            ]
         }())
     )
 

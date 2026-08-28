@@ -797,12 +797,6 @@ enum PlanLibraryValidator {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration is only valid for hang or pull steps."))
             }
         }
-        let isTimedSelfSelectedHang = step.phase == .hang
-            && step.targets.isEmpty
-            && step.activeDuration != nil
-        if step.phase != .rest && step.phase != .conditioning && !isTimedSelfSelectedHang && step.targets.isEmpty {
-            issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
-        }
         let isCompoundStep = step.segments.count > 1
         for (index, segment) in step.segments.enumerated() {
             let targetPath = "\(path).segments[\(index)].targets"
@@ -972,6 +966,12 @@ enum PlanLibraryValidator {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : step.id
                     let suffix = repetitions > 1 ? "-\(repetition + 1)" : ""
                     let resolvedID = sourceID + suffix
+                    validateStepTargetRequirement(
+                        step,
+                        plan: plan,
+                        stepPath: "\(referencePath).steps[\(stepIndex)]",
+                        issues: &issues
+                    )
                     for expandedID in expandedIDsEmittedByNormalizer(
                         for: step,
                         resolvedID: resolvedID
@@ -1020,6 +1020,42 @@ enum PlanLibraryValidator {
                 )
             }
         }
+    }
+
+    /// Only the official RPTC importer may retain its manufacturer-required,
+    /// athlete-selected grip. All other active steps must declare a target.
+    private static func validateStepTargetRequirement(
+        _ step: WorkoutStepDefinition,
+        plan: PlanDefinition,
+        stepPath: String,
+        issues: inout [PlanValidationIssue]
+    ) {
+        guard step.phase != .rest, step.phase != .conditioning, step.targets.isEmpty else {
+            return
+        }
+        guard allowsUntargetedRPTCSelfSelectedHang(step, in: plan) else {
+            issues.append(
+                PlanValidationIssue(
+                    path: "\(stepPath).targets",
+                    message: "Non-rest steps need at least one target."
+                )
+            )
+            return
+        }
+    }
+
+    private static func allowsUntargetedRPTCSelfSelectedHang(
+        _ step: WorkoutStepDefinition,
+        in plan: PlanDefinition
+    ) -> Bool {
+        plan.id == "rptc.seven-three-repeaters" &&
+            plan.metadata.provenance == .official &&
+            plan.metadata.sourceURL == URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155") &&
+            plan.boardID == nil &&
+            step.id.hasPrefix("rptc-repeaters-set-rep-") &&
+            step.phase == .hang &&
+            step.segments.isEmpty &&
+            step.activeDuration == 7
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
@@ -1613,7 +1649,7 @@ enum BuiltInPlanLibraryDefinition {
             ]
         } else if plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id {
             notes = [
-                "Official Rock Prodigy set template: seven 7s/3s two-handed dead-hang repetitions, then 2m 53s rest to 4:00.",
+                "Official Rock Prodigy set template: seven 7s/3s two-handed dead-hang repetitions, the table's 2m 53s recovery to 4:00, then a separate 3-minute between-set rest.",
                 "The source leaves the 5–10 grips and 1–3 sets per grip to the athlete, so the app intentionally supplies no target, grip order, or fixed workout duration."
             ]
         } else {
