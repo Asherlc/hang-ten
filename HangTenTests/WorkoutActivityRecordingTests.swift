@@ -232,6 +232,44 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertNil(records[1].sizeMillimeters)
     }
 
+    func testRPTCRepeatersRecordSelfSelectedWorkWithoutBoardHolds() throws {
+        let workout = try XCTUnwrap(
+            PlanCatalog.plan(id: LegacyPlanSeedCatalog.rptcRepeaters.id)
+        )
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board
+        )
+
+        let workRecords = records.filter { $0.kind == .work }
+        XCTAssertEqual(workRecords.count, 7)
+        XCTAssertTrue(workRecords.allSatisfy(\.holdIDs.isEmpty))
+        XCTAssertTrue(workRecords.allSatisfy { $0.holdType == nil })
+        XCTAssertTrue(workRecords.allSatisfy { $0.sizeMillimeters == nil })
+        XCTAssertEqual(workRecords.map(\.durationSeconds), Array(repeating: 7, count: 7))
+    }
+
+    func testTargetlessWorkOutsideRPTCThrowsUnresolvedTarget() {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: nil,
+                timing: .fixed,
+                duration: 7
+            )
+        ])
+
+        XCTAssertThrowsError(
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+        ) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "step", segmentIndex: 0)
+            )
+        }
+    }
+
     func testStopwatchWorkUsesSuppliedObservedDuration() throws {
         let workout = plan([
             WorkoutSegment(

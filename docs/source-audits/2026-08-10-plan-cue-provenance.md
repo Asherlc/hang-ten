@@ -24,7 +24,7 @@ measurement/feedback—the semantic target only highlights a suitable board
 feature and does not reproduce the study protocol. F100 retains its alternating
 right/left instruction without inventing board-side mappings.
 
-## Field decisions for all 17 built-in plans
+## Field decisions for all built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
@@ -46,6 +46,7 @@ right/left instruction without inventing board-side mappings.
 | `method.intermediate-hangboarding.repeaters` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable five-round 5–7-second repeater ranges | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects range endpoints, expands rows, and supplies semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 | `method.intermediate-hangboarding.emom` | coach | [Method Climbing · Intermediate Hangboarding](https://methodclimb.com/intermediate-hangboarding/) | title and identifiable ten-minute task order | subtitle, instruction, accessory, target, count, duration, interval, gripType: app defaults untimed counted work and maps source holds to semantic targets/cues | warmUp, cooldown, fingerConfiguration |
 | `rei.hangboard-sample-workout` | retailer | [REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing](https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html) | title and identifiable warm-up alternatives, five-grip order, repetitions, timing ranges, and recovery guidance | subtitle, instruction, accessory, target, count, duration, interval, gripType: app selects preview/range defaults and semantic targets/cues | warmUp, cooldown, fingerConfiguration |
+| `rptc.seven-three-repeaters` | manufacturer | [Rock Prodigy Training Center Use Instructions](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155) | title, subtitle, instruction, accessory, count, duration, interval: self-selected 5–10 grips, 1–3 sets per grip, 7×(7s/3s), table 2:53 recovery to 4:00, separate three-minute between-set rest, two-handed/no-pull-up/no-lock-off, and loading guidance | none | warmUp, cooldown, target, gripType, fingerConfiguration |
 
 ### Capacity-qualified pocket availability mappings
 
@@ -106,7 +107,8 @@ grip/finger cue.
     {"planID":"hoopers-beta.introductory-home-hangboard","sourceType":"coach","sourceLabel":"Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS","sourceURL":"https://www.hoopersbeta.com/library/hold-hangboard-introductory-routine"},
     {"planID":"method.intermediate-hangboarding.repeaters","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"method.intermediate-hangboarding.emom","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
-    {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"}
+    {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"},
+    {"planID":"rptc.seven-three-repeaters","sourceType":"manufacturer","sourceLabel":"Rock Prodigy Training Center Use Instructions","sourceURL":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155"}
   ],
   "targetFallbackRules": [
     {
@@ -227,7 +229,9 @@ grip/finger cue.
     {"planID":"rei.hangboard-sample-workout","fields":["subtitle","instruction","accessory","count","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"structure"},
     {"planID":"rei.hangboard-sample-workout","fields":["target"],"decision":"adapt","sourcePrescription":false,"adaptationType":"board"},
     {"planID":"rei.hangboard-sample-workout","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
-    {"planID":"rei.hangboard-sample-workout","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
+    {"planID":"rei.hangboard-sample-workout","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"rptc.seven-three-repeaters","fields":["title","subtitle","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
+    {"planID":"rptc.seven-three-repeaters","fields":["warmUp","cooldown","target","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
   ],
   "stepFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","stepIDPattern":".*task-.*","field":"instruction","decision":"keep","sourcePrescription":true},
@@ -295,7 +299,9 @@ grip/finger cue.
     {"planID":"method.intermediate-hangboarding.emom","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"instruction","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
-    {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"}
+    {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
+    {"planID":"rptc.seven-three-repeaters","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
+    {"planID":"rptc.seven-three-repeaters","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true}
   ]
 }
 ```

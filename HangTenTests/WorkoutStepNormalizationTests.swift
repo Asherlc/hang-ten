@@ -2,6 +2,26 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutStepNormalizationTests: XCTestCase {
+    func testMaterializingImplicitSegmentsCanonicalizesRPTCTerminalRest() {
+        let terminalRest = WorkoutStep(
+            id: "rptc-repeaters-between-sets-rest",
+            number: 8,
+            title: "RPTC repeater set · between-set rest",
+            instruction: "Rest 3 minutes between sets.",
+            accessory: "3-minute rest period between sets",
+            duration: 180,
+            phase: .rest,
+            targets: []
+        )
+
+        let canonical = WorkoutStepNormalizer.materializingImplicitSegments(terminalRest)
+
+        XCTAssertEqual(
+            canonical.segments,
+            [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 180)]
+        )
+    }
+
     func testFixedWorkAndRestSegmentsBecomeLiteralStepsInOrder() throws {
         let source = WorkoutStep(
             id: "repeaters",
