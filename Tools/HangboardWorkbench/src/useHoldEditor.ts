@@ -837,7 +837,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     const duplicates: Array<{ source: HoldRegion; id: number; key: string; holdId: string; pieceIndex: number }> = [];
     const duplicateKeyBySourceKey = new Map<string, string>();
     for (const hold of holds) {
-      const holdId = nextHoldId(planningDocument);
+      const holdId = nextHoldId(planningDocument, reservedHoldIDs);
       for (let index = 0; index < hold.length; index += 1) {
         const source = hold[index]!;
         const pieceIndex = source.metadata?.pieceIndex ?? index;
@@ -889,7 +889,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     if (!edited) return;
     setVertexSelection(null);
     setVertexMenuState(null);
-  }, [actions, busy, document, pathEditor, selectedHold, selectedKeys]);
+  }, [actions, busy, document, pathEditor, reservedHoldIDs, selectedHold, selectedKeys]);
 
   const deleteHold = useCallback((): void => {
     if (busy || !document || !selectedHold) return;
