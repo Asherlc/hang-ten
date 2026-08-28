@@ -31,6 +31,14 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
     }
+
+    func testLandscapePreStartLoadAdjustmentShowsOnlyFieldAndUnit() throws {
+        let loadAdjustment = app.textFields["Workout load adjustment"]
+
+        XCTAssertTrue(loadAdjustment.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["lbf"].exists || app.staticTexts["kgf"].exists)
+        XCTAssertFalse(app.staticTexts["Load"].exists)
+    }
 }
 
 final class IronPalmBoardMapInteractionUITests: XCTestCase {

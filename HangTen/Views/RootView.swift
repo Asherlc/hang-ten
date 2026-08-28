@@ -2354,25 +2354,7 @@ struct WorkoutView: View {
 
 			VStack(spacing: 6) {
 				HStack(spacing: 10) {
-					HStack(spacing: 6) {
-						Text("Load")
-							.font(.system(size: 14, weight: .bold, design: .rounded))
-							.foregroundStyle(Color.hangInk)
-						TextField(
-							"Load adjustment",
-							value: loadAdjustmentBinding(for: unit),
-							format: .number.precision(.fractionLength(1))
-						)
-						.keyboardType(.numbersAndPunctuation)
-						.textFieldStyle(.roundedBorder)
-						.frame(width: 62)
-						.accessibilityLabel("Workout load adjustment")
-						.accessibilityHint("Optional. Use a positive value for added weight or a negative value for pulley assistance. This starts from your latest saved session.")
-						Text(unit.label)
-							.font(.system(size: 13, weight: .bold, design: .rounded))
-							.foregroundStyle(Color.hangMuted)
-					}
-					.accessibilityElement(children: .contain)
+					loadAdjustmentField(for: unit, compact: true)
 
 					Spacer(minLength: 0)
 
@@ -2388,8 +2370,6 @@ struct WorkoutView: View {
 			.frame(maxWidth: 400)
 			.layoutPriority(1)
 		}
-		.padding(10)
-		.background(Color.hangGreen.opacity(0.12), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
 	}
 
     private func sessionHeader(
@@ -2521,33 +2501,41 @@ struct WorkoutView: View {
 
 	private var loadAdjustmentControl: some View {
 		let unit = motherboardSettingsStore.forceUnit
-		return VStack(alignment: .leading, spacing: 7) {
-			Text("Load adjustment")
-				.font(.system(size: 15, weight: .bold, design: .rounded))
-				.foregroundStyle(Color.hangInk)
+		return loadAdjustmentField(for: unit, compact: false)
+	}
 
-			HStack(spacing: 8) {
-				TextField(
-					"Load adjustment",
-					value: loadAdjustmentBinding(for: unit),
-					format: .number.precision(.fractionLength(1))
-				)
-				.keyboardType(.numbersAndPunctuation)
-				.textFieldStyle(.roundedBorder)
-				.accessibilityLabel("Workout load adjustment")
-				.accessibilityHint("Use a positive value for added weight or a negative value for pulley assistance.")
-
-				Text(unit.label)
-					.font(.system(size: 14, weight: .bold, design: .rounded))
-					.foregroundStyle(Color.hangMuted)
+	private func loadAdjustmentField(for unit: MotherboardForceUnit, compact: Bool) -> some View {
+		HStack(spacing: compact ? 5 : 8) {
+			TextField(
+				"",
+				value: loadAdjustmentBinding(for: unit),
+				format: .number.precision(.fractionLength(1))
+			)
+			.keyboardType(.numbersAndPunctuation)
+			.font(.system(size: compact ? 16 : 20, weight: .semibold, design: .rounded))
+			.multilineTextAlignment(.center)
+			.padding(.horizontal, compact ? 8 : 12)
+			.padding(.vertical, compact ? 6 : 9)
+			.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+			.overlay {
+				RoundedRectangle(cornerRadius: 10, style: .continuous)
+					.stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
 			}
+			.frame(
+				minWidth: compact ? 72 : 96,
+				idealWidth: compact ? 84 : 116,
+				maxWidth: compact ? 96 : 144
+			)
+			.layoutPriority(1)
+			.accessibilityLabel("Workout load adjustment")
+			.accessibilityHint("Use a positive value for added weight or a negative value for pulley assistance. This starts from your latest saved session.")
 
-			Text("Optional. Positive adds weight; negative records weight-pulley assistance. This starts from your latest saved session.")
-				.font(.system(size: 12, weight: .medium, design: .rounded))
+			Text(unit.label)
+				.font(.system(size: compact ? 13 : 14, weight: .bold, design: .rounded))
 				.foregroundStyle(Color.hangMuted)
 		}
-		.padding(12)
-		.background(Color.hangGreen.opacity(0.12), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.accessibilityElement(children: .contain)
 	}
 
 	private func loadAdjustmentBinding(for unit: MotherboardForceUnit) -> Binding<Double> {
