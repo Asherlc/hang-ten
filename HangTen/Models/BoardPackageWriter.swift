@@ -138,6 +138,8 @@ struct BoardEditableHold: Equatable, Decodable {
     var fingerCapacity: Int?
     var handCapacity: Int?
     var features: [HoldFeature]?
+    var pairedHoldID: String?
+    var declaresPairedHoldID: Bool
     var presentationID: String
     var geometry: [BoardEditablePiece]
 
@@ -153,6 +155,7 @@ struct BoardEditableHold: Equatable, Decodable {
         case fingerCapacity
         case handCapacity
         case features
+        case pairedHoldID
         case presentationID
     }
 
@@ -167,6 +170,7 @@ struct BoardEditableHold: Equatable, Decodable {
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         features: [HoldFeature]? = nil,
+        pairedHoldID: String? = nil,
         presentationID: String,
         geometry: [BoardEditablePiece]
     ) {
@@ -180,6 +184,8 @@ struct BoardEditableHold: Equatable, Decodable {
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
         self.features = features
+        self.pairedHoldID = pairedHoldID
+        declaresPairedHoldID = pairedHoldID != nil
         self.presentationID = presentationID
         self.geometry = geometry
     }
@@ -188,7 +194,7 @@ struct BoardEditableHold: Equatable, Decodable {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
             "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "presentationID", "sloper"
+            "features", "pairedHoldID", "presentationID", "sloper"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -216,6 +222,10 @@ struct BoardEditableHold: Equatable, Decodable {
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
+        declaresPairedHoldID = container.contains(.pairedHoldID)
+        pairedHoldID = declaresPairedHoldID
+            ? try container.decode(String.self, forKey: .pairedHoldID)
+            : nil
         presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 }
@@ -450,6 +460,17 @@ enum BoardPackageWriter {
                     throw invalid("hold \(hold.id) has invalid sloper metadata", document)
                 }
             }
+            if hold.kind == .gaston {
+                guard let pairedHoldID = hold.pairedHoldID,
+                      pairedHoldID.isEditorBoardIdentifier else {
+                    throw invalid(
+                        "gaston hold \(hold.id) must declare an identifier-shaped pairedHoldID",
+                        document
+                    )
+                }
+            } else if hold.declaresPairedHoldID {
+                throw invalid("non-gaston hold \(hold.id) must not declare pairedHoldID", document)
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw invalid("hold \(hold.id) has an invalid finger capacity", document)
@@ -481,6 +502,18 @@ enum BoardPackageWriter {
         }
         guard !document.holds.isEmpty else {
             throw invalid("holds must not be empty", document)
+        }
+        let holdsByID = Dictionary(uniqueKeysWithValues: document.holds.map { ($0.id, $0) })
+        for hold in document.holds where hold.kind == .gaston {
+            let pairedHoldID = hold.pairedHoldID!
+            guard pairedHoldID != hold.id,
+                  let pairedHold = holdsByID[pairedHoldID] else {
+                throw invalid("gaston hold \(hold.id) must pair with a distinct existing hold", document)
+            }
+            guard pairedHold.kind == .gaston,
+                  pairedHold.pairedHoldID == hold.id else {
+                throw invalid("gaston hold \(hold.id) must have a reciprocal gaston pair", document)
+            }
         }
     }
 
@@ -581,6 +614,9 @@ enum BoardPackageWriter {
         ]
         if let kind = hold.kind {
             entries.append(("kind", .string(kind.rawValue)))
+        }
+        if let pairedHoldID = hold.pairedHoldID {
+            entries.append(("pairedHoldID", .string(pairedHoldID)))
         }
         if let sloper = hold.sloper {
             var sloperEntries: [(String, CanonicalJSONValue)] = [

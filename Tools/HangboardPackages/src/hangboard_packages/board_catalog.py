@@ -33,7 +33,7 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
 _PACKAGE_ENTRIES = frozenset({"board.json", "assets"})
-_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+_HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 _SLOPER_TYPES = frozenset({"flat", "round"})
 _GRIP_TYPES = frozenset(
     {
@@ -419,6 +419,7 @@ class BoardHold:
     finger_capacity: int | None
     hand_capacity: int | None
     features: tuple[str, ...] | None
+    paired_hold_id: str | None
     presentation_id: str
 
     @property
@@ -495,6 +496,7 @@ def _load_hold(
             "handCapacity",
             "features",
             "sloper",
+            "pairedHoldID",
         }
         | {"presentationID"},
     )
@@ -511,6 +513,12 @@ def _load_hold(
         if "sloper" in payload:
             raise ValueError(f"{source}.sloper is only allowed for sloper holds")
         sloper = None
+    if kind == "gaston":
+        paired_hold_id = _identifier(payload.get("pairedHoldID"), f"{source}.pairedHoldID")
+    else:
+        if "pairedHoldID" in payload:
+            raise ValueError(f"{source}.pairedHoldID is only allowed for gaston holds")
+        paired_hold_id = None
     if "sizeMillimeters" in payload and "depthRangeMillimeters" in payload:
         raise ValueError(f"{source} must not specify both a size and depth range")
     size = None
@@ -565,6 +573,7 @@ def _load_hold(
         finger_capacity,
         hand_capacity,
         features,
+        paired_hold_id,
         presentation_id,
     )
 
@@ -655,6 +664,15 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
+    holds_by_id = {hold.id: hold for hold in holds_tuple}
+    for hold in holds_tuple:
+        if hold.kind != "gaston":
+            continue
+        if hold.paired_hold_id == hold.id or hold.paired_hold_id not in holds_by_id:
+            raise ValueError(f"gaston hold {hold.id} must pair with a distinct existing hold")
+        paired_hold = holds_by_id[hold.paired_hold_id]
+        if paired_hold.kind != "gaston" or paired_hold.paired_hold_id != hold.id:
+            raise ValueError(f"gaston hold {hold.id} must have a reciprocal gaston pair")
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),

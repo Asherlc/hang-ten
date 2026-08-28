@@ -958,6 +958,7 @@ def _save_loaded_editor_document(
         size_millimeters,
         depth_range,
         hand_capacity,
+        paired_hold_id,
     ) in parsed_regions.values():
         pieces_by_hold.setdefault(hold_id, []).append(
             (
@@ -972,6 +973,7 @@ def _save_loaded_editor_document(
                 size_millimeters,
                 depth_range,
                 hand_capacity,
+                paired_hold_id,
             )
         )
     for pieces in pieces_by_hold.values():

@@ -1411,6 +1411,46 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     assert saved.board_json_sha == expected_sha
 
 
+def test_changed_hosted_save_preserves_reciprocal_gaston_pair_metadata() -> None:
+    board = board_document("fixture.board")
+    left = board["holds"][0]
+    assert isinstance(left, dict)
+    right = copy.deepcopy(left)
+    left.update(
+        id="gaston-left",
+        name="Left gaston",
+        kind="gaston",
+        pairedHoldID="gaston-right",
+    )
+    right.update(
+        id="gaston-right",
+        name="Right gaston",
+        kind="gaston",
+        pairedHoldID="gaston-left",
+    )
+    board["holds"] = [left, right]
+    client = _client(("fixture-board", board))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert [hold["pairedHoldID"] for hold in saved.board["holds"]] == [
+        "gaston-right",
+        "gaston-left",
+    ]
+    assert [hold["pairedHoldID"] for hold in stored["holds"]] == [
+        "gaston-right",
+        "gaston-left",
+    ]
+
+
 def test_changed_hosted_save_persists_a_bendable_curve_marker() -> None:
     board = board_document("fixture.board")
     board["holds"][0]["geometry"][0]["shape"] = {

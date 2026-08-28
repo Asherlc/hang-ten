@@ -142,7 +142,7 @@ OPTIONAL_HOLD_METADATA_FIELDS = (
     "gripType",
     "features",
 )
-ALLOWED_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper"})
+ALLOWED_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 EXPECTED_KIND_COUNTS = Counter({"edge": 10, "pocket": 4, "pinch": 2, "sloper": 2})
 EXPECTED_PIECE_COUNT = 22
 EXPECTED_PIXEL_SIZE = (1774, 887)

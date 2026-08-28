@@ -175,6 +175,7 @@ export interface HoldEditorActions {
   makeSelectedSegmentVertical(): void;
   dismissVertexMenu(restoreFocus?: boolean): void;
   changeHoldType(type: string): void;
+  changePairedHoldID(pairedHoldID: string | undefined): void;
   changeFingerCapacity(capacity: number | undefined): void;
   changeHoldDepthMeasurement(mode: "unset" | "fixed" | "variable"): void;
   changeHoldSizeMillimeters(size: number | undefined): void;
@@ -969,12 +970,42 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         if (!siblingKeys.has(region.key)) continue;
         region.type = type;
         if (type !== "sloper") delete region.sloper;
+        if (type !== "gaston") delete region.pairedHoldID;
+      }
+      if (type !== "gaston") {
+        const selectedHoldIDs = new Set([...siblingKeys]
+          .map((key) => candidate.regions.find((region) => region.key === key)?.metadata?.holdID)
+          .filter((holdID): holdID is string => holdID !== undefined));
+        for (const region of candidate.regions) {
+          if (region.pairedHoldID && selectedHoldIDs.has(region.pairedHoldID)) delete region.pairedHoldID;
+        }
       }
     }, {
       status: "Hold recategorized. Save when ready.",
       failureMessage: "Hold type is invalid.",
     });
   }, [actions, busy, document, selectedHold, selectedKeys]);
+
+  const changePairedHoldID = useCallback((pairedHoldID: string | undefined): void => {
+    if (busy || !document || !selectedHold || selectedHold.type !== "gaston") return;
+    const holdID = selectedHold.metadata?.holdID;
+    if (!holdID || !pairedHoldID || pairedHoldID === holdID) return;
+    const pairedHold = document.regions.find((region) => (
+      region.metadata?.holdID === pairedHoldID && region.type === "gaston"
+    ));
+    if (!pairedHold
+      || (selectedHold.pairedHoldID !== undefined && selectedHold.pairedHoldID !== pairedHoldID)
+      || (pairedHold.pairedHoldID !== undefined && pairedHold.pairedHoldID !== holdID)) return;
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (region.metadata?.holdID === holdID) region.pairedHoldID = pairedHoldID;
+        if (region.metadata?.holdID === pairedHoldID) region.pairedHoldID = holdID;
+      }
+    }, {
+      status: "Gaston pair changed. Save when ready.",
+      failureMessage: "Gaston pair is invalid.",
+    });
+  }, [actions, busy, document, selectedHold]);
 
   const changeFingerCapacity = useCallback((capacity: number | undefined): void => {
     if (busy || !document || !selectedHold || (capacity !== undefined && (!Number.isInteger(capacity) || capacity < 1 || capacity > 4))) return;
@@ -1764,6 +1795,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     makeSelectedSegmentVertical,
     dismissVertexMenu,
     changeHoldType,
+    changePairedHoldID,
     changeFingerCapacity,
     changeHoldDepthMeasurement,
     changeHoldSizeMillimeters,

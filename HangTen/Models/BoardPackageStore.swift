@@ -682,6 +682,20 @@ struct BoardPackageStore {
                     reason: "hold \(hold.id) has sloper metadata but is not a sloper"
                 )
             }
+            if hold.kind == .gaston {
+                guard let pairedHoldID = hold.pairedHoldID,
+                      pairedHoldID.isBoardPackageIdentifier else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "gaston hold \(hold.id) must declare an identifier-shaped pairedHoldID"
+                    )
+                }
+            } else if hold.declaresPairedHoldID {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "non-gaston hold \(hold.id) must not declare pairedHoldID"
+                )
+            }
             if let fingerCapacity = hold.fingerCapacity,
                !BoardHold.validFingerCapacityRange.contains(fingerCapacity) {
                 throw BoardPackageStoreError.invalidPackage(
@@ -755,6 +769,26 @@ struct BoardPackageStore {
                 boardID: document.id,
                 reason: "holds must not be empty"
             )
+        }
+        let documentsByHoldID = Dictionary(
+            uniqueKeysWithValues: document.holds.map { ($0.id, $0) }
+        )
+        for hold in document.holds where hold.kind == .gaston {
+            let pairedHoldID = hold.pairedHoldID!
+            guard pairedHoldID != hold.id,
+                  let pairedHold = documentsByHoldID[pairedHoldID] else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "gaston hold \(hold.id) must pair with a distinct existing hold"
+                )
+            }
+            guard pairedHold.kind == .gaston,
+                  pairedHold.pairedHoldID == hold.id else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "gaston hold \(hold.id) must have a reciprocal gaston pair"
+                )
+            }
         }
         return holds
     }
@@ -892,6 +926,8 @@ private struct BoardPackageHoldDocument: Decodable {
     let fingerCapacity: Int?
     let handCapacity: Int?
     let features: [HoldFeature]?
+    let pairedHoldID: String?
+    let declaresPairedHoldID: Bool
     let presentationID: String
 
     private enum CodingKeys: String, CodingKey {
@@ -906,6 +942,7 @@ private struct BoardPackageHoldDocument: Decodable {
         case fingerCapacity
         case handCapacity
         case features
+        case pairedHoldID
         case presentationID
     }
 
@@ -913,7 +950,7 @@ private struct BoardPackageHoldDocument: Decodable {
         try decoder.rejectUnknownKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
             "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "presentationID", "sloper"
+            "features", "pairedHoldID", "presentationID", "sloper"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -932,6 +969,10 @@ private struct BoardPackageHoldDocument: Decodable {
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         features = try container.decodeIfPresent([HoldFeature].self, forKey: .features)
+        declaresPairedHoldID = container.contains(.pairedHoldID)
+        pairedHoldID = declaresPairedHoldID
+            ? try container.decode(String.self, forKey: .pairedHoldID)
+            : nil
         presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 
@@ -955,6 +996,7 @@ private struct BoardPackageHoldDocument: Decodable {
                 $0.lowerBound...$0.upperBound
             },
             features: features.map(Set.init),
+            pairedHoldID: pairedHoldID,
             presentationID: presentationID
         )
     }

@@ -66,6 +66,14 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
   const selectedHold: HoldRegion | null = state.document?.regions.find(
     (region) => region.key === state.selectedKey,
   ) ?? null;
+  const gastonPairCandidates = state.document && selectedHold?.metadata?.holdID
+    ? [...new Set(state.document.regions
+      .filter((region) => region.type === "gaston"
+        && region.metadata?.holdID !== selectedHold.metadata?.holdID
+        && (region.pairedHoldID === undefined || region.metadata?.holdID === selectedHold.pairedHoldID))
+      .map((region) => region.metadata?.holdID)
+      .filter((holdID): holdID is string => holdID !== undefined))]
+    : [];
   const selectedHoldCenter = state.document && selectedHold
     ? holdCentroid([selectedHold], dependencies.pathEditor)
     : null;
@@ -315,6 +323,8 @@ export function WorkbenchApp({ dependencies }: WorkbenchAppProps) {
           rotationDegrees={state.rotationDegrees}
           onRotationDegreesChange={actions.setRotationDegrees}
           onTypeChange={editor.changeHoldType}
+          gastonPairCandidates={gastonPairCandidates}
+          onPairedHoldIDChange={editor.changePairedHoldID}
           onFingerCapacityChange={editor.changeFingerCapacity}
           onDepthMeasurementChange={editor.changeHoldDepthMeasurement}
           onSizeMillimetersChange={editor.changeHoldSizeMillimeters}

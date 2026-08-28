@@ -30,7 +30,7 @@ VALIDATION_FIXTURES = json.loads(
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
 )
-SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper")
+SUPPORTED_HOLD_KINDS = ("jug", "edge", "pocket", "pinch", "sloper", "gaston")
 sys.path.insert(0, str(WORKBENCH_ROOT))
 
 import board_package  # noqa: E402
@@ -143,6 +143,47 @@ def _replace_holds_with_supported_kinds(board: dict[str, object]) -> None:
             "kind": kind,
         }
         for kind in SUPPORTED_HOLD_KINDS
+        if kind != "gaston"
+    ]
+    board["holds"].extend(
+        [
+            {
+                **template,
+                "id": "hold-gaston-left",
+                "name": "Fixture gaston left",
+                "kind": "gaston",
+                "pairedHoldID": "hold-gaston-right",
+            },
+            {
+                **template,
+                "id": "hold-gaston-right",
+                "name": "Fixture gaston right",
+                "kind": "gaston",
+                "pairedHoldID": "hold-gaston-left",
+            },
+        ]
+    )
+
+
+def _replace_holds_with_reciprocal_gastons(board: dict[str, object]) -> None:
+    holds = board["holds"]
+    assert isinstance(holds, list) and holds and isinstance(holds[0], dict)
+    template = holds[0]
+    board["holds"] = [
+        {
+            **template,
+            "id": "gaston-left",
+            "name": "Left gaston",
+            "kind": "gaston",
+            "pairedHoldID": "gaston-right",
+        },
+        {
+            **template,
+            "id": "gaston-right",
+            "name": "Right gaston",
+            "kind": "gaston",
+            "pairedHoldID": "gaston-left",
+        },
     ]
 
 
@@ -187,6 +228,69 @@ def test_editor_documents_are_focused_on_one_presentation(tmp_path: Path) -> Non
         "hold-back",
         "hold-back",
     ]
+
+
+def test_reciprocal_gaston_pairs_round_trip_through_workbench_save(tmp_path: Path) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, _replace_holds_with_reciprocal_gastons)
+
+    package = board_package.load_board_package(package_root)
+    document = board_package.editor_document(package)
+    assert {
+        region["metadata"]["holdID"]: region["pairedHoldID"]
+        for region in document["regions"]
+    } == {
+        "gaston-left": "gaston-right",
+        "gaston-right": "gaston-left",
+    }
+    for region in document["regions"]:
+        if region["metadata"]["holdID"] == "gaston-left":
+            region["fingerCapacity"] = 4
+    saved = board_package.save_editor_document(library, "fixture-board", document)
+
+    assert saved.hold_ids == ("gaston-left", "gaston-right")
+    holds = _read_board(package_root)["holds"]
+    assert holds[0]["kind"] == "gaston"
+    assert holds[0]["pairedHoldID"] == "gaston-right"
+    assert holds[0]["fingerCapacity"] == 4
+    assert holds[1]["kind"] == "gaston"
+    assert holds[1]["pairedHoldID"] == "gaston-left"
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda holds: holds[0].pop("pairedHoldID"), "pairedHoldID"),
+        (lambda holds: holds[0].__setitem__("pairedHoldID", None), "pairedHoldID"),
+        (lambda holds: holds[0].__setitem__("pairedHoldID", "not an identifier"), "pairedHoldID"),
+        (lambda holds: holds[0].__setitem__("pairedHoldID", "gaston-left"), "distinct existing"),
+        (lambda holds: holds[0].__setitem__("pairedHoldID", "missing"), "distinct existing"),
+        (
+            lambda holds: (
+                holds[1].__setitem__("kind", "jug"),
+                holds[1].pop("pairedHoldID"),
+            ),
+            "reciprocal gaston",
+        ),
+        (lambda holds: holds[1].__setitem__("pairedHoldID", "missing"), "reciprocal gaston"),
+        (lambda holds: holds[0].__setitem__("kind", "jug"), "only allowed for gaston"),
+    ],
+)
+def test_workbench_rejects_invalid_gaston_pair_metadata(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    library = _library(tmp_path)
+    package_root = _write_finished_package(library, "fixture-board", "fixture.board")
+    _mutate_board(package_root, _replace_holds_with_reciprocal_gastons)
+    board = _read_board(package_root)
+    holds = board["holds"]
+    assert isinstance(holds, list)
+    mutation(holds)
+    _write_json(package_root / "board.json", board)
+
+    with pytest.raises(BoardPackageError, match=message):
+        board_package.load_board_package(package_root)
 
 
 def test_optional_orientation_presentation_reuses_a_declared_surface(
@@ -530,6 +634,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 int | float | None,
                 dict[str, int | float] | None,
                 int | None,
+                str | None,
             ]
         ],
     ] = {}
@@ -546,6 +651,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
         size_millimeters,
         depth_range,
         hand_capacity,
+        paired_hold_id,
     ) in parsed.values():
         pieces_by_hold.setdefault(hold_id, []).append(
             (
@@ -560,6 +666,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
                 size_millimeters,
                 depth_range,
                 hand_capacity,
+                paired_hold_id,
             )
         )
     for pieces in pieces_by_hold.values():
@@ -578,6 +685,7 @@ def test_apply_editor_document_returns_updated_board_without_mutating_its_input(
             first_piece[8],
             first_piece[9],
             first_piece[10],
+            first_piece[11],
         )
     original = copy.deepcopy(package.board)
 
@@ -970,9 +1078,9 @@ def test_accepts_exact_physical_hold_kind_enum(tmp_path: Path) -> None:
 
     loaded = board_package.load_board_package(package)
 
-    assert [hold["kind"] for hold in loaded.board["holds"]] == list(
-        SUPPORTED_HOLD_KINDS
-    )
+    assert [hold["kind"] for hold in loaded.board["holds"]] == [
+        "jug", "edge", "pocket", "pinch", "sloper", "gaston", "gaston"
+    ]
 
 
 def test_editor_round_trips_optional_sloper_metadata(tmp_path: Path) -> None:
@@ -2095,7 +2203,11 @@ def test_save_deletes_one_of_several_holds(tmp_path: Path) -> None:
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    expected_ids = {f"hold-{kind}" for kind in SUPPORTED_HOLD_KINDS if kind != "jug"}
+    expected_ids = {
+        f"hold-{kind}"
+        for kind in SUPPORTED_HOLD_KINDS
+        if kind not in {"jug", "gaston"}
+    } | {"hold-gaston-left", "hold-gaston-right"}
     assert set(saved.hold_ids) == expected_ids
     assert "hold-jug" not in {hold["id"] for hold in _read_board(package_root)["holds"]}
 

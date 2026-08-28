@@ -83,6 +83,7 @@ export interface HoldRegion {
   id?: number;
   key: string;
   type?: string;
+  pairedHoldID?: string;
   displayPath: string;
   metadata?: {
     holdID: string;

@@ -831,6 +831,68 @@ test("the hold type control preserves an out-of-list document value", async () =
   }, dependenciesFixture(board));
 });
 
+test("an unpaired gaston offers only actionable pairing candidates and saves the initial reciprocal pair", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    { id: 3, key: "jug-piece-0", type: "jug", displayPath: OTHER_PATH, metadata: { holdID: "jug", pieceIndex: 0 } },
+    { id: 4, key: "other-a-piece-0", type: "gaston", pairedHoldID: "other-b", displayPath: "M 10 30 L 20 30 L 20 40 Z", metadata: { holdID: "other-a", pieceIndex: 0 } },
+    { id: 5, key: "other-b-piece-0", type: "gaston", pairedHoldID: "other-a", displayPath: "M 30 30 L 40 30 L 40 40 Z", metadata: { holdID: "other-b", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+
+    assert.equal(app.documentValue("#hold-type-select"), "gaston");
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value=""]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="left"]'), null);
+    assert.equal(app.text('#gaston-pair-select option[value="right"]'), "right");
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="jug"]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="other-a"]'), null);
+    assert.equal(app.document.querySelector('#gaston-pair-select option[value="other-b"]'), null);
+
+    await app.change("#gaston-pair-select", "right");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls[0]?.document.regions[0]?.pairedHoldID, "right");
+    assert.equal(client.saveCalls[0]?.document.regions[1]?.pairedHoldID, "left");
+  }, dependenciesFixture(board, { client }));
+});
+
+test("an established gaston pair shows its counterpart without offering reassignment or unset", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "right", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", pairedHoldID: "left", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    { id: 3, key: "other-piece-0", type: "gaston", displayPath: OTHER_PATH, metadata: { holdID: "other", pieceIndex: 0 } },
+  ]));
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+
+    assert.equal(app.document.querySelector("#gaston-pair-select"), null);
+    assert.equal(app.text("#gaston-pair-current"), "right");
+    assert.equal(app.document.querySelector("#gaston-pair-current")?.getAttribute("aria-label"), "Paired gaston hold: right");
+  }, dependenciesFixture(board));
+});
+
+test("changing a gaston hold to another kind clears its pair metadata", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "right", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "gaston", pairedHoldID: "left", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+    await app.change("#hold-type-select", "jug");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls[0]?.document.regions[0]?.pairedHoldID, undefined);
+    assert.equal(client.saveCalls[0]?.document.regions[1]?.pairedHoldID, undefined);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("Add Hold creates and selects a centered square", async () => {
   await withEditor(async (app) => {
     await app.click("#add-hold-button");
