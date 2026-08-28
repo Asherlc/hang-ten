@@ -39,6 +39,20 @@ enum WorkoutSummaryFormatting {
         guard displayedValue.isFinite, displayedValue >= 0 else { return nil }
         return "Captured baseline: \(String(format: "%.1f %@", displayedValue, unit.label))"
     }
+
+    static func loadAdjustmentText(
+        for loadAdjustmentKGF: Double,
+        unit: MotherboardForceUnit
+    ) -> String? {
+        guard loadAdjustmentKGF.isFinite, loadAdjustmentKGF != 0 else { return nil }
+        let displayedValue = unit.value(fromKilogramsForce: abs(loadAdjustmentKGF))
+        guard displayedValue.isFinite else { return nil }
+
+        if loadAdjustmentKGF > 0 {
+            return "Added weight: +\(String(format: "%.1f %@", displayedValue, unit.label))"
+        }
+        return "Pulley assistance: -\(String(format: "%.1f %@", displayedValue, unit.label))"
+    }
 }
 
 struct WorkoutSummaryView: View {
@@ -196,6 +210,17 @@ private struct WorkoutSummaryContent: View {
                 Text(session.forceSensorProfile.label)
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
+            }
+
+            if let loadAdjustmentText = WorkoutSummaryFormatting.loadAdjustmentText(
+                for: session.loadAdjustmentKGF,
+                unit: unit
+            ) {
+                Section("Load adjustment") {
+                    Text(loadAdjustmentText)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
             }
 
             if let bodyweightBaselineText = WorkoutSummaryFormatting.bodyweightBaselineText(

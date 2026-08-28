@@ -33,6 +33,21 @@ final class WorkoutSummaryTests: XCTestCase {
         XCTAssertNil(WorkoutSummaryFormatting.bodyweightBaselineText(for: nil, unit: .kgf))
     }
 
+    func testLoadAdjustmentTextDescribesAddedWeightAndPulleyAssistanceInSelectedUnit() {
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.loadAdjustmentText(for: 10, unit: .lbf),
+            "Added weight: +22.0 lbf"
+        )
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.loadAdjustmentText(for: -10, unit: .newtons),
+            "Pulley assistance: -98.1 N"
+        )
+    }
+
+    func testLoadAdjustmentTextOmitsNoAdjustment() {
+        XCTAssertNil(WorkoutSummaryFormatting.loadAdjustmentText(for: 0, unit: .kgf))
+    }
+
     func testGranularSampleTextUsesTheRecordedSensorProfile() throws {
         let measurement = MotherboardMeasurement(
             timestamp: Date(timeIntervalSince1970: 1),

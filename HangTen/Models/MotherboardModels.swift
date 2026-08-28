@@ -23,6 +23,16 @@ enum MotherboardForceUnit: String, CaseIterable, Codable, Identifiable {
         case .newtons: kgf * 9.80665
         }
     }
+
+    func kilogramsForce(fromDisplayedForce value: Double) -> Double {
+        guard value.isFinite else { return 0 }
+
+        return switch self {
+        case .kgf: value
+        case .lbf: value / 2.20462262185
+        case .newtons: value / 9.80665
+        }
+    }
 }
 
 struct MotherboardMeasurement: Codable, Equatable {
@@ -236,12 +246,14 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let stepTitles: [String]
     let forceSensorProfile: ForceSensorProfile
     let bodyweightKGF: Double?
+    let loadAdjustmentKGF: Double
     let motherboardMeasurements: [MotherboardMeasurement]
     let motherboardMeasurementsTruncated: Bool
 
     private enum CodingKeys: String, CodingKey {
         case id, planID, planTitle, recordedAt, startDate, endDate
         case motherboardIdentifier, batteryValue, steps, stepTitles, forceSensorProfile, bodyweightKGF
+        case loadAdjustmentKGF
         case motherboardMeasurements, motherboardMeasurementsTruncated
     }
 
@@ -258,6 +270,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         stepTitles: [String] = [],
         forceSensorProfile: ForceSensorProfile = .motherboard,
         bodyweightKGF: Double? = nil,
+        loadAdjustmentKGF: Double = 0,
         motherboardMeasurements: [MotherboardMeasurement] = [],
         motherboardMeasurementsTruncated: Bool = false
     ) {
@@ -273,6 +286,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.stepTitles = stepTitles
         self.forceSensorProfile = forceSensorProfile
         self.bodyweightKGF = bodyweightKGF
+        self.loadAdjustmentKGF = Self.normalizedLoadAdjustment(loadAdjustmentKGF)
         self.motherboardMeasurements = motherboardMeasurements
         self.motherboardMeasurementsTruncated = motherboardMeasurementsTruncated
     }
@@ -292,6 +306,9 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         let forceSensorProfileRawValue = try container.decodeIfPresent(String.self, forKey: .forceSensorProfile)
         forceSensorProfile = forceSensorProfileRawValue.flatMap(ForceSensorProfile.init(rawValue:)) ?? .motherboard
         bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
+        loadAdjustmentKGF = Self.normalizedLoadAdjustment(
+            try container.decodeIfPresent(Double.self, forKey: .loadAdjustmentKGF) ?? 0
+        )
         motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
         motherboardMeasurementsTruncated = try container.decodeIfPresent(Bool.self, forKey: .motherboardMeasurementsTruncated) ?? false
     }
@@ -302,6 +319,10 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
             return "Step \(index + 1)"
         }
         return stepTitles[index]
+    }
+
+    private static func normalizedLoadAdjustment(_ value: Double) -> Double {
+        value.isFinite ? value : 0
     }
 }
 
