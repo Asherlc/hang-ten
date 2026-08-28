@@ -6,9 +6,13 @@
   "productURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
   "dimensions": "79 \u00d7 16 \u00d7 6 cm",
   "aspectRatio": 1.5024437927663734,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "jug-rounded",
+      "equipmentObjectID": "primary",
       "name": "Rounded jug",
       "kind": "jug",
       "geometry": [
@@ -65,6 +69,7 @@
     },
     {
       "id": "edge-20",
+      "equipmentObjectID": "primary",
       "name": "20 mm rounded edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -122,6 +127,7 @@
     },
     {
       "id": "edge-15",
+      "equipmentObjectID": "primary",
       "name": "15 mm rounded edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -179,6 +185,7 @@
     },
     {
       "id": "edge-10",
+      "equipmentObjectID": "primary",
       "name": "10 mm rounded edge",
       "kind": "edge",
       "sizeMillimeters": 10,

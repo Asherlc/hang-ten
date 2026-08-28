@@ -6,6 +6,9 @@
   "productURL": "https://www.tensionclimbing.com/hangboards/grindstone-pro",
   "dimensions": "Not published by manufacturer",
   "aspectRatio": 1.7380073800738007,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     { "id": "phone-slot", "name": "Top phone slot", "kind": "edge", "geometry": [{ "frame": { "x": 0.126, "y": 0.164, "width": 0.113, "height": 0.067 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.3 }, "shapeConstraint": { "shape": "pill", "rotationDegrees": -8 } }], "presentationID": "primary" },
     { "id": "edge-35-left", "name": "35 mm left warm-up edge", "kind": "edge", "sizeMillimeters": 35, "geometry": [{ "frame": { "x": 0.247, "y": 0.151, "width": 0.135, "height": 0.115 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.3 }, "shapeConstraint": { "shape": "pill", "rotationDegrees": -8 } }], "presentationID": "primary" },

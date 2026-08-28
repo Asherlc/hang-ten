@@ -6,6 +6,9 @@
   "productURL": "https://www.tensionclimbing.com/hangboards/new-board",
   "dimensions": "Not published by manufacturer",
   "aspectRatio": 1.5029308323563892,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     { "id": "edge-35-left", "name": "35 mm left edge", "kind": "edge", "sizeMillimeters": 35, "geometry": [{ "frame": { "x": 0.310, "y": 0.369, "width": 0.137, "height": 0.046 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.32 }, "shapeConstraint": { "shape": "pill", "rotationDegrees": 0 }, "treatment": { "type": "surface" } }], "presentationID": "primary" },
     { "id": "edge-35-right", "name": "35 mm right edge", "kind": "edge", "sizeMillimeters": 35, "geometry": [{ "frame": { "x": 0.583, "y": 0.369, "width": 0.137, "height": 0.046 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.32 }, "shapeConstraint": { "shape": "pill", "rotationDegrees": 0 }, "treatment": { "type": "surface" } }], "presentationID": "primary" },

@@ -62,6 +62,15 @@ def _write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
 
 
+def test_catalog_validator_rejects_hold_with_unknown_equipment_object_id() -> None:
+    document = board_document("fixture.board")
+    document["equipmentObjects"] = [{"id": "primary"}]
+    document["holds"][0]["equipmentObjectID"] = "missing"
+
+    with pytest.raises(BoardPackageError, match="unknown equipment object"):
+        board_package.validate_catalog_board(document)
+
+
 def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
     return (
         struct.pack(">I", len(payload))

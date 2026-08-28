@@ -6,9 +6,13 @@
   "productURL": "https://www.zlagboard.com/hangboards",
   "dimensions": "70 \u00d7 23 \u00d7 6 cm",
   "aspectRatio": 2.7562913907284767,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "top-jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left top jug",
       "kind": "jug",
       "geometry": [
@@ -86,6 +90,7 @@
     },
     {
       "id": "top-sloper-32-left",
+      "equipmentObjectID": "primary",
       "name": "Left 32-degree top sloper",
       "kind": "sloper",
       "gripType": "sloper",
@@ -139,6 +144,7 @@
     },
     {
       "id": "top-sloper-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20-degree top sloper",
       "kind": "sloper",
       "gripType": "sloper",
@@ -192,6 +198,7 @@
     },
     {
       "id": "top-sloper-jug-center",
+      "equipmentObjectID": "primary",
       "name": "Center top sloper jug",
       "kind": "sloper",
       "gripType": "sloper",
@@ -303,6 +310,7 @@
     },
     {
       "id": "top-sloper-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20-degree top sloper",
       "kind": "sloper",
       "gripType": "sloper",
@@ -356,6 +364,7 @@
     },
     {
       "id": "top-sloper-32-right",
+      "equipmentObjectID": "primary",
       "name": "Right 32-degree top sloper",
       "kind": "sloper",
       "gripType": "sloper",
@@ -409,6 +418,7 @@
     },
     {
       "id": "top-jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right top jug",
       "kind": "jug",
       "geometry": [
@@ -486,6 +496,7 @@
     },
     {
       "id": "edge-30-left",
+      "equipmentObjectID": "primary",
       "name": "Left 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -596,6 +607,7 @@
     },
     {
       "id": "sloper-edge-30-left",
+      "equipmentObjectID": "primary",
       "name": "Left 30 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 30,
@@ -707,6 +719,7 @@
     },
     {
       "id": "sloper-edge-25-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
@@ -818,6 +831,7 @@
     },
     {
       "id": "edge-35-center",
+      "equipmentObjectID": "primary",
       "name": "Center 35 mm edge",
       "kind": "edge",
       "sizeMillimeters": 35,
@@ -928,6 +942,7 @@
     },
     {
       "id": "sloper-edge-25-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
@@ -1039,6 +1054,7 @@
     },
     {
       "id": "sloper-edge-30-right",
+      "equipmentObjectID": "primary",
       "name": "Right 30 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 30,
@@ -1150,6 +1166,7 @@
     },
     {
       "id": "edge-30-right",
+      "equipmentObjectID": "primary",
       "name": "Right 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -1260,6 +1277,7 @@
     },
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1370,6 +1388,7 @@
     },
     {
       "id": "sloper-edge-25-lower-left",
+      "equipmentObjectID": "primary",
       "name": "Lower left 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
@@ -1481,6 +1500,7 @@
     },
     {
       "id": "edge-30-inner-left",
+      "equipmentObjectID": "primary",
       "name": "Inner left 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -1591,6 +1611,7 @@
     },
     {
       "id": "sloper-edge-30-center",
+      "equipmentObjectID": "primary",
       "name": "Center 30 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 30,
@@ -1702,6 +1723,7 @@
     },
     {
       "id": "edge-30-inner-right",
+      "equipmentObjectID": "primary",
       "name": "Inner right 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -1812,6 +1834,7 @@
     },
     {
       "id": "sloper-edge-25-lower-right",
+      "equipmentObjectID": "primary",
       "name": "Lower right 25 mm sloper edge",
       "kind": "sloper",
       "sizeMillimeters": 25,
@@ -1923,6 +1946,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,

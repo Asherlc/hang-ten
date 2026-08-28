@@ -6,6 +6,9 @@
   "subtitle": "Portable board with three edges, two mono-finger openings, and a tray",
   "dimensions": "34 \u00d7 10 \u00d7 3 cm",
   "aspectRatio": 1.5,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "front-25-15",
@@ -25,6 +28,7 @@
   "holds": [
     {
       "id": "tray",
+      "equipmentObjectID": "primary",
       "name": "Wide tray",
       "kind": "jug",
       "presentationID": "front-25-15",
@@ -105,6 +109,7 @@
     },
     {
       "id": "edge-25",
+      "equipmentObjectID": "primary",
       "name": "25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -215,6 +220,7 @@
     },
     {
       "id": "edge-15",
+      "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -325,6 +331,7 @@
     },
     {
       "id": "mono-left",
+      "equipmentObjectID": "primary",
       "name": "Left mono-finger opening",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -421,6 +428,7 @@
     },
     {
       "id": "mono-right",
+      "equipmentObjectID": "primary",
       "name": "Right mono-finger opening",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -517,6 +525,7 @@
     },
     {
       "id": "edge-10",
+      "equipmentObjectID": "primary",
       "name": "10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,

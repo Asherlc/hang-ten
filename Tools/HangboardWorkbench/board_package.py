@@ -45,7 +45,7 @@ _BOARD_REQUIRED_FIELDS = frozenset(
         "holds",
     }
 )
-_BOARD_OPTIONAL_FIELDS = frozenset({"dimensions"})
+_BOARD_OPTIONAL_FIELDS = frozenset({"dimensions", "equipmentObjects"})
 _HOLD_REQUIRED_FIELDS = frozenset({"id", "name", "kind", "geometry"})
 _HOLD_OPTIONAL_FIELDS = frozenset(
     {
@@ -57,6 +57,7 @@ _HOLD_OPTIONAL_FIELDS = frozenset(
         "handCapacity",
         "features",
         "pairedHoldID",
+        "equipmentObjectID",
     }
 )
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
@@ -1038,6 +1039,7 @@ def _validate_board(
     allow_missing_kind: bool = False,
 ) -> None:
     parsed_presentations = _parse_board_presentations(board)
+    equipment_object_ids = _validate_equipment_objects(board)
     _identifier(board.get("id"), "board.json.id")
     for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
@@ -1065,6 +1067,7 @@ def _validate_board(
     if not isinstance(holds, list) or not holds:
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
+    owned_equipment_object_ids: set[str] = set()
     presentation_ids = {item[0] for item in parsed_presentations}
     canonical_presentation_ids = {
         item[0] for item in parsed_presentations if item[5] is None
@@ -1086,6 +1089,15 @@ def _validate_board(
                 f"{label}.presentationID must be owned by a canonical presentation"
             )
         hold_width, hold_height = dimensions_by_id.get(hold_presentation_id, (width, height))
+        equipment_object_id = _identifier(
+            hold.get("equipmentObjectID", "primary") if isinstance(hold, Mapping) else None,
+            f"{label}.equipmentObjectID",
+        )
+        if equipment_object_id not in equipment_object_ids:
+            raise BoardPackageError(
+                f"{label} references unknown equipment object {equipment_object_id}"
+            )
+        owned_equipment_object_ids.add(equipment_object_id)
         hold_id = _validate_hold(
             hold,
             hold_width,
@@ -1098,6 +1110,7 @@ def _validate_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
     _validate_gaston_pairs(holds)
 
 
@@ -1106,6 +1119,7 @@ def validate_catalog_board(
 ) -> None:
     """Validate board metadata that does not depend on decoding its primary image."""
     parsed_presentations = _parse_board_presentations(board)
+    equipment_object_ids = _validate_equipment_objects(board)
     _identifier(board.get("id"), "board.json.id")
     for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
@@ -1117,6 +1131,7 @@ def validate_catalog_board(
     if not isinstance(holds, list) or not holds:
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
+    owned_equipment_object_ids: set[str] = set()
     presentation_ids = {item[0] for item in parsed_presentations}
     canonical_presentation_ids = {
         item[0] for item in parsed_presentations if item[5] is None
@@ -1133,6 +1148,15 @@ def validate_catalog_board(
             raise BoardPackageError(
                 f"{label}.presentationID must be owned by a canonical presentation"
             )
+        equipment_object_id = _identifier(
+            hold.get("equipmentObjectID", "primary") if isinstance(hold, Mapping) else None,
+            f"{label}.equipmentObjectID",
+        )
+        if equipment_object_id not in equipment_object_ids:
+            raise BoardPackageError(
+                f"{label} references unknown equipment object {equipment_object_id}"
+            )
+        owned_equipment_object_ids.add(equipment_object_id)
         hold_id = _validate_hold(
             hold,
             1,
@@ -1145,7 +1169,35 @@ def validate_catalog_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
     _validate_gaston_pairs(holds)
+
+
+def _validate_equipment_objects(board: Mapping[str, Any]) -> set[str]:
+    raw_objects = board.get("equipmentObjects", [{"id": "primary"}])
+    if not isinstance(raw_objects, list) or not raw_objects:
+        raise BoardPackageError("board.json.equipmentObjects must be a non-empty array")
+    object_ids: set[str] = set()
+    for index, value in enumerate(raw_objects):
+        label = f"board.json.equipmentObjects[{index}]"
+        if not isinstance(value, Mapping):
+            raise BoardPackageError(f"{label} must be an object")
+        _required_and_allowed_keys(value, {"id"}, {"id"}, label)
+        object_id = _identifier(value.get("id"), f"{label}.id")
+        if object_id in object_ids:
+            raise BoardPackageError(f"duplicate equipment object ID {object_id}")
+        object_ids.add(object_id)
+    return object_ids
+
+
+def _validate_equipment_object_ownership(
+    equipment_object_ids: set[str], owned_equipment_object_ids: set[str]
+) -> None:
+    for object_id in equipment_object_ids:
+        if object_id not in owned_equipment_object_ids:
+            raise BoardPackageError(
+                f"equipment object {object_id} must own at least one hold"
+            )
 
 
 def _validate_hold(

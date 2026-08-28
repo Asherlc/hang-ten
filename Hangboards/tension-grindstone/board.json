@@ -6,9 +6,13 @@
   "productURL": "https://tensionclimbing.com/products/grindstone",
   "dimensions": "22 \u00d7 6 \u00d7 2.75 in",
   "aspectRatio": 1.7768331562167907,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "top-jug",
+      "equipmentObjectID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
       "geometry": [
@@ -88,6 +92,7 @@
     },
     {
       "id": "edge-50-center",
+      "equipmentObjectID": "primary",
       "name": "50 mm center one-arm edge",
       "kind": "edge",
       "sizeMillimeters": 50,
@@ -212,6 +217,7 @@
     },
     {
       "id": "edge-10-left",
+      "equipmentObjectID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -336,6 +342,7 @@
     },
     {
       "id": "edge-8-left",
+      "equipmentObjectID": "primary",
       "name": "Left 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -405,6 +412,7 @@
     },
     {
       "id": "edge-8-right",
+      "equipmentObjectID": "primary",
       "name": "Right 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -529,6 +537,7 @@
     },
     {
       "id": "edge-10-right",
+      "equipmentObjectID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -612,6 +621,7 @@
     },
     {
       "id": "edge-30-left",
+      "equipmentObjectID": "primary",
       "name": "Left 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -736,6 +746,7 @@
     },
     {
       "id": "edge-25-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -805,6 +816,7 @@
     },
     {
       "id": "edge-25-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -929,6 +941,7 @@
     },
     {
       "id": "edge-30-right",
+      "equipmentObjectID": "primary",
       "name": "Right 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -1019,6 +1032,7 @@
     },
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1143,6 +1157,7 @@
     },
     {
       "id": "edge-15-left",
+      "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1212,6 +1227,7 @@
     },
     {
       "id": "edge-15-right",
+      "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1336,6 +1352,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,

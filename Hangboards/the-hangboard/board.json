@@ -6,6 +6,9 @@
   "productURL": "https://thehangboard.com/products/hangboard",
   "dimensions": "23.5 \u00d7 6.25 \u00d7 2 in",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "front",
@@ -18,6 +21,7 @@
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left deep jug",
       "kind": "jug",
       "presentationID": "front",
@@ -104,6 +108,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right deep jug",
       "kind": "jug",
       "presentationID": "front",
@@ -198,6 +203,7 @@
     },
     {
       "id": "sloper-40-center",
+      "equipmentObjectID": "primary",
       "name": "Center 40-degree sloper",
       "kind": "sloper",
       "gripType": "openHand",
@@ -254,6 +260,7 @@
     },
     {
       "id": "edge-40-left",
+      "equipmentObjectID": "primary",
       "name": "Left 40 mm edge",
       "kind": "edge",
       "sizeMillimeters": 40,
@@ -379,6 +386,7 @@
     },
     {
       "id": "edge-30-left",
+      "equipmentObjectID": "primary",
       "name": "Left 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -504,6 +512,7 @@
     },
     {
       "id": "edge-25-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -629,6 +638,7 @@
     },
     {
       "id": "edge-40-right",
+      "equipmentObjectID": "primary",
       "name": "Right 40 mm edge",
       "kind": "edge",
       "sizeMillimeters": 40,
@@ -754,6 +764,7 @@
     },
     {
       "id": "edge-30-right",
+      "equipmentObjectID": "primary",
       "name": "Right 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -879,6 +890,7 @@
     },
     {
       "id": "edge-25-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -1004,6 +1016,7 @@
     },
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1129,6 +1142,7 @@
     },
     {
       "id": "edge-15-left",
+      "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1254,6 +1268,7 @@
     },
     {
       "id": "edge-10-left",
+      "equipmentObjectID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -1379,6 +1394,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1504,6 +1520,7 @@
     },
     {
       "id": "edge-15-right",
+      "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1629,6 +1646,7 @@
     },
     {
       "id": "edge-10-right",
+      "equipmentObjectID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,

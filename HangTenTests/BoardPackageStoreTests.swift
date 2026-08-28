@@ -3,6 +3,40 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testStoreRejectsHoldWithUnknownEquipmentObject() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["equipmentObjects"] = [["id": "primary"]]
+                var holds = try! XCTUnwrap(board["holds"] as? [[String: Any]])
+                holds[0]["equipmentObjectID"] = "missing"
+                board["holds"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "hold hold-left references unknown equipment object missing"
+                )
+            )
+        }
+    }
+
+    func testStoreNormalizesLegacyPackageToOnePrimaryEquipmentObject() throws {
+        let fixture = try makeFixtureBundle()
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(board.equipmentObjects.map(\.id), ["primary"])
+        XCTAssertTrue(board.holds.allSatisfy { $0.equipmentObjectID == "primary" })
+    }
+
     func testStoreLoadsPackageWithOmittedDimensions() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(

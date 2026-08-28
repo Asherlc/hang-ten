@@ -479,8 +479,13 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+struct EquipmentObject: Codable, Hashable, Identifiable {
+    let id: String
+}
+
 struct BoardHold: Identifiable, Hashable {
     let id: String
+    let equipmentObjectID: String
     let name: String
     let kind: HoldKind
     let sloper: SloperMetadata?
@@ -522,6 +527,7 @@ struct BoardHold: Identifiable, Hashable {
 
     init(
         id: String,
+        equipmentObjectID: String = "primary",
         name: String,
         kind: HoldKind,
         geometry: [BoardHoldPiece],
@@ -556,6 +562,7 @@ struct BoardHold: Identifiable, Hashable {
         }
 
         self.id = id
+        self.equipmentObjectID = equipmentObjectID
         self.name = name
         self.kind = kind
         self.sloper = sloper
@@ -592,6 +599,7 @@ struct BoardHold: Identifiable, Hashable {
     /// this frame-only path or its retired presentation arguments.
     init(
         id: String,
+        equipmentObjectID: String = "primary",
         name: String,
         shortLabel _: String,
         detail _: String,
@@ -607,6 +615,7 @@ struct BoardHold: Identifiable, Hashable {
     ) {
         self.init(
             id: id,
+            equipmentObjectID: equipmentObjectID,
             name: name,
             kind: kind,
             geometry: [
@@ -674,6 +683,7 @@ struct TrainingBoard: Identifiable, Hashable {
     let subtitle: String
     let dimensions: String?
     let aspectRatio: CGFloat
+    let equipmentObjects: [EquipmentObject]
     let holds: [BoardHold]
     let presentations: [BoardPresentation]
     /// Board-owned semantic targets loaded alongside the physical hold data.
@@ -691,6 +701,7 @@ struct TrainingBoard: Identifiable, Hashable {
         subtitle: String,
         dimensions: String?,
         aspectRatio: CGFloat,
+        equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         holds: [BoardHold],
         semanticHolds: [String: SemanticHoldMappingDefinition] = [:],
         productURL: URL,
@@ -703,6 +714,7 @@ struct TrainingBoard: Identifiable, Hashable {
         self.subtitle = subtitle
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.equipmentObjects = equipmentObjects
         self.holds = holds
         self.presentations = presentations.isEmpty
             ? [
@@ -726,6 +738,10 @@ struct TrainingBoard: Identifiable, Hashable {
     func presentation(id: String?) -> BoardPresentation? {
         guard let id else { return nil }
         return presentations.first { $0.id == id }
+    }
+
+    func object(id: String) -> EquipmentObject? {
+        equipmentObjects.first { $0.id == id }
     }
 }
 

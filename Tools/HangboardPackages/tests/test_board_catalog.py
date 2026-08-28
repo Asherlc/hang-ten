@@ -97,6 +97,16 @@ def test_board_schema_accepts_fractional_fixed_millimeter_measurement() -> None:
     assert board.holds[0].depth_range_millimeters is None
 
 
+def test_board_schema_rejects_hold_with_unknown_equipment_object_id() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["equipmentObjects"] = [{"id": "primary"}]
+    document["holds"][0]["equipmentObjectID"] = "missing"
+
+    with pytest.raises(ValueError, match="unknown equipment object"):
+        module._load_board(document)
+
+
 def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
     module = load_board_catalog_module()
     document = board_document()

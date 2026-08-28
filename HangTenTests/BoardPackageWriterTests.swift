@@ -214,6 +214,30 @@ final class BoardPackageWriterTests: XCTestCase {
         ])
     }
 
+    func testWriterRejectsHoldWithUnknownEquipmentObject() throws {
+        var document = makeDocument()
+        document.equipmentObjects = [EquipmentObject(id: "primary")]
+        document.holds[0].equipmentObjectID = "missing"
+
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document))
+    }
+
+    func testWriterRoundTripsExplicitEquipmentObjectAssignments() throws {
+        var document = makeDocument()
+        document.equipmentObjects = [EquipmentObject(id: "left"), EquipmentObject(id: "right")]
+        document.holds = [
+            makeHold(id: "left-hold", name: "Left hold"),
+            makeHold(id: "right-hold", name: "Right hold"),
+        ]
+        document.holds[0].equipmentObjectID = "left"
+        document.holds[1].equipmentObjectID = "right"
+
+        let redecoded = try BoardEditableDocument(data: BoardPackageWriter.data(for: document))
+
+        XCTAssertEqual(redecoded.equipmentObjects.map(\.id), ["left", "right"])
+        XCTAssertEqual(redecoded.holds.map(\.equipmentObjectID), ["left", "right"])
+    }
+
     func testWriterRejectsInvalidSloperMetadataCombinations() throws {
         let invalidHolds = [
             makeHold(

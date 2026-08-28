@@ -142,6 +142,7 @@ struct BoardPackageStore {
                 resource: "\(resourcePrefix)/board.json"
             )
             try Self.validateMetadata(boardDocument: boardDocument)
+            try Self.validateEquipmentObjects(in: boardDocument)
             let presentations = try Self.validatePresentations(
                 in: boardDocument,
                 packageURL: packageURL
@@ -178,6 +179,7 @@ struct BoardPackageStore {
                 in: boardDocument,
                 presentations: presentations
             )
+            try Self.validateEquipmentObjectOwnership(in: boardDocument)
             guard seenBoardIDs.insert(boardDocument.id).inserted else {
                 throw BoardPackageStoreError.duplicateBoardID(boardDocument.id)
             }
@@ -596,6 +598,44 @@ struct BoardPackageStore {
         return presentations
     }
 
+    private static func validateEquipmentObjects(
+        in document: BoardPackageBoardDocument
+    ) throws {
+        guard !document.equipmentObjects.isEmpty else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: document.id,
+                reason: "equipmentObjects must not be empty"
+            )
+        }
+        var objectIDs = Set<String>()
+        for object in document.equipmentObjects {
+            guard object.id.isBoardPackageIdentifier else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "equipment object ID must be identifier-shaped"
+                )
+            }
+            guard objectIDs.insert(object.id).inserted else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "equipment object ID \(object.id) is duplicated"
+                )
+            }
+        }
+    }
+
+    private static func validateEquipmentObjectOwnership(
+        in document: BoardPackageBoardDocument
+    ) throws {
+        let ownedObjectIDs = Set(document.holds.map(\.equipmentObjectID))
+        for object in document.equipmentObjects where !ownedObjectIDs.contains(object.id) {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: document.id,
+                reason: "equipment object \(object.id) must own at least one hold"
+            )
+        }
+    }
+
     private static func validatePresentationAssetPath(
         _ assetPath: String,
         boardID: String,
@@ -637,6 +677,7 @@ struct BoardPackageStore {
         presentations: [BoardPackagePresentationDocument]
     ) throws -> [BoardHold] {
         let presentationIDs = Set(presentations.map(\.id))
+        let equipmentObjectIDs = Set(document.equipmentObjects.map(\.id))
         let canonicalPresentationIDs = Set(
             presentations
                 .filter { $0.sourcePresentationID == nil }
@@ -656,6 +697,12 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.duplicateHoldID(
                     boardID: document.id,
                     holdID: hold.id
+                )
+            }
+            guard equipmentObjectIDs.contains(hold.equipmentObjectID) else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "hold \(hold.id) references unknown equipment object \(hold.equipmentObjectID)"
                 )
             }
             guard presentationIDs.contains(hold.presentationID) else {
@@ -803,6 +850,7 @@ private struct BoardPackageBoardDocument: Decodable {
     let productURL: URL
     let dimensions: String?
     let aspectRatio: Double
+    let equipmentObjects: [EquipmentObject]
     let presentations: [BoardPackagePresentationDocument]
     let holds: [BoardPackageHoldDocument]
 
@@ -814,6 +862,7 @@ private struct BoardPackageBoardDocument: Decodable {
         case productURL
         case dimensions
         case aspectRatio
+        case equipmentObjects
         case presentations
         case holds
     }
@@ -821,7 +870,7 @@ private struct BoardPackageBoardDocument: Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "id", "manufacturer", "name", "subtitle", "productURL", "dimensions",
-            "aspectRatio", "presentations", "holds"
+            "aspectRatio", "equipmentObjects", "presentations", "holds"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -831,6 +880,10 @@ private struct BoardPackageBoardDocument: Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        equipmentObjects = try container.decodeIfPresent(
+            [EquipmentObject].self,
+            forKey: .equipmentObjects
+        ) ?? [.init(id: "primary")]
         presentations = try container.decode(
             [BoardPackagePresentationDocument].self,
             forKey: .presentations
@@ -856,6 +909,7 @@ private struct BoardPackageBoardDocument: Decodable {
             subtitle: subtitle,
             dimensions: dimensions,
             aspectRatio: CGFloat(aspectRatio),
+            equipmentObjects: equipmentObjects,
             holds: holds,
             semanticHolds: [:],
             productURL: productURL,
@@ -929,6 +983,7 @@ private struct BoardPackageHoldDocument: Decodable {
     let pairedHoldID: String?
     let declaresPairedHoldID: Bool
     let presentationID: String
+    let equipmentObjectID: String
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -944,13 +999,14 @@ private struct BoardPackageHoldDocument: Decodable {
         case features
         case pairedHoldID
         case presentationID
+        case equipmentObjectID
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
             "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "pairedHoldID", "presentationID", "sloper"
+            "features", "pairedHoldID", "presentationID", "equipmentObjectID", "sloper"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -974,6 +1030,10 @@ private struct BoardPackageHoldDocument: Decodable {
             ? try container.decode(String.self, forKey: .pairedHoldID)
             : nil
         presentationID = try container.decode(String.self, forKey: .presentationID)
+        equipmentObjectID = try container.decodeIfPresent(
+            String.self,
+            forKey: .equipmentObjectID
+        ) ?? "primary"
     }
 
     func trainingBoardHold(geometryPieces: [BoardHoldPiece]) throws -> BoardHold {
@@ -984,6 +1044,7 @@ private struct BoardPackageHoldDocument: Decodable {
         }
         return BoardHold(
             id: id,
+            equipmentObjectID: equipmentObjectID,
             name: name,
             kind: kind,
             geometry: geometryPieces,

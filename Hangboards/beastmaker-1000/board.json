@@ -6,9 +6,13 @@
   "productURL": "https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series",
   "dimensions": "580 \u00d7 150 mm",
   "aspectRatio": 3.861003861003861,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "name": "Jug Left",
       "kind": "jug",
       "geometry": [
@@ -69,6 +73,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "name": "Jug Right",
       "kind": "jug",
       "geometry": [
@@ -132,6 +137,7 @@
     },
     {
       "id": "sloper-35-left",
+      "equipmentObjectID": "primary",
       "name": "Sloper 35 Left",
       "kind": "sloper",
       "geometry": [
@@ -195,6 +201,7 @@
     },
     {
       "id": "sloper-35-right",
+      "equipmentObjectID": "primary",
       "name": "Sloper 35 Right",
       "kind": "sloper",
       "geometry": [
@@ -258,6 +265,7 @@
     },
     {
       "id": "sloper-center",
+      "equipmentObjectID": "primary",
       "name": "20 Degree Center Sloper",
       "kind": "sloper",
       "geometry": [
@@ -314,6 +322,7 @@
     },
     {
       "id": "pocket-top-outer-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 10,
       "name": "10 mm 4 Finger Edge Left",
       "kind": "edge",
@@ -424,6 +433,7 @@
     },
     {
       "id": "pocket-top-outer-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 10,
       "name": "10 mm 4 Finger Edge Right",
       "kind": "edge",
@@ -534,6 +544,7 @@
     },
     {
       "id": "pocket-top-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 30,
       "name": "30 mm 3 Finger Edge Left",
       "kind": "edge",
@@ -644,6 +655,7 @@
     },
     {
       "id": "pocket-top-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 30,
       "name": "30 mm 3 Finger Edge Right",
       "kind": "edge",
@@ -754,6 +766,7 @@
     },
     {
       "id": "pocket-middle-outer-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 45,
       "name": "Pocket Middle Outer Left",
       "kind": "edge",
@@ -864,6 +877,7 @@
     },
     {
       "id": "pocket-middle-mid-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 50,
       "fingerCapacity": 2,
       "name": "Pocket Middle Mid Left",
@@ -975,6 +989,7 @@
     },
     {
       "id": "pocket-middle-inner-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 45,
       "fingerCapacity": 3,
       "name": "Pocket Middle Inner Left",
@@ -1086,6 +1101,7 @@
     },
     {
       "id": "pocket-middle-center",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 50,
       "name": "50 mm 4 Finger Edge Center",
       "kind": "edge",
@@ -1196,6 +1212,7 @@
     },
     {
       "id": "pocket-middle-inner-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 45,
       "fingerCapacity": 3,
       "name": "Pocket Middle Inner Right",
@@ -1307,6 +1324,7 @@
     },
     {
       "id": "pocket-middle-mid-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 50,
       "fingerCapacity": 2,
       "name": "Pocket Middle Mid Right",
@@ -1418,6 +1436,7 @@
     },
     {
       "id": "pocket-middle-outer-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 45,
       "name": "Pocket Middle Outer Right",
       "kind": "edge",
@@ -1528,6 +1547,7 @@
     },
     {
       "id": "pocket-bottom-outer-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 20,
       "name": "Pocket Bottom Outer Left",
       "kind": "edge",
@@ -1638,6 +1658,7 @@
     },
     {
       "id": "pocket-bottom-mid-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
       "name": "Pocket Bottom Mid Left",
@@ -1749,6 +1770,7 @@
     },
     {
       "id": "pocket-bottom-inner-left",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 20,
       "fingerCapacity": 3,
       "name": "Pocket Bottom Inner Left",
@@ -1860,6 +1882,7 @@
     },
     {
       "id": "pocket-bottom-inner-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 20,
       "fingerCapacity": 3,
       "name": "Pocket Bottom Inner Right",
@@ -1971,6 +1994,7 @@
     },
     {
       "id": "pocket-bottom-mid-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 25,
       "fingerCapacity": 2,
       "name": "Pocket Bottom Mid Right",
@@ -2082,6 +2106,7 @@
     },
     {
       "id": "pocket-bottom-outer-right",
+      "equipmentObjectID": "primary",
       "sizeMillimeters": 20,
       "name": "Pocket Bottom Outer Right",
       "kind": "edge",
