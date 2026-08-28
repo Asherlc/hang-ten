@@ -51,6 +51,9 @@ MIRRORED_PAIRS = {
     "nature-stoak-board-iii": (
         ("gradient-edge-left", "gradient-edge-right"),
     ),
+    "trango-rock-prodigy-training-center": (
+        ("edge-thin-crimp-left", "edge-thin-crimp-right"),
+    ),
     "escape-beta-22": tuple(
         (f"hold-{family:02d}-left", f"hold-{family:02d}-right")
         for family in range(1, 9)
