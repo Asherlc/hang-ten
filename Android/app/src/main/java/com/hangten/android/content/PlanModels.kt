@@ -17,6 +17,41 @@ data class TrainingSegment(
     val durationSeconds: Float?,
 )
 
+enum class GripType(
+    val portableValue: String,
+) {
+    OPEN_HAND("openHand"),
+    HALF_CRIMP("halfCrimp"),
+    FULL_CRIMP("fullCrimp"),
+    FOUR_FINGER_POCKET("fourFingerPocket"),
+    THREE_FINGER_POCKET("threeFingerPocket"),
+    TWO_FINGER_POCKET("twoFingerPocket"),
+    SLOPER("sloper"),
+    ;
+
+    companion object {
+        internal fun fromPortable(value: String): GripType? = entries.firstOrNull { it.portableValue == value }
+    }
+}
+
+enum class FingerSlot(
+    val portableValue: String,
+) {
+    INDEX("index"),
+    MIDDLE("middle"),
+    RING("ring"),
+    PINKY("pinky"),
+    ;
+
+    companion object {
+        internal fun fromPortable(value: String): FingerSlot? = entries.firstOrNull { it.portableValue == value }
+    }
+}
+
+data class FingerConfiguration(
+    val engagedFingers: List<FingerSlot>,
+)
+
 data class TrainingStep(
     val id: String,
     val title: String,
@@ -27,6 +62,8 @@ data class TrainingStep(
     val targets: List<PlanTarget>,
     val segments: List<TrainingSegment>,
     val activeDurationSeconds: Float?,
+    val gripType: GripType?,
+    val fingerConfiguration: FingerConfiguration?,
 )
 
 data class TrainingPlan(

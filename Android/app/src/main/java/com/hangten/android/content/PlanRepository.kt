@@ -103,7 +103,35 @@ class AssetPlanRepository(
         activeDurationSeconds = objectValue.optional("activeDuration")?.let {
             nonNegativeFiniteFloat(it, "$path.activeDuration")
         },
+        gripType = objectValue.optional("gripType")?.asGripType("$path.gripType"),
+        fingerConfiguration = objectValue.optional("fingerConfiguration")?.let {
+            decodeFingerConfiguration(it.asObject("$path.fingerConfiguration"), "$path.fingerConfiguration")
+        },
     )
+
+    private fun JsonValue.asGripType(path: String): GripType {
+        val value = asString(path)
+        return GripType.fromPortable(value) ?: fail("$path is unsupported: $value.")
+    }
+
+    private fun decodeFingerConfiguration(
+        objectValue: JsonValue.Object,
+        path: String,
+    ): FingerConfiguration {
+        if (objectValue.fields.keys != setOf("engagedFingers")) {
+            fail("$path must contain only engagedFingers.")
+        }
+        val fingers = objectValue.required("engagedFingers", path)
+            .asArray("$path.engagedFingers")
+            .mapIndexed { index, value ->
+                val fingerPath = "$path.engagedFingers[$index]"
+                val portableValue = value.asString(fingerPath)
+                FingerSlot.fromPortable(portableValue) ?: fail("$fingerPath is unsupported: $portableValue.")
+            }
+        if (fingers.isEmpty()) fail("$path.engagedFingers must not be empty.")
+        if (fingers.toSet().size != fingers.size) fail("$path.engagedFingers must not contain duplicates.")
+        return FingerConfiguration(fingers)
+    }
 
     private fun decodeSegment(objectValue: JsonValue.Object, path: String): TrainingSegment = TrainingSegment(
         kind = objectValue.requiredString("kind", path),
