@@ -3,6 +3,7 @@ set -euo pipefail
 
 repo_root=${0:A:h:h:h}
 cleanup_script="$repo_root/scripts/paseo-resource-cleanup.sh"
+archive_script="$repo_root/scripts/paseo-archive.sh"
 temp_dir=$(mktemp -d)
 trap 'rm -rf "$temp_dir"' EXIT
 
@@ -146,6 +147,13 @@ run_cleanup() {
   PATH="$fake_bin:$PATH" XCRUN_CALL_LOG="$call_log" XCRUN_ALL_CALL_LOG="$all_call_log" "$cleanup_script" "$@"
 }
 
+run_archive_wrapper() {
+  (
+    cd "$workspace"
+    env -u PASEO_WORKTREE_PATH PATH="$fake_bin:$PATH" XCRUN_CALL_LOG="$call_log" XCRUN_ALL_CALL_LOG="$all_call_log" "$archive_script"
+  )
+}
+
 : > "$call_log"
 : > "$all_call_log"
 if run_cleanup archive; then
@@ -161,6 +169,18 @@ workspace="$temp_dir/alpha"
 manifest="$workspace/.context/paseo-owned-simulators"
 pending_manifest="$workspace/.context/paseo-pending-simulators"
 mkdir -p "${manifest:h}"
+
+print -r -- '11111111-1111-1111-1111-111111111111' > "$manifest"
+: > "$pending_manifest"
+: > "$call_log"
+: > "$all_call_log"
+run_archive_wrapper
+wrapper_calls=$(<"$call_log")
+assert_contains 'delete 11111111-1111-1111-1111-111111111111' "$wrapper_calls"
+[[ ! -s "$manifest" ]] || {
+  print -u2 -- 'archive wrapper did not consume the workspace manifest'
+  exit 1
+}
 
 print -r -- '11111111-1111-1111-1111-111111111111
 22222222-2222-2222-2222-222222222222

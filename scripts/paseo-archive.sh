@@ -11,4 +11,5 @@ if ! command -v zsh >/dev/null 2>&1; then
 fi
 
 script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd -P) || exit 1
-exec zsh "$script_dir/paseo-resource-cleanup.sh" archive
+workspace_path=${PASEO_WORKTREE_PATH:-$(pwd -P)}
+exec env PASEO_WORKTREE_PATH="$workspace_path" zsh "$script_dir/paseo-resource-cleanup.sh" archive
