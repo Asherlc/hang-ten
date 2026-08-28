@@ -1433,6 +1433,60 @@
       "presentationID": "primary",
       "fingerCapacity": 4,
       "handCapacity": 1
+    },
+    {
+      "id": "hold-30",
+      "name": "Hold 30",
+      "kind": "sloper",
+      "fingerCapacity": 4,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.859140953771,
+            "y": 0.083881988506,
+            "width": 0.132319553933,
+            "height": 0.343509503448
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.35179478111
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.169655846175,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.657544899258
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.867411819343,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
