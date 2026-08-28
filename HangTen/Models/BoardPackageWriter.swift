@@ -63,7 +63,10 @@ struct BoardEditableDocument: Equatable, Decodable {
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
         equipmentObjects = container.contains(.equipmentObjects)
-            ? try container.decode([EquipmentObject].self, forKey: .equipmentObjects)
+            ? try container.decode(
+                [BoardEditableEquipmentObjectDocument].self,
+                forKey: .equipmentObjects
+            ).map(\.equipmentObject)
             : [.init(id: "primary")]
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
@@ -71,6 +74,24 @@ struct BoardEditableDocument: Equatable, Decodable {
 
     init(data: Data) throws {
         self = try JSONDecoder().decode(BoardEditableDocument.self, from: data)
+    }
+}
+
+private struct BoardEditableEquipmentObjectDocument: Decodable {
+    let id: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["id"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+    }
+
+    var equipmentObject: EquipmentObject {
+        EquipmentObject(id: id)
     }
 }
 

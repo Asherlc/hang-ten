@@ -778,6 +778,18 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertEqual(redecoded.holds[0].geometry[0].shapeConstraint?.rotationDegrees, -179.5)
     }
 
+    func testEditorDecoderRejectsUnknownKeysInEquipmentObjects() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        var document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        document["equipmentObjects"] = [["id": "primary", "unexpected": true]]
+
+        XCTAssertThrowsError(
+            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
+        )
+    }
+
     func testEditorDecoderPreservesOmittedKindButRejectsNullKind() throws {
         let encoded = try BoardPackageWriter.data(for: makeDocument())
         let source = String(decoding: encoded, as: UTF8.self)
