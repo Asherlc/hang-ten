@@ -3,6 +3,46 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testMetadataEncodingDoesNotPersistEquipment() throws {
+        let metadata = PlanMetadata(
+            title: "Test plan",
+            subtitle: "Test subtitle",
+            level: "Test",
+            sourceLabel: "Test fixture",
+            sourceURL: URL(string: "https://example.com/test")!,
+            provenance: .adapted,
+            category: "test",
+            tags: [],
+            notes: []
+        )
+
+        let encoded = try JSONEncoder().encode(metadata)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertNil(object["equipment"])
+    }
+
+    func testMetadataRejectsFormerEquipmentField() {
+        let data = Data(
+            #"""
+            {
+              "title": "Test plan",
+              "subtitle": "Test subtitle",
+              "level": "Test",
+              "sourceLabel": "Test fixture",
+              "sourceURL": "https://example.com/test",
+              "provenance": "adapted",
+              "category": "test",
+              "tags": [],
+              "equipment": ["hangboard"],
+              "notes": []
+            }
+            """#.utf8
+        )
+
+        XCTAssertThrowsError(try JSONDecoder().decode(PlanMetadata.self, from: data))
+    }
+
     func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {
         let step = WorkoutStep(
             id: "stopwatch-step",
@@ -691,7 +731,6 @@ final class PlanStorageTests: XCTestCase {
                   "provenance": "adapted",
                   "category": "test",
                   "tags": [],
-                  "equipment": [],
                   "notes": []
                 },
                 "blocks": [{ "blockID": "segment.block" }]
@@ -849,7 +888,6 @@ final class PlanStorageTests: XCTestCase {
                   "provenance": "adapted",
                   "category": "test",
                   "tags": [],
-                  "equipment": [],
                   "notes": []
                 },
                 "blocks": [{ "blockID": "legacy.block" }]

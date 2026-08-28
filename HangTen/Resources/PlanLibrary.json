@@ -18674,9 +18674,6 @@
       "id" : "metolius.generic-ten-minute.entry",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Entry",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -18710,9 +18707,6 @@
       "id" : "metolius.generic-ten-minute.intermediate",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -18746,9 +18740,6 @@
       "id" : "metolius.generic-ten-minute.advanced",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -18782,9 +18773,6 @@
       "id" : "metolius.contact.entry",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Entry",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18818,9 +18806,6 @@
       "id" : "metolius.contact.intermediate",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18854,9 +18839,6 @@
       "id" : "metolius.contact.advanced",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18890,9 +18872,6 @@
       "id" : "metolius.simulator-3d.entry",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Entry",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18926,9 +18905,6 @@
       "id" : "metolius.simulator-3d.intermediate",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18962,9 +18938,6 @@
       "id" : "metolius.simulator-3d.advanced",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18997,9 +18970,6 @@
       "id" : "rptc.seven-three-repeaters",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Self-selected",
         "notes" : [
           "Official Rock Prodigy set template: seven 7s\/3s two-handed dead-hang repetitions, the table's 2m 53s recovery to 4:00, then a separate 3-minute between-set rest.",
@@ -19028,9 +18998,6 @@
       "id" : "research.max-hangs",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19061,9 +19028,6 @@
       "id" : "research.force-feedback-f80",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19092,9 +19056,6 @@
       "id" : "research.force-feedback-f100",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Expert",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19126,9 +19087,6 @@
       "id" : "research.eva-int-hangs",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate+",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19156,9 +19114,6 @@
       "id" : "research.seven-three-repeaters",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19189,9 +19144,6 @@
       "id" : "research.abrahangs",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Supplemental",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19219,9 +19171,6 @@
       "id" : "coach.horst-seven-fifty-three",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19252,9 +19201,6 @@
       "id" : "coach.bechtel-three-six-nine",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate+",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19285,9 +19231,6 @@
       "id" : "coach.density-hangs",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate+",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19315,9 +19258,6 @@
       "id" : "device.zlagboard-sixty-sixty",
       "metadata" : {
         "category" : "device",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19348,9 +19288,6 @@
       "id" : "hoopers-beta.introductory-home-hangboard",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",
@@ -19384,9 +19321,6 @@
       "id" : "method.intermediate-hangboarding.repeaters",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
@@ -19418,9 +19352,6 @@
       "id" : "method.intermediate-hangboarding.emom",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
@@ -19454,9 +19385,6 @@
       "id" : "rei.hangboard-sample-workout",
       "metadata" : {
         "category" : "retailer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Source warm-up alternatives, five grip groups, 7–10s\/5s interval guidance, six repeats, recovery, and pain warning are retained.",
