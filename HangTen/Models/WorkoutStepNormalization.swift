@@ -11,6 +11,70 @@ enum WorkoutStepNormalizationError: Error, Equatable {
 }
 
 enum WorkoutStepNormalizer {
+    /// Materializes the implicit segments represented by a compact plan
+    /// definition. Runtime resolution and DEBUG seed literalization must use
+    /// this same canonical form before comparing plans.
+    static func materializingImplicitSegments(_ step: WorkoutStep) -> WorkoutStep {
+        guard step.segments.isEmpty else { return step }
+
+        let segments: [WorkoutSegment]
+        if step.phase == .rest {
+            segments = [
+                WorkoutSegment(
+                    kind: .rest,
+                    target: nil,
+                    timing: .fixed,
+                    duration: step.duration
+                )
+            ]
+        } else if let activeDuration = step.timedWorkDuration {
+            let workSegment = WorkoutSegment(
+                kind: .work,
+                targets: step.targets,
+                timing: .fixed,
+                duration: activeDuration
+            )
+            let restDuration = step.duration - activeDuration
+            segments = restDuration > 0 && restDuration.isFinite
+                ? [
+                    workSegment,
+                    WorkoutSegment(
+                        kind: .rest,
+                        target: nil,
+                        timing: .fixed,
+                        duration: restDuration
+                    )
+                ]
+                : [workSegment]
+        } else if !step.targets.isEmpty {
+            segments = [
+                WorkoutSegment(
+                    kind: .work,
+                    targets: step.targets,
+                    timing: .undefined,
+                    duration: nil
+                )
+            ]
+        } else {
+            return step
+        }
+
+        return WorkoutStep(
+            id: step.id,
+            number: step.number,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: step.targets,
+            segments: segments,
+            gripType: step.gripType,
+            fingerConfiguration: step.fingerConfiguration,
+            timedWorkDuration: step.timedWorkDuration
+        )
+    }
+
     static func expand(_ step: WorkoutStep) throws -> [WorkoutStep] {
         guard step.segments.count > 1 else {
             return [step]

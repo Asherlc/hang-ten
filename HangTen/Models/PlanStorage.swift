@@ -1266,7 +1266,8 @@ struct PlanDefinitionResolver {
                         fingerConfiguration: stepDefinition.fingerConfiguration,
                         timedWorkDuration: stepDefinition.activeDuration
                     )
-                    for normalizedStep in try WorkoutStepNormalizer.expand(resolvedStep) {
+                    let canonicalStep = WorkoutStepNormalizer.materializingImplicitSegments(resolvedStep)
+                    for normalizedStep in try WorkoutStepNormalizer.expand(canonicalStep) {
                         steps.append(normalizedStep.withNumber(steps.count + 1))
                     }
                 }
@@ -1338,50 +1339,7 @@ struct PlanDefinitionResolver {
         mapping: BoardMappingDefinition?,
         board: TrainingBoard
     ) throws -> [WorkoutSegment] {
-        if step.segments.isEmpty {
-            if step.phase == .rest {
-                return [
-                    WorkoutSegment(
-                        kind: .rest,
-                        target: nil,
-                        timing: .fixed,
-                        duration: step.duration
-                    )
-                ]
-            }
-            if let activeDuration = step.activeDuration {
-                let workSegment = WorkoutSegment(
-                    kind: .work,
-                    targets: targets,
-                    timing: .fixed,
-                    duration: activeDuration
-                )
-                var segments = [workSegment]
-                let restDuration = step.duration - activeDuration
-                if restDuration > 0, restDuration.isFinite {
-                    segments.append(
-                        WorkoutSegment(
-                            kind: .rest,
-                            target: nil,
-                            timing: .fixed,
-                            duration: restDuration
-                        )
-                    )
-                }
-                return segments
-            }
-            if !targets.isEmpty {
-                return [
-                    WorkoutSegment(
-                        kind: .work,
-                        targets: targets,
-                        timing: .undefined,
-                        duration: nil
-                    )
-                ]
-            }
-            return []
-        }
+        guard !step.segments.isEmpty else { return [] }
 
         return try step.segments.map { definition in
             let segmentTargets = try resolveTargets(
@@ -1782,6 +1740,7 @@ private func literalizedLegacyPlanCatalog() -> [TrainingPlan] {
         let literalSteps: [WorkoutStep]
         do {
             literalSteps = try seedPlan.steps
+                .map(WorkoutStepNormalizer.materializingImplicitSegments)
                 .flatMap(WorkoutStepNormalizer.expand)
                 .enumerated()
                 .map { index, step in

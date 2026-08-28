@@ -1590,6 +1590,7 @@ final class PlanStorageTests: XCTestCase {
     func testPlanCatalogMatchesLiteralizedLegacyPlanSeeds() throws {
         let expectedPlans = try LegacyPlanSeedCatalog.all.map { seedPlan in
             let literalSteps = try seedPlan.steps
+                .map(WorkoutStepNormalizer.materializingImplicitSegments)
                 .flatMap(WorkoutStepNormalizer.expand)
                 .enumerated()
                 .map { index, step in
