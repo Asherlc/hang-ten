@@ -154,6 +154,7 @@ struct TrainView: View {
                     FavoritePlanCard(
                         plan: plan,
                         board: store.board(for: plan),
+                        labels: store.metadata(for: plan).athleteFacingLabels,
                         isFavorite: store.isFavorite(plan),
                         isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                     ) {

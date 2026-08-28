@@ -19,7 +19,7 @@ struct PlanFilters: Equatable {
         (levels.isEmpty || levels.contains(metadata.level)) &&
         (provenances.isEmpty || provenances.contains(metadata.provenance)) &&
         (categories.isEmpty || categories.contains(metadata.category)) &&
-        (tags.isEmpty || !tags.isDisjoint(with: metadata.tags)) &&
+        (tags.isEmpty || !tags.isDisjoint(with: metadata.athleteFacingLabels)) &&
         (equipment.isEmpty || !equipment.isDisjoint(with: metadata.equipment))
     }
 
@@ -57,7 +57,7 @@ struct PlanFilterOptions: Hashable {
         levels = Self.sortedUnique(metadata.map(\.level))
         provenances = Array(Set(metadata.map(\.provenance))).sorted { $0.label < $1.label }
         categories = Self.sortedUnique(metadata.map(\.category))
-        tags = Self.sortedUnique(metadata.flatMap(\.tags))
+        tags = Self.sortedUnique(metadata.flatMap(\.athleteFacingLabels))
         equipment = Self.sortedUnique(metadata.flatMap(\.equipment))
     }
 
