@@ -399,8 +399,6 @@ struct PlansView: View {
                         }
                         }
                     }
-
-                    sourceCard
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 18)
@@ -622,28 +620,6 @@ struct PlansView: View {
         rawValue.replacingOccurrences(of: "-", with: " ").capitalized
     }
 
-    private var sourceCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 8) {
-                Image(systemName: "link")
-                    .foregroundStyle(Color.hangGreenDark)
-                SectionLabel(title: "Learn more")
-            }
-            Text("Each routine includes its source link.")
-                .font(.system(size: 14, weight: .medium, design: .rounded))
-                .foregroundStyle(Color.hangMuted)
-                .fixedSize(horizontal: false, vertical: true)
-            Link(destination: PlanCatalog.evidenceOverviewURL) {
-                HStack {
-                    Text("Read the evidence overview")
-                    Image(systemName: "arrow.up.right")
-                }
-                .font(.system(size: 13, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangGreenDark)
-            }
-        }
-        .hangCard()
-    }
 }
 
 private struct NoMatchingPlansCard: View {

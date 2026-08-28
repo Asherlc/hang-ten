@@ -1,6 +1,15 @@
 import XCTest
 
 final class SettingsBoardEditorVisibilityUITests: XCTestCase {
+    func testPlansPageDoesNotShowLearnMoreCard() {
+        let app = XCUIApplication()
+        app.launchEnvironment["HANGTEN_REVIEW_PLANS"] = "1"
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["Choose your session."].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["Learn more"].exists)
+    }
+
     func testBoardPackagesSectionMatchesBuildConfiguration() throws {
         let app = XCUIApplication()
         app.launch()
