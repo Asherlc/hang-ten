@@ -1487,6 +1487,142 @@
         }
       ],
       "presentationID": "primary"
+    },
+    {
+      "id": "hold-31",
+      "name": "Hold 31",
+      "kind": "pinch",
+      "fingerCapacity": 4,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.845747141119,
+            "y": 0.221302903448,
+            "width": 0.138167556367,
+            "height": 0.270788708046
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.418624868719
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.150187052937,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.058709479634,
+                  0.179692750733
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.533983640874
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.774719420595,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.928280804275,
+                  0.782568235243
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
+    },
+    {
+      "id": "hold-32",
+      "name": "Hold 32",
+      "kind": "pinch",
+      "fingerCapacity": 4,
+      "handCapacity": 1,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.82386429116,
+            "y": 0.25682688046,
+            "width": 0.123264581509,
+            "height": 0.320283894253
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  1.0,
+                  0.707137548531
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.178895108287,
+                  0.32694206621
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.241804662478,
+                  0.007619978293
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.166981358432,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.624364071719
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.931131583846,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
