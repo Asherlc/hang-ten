@@ -840,6 +840,37 @@ test("Add Hold creates and selects a centered square", async () => {
   });
 });
 
+test("Add segment creates and selects a separately editable piece of the selected hold", async () => {
+  const board = boardFixture();
+  const saved: EditorDocument[] = [];
+  const client: WorkbenchClient = {
+    ...clientFixture([board]),
+    async saveBoard(_boardId, document) {
+      saved.push(structuredClone(document));
+      return { ...board, document };
+    },
+  };
+
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.click("#add-hold-segment-button");
+
+    assert.equal(app.text("#hold-heading"), "a-piece-2");
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-0"]')?.getAttribute("aria-pressed"), "false");
+    assert.equal(app.document.querySelector('[data-hold-key="a-piece-2"]')?.getAttribute("aria-pressed"), "true");
+    assert.equal(paths(app).at(-1), "M 26 10 L 36 10 L 36 20 Z");
+
+    await app.click("#save-button");
+    assert.deepEqual(saved[0]?.regions.at(-1), {
+      id: 4,
+      key: "a-piece-2",
+      type: "jug",
+      displayPath: "M 26 10 L 36 10 L 36 20 Z",
+      metadata: { holdID: "a", pieceIndex: 2 },
+    });
+  }, dependenciesFixture(board, { client }));
+});
+
 test("delete and type changes apply to every piece sharing holdID", async () => {
   await withEditor(async (app) => {
     await app.click('[data-hold-key="a-piece-0"]');
