@@ -1064,9 +1064,9 @@ enum PlanLibraryValidator {
             return false
         }
 
-        return plan.id == "rptc.seven-three-repeaters" &&
+        return plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id &&
             plan.metadata.provenance == .official &&
-            plan.metadata.sourceURL == URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155") &&
+            plan.metadata.sourceURL == LegacyPlanSeedCatalog.rptcRepeaters.sourceURL &&
             plan.boardID == nil &&
             step.phase == .hang &&
             step.segments.isEmpty &&

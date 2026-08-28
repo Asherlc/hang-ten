@@ -574,7 +574,20 @@ struct WorkoutActivityRecorder {
                     result.append(RecordedActivitySegment(stepID: step.id, stepNumber: step.number, kind: .rest, holdIDs: [], holdType: nil, sizeMillimeters: nil, durationSeconds: duration))
                     continue
                 }
-                guard !segment.targets.isEmpty else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
+                guard !segment.targets.isEmpty else {
+                    result.append(
+                        RecordedActivitySegment(
+                            stepID: step.id,
+                            stepNumber: step.number,
+                            kind: .work,
+                            holdIDs: [],
+                            holdType: nil,
+                            sizeMillimeters: nil,
+                            durationSeconds: duration
+                        )
+                    )
+                    continue
+                }
                 let holdsByTarget = segment.targets.map {
                     BoardTargetResolver.substituteHolds(for: $0, on: board, gripType: step.gripType)
                 }
