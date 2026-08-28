@@ -1678,7 +1678,9 @@
           }
         }
       ],
-      "presentationID": "primary"
+      "presentationID": "primary",
+      "fingerCapacity": 4,
+      "handCapacity": 1
     }
   ],
   "presentations": [
