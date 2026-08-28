@@ -682,6 +682,35 @@ final class BoardPackageWriterTests: XCTestCase {
         )
     }
 
+    func testSmoothMarkSurvivesRoundTrip() throws {
+        var document = makeDocument()
+        document.holds[0].geometry[0].shape = BoardGeometryShapeDocument(
+            type: "path",
+            commands: [
+                BoardGeometryPathCommandDocument(command: "move", to: [0, 0], control: nil, control1: nil, control2: nil),
+                BoardGeometryPathCommandDocument(
+                    command: "curve",
+                    to: [1, 1],
+                    control: nil,
+                    control1: [0.25, 0],
+                    control2: [0.75, 0.5],
+                    smooth: true
+                ),
+                BoardGeometryPathCommandDocument(command: "close", to: nil, control: nil, control1: nil, control2: nil),
+            ],
+            cornerRadiusFraction: nil
+        )
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let output = String(decoding: encoded, as: UTF8.self)
+        XCTAssertTrue(output.contains("\"smooth\": true"))
+        let redecoded = try BoardEditableDocument(data: encoded)
+        XCTAssertEqual(
+            redecoded.holds[0].geometry[0].shape.commands?[1].smooth,
+            true
+        )
+    }
+
     func testStrictDecoderRejectsUnknownKeys() throws {
         var document = makeDocument()
         let encoded = try BoardPackageWriter.data(for: document)

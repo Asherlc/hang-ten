@@ -1160,6 +1160,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
     let control1: [Double]?
     let control2: [Double]?
     var bendable: Bool?
+    var smooth: Bool?
 
     private enum CodingKeys: String, CodingKey {
         case command
@@ -1168,6 +1169,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case control1
         case control2
         case bendable
+        case smooth
     }
 
     init(
@@ -1176,7 +1178,8 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         control: [Double]?,
         control1: [Double]?,
         control2: [Double]?,
-        bendable: Bool? = nil
+        bendable: Bool? = nil,
+        smooth: Bool? = nil
     ) {
         self.command = command
         self.to = to
@@ -1184,6 +1187,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         self.control1 = control1
         self.control2 = control2
         self.bendable = bendable
+        self.smooth = smooth
     }
 
     init(from decoder: Decoder) throws {
@@ -1196,7 +1200,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case "quad":
             allowedKeys = ["command", "to", "control"]
         case "curve":
-            allowedKeys = ["command", "to", "control1", "control2", "bendable"]
+            allowedKeys = ["command", "to", "control1", "control2", "bendable", "smooth"]
         case "close":
             allowedKeys = ["command"]
         default:
@@ -1219,6 +1223,18 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         } else {
             bendable = nil
         }
+        if container.contains(.smooth) {
+            guard try container.decode(Bool.self, forKey: .smooth) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .smooth,
+                    in: container,
+                    debugDescription: "smooth must be true"
+                )
+            }
+            smooth = true
+        } else {
+            smooth = nil
+        }
     }
 
     private func container(
@@ -1228,7 +1244,7 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         try decoder.container(keyedBy: keys)
     }
 
-    /// Runtime encoding drops editor-only bendable metadata: the training app
+    /// Runtime encoding drops editor-only bendable and smooth metadata: the training app
     /// never re-delivers it, while the board editor writer reads the stored
     /// property directly when it serializes canonical packages.
     func encode(to encoder: Encoder) throws {

@@ -86,6 +86,7 @@ class PathCommand:
     control1: tuple[float, float] | None = None
     control2: tuple[float, float] | None = None
     bendable: bool = False
+    smooth: bool = False
 
     @staticmethod
     def _point(value: Any, label: str, *, constrain: bool = True) -> tuple[float, float]:
@@ -118,9 +119,11 @@ class PathCommand:
             to = cls._point(payload["to"], f"{label}.to")
             return cls(command="quad", control=control, to=to)
         if command == "curve":
-            _closed(payload, label, required={"command", "control1", "control2", "to"}, optional={"bendable"})
+            _closed(payload, label, required={"command", "control1", "control2", "to"}, optional={"bendable", "smooth"})
             if "bendable" in payload and payload["bendable"] is not True:
                 raise ValueError(f"{label}.bendable must be true")
+            if "smooth" in payload and payload["smooth"] is not True:
+                raise ValueError(f"{label}.smooth must be true")
             control1 = cls._point(payload["control1"], f"{label}.control1", constrain=False)
             control2 = cls._point(payload["control2"], f"{label}.control2", constrain=False)
             to = cls._point(payload["to"], f"{label}.to")
@@ -130,6 +133,7 @@ class PathCommand:
                 control2=control2,
                 to=to,
                 bendable=payload.get("bendable", False),
+                smooth=payload.get("smooth", False),
             )
         if command == "close":
             _closed(payload, label, required={"command"})

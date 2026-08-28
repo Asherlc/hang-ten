@@ -70,6 +70,15 @@ def test_curve_command_accepts_true_bendable_metadata() -> None:
     assert command.bendable is True
 
 
+def test_curve_command_accepts_true_smooth_metadata() -> None:
+    command = PathCommand.from_json(
+        {"command": "curve", "control1": [0.2, 0.2], "control2": [0.8, 0.2], "to": [1, 0], "smooth": True},
+        "commands[1]",
+    )
+
+    assert command.smooth is True
+
+
 @pytest.mark.parametrize("command", [_move(0, 0), _line(1, 0), _quad((0.5, 1), 1, 0), _close()])
 def test_non_curve_commands_reject_bendable_metadata(command: dict) -> None:
     command["bendable"] = True
