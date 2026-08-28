@@ -161,6 +161,10 @@ enum MotherboardConnectionState: Equatable {
     var showsWorkoutMeter: Bool {
         self == .streaming
     }
+
+    var disablesManualLoadAdjustment: Bool {
+        self == .streaming
+    }
 }
 
 enum MotherboardForceRocker {

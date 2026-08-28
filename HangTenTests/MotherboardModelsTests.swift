@@ -50,6 +50,23 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertTrue(hiddenStates.allSatisfy { !$0.showsWorkoutMeter })
     }
 
+    func testConnectionStateDisablesManualLoadAdjustmentOnlyWhileStreaming() {
+        XCTAssertTrue(MotherboardConnectionState.streaming.disablesManualLoadAdjustment)
+
+        let enabledStates: [MotherboardConnectionState] = [
+            .bluetoothUnavailable,
+            .unauthorized,
+            .idle,
+            .scanning,
+            .connecting,
+            .calibrating,
+            .disconnected,
+            .failed
+        ]
+
+        XCTAssertTrue(enabledStates.allSatisfy { !$0.disablesManualLoadAdjustment == false })
+    }
+
     func testForceUnitConversionUsesKilogramsForceAsCanonicalValue() {
         XCTAssertEqual(MotherboardForceUnit.kgf.value(fromKilogramsForce: 2), 2, accuracy: 0.0001)
         XCTAssertEqual(MotherboardForceUnit.lbf.value(fromKilogramsForce: 2), 4.40925, accuracy: 0.0001)

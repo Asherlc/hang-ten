@@ -2506,7 +2506,16 @@ struct WorkoutView: View {
 	}
 
 	private var loadAdjustmentControl: some View {
-		loadAdjustmentField(compact: true)
+		VStack(alignment: .trailing, spacing: 4) {
+			loadAdjustmentField(compact: true)
+				.disabled(motherboardBluetoothService.state.disablesManualLoadAdjustment)
+
+			if motherboardBluetoothService.state.disablesManualLoadAdjustment {
+				Text("Using connected scale for load.")
+					.font(.system(size: 11, weight: .semibold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+			}
+		}
 	}
 
 	private func loadAdjustmentField(compact: Bool) -> some View {
