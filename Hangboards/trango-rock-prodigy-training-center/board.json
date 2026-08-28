@@ -1839,6 +1839,58 @@
       "presentationID": "primary",
       "fingerCapacity": 4,
       "handCapacity": 1
+    },
+    {
+      "id": "hold-26",
+      "name": "Hold 26",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.048720931873,
+            "y": 0.361397377011,
+            "width": 0.042335766423,
+            "height": 0.12
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "primary"
     }
   ],
   "presentations": [
