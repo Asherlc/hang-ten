@@ -1755,6 +1755,7 @@ struct WorkoutView: View {
 	    @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
 	    @State private var bodyweightKGF: Double?
 	    @State private var loadAdjustmentKGF: Double = 0
+	    @State private var loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit = .kilograms
 	    @State private var didLoadInitialLoadAdjustment = false
 	    @State private var didSetLoadAdjustment = false
 	    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
@@ -1960,6 +1961,7 @@ struct WorkoutView: View {
 			UIApplication.shared.isIdleTimerDisabled = true
 			if !didLoadInitialLoadAdjustment {
 				loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
+				loadAdjustmentDisplayUnit = store.mostRecentSavedLoadAdjustmentDisplayUnit
 				didLoadInitialLoadAdjustment = true
 			}
 			configureRecorder()
@@ -2000,6 +2002,7 @@ struct WorkoutView: View {
 			guard WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
 			      !didSetLoadAdjustment else { return }
 			loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
+			loadAdjustmentDisplayUnit = store.mostRecentSavedLoadAdjustmentDisplayUnit
 		}
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
 			guard let pendingCountdownStart else { return }
@@ -2333,7 +2336,6 @@ struct WorkoutView: View {
 		canNavigate: Bool,
 		currentStopwatchKey: WorkoutActivitySegmentKey?
 	) -> some View {
-		let unit = motherboardSettingsStore.forceUnit
 		let presentation = WorkoutLandscapePreStartPresentation.content(
 			for: step,
 			countdown: countdown,
@@ -2354,7 +2356,7 @@ struct WorkoutView: View {
 
 			VStack(spacing: 6) {
 				HStack(spacing: 10) {
-					loadAdjustmentField(for: unit, compact: true)
+					loadAdjustmentField(compact: true)
 
 					Spacer(minLength: 0)
 
@@ -2411,27 +2413,37 @@ struct WorkoutView: View {
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
 
-            HStack(alignment: .firstTextBaseline, spacing: 7) {
-                Text(
-                    timeLabel(
-                        isComplete
-                            ? 0
-                            : countdown > 0
-                                ? TimeInterval(countdown)
-                                : intervalRemaining(step: step, stepElapsed: stepElapsed)
+            HStack(alignment: .center, spacing: 12) {
+                HStack(alignment: .firstTextBaseline, spacing: 7) {
+                    Text(
+                        timeLabel(
+                            isComplete
+                                ? 0
+                                : countdown > 0
+                                    ? TimeInterval(countdown)
+                                    : intervalRemaining(step: step, stepElapsed: stepElapsed)
+                        )
                     )
-                )
-                    .font(.system(size: 46, weight: .heavy, design: .rounded).monospacedDigit())
-                    .foregroundStyle(Color.hangInk)
-                Text(
-                    isComplete
-                        ? "complete"
-                        : countdown > 0
-                            ? "starting in"
-                            : isResting ? "rest" : step.hasRestInterval ? "left in cue" : "left in cycle"
-                )
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
+                        .font(.system(size: 46, weight: .heavy, design: .rounded).monospacedDigit())
+                        .foregroundStyle(Color.hangInk)
+                    Text(
+                        isComplete
+                            ? "complete"
+                            : countdown > 0
+                                ? "starting in"
+                                : isResting ? "rest" : step.hasRestInterval ? "left in cue" : "left in cycle"
+                    )
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.hangMuted)
+                }
+
+                Spacer(minLength: 0)
+
+                if WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+                   countdown == 0,
+                   !isComplete {
+                    loadAdjustmentControl
+                }
             }
 
             ProgressView(value: min(elapsed, plan.duration), total: plan.duration)
@@ -2483,12 +2495,6 @@ struct WorkoutView: View {
 		canNavigate: Bool
 	) -> some View {
         VStack(spacing: 10) {
-			if WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
-			   countdown == 0,
-			   !isComplete {
-				loadAdjustmentControl
-			}
-
             controlButton(isComplete: isComplete, countdown: countdown)
 
             if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
@@ -2500,15 +2506,14 @@ struct WorkoutView: View {
 	}
 
 	private var loadAdjustmentControl: some View {
-		let unit = motherboardSettingsStore.forceUnit
-		return loadAdjustmentField(for: unit, compact: false)
+		loadAdjustmentField(compact: true)
 	}
 
-	private func loadAdjustmentField(for unit: MotherboardForceUnit, compact: Bool) -> some View {
+	private func loadAdjustmentField(compact: Bool) -> some View {
 		HStack(spacing: compact ? 5 : 8) {
 			TextField(
 				"",
-				value: loadAdjustmentBinding(for: unit),
+				value: loadAdjustmentBinding,
 				format: .number.precision(.fractionLength(1))
 			)
 			.keyboardType(.numbersAndPunctuation)
@@ -2530,20 +2535,24 @@ struct WorkoutView: View {
 			.accessibilityLabel("Workout load adjustment")
 			.accessibilityHint("Use a positive value for added weight or a negative value for pulley assistance. This starts from your latest saved session.")
 
-			Text(unit.label)
-				.font(.system(size: compact ? 13 : 14, weight: .bold, design: .rounded))
-				.foregroundStyle(Color.hangMuted)
+			Picker("Workout load unit", selection: $loadAdjustmentDisplayUnit) {
+				ForEach(WorkoutLoadAdjustmentDisplayUnit.allCases) { unit in
+					Text(unit.label).tag(unit)
+				}
+			}
+			.pickerStyle(.segmented)
+			.frame(width: compact ? 72 : 88)
+			.accessibilityIdentifier("workout.loadAdjustment.unit")
 		}
-		.frame(maxWidth: .infinity, alignment: .leading)
 		.accessibilityElement(children: .contain)
 	}
 
-	private func loadAdjustmentBinding(for unit: MotherboardForceUnit) -> Binding<Double> {
+	private var loadAdjustmentBinding: Binding<Double> {
 		Binding(
-			get: { unit.value(fromKilogramsForce: loadAdjustmentKGF) },
+			get: { loadAdjustmentDisplayUnit.value(fromKilogramsForce: loadAdjustmentKGF) },
 			set: { displayedValue in
 				didSetLoadAdjustment = true
-				loadAdjustmentKGF = unit.kilogramsForce(fromDisplayedForce: displayedValue)
+				loadAdjustmentKGF = loadAdjustmentDisplayUnit.kilogramsForce(fromDisplayedForce: displayedValue)
 			}
 		)
 	}
@@ -2916,6 +2925,7 @@ struct WorkoutView: View {
 			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
 			bodyweightKGF: bodyweightKGF,
 			loadAdjustmentKGF: loadAdjustmentKGF,
+			loadAdjustmentDisplayUnit: loadAdjustmentDisplayUnit,
 			motherboardMeasurements: motherboardMeasurementCollector.measurements,
 			motherboardMeasurementsTruncated: motherboardMeasurementCollector.didTruncate
 		)
