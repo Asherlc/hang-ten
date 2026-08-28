@@ -18559,7 +18559,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius 10-minute · Entry"
+        "title" : "Metolius 10-minute · Entry",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18590,7 +18595,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius 10-minute · Intermediate"
+        "title" : "Metolius 10-minute · Intermediate",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18621,7 +18631,11 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius 10-minute · Advanced"
+        "title" : "Metolius 10-minute · Advanced",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups"
+        ]
       }
     },
     {
@@ -18652,7 +18666,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius Contact · Entry"
+        "title" : "Metolius Contact · Entry",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18683,7 +18702,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius Contact · Intermediate"
+        "title" : "Metolius Contact · Intermediate",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18714,7 +18738,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius Contact · Advanced"
+        "title" : "Metolius Contact · Advanced",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18745,7 +18774,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius Simulator 3D · Entry"
+        "title" : "Metolius Simulator 3D · Entry",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18776,7 +18810,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius Simulator 3D · Intermediate"
+        "title" : "Metolius Simulator 3D · Intermediate",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18807,7 +18846,12 @@
           "built-in",
           "manufacturer"
         ],
-        "title" : "Metolius Simulator 3D · Advanced"
+        "title" : "Metolius Simulator 3D · Advanced",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -18837,7 +18881,10 @@
           "built-in",
           "research"
         ],
-        "title" : "Max Hangs"
+        "title" : "Max Hangs",
+        "workoutLabels" : [
+          "max-effort"
+        ]
       }
     },
     {
@@ -18899,7 +18946,10 @@
           "research",
           "requires-instrumented-12mm-force-feedback"
         ],
-        "title" : "F100 Force Board"
+        "title" : "F100 Force Board",
+        "workoutLabels" : [
+          "max-effort"
+        ]
       }
     },
     {
@@ -18959,7 +19009,10 @@
           "built-in",
           "research"
         ],
-        "title" : "7\/3 Repeaters"
+        "title" : "7\/3 Repeaters",
+        "workoutLabels" : [
+          "repeaters"
+        ]
       }
     },
     {
@@ -19019,7 +19072,10 @@
           "built-in",
           "coach"
         ],
-        "title" : "7–53 Max Hangs"
+        "title" : "7–53 Max Hangs",
+        "workoutLabels" : [
+          "max-effort"
+        ]
       }
     },
     {
@@ -19049,7 +19105,10 @@
           "built-in",
           "coach"
         ],
-        "title" : "3–6–9 Ladders"
+        "title" : "3–6–9 Ladders",
+        "workoutLabels" : [
+          "max-effort"
+        ]
       }
     },
     {
@@ -19109,7 +19168,10 @@
           "built-in",
           "device"
         ],
-        "title" : "Zlagboard 60\/60 Endurance"
+        "title" : "Zlagboard 60\/60 Endurance",
+        "workoutLabels" : [
+          "endurance"
+        ]
       }
     },
     {
@@ -19140,7 +19202,12 @@
           "built-in",
           "coach"
         ],
-        "title" : "Hooper's Beta · Introductory Home Hangboard"
+        "title" : "Hooper's Beta · Introductory Home Hangboard",
+        "workoutLabels" : [
+          "warm-up",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -19171,7 +19238,10 @@
           "built-in",
           "coach"
         ],
-        "title" : "Method Climbing · Intermediate Repeaters"
+        "title" : "Method Climbing · Intermediate Repeaters",
+        "workoutLabels" : [
+          "repeaters"
+        ]
       }
     },
     {
@@ -19202,7 +19272,12 @@
           "built-in",
           "coach"
         ],
-        "title" : "Method Climbing · Intermediate 10-minute EMOM"
+        "title" : "Method Climbing · Intermediate 10-minute EMOM",
+        "workoutLabels" : [
+          "max-effort",
+          "pull-ups",
+          "core"
+        ]
       }
     },
     {
@@ -19233,7 +19308,11 @@
           "built-in",
           "retailer"
         ],
-        "title" : "REI · Hangboard Sample Workout"
+        "title" : "REI · Hangboard Sample Workout",
+        "workoutLabels" : [
+          "warm-up",
+          "pull-ups"
+        ]
       }
     }
   ]

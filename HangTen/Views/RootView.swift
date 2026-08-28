@@ -321,6 +321,7 @@ struct PlansView: View {
                                 FavoritePlanCard(
                                     plan: plan,
                                     board: store.board(for: plan),
+                                    labels: store.metadata(for: plan).athleteFacingLabels,
                                     isFavorite: store.isFavorite(plan),
                                     isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                                 ) {
@@ -349,6 +350,7 @@ struct PlansView: View {
                             FavoritePlanCard(
                                 plan: plan,
                                 board: store.board(for: plan),
+                                labels: store.metadata(for: plan).athleteFacingLabels,
                                 isFavorite: store.isFavorite(plan),
                                 isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                             ) {
@@ -624,6 +626,7 @@ private struct NoMatchingPlansCard: View {
 private struct PlanCard: View {
     let plan: TrainingPlan
     let board: TrainingBoard
+    let labels: [String]
     var isIncompatible: Bool = false
 
     var body: some View {
@@ -650,6 +653,22 @@ private struct PlanCard: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
+            if !labels.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(labels, id: \.self) { label in
+                            Pill(
+                                title: label.replacingOccurrences(of: "-", with: " ").capitalized,
+                                tint: Color.hangGreenDark,
+                                fill: Color.hangGreen.opacity(0.18)
+                            )
+                        }
+                    }
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Workout labels: \(labels.joined(separator: ", "))")
+            }
+
             HStack(spacing: 8) {
                 Image(systemName: "rectangle.portrait.and.arrow.right")
                 Text(board.name)
@@ -666,6 +685,7 @@ private struct PlanCard: View {
 struct FavoritePlanCard: View {
     let plan: TrainingPlan
     let board: TrainingBoard
+    var labels: [String] = []
     let isFavorite: Bool
     var isIncompatible: Bool = false
     let onToggle: () -> Void
@@ -673,7 +693,7 @@ struct FavoritePlanCard: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             NavigationLink(destination: PlanDetailView(plan: plan)) {
-                PlanCard(plan: plan, board: board, isIncompatible: isIncompatible)
+                PlanCard(plan: plan, board: board, labels: labels, isIncompatible: isIncompatible)
             }
             .buttonStyle(.plain)
             .frame(maxWidth: .infinity)
