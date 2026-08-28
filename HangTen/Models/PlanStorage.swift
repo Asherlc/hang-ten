@@ -132,7 +132,6 @@ struct PlanMetadata: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectFormerPlanLibraryKeys(["equipment"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         title = try container.decode(String.self, forKey: .title)
         subtitle = try container.decode(String.self, forKey: .subtitle)

@@ -3,7 +3,7 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
-    func testMetadataEncodingDoesNotPersistEquipment() throws {
+    func testMetadataRoundTripsCurrentSchema() throws {
         let metadata = PlanMetadata(
             title: "Test plan",
             subtitle: "Test subtitle",
@@ -17,12 +17,12 @@ final class PlanStorageTests: XCTestCase {
         )
 
         let encoded = try JSONEncoder().encode(metadata)
-        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let decoded = try JSONDecoder().decode(PlanMetadata.self, from: encoded)
 
-        XCTAssertNil(object["equipment"])
+        XCTAssertEqual(decoded, metadata)
     }
 
-    func testMetadataRejectsFormerEquipmentField() {
+    func testMetadataDecodesDocumentsWithUnknownFields() throws {
         let data = Data(
             #"""
             {
@@ -40,7 +40,10 @@ final class PlanStorageTests: XCTestCase {
             """#.utf8
         )
 
-        XCTAssertThrowsError(try JSONDecoder().decode(PlanMetadata.self, from: data))
+        let decoded = try JSONDecoder().decode(PlanMetadata.self, from: data)
+
+        XCTAssertEqual(decoded.title, "Test plan")
+        XCTAssertEqual(decoded.category, "test")
     }
 
     func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {

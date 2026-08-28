@@ -92,7 +92,7 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertTrue(filters.matches(custom))
     }
 
-    func testConsumerFilterPresentationExcludesEquipmentAndProvenance() {
+    func testConsumerFilterPresentationShowsOnlyAthleteFacingFacets() {
         let options = PlanFilterOptions(metadata: [
             metadata(
                 level: "Advanced",
