@@ -198,16 +198,13 @@ final class PurchaseManagerTests: XCTestCase {
     }
 
     func testVerifiedTransactionUpdateUnlocksLifetimeAccess() async {
-        let manager = PurchaseManager(
-            client: FakeStoreKitClient(
-                updates: [.verified(productID: PurchaseManager.lifetimeProductID)]
-            )
-        )
+        let client = FakeStoreKitClient()
+        let manager = PurchaseManager(client: client)
 
         await manager.prepare()
-        for _ in 0..<5 where !manager.hasLifetimeEntitlement {
-            await Task.yield()
-        }
+        await waitForUpdateSubscription(from: client)
+        client.sendUpdate(.verified(productID: PurchaseManager.lifetimeProductID))
+        await waitForEntitlementChange(in: manager, expected: true)
 
         XCTAssertTrue(manager.hasLifetimeEntitlement)
     }
