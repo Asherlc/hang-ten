@@ -974,7 +974,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "handCapacity": 1
     },
     {
       "id": "pocket-index-middle-deep-right",
@@ -995,7 +996,8 @@
         }
       ],
       "presentationID": "primary",
-      "fingerCapacity": 3
+      "fingerCapacity": 3,
+      "handCapacity": 1
     },
     {
       "id": "pocket-middle-ring-deep-left",
