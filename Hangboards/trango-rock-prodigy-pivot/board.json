@@ -2380,7 +2380,7 @@
     {
       "id": "hold-42",
       "name": "Hold 42",
-      "kind": "edge",
+      "kind": "pinch",
       "geometry": [
         {
           "frame": {
