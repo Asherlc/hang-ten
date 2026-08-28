@@ -1245,7 +1245,16 @@ final class PlanStorageTests: XCTestCase {
             targets: [],
             activeDuration: 7
         )
-        var library = makeLibrary(steps: [makeStep(id: "referenced-step")])
+        var library = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "referenced-step",
+                    duration: 7,
+                    targets: [.kind(.edge)],
+                    segments: []
+                )
+            ]
+        )
         library = PlanLibraryDefinition(
             metadata: library.metadata,
             boardMappings: library.boardMappings,
