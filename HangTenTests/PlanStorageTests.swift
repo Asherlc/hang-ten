@@ -8,6 +8,49 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(WorkoutPresentationContent.portraitTimerSupportingStatus)
     }
 
+    func testMetadataRoundTripsCurrentSchema() throws {
+        let metadata = PlanMetadata(
+            title: "Test plan",
+            subtitle: "Test subtitle",
+            level: "Test",
+            sourceLabel: "Test fixture",
+            sourceURL: URL(string: "https://example.com/test")!,
+            provenance: .adapted,
+            category: "test",
+            tags: [],
+            notes: []
+        )
+
+        let encoded = try JSONEncoder().encode(metadata)
+        let decoded = try JSONDecoder().decode(PlanMetadata.self, from: encoded)
+
+        XCTAssertEqual(decoded, metadata)
+    }
+
+    func testMetadataDecodesDocumentsWithUnknownPersistedFields() throws {
+        let data = Data(
+            #"""
+            {
+              "title": "Test plan",
+              "subtitle": "Test subtitle",
+              "level": "Test",
+              "sourceLabel": "Test fixture",
+              "sourceURL": "https://example.com/test",
+              "provenance": "adapted",
+              "category": "test",
+              "tags": [],
+              "retiredMetadataField": "retired value",
+              "notes": []
+            }
+            """#.utf8
+        )
+
+        let decoded = try JSONDecoder().decode(PlanMetadata.self, from: data)
+
+        XCTAssertEqual(decoded.title, "Test plan")
+        XCTAssertEqual(decoded.category, "test")
+    }
+
     func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {
         let step = WorkoutStep(
             id: "stopwatch-step",
@@ -696,7 +739,6 @@ final class PlanStorageTests: XCTestCase {
                   "provenance": "adapted",
                   "category": "test",
                   "tags": [],
-                  "equipment": [],
                   "notes": []
                 },
                 "blocks": [{ "blockID": "segment.block" }]
@@ -854,7 +896,6 @@ final class PlanStorageTests: XCTestCase {
                   "provenance": "adapted",
                   "category": "test",
                   "tags": [],
-                  "equipment": [],
                   "notes": []
                 },
                 "blocks": [{ "blockID": "legacy.block" }]
@@ -1324,10 +1365,131 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
-    func testShippedRoutineSeedsExpandToTerminalWorkSteps() throws {
-        let terminalSteps = try LegacyPlanSeedCatalog.all.map { plan in
-            try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
+    func testPlanLibraryRejectsUntargetedTimedHangOutsideOfficialRPTCImporter() {
+        let selfSelectedHang = WorkoutStepDefinition(
+            id: "self-selected-hang",
+            title: "Self-selected hang",
+            instruction: "Hang on a self-selected grip.",
+            accessory: "7s hang",
+            duration: 7,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+
+        let issues = makeLibrary(
+            steps: [selfSelectedHang],
+            provenance: .official
+        ).validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[0].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testPlanLibraryRejectsUntargetedActiveStepInUnreferencedBlock() {
+        let untargetedHang = WorkoutStepDefinition(
+            id: "unreferenced-self-selected-hang",
+            title: "Self-selected hang",
+            instruction: "Hang on a self-selected grip.",
+            accessory: "7s hang",
+            duration: 7,
+            phase: .hang,
+            targets: [],
+            activeDuration: 7
+        )
+        var library = makeLibrary(
+            steps: [
+                makeStep(
+                    id: "referenced-step",
+                    duration: 7,
+                    targets: [.kind(.edge)],
+                    segments: []
+                )
+            ]
+        )
+        library = PlanLibraryDefinition(
+            metadata: library.metadata,
+            boardMappings: library.boardMappings,
+            blocks: library.blocks + [
+                WorkoutBlockDefinition(id: "unreferenced.block", steps: [untargetedHang])
+            ],
+            plans: library.plans
+        )
+
+        let issues = library.validationIssues(availableBoards: BoardCatalog.all)
+
+        XCTAssertTrue(issues.contains {
+            $0.path == "blocks[1].steps[0].targets" &&
+                $0.message == "Non-rest steps need at least one target."
+        })
+    }
+
+    func testOfficialRPTCImporterRejectsUntargetedRepeaterWithUnknownIDOrTiming() {
+        let cases = [
+            (id: "rptc-repeaters-set-rep-extra", duration: 10.0, activeDuration: 7.0),
+            (id: "rptc-repeaters-set-rep-1", duration: 11.0, activeDuration: 7.0),
+            (id: "rptc-repeaters-set-rep-1", duration: 10.0, activeDuration: 6.0)
+        ]
+
+        for testCase in cases {
+            let step = WorkoutStepDefinition(
+                id: testCase.id,
+                title: "RPTC repeater",
+                instruction: "Hang on the grip you selected.",
+                accessory: "7s hang",
+                duration: testCase.duration,
+                phase: .hang,
+                targets: [],
+                activeDuration: testCase.activeDuration
+            )
+            let issues = makeLibrary(
+                steps: [step],
+                provenance: .official,
+                planID: "rptc.seven-three-repeaters",
+                sourceURL: URL(string: "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155")
+            ).validationIssues(availableBoards: BoardCatalog.all)
+
+            XCTAssertTrue(issues.contains {
+                $0.path == "blocks[0].steps[0].targets" &&
+                    $0.message == "Non-rest steps need at least one target."
+            }, "Expected \(testCase.id) with timing \(testCase.activeDuration)s/\(testCase.duration)s to be rejected.")
         }
+    }
+
+    func testRPTCRepeatersPreserveTheSourceSetTimingWithoutInventedGripTargets() {
+        let plan = LegacyPlanSeedCatalog.rptcRepeaters
+
+        XCTAssertEqual(plan.provenance, .official)
+        XCTAssertNil(plan.boardID)
+        XCTAssertEqual(plan.duration, 420)
+        XCTAssertEqual(plan.steps.count, 8)
+        XCTAssertTrue(plan.steps.dropLast().allSatisfy { $0.targets.isEmpty })
+        XCTAssertEqual(plan.steps.prefix(6).map(\.duration), Array(repeating: 10, count: 6))
+        XCTAssertEqual(plan.steps.prefix(7).map(\.timedWorkDuration), Array(repeating: 7, count: 7))
+        XCTAssertEqual(plan.steps[6].duration, 180)
+        XCTAssertTrue(plan.steps[6].instruction.contains("2:53"))
+        XCTAssertTrue(plan.steps[6].instruction.contains("do not treat the table recovery as that rest"))
+        XCTAssertEqual(plan.steps[7].phase, .rest)
+        XCTAssertEqual(plan.steps[7].duration, 180)
+        XCTAssertTrue(plan.steps[7].instruction.contains("Rest 3 minutes between sets."))
+    }
+
+    func testRoutineCatalogIncludesRPTCAsAnOfficialPlan() throws {
+        let plan = try XCTUnwrap(
+            LegacyPlanSeedCatalog.all.first { $0.id == "rptc.seven-three-repeaters" }
+        )
+
+        XCTAssertEqual(plan.provenance, .official)
+    }
+
+    func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
+        let terminalSteps = try LegacyPlanSeedCatalog.all
+            .filter { $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id }
+            .map { plan in
+                try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
+            }
 
         XCTAssertTrue(terminalSteps.allSatisfy { $0.phase != .rest })
     }
@@ -1582,6 +1744,7 @@ final class PlanStorageTests: XCTestCase {
     func testPlanCatalogMatchesLiteralizedLegacyPlanSeeds() throws {
         let expectedPlans = try LegacyPlanSeedCatalog.all.map { seedPlan in
             let literalSteps = try seedPlan.steps
+                .map(WorkoutStepNormalizer.materializingImplicitSegments)
                 .flatMap(WorkoutStepNormalizer.expand)
                 .enumerated()
                 .map { index, step in
@@ -2260,7 +2423,10 @@ final class PlanStorageTests: XCTestCase {
     private func makeLibrary(
         steps: [WorkoutStepDefinition],
         boardID: String? = nil,
-        boardMappings: [BoardMappingDefinition] = []
+        boardMappings: [BoardMappingDefinition] = [],
+        provenance: RoutineProvenance = .adapted,
+        planID: String = "test.plan",
+        sourceURL: URL? = URL(string: "https://example.com/test")
     ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(
@@ -2272,14 +2438,14 @@ final class PlanStorageTests: XCTestCase {
             blocks: [WorkoutBlockDefinition(id: "test.block", steps: steps)],
             plans: [
                 PlanDefinition(
-                    id: "test.plan",
+                    id: planID,
                     metadata: PlanMetadata(
                         title: "Test plan",
                         subtitle: "Storage tests",
                         level: "Test",
                         sourceLabel: "Test fixture",
-                        sourceURL: URL(string: "https://example.com/test")!,
-                        provenance: .adapted
+                        sourceURL: sourceURL,
+                        provenance: provenance
                     ),
                     boardID: boardID,
                     blocks: [WorkoutBlockReference(blockID: "test.block")]

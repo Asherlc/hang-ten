@@ -8,8 +8,7 @@ final class PlanFiltersTests: XCTestCase {
         provenance: RoutineProvenance = .official,
         category: String = "manufacturer",
         workoutLabels: [String] = [],
-        tags: [String] = ["built-in", "manufacturer"],
-        equipment: [String] = ["hangboard"]
+        tags: [String] = ["built-in", "manufacturer"]
     ) -> PlanMetadata {
         PlanMetadata(
             title: "Test plan",
@@ -20,8 +19,7 @@ final class PlanFiltersTests: XCTestCase {
             provenance: provenance,
             category: category,
             workoutLabels: workoutLabels,
-            tags: tags,
-            equipment: equipment
+            tags: tags
         )
     }
 
@@ -51,28 +49,26 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertFalse(filters.matches(metadata(level: "Intermediate", category: "research")))
     }
 
-    func testTagsAndEquipmentMatchAnySelectedValue() {
+    func testTagsMatchAnySelectedValue() {
         var filters = PlanFilters()
         filters.tags = ["endurance", "strength"]
-        filters.equipment = ["hangboard", "weights"]
 
-        XCTAssertTrue(filters.matches(metadata(provenance: .custom, tags: ["strength"], equipment: ["hangboard"])))
-        XCTAssertTrue(filters.matches(metadata(provenance: .custom, tags: ["endurance"], equipment: ["weights"])))
-        XCTAssertFalse(filters.matches(metadata(provenance: .custom, tags: ["mobility"], equipment: ["hangboard"])))
+        XCTAssertTrue(filters.matches(metadata(provenance: .custom, tags: ["strength"])))
+        XCTAssertTrue(filters.matches(metadata(provenance: .custom, tags: ["endurance"])))
+        XCTAssertFalse(filters.matches(metadata(provenance: .custom, tags: ["mobility"])))
     }
 
     func testFilterOptionsAreUniqueAndSorted() {
         let options = PlanFilterOptions(metadata: [
-            metadata(level: "Advanced", provenance: .adapted, category: "research", workoutLabels: ["strength", "shared"], tags: ["built-in", "research"], equipment: ["hangboard"]),
-            metadata(level: "Entry", provenance: .official, category: "manufacturer", workoutLabels: ["shared"], tags: ["built-in", "manufacturer"], equipment: ["weights"]),
-            metadata(level: "Advanced", provenance: .adapted, category: "research", workoutLabels: ["strength"], tags: ["built-in", "research"], equipment: ["hangboard"])
+            metadata(level: "Advanced", provenance: .adapted, category: "research", workoutLabels: ["strength", "shared"], tags: ["built-in", "research"]),
+            metadata(level: "Entry", provenance: .official, category: "manufacturer", workoutLabels: ["shared"], tags: ["built-in", "manufacturer"]),
+            metadata(level: "Advanced", provenance: .adapted, category: "research", workoutLabels: ["strength"], tags: ["built-in", "research"])
         ])
 
         XCTAssertEqual(options.levels, ["Advanced", "Entry"])
         XCTAssertEqual(Set(options.provenances), Set([.official, .adapted]))
         XCTAssertEqual(options.categories, ["manufacturer", "research"])
         XCTAssertEqual(options.tags, ["shared", "strength"])
-        XCTAssertEqual(options.equipment, ["hangboard", "weights"])
     }
 
     func testCustomRoutineTagsRemainFilterableWhileBuiltInTagsAreExcluded() {
@@ -96,21 +92,20 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertTrue(filters.matches(custom))
     }
 
-    func testConsumerFilterPresentationExcludesProvenanceAndRetainsAthleteFacets() {
+    func testConsumerFilterPresentationShowsOnlyAthleteFacingFacets() {
         let options = PlanFilterOptions(metadata: [
             metadata(
                 level: "Advanced",
                 provenance: .adapted,
                 category: "research",
                 workoutLabels: ["strength"],
-                tags: ["strength"],
-                equipment: ["hangboard"]
+                tags: ["strength"]
             )
         ])
 
         XCTAssertEqual(
             PlanFilterPresentationContent.visibleFacets(for: options),
-            [.difficulty, .category, .tags, .equipment]
+            [.difficulty, .category, .tags]
         )
     }
 
@@ -134,7 +129,6 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertEqual(metadata?.provenance, .adapted)
         XCTAssertEqual(metadata?.category, "research")
         XCTAssertEqual(metadata?.tags, ["built-in", "research"])
-        XCTAssertEqual(metadata?.equipment, ["hangboard"])
     }
 
     func testBuiltInFilterOptionsExposeCuratedWorkoutLabelsInsteadOfSourceTags() throws {

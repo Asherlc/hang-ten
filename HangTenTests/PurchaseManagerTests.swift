@@ -198,16 +198,23 @@ final class PurchaseManagerTests: XCTestCase {
     }
 
     func testVerifiedTransactionUpdateUnlocksLifetimeAccess() async {
-        let manager = PurchaseManager(
-            client: FakeStoreKitClient(
-                updates: [.verified(productID: PurchaseManager.lifetimeProductID)]
-            )
-        )
+        let client = FakeStoreKitClient()
+        let manager = PurchaseManager(client: client)
+        let updateSubscription = expectation(description: "transaction updates are subscribed")
+        client.onTransactionUpdateSubscription = {
+            updateSubscription.fulfill()
+        }
+        let updateApplied = expectation(description: "verified transaction update is applied")
+        client.onTransactionFinished = { transaction in
+            if transaction.productID == PurchaseManager.lifetimeProductID {
+                updateApplied.fulfill()
+            }
+        }
 
         await manager.prepare()
-        for _ in 0..<5 where !manager.hasLifetimeEntitlement {
-            await Task.yield()
-        }
+        await fulfillment(of: [updateSubscription], timeout: 1)
+        client.sendUpdate(.verified(productID: PurchaseManager.lifetimeProductID))
+        await fulfillment(of: [updateApplied], timeout: 1)
 
         XCTAssertTrue(manager.hasLifetimeEntitlement)
     }
@@ -220,13 +227,23 @@ final class PurchaseManagerTests: XCTestCase {
             )
         )
         let manager = PurchaseManager(client: client)
+        let updateSubscription = expectation(description: "transaction updates are subscribed")
+        client.onTransactionUpdateSubscription = {
+            updateSubscription.fulfill()
+        }
+        let updateApplied = expectation(description: "revoked transaction update is applied")
+        client.onTransactionFinished = { transaction in
+            if transaction.transactionID == 501 {
+                updateApplied.fulfill()
+            }
+        }
 
         await manager.prepare()
-        await waitForUpdateSubscription(from: client)
+        await fulfillment(of: [updateSubscription], timeout: 1)
         client.sendUpdate(
             .revoked(productID: PurchaseManager.lifetimeProductID, transactionID: 501)
         )
-        await waitForEntitlementChange(in: manager, expected: false)
+        await fulfillment(of: [updateApplied], timeout: 1)
 
         XCTAssertFalse(manager.hasLifetimeEntitlement)
         XCTAssertEqual(manager.state, .idle)
@@ -253,11 +270,6 @@ final class PurchaseManagerTests: XCTestCase {
         XCTAssertTrue(client.isObservingUpdates)
     }
 
-    private func waitForEntitlementChange(in manager: PurchaseManager, expected: Bool) async {
-        for _ in 0..<10 where manager.hasLifetimeEntitlement != expected {
-            await Task.yield()
-        }
-    }
 }
 
 private enum TestError: Error {
@@ -274,6 +286,8 @@ final class FakeStoreKitClient: StoreKitClient {
     var productLoadError: Error?
     private(set) var finishedTransactionIDs: [UInt64] = []
     private(set) var isObservingUpdates = false
+    var onTransactionUpdateSubscription: (() -> Void)?
+    var onTransactionFinished: ((StoreKitTransaction) -> Void)?
     private var updateContinuation: AsyncStream<StoreKitTransaction>.Continuation?
 
     init(
@@ -317,6 +331,7 @@ final class FakeStoreKitClient: StoreKitClient {
     func transactionUpdates() -> AsyncStream<StoreKitTransaction> {
         AsyncStream { continuation in
             isObservingUpdates = true
+            onTransactionUpdateSubscription?()
             updateContinuation = continuation
             updates.forEach { _ = continuation.yield($0) }
         }
@@ -328,6 +343,7 @@ final class FakeStoreKitClient: StoreKitClient {
 
     func finish(_ transaction: StoreKitTransaction) async {
         finishedTransactionIDs.append(transaction.transactionID)
+        onTransactionFinished?(transaction)
     }
 
     deinit {

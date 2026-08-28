@@ -4724,6 +4724,137 @@
       "title" : "Metolius Simulator 3D · Advanced"
     },
     {
+      "id" : "rptc.seven-three-repeaters.warm-up",
+      "steps" : [
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-1",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 1 of 7"
+        }
+      ],
+      "title" : "RPTC repeater set · rep 1 of 7"
+    },
+    {
+      "id" : "rptc.seven-three-repeaters.main",
+      "steps" : [
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-2",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 2 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-3",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 3 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-4",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 4 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-5",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 5 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 3s rest",
+          "activeDuration" : 7,
+          "duration" : 10,
+          "id" : "rptc-repeaters-set-rep-6",
+          "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 6 of 7"
+        },
+        {
+          "accessory" : "7s two-handed deadhang · 2m 53s rest to 4:00",
+          "activeDuration" : 7,
+          "duration" : 180,
+          "id" : "rptc-repeaters-set-rep-7",
+          "instruction" : "Complete the seventh 7-second two-handed dead hang on the grip you selected, then use the table's 2:53 recovery to reach 4:00 from the first hang. The source separately prescribes the following 3-minute rest period between sets; do not treat the table recovery as that rest. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout.",
+          "phase" : "hang",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · rep 7 of 7"
+        },
+        {
+          "accessory" : "3-minute rest period between sets",
+          "duration" : 180,
+          "id" : "rptc-repeaters-between-sets-rest",
+          "instruction" : "Rest 3 minutes between sets. If you chose another of the source-permitted 1–3 sets on this grip, begin it after this rest; then move to the next of approximately 5–10 grips.",
+          "phase" : "rest",
+          "segments" : [
+
+          ],
+          "targets" : [
+
+          ],
+          "title" : "RPTC repeater set · between-set rest"
+        }
+      ],
+      "title" : "RPTC · 7\/3 Repeaters"
+    },
+    {
       "id" : "research.max-hangs.warm-up",
       "steps" : [
         {
@@ -18543,9 +18674,6 @@
       "id" : "metolius.generic-ten-minute.entry",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Entry",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -18579,9 +18707,6 @@
       "id" : "metolius.generic-ten-minute.intermediate",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -18615,9 +18740,6 @@
       "id" : "metolius.generic-ten-minute.advanced",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
@@ -18651,9 +18773,6 @@
       "id" : "metolius.contact.entry",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Entry",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18687,9 +18806,6 @@
       "id" : "metolius.contact.intermediate",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18723,9 +18839,6 @@
       "id" : "metolius.contact.advanced",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18759,9 +18872,6 @@
       "id" : "metolius.simulator-3d.entry",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Entry",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18795,9 +18905,6 @@
       "id" : "metolius.simulator-3d.intermediate",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18831,9 +18938,6 @@
       "id" : "metolius.simulator-3d.advanced",
       "metadata" : {
         "category" : "manufacturer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
@@ -18857,6 +18961,34 @@
     {
       "blocks" : [
         {
+          "blockID" : "rptc.seven-three-repeaters.warm-up"
+        },
+        {
+          "blockID" : "rptc.seven-three-repeaters.main"
+        }
+      ],
+      "id" : "rptc.seven-three-repeaters",
+      "metadata" : {
+        "category" : "manufacturer",
+        "level" : "Self-selected",
+        "notes" : [
+          "Official Rock Prodigy set template: seven 7s\/3s two-handed dead-hang repetitions, the table's 2m 53s recovery to 4:00, then a separate 3-minute between-set rest.",
+          "The source leaves the 5–10 grips and 1–3 sets per grip to the athlete, so the app intentionally supplies no target, grip order, or fixed workout duration."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Rock Prodigy Training Center Use Instructions",
+        "sourceURL" : "https:\/\/cdn.shopify.com\/s\/files\/1\/0282\/7557\/2841\/files\/RPTC_Use_Instructions.pdf?v=1588608155",
+        "subtitle" : "Self-selected 5–10 grip routine; 1–3 sets per grip.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "RPTC · 7\/3 Repeaters"
+      }
+    },
+    {
+      "blocks" : [
+        {
           "blockID" : "research.max-hangs.warm-up"
         },
         {
@@ -18866,9 +18998,6 @@
       "id" : "research.max-hangs",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -18899,9 +19028,6 @@
       "id" : "research.force-feedback-f80",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -18930,9 +19056,6 @@
       "id" : "research.force-feedback-f100",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Expert",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -18964,9 +19087,6 @@
       "id" : "research.eva-int-hangs",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate+",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -18994,9 +19114,6 @@
       "id" : "research.seven-three-repeaters",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19027,9 +19144,6 @@
       "id" : "research.abrahangs",
       "metadata" : {
         "category" : "research",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Supplemental",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19057,9 +19171,6 @@
       "id" : "coach.horst-seven-fifty-three",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Advanced",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19090,9 +19201,6 @@
       "id" : "coach.bechtel-three-six-nine",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate+",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19123,9 +19231,6 @@
       "id" : "coach.density-hangs",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate+",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19153,9 +19258,6 @@
       "id" : "device.zlagboard-sixty-sixty",
       "metadata" : {
         "category" : "device",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Preserved from the original Hang Ten routine catalog."
@@ -19186,9 +19288,6 @@
       "id" : "hoopers-beta.introductory-home-hangboard",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",
@@ -19222,9 +19321,6 @@
       "id" : "method.intermediate-hangboarding.repeaters",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
@@ -19256,9 +19352,6 @@
       "id" : "method.intermediate-hangboarding.emom",
       "metadata" : {
         "category" : "coach",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
@@ -19292,9 +19385,6 @@
       "id" : "rei.hangboard-sample-workout",
       "metadata" : {
         "category" : "retailer",
-        "equipment" : [
-          "hangboard"
-        ],
         "level" : "Intermediate",
         "notes" : [
           "Source warm-up alternatives, five grip groups, 7–10s\/5s interval guidance, six repeats, recovery, and pain warning are retained.",

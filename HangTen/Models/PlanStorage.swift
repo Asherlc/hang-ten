@@ -71,8 +71,8 @@ struct PlanLibraryMetadata: Codable, Hashable {
 }
 
 /// Metadata that travels with a routine. The original source fields remain
-/// first-class, while tags/equipment/notes give imported routines room to
-/// describe themselves without adding more UI-specific fields to `TrainingPlan`.
+/// first-class, while tags and notes give imported routines room to describe
+/// themselves without adding more UI-specific fields to `TrainingPlan`.
 struct PlanMetadata: Codable, Hashable {
     let title: String
     let subtitle: String
@@ -85,7 +85,6 @@ struct PlanMetadata: Codable, Hashable {
     /// library provenance or runtime requirements in the Plans filter.
     let workoutLabels: [String]
     let tags: [String]
-    let equipment: [String]
     let notes: [String]
 
     init(
@@ -98,7 +97,6 @@ struct PlanMetadata: Codable, Hashable {
         category: String = "general",
         workoutLabels: [String] = [],
         tags: [String] = [],
-        equipment: [String] = [],
         notes: [String] = []
     ) {
         self.title = title
@@ -110,7 +108,6 @@ struct PlanMetadata: Codable, Hashable {
         self.category = category
         self.workoutLabels = workoutLabels
         self.tags = tags
-        self.equipment = equipment
         self.notes = notes
     }
 
@@ -131,7 +128,6 @@ struct PlanMetadata: Codable, Hashable {
         case category
         case workoutLabels
         case tags
-        case equipment
         case notes
     }
 
@@ -146,7 +142,6 @@ struct PlanMetadata: Codable, Hashable {
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? "general"
         workoutLabels = try container.decodeIfPresent([String].self, forKey: .workoutLabels) ?? []
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
-        equipment = try container.decodeIfPresent([String].self, forKey: .equipment) ?? []
         notes = try container.decodeIfPresent([String].self, forKey: .notes) ?? []
     }
 
@@ -163,7 +158,6 @@ struct PlanMetadata: Codable, Hashable {
             try container.encode(workoutLabels, forKey: .workoutLabels)
         }
         try container.encode(tags, forKey: .tags)
-        try container.encode(equipment, forKey: .equipment)
         try container.encode(notes, forKey: .notes)
     }
 }
@@ -764,6 +758,13 @@ enum PlanLibraryValidator {
 
         let mappingByBoardID = planMappingByBoardID
 
+        var plansReferencingBlockID: [String: [PlanDefinition]] = [:]
+        for plan in library.plans {
+            for reference in plan.blocks {
+                plansReferencingBlockID[reference.blockID, default: []].append(plan)
+            }
+        }
+
         var blockByID: [String: WorkoutBlockDefinition] = [:]
         for (index, block) in library.blocks.enumerated() {
             let path = "blocks[\(index)]"
@@ -771,7 +772,12 @@ enum PlanLibraryValidator {
                 issues.append(PlanValidationIssue(path: path, message: "Duplicate block ID \"\(block.id)\"."))
             }
             blockByID[block.id] = block
-            validateBlock(block, path: path, issues: &issues)
+            validateBlock(
+                block,
+                path: path,
+                plansReferencingBlock: plansReferencingBlockID[block.id, default: []],
+                issues: &issues
+            )
         }
 
         var planIDs = Set<String>()
@@ -814,6 +820,7 @@ enum PlanLibraryValidator {
     private static func validateBlock(
         _ block: WorkoutBlockDefinition,
         path: String,
+        plansReferencingBlock: [PlanDefinition],
         issues: inout [PlanValidationIssue]
     ) {
         if block.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -829,13 +836,23 @@ enum PlanLibraryValidator {
             if !stepIDs.insert(step.id).inserted {
                 issues.append(PlanValidationIssue(path: stepPath, message: "Duplicate step ID \"\(step.id)\" in block."))
             }
-            validateStep(step, path: stepPath, issues: &issues)
+            let allowsUntargetedStep = !plansReferencingBlock.isEmpty &&
+                plansReferencingBlock.allSatisfy {
+                    allowsUntargetedRPTCSelfSelectedHang(step, in: $0)
+                }
+            validateStep(
+                step,
+                path: stepPath,
+                allowsUntargetedStep: allowsUntargetedStep,
+                issues: &issues
+            )
         }
     }
 
     private static func validateStep(
         _ step: WorkoutStepDefinition,
         path: String,
+        allowsUntargetedStep: Bool,
         issues: inout [PlanValidationIssue]
     ) {
         if step.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -855,7 +872,10 @@ enum PlanLibraryValidator {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration is only valid for hang or pull steps."))
             }
         }
-        if step.phase != .rest && step.phase != .conditioning && step.targets.isEmpty {
+        if step.phase != .rest,
+           step.phase != .conditioning,
+           step.targets.isEmpty,
+           !allowsUntargetedStep {
             issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
         }
         let isCompoundStep = step.segments.count > 1
@@ -1062,7 +1082,8 @@ enum PlanLibraryValidator {
 
         if let index = plan.blocks.indices.last {
             let reference = plan.blocks[index]
-            if reference.repeatCount > 0,
+            if plan.metadata.provenance != .official,
+               reference.repeatCount > 0,
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
                stepEndsInRestAfterNormalization(terminalStep) {
@@ -1074,6 +1095,35 @@ enum PlanLibraryValidator {
                 )
             }
         }
+    }
+
+    private static func allowsUntargetedRPTCSelfSelectedHang(
+        _ step: WorkoutStepDefinition,
+        in plan: PlanDefinition
+    ) -> Bool {
+        let expectedDuration: TimeInterval
+        switch step.id {
+        case "rptc-repeaters-set-rep-1",
+            "rptc-repeaters-set-rep-2",
+            "rptc-repeaters-set-rep-3",
+            "rptc-repeaters-set-rep-4",
+            "rptc-repeaters-set-rep-5",
+            "rptc-repeaters-set-rep-6":
+            expectedDuration = 10
+        case "rptc-repeaters-set-rep-7":
+            expectedDuration = 180
+        default:
+            return false
+        }
+
+        return plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id &&
+            plan.metadata.provenance == .official &&
+            plan.metadata.sourceURL == LegacyPlanSeedCatalog.rptcRepeaters.sourceURL &&
+            plan.boardID == nil &&
+            step.phase == .hang &&
+            step.segments.isEmpty &&
+            step.activeDuration == 7 &&
+            step.duration == expectedDuration
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
@@ -1268,7 +1318,8 @@ struct PlanDefinitionResolver {
                         fingerConfiguration: stepDefinition.fingerConfiguration,
                         timedWorkDuration: stepDefinition.activeDuration
                     )
-                    for normalizedStep in try WorkoutStepNormalizer.expand(resolvedStep) {
+                    let canonicalStep = WorkoutStepNormalizer.materializingImplicitSegments(resolvedStep)
+                    for normalizedStep in try WorkoutStepNormalizer.expand(canonicalStep) {
                         steps.append(normalizedStep.withNumber(steps.count + 1))
                     }
                 }
@@ -1340,50 +1391,7 @@ struct PlanDefinitionResolver {
         mapping: BoardMappingDefinition?,
         board: TrainingBoard
     ) throws -> [WorkoutSegment] {
-        if step.segments.isEmpty {
-            if step.phase == .rest {
-                return [
-                    WorkoutSegment(
-                        kind: .rest,
-                        target: nil,
-                        timing: .fixed,
-                        duration: step.duration
-                    )
-                ]
-            }
-            if let activeDuration = step.activeDuration {
-                let workSegment = WorkoutSegment(
-                    kind: .work,
-                    targets: targets,
-                    timing: .fixed,
-                    duration: activeDuration
-                )
-                var segments = [workSegment]
-                let restDuration = step.duration - activeDuration
-                if restDuration > 0, restDuration.isFinite {
-                    segments.append(
-                        WorkoutSegment(
-                            kind: .rest,
-                            target: nil,
-                            timing: .fixed,
-                            duration: restDuration
-                        )
-                    )
-                }
-                return segments
-            }
-            if !targets.isEmpty {
-                return [
-                    WorkoutSegment(
-                        kind: .work,
-                        targets: targets,
-                        timing: .undefined,
-                        duration: nil
-                    )
-                ]
-            }
-            return []
-        }
+        guard !step.segments.isEmpty else { return [] }
 
         return try step.segments.map { definition in
             let segmentTargets = try resolveTargets(
@@ -1695,6 +1703,11 @@ enum BuiltInPlanLibraryDefinition {
                 "Source warm-up alternatives, five grip groups, 7–10s/5s interval guidance, six repeats, recovery, and pain warning are retained.",
                 "The app defaults the source ranges to 7 seconds and uses a manual 25-minute warm-up preview."
             ]
+        } else if plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id {
+            notes = [
+                "Official Rock Prodigy set template: seven 7s/3s two-handed dead-hang repetitions, the table's 2m 53s recovery to 4:00, then a separate 3-minute between-set rest.",
+                "The source leaves the 5–10 grips and 1–3 sets per grip to the athlete, so the app intentionally supplies no target, grip order, or fixed workout duration."
+            ]
         } else {
             notes = ["Preserved from the original Hang Ten routine catalog."]
         }
@@ -1714,7 +1727,6 @@ enum BuiltInPlanLibraryDefinition {
             category: category,
             workoutLabels: PlanWorkoutLabelAudit.labels(for: plan.id),
             tags: tags,
-            equipment: ["hangboard"],
             notes: notes
         )
 
@@ -1810,6 +1822,7 @@ private func literalizedLegacyPlanCatalog() -> [TrainingPlan] {
         let literalSteps: [WorkoutStep]
         do {
             literalSteps = try seedPlan.steps
+                .map(WorkoutStepNormalizer.materializingImplicitSegments)
                 .flatMap(WorkoutStepNormalizer.expand)
                 .enumerated()
                 .map { index, step in
@@ -1872,8 +1885,6 @@ enum PlanCatalog {
     static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
     static let reiHangboardSample = required("rei.hangboard-sample-workout")
-
-    static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
 
     static func plan(id: String) -> TrainingPlan? {
         store.plan(id: id)

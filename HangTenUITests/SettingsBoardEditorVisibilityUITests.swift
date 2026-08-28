@@ -19,6 +19,17 @@ final class SettingsBoardEditorVisibilityUITests: XCTestCase {
         XCTAssertFalse(app.segmentedControls["settings.loadAdjustmentUnit"].exists)
     }
 
+    func testPlansPageDoesNotShowLearnMoreCard() {
+        let app = XCUIApplication()
+        app.launchEnvironment["HANGTEN_REVIEW_PLANS"] = "1"
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["Choose your session."].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["Learn more"].exists)
+        XCTAssertFalse(app.staticTexts["Each routine includes its source link."].exists)
+        XCTAssertFalse(app.staticTexts["Read the evidence overview"].exists)
+    }
+
     func testBoardPackagesSectionMatchesBuildConfiguration() throws {
         let app = XCUIApplication()
         app.launch()
