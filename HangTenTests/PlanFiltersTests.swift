@@ -137,9 +137,9 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertEqual(metadata?.equipment, ["hangboard"])
     }
 
-    func testBuiltInFilterOptionsExposeCuratedWorkoutLabelsInsteadOfSourceTags() {
-        let maxHangs = try! XCTUnwrap(PlanCatalog.metadata(for: "research.max-hangs"))
-        let repeaters = try! XCTUnwrap(PlanCatalog.metadata(for: "research.seven-three-repeaters"))
+    func testBuiltInFilterOptionsExposeCuratedWorkoutLabelsInsteadOfSourceTags() throws {
+        let maxHangs = try XCTUnwrap(PlanCatalog.metadata(for: "research.max-hangs"))
+        let repeaters = try XCTUnwrap(PlanCatalog.metadata(for: "research.seven-three-repeaters"))
 
         let options = PlanFilterOptions(metadata: [maxHangs, repeaters])
 
@@ -149,6 +149,13 @@ final class PlanFiltersTests: XCTestCase {
         filters.tags = ["max-effort"]
         XCTAssertTrue(filters.matches(maxHangs))
         XCTAssertFalse(filters.matches(repeaters))
+    }
+
+    func testWorkoutLabelPresentationUsesDisplayLabelsForVisualAndAccessibilityContent() {
+        XCTAssertEqual(
+            WorkoutLabelPresentationContent.displayLabels(for: ["max-effort", "repeaters"]),
+            ["Max Effort", "Repeaters"]
+        )
     }
 
     func testMetadataLookupMapPreservesFirstEntryForDuplicateIDs() {

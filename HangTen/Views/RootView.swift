@@ -110,6 +110,12 @@ enum PlanSourcePresentationContent {
     }
 }
 
+enum WorkoutLabelPresentationContent {
+    static func displayLabels(for labels: [String]) -> [String] {
+        labels.map { $0.replacingOccurrences(of: "-", with: " ").capitalized }
+    }
+}
+
 enum PlanFilterPresentationContent {
     enum Facet: Hashable {
         case difficulty
@@ -630,6 +636,8 @@ private struct PlanCard: View {
     var isIncompatible: Bool = false
 
     var body: some View {
+        let displayLabels = WorkoutLabelPresentationContent.displayLabels(for: labels)
+
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Pill(title: plan.level, tint: Color.hangGreenDark, fill: Color.hangGreen.opacity(0.25))
@@ -653,12 +661,12 @@ private struct PlanCard: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            if !labels.isEmpty {
+            if !displayLabels.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
-                        ForEach(labels, id: \.self) { label in
+                        ForEach(displayLabels, id: \.self) { label in
                             Pill(
-                                title: label.replacingOccurrences(of: "-", with: " ").capitalized,
+                                title: label,
                                 tint: Color.hangGreenDark,
                                 fill: Color.hangGreen.opacity(0.18)
                             )
@@ -666,7 +674,7 @@ private struct PlanCard: View {
                     }
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Workout labels: \(labels.joined(separator: ", "))")
+                .accessibilityLabel("Workout labels: \(displayLabels.joined(separator: ", "))")
             }
 
             HStack(spacing: 8) {
