@@ -1370,136 +1370,6 @@
       "handCapacity": 1
     },
     {
-      "id": "large-crimp-right-orientation-4",
-      "name": "Right large crimp \u2014 Orientation 4",
-      "kind": "edge",
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
-      },
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.79868,
-            "y": 0.473539774169922,
-            "width": 0.015809501953125,
-            "height": 0.199636175537109
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.870995180039694,
-                  0.012724276165098
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.000031503008537,
-                  0.237533231151603
-                ],
-                "control2": [
-                  1.032290583750748,
-                  0.687151141124613
-                ],
-                "to": [
-                  0.967772422266327,
-                  0.92217868497414
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.903254260781904,
-                  0.983490218152278
-                ],
-                "control2": [
-                  0.698946749414225,
-                  1.014145984741347
-                ],
-                "to": [
-                  0.494639238047577,
-                  0.993708807015301
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.23656659210989,
-                  0.973271629289254
-                ],
-                "control2": [
-                  0.064518161484421,
-                  0.911960096111117
-                ],
-                "to": [
-                  0.0,
-                  0.809774207480888
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.075271188398836,
-                  0.584965252494383
-                ],
-                "control2": [
-                  0.086024215312218,
-                  0.309063353192764
-                ],
-                "to": [
-                  0.010753026914415,
-                  0.074035809343235
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.129036322968843,
-                  0.012724276165098
-                ],
-                "control2": [
-                  0.322590807422108,
-                  -0.007712901560948
-                ],
-                "to": [
-                  0.516145291875374,
-                  0.002505687302074
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.688193722500843,
-                  0.002505687302074
-                ],
-                "control2": [
-                  0.806477018555273,
-                  0.002505687302074
-                ],
-                "to": [
-                  0.870995180039694,
-                  0.012724276165098
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "treatment": {
-            "type": "shelf",
-            "rimInsetFraction": 0.1
-          }
-        }
-      ],
-      "presentationID": "orientation-4",
-      "fingerCapacity": 4
-    },
-    {
       "id": "hold-69",
       "name": "Hold 69",
       "kind": "pinch",
@@ -2506,6 +2376,58 @@
         }
       ],
       "presentationID": "orientation-3"
+    },
+    {
+      "id": "hold-42",
+      "name": "Hold 42",
+      "kind": "edge",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.47,
+            "y": 0.44,
+            "width": 0.06,
+            "height": 0.12
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          }
+        }
+      ],
+      "presentationID": "orientation-4"
     }
   ],
   "presentations": [
