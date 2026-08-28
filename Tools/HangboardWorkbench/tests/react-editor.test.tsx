@@ -831,6 +831,70 @@ test("the hold type control preserves an out-of-list document value", async () =
   }, dependenciesFixture(board));
 });
 
+test("changing exactly two selected physical holds to gastons creates a reciprocal pair that saves", async () => {
+  const client = clientFixture([boardFixture()]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="a-piece-0"]');
+    await app.mouse('[data-hold-key="b-piece-0"]', "click", { ctrlKey: true });
+
+    await app.change("#hold-type-select", "gaston");
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.regions.map((region) => [region.type, region.pairedHoldID]), [
+      ["gaston", "b"],
+      ["gaston", "b"],
+      ["gaston", "a"],
+    ]);
+  }, dependenciesFixture(boardFixture(), { client }));
+});
+
+test("converting a selected gaston would orphan its unselected counterpart, so it leaves the pair unchanged", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "outside", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+    { id: 2, key: "right-piece-0", type: "jug", displayPath: SECOND_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    { id: 3, key: "outside-piece-0", type: "gaston", pairedHoldID: "left", displayPath: OTHER_PATH, metadata: { holdID: "outside", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="left-piece-0"]');
+    await app.mouse('[data-hold-key="right-piece-0"]', "click", { ctrlKey: true });
+
+    await app.change("#hold-type-select", "gaston");
+
+    assert.match(app.text("#validation-list"), /would orphan.*outside/i);
+
+    await app.click("#save-button");
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.regions.map((region) => [region.type, region.pairedHoldID]), [
+      ["gaston", "outside"],
+      ["jug", undefined],
+      ["gaston", "left"],
+    ]);
+  }, dependenciesFixture(board, { client }));
+});
+
+test("converting two holds with the same hold ID to gastons leaves them unchanged with validation", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "same-a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "same", pieceIndex: 0 } },
+    { id: 2, key: "same-b-piece-0", type: "edge", displayPath: SECOND_PATH, metadata: { holdID: "same", pieceIndex: 1 } },
+  ]));
+  const client = clientFixture([board]);
+  await withEditor(async (app) => {
+    await app.click('[data-hold-key="same-a-piece-0"]');
+    await app.mouse('[data-hold-key="same-b-piece-0"]', "click", { ctrlKey: true });
+
+    await app.change("#hold-type-select", "gaston");
+
+    assert.equal(app.documentValue("#hold-type-select"), "edge");
+    assert.match(app.text("#validation-list"), /two distinct hold IDs/i);
+
+    await app.click("#save-button");
+    assert.equal(client.saveCalls.length, 1);
+    assert.deepEqual(client.saveCalls[0]?.document.regions.map((region) => region.type), ["jug", "edge"]);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("an unpaired gaston offers only actionable pairing candidates and saves the initial reciprocal pair", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "left-piece-0", type: "gaston", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
