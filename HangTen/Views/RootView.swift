@@ -121,15 +121,13 @@ enum PlanFilterPresentationContent {
         case difficulty
         case category
         case tags
-        case equipment
     }
 
     static func visibleFacets(for options: PlanFilterOptions) -> [Facet] {
         [
             options.levels.isEmpty ? nil : .difficulty,
             options.categories.isEmpty ? nil : .category,
-            options.tags.isEmpty ? nil : .tags,
-            options.equipment.isEmpty ? nil : .equipment
+            options.tags.isEmpty ? nil : .tags
         ].compactMap { $0 }
     }
 }
@@ -525,30 +523,6 @@ struct PlansView: View {
                     .accessibilityValue(filterMenuAccessibilityValue(
                         selectionCount: filters.tags.count,
                         singleSelection: filters.tags.first.map(displayName)
-                    ))
-                }
-
-                if visibleFacets.contains(.equipment) {
-                    Menu {
-                        filterAllButton(isSelected: filters.equipment.isEmpty) {
-                            filters.equipment.removeAll()
-                        }
-                        ForEach(options.equipment, id: \.self) { value in
-                            filterValueButton(displayName(value), isSelected: filters.equipment.contains(value)) {
-                                filters.toggle(equipment: value)
-                            }
-                        }
-                    } label: {
-                        filterMenuLabel(
-                            title: "Equipment",
-                            selectionCount: filters.equipment.count,
-                            singleSelection: filters.equipment.first.map(displayName)
-                        )
-                    }
-                    .accessibilityLabel("Filter by equipment")
-                    .accessibilityValue(filterMenuAccessibilityValue(
-                        selectionCount: filters.equipment.count,
-                        singleSelection: filters.equipment.first.map(displayName)
                     ))
                 }
 
