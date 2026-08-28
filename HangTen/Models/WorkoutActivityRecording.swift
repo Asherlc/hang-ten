@@ -575,6 +575,16 @@ struct WorkoutActivityRecorder {
                     continue
                 }
                 guard !segment.targets.isEmpty else {
+                    guard allowsUntargetedRPTCSelfSelectedWork(
+                        segment,
+                        in: step,
+                        plan: plan
+                    ) else {
+                        throw WorkoutActivityRecordingError.unresolvedTarget(
+                            stepID: step.id,
+                            segmentIndex: index
+                        )
+                    }
                     result.append(
                         RecordedActivitySegment(
                             stepID: step.id,
@@ -628,6 +638,29 @@ struct WorkoutActivityRecorder {
             }
         }
         return result
+    }
+
+    private func allowsUntargetedRPTCSelfSelectedWork(
+        _ segment: WorkoutSegment,
+        in step: WorkoutStep,
+        plan: TrainingPlan
+    ) -> Bool {
+        let expectedStepIDs = Set((1...7).map { "rptc-repeaters-set-rep-\($0).segment-1" })
+        return plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id &&
+            plan.provenance == .official &&
+            plan.sourceURL == LegacyPlanSeedCatalog.rptcRepeaters.sourceURL &&
+            plan.boardID == nil &&
+            plan.steps.count == 15 &&
+            expectedStepIDs.contains(step.id) &&
+            step.phase == .hang &&
+            step.targets.isEmpty &&
+            step.duration == 7 &&
+            step.timedWorkDuration == 7 &&
+            step.segments == [segment] &&
+            segment.kind == .work &&
+            segment.targets.isEmpty &&
+            segment.timing == .fixed &&
+            segment.duration == 7
     }
 
     func metadata(

@@ -250,6 +250,26 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(workRecords.map(\.durationSeconds), Array(repeating: 7, count: 7))
     }
 
+    func testTargetlessWorkOutsideRPTCThrowsUnresolvedTarget() {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: nil,
+                timing: .fixed,
+                duration: 7
+            )
+        ])
+
+        XCTAssertThrowsError(
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+        ) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "step", segmentIndex: 0)
+            )
+        }
+    }
+
     func testStopwatchWorkUsesSuppliedObservedDuration() throws {
         let workout = plan([
             WorkoutSegment(
