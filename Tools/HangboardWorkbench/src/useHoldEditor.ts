@@ -964,13 +964,49 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
 
   const changeHoldType = useCallback((type: string): void => {
     if (busy || !document || !selectedHold) return;
-    const siblingKeys = new Set(selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)));
+    const selectedHolds = selectedPhysicalHolds(document, selectedKeys);
+    const siblingKeys = new Set(selectedHolds.flatMap((hold) => hold.map((region) => region.key)));
+    const gastonPairHoldIDs = type === "gaston" ? selectedHolds.map((hold) => hold[0]?.metadata?.holdID) : [];
+    const [firstGastonHoldID, secondGastonHoldID] = gastonPairHoldIDs;
+    const createsGastonPair = selectedHolds.length === 2
+      && firstGastonHoldID !== undefined
+      && secondGastonHoldID !== undefined
+      && firstGastonHoldID !== secondGastonHoldID;
+    if (type === "gaston" && !createsGastonPair) {
+      actions.replaceDocument(document, {
+        dirty,
+        validation: "Select exactly two physical holds with two distinct hold IDs to create a Gaston pair.",
+        status: "Gaston conversion needs two distinct hold IDs.",
+      });
+      return;
+    }
+    const selectedGastonHoldIDs = new Set([firstGastonHoldID, secondGastonHoldID]);
+    const displacedGaston = type === "gaston" ? document.regions.find((region) => (
+      !selectedGastonHoldIDs.has(region.metadata?.holdID)
+      && region.pairedHoldID !== undefined
+      && selectedGastonHoldIDs.has(region.pairedHoldID)
+    )) : undefined;
+    if (displacedGaston) {
+      const displacedHoldID = displacedGaston.metadata?.holdID ?? displacedGaston.key;
+      actions.replaceDocument(document, {
+        dirty,
+        validation: `Creating this Gaston pair would orphan paired Gaston hold ${displacedHoldID}. Select it instead or recategorize it first.`,
+        status: "Gaston conversion would orphan an existing pair.",
+      });
+      return;
+    }
     actions.editDocument((candidate) => {
       for (const region of candidate.regions) {
         if (!siblingKeys.has(region.key)) continue;
         region.type = type;
         if (type !== "sloper") delete region.sloper;
         if (type !== "gaston") delete region.pairedHoldID;
+        if (createsGastonPair && region.metadata?.holdID === firstGastonHoldID) {
+          region.pairedHoldID = secondGastonHoldID;
+        }
+        if (createsGastonPair && region.metadata?.holdID === secondGastonHoldID) {
+          region.pairedHoldID = firstGastonHoldID;
+        }
       }
       if (type !== "gaston") {
         const selectedHoldIDs = new Set([...siblingKeys]
@@ -984,7 +1020,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
       status: "Hold recategorized. Save when ready.",
       failureMessage: "Hold type is invalid.",
     });
-  }, [actions, busy, document, selectedHold, selectedKeys]);
+  }, [actions, busy, dirty, document, selectedHold, selectedKeys]);
 
   const changePairedHoldID = useCallback((pairedHoldID: string | undefined): void => {
     if (busy || !document || !selectedHold || selectedHold.type !== "gaston") return;
