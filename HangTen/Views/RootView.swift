@@ -163,6 +163,40 @@ enum RootReviewDestination: Equatable {
     }
 }
 
+enum WorkoutLandscapeControlLayoutPolicy {
+    static func usesCompactControls(
+        isFirstStart: Bool,
+        countdown: Int,
+        isComplete: Bool
+    ) -> Bool {
+        isFirstStart && countdown == 0 && !isComplete
+    }
+}
+
+struct WorkoutLandscapePreStartPresentation: Equatable {
+    let cueCardRows: [InstructionAccessoryCardRow]?
+    let stopwatchKey: WorkoutActivitySegmentKey?
+
+    static func content(
+        for step: WorkoutStep,
+        countdown: Int,
+        isResting: Bool,
+        isComplete: Bool,
+        currentStopwatchKey: WorkoutActivitySegmentKey?
+    ) -> Self {
+        Self(
+            cueCardRows: WorkoutPresentationContent.cueCardRows(
+                step: step,
+                countdown: countdown,
+                isComplete: isComplete
+            ),
+            stopwatchKey: countdown == 0 && !isResting && !isComplete
+                ? currentStopwatchKey
+                : nil
+        )
+    }
+}
+
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
 	@StateObject private var workoutAudioCoach = WorkoutAudioCoach()
@@ -867,7 +901,7 @@ struct PlanDetailView: View {
                 metadata: store.metadata(for: currentPlan)
             ) {
             case .available:
-                WorkoutAccessGate(plan: currentPlan, startsImmediately: true) {
+                WorkoutAccessGate(plan: currentPlan) {
                     startRoutineLabel(for: currentPlan)
                 }
                 .buttonStyle(.plain)
@@ -1692,6 +1726,9 @@ struct WorkoutView: View {
     @State private var didCompleteWorkoutPreparation = false
 	    @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
 	    @State private var bodyweightKGF: Double?
+	    @State private var loadAdjustmentKGF: Double = 0
+	    @State private var didLoadInitialLoadAdjustment = false
+	    @State private var didSetLoadAdjustment = false
 	    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
 	    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
 	    @State private var completedStopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
@@ -1893,6 +1930,10 @@ struct WorkoutView: View {
 		}
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
+			if !didLoadInitialLoadAdjustment {
+				loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
+				didLoadInitialLoadAdjustment = true
+			}
 			configureRecorder()
 			#if DEBUG
 			if !didApplyReviewStep {
@@ -1926,6 +1967,11 @@ struct WorkoutView: View {
 		.onChange(of: scenePhase) { _, phase in
 			guard phase != .active else { return }
 			pauseForInterruption()
+		}
+		.onChange(of: store.sessionHistory) { _, _ in
+			guard WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+			      !didSetLoadAdjustment else { return }
+			loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
 		}
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
 			guard let pendingCountdownStart else { return }
@@ -2098,7 +2144,22 @@ struct WorkoutView: View {
 			}
 			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 
-			HStack(alignment: .center, spacing: 12) {
+			if WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+				isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+				countdown: countdown,
+				isComplete: isComplete
+			) {
+				landscapePreStartControls(
+					step: step,
+					isResting: isResting,
+					isComplete: isComplete,
+					countdown: countdown,
+					monotonicTime: monotonicTime,
+					canNavigate: canNavigate,
+					currentStopwatchKey: currentStopwatchKey(for: step)
+				)
+			} else {
+				HStack(alignment: .center, spacing: 12) {
 					if let cueCardRows = WorkoutPresentationContent.cueCardRows(
 						step: step,
 						countdown: countdown,
@@ -2111,8 +2172,9 @@ struct WorkoutView: View {
 							isResting: isResting
 						)
 					}
-				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
-					.frame(width: 224)
+					controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
+						.frame(width: 224)
+				}
 			}
 			if motherboardBluetoothService.state.showsWorkoutMeter {
 				meter(step: step)
@@ -2234,6 +2296,74 @@ struct WorkoutView: View {
 		.hangCard(padding: 12)
 	}
 
+	private func landscapePreStartControls(
+		step: WorkoutStep,
+		isResting: Bool,
+		isComplete: Bool,
+		countdown: Int,
+		monotonicTime: TimeInterval,
+		canNavigate: Bool,
+		currentStopwatchKey: WorkoutActivitySegmentKey?
+	) -> some View {
+		let unit = motherboardSettingsStore.forceUnit
+		let presentation = WorkoutLandscapePreStartPresentation.content(
+			for: step,
+			countdown: countdown,
+			isResting: isResting,
+			isComplete: isComplete,
+			currentStopwatchKey: currentStopwatchKey
+		)
+		return HStack(alignment: .center, spacing: 12) {
+			if let cueCardRows = presentation.cueCardRows {
+				landscapeCueCard(
+					rows: cueCardRows,
+					step: step,
+					countdown: countdown,
+					isResting: isResting
+				)
+				.frame(minWidth: 156, maxWidth: .infinity)
+			}
+
+			VStack(spacing: 6) {
+				HStack(spacing: 10) {
+					HStack(spacing: 6) {
+						Text("Load")
+							.font(.system(size: 14, weight: .bold, design: .rounded))
+							.foregroundStyle(Color.hangInk)
+						TextField(
+							"Load adjustment",
+							value: loadAdjustmentBinding(for: unit),
+							format: .number.precision(.fractionLength(1))
+						)
+						.keyboardType(.numbersAndPunctuation)
+						.textFieldStyle(.roundedBorder)
+						.frame(width: 62)
+						.accessibilityLabel("Workout load adjustment")
+						.accessibilityHint("Optional. Use a positive value for added weight or a negative value for pulley assistance. This starts from your latest saved session.")
+						Text(unit.label)
+							.font(.system(size: 13, weight: .bold, design: .rounded))
+							.foregroundStyle(Color.hangMuted)
+					}
+					.accessibilityElement(children: .contain)
+
+					Spacer(minLength: 0)
+
+					controlButton(isComplete: isComplete, countdown: countdown)
+						.frame(maxWidth: 164)
+					skipStepButton(step: step, canNavigate: canNavigate, compact: true)
+				}
+
+				if let stopwatchKey = presentation.stopwatchKey {
+					compactStopwatchControl(for: stopwatchKey, at: monotonicTime)
+				}
+			}
+			.frame(maxWidth: 400)
+			.layoutPriority(1)
+		}
+		.padding(10)
+		.background(Color.hangGreen.opacity(0.12), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+	}
+
     private func sessionHeader(
         step: WorkoutStep,
         stepElapsed: TimeInterval,
@@ -2336,7 +2466,7 @@ struct WorkoutView: View {
         .hangCard()
     }
 
-    private func controlGroup(
+	private func controlGroup(
 		step: WorkoutStep,
 		isResting: Bool,
 		isComplete: Bool,
@@ -2345,28 +2475,86 @@ struct WorkoutView: View {
 		canNavigate: Bool
 	) -> some View {
         VStack(spacing: 10) {
+			if WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+			   countdown == 0,
+			   !isComplete {
+				loadAdjustmentControl
+			}
+
             controlButton(isComplete: isComplete, countdown: countdown)
 
             if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
                 stopwatchControl(for: key, at: monotonicTime)
             }
 
-            Button {
-                skipCurrentStep()
-            } label: {
-                Label("Skip step", systemImage: "forward.fill")
-                    .frame(maxWidth: .infinity)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangGreenDark)
-                    .padding(.vertical, 10)
-                    .background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-            }
-            .buttonStyle(.plain)
-            .disabled(!canNavigate)
-            .accessibilityLabel("Skip step \(step.number): \(step.title)")
-            .accessibilityIdentifier("workout.skipStep")
-        }
-    }
+			skipStepButton(step: step, canNavigate: canNavigate)
+		}
+	}
+
+	private var loadAdjustmentControl: some View {
+		let unit = motherboardSettingsStore.forceUnit
+		return VStack(alignment: .leading, spacing: 7) {
+			Text("Load adjustment")
+				.font(.system(size: 15, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangInk)
+
+			HStack(spacing: 8) {
+				TextField(
+					"Load adjustment",
+					value: loadAdjustmentBinding(for: unit),
+					format: .number.precision(.fractionLength(1))
+				)
+				.keyboardType(.numbersAndPunctuation)
+				.textFieldStyle(.roundedBorder)
+				.accessibilityLabel("Workout load adjustment")
+				.accessibilityHint("Use a positive value for added weight or a negative value for pulley assistance.")
+
+				Text(unit.label)
+					.font(.system(size: 14, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+			}
+
+			Text("Optional. Positive adds weight; negative records weight-pulley assistance. This starts from your latest saved session.")
+				.font(.system(size: 12, weight: .medium, design: .rounded))
+				.foregroundStyle(Color.hangMuted)
+		}
+		.padding(12)
+		.background(Color.hangGreen.opacity(0.12), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+	}
+
+	private func loadAdjustmentBinding(for unit: MotherboardForceUnit) -> Binding<Double> {
+		Binding(
+			get: { unit.value(fromKilogramsForce: loadAdjustmentKGF) },
+			set: { displayedValue in
+				didSetLoadAdjustment = true
+				loadAdjustmentKGF = unit.kilogramsForce(fromDisplayedForce: displayedValue)
+			}
+		)
+	}
+
+	private func skipStepButton(step: WorkoutStep, canNavigate: Bool, compact: Bool = false) -> some View {
+		Button {
+			skipCurrentStep()
+		} label: {
+			Group {
+				if compact {
+					Image(systemName: "forward.fill")
+				} else {
+					Label("Skip step", systemImage: "forward.fill")
+				}
+			}
+				.frame(maxWidth: .infinity)
+				.font(.system(size: 14, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangGreenDark)
+				.padding(.horizontal, compact ? 13 : 0)
+				.padding(.vertical, 10)
+				.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+		}
+		.buttonStyle(.plain)
+		.disabled(!canNavigate)
+		.accessibilityLabel("Skip step \(step.number): \(step.title)")
+		.accessibilityIdentifier("workout.skipStep")
+	}
 
     private func controlButton(isComplete: Bool, countdown: Int) -> some View {
         Button {
@@ -2436,6 +2624,43 @@ struct WorkoutView: View {
         .padding(.vertical, 4)
         .accessibilityIdentifier("workout.stopwatch")
     }
+
+	private func compactStopwatchControl(for key: WorkoutActivitySegmentKey, at monotonicTime: TimeInterval) -> some View {
+		let stopwatch = stopwatches[key] ?? WorkoutStopwatch()
+		let elapsed = stopwatch.elapsed(at: monotonicTime) ?? 0
+		let label = stopwatch.isFinalized
+			? "Stopwatch finalized"
+			: stopwatch.isRunning
+				? "Stop stopwatch"
+				: stopwatch.hasStarted
+					? "Resume stopwatch"
+					: "Start stopwatch"
+
+		return HStack(spacing: 10) {
+			Text(stopwatchTimeLabel(elapsed))
+				.font(.system(size: 24, weight: .heavy, design: .rounded).monospacedDigit())
+				.foregroundStyle(Color.hangInk)
+				.frame(minWidth: 68, alignment: .leading)
+
+			Button {
+				toggleStopwatch(for: key, at: monotonicTime)
+			} label: {
+				Label(label, systemImage: stopwatch.isRunning ? "pause.fill" : stopwatch.isFinalized ? "checkmark" : "stopwatch")
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangGreenDark)
+					.padding(.horizontal, 12)
+					.padding(.vertical, 8)
+					.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+			}
+			.buttonStyle(.plain)
+			.disabled(stopwatch.isFinalized)
+			.accessibilityLabel(label)
+			.accessibilityIdentifier("workout.stopwatch.toggle")
+
+			Spacer(minLength: 0)
+		}
+		.accessibilityIdentifier("workout.stopwatch")
+	}
 
     private func toggleRunning() {
 		let monotonicTime = WorkoutClock.monotonicTime
@@ -2674,6 +2899,7 @@ struct WorkoutView: View {
 			stepTitles: plan.steps.map(\.title),
 			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
 			bodyweightKGF: bodyweightKGF,
+			loadAdjustmentKGF: loadAdjustmentKGF,
 			motherboardMeasurements: motherboardMeasurementCollector.measurements,
 			motherboardMeasurementsTruncated: motherboardMeasurementCollector.didTruncate
 		)

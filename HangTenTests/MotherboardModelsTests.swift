@@ -56,6 +56,19 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(MotherboardForceUnit.newtons.value(fromKilogramsForce: 2), 19.6133, accuracy: 0.0001)
     }
 
+    func testForceUnitConvertsSignedDisplayedAdjustmentBackToCanonicalKilogramsForce() {
+        XCTAssertEqual(
+            MotherboardForceUnit.lbf.kilogramsForce(fromDisplayedForce: -22.0462262185),
+            -10,
+            accuracy: 0.0001
+        )
+        XCTAssertEqual(
+            MotherboardForceUnit.newtons.kilogramsForce(fromDisplayedForce: 98.0665),
+            10,
+            accuracy: 0.0001
+        )
+    }
+
     func testMeasurementSplitsCenterLoadNeutrallyAcrossDisplayedSides() {
         let measurement = measurement(sensorLoads: [3, 4, 5, 100], aggregate: 12)
 
@@ -216,6 +229,52 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertFalse(decoded.motherboardMeasurementsTruncated)
         XCTAssertEqual(decoded.stepTitles, [])
         XCTAssertEqual(decoded.stepTitle(at: 0), "Step 1")
+    }
+
+    func testSessionRecordDecodesMissingLoadAdjustmentAsZero() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+        let data = try JSONEncoder().encode(record)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        object.removeValue(forKey: "loadAdjustmentKGF")
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONSerialization.data(withJSONObject: object)
+        )
+
+        XCTAssertEqual(decoded.loadAdjustmentKGF, 0, accuracy: 0.0001)
+    }
+
+    func testSessionRecordRoundTripsSignedLoadAdjustmentInKilogramsForce() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [],
+            loadAdjustmentKGF: -12.5
+        )
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONEncoder().encode(record)
+        )
+
+        XCTAssertEqual(decoded.loadAdjustmentKGF, -12.5, accuracy: 0.0001)
     }
 
     func testSessionRecordRoundTripsRecordedStepTitles() throws {
