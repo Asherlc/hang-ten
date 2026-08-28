@@ -25,6 +25,8 @@ class WorkoutViewModel(
 
     fun resume(): WorkoutSnapshot = publish { session.resume(elapsedRealtime()) }
 
+    fun refresh(): WorkoutSnapshot = publish { session.snapshot(elapsedRealtime()) }
+
     fun complete(): CompletedSession {
         val completed = session.complete(elapsedRealtime())
         _snapshot.value = session.snapshot(elapsedRealtime())
