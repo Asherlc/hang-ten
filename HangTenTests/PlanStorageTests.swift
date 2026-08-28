@@ -22,7 +22,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(decoded, metadata)
     }
 
-    func testMetadataDecodesDocumentsWithUnknownFields() throws {
+    func testMetadataDecodesDocumentsWithUnknownPersistedFields() throws {
         let data = Data(
             #"""
             {
@@ -34,7 +34,7 @@ final class PlanStorageTests: XCTestCase {
               "provenance": "adapted",
               "category": "test",
               "tags": [],
-              "equipment": ["hangboard"],
+              "retiredMetadataField": "retired value",
               "notes": []
             }
             """#.utf8
