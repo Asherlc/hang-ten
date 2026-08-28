@@ -860,6 +860,20 @@ test("an unpaired gaston offers only actionable pairing candidates and saves the
   }, dependenciesFixture(board, { client }));
 });
 
+test("saving an unpaired gaston stays local and explains that it needs a pair", async () => {
+  const board = boardFixture(documentFixture([
+    { id: 1, key: "left-piece-0", type: "gaston", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+  ]));
+  const client = clientFixture([board]);
+
+  await withEditor(async (app) => {
+    await app.click("#save-button");
+
+    assert.equal(client.saveCalls.length, 0);
+    assert.match(app.text("#validation-list"), /gaston hold left needs a paired gaston hold/i);
+  }, dependenciesFixture(board, { client }));
+});
+
 test("an established gaston pair shows its counterpart without offering reassignment or unset", async () => {
   const board = boardFixture(documentFixture([
     { id: 1, key: "left-piece-0", type: "gaston", pairedHoldID: "right", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },

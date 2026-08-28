@@ -218,6 +218,7 @@ export interface SavedBoard {
 
 export interface WorkbenchController {
   validateEditorDocument(document: unknown): EditorDocument;
+  validateEditorDocumentForSave(document: unknown): EditorDocument;
   loadBoardAtomically<ImageType>(options: {
     boardId: string;
     getBoard(boardId: string): Promise<Board>;
