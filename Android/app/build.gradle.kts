@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.Test
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -39,6 +41,7 @@ val stageCanonicalAssets by tasks.registering(Copy::class) {
 
 android.sourceSets.getByName("main").assets.srcDir(stageCanonicalAssets)
 tasks.named("preBuild").configure { dependsOn(stageCanonicalAssets) }
+tasks.withType<Test>().configureEach { dependsOn(stageCanonicalAssets) }
 
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2024.12.01"))
