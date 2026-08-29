@@ -31,6 +31,7 @@ import com.hangten.android.sensors.ForceSensorProfile
 import com.hangten.android.sensors.SensorConnectionController
 import com.hangten.android.telemetry.HealthAuthorizationOutcome
 import com.hangten.android.telemetry.MotherboardConnectionOutcome
+import com.hangten.android.telemetry.healthAuthorizationTelemetryOutcome
 import com.hangten.android.telemetry.telemetryOutcome
 import kotlinx.coroutines.launch
 
@@ -57,8 +58,8 @@ fun SettingsScreen(
     val isTransacting = state == PurchaseState.Loading || state == PurchaseState.Purchasing
     val healthPermissionLauncher = rememberLauncherForActivityResult(
         contract = PermissionController.createRequestPermissionResultContract(),
-        onResult = { healthViewModel.authorizationRequestFinished { authorization ->
-            authorization.telemetryOutcome()?.let(onHealthAuthorizationFinished)
+        onResult = { healthViewModel.authorizationRequestFinished { result ->
+            healthAuthorizationTelemetryOutcome(result)?.let(onHealthAuthorizationFinished)
         } },
     )
     val sensorPermissionLauncher = rememberLauncherForActivityResult(
@@ -155,8 +156,8 @@ fun SettingsScreen(
                 onClick = {
                     val permissions = healthViewModel.requestAuthorization()
                     if (permissions.isEmpty()) {
-                        healthViewModel.authorizationRequestFinished { authorization ->
-                            authorization.telemetryOutcome()?.let(onHealthAuthorizationFinished)
+                        healthViewModel.authorizationRequestFinished { result ->
+                            healthAuthorizationTelemetryOutcome(result)?.let(onHealthAuthorizationFinished)
                         }
                     } else {
                         (onHealthPermissionRequest ?: healthPermissionLauncher::launch)(permissions)

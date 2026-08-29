@@ -2,7 +2,13 @@ package com.hangten.android.health
 
 import com.hangten.android.workout.CompletedSession
 import java.time.Instant
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -20,6 +26,25 @@ class HealthConnectServiceTest {
 
         gateway.grantedPermissions = HealthConnectPermissions.required
         assertEquals(HealthAuthorizationState.Authorized, service.completeAuthorizationRequest())
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun authorizationRequestFailureKeepsAUserVisibleErrorAndReportsFailureToTheUi() = runTest {
+        Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
+        try {
+            val viewModel = HealthViewModel(FailingAuthorizationStore(), FakeSessionHistory())
+            var completion: Result<HealthAuthorizationState>? = null
+
+            viewModel.authorizationRequestFinished { completion = it }
+            advanceUntilIdle()
+
+            assertTrue(requireNotNull(completion).isFailure)
+            assertEquals(HealthAuthorizationState.NotDetermined, viewModel.state.value.authorization)
+            assertEquals("Health Connect provider failed", viewModel.state.value.error)
+        } finally {
+            Dispatchers.resetMain()
+        }
     }
 
     @Test
@@ -180,4 +205,19 @@ private class FakeSessionHistory(
     }
 
     override suspend fun completedSessions(): List<CompletedSession> = recorded.sortedByDescending { it.completedAtWallClockMs }
+}
+
+private class FailingAuthorizationStore : WorkoutHealthStore {
+    override fun requestAuthorization(): Set<String> = emptySet()
+
+    override suspend fun completeAuthorizationRequest(): HealthAuthorizationState =
+        throw IllegalStateException("Health Connect provider failed")
+
+    override suspend fun refreshAuthorization(): HealthAuthorizationState = HealthAuthorizationState.NotDetermined
+
+    override suspend fun saveCompletedWorkout(workout: CompletedHealthWorkout): Result<HangTenHealthWorkout> =
+        error("Not used by this test")
+
+    override suspend fun fetchHangTenWorkouts(): Result<List<HangTenHealthWorkout>> =
+        error("Not used by this test")
 }

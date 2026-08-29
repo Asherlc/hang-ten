@@ -103,7 +103,6 @@ fun BoardEditorScreen(
     tokenStore: GitHubTokenStore,
     packageSync: GitHubPackageSync,
     contentPadding: PaddingValues,
-    onCustomSave: () -> Unit = {},
     onSaveFailure: (Throwable) -> Unit = {},
 ) {
     var board by remember(slug) { mutableStateOf<Board?>(null) }
@@ -171,7 +170,6 @@ fun BoardEditorScreen(
                                 store.movePathPoint(slug, hold.id, selectedGeometry, selectedCommand, EditablePathPoint.To, x, y)
                             }.onSuccess {
                                 version += 1
-                                onCustomSave()
                             }.onFailure {
                                 error = it.message
                                 onSaveFailure(it)

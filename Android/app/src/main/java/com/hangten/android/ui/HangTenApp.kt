@@ -362,9 +362,6 @@ private fun HangTenNavHost(
                     tokenStore = boardEditorServices.tokenStore,
                     packageSync = boardEditorServices.packageSync,
                     contentPadding = padding,
-                    onCustomSave = {
-                        telemetry.tracking.track(HangTenTelemetryEvent.CustomRoutineSaved)
-                    },
                     onSaveFailure = telemetry::recordPersistenceSaveDiagnostic,
                 )
             }

@@ -178,6 +178,11 @@ fun HealthAuthorizationState.telemetryOutcome(): HealthAuthorizationOutcome? = w
     HealthAuthorizationState.NotDetermined -> null
 }
 
+fun healthAuthorizationTelemetryOutcome(result: Result<HealthAuthorizationState>): HealthAuthorizationOutcome? = result.fold(
+    onSuccess = HealthAuthorizationState::telemetryOutcome,
+    onFailure = { HealthAuthorizationOutcome.Error },
+)
+
 fun SensorConnectionState.telemetryOutcome(): MotherboardConnectionOutcome? = when (this) {
     SensorConnectionState.Streaming -> MotherboardConnectionOutcome.Connected
     SensorConnectionState.Failed -> MotherboardConnectionOutcome.Failed

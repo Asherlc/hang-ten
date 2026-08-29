@@ -169,6 +169,10 @@ class TelemetryTest {
         assertEquals(HealthAuthorizationOutcome.Denied, HealthAuthorizationState.Denied.telemetryOutcome())
         assertEquals(HealthAuthorizationOutcome.Unavailable, HealthAuthorizationState.Unavailable.telemetryOutcome())
         assertNull(HealthAuthorizationState.NotDetermined.telemetryOutcome())
+        assertEquals(
+            HealthAuthorizationOutcome.Error,
+            healthAuthorizationTelemetryOutcome(Result.failure(IllegalStateException("private Health Connect failure"))),
+        )
         assertEquals(MotherboardConnectionOutcome.Connected, SensorConnectionState.Streaming.telemetryOutcome())
         assertEquals(MotherboardConnectionOutcome.Failed, SensorConnectionState.Failed.telemetryOutcome())
         assertEquals(MotherboardConnectionOutcome.Disconnected, SensorConnectionState.Disconnected.telemetryOutcome())
