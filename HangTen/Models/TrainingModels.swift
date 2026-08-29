@@ -2343,20 +2343,17 @@ enum LegacyPlanSeedCatalog {
             for set in 1...6 {
                 for side in [WorkoutSide.left, .right] {
                     for repetition in 1...4 {
-                        let finalRepetitionForSide = repetition == 4
                         steps.append(
                             WorkoutStep(
                                 id: "megos-7-3-set-\(set)-\(side.rawValue)-rep-\(repetition)",
                                 number: 0,
                                 title: "Megos 7/3 · set \(set) · \(side.rawValue) · rep \(repetition) of 4",
                                 instruction: "Hang one-armed from a comfortable 20–24 mm edge for 7 seconds.",
-                                accessory: finalRepetitionForSide
-                                    ? "7s hang · switch sides"
-                                    : "7s hang · 3s rest",
-                                duration: finalRepetitionForSide ? 7 : 10,
+                                accessory: "7s hang · 3s rest",
+                                duration: 10,
                                 phase: .hang,
                                 targets: target,
-                                segments: [fixedWork(target[0], 7)] + (finalRepetitionForSide ? [] : [fixedRest(3)]),
+                                segments: [fixedWork(target[0], 7), fixedRest(3)],
                                 gripType: .halfCrimp,
                                 handUse: .single,
                                 side: side,

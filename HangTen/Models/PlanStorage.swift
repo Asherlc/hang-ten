@@ -1156,7 +1156,8 @@ enum PlanLibraryValidator {
                reference.repeatCount > 0,
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
-               stepEndsInRestAfterNormalization(terminalStep) {
+               stepEndsInRestAfterNormalization(terminalStep),
+               !allowsSourceRequiredTerminalRest(in: plan, terminalStep: terminalStep) {
                 issues.append(
                     PlanValidationIssue(
                         path: "\(path).blocks[\(index)].steps[\(block.steps.count - 1)]",
@@ -1206,6 +1207,32 @@ enum PlanLibraryValidator {
             return true
         }
         return step.phase == .rest
+    }
+
+    /// The reported Megos protocol defines a 3-second recovery after every
+    /// 7-second work interval, including its final repetition. Preserve that
+    /// source-required terminal recovery rather than silently dropping it to
+    /// satisfy the usual end-on-work-step convention.
+    private static func allowsSourceRequiredTerminalRest(
+        in plan: PlanDefinition,
+        terminalStep: WorkoutStepDefinition
+    ) -> Bool {
+        guard plan.id == "research.megos-one-arm-7-3",
+              plan.metadata.provenance == .adapted,
+              plan.metadata.sourceURL == URL(string: "https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/"),
+              terminalStep.id == "megos-7-3-set-6-right-rep-4",
+              terminalStep.duration == 10,
+              terminalStep.activeDuration == 7,
+              terminalStep.segments.count == 2,
+              terminalStep.segments[0].kind == .work,
+              terminalStep.segments[0].timing == .fixed,
+              terminalStep.segments[0].duration == 7,
+              terminalStep.segments[1].kind == .rest,
+              terminalStep.segments[1].timing == .fixed,
+              terminalStep.segments[1].duration == 3 else {
+            return false
+        }
+        return true
     }
 
     private static func expandedIDsEmittedByNormalizer(

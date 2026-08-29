@@ -13480,10 +13480,10 @@
           "title" : "Megos 7\/3 · set 1 · left · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-1-left-rep-4",
@@ -13497,6 +13497,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -13624,10 +13632,10 @@
           "title" : "Megos 7\/3 · set 1 · right · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-1-right-rep-4",
@@ -13641,6 +13649,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -13792,10 +13808,10 @@
           "title" : "Megos 7\/3 · set 2 · left · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-2-left-rep-4",
@@ -13809,6 +13825,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -13936,10 +13960,10 @@
           "title" : "Megos 7\/3 · set 2 · right · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-2-right-rep-4",
@@ -13953,6 +13977,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -14104,10 +14136,10 @@
           "title" : "Megos 7\/3 · set 3 · left · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-3-left-rep-4",
@@ -14121,6 +14153,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -14248,10 +14288,10 @@
           "title" : "Megos 7\/3 · set 3 · right · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-3-right-rep-4",
@@ -14265,6 +14305,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -14416,10 +14464,10 @@
           "title" : "Megos 7\/3 · set 4 · left · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-4-left-rep-4",
@@ -14433,6 +14481,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -14560,10 +14616,10 @@
           "title" : "Megos 7\/3 · set 4 · right · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-4-right-rep-4",
@@ -14577,6 +14633,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -14728,10 +14792,10 @@
           "title" : "Megos 7\/3 · set 5 · left · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-5-left-rep-4",
@@ -14745,6 +14809,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -14872,10 +14944,10 @@
           "title" : "Megos 7\/3 · set 5 · right · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-5-right-rep-4",
@@ -14889,6 +14961,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -15040,10 +15120,10 @@
           "title" : "Megos 7\/3 · set 6 · left · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-6-left-rep-4",
@@ -15057,6 +15137,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }
@@ -15184,10 +15272,10 @@
           "title" : "Megos 7\/3 · set 6 · right · rep 3 of 4"
         },
         {
-          "accessory" : "7s hang · switch sides",
+          "accessory" : "7s hang · 3s rest",
           "action" : "hang",
           "activeDuration" : 7,
-          "duration" : 7,
+          "duration" : 10,
           "gripType" : "halfCrimp",
           "handUse" : "single",
           "id" : "megos-7-3-set-6-right-rep-4",
@@ -15201,6 +15289,14 @@
                 {
                   "feature" : "mediumEdge"
                 }
+              ],
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "targets" : [
+
               ],
               "timing" : "fixed"
             }

@@ -34,9 +34,9 @@ Source: [Alex Megos' Finger Training Power-Endurance Protocol](https://trainingf
 | --- | --- |
 | six set loops | "six total sets" |
 | left four reps, then right four reps | four cycles per arm; switch to the other arm after completing one arm |
-| `activeDuration = 7`, 3-second recovery after reps 1–3 | 7 seconds hang, 3 seconds rest, repeated four times |
-| no recovery timer between the left final rep and first right rep | Source directs a side switch after an arm is complete, then places the two-minute rest after the other arm; it does not prescribe an interval between sides. |
-| 120-second recovery after sets 1–5 only | two-minute rest before the next set; no post-session rest step is represented |
+| `activeDuration = 7`, 3-second recovery after every rep | 7 seconds hang, 3 seconds rest, repeated four times |
+| 3-second recovery before the side switch | The fourth 7/3 cycle retains its documented 3-second rest before the other arm begins. |
+| 120-second recovery after the right arm's fourth 3-second recovery in sets 1–5 | two-minute rest before the next set; no additional post-session recovery is represented after set six |
 | `handUse = single`, `side = left/right`, `action = hang` | one-arm hangs and explicit side order |
 | target `.mediumEdge`, half-crimp | approximately 20–24 mm edge and the source's half-crimp guidance |
 

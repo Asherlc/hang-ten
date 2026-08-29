@@ -14,6 +14,15 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(workSteps.allSatisfy { $0.activeDuration == 7 })
     }
 
+    func testMegosRepeaterPlanKeepsEveryFourthRecovery() throws {
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
+        let terminalStep = try XCTUnwrap(plan.steps.last)
+
+        XCTAssertEqual(terminalStep.phase, .rest)
+        XCTAssertEqual(terminalStep.duration, 3)
+        XCTAssertEqual(terminalStep.accessory, "3s rest")
+    }
+
     func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {
         let step = WorkoutStep(
             id: "stopwatch-step",
@@ -1451,12 +1460,23 @@ final class PlanStorageTests: XCTestCase {
 
     func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
         let terminalSteps = try LegacyPlanSeedCatalog.all
-            .filter { $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id }
+            .filter {
+                $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id &&
+                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id
+            }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
             }
 
         XCTAssertTrue(terminalSteps.allSatisfy { $0.phase != .rest })
+
+        let megoTerminalStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.megoOneArmSevenThree.steps
+                .flatMap(WorkoutStepNormalizer.expand)
+                .last
+        )
+        XCTAssertEqual(megoTerminalStep.phase, .rest)
+        XCTAssertEqual(megoTerminalStep.duration, 3)
     }
 
     func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
