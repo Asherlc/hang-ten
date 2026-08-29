@@ -1,5 +1,45 @@
 import SwiftUI
 
+enum WorkoutStepFormatting {
+    enum ExternalLoadUnit {
+        case kilograms
+
+        var label: String {
+            switch self {
+            case .kilograms: "kg"
+            }
+        }
+    }
+
+    static func externalLoadText(_ loadKGF: Double, unit: ExternalLoadUnit) -> String {
+        externalLoadText(displayedLoad: loadKGF, unitLabel: unit.label)
+    }
+
+    static func externalLoadText(_ loadKGF: Double, unit: MotherboardForceUnit) -> String {
+        externalLoadText(
+            displayedLoad: unit.value(fromKilogramsForce: loadKGF),
+            unitLabel: unit.label
+        )
+    }
+
+    private static func externalLoadText(displayedLoad: Double, unitLabel: String) -> String {
+        let magnitude = abs(displayedLoad)
+        let number = magnitude.rounded() == magnitude
+            ? String(format: "%.0f", magnitude)
+            : String(format: "%.1f", magnitude)
+        if displayedLoad < 0 {
+            return "\(number) \(unitLabel) assistance"
+        }
+        return "+\(number) \(unitLabel)"
+    }
+
+    static func labels(for step: WorkoutStep) -> [String] {
+        WorkoutTimeline.labels(for: step) + (step.externalLoadKGF.map {
+            [externalLoadText($0, unit: .kilograms)]
+        } ?? [])
+    }
+}
+
 struct WorkoutStepPickerView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -64,6 +104,12 @@ struct WorkoutStepPickerView: View {
                     Text(step.accessory)
                         .font(.system(size: 11, weight: .bold, design: .rounded))
                         .foregroundStyle(step.phase.textTint)
+
+                    if !step.isRestStep {
+                        Text(WorkoutStepFormatting.labels(for: step).joined(separator: " • "))
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundStyle(step.phase.textTint)
+                    }
                 }
 
                 if isCurrent {

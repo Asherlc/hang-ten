@@ -83,6 +83,7 @@ export interface HoldRegion {
   id?: number;
   key: string;
   type?: string;
+  equipmentObjectID?: string;
   pairedHoldID?: string;
   displayPath: string;
   metadata?: {
@@ -102,6 +103,7 @@ export interface HoldRegion {
 
 export interface EditorDocument {
   presentationID?: string;
+  equipmentObjects?: string[];
   canvas: {
     width: number;
     height: number;

@@ -248,11 +248,88 @@ struct WorkoutStepMeasurement: Codable, Equatable {
     let peakLoadKGF: Double?
     let sampleCount: Int
     let status: Status
+    let handUse: WorkoutHandUse
+    let side: WorkoutSide
+    let action: WorkoutAction
+    let repetitions: Int?
+    let completedRepetitions: Int?
+    let externalLoadKGF: Double?
+    let isRest: Bool
 
     enum Status: String, Codable {
         case measured
         case unmeasured
         case interrupted
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case stepID, plannedActiveDuration, intervals, peakLoadKGF, sampleCount, status
+        case handUse, side, action, repetitions, completedRepetitions, externalLoadKGF, isRest
+    }
+
+    init(
+        stepID: String,
+        plannedActiveDuration: TimeInterval,
+        intervals: [LoadInterval],
+        peakLoadKGF: Double?,
+        sampleCount: Int,
+        status: Status,
+        handUse: WorkoutHandUse = .double,
+        side: WorkoutSide = .both,
+        action: WorkoutAction = .hang,
+        repetitions: Int? = nil,
+        completedRepetitions: Int? = nil,
+        externalLoadKGF: Double? = nil,
+        isRest: Bool = false
+    ) {
+        self.stepID = stepID
+        self.plannedActiveDuration = plannedActiveDuration
+        self.intervals = intervals
+        self.peakLoadKGF = peakLoadKGF
+        self.sampleCount = sampleCount
+        self.status = status
+        self.handUse = handUse
+        self.side = side
+        self.action = action
+        self.repetitions = repetitions
+        self.completedRepetitions = completedRepetitions
+        self.externalLoadKGF = externalLoadKGF
+        self.isRest = isRest
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stepID = try container.decode(String.self, forKey: .stepID)
+        plannedActiveDuration = try container.decode(TimeInterval.self, forKey: .plannedActiveDuration)
+        intervals = try container.decode([LoadInterval].self, forKey: .intervals)
+        peakLoadKGF = try container.decodeIfPresent(Double.self, forKey: .peakLoadKGF)
+        sampleCount = try container.decode(Int.self, forKey: .sampleCount)
+        status = try container.decode(Status.self, forKey: .status)
+        handUse = try container.decodeIfPresent(WorkoutHandUse.self, forKey: .handUse) ?? .double
+        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side) ?? .both
+        action = try container.decodeIfPresent(WorkoutAction.self, forKey: .action) ?? .hang
+        repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
+        completedRepetitions = try container.decodeIfPresent(Int.self, forKey: .completedRepetitions)
+        externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
+        isRest = try container.decodeIfPresent(Bool.self, forKey: .isRest) ?? false
+    }
+
+    func applyingSemantics(from step: WorkoutStep) -> WorkoutStepMeasurement {
+        WorkoutStepMeasurement(
+            stepID: stepID,
+            plannedActiveDuration: plannedActiveDuration,
+            intervals: intervals,
+            peakLoadKGF: peakLoadKGF,
+            sampleCount: sampleCount,
+            status: status,
+            handUse: step.handUse,
+            side: step.side,
+            action: step.action,
+            repetitions: step.repetitions,
+            completedRepetitions: completedRepetitions,
+            externalLoadKGF: step.externalLoadKGF,
+            isRest: step.isRestStep
+        )
     }
 
     var actualLoadedDuration: TimeInterval {

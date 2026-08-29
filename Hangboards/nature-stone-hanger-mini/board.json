@@ -1,0 +1,506 @@
+{
+  "id": "nature.stone-hanger-mini",
+  "manufacturer": "Nature Climbing",
+  "name": "Stone Hanger Mini",
+  "subtitle": "Compact lifting edge with granite, wood, pinch, and jug contacts.",
+  "productURL": "https://natureclimbing.com/products/stone-hanger-mini-beech",
+  "dimensions": "10 × 6 × 2.5 cm",
+  "aspectRatio": 1.6666666667,
+  "equipmentObjects": [
+    {
+      "id": "primary",
+      "missingHandCapacityPolicy": "unavailable"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Front",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.6666666667,
+      "default": true
+    },
+    {
+      "id": "side",
+      "name": "Side",
+      "assetPath": "assets/side.png",
+      "aspectRatio": 1.6666666667,
+      "default": false
+    }
+  ],
+  "holds": [
+    {
+      "id": "pull-up-jug",
+      "equipmentObjectID": "primary",
+      "name": "Smooth pull-up jug",
+      "kind": "jug",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.25,
+            "y": 0.34,
+            "width": 0.5,
+            "height": 0.065
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "wood-edge-15-incut",
+      "equipmentObjectID": "primary",
+      "name": "15 mm incut wood edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.270833,
+            "y": 0.402778,
+            "width": 0.458333,
+            "height": 0.083333
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ],
+      "sizeMillimeters": 15
+    },
+    {
+      "id": "granite-edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm granite edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.270833,
+            "y": 0.597222,
+            "width": 0.458333,
+            "height": 0.104167
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ],
+      "sizeMillimeters": 15
+    },
+    {
+      "id": "pinch-60",
+      "equipmentObjectID": "primary",
+      "name": "60 mm pinch",
+      "kind": "pinch",
+      "handCapacity": 1,
+      "presentationID": "side",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.420833,
+            "y": 0.326389,
+            "width": 0.158333,
+            "height": 0.444444
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.95,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.05
+                ],
+                "to": [
+                  1.0,
+                  0.12
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.88
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.95
+                ],
+                "control2": [
+                  0.95,
+                  1.0
+                ],
+                "to": [
+                  0.88,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.12,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.05,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.95
+                ],
+                "to": [
+                  0.0,
+                  0.88
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.12
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.05
+                ],
+                "control2": [
+                  0.05,
+                  0.0
+                ],
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0
+          }
+        }
+      ],
+      "sizeMillimeters": 60
+    }
+  ]
+}

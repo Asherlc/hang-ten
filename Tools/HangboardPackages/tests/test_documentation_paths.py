@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import shlex
 from pathlib import Path
 
@@ -13,10 +14,47 @@ ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
 
 
+def _shell_function_body(script: str, function_name: str) -> str:
+    """Return a top-level shell function body without consuming later code."""
+    signature = re.search(
+        rf"^(?P<indent>[ \t]*){re.escape(function_name)}\(\) \{{[ \t]*$",
+        script,
+        flags=re.MULTILINE,
+    )
+    assert signature, f"missing shell function {function_name}"
+    closing_brace = re.compile(
+        rf"^{re.escape(signature.group('indent'))}}}[ \t]*$", re.MULTILINE
+    ).search(script, signature.end())
+    assert closing_brace, f"unterminated shell function {function_name}"
+    return script[signature.end() : closing_brace.start()]
+
+
 def _ci_workflow() -> dict[str, object]:
     document = yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
     assert isinstance(document, dict)
     return document
+
+
+def test_shell_function_body_ends_at_an_unindented_closing_brace() -> None:
+    """Nested shell blocks must not require YAML source indentation to parse."""
+    script = """\
+run_xctest_attempt() {
+  while true; do
+    if should_retry; then
+      break
+    fi
+  done
+}
+outside_function
+"""
+
+    assert _shell_function_body(script, "run_xctest_attempt") == """
+  while true; do
+    if should_retry; then
+      break
+    fi
+  done
+"""
 
 
 def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() -> None:
@@ -43,7 +81,19 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     worker_flag = "-maximum-parallel-testing-workers"
     assert xctest_tokens.count(worker_flag) == 1
     assert xctest_tokens[xctest_tokens.index(worker_flag) + 1] == "1"
-    assert "test 2>&1" in xctest_command
+    xctest_attempt_body = _shell_function_body(xctest_command, "run_xctest_attempt")
+    assert "os.setsid()" in xctest_command
+    assert "os.execvp(sys.argv[1], sys.argv[1:])" in xctest_command
+    assert 'kill -TERM -- "-$xcodebuild_pid"' in xctest_command
+    assert 'kill -KILL -- "-$xcodebuild_pid"' in xctest_command
+    assert xctest_command.count('kill -0 -- "-$xcodebuild_pid"') == 2
+    assert re.search(
+        r"python3 -c .*?\\\n\s+xcodebuild \\.*?\n\s+test\s+>",
+        xctest_attempt_body,
+        flags=re.DOTALL,
+    )
+    assert "if ! run_xctest_attempt 1; then" in xctest_command
+    assert "run_xctest_attempt 2" in xctest_command
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
     assert "exactly two states" not in active_docs

@@ -1,0 +1,728 @@
+{
+  "id": "crimptonite.helium-mobile",
+  "manufacturer": "Crimptonite",
+  "name": "Helium Mobile",
+  "subtitle": "Ultra-light mobile board with four edges and jug/sloper surfaces.",
+  "productURL": "https://crimptonite.com/product/helium-mobile/",
+  "dimensions": "400 × 58 × 24 mm",
+  "aspectRatio": 2.8,
+  "equipmentObjects": [
+    {
+      "id": "primary",
+      "missingHandCapacityPolicy": "unavailable"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Front",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 2.8,
+      "default": true
+    },
+    {
+      "id": "reverse",
+      "name": "Back",
+      "assetPath": "assets/reverse.png",
+      "aspectRatio": 2.8,
+      "default": false
+    },
+    {
+      "id": "top",
+      "name": "Top",
+      "assetPath": "assets/top.png",
+      "aspectRatio": 2.8571428571,
+      "default": false
+    }
+  ],
+  "holds": [
+    {
+      "id": "edge-14",
+      "equipmentObjectID": "primary",
+      "name": "14 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.15,
+            "y": 0.44,
+            "width": 0.2,
+            "height": 0.24
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ],
+      "sizeMillimeters": 14
+    },
+    {
+      "id": "center-edge-18",
+      "equipmentObjectID": "primary",
+      "name": "18 mm center edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.4,
+            "y": 0.44,
+            "width": 0.2,
+            "height": 0.24
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ],
+      "sizeMillimeters": 18
+    },
+    {
+      "id": "edge-22",
+      "equipmentObjectID": "primary",
+      "name": "22 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.65,
+            "y": 0.44,
+            "width": 0.2,
+            "height": 0.24
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ],
+      "sizeMillimeters": 22
+    },
+    {
+      "id": "center-edge-10",
+      "equipmentObjectID": "primary",
+      "name": "10 mm center edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "reverse",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.364286,
+            "y": 0.47,
+            "width": 0.271429,
+            "height": 0.17
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ],
+      "sizeMillimeters": 10
+    },
+    {
+      "id": "back-jug-sloper",
+      "equipmentObjectID": "primary",
+      "name": "Back jug / sloper surface",
+      "kind": "sloper",
+      "handCapacity": 1,
+      "presentationID": "reverse",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.125,
+            "y": 0.31,
+            "width": 0.75,
+            "height": 0.12
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-jug",
+      "equipmentObjectID": "primary",
+      "name": "Top jug",
+      "kind": "jug",
+      "handCapacity": 1,
+      "presentationID": "top",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.233333,
+            "y": 0.535714,
+            "width": 0.533333,
+            "height": 0.214286
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.0
+                ],
+                "control2": [
+                  1.0,
+                  0.22
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.78
+                ],
+                "control2": [
+                  0.96,
+                  1.0
+                ],
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  1.0
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.22
+                ],
+                "control2": [
+                  0.04,
+                  0.0
+                ],
+                "to": [
+                  0.1,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          },
+          "shapeConstraint": {
+            "shape": "pill",
+            "rotationDegrees": 0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -67,6 +67,7 @@ function isHoldRegion(value: unknown): value is HoldRegion {
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && (value.type === undefined || typeof value.type === "string")
+    && (value.equipmentObjectID === undefined || typeof value.equipmentObjectID === "string")
     && (value.pairedHoldID === undefined || typeof value.pairedHoldID === "string")
     && (value.sloper === undefined
       || (value.type === "sloper" && isSloperMetadata(value.sloper)))
@@ -89,8 +90,11 @@ function isHoldRegion(value: unknown): value is HoldRegion {
 
 function isEditorDocument(value: unknown): value is EditorDocument {
   return isRecord(value)
-    && Object.keys(value).every((key) => key === "presentationID" || key === "canvas" || key === "regions")
+    && Object.keys(value).every((key) => key === "presentationID" || key === "equipmentObjects" || key === "canvas" || key === "regions")
     && (value.presentationID === undefined || typeof value.presentationID === "string")
+    && (value.equipmentObjects === undefined
+      || (Array.isArray(value.equipmentObjects)
+        && value.equipmentObjects.every((equipmentObjectID) => typeof equipmentObjectID === "string")))
     && isRecord(value.canvas)
     && typeof value.canvas.width === "number"
     && typeof value.canvas.height === "number"
@@ -103,7 +107,7 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     throw new TypeError("Hold document is required");
   }
   const unknownKey = Object.keys(document).find(
-    (key) => key !== "presentationID" && key !== "canvas" && key !== "regions",
+    (key) => key !== "presentationID" && key !== "equipmentObjects" && key !== "canvas" && key !== "regions",
   );
   if (unknownKey) throw new Error(`Hold document has unknown field ${unknownKey}`);
   const canvas = document.canvas;
@@ -121,6 +125,21 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   if (document.presentationID !== undefined && !presentationID) {
     throw new Error("Hold document needs a valid presentation");
   }
+  let equipmentObjectIDs: Set<string> | null = null;
+  if (document.equipmentObjects !== undefined) {
+    if (!Array.isArray(document.equipmentObjects) || document.equipmentObjects.length === 0) {
+      throw new Error("Hold document needs at least one equipment object");
+    }
+    if (!document.equipmentObjects.every((equipmentObjectID) => (
+      typeof equipmentObjectID === "string" && IDENTIFIER.test(equipmentObjectID)
+    ))) {
+      throw new Error("Equipment object IDs must be identifier-shaped");
+    }
+    equipmentObjectIDs = new Set(document.equipmentObjects);
+    if (equipmentObjectIDs.size !== document.equipmentObjects.length) {
+      throw new Error("Equipment object IDs must be unique");
+    }
+  }
   const keys = new Set<string>();
   const fingerCapacityByHoldId = new Map<string, number | undefined>();
   const sloperByHoldId = new Map<string, unknown>();
@@ -128,6 +147,7 @@ export function validateEditorDocument(document: unknown): EditorDocument {
   const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
   const depthRepresentationByHoldId = new Map<string, "fixed" | "variable" | "unset">();
   const handCapacityByHoldId = new Map<string, number | undefined>();
+  const equipmentObjectByHoldId = new Map<string, string | undefined>();
   for (const region of document.regions) {
     if (!isRecord(region) || typeof region.key !== "string" || !region.key.trim()) {
       throw new Error("Every hold needs a key");
@@ -168,6 +188,11 @@ export function validateEditorDocument(document: unknown): EditorDocument {
     if (Object.hasOwn(region, "handCapacity")
       && !isHandCapacity(region.handCapacity)) {
       throw new Error(`Hold ${region.key} hand capacity must be between 1 and 2`);
+    }
+    if (equipmentObjectIDs
+      && (typeof region.equipmentObjectID !== "string"
+        || !equipmentObjectIDs.has(region.equipmentObjectID))) {
+      throw new Error(`Hold ${region.key} needs a valid equipment object`);
     }
     if (!isHoldRegion(region)) {
       throw new Error(`Hold ${region.key} needs valid hold fields`);
@@ -213,6 +238,11 @@ export function validateEditorDocument(document: unknown): EditorDocument {
         throw new Error(`Hold ${holdID} pieces must share one hand capacity`);
       }
       handCapacityByHoldId.set(holdID, region.handCapacity);
+      if (equipmentObjectByHoldId.has(holdID)
+        && equipmentObjectByHoldId.get(holdID) !== region.equipmentObjectID) {
+        throw new Error(`Hold ${holdID} pieces must share one equipment object`);
+      }
+      equipmentObjectByHoldId.set(holdID, region.equipmentObjectID);
     }
   }
   if (!isEditorDocument(document)) {

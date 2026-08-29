@@ -6,9 +6,13 @@
   "productURL": "https://trango.com/products/rock-prodigy-pivot?variant=33101615890537",
   "dimensions": "15.5 \u00d7 5 \u00d7 2.5 in",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "upper-sloped-crimp-left",
+      "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -135,6 +139,7 @@
     },
     {
       "id": "upper-sloped-crimp-right",
+      "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -261,6 +266,7 @@
     },
     {
       "id": "outer-sloped-crimp-left",
+      "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -372,6 +378,7 @@
     },
     {
       "id": "outer-sloped-crimp-right",
+      "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp",
       "kind": "edge",
       "geometry": [
@@ -483,6 +490,7 @@
     },
     {
       "id": "variable-edge-left",
+      "equipmentObjectID": "primary",
       "name": "Left variable-depth edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -614,6 +622,7 @@
     },
     {
       "id": "variable-edge-right",
+      "equipmentObjectID": "primary",
       "name": "Right variable-depth edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -745,6 +754,7 @@
     },
     {
       "id": "medium-crimp-left",
+      "equipmentObjectID": "primary",
       "name": "Left medium crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -875,6 +885,7 @@
     },
     {
       "id": "medium-crimp-right",
+      "equipmentObjectID": "primary",
       "name": "Right medium crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -1005,6 +1016,7 @@
     },
     {
       "id": "large-crimp-left",
+      "equipmentObjectID": "primary",
       "name": "Left large crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -1135,6 +1147,7 @@
     },
     {
       "id": "large-crimp-right",
+      "equipmentObjectID": "primary",
       "name": "Right large crimp",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -1265,6 +1278,7 @@
     },
     {
       "id": "two-finger-pocket-left",
+      "equipmentObjectID": "primary",
       "name": "Left two-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1397,6 +1411,7 @@
     },
     {
       "id": "two-finger-pocket-right",
+      "equipmentObjectID": "primary",
       "name": "Right two-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1529,6 +1544,7 @@
     },
     {
       "id": "three-finger-pocket-left",
+      "equipmentObjectID": "primary",
       "name": "Left three-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1677,6 +1693,7 @@
     },
     {
       "id": "three-finger-pocket-right",
+      "equipmentObjectID": "primary",
       "name": "Right three-finger pocket",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -1824,6 +1841,7 @@
     },
     {
       "id": "outer-wedge-pinch-left",
+      "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface",
       "kind": "pinch",
       "geometry": [
@@ -2080,6 +2098,7 @@
     },
     {
       "id": "outer-wedge-pinch-right",
+      "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface",
       "kind": "pinch",
       "geometry": [
@@ -2336,6 +2355,7 @@
     },
     {
       "id": "lower-sloper-left",
+      "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper",
       "kind": "sloper",
       "geometry": [
@@ -2578,6 +2598,7 @@
     },
     {
       "id": "lower-sloper-right",
+      "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper",
       "kind": "sloper",
       "geometry": [
@@ -2820,6 +2841,7 @@
     },
     {
       "id": "upper-sloped-crimp-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp \u2014 Orientation 2",
       "kind": "edge",
       "geometry": [
@@ -2946,6 +2968,7 @@
     },
     {
       "id": "upper-sloped-crimp-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp \u2014 Orientation 2",
       "kind": "edge",
       "geometry": [
@@ -3072,6 +3095,7 @@
     },
     {
       "id": "outer-sloped-crimp-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp \u2014 Orientation 2",
       "kind": "edge",
       "geometry": [
@@ -3183,6 +3207,7 @@
     },
     {
       "id": "outer-sloped-crimp-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp \u2014 Orientation 2",
       "kind": "edge",
       "geometry": [
@@ -3294,6 +3319,7 @@
     },
     {
       "id": "variable-edge-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left variable-depth edge \u2014 Orientation 2",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -3425,6 +3451,7 @@
     },
     {
       "id": "variable-edge-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right variable-depth edge \u2014 Orientation 2",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -3556,6 +3583,7 @@
     },
     {
       "id": "medium-crimp-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left medium crimp \u2014 Orientation 2",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -3686,6 +3714,7 @@
     },
     {
       "id": "medium-crimp-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right medium crimp \u2014 Orientation 2",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -3816,6 +3845,7 @@
     },
     {
       "id": "large-crimp-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left large crimp \u2014 Orientation 2",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -3946,6 +3976,7 @@
     },
     {
       "id": "large-crimp-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right large crimp \u2014 Orientation 2",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -4076,6 +4107,7 @@
     },
     {
       "id": "two-finger-pocket-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left two-finger pocket \u2014 Orientation 2",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -4208,6 +4240,7 @@
     },
     {
       "id": "two-finger-pocket-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right two-finger pocket \u2014 Orientation 2",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -4340,6 +4373,7 @@
     },
     {
       "id": "three-finger-pocket-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left three-finger pocket \u2014 Orientation 2",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -4488,6 +4522,7 @@
     },
     {
       "id": "three-finger-pocket-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right three-finger pocket \u2014 Orientation 2",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -4635,6 +4670,7 @@
     },
     {
       "id": "outer-wedge-pinch-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface \u2014 Orientation 2",
       "kind": "pinch",
       "geometry": [
@@ -4891,6 +4927,7 @@
     },
     {
       "id": "outer-wedge-pinch-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface \u2014 Orientation 2",
       "kind": "pinch",
       "geometry": [
@@ -5147,6 +5184,7 @@
     },
     {
       "id": "lower-sloper-left-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper \u2014 Orientation 2",
       "kind": "sloper",
       "geometry": [
@@ -5389,6 +5427,7 @@
     },
     {
       "id": "lower-sloper-right-orientation-2",
+      "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper \u2014 Orientation 2",
       "kind": "sloper",
       "geometry": [
@@ -5631,6 +5670,7 @@
     },
     {
       "id": "upper-sloped-crimp-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp \u2014 Orientation 3",
       "kind": "edge",
       "geometry": [
@@ -5757,6 +5797,7 @@
     },
     {
       "id": "upper-sloped-crimp-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp \u2014 Orientation 3",
       "kind": "edge",
       "geometry": [
@@ -5883,6 +5924,7 @@
     },
     {
       "id": "outer-sloped-crimp-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp \u2014 Orientation 3",
       "kind": "edge",
       "geometry": [
@@ -5994,6 +6036,7 @@
     },
     {
       "id": "outer-sloped-crimp-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp \u2014 Orientation 3",
       "kind": "edge",
       "geometry": [
@@ -6105,6 +6148,7 @@
     },
     {
       "id": "variable-edge-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left variable-depth edge \u2014 Orientation 3",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -6236,6 +6280,7 @@
     },
     {
       "id": "variable-edge-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right variable-depth edge \u2014 Orientation 3",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -6367,6 +6412,7 @@
     },
     {
       "id": "medium-crimp-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left medium crimp \u2014 Orientation 3",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -6497,6 +6543,7 @@
     },
     {
       "id": "medium-crimp-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right medium crimp \u2014 Orientation 3",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -6627,6 +6674,7 @@
     },
     {
       "id": "large-crimp-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left large crimp \u2014 Orientation 3",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -6757,6 +6805,7 @@
     },
     {
       "id": "large-crimp-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right large crimp \u2014 Orientation 3",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -6887,6 +6936,7 @@
     },
     {
       "id": "two-finger-pocket-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left two-finger pocket \u2014 Orientation 3",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -7019,6 +7069,7 @@
     },
     {
       "id": "two-finger-pocket-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right two-finger pocket \u2014 Orientation 3",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -7151,6 +7202,7 @@
     },
     {
       "id": "three-finger-pocket-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left three-finger pocket \u2014 Orientation 3",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -7299,6 +7351,7 @@
     },
     {
       "id": "three-finger-pocket-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right three-finger pocket \u2014 Orientation 3",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -7446,6 +7499,7 @@
     },
     {
       "id": "outer-wedge-pinch-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface \u2014 Orientation 3",
       "kind": "pinch",
       "geometry": [
@@ -7702,6 +7756,7 @@
     },
     {
       "id": "outer-wedge-pinch-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface \u2014 Orientation 3",
       "kind": "pinch",
       "geometry": [
@@ -7958,6 +8013,7 @@
     },
     {
       "id": "lower-sloper-left-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper \u2014 Orientation 3",
       "kind": "sloper",
       "geometry": [
@@ -8200,6 +8256,7 @@
     },
     {
       "id": "lower-sloper-right-orientation-3",
+      "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper \u2014 Orientation 3",
       "kind": "sloper",
       "geometry": [
@@ -8442,6 +8499,7 @@
     },
     {
       "id": "upper-sloped-crimp-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp \u2014 Orientation 4",
       "kind": "edge",
       "geometry": [
@@ -8568,6 +8626,7 @@
     },
     {
       "id": "upper-sloped-crimp-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp \u2014 Orientation 4",
       "kind": "edge",
       "geometry": [
@@ -8694,6 +8753,7 @@
     },
     {
       "id": "outer-sloped-crimp-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp \u2014 Orientation 4",
       "kind": "edge",
       "geometry": [
@@ -8805,6 +8865,7 @@
     },
     {
       "id": "outer-sloped-crimp-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp \u2014 Orientation 4",
       "kind": "edge",
       "geometry": [
@@ -8916,6 +8977,7 @@
     },
     {
       "id": "variable-edge-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left variable-depth edge \u2014 Orientation 4",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -9047,6 +9109,7 @@
     },
     {
       "id": "variable-edge-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right variable-depth edge \u2014 Orientation 4",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -9178,6 +9241,7 @@
     },
     {
       "id": "medium-crimp-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left medium crimp \u2014 Orientation 4",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -9308,6 +9372,7 @@
     },
     {
       "id": "medium-crimp-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right medium crimp \u2014 Orientation 4",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -9438,6 +9503,7 @@
     },
     {
       "id": "large-crimp-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left large crimp \u2014 Orientation 4",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -9568,6 +9634,7 @@
     },
     {
       "id": "large-crimp-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right large crimp \u2014 Orientation 4",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -9698,6 +9765,7 @@
     },
     {
       "id": "two-finger-pocket-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left two-finger pocket \u2014 Orientation 4",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -9830,6 +9898,7 @@
     },
     {
       "id": "two-finger-pocket-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right two-finger pocket \u2014 Orientation 4",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -9962,6 +10031,7 @@
     },
     {
       "id": "three-finger-pocket-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left three-finger pocket \u2014 Orientation 4",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -10109,6 +10179,7 @@
     },
     {
       "id": "three-finger-pocket-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right three-finger pocket \u2014 Orientation 4",
       "kind": "pocket",
       "depthRangeMillimeters": {
@@ -10257,6 +10328,7 @@
     },
     {
       "id": "outer-wedge-pinch-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface \u2014 Orientation 4",
       "kind": "pinch",
       "geometry": [
@@ -10513,6 +10585,7 @@
     },
     {
       "id": "outer-wedge-pinch-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface \u2014 Orientation 4",
       "kind": "pinch",
       "geometry": [
@@ -10769,6 +10842,7 @@
     },
     {
       "id": "lower-sloper-left-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper \u2014 Orientation 4",
       "kind": "sloper",
       "geometry": [
@@ -11011,6 +11085,7 @@
     },
     {
       "id": "lower-sloper-right-orientation-4",
+      "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper \u2014 Orientation 4",
       "kind": "sloper",
       "geometry": [

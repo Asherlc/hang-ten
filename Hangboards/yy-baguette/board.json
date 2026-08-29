@@ -6,6 +6,9 @@
   "subtitle": "Portable reversible bar with six documented grips",
   "dimensions": "47 \u00d7 4 \u00d7 4 cm",
   "aspectRatio": 1.5,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "stepped-face",
@@ -25,6 +28,7 @@
   "holds": [
     {
       "id": "edge-30",
+      "equipmentObjectID": "primary",
       "name": "30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -135,6 +139,7 @@
     },
     {
       "id": "tray",
+      "equipmentObjectID": "primary",
       "name": "Tray",
       "kind": "jug",
       "presentationID": "stepped-face",
@@ -247,6 +252,7 @@
     },
     {
       "id": "edge-20",
+      "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -357,6 +363,7 @@
     },
     {
       "id": "edge-25",
+      "equipmentObjectID": "primary",
       "name": "25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -467,6 +474,7 @@
     },
     {
       "id": "edge-15",
+      "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -577,6 +585,7 @@
     },
     {
       "id": "edge-10",
+      "equipmentObjectID": "primary",
       "name": "10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,

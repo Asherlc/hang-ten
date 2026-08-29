@@ -6,9 +6,13 @@
   "productURL": "https://frictitiousclimbing.com/en-ca/products/doormount-pro",
   "dimensions": "25.5 \u00d7 4.5 \u00d7 2.25 in",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "top-jug",
+      "equipmentObjectID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
       "geometry": [
@@ -80,6 +84,7 @@
     },
     {
       "id": "edge-35-left",
+      "equipmentObjectID": "primary",
       "name": "Left 35 mm edge",
       "kind": "edge",
       "sizeMillimeters": 35,
@@ -204,6 +209,7 @@
     },
     {
       "id": "edge-35-right",
+      "equipmentObjectID": "primary",
       "name": "Right 35 mm edge",
       "kind": "edge",
       "sizeMillimeters": 35,
@@ -328,6 +334,7 @@
     },
     {
       "id": "mixed-25-pocket-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -452,6 +459,7 @@
     },
     {
       "id": "mixed-25-pocket-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -576,6 +584,7 @@
     },
     {
       "id": "hold-6",
+      "equipmentObjectID": "primary",
       "name": "Right pocket",
       "kind": "pocket",
       "geometry": [
@@ -685,6 +694,7 @@
     },
     {
       "id": "hold-7",
+      "equipmentObjectID": "primary",
       "name": "Left pocket",
       "kind": "pocket",
       "geometry": [
@@ -794,6 +804,7 @@
     },
     {
       "id": "hold-8",
+      "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -918,6 +929,7 @@
     },
     {
       "id": "hold-9",
+      "equipmentObjectID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -1042,6 +1054,7 @@
     },
     {
       "id": "hold-10",
+      "equipmentObjectID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -1166,6 +1179,7 @@
     },
     {
       "id": "hold-11",
+      "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -1290,6 +1304,7 @@
     },
     {
       "id": "hold-12",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1414,6 +1429,7 @@
     },
     {
       "id": "hold-13",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,

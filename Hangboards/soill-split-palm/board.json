@@ -6,9 +6,13 @@
   "productURL": "https://soillholds.com/products/split-palm",
   "dimensions": "Each piece: 16.5 \u00d7 11 \u00d7 3.875 in",
   "aspectRatio": 1.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left jug",
       "kind": "jug",
       "geometry": [
@@ -93,6 +97,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right jug",
       "kind": "jug",
       "geometry": [
@@ -155,6 +160,7 @@
     },
     {
       "id": "large-sloper-left",
+      "equipmentObjectID": "primary",
       "name": "Left large sloper",
       "kind": "sloper",
       "geometry": [
@@ -250,6 +256,7 @@
     },
     {
       "id": "large-sloper-right",
+      "equipmentObjectID": "primary",
       "name": "Right large sloper",
       "kind": "sloper",
       "geometry": [
@@ -345,6 +352,7 @@
     },
     {
       "id": "small-sloper-left",
+      "equipmentObjectID": "primary",
       "name": "Left small sloper",
       "kind": "sloper",
       "geometry": [
@@ -440,6 +448,7 @@
     },
     {
       "id": "small-sloper-right",
+      "equipmentObjectID": "primary",
       "name": "Right small sloper",
       "kind": "sloper",
       "geometry": [
@@ -535,6 +544,7 @@
     },
     {
       "id": "sloping-rail-38-left",
+      "equipmentObjectID": "primary",
       "name": "Left 38.1 mm sloping rail",
       "kind": "edge",
       "sizeMillimeters": 38.1,
@@ -588,6 +598,7 @@
     },
     {
       "id": "sloping-rail-38-right",
+      "equipmentObjectID": "primary",
       "name": "Right 38.1 mm sloping rail",
       "kind": "edge",
       "sizeMillimeters": 38.1,
@@ -641,6 +652,7 @@
     },
     {
       "id": "flat-edge-25-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25.4 mm flat rail",
       "kind": "edge",
       "sizeMillimeters": 25.4,
@@ -701,6 +713,7 @@
     },
     {
       "id": "flat-edge-25-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25.4 mm flat rail",
       "kind": "edge",
       "sizeMillimeters": 25.4,
@@ -762,6 +775,7 @@
     },
     {
       "id": "outer-crimp-12-left",
+      "equipmentObjectID": "primary",
       "name": "Left 12.7 mm outer crimp",
       "kind": "edge",
       "sizeMillimeters": 12.7,
@@ -886,6 +900,7 @@
     },
     {
       "id": "outer-crimp-12-right",
+      "equipmentObjectID": "primary",
       "name": "Right 12.7 mm outer crimp",
       "kind": "edge",
       "sizeMillimeters": 12.7,
@@ -1010,6 +1025,7 @@
     },
     {
       "id": "bottom-sloping-crimp-12-left",
+      "equipmentObjectID": "primary",
       "name": "Left 12.7 mm bottom sloping crimp",
       "kind": "edge",
       "sizeMillimeters": 12.7,
@@ -1105,6 +1121,7 @@
     },
     {
       "id": "bottom-sloping-crimp-12-right",
+      "equipmentObjectID": "primary",
       "name": "Right 12.7 mm bottom sloping crimp",
       "kind": "edge",
       "sizeMillimeters": 12.7,
@@ -1190,6 +1207,7 @@
     },
     {
       "id": "lower-pinch-left",
+      "equipmentObjectID": "primary",
       "name": "Left lower pinch",
       "kind": "pinch",
       "geometry": [
@@ -1315,6 +1333,7 @@
     },
     {
       "id": "lower-pinch-right",
+      "equipmentObjectID": "primary",
       "name": "Right lower pinch",
       "kind": "pinch",
       "geometry": [

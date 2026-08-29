@@ -112,6 +112,8 @@ enum WorkoutHoldCuePolicy {
               let hold,
               BoardTargetResolver.substituteHoldIDs(
                   for: target,
+                  handUse: step.handUse,
+                  side: step.side,
                   on: board,
                   gripType: step.gripType
               ).contains(hold.id),
@@ -144,6 +146,26 @@ struct WorkoutTimeline {
     }
 
     let duration: TimeInterval
+
+    static func labels(for step: WorkoutStep) -> [String] {
+        guard !step.isRestStep else { return ["Rest"] }
+        let actionLabel: String
+        switch step.action {
+        case .hang: actionLabel = "Hang"
+        case .isometricPull: actionLabel = "Isometric pull"
+        case .loadedLift: actionLabel = "Loaded lift"
+        }
+        var labels = [actionLabel]
+        switch step.side {
+        case .left: labels.append("Left hand")
+        case .right: labels.append("Right hand")
+        case .both: labels.append("Both hands")
+        }
+        if let repetitions = step.repetitions {
+            labels.append("\(repetitions) \(repetitions == 1 ? "lift" : "lifts")")
+        }
+        return labels
+    }
 
     func step(at elapsed: TimeInterval) -> WorkoutStep? {
         guard let location = location(at: elapsed) else {
@@ -293,5 +315,69 @@ struct WorkoutTimeline {
 
         let finalIndex = steps.index(before: steps.endIndex)
         return (finalIndex, startOffsets[finalIndex])
+    }
+}
+
+struct WorkoutLiftCompletion: Equatable {
+    private var repetitionsByStepID: [String: Int] = [:]
+    private var externalLoadKGFByStepID: [String: Double] = [:]
+
+    mutating func completeLift(for step: WorkoutStep) {
+        guard step.action == .loadedLift, let prescribed = step.repetitions else { return }
+        repetitionsByStepID[step.id] = min(
+            prescribed,
+            completedRepetitions(for: step) + 1
+        )
+    }
+
+    func completedRepetitions(for step: WorkoutStep) -> Int {
+        repetitionsByStepID[step.id, default: 0]
+    }
+
+    mutating func setExternalLoadKGF(_ value: Double, for step: WorkoutStep) {
+        guard step.action == .loadedLift, value.isFinite else { return }
+        externalLoadKGFByStepID[step.id] = value
+    }
+
+    func externalLoadKGF(for step: WorkoutStep) -> Double? {
+        externalLoadKGFByStepID[step.id] ?? step.externalLoadKGF
+    }
+}
+
+enum WorkoutLiftCompletionPolicy {
+    static func isEnabled(
+        completedRepetitions: Int,
+        prescribedRepetitions: Int,
+        sessionCanNavigate: Bool
+    ) -> Bool {
+        sessionCanNavigate && completedRepetitions < prescribedRepetitions
+    }
+}
+
+enum WorkoutHighlightResolver {
+    static func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> [String] {
+        let gripType = step.targets.count == 1 ? step.gripType : nil
+        let selectedHoldIDs = step.targets.flatMap {
+            BoardTargetResolver.substituteHoldIDs(
+                for: $0,
+                handUse: step.handUse,
+                side: step.side,
+                on: board,
+                gripType: gripType
+            )
+        }
+        let selectedObjectIDs = Set(
+            board.holds
+                .filter { selectedHoldIDs.contains($0.id) }
+                .map(\.equipmentObjectID)
+        )
+
+        // Legacy boards treat the board itself as the sole equipment object.
+        // Preserve their hold-level cues while portable multi-object boards
+        // highlight the whole selected physical object.
+        guard board.equipmentObjects.count > 1 else { return selectedHoldIDs }
+        return board.holds
+            .filter { selectedObjectIDs.contains($0.equipmentObjectID) }
+            .map(\.id)
     }
 }

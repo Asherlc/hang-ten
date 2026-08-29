@@ -8,6 +8,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     var productURL: URL
     var dimensions: String?
     var aspectRatio: Double
+    var equipmentObjects: [EquipmentObject]
     var holds: [BoardEditableHold]
     var presentations: [BoardEditablePresentation]
 
@@ -19,6 +20,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         case productURL
         case dimensions
         case aspectRatio
+        case equipmentObjects
         case holds
         case presentations
     }
@@ -31,6 +33,9 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL: URL,
         dimensions: String?,
         aspectRatio: Double,
+        equipmentObjects: [EquipmentObject] = [
+            .init(id: "primary", missingHandCapacityPolicy: .unavailable)
+        ],
         holds: [BoardEditableHold],
         presentations: [BoardEditablePresentation]
     ) {
@@ -41,6 +46,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         self.productURL = productURL
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.equipmentObjects = equipmentObjects
         self.holds = holds
         self.presentations = presentations
     }
@@ -48,7 +54,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "holds", "presentations"
+            "dimensions", "aspectRatio", "equipmentObjects", "holds", "presentations"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -58,12 +64,45 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        equipmentObjects = container.contains(.equipmentObjects)
+            ? try container.decode(
+                [BoardEditableEquipmentObjectDocument].self,
+                forKey: .equipmentObjects
+            ).map(\.equipmentObject)
+            : [.init(id: "primary")]
         holds = try container.decode([BoardEditableHold].self, forKey: .holds)
         presentations = try container.decode([BoardEditablePresentation].self, forKey: .presentations)
     }
 
     init(data: Data) throws {
         self = try JSONDecoder().decode(BoardEditableDocument.self, from: data)
+    }
+}
+
+private struct BoardEditableEquipmentObjectDocument: Decodable {
+    let id: String
+    let missingHandCapacityPolicy: MissingHandCapacityPolicy
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case missingHandCapacityPolicy
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownEditorKeys(["id", "missingHandCapacityPolicy"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        missingHandCapacityPolicy = try container.decodeIfPresent(
+            MissingHandCapacityPolicy.self,
+            forKey: .missingHandCapacityPolicy
+        ) ?? .legacyBilateral
+    }
+
+    var equipmentObject: EquipmentObject {
+        EquipmentObject(
+            id: id,
+            missingHandCapacityPolicy: missingHandCapacityPolicy
+        )
     }
 }
 
@@ -140,6 +179,7 @@ struct BoardEditableHold: Equatable, Decodable {
     var features: [HoldFeature]?
     var pairedHoldID: String?
     var declaresPairedHoldID: Bool
+    var equipmentObjectID: String
     var presentationID: String
     var geometry: [BoardEditablePiece]
 
@@ -156,6 +196,7 @@ struct BoardEditableHold: Equatable, Decodable {
         case handCapacity
         case features
         case pairedHoldID
+        case equipmentObjectID
         case presentationID
     }
 
@@ -171,6 +212,7 @@ struct BoardEditableHold: Equatable, Decodable {
         handCapacity: Int? = nil,
         features: [HoldFeature]? = nil,
         pairedHoldID: String? = nil,
+        equipmentObjectID: String = "primary",
         presentationID: String,
         geometry: [BoardEditablePiece]
     ) {
@@ -186,6 +228,7 @@ struct BoardEditableHold: Equatable, Decodable {
         self.features = features
         self.pairedHoldID = pairedHoldID
         declaresPairedHoldID = pairedHoldID != nil
+        self.equipmentObjectID = equipmentObjectID
         self.presentationID = presentationID
         self.geometry = geometry
     }
@@ -194,7 +237,7 @@ struct BoardEditableHold: Equatable, Decodable {
         try decoder.rejectUnknownEditorKeys([
             "id", "name", "kind", "geometry", "sizeMillimeters",
             "depthRangeMillimeters", "gripType", "fingerCapacity", "handCapacity",
-            "features", "pairedHoldID", "presentationID", "sloper"
+            "features", "pairedHoldID", "equipmentObjectID", "presentationID", "sloper"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -226,6 +269,9 @@ struct BoardEditableHold: Equatable, Decodable {
         pairedHoldID = declaresPairedHoldID
             ? try container.decode(String.self, forKey: .pairedHoldID)
             : nil
+        equipmentObjectID = container.contains(.equipmentObjectID)
+            ? try container.decode(String.self, forKey: .equipmentObjectID)
+            : "primary"
         presentationID = try container.decode(String.self, forKey: .presentationID)
     }
 }
@@ -388,6 +434,7 @@ enum BoardPackageWriter {
         guard !document.presentations.isEmpty else {
             throw invalid("presentations must not be empty", document)
         }
+        let equipmentObjectIDs = try validateEquipmentObjects(in: document)
         var presentationIDs = Set<String>()
         var defaultPresentationCount = 0
         for presentation in document.presentations {
@@ -440,6 +487,11 @@ enum BoardPackageWriter {
             guard holdIDs.insert(hold.id).inserted else {
                 throw invalid("hold ID \(hold.id) is duplicated", document)
             }
+            try validateEquipmentObjectReference(
+                for: hold,
+                validIDs: equipmentObjectIDs,
+                in: document
+            )
             guard presentationIDs.contains(hold.presentationID) else {
                 throw invalid("hold \(hold.id) references unknown presentation \(hold.presentationID)", document)
             }
@@ -503,6 +555,7 @@ enum BoardPackageWriter {
         guard !document.holds.isEmpty else {
             throw invalid("holds must not be empty", document)
         }
+        try validateEquipmentObjectOwnership(in: document)
         let holdsByID = Dictionary(uniqueKeysWithValues: document.holds.map { ($0.id, $0) })
         for hold in document.holds where hold.kind == .gaston {
             let pairedHoldID = hold.pairedHoldID!
@@ -514,6 +567,46 @@ enum BoardPackageWriter {
                   pairedHold.pairedHoldID == hold.id else {
                 throw invalid("gaston hold \(hold.id) must have a reciprocal gaston pair", document)
             }
+        }
+    }
+
+    private static func validateEquipmentObjects(
+        in document: BoardEditableDocument
+    ) throws -> Set<String> {
+        guard !document.equipmentObjects.isEmpty else {
+            throw invalid("equipmentObjects must not be empty", document)
+        }
+        var equipmentObjectIDs = Set<String>()
+        for object in document.equipmentObjects {
+            guard object.id.isEditorBoardIdentifier else {
+                throw invalid("equipment object ID must be identifier-shaped", document)
+            }
+            guard equipmentObjectIDs.insert(object.id).inserted else {
+                throw invalid("equipment object ID \(object.id) is duplicated", document)
+            }
+        }
+        return equipmentObjectIDs
+    }
+
+    private static func validateEquipmentObjectReference(
+        for hold: BoardEditableHold,
+        validIDs: Set<String>,
+        in document: BoardEditableDocument
+    ) throws {
+        guard validIDs.contains(hold.equipmentObjectID) else {
+            throw invalid(
+                "hold \(hold.id) references unknown equipment object \(hold.equipmentObjectID)",
+                document
+            )
+        }
+    }
+
+    private static func validateEquipmentObjectOwnership(
+        in document: BoardEditableDocument
+    ) throws {
+        let ownedEquipmentObjectIDs = Set(document.holds.map(\.equipmentObjectID))
+        for object in document.equipmentObjects where !ownedEquipmentObjectIDs.contains(object.id) {
+            throw invalid("equipment object \(object.id) must own at least one hold", document)
         }
     }
 
@@ -598,6 +691,18 @@ enum BoardPackageWriter {
             ("subtitle", .string(document.subtitle)),
             ("productURL", .string(document.productURL.absoluteString)),
             ("aspectRatio", .double(document.aspectRatio)),
+            ("equipmentObjects", .array(document.equipmentObjects.map { object in
+                var entries: [(String, CanonicalJSONValue)] = [
+                    ("id", .string(object.id))
+                ]
+                if object.missingHandCapacityPolicy != .legacyBilateral {
+                    entries.append((
+                        "missingHandCapacityPolicy",
+                        .string(object.missingHandCapacityPolicy.rawValue)
+                    ))
+                }
+                return .object(entries)
+            })),
             ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),
         ]
@@ -648,6 +753,7 @@ enum BoardPackageWriter {
         if let features = hold.features {
             entries.append(("features", .array(features.map { .string($0.rawValue) })))
         }
+        entries.append(("equipmentObjectID", .string(hold.equipmentObjectID)))
         entries.append(("presentationID", .string(hold.presentationID)))
         entries.append(("geometry", .array(hold.geometry.map(canonicalPieceValue))))
         return .object(entries)

@@ -6,6 +6,9 @@
   "productURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
   "dimensions": "24 \u00d7 8.5 in",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "front",
@@ -18,6 +21,7 @@
   "holds": [
     {
       "id": "jug-1-left",
+      "equipmentObjectID": "primary",
       "name": "Left #1 outer jug",
       "kind": "jug",
       "presentationID": "front",
@@ -97,6 +101,7 @@
     },
     {
       "id": "sloper-2-flat-left",
+      "equipmentObjectID": "primary",
       "name": "Left #2 56 mm flat sloper",
       "kind": "sloper",
       "sloper": {
@@ -155,6 +160,7 @@
     },
     {
       "id": "sloper-12-round-center",
+      "equipmentObjectID": "primary",
       "name": "Center #12 56 mm round sloper",
       "kind": "sloper",
       "sloper": {
@@ -213,6 +219,7 @@
     },
     {
       "id": "sloper-2-flat-right",
+      "equipmentObjectID": "primary",
       "name": "Right #2 56 mm flat sloper",
       "kind": "sloper",
       "sloper": {
@@ -271,6 +278,7 @@
     },
     {
       "id": "jug-1-right",
+      "equipmentObjectID": "primary",
       "name": "Right #1 outer jug",
       "kind": "jug",
       "presentationID": "front",
@@ -343,6 +351,7 @@
     },
     {
       "id": "edge-3-31-left",
+      "equipmentObjectID": "primary",
       "name": "Left #3 31 mm edge",
       "kind": "edge",
       "sizeMillimeters": 31,
@@ -425,6 +434,7 @@
     },
     {
       "id": "pocket-4-32-three-left",
+      "equipmentObjectID": "primary",
       "name": "Left #4 32 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 32,
@@ -537,6 +547,7 @@
     },
     {
       "id": "pocket-5-38-two-left",
+      "equipmentObjectID": "primary",
       "name": "Left #5 38 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 38,
@@ -649,6 +660,7 @@
     },
     {
       "id": "pocket-13-32-four-center",
+      "equipmentObjectID": "primary",
       "name": "Center #13 32 mm four-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 32,
@@ -761,6 +773,7 @@
     },
     {
       "id": "pocket-5-38-two-right",
+      "equipmentObjectID": "primary",
       "name": "Right #5 38 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 38,
@@ -873,6 +886,7 @@
     },
     {
       "id": "pocket-4-32-three-right",
+      "equipmentObjectID": "primary",
       "name": "Right #4 32 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 32,
@@ -985,6 +999,7 @@
     },
     {
       "id": "edge-3-31-right",
+      "equipmentObjectID": "primary",
       "name": "Right #3 31 mm edge",
       "kind": "edge",
       "sizeMillimeters": 31,
@@ -1067,6 +1082,7 @@
     },
     {
       "id": "edge-6-25-left",
+      "equipmentObjectID": "primary",
       "name": "Left #6 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -1149,6 +1165,7 @@
     },
     {
       "id": "pocket-7-25-three-left",
+      "equipmentObjectID": "primary",
       "name": "Left #7 25 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -1261,6 +1278,7 @@
     },
     {
       "id": "pocket-8-28-two-left",
+      "equipmentObjectID": "primary",
       "name": "Left #8 28 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 28,
@@ -1373,6 +1391,7 @@
     },
     {
       "id": "pocket-14-25-four-center",
+      "equipmentObjectID": "primary",
       "name": "Center #14 25 mm four-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -1485,6 +1504,7 @@
     },
     {
       "id": "pocket-8-28-two-right",
+      "equipmentObjectID": "primary",
       "name": "Right #8 28 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 28,
@@ -1597,6 +1617,7 @@
     },
     {
       "id": "pocket-7-25-three-right",
+      "equipmentObjectID": "primary",
       "name": "Right #7 25 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -1709,6 +1730,7 @@
     },
     {
       "id": "edge-6-25-right",
+      "equipmentObjectID": "primary",
       "name": "Right #6 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -1791,6 +1813,7 @@
     },
     {
       "id": "edge-9-19-left",
+      "equipmentObjectID": "primary",
       "name": "Left #9 19 mm edge",
       "kind": "edge",
       "sizeMillimeters": 19,
@@ -1873,6 +1896,7 @@
     },
     {
       "id": "pocket-10-19-three-left",
+      "equipmentObjectID": "primary",
       "name": "Left #10 19 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 19,
@@ -1985,6 +2009,7 @@
     },
     {
       "id": "pocket-11-19-two-left",
+      "equipmentObjectID": "primary",
       "name": "Left #11 19 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 19,
@@ -2097,6 +2122,7 @@
     },
     {
       "id": "pocket-15-19-four-center",
+      "equipmentObjectID": "primary",
       "name": "Center #15 19 mm four-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 19,
@@ -2209,6 +2235,7 @@
     },
     {
       "id": "pocket-11-19-two-right",
+      "equipmentObjectID": "primary",
       "name": "Right #11 19 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 19,
@@ -2321,6 +2348,7 @@
     },
     {
       "id": "pocket-10-19-three-right",
+      "equipmentObjectID": "primary",
       "name": "Right #10 19 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 19,
@@ -2433,6 +2461,7 @@
     },
     {
       "id": "edge-9-19-right",
+      "equipmentObjectID": "primary",
       "name": "Right #9 19 mm edge",
       "kind": "edge",
       "sizeMillimeters": 19,

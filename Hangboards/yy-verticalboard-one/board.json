@@ -6,6 +6,9 @@
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-one",
   "dimensions": "62 \u00d7 13 \u00d7 5.5 cm",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "primary",
@@ -18,6 +21,7 @@
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Left top jug",
       "kind": "jug",
@@ -96,6 +100,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Right top jug",
       "kind": "jug",
@@ -166,6 +171,7 @@
     },
     {
       "id": "sloper-35-left",
+      "equipmentObjectID": "primary",
       "gripType": "sloper",
       "presentationID": "primary",
       "name": "Left 35-degree sloper",
@@ -248,6 +254,7 @@
     },
     {
       "id": "sloper-35-right",
+      "equipmentObjectID": "primary",
       "gripType": "sloper",
       "presentationID": "primary",
       "name": "Right 35-degree sloper",
@@ -330,6 +337,7 @@
     },
     {
       "id": "sloper-20-center",
+      "equipmentObjectID": "primary",
       "gripType": "sloper",
       "presentationID": "primary",
       "name": "Center 20-degree sloper",
@@ -393,6 +401,7 @@
     },
     {
       "id": "edge-25-left",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
@@ -503,6 +512,7 @@
     },
     {
       "id": "edge-25-right",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
@@ -613,6 +623,7 @@
     },
     {
       "id": "edge-45-left",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Left 45 mm edge",
       "kind": "edge",
@@ -723,6 +734,7 @@
     },
     {
       "id": "edge-45-right",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Right 45 mm edge",
       "kind": "edge",
@@ -833,6 +845,7 @@
     },
     {
       "id": "pocket-50-left",
+      "equipmentObjectID": "primary",
       "gripType": "twoFingerPocket",
       "presentationID": "primary",
       "name": "Left 50 mm two-finger pocket",
@@ -945,6 +958,7 @@
     },
     {
       "id": "pocket-50-right",
+      "equipmentObjectID": "primary",
       "gripType": "twoFingerPocket",
       "presentationID": "primary",
       "name": "Right 50 mm two-finger pocket",
@@ -1057,6 +1071,7 @@
     },
     {
       "id": "edge-inclined-25-left",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Left 25 mm inclined edge",
       "kind": "edge",
@@ -1167,6 +1182,7 @@
     },
     {
       "id": "edge-inclined-25-right",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Right 25 mm inclined edge",
       "kind": "edge",
@@ -1277,6 +1293,7 @@
     },
     {
       "id": "pocket-30-left",
+      "equipmentObjectID": "primary",
       "gripType": "twoFingerPocket",
       "presentationID": "primary",
       "name": "Left 30 mm two-finger pocket",
@@ -1389,6 +1406,7 @@
     },
     {
       "id": "pocket-30-right",
+      "equipmentObjectID": "primary",
       "gripType": "twoFingerPocket",
       "presentationID": "primary",
       "name": "Right 30 mm two-finger pocket",
@@ -1501,6 +1519,7 @@
     },
     {
       "id": "center-handle",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Center multifunction handle",
       "kind": "jug",
@@ -1610,6 +1629,7 @@
     },
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
@@ -1720,6 +1740,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
@@ -1830,6 +1851,7 @@
     },
     {
       "id": "edge-18-left",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Left 18 mm edge",
       "kind": "edge",
@@ -1940,6 +1962,7 @@
     },
     {
       "id": "edge-18-right",
+      "equipmentObjectID": "primary",
       "presentationID": "primary",
       "name": "Right 18 mm edge",
       "kind": "edge",

@@ -314,7 +314,13 @@ final class AppStore: ObservableObject {
     func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> Set<String> {
         let gripType = step.targets.count == 1 ? step.gripType : nil
         let ids = step.targets.flatMap {
-            BoardTargetResolver.substituteHoldIDs(for: $0, on: board, gripType: gripType)
+            BoardTargetResolver.substituteHoldIDs(
+                for: $0,
+                handUse: step.handUse,
+                side: step.side,
+                on: board,
+                gripType: gripType
+            )
         }
         return Set(ids)
     }
@@ -328,6 +334,8 @@ final class AppStore: ObservableObject {
                 let hasExactMatch = board.holds.contains { $0.features?.contains(feature) == true }
                 return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(
                     for: target,
+                    handUse: step.handUse,
+                    side: step.side,
                     on: board,
                     gripType: gripType
                 ).isEmpty
@@ -341,6 +349,8 @@ final class AppStore: ObservableObject {
             return step.targets.contains { target in
                 BoardTargetResolver.substituteHoldIDs(
                     for: target,
+                    handUse: step.handUse,
+                    side: step.side,
                     on: board,
                     gripType: gripType
                 ).isEmpty

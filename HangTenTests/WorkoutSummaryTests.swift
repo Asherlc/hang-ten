@@ -2,9 +2,57 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSummaryTests: XCTestCase {
+    func testLoadedLiftSummaryUsesSignedLoadCopy() {
+        XCTAssertEqual(
+            WorkoutStepFormatting.externalLoadText(-5, unit: .kilograms),
+            "5 kg assistance"
+        )
+        XCTAssertEqual(
+            WorkoutStepFormatting.externalLoadText(10, unit: .kilograms), "+10 kg")
+    }
+
     func testHistorySummaryModeIsReadOnly() {
         XCTAssertFalse(WorkoutSummaryMode.pending.isReadOnly)
         XCTAssertTrue(WorkoutSummaryMode.history.isReadOnly)
+    }
+
+    func testRestSummaryDoesNotClaimHangOrBothHands() {
+        let rest = WorkoutStepMeasurement(
+            stepID: "rest",
+            plannedActiveDuration: 30,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured,
+            isRest: true
+        )
+
+        XCTAssertEqual(WorkoutSummaryFormatting.semanticText(for: rest, unit: .kgf), "Rest")
+        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest, unit: .kgf).contains("Hang"))
+        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest, unit: .kgf).contains("hands"))
+    }
+
+    func testLoadedLiftSemanticTextUsesSelectedForceUnit() {
+        let lift = WorkoutStepMeasurement(
+            stepID: "lift",
+            plannedActiveDuration: 20,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured,
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: 3,
+            completedRepetitions: 2,
+            externalLoadKGF: 10,
+            isRest: false
+        )
+
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.semanticText(for: lift, unit: .lbf),
+            "Loaded lift • Left hand • 2 of 3 lifts complete • +22.0 lbf"
+        )
     }
 
     func testSummaryUsesActualLoadedDurationAndPeakInSelectedUnit() {

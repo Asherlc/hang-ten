@@ -409,6 +409,7 @@ class BoardPresentation:
 @dataclass(frozen=True)
 class BoardHold:
     id: str
+    equipment_object_id: str
     name: str
     kind: str
     sloper: SloperMetadata | None
@@ -435,6 +436,7 @@ class BoardHold:
 class BoardDocument:
     id: str
     facts: Mapping[str, Any]
+    equipment_objects: tuple[str, ...]
     holds: tuple[BoardHold, ...]
     presentations: tuple[BoardPresentation, ...]
 
@@ -489,6 +491,7 @@ def _load_hold(
         {"id", "name", "kind", "geometry"},
         source,
         optional={
+            "equipmentObjectID",
             "sizeMillimeters",
             "depthRangeMillimeters",
             "gripType",
@@ -563,6 +566,10 @@ def _load_hold(
             raise ValueError(f"{source}.features must be unique")
     return BoardHold(
         _identifier(payload["id"], f"{source}.id"),
+        _identifier(
+            payload.get("equipmentObjectID", "primary"),
+            f"{source}.equipmentObjectID",
+        ),
         _string(payload["name"], f"{source}.name"),
         kind,
         sloper,
@@ -622,7 +629,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "presentations",
         "holds",
     }
-    _closed(value, required, "board.json", optional={"dimensions"})
+    _closed(value, required, "board.json", optional={"dimensions", "equipmentObjects"})
     facts: dict[str, Any] = {}
     for key in ("manufacturer", "name", "subtitle", "productURL"):
         facts[key] = _string(value[key], f"board.json.{key}")
@@ -631,6 +638,36 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")
+    raw_equipment_objects = value.get("equipmentObjects", [{"id": "primary"}])
+    if not isinstance(raw_equipment_objects, list) or not raw_equipment_objects:
+        raise ValueError("board.json.equipmentObjects must be a non-empty array")
+    equipment_objects = tuple(
+        _identifier(
+            _mapping(item, f"board.json.equipmentObjects[{index}]").get("id"),
+            f"board.json.equipmentObjects[{index}].id",
+        )
+        for index, item in enumerate(raw_equipment_objects)
+    )
+    for index, item in enumerate(raw_equipment_objects):
+        source = f"board.json.equipmentObjects[{index}]"
+        equipment_object = _mapping(item, source)
+        _closed(
+            equipment_object,
+            {"id"},
+            source,
+            optional={"missingHandCapacityPolicy"},
+        )
+        if "missingHandCapacityPolicy" in equipment_object:
+            policy = _string(
+                equipment_object["missingHandCapacityPolicy"],
+                f"{source}.missingHandCapacityPolicy",
+            )
+            if policy not in {"legacyBilateral", "unavailable"}:
+                raise ValueError(
+                    f"{source}.missingHandCapacityPolicy must be legacyBilateral or unavailable"
+                )
+    if len(set(equipment_objects)) != len(equipment_objects):
+        raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
@@ -664,6 +701,18 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
+    equipment_object_ids = set(equipment_objects)
+    for hold in holds_tuple:
+        if hold.equipment_object_id not in equipment_object_ids:
+            raise ValueError(
+                f"hold {hold.id} references unknown equipment object {hold.equipment_object_id}"
+            )
+    owned_equipment_object_ids = {hold.equipment_object_id for hold in holds_tuple}
+    for equipment_object_id in equipment_objects:
+        if equipment_object_id not in owned_equipment_object_ids:
+            raise ValueError(
+                f"equipment object {equipment_object_id} must own at least one hold"
+            )
     holds_by_id = {hold.id: hold for hold in holds_tuple}
     for hold in holds_tuple:
         if hold.kind != "gaston":
@@ -676,6 +725,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),
+        equipment_objects,
         holds_tuple,
         presentations,
     )

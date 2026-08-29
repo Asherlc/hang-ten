@@ -3,6 +3,76 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testMegosRepeaterPlanPreservesStructuredSideSequence() throws {
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
+        // The composed plan starts with source-provided warm-up hangs. The
+        // source-order assertions below intentionally cover only the 48
+        // unilateral main-set repetitions.
+        let workSteps = plan.steps.filter {
+            $0.phase == .hang && $0.id.hasPrefix("megos-7-3-set-")
+        }
+
+        let expectedSides = (1...6).flatMap { _ in
+            Array(repeating: WorkoutSide.left, count: 4)
+                + Array(repeating: WorkoutSide.right, count: 4)
+        }
+
+        let expectedIDs = (1...6).flatMap { set in
+            [WorkoutSide.left, .right].flatMap { side in
+                (1...4).map { repetition in
+                    "megos-7-3-set-\(set)-\(side.rawValue)-rep-\(repetition).segment-1"
+                }
+            }
+        }
+
+        XCTAssertEqual(workSteps.map(\.side), expectedSides)
+        XCTAssertEqual(workSteps.map(\.id), expectedIDs.map { "\($0).segment-1" })
+        XCTAssertTrue(workSteps.allSatisfy { $0.handUse == .single })
+        XCTAssertTrue(workSteps.allSatisfy { $0.action == .hang })
+        XCTAssertTrue(workSteps.allSatisfy { $0.activeDuration == 7 })
+    }
+
+    func testMegosRepeaterPlanKeepsEveryFourthRecovery() throws {
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
+        let terminalStep = try XCTUnwrap(plan.steps.last)
+
+        XCTAssertEqual(terminalStep.phase, .rest)
+        XCTAssertEqual(terminalStep.duration, 3)
+        XCTAssertEqual(terminalStep.accessory, "3s rest")
+    }
+
+    func testMegosRepeaterPlanPreservesOrderedRestsAndSetRecovery() throws {
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
+        var stepIndex = 0
+
+        for set in 1...6 {
+            for side in [WorkoutSide.left, .right] {
+                for repetition in 1...4 {
+                    let hang = plan.steps[stepIndex]
+                    XCTAssertEqual(hang.phase, .hang, "set \(set), \(side), rep \(repetition)")
+                    XCTAssertEqual(hang.side, side, "set \(set), \(side), rep \(repetition)")
+                    XCTAssertEqual(hang.duration, 7, "set \(set), \(side), rep \(repetition)")
+                    stepIndex += 1
+
+                    let repetitionRest = plan.steps[stepIndex]
+                    XCTAssertEqual(repetitionRest.phase, .rest, "set \(set), \(side), rep \(repetition)")
+                    XCTAssertEqual(repetitionRest.duration, 3, "set \(set), \(side), rep \(repetition)")
+                    stepIndex += 1
+                }
+            }
+
+            if set < 6 {
+                let setRecovery = plan.steps[stepIndex]
+                XCTAssertEqual(setRecovery.phase, .rest, "set \(set) recovery")
+                XCTAssertEqual(setRecovery.duration, 120, "set \(set) recovery")
+                stepIndex += 1
+            }
+        }
+
+        XCTAssertEqual(stepIndex, plan.steps.count)
+        XCTAssertEqual(plan.duration, 1_080)
+    }
+
     func testPortraitTimerLayoutKeepsTimerOnOneLineWithoutSupportingStatus() {
         XCTAssertEqual(WorkoutPresentationContent.portraitTimerLineLimit, 1)
         XCTAssertNil(WorkoutPresentationContent.portraitTimerSupportingStatus)
@@ -1486,12 +1556,23 @@ final class PlanStorageTests: XCTestCase {
 
     func testShippedRoutineSeedsExceptRPTCExpandToTerminalWorkSteps() throws {
         let terminalSteps = try LegacyPlanSeedCatalog.all
-            .filter { $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id }
+            .filter {
+                $0.id != LegacyPlanSeedCatalog.rptcRepeaters.id &&
+                    $0.id != LegacyPlanSeedCatalog.megoOneArmSevenThree.id
+            }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
             }
 
         XCTAssertTrue(terminalSteps.allSatisfy { $0.phase != .rest })
+
+        let megoTerminalStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.megoOneArmSevenThree.steps
+                .flatMap(WorkoutStepNormalizer.expand)
+                .last
+        )
+        XCTAssertEqual(megoTerminalStep.phase, .rest)
+        XCTAssertEqual(megoTerminalStep.duration, 3)
     }
 
     func testAbrahangsSecondGripKeepsSourceBackedFrontThreeOpenCue() throws {
@@ -2633,6 +2714,67 @@ final class PlanStorageTests: XCTestCase {
         })
     }
 
+    func testPlanResolutionPreservesUnilateralStepSemantics() throws {
+        let step = WorkoutStepDefinition(id: "left-lift", title: "Left lift", instruction: "Lift.", accessory: "", duration: 10, phase: .pull, targets: [.kind(.jug)], handUse: .single, side: .left, action: .loadedLift, repetitions: 7, externalLoadKGF: -8)
+        let library = unilateralTestLibrary(step: step)
+
+        let resolved = try PlanDefinitionResolver(library: library).resolve(library.plans[0])
+
+        XCTAssertEqual(resolved.steps[0].handUse, .single)
+        XCTAssertEqual(resolved.steps[0].side, .left)
+        XCTAssertEqual(resolved.steps[0].action, .loadedLift)
+        XCTAssertEqual(resolved.steps[0].repetitions, 7)
+        XCTAssertEqual(resolved.steps[0].externalLoadKGF, -8)
+    }
+
+    func testPlanValidationRejectsInvalidUnilateralStepSemantics() {
+        let step = WorkoutStepDefinition(id: "invalid", title: "Invalid", instruction: "", accessory: "", duration: 10, phase: .pull, targets: [.kind(.jug)], handUse: .single, side: .both, action: .loadedLift, repetitions: 0)
+
+        let issues = PlanLibraryValidator.issues(
+            for: unilateralTestLibrary(step: step),
+            availableBoards: BoardCatalog.all
+        )
+
+        XCTAssertTrue(issues.contains { $0.path.hasSuffix(".side") })
+        XCTAssertTrue(issues.contains { $0.path.hasSuffix(".repetitions") })
+    }
+
+    func testLegacyStepDefinitionDefaultsToBilateralTimedHang() throws {
+        let data = Data(
+            #"{"id":"legacy-step","title":"Legacy step","instruction":"Hang.","accessory":"10s","duration":10,"phase":"hang","targets":[]}"#.utf8
+        )
+
+        let step = try JSONDecoder().decode(WorkoutStepDefinition.self, from: data)
+
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.action, .hang)
+        XCTAssertNil(step.repetitions)
+        XCTAssertNil(step.externalLoadKGF)
+    }
+
+    func testSingleArmLoadedLiftRoundTripsSignedLoad() throws {
+        let step = WorkoutStepDefinition(id: "single-arm-loaded-lift", title: "Loaded lift", instruction: "Lift.", accessory: "", duration: 20, phase: .pull, targets: [], handUse: .single, side: .left, action: .loadedLift, repetitions: 7, externalLoadKGF: -8)
+
+        let decoded = try JSONDecoder().decode(WorkoutStepDefinition.self, from: JSONEncoder().encode(step))
+
+        XCTAssertEqual(decoded, step)
+    }
+
+    private func unilateralTestLibrary(step: WorkoutStepDefinition) -> PlanLibraryDefinition {
+        PlanLibraryDefinition(
+            metadata: PlanLibraryMetadata(id: "test", title: "Test", generatedAt: "local"),
+            boardMappings: [],
+            blocks: [WorkoutBlockDefinition(id: "block", steps: [step])],
+            plans: [PlanDefinition(
+                id: "plan",
+                metadata: PlanMetadata(title: "Test", subtitle: "", level: "Test", sourceLabel: "Created in Hang Ten", sourceURL: nil, provenance: .custom),
+                boardID: nil,
+                blocks: [WorkoutBlockReference(blockID: "block")]
+            )]
+        )
+    }
+
     private func loadPlanCueAudit() throws -> CueAuditDocument {
         let fileURL = try planCueAuditURL()
         let markdown = try String(contentsOf: fileURL, encoding: .utf8)
@@ -2786,6 +2928,7 @@ private extension String {
         !trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
+
 
 private struct PlanFieldRule: Decodable, CueAuditDecision {
     let planID: String
