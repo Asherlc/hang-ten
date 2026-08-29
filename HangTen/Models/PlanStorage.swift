@@ -71,8 +71,8 @@ struct PlanLibraryMetadata: Codable, Hashable {
 }
 
 /// Metadata that travels with a routine. The original source fields remain
-/// first-class, while tags/equipment/notes give imported routines room to
-/// describe themselves without adding more UI-specific fields to `TrainingPlan`.
+/// first-class, while tags and notes give imported routines room to describe
+/// themselves without adding more UI-specific fields to `TrainingPlan`.
 struct PlanMetadata: Codable, Hashable {
     let title: String
     let subtitle: String
@@ -85,7 +85,6 @@ struct PlanMetadata: Codable, Hashable {
     /// library provenance or runtime requirements in the Plans filter.
     let workoutLabels: [String]
     let tags: [String]
-    let equipment: [String]
     let notes: [String]
 
     init(
@@ -98,7 +97,6 @@ struct PlanMetadata: Codable, Hashable {
         category: String = "general",
         workoutLabels: [String] = [],
         tags: [String] = [],
-        equipment: [String] = [],
         notes: [String] = []
     ) {
         self.title = title
@@ -110,7 +108,6 @@ struct PlanMetadata: Codable, Hashable {
         self.category = category
         self.workoutLabels = workoutLabels
         self.tags = tags
-        self.equipment = equipment
         self.notes = notes
     }
 
@@ -131,7 +128,6 @@ struct PlanMetadata: Codable, Hashable {
         case category
         case workoutLabels
         case tags
-        case equipment
         case notes
     }
 
@@ -146,7 +142,6 @@ struct PlanMetadata: Codable, Hashable {
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? "general"
         workoutLabels = try container.decodeIfPresent([String].self, forKey: .workoutLabels) ?? []
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
-        equipment = try container.decodeIfPresent([String].self, forKey: .equipment) ?? []
         notes = try container.decodeIfPresent([String].self, forKey: .notes) ?? []
     }
 
@@ -163,7 +158,6 @@ struct PlanMetadata: Codable, Hashable {
             try container.encode(workoutLabels, forKey: .workoutLabels)
         }
         try container.encode(tags, forKey: .tags)
-        try container.encode(equipment, forKey: .equipment)
         try container.encode(notes, forKey: .notes)
     }
 }
@@ -1880,7 +1874,6 @@ enum BuiltInPlanLibraryDefinition {
             category: category,
             workoutLabels: PlanWorkoutLabelAudit.labels(for: plan.id),
             tags: tags,
-            equipment: ["hangboard"],
             notes: notes
         )
 
@@ -2039,8 +2032,6 @@ enum PlanCatalog {
     static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
     static let reiHangboardSample = required("rei.hangboard-sample-workout")
-
-    static let evidenceOverviewURL = URL(string: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9806751/")!
 
     static func plan(id: String) -> TrainingPlan? {
         store.plan(id: id)

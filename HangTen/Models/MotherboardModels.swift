@@ -35,6 +35,29 @@ enum MotherboardForceUnit: String, CaseIterable, Codable, Identifiable {
     }
 }
 
+enum WorkoutLoadAdjustmentDisplayUnit: String, CaseIterable, Codable, Identifiable {
+    case pounds = "lb"
+    case kilograms = "kg"
+
+    var id: String { rawValue }
+    var label: String { rawValue }
+
+    func value(fromKilogramsForce kgf: Double) -> Double {
+        switch self {
+        case .pounds: kgf * 2.20462262185
+        case .kilograms: kgf
+        }
+    }
+
+    func kilogramsForce(fromDisplayedForce value: Double) -> Double {
+        guard value.isFinite else { return 0 }
+        return switch self {
+        case .pounds: value / 2.20462262185
+        case .kilograms: value
+        }
+    }
+}
+
 struct MotherboardMeasurement: Codable, Equatable {
     let timestamp: Date
     let sampleNumber: UInt16
@@ -136,6 +159,10 @@ enum MotherboardConnectionState: Equatable {
     case failed
 
     var showsWorkoutMeter: Bool {
+        self == .streaming
+    }
+
+    var disablesManualLoadAdjustment: Bool {
         self == .streaming
     }
 }
@@ -324,6 +351,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let forceSensorProfile: ForceSensorProfile
     let bodyweightKGF: Double?
     let loadAdjustmentKGF: Double
+    let loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit
     let motherboardMeasurements: [MotherboardMeasurement]
     let motherboardMeasurementsTruncated: Bool
 
@@ -331,6 +359,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         case id, planID, planTitle, recordedAt, startDate, endDate
         case motherboardIdentifier, batteryValue, steps, stepTitles, forceSensorProfile, bodyweightKGF
         case loadAdjustmentKGF
+        case loadAdjustmentDisplayUnit
         case motherboardMeasurements, motherboardMeasurementsTruncated
     }
 
@@ -348,6 +377,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         forceSensorProfile: ForceSensorProfile = .motherboard,
         bodyweightKGF: Double? = nil,
         loadAdjustmentKGF: Double = 0,
+        loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit = .kilograms,
         motherboardMeasurements: [MotherboardMeasurement] = [],
         motherboardMeasurementsTruncated: Bool = false
     ) {
@@ -364,6 +394,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.forceSensorProfile = forceSensorProfile
         self.bodyweightKGF = bodyweightKGF
         self.loadAdjustmentKGF = Self.normalizedLoadAdjustment(loadAdjustmentKGF)
+        self.loadAdjustmentDisplayUnit = loadAdjustmentDisplayUnit
         self.motherboardMeasurements = motherboardMeasurements
         self.motherboardMeasurementsTruncated = motherboardMeasurementsTruncated
     }
@@ -386,6 +417,10 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         loadAdjustmentKGF = Self.normalizedLoadAdjustment(
             try container.decodeIfPresent(Double.self, forKey: .loadAdjustmentKGF) ?? 0
         )
+        loadAdjustmentDisplayUnit = try container.decodeIfPresent(
+            WorkoutLoadAdjustmentDisplayUnit.self,
+            forKey: .loadAdjustmentDisplayUnit
+        ) ?? .kilograms
         motherboardMeasurements = try container.decodeIfPresent([MotherboardMeasurement].self, forKey: .motherboardMeasurements) ?? []
         motherboardMeasurementsTruncated = try container.decodeIfPresent(Bool.self, forKey: .motherboardMeasurementsTruncated) ?? false
     }
@@ -407,6 +442,7 @@ final class MotherboardSettingsStore: ObservableObject {
     private enum Key {
         static let forceSensorProfile = "motherboard.forceSensorProfile"
         static let forceUnit = "motherboard.forceUnit"
+        static let loadAdjustmentUnit = "motherboard.loadAdjustmentUnit"
         static let thresholdKGF = "motherboard.thresholdKGF"
         static let bodyweightCaptureDuration = "motherboard.bodyweightCaptureDuration"
     }
@@ -419,6 +455,10 @@ final class MotherboardSettingsStore: ObservableObject {
 
     @Published var forceUnit: MotherboardForceUnit {
         didSet { defaults.set(forceUnit.rawValue, forKey: Key.forceUnit) }
+    }
+
+    @Published var loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit {
+        didSet { defaults.set(loadAdjustmentUnit.rawValue, forKey: Key.loadAdjustmentUnit) }
     }
 
     @Published var thresholdKGF: Double {
@@ -456,6 +496,13 @@ final class MotherboardSettingsStore: ObservableObject {
             forceUnit = storedForceUnit
         } else {
             forceUnit = .kgf
+        }
+
+        if let rawValue = defaults.string(forKey: Key.loadAdjustmentUnit),
+           let storedLoadAdjustmentUnit = WorkoutLoadAdjustmentDisplayUnit(rawValue: rawValue) {
+            loadAdjustmentUnit = storedLoadAdjustmentUnit
+        } else {
+            loadAdjustmentUnit = .kilograms
         }
 
         let normalizedThreshold = Self.normalizedThreshold(defaults.object(forKey: Key.thresholdKGF) as? Double ?? 2.5)

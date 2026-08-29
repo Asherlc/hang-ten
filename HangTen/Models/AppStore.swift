@@ -185,6 +185,12 @@ final class AppStore: ObservableObject {
         }?.loadAdjustmentKGF ?? 0
     }
 
+    var mostRecentSavedLoadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit {
+        sessionHistory.max { lhs, rhs in
+            lhs.recordedAt < rhs.recordedAt
+        }?.loadAdjustmentDisplayUnit ?? .kilograms
+    }
+
     var plans: [TrainingPlan] {
         (PlanCatalog.all + customPlans).filter { plan in
             plan.boardID == nil || plan.boardID == selectedBoard.id

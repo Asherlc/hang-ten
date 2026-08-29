@@ -56,7 +56,7 @@ rtk xcodebuild -project HangTen.xcodeproj \
   build
 ```
 
-All Conductor/local-agent builds must use a workspace-local DerivedData path so
+All Paseo/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
 
 ## Lifetime unlock StoreKit setup

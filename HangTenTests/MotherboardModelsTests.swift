@@ -50,6 +50,23 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertTrue(hiddenStates.allSatisfy { !$0.showsWorkoutMeter })
     }
 
+    func testConnectionStateDisablesManualLoadAdjustmentOnlyWhileStreaming() {
+        XCTAssertTrue(MotherboardConnectionState.streaming.disablesManualLoadAdjustment)
+
+        let enabledStates: [MotherboardConnectionState] = [
+            .bluetoothUnavailable,
+            .unauthorized,
+            .idle,
+            .scanning,
+            .connecting,
+            .calibrating,
+            .disconnected,
+            .failed
+        ]
+
+        XCTAssertTrue(enabledStates.allSatisfy { !$0.disablesManualLoadAdjustment })
+    }
+
     func testForceUnitConversionUsesKilogramsForceAsCanonicalValue() {
         XCTAssertEqual(MotherboardForceUnit.kgf.value(fromKilogramsForce: 2), 2, accuracy: 0.0001)
         XCTAssertEqual(MotherboardForceUnit.lbf.value(fromKilogramsForce: 2), 4.40925, accuracy: 0.0001)
@@ -277,6 +294,54 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(decoded.loadAdjustmentKGF, -12.5, accuracy: 0.0001)
     }
 
+    func testSessionRecordRoundTripsLoadAdjustmentDisplayUnit() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [],
+            loadAdjustmentKGF: 10,
+            loadAdjustmentDisplayUnit: .pounds
+        )
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONEncoder().encode(record)
+        )
+
+        XCTAssertEqual(decoded.loadAdjustmentKGF, 10, accuracy: 0.0001)
+        XCTAssertEqual(decoded.loadAdjustmentDisplayUnit, .pounds)
+    }
+
+    func testLegacySessionRecordDefaultsLoadAdjustmentDisplayUnitToKilograms() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+        let data = try JSONEncoder().encode(record)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        object.removeValue(forKey: "loadAdjustmentDisplayUnit")
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONSerialization.data(withJSONObject: object)
+        )
+
+        XCTAssertEqual(decoded.loadAdjustmentDisplayUnit, .kilograms)
+    }
+
     func testSessionRecordRoundTripsRecordedStepTitles() throws {
         let record = WorkoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,
@@ -315,6 +380,22 @@ final class MotherboardModelsTests: XCTestCase {
         let second = MotherboardSettingsStore(defaults: defaults)
         XCTAssertEqual(second.forceUnit, .newtons)
         XCTAssertEqual(second.thresholdKGF, 4.25, accuracy: 0.0001)
+    }
+
+    func testLoadAdjustmentUnitDefaultsToKilogramsAndRoundTripsIndependentlyOfForceUnit() {
+        let suite = "MotherboardModelsLoadAdjustmentUnitTests"
+        let defaults = UserDefaults(suiteName: suite)!
+        defaults.removePersistentDomain(forName: suite)
+
+        let first = MotherboardSettingsStore(defaults: defaults)
+        XCTAssertEqual(first.loadAdjustmentUnit, .kilograms)
+
+        first.loadAdjustmentUnit = .pounds
+        first.forceUnit = .newtons
+
+        let second = MotherboardSettingsStore(defaults: defaults)
+        XCTAssertEqual(second.loadAdjustmentUnit, .pounds)
+        XCTAssertEqual(second.forceUnit, .newtons)
     }
 
     func testForceSensorProfileDefaultsToAutomaticAndRoundTripsThroughUserDefaults() {
