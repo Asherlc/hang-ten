@@ -40,6 +40,10 @@ is inferred from a marketing photograph.
 - Plateau's body plus supplied edge/blocker is the included revision.  The
   product claims compatibility with inserts but does not make unnamed future
   inserts part of this audited package.
+- Aelith Cyclops, Crimptonite Helium Mobile, and Plateau Lifting Edge sources
+  establish a mono edge, product mass, and compact aluminium construction,
+  respectively, but not overall dimensions. Their packages therefore omit
+  `dimensions`; mass and marketing descriptions are not dimension values.
 
 ### Frozen package and physical-contact IDs
 

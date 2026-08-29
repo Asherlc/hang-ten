@@ -136,6 +136,17 @@ def test_crimptonite_helium_mobile_matches_audited_inventory() -> None:
     )
 
 
+def test_compact_single_hand_packages_omit_unpublished_outer_dimensions() -> None:
+    """Mass and marketing descriptions must not be presented as dimensions."""
+    for slug in (
+        "aelith-cyclops-011",
+        "crimptonite-helium-mobile",
+        "plateau-lifting-edge",
+    ):
+        board = board_package.load_board_package(REPOSITORY_ROOT / "Hangboards" / slug).board
+        assert "dimensions" not in board
+
+
 def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
     package_root = REPOSITORY_ROOT / "Hangboards" / "frictitious-port-a-board"
     package = board_package.load_board_package(package_root)

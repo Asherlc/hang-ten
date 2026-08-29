@@ -1,6 +1,6 @@
 # Compact Single-Hand Hangboards Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use a fresh subagent for every implementation or configuration task. The controller must use `superpowers:subagent-driven-development` with a per-task implementation and review checkpoint; do not substitute `executing-plans`. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add every currently sold, primary-source-verifiable compact single-hand hangboard or lifting edge found by a comprehensive manufacturer search, plus only source-complete routines.
 
@@ -16,7 +16,7 @@
 - Use direct manufacturer evidence and record URL, review date, revision, visible hold inventory, and exclusions.
 - Directly author canonical paths; never derive geometry from image processing or vectorization.
 - Omit every unsupported physical fact and every incomplete training prescription.
-- Push each commit to `origin/single-armed-tindeq`.
+- Push each commit to the workspace-owned remote branch selected for this work.
 
 ---
 
@@ -170,7 +170,7 @@ Expected: unchecked evidence entries exist.
 
 - [ ] **Step 3: Run validations and capture exact outcomes**
 
-Use a dedicated `CONDUCTOR_WORKSPACE_NAME` simulator following `docs/IOS_SIMULATOR_VALIDATION.md`. Inspect representative normal, active, and hit-tested paths for every imported package, record the exact commands/results in the audit, clean up the owned simulator, and mark the evidence checklist complete.
+Before creating the dedicated simulator, derive its owner from the final component of `${PASEO_WORKTREE_PATH:-$PWD}`, include that owner in the simulator name, and immediately record the exact name and UDID in `.context`. Follow `docs/IOS_SIMULATOR_VALIDATION.md`, inspect representative normal, active, and hit-tested paths for every imported package, record the exact commands/results in the audit, clean up the owned simulator, verify deletion, and mark the evidence checklist complete.
 
 - [ ] **Step 4: Verify all final checks**
 

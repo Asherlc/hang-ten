@@ -14,6 +14,16 @@ ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
 
 
+def _shell_function_body(script: str, function_name: str) -> str:
+    """Return a top-level shell function body without consuming later code."""
+    signature = f"{function_name}() {{"
+    _, separator, remainder = script.partition(signature)
+    assert separator, f"missing shell function {function_name}"
+    body, separator, _ = remainder.partition("\n          }\n")
+    assert separator, f"unterminated shell function {function_name}"
+    return body
+
+
 def _ci_workflow() -> dict[str, object]:
     document = yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
     assert isinstance(document, dict)
@@ -44,15 +54,15 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     worker_flag = "-maximum-parallel-testing-workers"
     assert xctest_tokens.count(worker_flag) == 1
     assert xctest_tokens[xctest_tokens.index(worker_flag) + 1] == "1"
-    assert "run_xctest_attempt() {" in xctest_command
+    xctest_attempt_body = _shell_function_body(xctest_command, "run_xctest_attempt")
     assert "os.setsid()" in xctest_command
     assert "os.execvp(sys.argv[1], sys.argv[1:])" in xctest_command
     assert 'kill -TERM -- "-$xcodebuild_pid"' in xctest_command
     assert 'kill -KILL -- "-$xcodebuild_pid"' in xctest_command
     assert xctest_command.count('kill -0 -- "-$xcodebuild_pid"') == 2
     assert re.search(
-        r"run_xctest_attempt\(\) \{.*?python3 -c .*?\\\n\s+xcodebuild \\.*?\n\s+test\s+>",
-        xctest_command,
+        r"python3 -c .*?\\\n\s+xcodebuild \\.*?\n\s+test\s+>",
+        xctest_attempt_body,
         flags=re.DOTALL,
     )
     assert "if ! run_xctest_attempt 1; then" in xctest_command
