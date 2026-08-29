@@ -2,8 +2,8 @@
 
 ## Local prerequisites and commands
 
-Install Android Studio with the Android SDK Platform 35, an API 35 emulator
-image, and a JDK 17. Open the `Android` directory in Android Studio, or use the
+Install Android Studio with Android SDK Platform 36, an API 35 emulator image,
+and a JDK 17. Open the `Android` directory in Android Studio, or use the
 checked-in Gradle wrapper from the repository root. Keep local Android SDK
 configuration in the ignored `Android/local.properties` file; do not commit it.
 
@@ -12,6 +12,7 @@ Run the local checks that CI runs before packaging:
 ```sh
 rtk ./Android/gradlew -p Android check
 rtk ./Android/gradlew -p Android :app:stageCanonicalAssets :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+rtk ./Android/gradlew -p Android -PGITHUB_OAUTH_CLIENT_ID=your_public_client_id :app:bundleRelease
 ```
 
 Start an API 35 emulator in Android Studio, then run the instrumented test
@@ -61,15 +62,69 @@ Record the Play Console order IDs, tester account, build version code, and the
 pass/fail result of each step in the release ticket. Do not include purchase
 tokens, service-account keys, or other credentials in the ticket.
 
+## Health, sensor, and GitHub release gates
+
+These checks require physical devices or external services and are not
+substituted by emulator fakes. Record the model/OS, candidate version code, and
+pass/fail result in the release ticket; never record OAuth tokens, GitHub device
+codes, sensor identifiers, or raw workout/sensor data.
+
+1. On an API 36+ device with Health Connect installed, open **Settings > Connect
+   Health**. Confirm the app does not request Health permission at launch, asks
+   only after that explicit action, and keeps local history after denied or
+   unavailable permission. With authorization granted, complete a workout,
+   confirm the locally saved session remains visible, then confirm the matching
+   strength-training record and its Hang Ten history reconciliation after an
+   app restart.
+2. On supported Android hardware, use **Settings > Connect sensor** and grant
+   Bluetooth permission only from that action. Exercise the reviewed
+   Motherboard, Tindeq Progressor, and PitchSix devices where available:
+   confirm scan/connect, live force, tare, a measured workout, disconnect, and
+   reconnect. Confirm a malformed/disconnected stream fails visibly without
+   losing local workout completion. This is the required real-transport check;
+   deterministic fake-transport tests do not replace it.
+3. In **Settings > Board editor**, sign in with the registered public GitHub
+   Device Flow client. Complete browser verification, cancel one attempt, and
+   verify sign-out removes local authorization. Pull a package, make a direct
+   geometry edit, validate/save it, push the allowed `board.json` plus its
+   referenced image to a draft branch, and confirm the pull request. Make a
+   competing remote change and confirm the Android client reports a conflict
+   rather than overwriting it. Never enter a personal access token or client
+   secret in the app.
+
+## Optional diagnostics configuration
+
+Android telemetry emits only the typed iOS-compatible event names/properties:
+tab/source/outcome, a coarse duration bucket, approved board-family values, and
+typed diagnostic category/operation/error-kind. It never sends plan or board
+identifiers, canonical geometry, instructions, health records, raw timing,
+sensor measurements, OAuth data, purchase tokens, or error text. Amplitude
+autocapture and device/location fields are disabled; Sentry receives only the
+typed `app diagnostic` message and tags.
+
+Both providers are optional. A missing, placeholder, or non-HTTPS value leaves
+the relevant adapter inert and does not prevent an Android release. To enable
+them in a protected `google-play` environment, configure:
+
+- Optional secret `HANGTEN_AMPLITUDE_API_KEY` for the Amplitude project key.
+- Optional environment variable `HANGTEN_SENTRY_DSN` for the HTTPS Sentry DSN.
+
+The release workflow passes these values to Gradle's Release `BuildConfig`; do not put them
+in source, tickets, issue comments, or command output. The DSN is an app-side
+identifier, not an authentication secret, but environment scoping still keeps
+operational configuration separate from source.
+
 ## GitHub Actions verification
 
 The stable branch-protection check is named **Android verification**. It runs
 the Android validation job when Android code, `Hangboards`, the canonical plan
 library, countdown audio, shared board content, or CI wiring changes. For
 unrelated pull requests, the stable check reports that the path is skipped
-successfully rather than remaining pending. Each run uploads an
-`android-verification-<run-id>` artifact containing the Debug APK and available
-test/lint reports.
+successfully rather than remaining pending. It runs JVM tests, Debug lint and
+APK assembly, a Release AAB candidate build using a synthetic public Device
+Flow client ID, API 35 instrumented tests, and a pinned `actionlint` workflow
+syntax check. Each run uploads an `android-verification-<run-id>` artifact
+containing the Debug APK, candidate AAB, and available test/lint reports.
 
 ## One-time Google Play operator handoff
 
@@ -96,6 +151,7 @@ before the release workflow can publish anything.
    - `ANDROID_UPLOAD_KEY_ALIAS`: alias of the upload key.
    - `ANDROID_UPLOAD_KEY_PASSWORD`: private-key password.
    - `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`: the complete JSON service-account key.
+   - `HANGTEN_AMPLITUDE_API_KEY` (optional): the Amplitude project key.
 
 5. Add this **environment variable** exactly as named:
 
@@ -104,6 +160,8 @@ before the release workflow can publish anything.
      public Device Flow client ID. Enable Device Flow for that app before
      release. This is intentionally a GitHub environment **variable**, not a
      secret: Android embeds the public client ID in `BuildConfig`.
+   - `HANGTEN_SENTRY_DSN` (optional): HTTPS Sentry DSN used for typed Android
+     diagnostics only.
 
 Never provide `GITHUB_CLIENT_SECRET`, an OAuth client secret, or a personal
 access token to the Android Gradle build, release environment, app settings,
@@ -113,7 +171,7 @@ or source tree. For a local Release build, pass only the same public value:
 rtk ./Android/gradlew -p Android -PGITHUB_OAUTH_CLIENT_ID=your_public_client_id :app:bundleRelease
 ```
 
-Treat all five secrets and the local keystore as credentials. The workflow
+Treat the five required secrets and local keystore as credentials. The workflow
 checks that every secret and variable is nonempty before decoding the keystore
 or invoking Gradle, writes the keystore and signing properties only in
 runner-temporary storage with restrictive permissions, and removes them when

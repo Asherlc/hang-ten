@@ -51,6 +51,12 @@ import com.hangten.android.sensors.SensorConnectionController
 import com.hangten.android.editor.BoardEditorListScreen
 import com.hangten.android.editor.BoardEditorScreen
 import com.hangten.android.editor.BoardEditorServices
+import com.hangten.android.telemetry.AppTab
+import com.hangten.android.telemetry.HangTenTelemetryEvent
+import com.hangten.android.telemetry.NoOpTelemetry
+import com.hangten.android.telemetry.PlanSource
+import com.hangten.android.telemetry.TelemetryDependencies
+import com.hangten.android.telemetry.WorkoutOutcome
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -66,6 +72,19 @@ private enum class HangTenDestination(
     Workout("workout", "Workout"),
 }
 
+private fun HangTenDestination.telemetryTab(): AppTab = when (this) {
+    HangTenDestination.Train -> AppTab.Train
+    HangTenDestination.Plans -> AppTab.Plans
+    HangTenDestination.History -> AppTab.History
+    else -> error("Only root tabs have telemetry values.")
+}
+
+private fun noOpTelemetryDependencies() = TelemetryDependencies(
+    tracking = NoOpTelemetry,
+    diagnostics = NoOpTelemetry,
+    isNoOp = true,
+)
+
 @Composable
 fun HangTenApp(
     boards: List<Board>,
@@ -75,6 +94,7 @@ fun HangTenApp(
     healthStore: WorkoutHealthStore = UnavailableHealthStore,
     sensorController: SensorConnectionController? = null,
     boardEditorServices: BoardEditorServices? = null,
+    telemetry: TelemetryDependencies = noOpTelemetryDependencies(),
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current.applicationContext
@@ -90,6 +110,7 @@ fun HangTenApp(
         healthStore = healthStore,
         sensorController = sensorController,
         boardEditorServices = boardEditorServices,
+        telemetry = telemetry,
         modifier = modifier,
     )
 }
@@ -105,6 +126,7 @@ fun HangTenApp(
     healthStore: WorkoutHealthStore = UnavailableHealthStore,
     sensorController: SensorConnectionController? = null,
     boardEditorServices: BoardEditorServices? = null,
+    telemetry: TelemetryDependencies = noOpTelemetryDependencies(),
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
@@ -153,6 +175,7 @@ fun HangTenApp(
                             NavigationBarItem(
                                 selected = destination == item.route,
                                 onClick = {
+                                    telemetry.tracking.track(HangTenTelemetryEvent.AppTabSelected(item.telemetryTab()))
                                     navController.navigate(item.route) {
                                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                                         launchSingleTop = true
@@ -182,12 +205,19 @@ fun HangTenApp(
                 accessStore = accessStore,
                 sensorController = sensorController,
                 boardEditorServices = boardEditorServices,
+                telemetry = telemetry,
                 onBoardSelected = selections::selectBoard,
                 onPlanSelected = selections::selectPlan,
                 onOpenSettings = { navController.navigate(HangTenDestination.Settings.route) },
                 onStartWorkout = { navController.navigate(HangTenDestination.Workout.route) },
                 onSessionEnded = { completed ->
                     coroutineScope.launch {
+                        telemetry.tracking.track(
+                            HangTenTelemetryEvent.WorkoutFinished(
+                                WorkoutOutcome.Completed,
+                                completed.session.elapsedDurationMs,
+                            ),
+                        )
                         healthViewModel.recordCompletion(completed)
                         accessStore.recordSavedWorkout(hasLifetimeEntitlement)
                         historyVersion += 1
@@ -235,6 +265,7 @@ private fun HangTenNavHost(
     accessStore: WorkoutAccessStore,
     sensorController: SensorConnectionController?,
     boardEditorServices: BoardEditorServices?,
+    telemetry: TelemetryDependencies,
     onBoardSelected: (Board) -> Unit,
     onPlanSelected: (TrainingPlan) -> Unit,
     onOpenSettings: () -> Unit,
@@ -251,7 +282,10 @@ private fun HangTenNavHost(
             WorkoutAccessGate(
                 accessStore = accessStore,
                 purchaseManager = purchaseManager,
-                onWorkoutAllowed = onStartWorkout,
+                onWorkoutAllowed = {
+                    telemetry.tracking.track(HangTenTelemetryEvent.WorkoutStarted(PlanSource.Catalog))
+                    onStartWorkout()
+                },
             ) { requestWorkout ->
                 TrainScreen(
                     board = selectedBoard,
@@ -264,6 +298,9 @@ private fun HangTenNavHost(
             }
         }
         composable(HangTenDestination.Plans.route) {
+            LaunchedEffect(Unit) {
+                telemetry.tracking.track(HangTenTelemetryEvent.PlanBrowsed(PlanSource.Catalog))
+            }
             PlansScreen(
                 boards = boards,
                 plans = plans,

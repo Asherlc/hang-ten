@@ -34,6 +34,9 @@ import com.hangten.android.editor.GitHubDeviceFlow
 import com.hangten.android.editor.GitHubPackageSync
 import com.hangten.android.editor.GitHubSyncSession
 import com.hangten.android.editor.OkHttpGitHubApi
+import com.hangten.android.telemetry.AndroidTelemetryAdapterFactory
+import com.hangten.android.telemetry.TelemetryComposition
+import com.hangten.android.telemetry.TelemetryConfiguration
 import com.hangten.training.BuildConfig
 import java.io.File
 
@@ -60,6 +63,12 @@ class MainActivity : ComponentActivity() {
                     }
                     val sensorController = remember {
                         SensorConnectionController(AndroidBleForceSensorTransport(applicationContext))
+                    }
+                    val telemetry = remember {
+                        TelemetryComposition.make(
+                            TelemetryConfiguration(BuildConfig.AMPLITUDE_API_KEY, BuildConfig.SENTRY_DSN),
+                            AndroidTelemetryAdapterFactory(applicationContext),
+                        )
                     }
                     val boardEditorServices = remember {
                         val tokenStore = EncryptedGitHubTokenStore(applicationContext)
@@ -88,6 +97,7 @@ class MainActivity : ComponentActivity() {
                         healthStore = healthStore,
                         sensorController = sensorController,
                         boardEditorServices = boardEditorServices,
+                        telemetry = telemetry,
                     )
                 }
             }

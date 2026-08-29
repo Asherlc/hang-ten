@@ -11,6 +11,17 @@ val githubOauthClientId = providers.gradleProperty("GITHUB_OAUTH_CLIENT_ID").orE
         "GITHUB_OAUTH_CLIENT_ID must be a public GitHub OAuth client identifier."
     }
 }
+val amplitudeApiKey = providers.gradleProperty("AMPLITUDE_API_KEY").orElse("").get().trim()
+val sentryDsn = providers.gradleProperty("SENTRY_DSN").orElse("").get().trim().also {
+    require(it.isEmpty() || it.startsWith("https://")) {
+        "SENTRY_DSN must be an HTTPS DSN when configured."
+    }
+}
+
+fun String.asBuildConfigString(): String {
+    require(none { it == '\n' || it == '\r' }) { "Build configuration values may not contain newlines." }
+    return "\"${replace("\\", "\\\\").replace("\"", "\\\"")}\""
+}
 
 android {
     namespace = "com.hangten.training"
@@ -24,6 +35,8 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "GITHUB_OAUTH_CLIENT_ID", "\"$githubOauthClientId\"")
+        buildConfigField("String", "AMPLITUDE_API_KEY", amplitudeApiKey.asBuildConfigString())
+        buildConfigField("String", "SENTRY_DSN", sentryDsn.asBuildConfigString())
     }
 
     buildFeatures {
@@ -79,6 +92,8 @@ dependencies {
     implementation("androidx.health.connect:connect-client:1.1.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.amplitude:analytics-android:1.30.1")
+    implementation("io.sentry:sentry-android:8.54.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")

@@ -29,6 +29,8 @@ jobs:
       GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
       GOOGLE_PLAY_PACKAGE_NAME: ${{ vars.GOOGLE_PLAY_PACKAGE_NAME }}
       HANGTEN_GITHUB_OAUTH_CLIENT_ID: ${{ vars.HANGTEN_GITHUB_OAUTH_CLIENT_ID }}
+      HANGTEN_AMPLITUDE_API_KEY: ${{ secrets.HANGTEN_AMPLITUDE_API_KEY }}
+      HANGTEN_SENTRY_DSN: ${{ vars.HANGTEN_SENTRY_DSN }}
 
     steps:
       # actions/checkout v4.2.2
@@ -72,7 +74,10 @@ jobs:
           chmod 600 "$keystore_path" "$signing_properties"
           unset ANDROID_UPLOAD_KEYSTORE_BASE64 ANDROID_UPLOAD_KEYSTORE_PASSWORD ANDROID_UPLOAD_KEY_ALIAS ANDROID_UPLOAD_KEY_PASSWORD
           GRADLE_USER_HOME="$signing_dir" ./Android/gradlew --no-daemon -p Android \
-            -PGITHUB_OAUTH_CLIENT_ID="$HANGTEN_GITHUB_OAUTH_CLIENT_ID" :app:bundleRelease
+            -PGITHUB_OAUTH_CLIENT_ID="$HANGTEN_GITHUB_OAUTH_CLIENT_ID" \
+            -PAMPLITUDE_API_KEY="${HANGTEN_AMPLITUDE_API_KEY:-}" \
+            -PSENTRY_DSN="${HANGTEN_SENTRY_DSN:-}" \
+            :app:bundleRelease
           test -s Android/app/build/outputs/bundle/release/app-release.aab
 
       # actions/upload-artifact v4.6.2

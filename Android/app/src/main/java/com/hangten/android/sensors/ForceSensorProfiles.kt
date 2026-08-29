@@ -27,7 +27,11 @@ enum class ForceSensorProfile(
         ForceSensorCharacteristic(ProgressorProtocolAdapter.SERVICE_UUID, ProgressorProtocolAdapter.WRITE_UUID),
     );
 
-    val serviceUuids: Set<String> get() = notificationCharacteristics.mapTo(linkedSetOf()) { it.serviceUuid } + listOfNotNull(writeCharacteristic?.serviceUuid)
+    val serviceUuids: Set<String>
+        get() = linkedSetOf<String>().also { serviceUuids ->
+            notificationCharacteristics.forEach { characteristic -> serviceUuids += characteristic.serviceUuid }
+            writeCharacteristic?.serviceUuid?.let { serviceUuids += it }
+        }
 
     companion object {
         val connectable = entries.filter { it != Automatic }

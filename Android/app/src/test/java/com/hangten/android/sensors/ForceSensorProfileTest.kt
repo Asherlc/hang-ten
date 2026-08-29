@@ -8,6 +8,14 @@ import org.junit.Test
 
 class ForceSensorProfileTest {
     @Test
+    fun `profile service UUIDs include notification and write services`() {
+        assertEquals(
+            setOf(PitchSixProtocolAdapter.FORCE_SERVICE_UUID, PitchSixProtocolAdapter.MODE_SERVICE_UUID),
+            ForceSensorProfile.PitchSix.serviceUuids,
+        )
+    }
+
+    @Test
     fun progressorRecognizesNamedAndGenericProfilesAndDecodesLittleEndianSamples() {
         val named = ProgressorProtocolAdapter(ForceSensorProfile.Progressor)
         val generic = ProgressorProtocolAdapter(ForceSensorProfile.GenericProgressor)

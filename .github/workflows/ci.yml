@@ -186,7 +186,10 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Stage canonical content, test, lint, and assemble Debug APK
-        run: ./Android/gradlew -p Android :app:stageCanonicalAssets :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+        run: >-
+          ./Android/gradlew -p Android
+          -PGITHUB_OAUTH_CLIENT_ID=hangten_ci_public_device_flow_client
+          :app:stageCanonicalAssets :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:bundleRelease
 
       # reactivecircus/android-emulator-runner v2.34.0
       - name: Run Android instrumented tests
@@ -203,10 +206,33 @@ jobs:
           name: android-verification-${{ github.run_id }}
           path: |
             Android/app/build/outputs/apk/debug/*.apk
+            Android/app/build/outputs/bundle/release/*.aab
             Android/app/build/reports/**
             Android/app/build/test-results/**
             Android/app/build/outputs/androidTest-results/**
           if-no-files-found: warn
+
+  workflow-lint:
+    name: Lint GitHub Actions workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      # reviewdog/action-actionlint v1.73.2
+      - name: Validate workflow syntax
+        uses: reviewdog/action-actionlint@dbe5299849118fd6f099ba563d263d770955a64a
+        with:
+          reporter: github-check
+          filter_mode: nofilter
+          fail_level: error
 
   android-required:
     # Keep this stable: branch protection requires this exact check name. An

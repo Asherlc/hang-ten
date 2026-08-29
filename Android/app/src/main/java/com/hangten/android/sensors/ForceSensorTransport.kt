@@ -284,7 +284,8 @@ object BlePermissionRequirements {
  */
 class AndroidBleForceSensorTransport(private val context: Context) : ForceSensorTransport {
     private val appContext = context.applicationContext
-    private val bluetoothAdapter: BluetoothAdapter? = appContext.getSystemService(BluetoothManager::class.java)?.adapter
+    private val bluetoothAdapter: BluetoothAdapter?
+        get() = (appContext.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
     private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val errorEvents = Channel<Throwable>(Channel.UNLIMITED)
     private val notificationEvents = SerialNotificationQueue(notificationScope, onTerminal = ::reportError)

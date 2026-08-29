@@ -143,6 +143,13 @@ Play delivery is intentionally separate: a `main` push can publish a signed
 Release AAB to the internal track only after an operator configures the
 protected `google-play` environment. See [Android release operations](docs/ANDROID_RELEASE.md).
 
+Android's optional Amplitude and Sentry adapters use the same typed event
+names/properties as iOS and remain inert without configured keys. They never
+transmit personal workout content. The Android gate also builds a candidate
+Release AAB and validates GitHub Actions syntax with actionlint; the physical
+Play Billing, Health Connect, BLE, and GitHub Device Flow checks remain explicit
+release gates in the Android operations guide.
+
 The release workflow uses a GitHub environment named `app-store-connect`.
 Configure that environment with no required reviewers for zero-touch delivery,
 and restrict it to the `main` branch. Add these environment secrets:
