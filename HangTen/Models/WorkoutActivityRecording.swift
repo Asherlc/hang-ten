@@ -89,6 +89,40 @@ internal enum BoardTargetResolver {
         resolveHoldIDs(for: target, among: compatibleHolds(on: board, gripType: gripType))
     }
 
+    static func resolveHoldIDs(
+        for target: HoldTarget,
+        handUse: WorkoutHandUse,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [String] {
+        selectHoldIDs(
+            resolveHoldIDs(for: target, on: board, gripType: gripType),
+            for: handUse,
+            on: board
+        )
+    }
+
+    static func resolveObjects(
+        for target: HoldTarget,
+        handUse: WorkoutHandUse,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [String] {
+        let selectedHoldIDs = Set(resolveHoldIDs(
+            for: target,
+            handUse: handUse,
+            on: board,
+            gripType: gripType
+        ))
+        var objectIDs: [String] = []
+        for hold in board.holds where selectedHoldIDs.contains(hold.id) {
+            if !objectIDs.contains(hold.equipmentObjectID) {
+                objectIDs.append(hold.equipmentObjectID)
+            }
+        }
+        return objectIDs
+    }
+
     private static func resolveHoldIDs(for target: HoldTarget, among holds: [BoardHold]) -> [String] {
         if !target.holdIDs.isEmpty {
             let available = Set(holds.map(\.id))
@@ -188,6 +222,21 @@ internal enum BoardTargetResolver {
         return board.holds.filter { ids.contains($0.id) }
     }
 
+    static func resolveHolds(
+        for target: HoldTarget,
+        handUse: WorkoutHandUse,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [BoardHold] {
+        let ids = Set(resolveHoldIDs(
+            for: target,
+            handUse: handUse,
+            on: board,
+            gripType: gripType
+        ))
+        return board.holds.filter { ids.contains($0.id) }
+    }
+
     static func substituteHoldIDs(
         for target: HoldTarget,
         on board: TrainingBoard,
@@ -210,6 +259,35 @@ internal enum BoardTargetResolver {
         return []
     }
 
+    static func substituteHoldIDs(
+        for target: HoldTarget,
+        handUse: WorkoutHandUse,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [String] {
+        let holds = compatibleHolds(on: board, gripType: gripType)
+        let primary = resolveHoldIDs(for: target, among: holds)
+        if !primary.isEmpty {
+            return selectHoldIDs(primary, for: handUse, on: board)
+        }
+        let closestPrimary = closestMatch(for: target, among: holds)
+        if !closestPrimary.isEmpty {
+            return selectHoldIDs(closestPrimary, for: handUse, on: board)
+        }
+        guard target.feature?.holdKind == .pocket || target.kind == .pocket else { return [] }
+        for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
+            let fallbackTarget = HoldTarget.feature(
+                fallback,
+                fingerCapacity: target.fingerCapacity
+            )
+            let closestFallback = closestMatch(for: fallbackTarget, among: holds)
+            if !closestFallback.isEmpty {
+                return selectHoldIDs(closestFallback, for: handUse, on: board)
+            }
+        }
+        return []
+    }
+
     static func substituteHolds(
         for target: HoldTarget,
         on board: TrainingBoard,
@@ -217,6 +295,53 @@ internal enum BoardTargetResolver {
     ) -> [BoardHold] {
         let ids = Set(substituteHoldIDs(for: target, on: board, gripType: gripType))
         return board.holds.filter { ids.contains($0.id) }
+    }
+
+    static func substituteHolds(
+        for target: HoldTarget,
+        handUse: WorkoutHandUse,
+        on board: TrainingBoard,
+        gripType: GripType? = nil
+    ) -> [BoardHold] {
+        let ids = Set(substituteHoldIDs(
+            for: target,
+            handUse: handUse,
+            on: board,
+            gripType: gripType
+        ))
+        return board.holds.filter { ids.contains($0.id) }
+    }
+
+    private static func selectHoldIDs(
+        _ candidateIDs: [String],
+        for handUse: WorkoutHandUse,
+        on board: TrainingBoard
+    ) -> [String] {
+        let candidates = candidateIDs.compactMap { id in
+            board.holds.first { $0.id == id }
+        }
+        switch handUse {
+        case .single:
+            guard let objectID = candidates.first?.equipmentObjectID else { return [] }
+            return candidates.filter { $0.equipmentObjectID == objectID }.map(\.id)
+        case .double:
+            var selectedObjectIDs: [String] = []
+            for hold in candidates where !selectedObjectIDs.contains(hold.equipmentObjectID) {
+                selectedObjectIDs.append(hold.equipmentObjectID)
+                if selectedObjectIDs.count == 2 { break }
+            }
+            if selectedObjectIDs.count == 2 {
+                return candidates.filter { selectedObjectIDs.contains($0.equipmentObjectID) }.map(\.id)
+            }
+            if let bilateralHold = candidates.first(where: { $0.handCapacity == 2 }) {
+                return [bilateralHold.id]
+            }
+            // Older package metadata has no hand-capacity declaration. Keep
+            // its established selection behavior, but never construct a
+            // bilateral target from a hold explicitly documented for one hand.
+            guard !candidates.contains(where: { $0.handCapacity == 1 }) else { return [] }
+            return candidates.map(\.id)
+        }
     }
 
     private static func compatibleHolds(on board: TrainingBoard, gripType: GripType?) -> [BoardHold] {
@@ -599,7 +724,12 @@ struct WorkoutActivityRecorder {
                     continue
                 }
                 let holdsByTarget = segment.targets.map {
-                    BoardTargetResolver.substituteHolds(for: $0, on: board, gripType: step.gripType)
+                    BoardTargetResolver.substituteHolds(
+                        for: $0,
+                        handUse: step.handUse,
+                        on: board,
+                        gripType: step.gripType
+                    )
                 }
                 guard holdsByTarget.allSatisfy({ !$0.isEmpty }) else { throw WorkoutActivityRecordingError.unresolvedTarget(stepID: step.id, segmentIndex: index) }
                 let holds = holdsByTarget.flatMap { $0 }
