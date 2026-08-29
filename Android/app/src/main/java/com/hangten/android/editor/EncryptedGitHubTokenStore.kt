@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -50,7 +52,7 @@ internal class CiphertextGitHubTokenStore(
 class EncryptedGitHubTokenStore(context: Context) : GitHubTokenStore {
     private val delegate = CiphertextGitHubTokenStore(
         SharedPreferencesCiphertextStorage(
-            context.applicationContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE),
+            context.applicationContext,
         ),
         AndroidKeystoreTokenCipher(),
     )
@@ -65,8 +67,15 @@ class EncryptedGitHubTokenStore(context: Context) : GitHubTokenStore {
 }
 
 private class SharedPreferencesCiphertextStorage(
-    private val preferences: SharedPreferences,
+    context: Context,
 ) : CiphertextStorage {
+    private val preferences: SharedPreferences = EncryptedSharedPreferences.create(
+        context,
+        PREFERENCES,
+        MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+    )
     override fun read(): String? = preferences.getString(TOKEN, null)
     override fun write(value: String) {
         check(preferences.edit().putString(TOKEN, value).commit()) { "Unable to save encrypted GitHub credential." }
@@ -75,10 +84,13 @@ private class SharedPreferencesCiphertextStorage(
         check(preferences.edit().remove(TOKEN).commit()) { "Unable to clear encrypted GitHub credential." }
     }
 
-    private companion object { const val TOKEN = "oauth_token" }
+    private companion object {
+        const val PREFERENCES = "hangten.github.encrypted"
+        const val TOKEN = "oauth_token"
+    }
 }
 
-private class AndroidKeystoreTokenCipher : TokenCipher {
+internal class AndroidKeystoreTokenCipher : TokenCipher {
     override fun encrypt(plaintext: String): String {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, key())

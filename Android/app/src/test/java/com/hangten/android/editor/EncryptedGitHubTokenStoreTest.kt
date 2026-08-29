@@ -19,6 +19,15 @@ class EncryptedGitHubTokenStoreTest {
         assertNull(storage.value)
         assertNull(store.load())
     }
+
+    @Test
+    fun corruptCiphertextIsClearedWithoutCrashingOrReturningAToken() {
+        val storage = FakeCiphertextStorage().also { it.value = "corrupt-ciphertext" }
+        val store = CiphertextGitHubTokenStore(storage, RejectingTokenCipher())
+
+        assertNull(store.load())
+        assertNull(storage.value)
+    }
 }
 
 private class FakeCiphertextStorage : CiphertextStorage {
@@ -31,4 +40,9 @@ private class FakeCiphertextStorage : CiphertextStorage {
 private class PrefixTokenCipher : TokenCipher {
     override fun encrypt(plaintext: String) = "cipher:${plaintext.reversed()}"
     override fun decrypt(ciphertext: String) = ciphertext.removePrefix("cipher:").reversed()
+}
+
+private class RejectingTokenCipher : TokenCipher {
+    override fun encrypt(plaintext: String): String = error("not used")
+    override fun decrypt(ciphertext: String): String = throw IllegalArgumentException("corrupt ciphertext")
 }
