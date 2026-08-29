@@ -30,7 +30,7 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
         "jug-outer-rim",
         "pinch-body",
     }
-    assert all(hold.get("handCapacity") == 1 for hold in board["holds"])
+    assert all("handCapacity" not in hold for hold in board["holds"])
     assert {hold["kind"] for hold in board["holds"]} >= {"edge", "pocket", "jug", "pinch"}
     assert {presentation["id"] for presentation in board["presentations"]} == {
         "primary",
