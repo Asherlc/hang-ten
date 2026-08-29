@@ -403,7 +403,8 @@ final class WorkoutTimelineTests: XCTestCase {
             shortLabel: "E",
             detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            handCapacity: 2
         )
         let step = WorkoutStep(
             id: "cue-step",
