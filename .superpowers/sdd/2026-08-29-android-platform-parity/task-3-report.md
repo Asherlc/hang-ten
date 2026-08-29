@@ -248,6 +248,8 @@ no AVD was created. All three exact owned SDK roots were then deleted.
   finished **BUILD SUCCESSFUL**. The connected-emulator release gate remains
   separately unrun.
 - Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round8` root is absent.
+- Cleanup check: the exact owned
   `.context/android-sdk-bitter-scorpion-0o9ylkoo-round6` root is absent.
 
 ### Round 7 late-event regression repair
@@ -271,3 +273,23 @@ no AVD was created. All three exact owned SDK roots were then deleted.
   remains separately unrun.
 - Cleanup check: the exact owned
   `.context/android-sdk-bitter-scorpion-0o9ylkoo-round7` root is absent.
+
+### Round 8 post-terminal callback execution correction
+
+- The late-event regression now models a non-cancellable callback already
+  delivered after teardown without violating Kotlin Flow context rules. A
+  test-only latch releases a `NonCancellable` invocation of the controller's
+  real private Motherboard frame handler; a second latch is completed only
+  after that handler returns. The terminal state/error assertion occurs after
+  this explicit post-handler completion.
+- With the Round 6 notification fences temporarily removed, the harness
+  reached the post-handler latch and then failed because late `Stream:30` and
+  parser-error handling overwrote the remote `GATT 133` terminal. Restoring
+  the existing fence unchanged made the same test pass. No production source
+  change is included in this correction.
+- Fresh owned minimal-SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round8` (no image or AVD):
+  focused `ForceSensorTransportTest`/`SensorConnectionControllerTest` and
+  unfiltered `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` both
+  finished **BUILD SUCCESSFUL**. The connected-emulator release gate remains
+  separately unrun.
