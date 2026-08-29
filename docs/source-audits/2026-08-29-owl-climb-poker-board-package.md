@@ -52,26 +52,26 @@ the two half-circles retain explicitly authored closed Bézier paths. The saved
 paths remain the normal rendering, active rendering, and hit-test truth. No
 source image drove geometry extraction or automatic refinement.
 
-## iOS validation limitation
+## iOS visual validation
 
-On 2026-08-29, an owned iPhone 17 Pro / iOS 26.3 simulator was created and
-cleaned under the exact `Hang Ten Paseo infamous-parrot` ownership marker for
-each attempt. A signed direct launch did reach the Hang Ten board picker, but
-only after the cold launch's UIKit scene became ready roughly 24 seconds after
-`simctl launch`; the earlier 12-second splash capture was discarded. The
-focused UI test is registered in the `HangTenUITests` target and uses a
-30-second board-picker wait for that observed cold-start boundary.
+On 2026-08-29, a fresh owned iPhone 17 Pro / iOS 26.3 simulator named
+`Hang Ten Paseo infamous-parrot Review` was recorded before boot and used by
+explicit UUID throughout. A signed Debug build was installed and launched with
+`SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_PICKER=1`. Its standalone cold-launch frame
+remained blank after 30 seconds, so it was discarded rather than presented as
+app evidence.
 
-One execution reached Poker, switched to Face B, and tapped the left central
-sloper. It exposed an assertion-only test defect: `boardDetail.map` is an
-accessible button rather than an `Other` element. The test now queries that
-actual element type. The verification retry then stalled before launching
-either the app or XCTest runner; `launchctl` on the explicit owned UUID showed
-neither process, and Xcode could not finish writing its interrupted result
-bundle after its 30-second record-finalization wait.
+The focused
+`OwlClimbPokerBoardMapInteractionUITests/testPokerFaceBSloperHasAlignedNormalActiveAndHitTestStates`
+then passed (1 test, 0 failures, 52.678 seconds) on that same owned simulator.
+It opened the board picker, searched for Poker, opened Hold specs, captured
+Face A, switched to Face B, tapped the left central sloper, and asserted
+`boardDetail.selectedHold.face-b-sloper-left`. The retained XCTest attachments
+were visually reviewed and show the intended normal and selected states:
 
-No normal Face A or active Face B screenshot is retained or claimed as product
-evidence. The owned simulator resources and workspace Derived Data were
-removed through `scripts/paseo-resource-cleanup.sh archive`; the local
-manifests are empty. Focused visual validation still needs a healthy
-Xcode/simulator test-runner session.
+- [Face A normal](screenshots/pr-371/poker-face-a-normal.png)
+- [Face B left central sloper selected](screenshots/pr-371/poker-face-b-left-sloper-selected.png)
+
+The owned simulator and workspace-local build, result, log, and intermediate
+screenshot artifacts were cleaned using `scripts/paseo-resource-cleanup.sh
+archive`; no shared simulator was addressed.
