@@ -373,7 +373,8 @@ internal enum BoardTargetResolver {
                 return lhs < rhs
             }
             let objectID = side == .left ? rankedObjectIDs.first! : rankedObjectIDs.last!
-            return candidates.filter { $0.equipmentObjectID == objectID }.map(\.id)
+            return candidates.first(where: { $0.equipmentObjectID == objectID })
+                .map { [$0.id] } ?? []
         case .double:
             guard side == .both else { return [] }
             var selectedObjectIDs: [String] = []

@@ -89,12 +89,25 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             on: rockRings
         )
 
-        XCTAssertEqual(Set(left.compactMap { id in
-            rockRings.holds.first(where: { $0.id == id })?.equipmentObjectID
-        }), ["left-ring"])
-        XCTAssertEqual(Set(right.compactMap { id in
-            rockRings.holds.first(where: { $0.id == id })?.equipmentObjectID
-        }), ["right-ring"])
+        XCTAssertEqual(left, ["pocket-40-four-left"])
+        XCTAssertEqual(right, ["pocket-40-four-right"])
+    }
+
+    func testSingleHandTargetSelectsOneHoldOnOneObject() {
+        let board = board(holds: [
+            hold(id: "first-pocket", kind: .pocket, handCapacity: 1, x: 0.1),
+            hold(id: "second-pocket", kind: .pocket, handCapacity: 1, x: 0.8)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(
+                for: .kind(.pocket),
+                handUse: .single,
+                side: .left,
+                on: board
+            ),
+            ["first-pocket"]
+        )
     }
 
     func testDoubleHandRockRingTargetResolvesMatchingHoldsOnTwoRings() throws {
