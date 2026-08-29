@@ -891,6 +891,7 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
         "depthRangeMillimeters",
         "fingerCapacity",
         "handCapacity",
+        "equipmentObjectID",
         "gripType",
         "features",
         "sloper",
@@ -900,6 +901,7 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
     assert all(not (set(hold) & retired_fields) for hold in holds)
     assert all({"id", "name", "kind", "geometry"} <= set(hold) for hold in holds)
     assert all(set(hold) <= supported_fields for hold in holds)
+    assert {hold.get("equipmentObjectID") for hold in holds} == {"primary"}
     assert all("depthRangeMillimeters" not in hold for hold in holds)
     expected_pocket_grips = {
         2: "twoFingerPocket",
