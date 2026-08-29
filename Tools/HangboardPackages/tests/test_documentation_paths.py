@@ -16,18 +16,45 @@ TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
 
 def _shell_function_body(script: str, function_name: str) -> str:
     """Return a top-level shell function body without consuming later code."""
-    signature = f"{function_name}() {{"
-    _, separator, remainder = script.partition(signature)
-    assert separator, f"missing shell function {function_name}"
-    body, separator, _ = remainder.partition("\n          }\n")
-    assert separator, f"unterminated shell function {function_name}"
-    return body
+    signature = re.search(
+        rf"^(?P<indent>[ \t]*){re.escape(function_name)}\(\) \{{[ \t]*$",
+        script,
+        flags=re.MULTILINE,
+    )
+    assert signature, f"missing shell function {function_name}"
+    closing_brace = re.compile(
+        rf"^{re.escape(signature.group('indent'))}}}[ \t]*$", re.MULTILINE
+    ).search(script, signature.end())
+    assert closing_brace, f"unterminated shell function {function_name}"
+    return script[signature.end() : closing_brace.start()]
 
 
 def _ci_workflow() -> dict[str, object]:
     document = yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
     assert isinstance(document, dict)
     return document
+
+
+def test_shell_function_body_ends_at_an_unindented_closing_brace() -> None:
+    """Nested shell blocks must not require YAML source indentation to parse."""
+    script = """\
+run_xctest_attempt() {
+  while true; do
+    if should_retry; then
+      break
+    fi
+  done
+}
+outside_function
+"""
+
+    assert _shell_function_body(script, "run_xctest_attempt") == """
+  while true; do
+    if should_retry; then
+      break
+    fi
+  done
+"""
 
 
 def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() -> None:
