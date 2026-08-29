@@ -28,6 +28,7 @@ is inferred from a marketing photograph.
 | Captain Fingerfood | POCKET+ | [product](https://en.captainfingerfood.rocks/Products/The-hangboard-for-your-pocket): distinct 110 x 66 x 35 mm revision with 6/10/15/20 mm bars, listed rotated two-finger uses, open/undercut pinch, and open/undercut jug. | included |
 | Captain Fingerfood | UNLEVEL | [product](https://en.captainfingerfood.rocks/products/unlevel-hangboard): 12 x 7 x 3 cm, two curved rung depths (20/25 mm). | included |
 | Captain Fingerfood | DUAL | [product](https://en.captainfingerfood.rocks/products/dual-hangboard): 12 x 7 x 3 cm, one straight and one curved 20 mm edge. | included |
+| Aelith | Cyclops Portable Hangboard (current SKU 1001-011, Blue x Black) | [current product](https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/): product is in stock and add-to-cart. The complete selectable inventory is one 20 mm mono edge; the lanyard and carabiner hole are suspension hardware, not contacts. Other grip postures named on the page use that same mono edge and are not separate holds. | included |
 | Crimptonite | Helium Mobile | [product](https://crimptonite.com/product/helium-mobile/): current portable 125 g board; 14 mm, 22 mm, 10/18 mm centre hold, top jug, and a back jug/sloper are explicitly described. | included |
 
 ### Package hand-off notes
@@ -44,7 +45,7 @@ is inferred from a marketing photograph.
 
 | Manufacturer | Candidate / catalog result | Primary URL checked | Disposition and reason |
 | --- | --- | --- | --- |
-| Nature Climbing | Stone Hanger All-you-need | [bundle](https://natureclimbing.com/products/stone-hanger-all-you-need) | excluded — bundle of the already-admitted Stone Hanger and accessories, not a physical-board revision. |
+| Nature Climbing | Stone Hanger All-you-need | [bundle](https://natureclimbing.com/products/stone-hanger-all-you-need) | excluded — bundle of the deferred Stone Hanger and accessories, not a physical-board revision. |
 | Nature Climbing | Raw Hanger | [product](https://natureclimbing.com/products/raw-hanger) | deferred — current first-party prose names 20/15/10/6 mm edges but only says “more than 10” grip/pinch positions. It does not freeze every visible canonical contact in a reviewable inventory, so this audit cannot safely hand it to package work. |
 | Nature Climbing | Stone Hanger (Granite, Beech, and Smoked editions) | [product](https://natureclimbing.com/products/stone-hanger-1) | deferred — current first-party prose names 20/15/10/6 mm edges but only says “over 10” positions. The material/finish editions do not cure the missing frozen contact inventory. |
 | Lattice | Mega Bar | [catalogue, p. 8](https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf) | excluded — manufacturer explicitly calls it the two-handed counterpart to the single-hand Mini Bar. |
@@ -65,7 +66,6 @@ is inferred from a marketing photograph.
 | Zodiac | 22VXE and 22RXE | [22VXE](https://zodiac-holds.com/products/dual-edge-block-vxe), [22RXE](https://zodiac-holds.com/products/dual-edge-block-22rxe) | excluded — both direct manufacturer pages are marked “Sold out.” |
 | AEVORN | Full-Size Grip Training Hangboard | [product](https://theaevorn.com/full-size-hangboard) | excluded — manufacturer calls it a wider two-hand platform (19.69 in), explicitly outside the category. |
 | AEVORN | Portable Wooden Hangboard Block | [product](https://theaevorn.com/portable-hangboard) | deferred — primary text gives 6/15/20 mm depths but calls the rest “multiple grip orientations”; it does not enumerate which physical contacts/orientations form the complete inventory. |
-| Aelith | Cyclops Portable Hangboard | [former product URL](https://aelithequipment.com/product/cyclops-portable-hangboard/) | no current product — rechecked URL now returns 404. The current [manufacturer home page](https://aelithequipment.com/) does not supply a working current product page or purchasable revision. |
 
 ## Manufacturer coverage and verification
 
@@ -86,7 +86,7 @@ that the checked manufacturer catalogue produced no current eligible item;
 | Captain Fingerfood | included | https://captainfingerfood.rocks/en/collections/hangboards |
 | Problemsolver | no current product | https://www.problemsolver.rocks/hangboards |
 | AEVORN | excluded | https://theaevorn.com/portable-hangboard |
-| Aelith | no current product | https://aelithequipment.com/ |
+| Aelith | included | https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/ |
 | Two Stones | no current product | https://www.twostonesclimbing.com/collections/portable-hangboard |
 | Zodiac | no current product | https://zodiac-holds.com/collections/training |
 
