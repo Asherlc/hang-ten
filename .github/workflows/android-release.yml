@@ -28,6 +28,7 @@ jobs:
       ANDROID_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
       GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
       GOOGLE_PLAY_PACKAGE_NAME: ${{ vars.GOOGLE_PLAY_PACKAGE_NAME }}
+      HANGTEN_GITHUB_OAUTH_CLIENT_ID: ${{ vars.HANGTEN_GITHUB_OAUTH_CLIENT_ID }}
 
     steps:
       # actions/checkout v4.2.2
@@ -52,6 +53,7 @@ jobs:
           : "${ANDROID_UPLOAD_KEY_PASSWORD:?Configure the ANDROID_UPLOAD_KEY_PASSWORD secret in the google-play environment}"
           : "${GOOGLE_PLAY_SERVICE_ACCOUNT_JSON:?Configure the GOOGLE_PLAY_SERVICE_ACCOUNT_JSON secret in the google-play environment}"
           : "${GOOGLE_PLAY_PACKAGE_NAME:?Configure the GOOGLE_PLAY_PACKAGE_NAME variable in the google-play environment}"
+          : "${HANGTEN_GITHUB_OAUTH_CLIENT_ID:?Configure the public HANGTEN_GITHUB_OAUTH_CLIENT_ID variable in the google-play environment}"
 
           signing_dir="$RUNNER_TEMP/hang-ten-android-signing"
           keystore_path="$signing_dir/upload-keystore.jks"
@@ -69,7 +71,8 @@ jobs:
           } > "$signing_properties"
           chmod 600 "$keystore_path" "$signing_properties"
           unset ANDROID_UPLOAD_KEYSTORE_BASE64 ANDROID_UPLOAD_KEYSTORE_PASSWORD ANDROID_UPLOAD_KEY_ALIAS ANDROID_UPLOAD_KEY_PASSWORD
-          GRADLE_USER_HOME="$signing_dir" ./Android/gradlew --no-daemon -p Android :app:bundleRelease
+          GRADLE_USER_HOME="$signing_dir" ./Android/gradlew --no-daemon -p Android \
+            -PGITHUB_OAUTH_CLIENT_ID="$HANGTEN_GITHUB_OAUTH_CLIENT_ID" :app:bundleRelease
           test -s Android/app/build/outputs/bundle/release/app-release.aab
 
       # actions/upload-artifact v4.6.2

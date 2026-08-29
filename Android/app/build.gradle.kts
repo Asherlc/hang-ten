@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-val githubOauthClientId = providers.gradleProperty("GITHUB_OAUTH_CLIENT_ID").orElse("").get().also {
+val githubOauthClientId = providers.gradleProperty("GITHUB_OAUTH_CLIENT_ID").orElse("").get().trim().also {
     require(it.isEmpty() || it.matches(Regex("[A-Za-z0-9_-]+"))) {
         "GITHUB_OAUTH_CLIENT_ID must be a public GitHub OAuth client identifier."
     }
@@ -55,6 +55,18 @@ val stageCanonicalAssets by tasks.registering(Copy::class) {
 android.sourceSets.getByName("main").assets.srcDir(stageCanonicalAssets)
 tasks.named("preBuild").configure { dependsOn(stageCanonicalAssets) }
 tasks.withType<Test>().configureEach { dependsOn(stageCanonicalAssets) }
+// Debug may leave sign-in disabled, but no Release AAB may be produced without
+// the registered public Device Flow client ID. This is a public identifier,
+// never a client secret or personal access token.
+tasks.configureEach {
+    if (name == "bundleRelease" || name == "assembleRelease" || name == "packageRelease") {
+        doFirst {
+            check(githubOauthClientId.isNotBlank()) {
+                "Release requires -PGITHUB_OAUTH_CLIENT_ID=<public GitHub OAuth Device Flow client ID>."
+            }
+        }
+    }
+}
 
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2024.12.01"))

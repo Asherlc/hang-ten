@@ -111,18 +111,7 @@ class BoardEditorStore(
     /** Validates before atomically replacing board.json; failures leave it untouched. */
     fun save(slug: String, boardJson: String) {
         validate(slug, boardJson)
-        val destination = boardFile(slug)
-        val temporary = File(destination.parentFile, "$BOARD_JSON.tmp-${UUID.randomUUID()}")
-        try {
-            FileOutputStream(temporary).use { output ->
-                output.write(boardJson.encodeToByteArray())
-                output.fd.sync()
-            }
-            Files.move(temporary.toPath(), destination.toPath(), ATOMIC_MOVE, REPLACE_EXISTING)
-        } catch (error: Throwable) {
-            temporary.delete()
-            throw BoardEditorException.WriteFailed(error.message.orEmpty())
-        }
+        atomicReplace(boardFile(slug), boardJson.encodeToByteArray())
     }
 
     fun boardDirectory(slug: String): File = packageDirectory(slug)
@@ -131,22 +120,51 @@ class BoardEditorStore(
         if (!BoardPackagePaths.isAllowed(slug, "Hangboards/$slug/$assetPath") || !assetPath.startsWith("assets/")) {
             throw BoardEditorException.InvalidPath("Pulled image path is outside this board package.")
         }
-        val target = File(packageDirectory(slug), assetPath)
-        target.parentFile?.mkdirs()
-        val temporary = File(target.parentFile, "${target.name}.tmp-${UUID.randomUUID()}")
-        FileOutputStream(temporary).use { output -> output.write(data); output.fd.sync() }
-        Files.move(temporary.toPath(), target.toPath(), ATOMIC_MOVE, REPLACE_EXISTING)
+        atomicReplace(File(packageDirectory(slug), assetPath), data)
     }
 
-    private fun validate(slug: String, boardJson: String) {
+    /**
+     * Validates the complete remote board, including its declared package slug
+     * and presentation image, before changing either local package file.
+     */
+    fun applyPulledPackage(slug: String, payload: PulledBoardPackage) {
+        if (!BoardPackagePaths.isValidSlug(slug)) {
+            throw BoardEditorException.InvalidPath("Pulled package has an invalid board slug.")
+        }
+        val defaultAssetPath = runCatching { defaultPresentationAssetPath(slug, payload.boardJson) }
+            .getOrElse { throw BoardEditorException.InvalidBoard(it.message.orEmpty()) }
+        if (!BoardPackagePaths.isAllowed(slug, "Hangboards/$slug/${payload.imagePath}") ||
+            defaultAssetPath != payload.imagePath
+        ) throw BoardEditorException.InvalidPath("Pulled package is outside this board package.")
+        validate(slug, payload.boardJson.decodeToString(), setOf(payload.imagePath))
+        atomicReplace(File(packageDirectory(slug), payload.imagePath), payload.image)
+        atomicReplace(boardFile(slug), payload.boardJson)
+    }
+
+    private fun validate(slug: String, boardJson: String, stagedAssets: Set<String> = emptySet()) {
         requireSlug(slug)
-        val board = decode(slug, boardJson)
+        val board = decode(slug, boardJson, stagedAssets)
         if (board.id != slug) throw BoardEditorException.InvalidBoard("board ID must match the package slug.")
     }
 
-    private fun decode(slug: String, boardJson: String): Board = AssetBoardRepository(
-        EditorContentAssets(editedRoot, slug, boardJson),
+    private fun decode(slug: String, boardJson: String, stagedAssets: Set<String> = emptySet()): Board = AssetBoardRepository(
+        EditorContentAssets(editedRoot, slug, boardJson, stagedAssets),
     ).loadBoards().getOrElse { throw BoardEditorException.InvalidBoard(it.message.orEmpty()) }.single()
+
+    private fun atomicReplace(destination: File, data: ByteArray) {
+        destination.parentFile?.mkdirs()
+        val temporary = File(destination.parentFile, "${destination.name}.tmp-${UUID.randomUUID()}")
+        try {
+            FileOutputStream(temporary).use { output ->
+                output.write(data)
+                output.fd.sync()
+            }
+            Files.move(temporary.toPath(), destination.toPath(), ATOMIC_MOVE, REPLACE_EXISTING)
+        } catch (error: Throwable) {
+            temporary.delete()
+            throw BoardEditorException.WriteFailed(error.message.orEmpty())
+        }
+    }
 
     private fun boardFile(slug: String): File {
         val result = File(packageDirectory(slug), BOARD_JSON)
@@ -196,7 +214,12 @@ class FileBoardPackageSource(private val root: File) : BoardPackageSource {
 
 /** All repository paths are checked before pull, local persistence, and push. */
 object BoardPackagePaths {
+    private val slug = Regex("[a-z0-9]+(?:-[a-z0-9]+)*")
+
+    fun isValidSlug(value: String): Boolean = slug.matches(value)
+
     fun isAllowed(slug: String, path: String): Boolean {
+        if (!isValidSlug(slug)) return false
         val prefix = "Hangboards/$slug/"
         if (!path.startsWith(prefix) || path.contains("\\") || path.split('/').any { it == ".." || it == "." || it.isEmpty() }) return false
         val relative = path.removePrefix(prefix)
@@ -208,6 +231,7 @@ private class EditorContentAssets(
     private val root: File,
     private val slug: String,
     private val candidateBoardJson: String,
+    private val stagedAssets: Set<String>,
 ) : ContentAssets {
     override fun list(path: String): List<String>? = when (path) {
         "Hangboards" -> listOf(slug)
@@ -223,7 +247,7 @@ private class EditorContentAssets(
         val expectedPrefix = "Hangboards/$slug/"
         if (!path.startsWith(expectedPrefix)) return false
         val relative = path.removePrefix(expectedPrefix)
-        return File(File(root, slug), relative).isFile
+        return relative in stagedAssets || File(File(root, slug), relative).isFile
     }
 }
 

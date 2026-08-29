@@ -112,6 +112,8 @@ fun BoardEditorScreen(
     var version by remember(slug) { mutableIntStateOf(0) }
     var error by remember(slug) { mutableStateOf<String?>(null) }
     var remoteHead by remember(slug) { mutableStateOf<String?>(null) }
+    var draftBranch by remember(slug) { mutableStateOf<String?>(null) }
+    var draftPullRequestUrl by remember(slug) { mutableStateOf<String?>(null) }
     var syncStatus by remember(slug) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
@@ -212,9 +214,10 @@ fun BoardEditorScreen(
                             packageSync.pull(token, slug, packageSync.defaultBranch(token))
                         }) {
                             is PackageSyncResult.Pulled -> runCatching {
-                                store.persistPulledImage(slug, result.payload.imagePath, result.payload.image)
-                                store.save(slug, result.payload.boardJson.decodeToString())
+                                store.applyPulledPackage(slug, result.payload)
                                 remoteHead = result.payload.head
+                                draftBranch = null
+                                draftPullRequestUrl = null
                                 version += 1
                             }.onSuccess { syncStatus = "Pulled latest package." }.onFailure { syncStatus = it.message }
                             PackageSyncResult.Conflict -> syncStatus = "GitHub reported a conflict. Pull again before editing."
@@ -230,6 +233,7 @@ fun BoardEditorScreen(
                     scope.launch {
                         val token = tokenStore.load()
                         val expected = remoteHead
+                        val branch = draftBranch ?: GitHubBranchName.newForBoard(slug)
                         val defaultImage = current.presentations.firstOrNull { it.isDefault }?.assetPath
                         if (token == null) syncStatus = "Connect GitHub before pushing a package."
                         else if (expected == null) syncStatus = "Pull latest before committing so conflicts can be detected."
@@ -238,15 +242,21 @@ fun BoardEditorScreen(
                             packageSync.push(
                                 token = token,
                                 slug = slug,
-                                branch = "hangten/android-$slug",
+                                branch = branch,
                                 expectedHead = expected,
                                 boardJson = store.readBoardJson(slug).encodeToByteArray(),
                                 imagePath = defaultImage,
                                 image = store.readPackageFile(slug, defaultImage),
                                 message = "Update $slug board geometry",
+                                existingPullRequestUrl = draftPullRequestUrl,
                             )
                         }) {
-                            is PackageSyncResult.Pushed -> syncStatus = "Pull request opened: ${result.pullRequestUrl}"
+                            is PackageSyncResult.Pushed -> {
+                                draftBranch = result.branch
+                                draftPullRequestUrl = result.pullRequestUrl
+                                remoteHead = result.commit
+                                syncStatus = "Pull request opened: ${result.pullRequestUrl}"
+                            }
                             PackageSyncResult.Conflict -> syncStatus = "Remote branch changed. Pull latest and resolve the conflict."
                             is PackageSyncResult.Failed -> syncStatus = result.message
                             is PackageSyncResult.Pulled -> error("Unexpected pull result")

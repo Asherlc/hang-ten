@@ -100,6 +100,18 @@ before the release workflow can publish anything.
 5. Add this **environment variable** exactly as named:
 
    - `GOOGLE_PLAY_PACKAGE_NAME`: `com.hangten.training`.
+   - `HANGTEN_GITHUB_OAUTH_CLIENT_ID`: the registered GitHub OAuth App's
+     public Device Flow client ID. Enable Device Flow for that app before
+     release. This is intentionally a GitHub environment **variable**, not a
+     secret: Android embeds the public client ID in `BuildConfig`.
+
+Never provide `GITHUB_CLIENT_SECRET`, an OAuth client secret, or a personal
+access token to the Android Gradle build, release environment, app settings,
+or source tree. For a local Release build, pass only the same public value:
+
+```sh
+rtk ./Android/gradlew -p Android -PGITHUB_OAUTH_CLIENT_ID=your_public_client_id :app:bundleRelease
+```
 
 Treat all five secrets and the local keystore as credentials. The workflow
 checks that every secret and variable is nonempty before decoding the keystore

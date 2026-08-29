@@ -64,6 +64,64 @@ class BoardEditorStoreTest {
         assertFalse(BoardPackagePaths.isAllowed("demo", "Plans/demo.json"))
     }
 
+    @Test
+    fun invalidPulledBoardDoesNotPersistItsAsset() {
+        val root = createTempDirectory("board-editor-pull").toFile()
+        try {
+            val source = File(root, "source").also { it.mkdirs() }
+            writeSourcePackage(source)
+            val store = BoardEditorStore(File(root, "edited"), FileBoardPackageSource(source))
+            store.startEditing("demo")
+            val originalImage = store.readPackageFile("demo", "assets/primary.png")
+
+            val failure = runCatching {
+                store.applyPulledPackage(
+                    "demo",
+                    PulledBoardPackage(
+                        head = "head",
+                        boardJson = "{ not-json".encodeToByteArray(),
+                        imagePath = "assets/primary.png",
+                        image = "remote-image".encodeToByteArray(),
+                    ),
+                )
+            }.exceptionOrNull()
+
+            assertTrue(failure is BoardEditorException.InvalidBoard)
+            assertEquals(originalImage.toList(), store.readPackageFile("demo", "assets/primary.png").toList())
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun pulledBoardWithAnotherSlugDoesNotPersistItsAsset() {
+        val root = createTempDirectory("board-editor-pull-slug").toFile()
+        try {
+            val source = File(root, "source").also { it.mkdirs() }
+            writeSourcePackage(source)
+            val store = BoardEditorStore(File(root, "edited"), FileBoardPackageSource(source))
+            store.startEditing("demo")
+            val originalImage = store.readPackageFile("demo", "assets/primary.png")
+
+            val failure = runCatching {
+                store.applyPulledPackage(
+                    "demo",
+                    PulledBoardPackage(
+                        head = "head",
+                        boardJson = boardJson().replace("\"id\":\"demo\"", "\"id\":\"other\"").encodeToByteArray(),
+                        imagePath = "assets/primary.png",
+                        image = "remote-image".encodeToByteArray(),
+                    ),
+                )
+            }.exceptionOrNull()
+
+            assertTrue(failure is BoardEditorException.InvalidBoard)
+            assertEquals(originalImage.toList(), store.readPackageFile("demo", "assets/primary.png").toList())
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
     private fun writeSourcePackage(root: File) {
         val packageDirectory = File(root, "demo/assets").also { it.mkdirs() }
         File(packageDirectory, "primary.png").writeText("fixture-image")

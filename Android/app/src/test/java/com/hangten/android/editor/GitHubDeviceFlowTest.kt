@@ -99,6 +99,36 @@ class GitHubDeviceFlowTest {
         assertTrue(result is PackageSyncResult.Failed)
         assertFalse(api.pushed)
     }
+
+    @Test
+    fun malformedSlugIsRejectedBeforePullingRemotePackage() = runTest {
+        val api = FakeGitHubPackageApi(currentHead = "head")
+
+        val result = GitHubPackageSync(api).pull("token", "../demo", "main")
+
+        assertTrue(result is PackageSyncResult.Failed)
+        assertEquals(0, api.pulls)
+    }
+
+    @Test
+    fun aDraftBranchIsUniqueThenReusableAfterItsPullRequestExists() = runTest {
+        val api = ReusableBranchApi()
+        val sync = GitHubPackageSync(api)
+        val board = boardJsonWithDefaultAsset("assets/primary.png").encodeToByteArray()
+        val branch = GitHubBranchName.newForBoard("demo") { "review-1" }
+
+        val first = sync.push("token", "demo", branch, "base", board, "assets/primary.png", byteArrayOf(1), "Edit geometry")
+        val pushed = first as PackageSyncResult.Pushed
+        val second = sync.push(
+            "token", "demo", branch, pushed.commit, board, "assets/primary.png", byteArrayOf(2), "Edit geometry again",
+            existingPullRequestUrl = pushed.pullRequestUrl,
+        )
+
+        assertEquals("hangten/android-demo-review-1", branch)
+        assertTrue(second is PackageSyncResult.Pushed)
+        assertEquals(1, api.pullRequests)
+        assertEquals(2, api.pushes)
+    }
 }
 
 private fun boardJsonWithDefaultAsset(assetPath: String) = """
@@ -132,13 +162,37 @@ private class FakeGitHubPackageApi(
     private val currentHead: String,
 ) : GitHubPackageApi {
     var pushed = false
+    var pulls = 0
     override suspend fun branchHead(token: String, branch: String) = currentHead
     override suspend fun createBranch(token: String, branch: String, fromHead: String) = Unit
     override suspend fun defaultBranch(token: String) = "main"
-    override suspend fun pullPackage(token: String, branch: String, slug: String) = error("not used")
+    override suspend fun pullPackage(token: String, branch: String, slug: String): PulledBoardPackage {
+        pulls += 1
+        error("not used")
+    }
     override suspend fun pushPackage(token: String, branch: String, expectedHead: String, files: List<GitHubPackageFile>, message: String): String {
         pushed = true
         return "commit"
     }
     override suspend fun createPullRequest(token: String, title: String, head: String, base: String, body: String) = "https://github.com/Asherlc/hang-ten/pull/1"
+}
+
+private class ReusableBranchApi : GitHubPackageApi {
+    private val heads = mutableMapOf("main" to "base")
+    var pullRequests = 0
+    var pushes = 0
+
+    override suspend fun defaultBranch(token: String) = "main"
+    override suspend fun branchHead(token: String, branch: String) = heads[branch]
+    override suspend fun createBranch(token: String, branch: String, fromHead: String) { heads[branch] = fromHead }
+    override suspend fun pullPackage(token: String, branch: String, slug: String): PulledBoardPackage = error("not used")
+    override suspend fun pushPackage(token: String, branch: String, expectedHead: String, files: List<GitHubPackageFile>, message: String): String {
+        check(heads[branch] == expectedHead)
+        pushes += 1
+        return "commit-$pushes".also { heads[branch] = it }
+    }
+    override suspend fun createPullRequest(token: String, title: String, head: String, base: String, body: String): String {
+        pullRequests += 1
+        return "https://github.com/Asherlc/hang-ten/pull/1"
+    }
 }

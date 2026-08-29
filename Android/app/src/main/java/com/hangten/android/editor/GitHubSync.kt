@@ -131,7 +131,7 @@ interface GitHubPackageApi {
 
 sealed interface PackageSyncResult {
     data class Pulled(val payload: PulledBoardPackage) : PackageSyncResult
-    data class Pushed(val pullRequestUrl: String, val commit: String) : PackageSyncResult
+    data class Pushed(val pullRequestUrl: String, val commit: String, val branch: String) : PackageSyncResult
     data object Conflict : PackageSyncResult
     data class Failed(val message: String) : PackageSyncResult
 }
@@ -141,6 +141,9 @@ class GitHubPackageSync(private val api: GitHubPackageApi) {
     suspend fun defaultBranch(token: String): String = api.defaultBranch(token)
 
     suspend fun pull(token: String, slug: String, branch: String): PackageSyncResult {
+        if (!BoardPackagePaths.isValidSlug(slug)) {
+            return PackageSyncResult.Failed("GitHub returned an invalid board package slug.")
+        }
         return try {
         val payload = api.pullPackage(token, branch, slug)
         if (!BoardPackagePaths.isAllowed(slug, "Hangboards/$slug/board.json") ||
@@ -164,9 +167,10 @@ class GitHubPackageSync(private val api: GitHubPackageApi) {
         imagePath: String,
         image: ByteArray,
         message: String,
+        existingPullRequestUrl: String? = null,
     ): PackageSyncResult {
         return try {
-        if (message.isBlank() || !BoardPackagePaths.isAllowed(slug, "Hangboards/$slug/board.json") ||
+        if (!BoardPackagePaths.isValidSlug(slug) || message.isBlank() || !BoardPackagePaths.isAllowed(slug, "Hangboards/$slug/board.json") ||
             !BoardPackagePaths.isAllowed(slug, "Hangboards/$slug/$imagePath") ||
             defaultPresentationAssetPath(slug, boardJson) != imagePath
         ) return PackageSyncResult.Failed("Only this board's board.json and referenced asset may be pushed.")
@@ -185,14 +189,26 @@ class GitHubPackageSync(private val api: GitHubPackageApi) {
             ),
             message,
         )
-        val url = api.createPullRequest(token, message, branch, base, "Updated Hang Ten board geometry from Android.")
+        val url = existingPullRequestUrl ?: api.createPullRequest(
+            token, message, branch, base, "Updated Hang Ten board geometry from Android.",
+        )
         if (!httpsUrl(url)) return PackageSyncResult.Failed("GitHub returned an invalid pull request URL.")
-        PackageSyncResult.Pushed(url, commit)
+        PackageSyncResult.Pushed(url, commit, branch)
     } catch (error: GitHubSyncException.Conflict) {
         PackageSyncResult.Conflict
     } catch (error: Throwable) {
         PackageSyncResult.Failed(error.message ?: "Unable to push board package.")
         }
+    }
+}
+
+/** A new draft gets its own branch; later edits retain that draft branch and PR. */
+object GitHubBranchName {
+    fun newForBoard(slug: String, nonce: () -> String = { java.util.UUID.randomUUID().toString().replace("-", "") }): String {
+        require(BoardPackagePaths.isValidSlug(slug)) { "Invalid board package slug." }
+        val suffix = nonce()
+        require(suffix.matches(Regex("[A-Za-z0-9][A-Za-z0-9-]*"))) { "Invalid branch nonce." }
+        return "hangten/android-$slug-$suffix"
     }
 }
 
@@ -344,7 +360,7 @@ class OkHttpGitHubApi(
 
 private class GitHubNotFound(message: String) : GitHubSyncException(message)
 private fun httpsUrl(value: String): Boolean = value.toHttpUrlOrNull()?.isHttps == true
-private fun defaultPresentationAssetPath(slug: String, boardJson: ByteArray): String {
+internal fun defaultPresentationAssetPath(slug: String, boardJson: ByteArray): String {
     val root = JsonParser(boardJson.decodeToString()).parse().asObject("board.json")
     val presentations = root.required("presentations", "board.json").asArray("board.json.presentations")
     val presentation = presentations.firstOrNull { value ->
