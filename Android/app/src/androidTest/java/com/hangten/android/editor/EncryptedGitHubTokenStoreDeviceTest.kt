@@ -1,6 +1,9 @@
 package com.hangten.android.editor
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -18,28 +21,37 @@ class EncryptedGitHubTokenStoreDeviceTest {
         val store = EncryptedGitHubTokenStore(context)
         store.clear()
         val raw = context.getSharedPreferences("hangten.github.encrypted", Context.MODE_PRIVATE)
-        val beforeSave = raw.all.toMap()
 
         store.save(token)
 
         assertEquals(token, store.load())
         assertFalse(raw.all.toString().contains(token))
 
-        // Find the actual value inserted by EncryptedSharedPreferences, rather
-        // than supplying an in-memory fake. Its key is encrypted too, so a
-        // before/after diff is the only stable black-box way to identify it.
-        val ciphertextEntry = raw.all.entries.single { beforeSave[it.key] != it.value }
-        check(raw.edit().putString(ciphertextEntry.key, "malformed-ciphertext").commit())
+        store.clear()
+        assertNull(store.load())
+
+        // This is a second, real EncryptedSharedPreferences handle with the
+        // same MasterKey, file, and schemes as production. The outer record is
+        // valid encrypted storage, while the logical token is intentionally
+        // malformed for AndroidKeystoreTokenCipher's inner AES-GCM layer.
+        val encryptedPreferences = realEncryptedPreferences()
+        check(encryptedPreferences.edit().putString("oauth_token", "malformed-ciphertext").commit())
 
         val recovered = EncryptedGitHubTokenStore(context)
         assertNull(recovered.load())
-        assertFalse(raw.contains(ciphertextEntry.key))
+        assertNull(encryptedPreferences.getString("oauth_token", null))
         recovered.save("replacement-token")
         assertEquals("replacement-token", recovered.load())
         recovered.clear()
         assertNull(recovered.load())
 
-        store.clear()
-        assertNull(store.load())
     }
+
+    private fun realEncryptedPreferences(): SharedPreferences = EncryptedSharedPreferences.create(
+        context,
+        "hangten.github.encrypted",
+        MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+    )
 }
