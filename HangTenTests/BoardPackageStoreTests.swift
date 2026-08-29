@@ -9,7 +9,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
             ) { board in
                 board["equipmentObjects"] = [["id": "primary"]]
-                var holds = try! XCTUnwrap(board["holds"] as? [[String: Any]])
+                var holds = try XCTUnwrap(board["holds"] as? [[String: Any]])
                 holds[0]["equipmentObjectID"] = "missing"
                 board["holds"] = holds
             }

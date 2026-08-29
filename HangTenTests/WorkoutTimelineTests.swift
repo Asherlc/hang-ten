@@ -102,6 +102,30 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(completion.completedRepetitions(for: step), 2)
     }
 
+    func testLoadedLiftCompletionRequiresAnActiveStartedSession() {
+        XCTAssertFalse(
+            WorkoutLiftCompletionPolicy.isEnabled(
+                completedRepetitions: 0,
+                prescribedRepetitions: 7,
+                sessionCanNavigate: false
+            )
+        )
+        XCTAssertFalse(
+            WorkoutLiftCompletionPolicy.isEnabled(
+                completedRepetitions: 7,
+                prescribedRepetitions: 7,
+                sessionCanNavigate: true
+            )
+        )
+        XCTAssertTrue(
+            WorkoutLiftCompletionPolicy.isEnabled(
+                completedRepetitions: 6,
+                prescribedRepetitions: 7,
+                sessionCanNavigate: true
+            )
+        )
+    }
+
     func testLoadedLiftRuntimeLoadDefaultsFromPlanAndCanBeChangedPerStep() {
         let first = loadedLiftStep(repetitions: 2, externalLoadKGF: 12)
         let second = loadedLiftStep(id: "second-lift", repetitions: 2, externalLoadKGF: -5)

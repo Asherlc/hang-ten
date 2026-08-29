@@ -344,6 +344,16 @@ struct WorkoutLiftCompletion: Equatable {
     }
 }
 
+enum WorkoutLiftCompletionPolicy {
+    static func isEnabled(
+        completedRepetitions: Int,
+        prescribedRepetitions: Int,
+        sessionCanNavigate: Bool
+    ) -> Bool {
+        sessionCanNavigate && completedRepetitions < prescribedRepetitions
+    }
+}
+
 enum WorkoutHighlightResolver {
     static func holdIDs(for step: WorkoutStep, on board: TrainingBoard) -> [String] {
         let gripType = step.targets.count == 1 ? step.gripType : nil

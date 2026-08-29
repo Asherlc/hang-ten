@@ -2323,7 +2323,7 @@ struct WorkoutView: View {
 				}
 
 				if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
-					liftCompletionControl(for: step)
+					liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
 				}
 			}
 			.frame(maxWidth: 400)
@@ -2480,7 +2480,7 @@ struct WorkoutView: View {
 			controlButton(isComplete: isComplete, countdown: countdown)
 
 			if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
-				liftCompletionControl(for: step)
+				liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
 			}
 
             if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
@@ -2547,7 +2547,10 @@ struct WorkoutView: View {
 		)
 	}
 
-	private func liftCompletionControl(for step: WorkoutStep) -> some View {
+	private func liftCompletionControl(
+		for step: WorkoutStep,
+		sessionCanNavigate: Bool
+	) -> some View {
 		let prescribed = step.repetitions ?? 0
 		let completed = liftCompletion.completedRepetitions(for: step)
 		let unit = motherboardSettingsStore.forceUnit
@@ -2581,7 +2584,13 @@ struct WorkoutView: View {
 			.foregroundStyle(Color.hangGreenDark)
 			.padding(.vertical, 10)
 			.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-			.disabled(completed >= prescribed)
+			.disabled(
+				!WorkoutLiftCompletionPolicy.isEnabled(
+					completedRepetitions: completed,
+					prescribedRepetitions: prescribed,
+					sessionCanNavigate: sessionCanNavigate
+				)
+			)
 			.accessibilityIdentifier("workout.completeLift")
 		}
 	}
