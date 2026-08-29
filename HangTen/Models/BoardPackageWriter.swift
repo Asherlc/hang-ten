@@ -434,18 +434,7 @@ enum BoardPackageWriter {
         guard !document.presentations.isEmpty else {
             throw invalid("presentations must not be empty", document)
         }
-        guard !document.equipmentObjects.isEmpty else {
-            throw invalid("equipmentObjects must not be empty", document)
-        }
-        var equipmentObjectIDs = Set<String>()
-        for object in document.equipmentObjects {
-            guard object.id.isEditorBoardIdentifier else {
-                throw invalid("equipment object ID must be identifier-shaped", document)
-            }
-            guard equipmentObjectIDs.insert(object.id).inserted else {
-                throw invalid("equipment object ID \(object.id) is duplicated", document)
-            }
-        }
+        let equipmentObjectIDs = try validateEquipmentObjects(in: document)
         var presentationIDs = Set<String>()
         var defaultPresentationCount = 0
         for presentation in document.presentations {
@@ -498,12 +487,11 @@ enum BoardPackageWriter {
             guard holdIDs.insert(hold.id).inserted else {
                 throw invalid("hold ID \(hold.id) is duplicated", document)
             }
-            guard equipmentObjectIDs.contains(hold.equipmentObjectID) else {
-                throw invalid(
-                    "hold \(hold.id) references unknown equipment object \(hold.equipmentObjectID)",
-                    document
-                )
-            }
+            try validateEquipmentObjectReference(
+                for: hold,
+                validIDs: equipmentObjectIDs,
+                in: document
+            )
             guard presentationIDs.contains(hold.presentationID) else {
                 throw invalid("hold \(hold.id) references unknown presentation \(hold.presentationID)", document)
             }
@@ -567,10 +555,7 @@ enum BoardPackageWriter {
         guard !document.holds.isEmpty else {
             throw invalid("holds must not be empty", document)
         }
-        let ownedEquipmentObjectIDs = Set(document.holds.map(\.equipmentObjectID))
-        for object in document.equipmentObjects where !ownedEquipmentObjectIDs.contains(object.id) {
-            throw invalid("equipment object \(object.id) must own at least one hold", document)
-        }
+        try validateEquipmentObjectOwnership(in: document)
         let holdsByID = Dictionary(uniqueKeysWithValues: document.holds.map { ($0.id, $0) })
         for hold in document.holds where hold.kind == .gaston {
             let pairedHoldID = hold.pairedHoldID!
@@ -582,6 +567,46 @@ enum BoardPackageWriter {
                   pairedHold.pairedHoldID == hold.id else {
                 throw invalid("gaston hold \(hold.id) must have a reciprocal gaston pair", document)
             }
+        }
+    }
+
+    private static func validateEquipmentObjects(
+        in document: BoardEditableDocument
+    ) throws -> Set<String> {
+        guard !document.equipmentObjects.isEmpty else {
+            throw invalid("equipmentObjects must not be empty", document)
+        }
+        var equipmentObjectIDs = Set<String>()
+        for object in document.equipmentObjects {
+            guard object.id.isEditorBoardIdentifier else {
+                throw invalid("equipment object ID must be identifier-shaped", document)
+            }
+            guard equipmentObjectIDs.insert(object.id).inserted else {
+                throw invalid("equipment object ID \(object.id) is duplicated", document)
+            }
+        }
+        return equipmentObjectIDs
+    }
+
+    private static func validateEquipmentObjectReference(
+        for hold: BoardEditableHold,
+        validIDs: Set<String>,
+        in document: BoardEditableDocument
+    ) throws {
+        guard validIDs.contains(hold.equipmentObjectID) else {
+            throw invalid(
+                "hold \(hold.id) references unknown equipment object \(hold.equipmentObjectID)",
+                document
+            )
+        }
+    }
+
+    private static func validateEquipmentObjectOwnership(
+        in document: BoardEditableDocument
+    ) throws {
+        let ownedEquipmentObjectIDs = Set(document.holds.map(\.equipmentObjectID))
+        for object in document.equipmentObjects where !ownedEquipmentObjectIDs.contains(object.id) {
+            throw invalid("equipment object \(object.id) must own at least one hold", document)
         }
     }
 

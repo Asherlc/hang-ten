@@ -29,7 +29,7 @@ is inferred from a marketing photograph.
 | Captain Fingerfood | UNLEVEL | [product](https://en.captainfingerfood.rocks/products/unlevel-hangboard): 12 x 7 x 3 cm, two curved rung depths (20/25 mm). | included |
 | Captain Fingerfood | DUAL | [product](https://en.captainfingerfood.rocks/products/dual-hangboard): 12 x 7 x 3 cm, one straight and one curved 20 mm edge. | included |
 | Aelith | Cyclops Portable Hangboard (current SKU 1001-011, Blue x Black) | [current product](https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/): product is in stock and add-to-cart. The complete selectable inventory is one 20 mm mono edge; the lanyard and carabiner hole are suspension hardware, not contacts. Other grip postures named on the page use that same mono edge and are not separate holds. | included |
-| Crimptonite | Helium Mobile | [product](https://crimptonite.com/product/helium-mobile/): current portable 125 g board; 14 mm, 22 mm, 10/18 mm centre hold, top jug, and a back jug/sloper are explicitly described. | included |
+| Crimptonite | Helium Mobile | [product](https://crimptonite.com/product/helium-mobile/): current 400 × 58 × 24 mm, 125 g portable board; 14 mm, 22 mm, 10/18 mm centre hold, top jug, and a back jug/sloper are explicitly described. | included |
 
 ### Package hand-off notes
 
@@ -40,10 +40,12 @@ is inferred from a marketing photograph.
 - Plateau's body plus supplied edge/blocker is the included revision.  The
   product claims compatibility with inserts but does not make unnamed future
   inserts part of this audited package.
-- Aelith Cyclops, Crimptonite Helium Mobile, and Plateau Lifting Edge sources
-  establish a mono edge, product mass, and compact aluminium construction,
-  respectively, but not overall dimensions. Their packages therefore omit
-  `dimensions`; mass and marketing descriptions are not dimension values.
+- Aelith Cyclops and Plateau Lifting Edge sources establish a mono edge and
+  compact aluminium construction, respectively, but not overall dimensions;
+  their packages therefore omit `dimensions`. Crimptonite's current Helium
+  Mobile page explicitly specifies 400 × 58 × 24 mm, so that package records
+  the physical dimensions while leaving its separately stated mass out of the
+  dimension field.
 
 ### Frozen package and physical-contact IDs
 

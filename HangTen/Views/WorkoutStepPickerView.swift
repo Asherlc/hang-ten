@@ -12,14 +12,25 @@ enum WorkoutStepFormatting {
     }
 
     static func externalLoadText(_ loadKGF: Double, unit: ExternalLoadUnit) -> String {
-        let magnitude = abs(loadKGF)
+        externalLoadText(displayedLoad: loadKGF, unitLabel: unit.label)
+    }
+
+    static func externalLoadText(_ loadKGF: Double, unit: MotherboardForceUnit) -> String {
+        externalLoadText(
+            displayedLoad: unit.value(fromKilogramsForce: loadKGF),
+            unitLabel: unit.label
+        )
+    }
+
+    private static func externalLoadText(displayedLoad: Double, unitLabel: String) -> String {
+        let magnitude = abs(displayedLoad)
         let number = magnitude.rounded() == magnitude
             ? String(format: "%.0f", magnitude)
             : String(format: "%.1f", magnitude)
-        if loadKGF < 0 {
-            return "\(number) \(unit.label) assistance"
+        if displayedLoad < 0 {
+            return "\(number) \(unitLabel) assistance"
         }
-        return "+\(number) \(unit.label)"
+        return "+\(number) \(unitLabel)"
     }
 
     static func labels(for step: WorkoutStep) -> [String] {

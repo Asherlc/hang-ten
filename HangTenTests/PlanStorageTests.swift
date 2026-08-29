@@ -34,6 +34,38 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(terminalStep.accessory, "3s rest")
     }
 
+    func testMegosRepeaterPlanPreservesOrderedRestsAndSetRecovery() throws {
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
+        var stepIndex = 0
+
+        for set in 1...6 {
+            for side in [WorkoutSide.left, .right] {
+                for repetition in 1...4 {
+                    let hang = plan.steps[stepIndex]
+                    XCTAssertEqual(hang.phase, .hang, "set \(set), \(side), rep \(repetition)")
+                    XCTAssertEqual(hang.side, side, "set \(set), \(side), rep \(repetition)")
+                    XCTAssertEqual(hang.duration, 7, "set \(set), \(side), rep \(repetition)")
+                    stepIndex += 1
+
+                    let repetitionRest = plan.steps[stepIndex]
+                    XCTAssertEqual(repetitionRest.phase, .rest, "set \(set), \(side), rep \(repetition)")
+                    XCTAssertEqual(repetitionRest.duration, 3, "set \(set), \(side), rep \(repetition)")
+                    stepIndex += 1
+                }
+            }
+
+            if set < 6 {
+                let setRecovery = plan.steps[stepIndex]
+                XCTAssertEqual(setRecovery.phase, .rest, "set \(set) recovery")
+                XCTAssertEqual(setRecovery.duration, 120, "set \(set) recovery")
+                stepIndex += 1
+            }
+        }
+
+        XCTAssertEqual(stepIndex, plan.steps.count)
+        XCTAssertEqual(plan.duration, 1_080)
+    }
+
     func testPortraitTimerLayoutKeepsTimerOnOneLineWithoutSupportingStatus() {
         XCTAssertEqual(WorkoutPresentationContent.portraitTimerLineLimit, 1)
         XCTAssertNil(WorkoutPresentationContent.portraitTimerSupportingStatus)

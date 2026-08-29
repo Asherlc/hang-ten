@@ -27,9 +27,32 @@ final class WorkoutSummaryTests: XCTestCase {
             isRest: true
         )
 
-        XCTAssertEqual(WorkoutSummaryFormatting.semanticText(for: rest), "Rest")
-        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest).contains("Hang"))
-        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest).contains("hands"))
+        XCTAssertEqual(WorkoutSummaryFormatting.semanticText(for: rest, unit: .kgf), "Rest")
+        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest, unit: .kgf).contains("Hang"))
+        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest, unit: .kgf).contains("hands"))
+    }
+
+    func testLoadedLiftSemanticTextUsesSelectedForceUnit() {
+        let lift = WorkoutStepMeasurement(
+            stepID: "lift",
+            plannedActiveDuration: 20,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured,
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: 3,
+            completedRepetitions: 2,
+            externalLoadKGF: 10,
+            isRest: false
+        )
+
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.semanticText(for: lift, unit: .lbf),
+            "Loaded lift • Left hand • 2 of 3 lifts complete • +22.0 lbf"
+        )
     }
 
     func testSummaryUsesActualLoadedDurationAndPeakInSelectedUnit() {

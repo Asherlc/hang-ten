@@ -140,11 +140,15 @@ def test_compact_single_hand_packages_omit_unpublished_outer_dimensions() -> Non
     """Mass and marketing descriptions must not be presented as dimensions."""
     for slug in (
         "aelith-cyclops-011",
-        "crimptonite-helium-mobile",
         "plateau-lifting-edge",
     ):
         board = board_package.load_board_package(REPOSITORY_ROOT / "Hangboards" / slug).board
         assert "dimensions" not in board
+
+    helium = board_package.load_board_package(
+        REPOSITORY_ROOT / "Hangboards" / "crimptonite-helium-mobile"
+    ).board
+    assert helium["dimensions"] == "400 × 58 × 24 mm"
 
 
 def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:

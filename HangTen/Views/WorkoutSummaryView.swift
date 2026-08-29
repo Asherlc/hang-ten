@@ -54,7 +54,10 @@ enum WorkoutSummaryFormatting {
         return "Pulley assistance: -\(String(format: "%.1f %@", displayedValue, unit.label))"
     }
 
-    static func semanticText(for step: WorkoutStepMeasurement) -> String {
+    static func semanticText(
+        for step: WorkoutStepMeasurement,
+        unit: MotherboardForceUnit
+    ) -> String {
         guard !step.isRest else { return "Rest" }
         let side: String
         switch step.side {
@@ -71,7 +74,7 @@ enum WorkoutSummaryFormatting {
             let completed = step.completedRepetitions ?? 0
             let prescribed = step.repetitions ?? 0
             let load = step.externalLoadKGF.map {
-                " • \(WorkoutStepFormatting.externalLoadText($0, unit: .kilograms))"
+                " • \(WorkoutStepFormatting.externalLoadText($0, unit: unit))"
             } ?? ""
             return "Loaded lift • \(side) • \(completed) of \(prescribed) lifts complete\(load)"
         }
@@ -316,7 +319,7 @@ private struct WorkoutSummaryContent: View {
                 summaryValue(title: "Peak", value: peakText(for: step))
             }
 
-            Text(WorkoutSummaryFormatting.semanticText(for: step))
+            Text(WorkoutSummaryFormatting.semanticText(for: step, unit: unit))
                 .font(.system(size: 12, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
 
