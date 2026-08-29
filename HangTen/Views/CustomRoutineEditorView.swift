@@ -128,7 +128,8 @@ struct CustomRoutineEditorView: View {
                 CustomRoutineStepEditor(
                     step: binding(for: step),
                     targetMode: draft.targetMode,
-                    board: selectedBoard
+                    board: selectedBoard,
+                    onAddPair: { draft.addLeftAndRightPair(from: $0) }
                 )
             }
             .onMove { offsets, destination in
@@ -228,6 +229,15 @@ struct CustomRoutineEditorView: View {
         for (index, step) in definition.steps.enumerated() where step.phase != .rest && step.targets.isEmpty {
             issues.append("Step \(index + 1) needs a hold target.")
         }
+        for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
+            issues.append("Step \(index + 1) needs a side compatible with its hand use.")
+        }
+        for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidActionAndRepetitions(step.action, step.repetitions) {
+            issues.append("Step \(index + 1) needs positive repetitions for a loaded lift.")
+        }
+        for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidExternalLoad(step.externalLoadKGF) {
+            issues.append("Step \(index + 1) needs a finite external load.")
+        }
         return issues
     }
 }
@@ -250,6 +260,7 @@ private struct CustomRoutineStepEditor: View {
     @Binding var step: CustomRoutineStepDraft
     let targetMode: CustomRoutineTargetMode
     let board: TrainingBoard
+    let onAddPair: (CustomRoutineStepDraft) -> Void
 
     @State private var activeHoldID: String?
 
@@ -308,6 +319,49 @@ private struct CustomRoutineStepEditor: View {
             }
 
             if !step.isRest {
+                Picker("Action", selection: $step.action) {
+                    Text("Hang").tag(WorkoutAction.hang)
+                    Text("Isometric pull").tag(WorkoutAction.isometricPull)
+                    Text("Loaded lift").tag(WorkoutAction.loadedLift)
+                }
+                .onChange(of: step.action) { _, action in
+                    step.repetitions = action == .loadedLift ? max(step.repetitions ?? 1, 1) : nil
+                }
+                .accessibilityIdentifier("customRoutine.stepAction")
+
+                Picker("Hand use", selection: $step.handUse) {
+                    Text("Single hand").tag(WorkoutHandUse.single)
+                    Text("Both hands").tag(WorkoutHandUse.double)
+                }
+                .onChange(of: step.handUse) { _, handUse in
+                    step.side = handUse == .single ? .left : .both
+                }
+                .accessibilityIdentifier("customRoutine.stepHandUse")
+
+                Picker("Side", selection: $step.side) {
+                    if step.handUse == .single {
+                        Text("Left").tag(WorkoutSide.left)
+                        Text("Right").tag(WorkoutSide.right)
+                    } else {
+                        Text("Both").tag(WorkoutSide.both)
+                    }
+                }
+                .accessibilityIdentifier("customRoutine.stepSide")
+
+                if step.action == .loadedLift {
+                    TextField("Repetitions", value: $step.repetitions, format: .number)
+                        .keyboardType(.numberPad)
+                        .accessibilityIdentifier("customRoutine.stepRepetitions")
+                    TextField("External load (kg; negative is assistance)", value: $step.externalLoadKGF, format: .number)
+                        .keyboardType(.numbersAndPunctuation)
+                        .accessibilityIdentifier("customRoutine.stepExternalLoad")
+                }
+
+                Button("Add left + right pair") {
+                    onAddPair(step)
+                }
+                .accessibilityIdentifier("customRoutine.addLeftRightPair")
+
                 targetEditor
             }
         }

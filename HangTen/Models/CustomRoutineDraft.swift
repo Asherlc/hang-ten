@@ -1,7 +1,7 @@
 import Foundation
 
 struct CustomRoutineStepDraft: Equatable, Identifiable {
-    let id: String
+    var id: String
     var title: String
     var instruction: String
     var accessory: String
@@ -133,6 +133,20 @@ struct CustomRoutineDraft: Equatable {
                 activeDuration: nil
             )
         )
+    }
+
+    mutating func addLeftAndRightPair(from step: CustomRoutineStepDraft) {
+        var left = step
+        left.id = UUID().uuidString
+        left.handUse = .single
+        left.side = .left
+
+        var right = step
+        right.id = UUID().uuidString
+        right.handUse = .single
+        right.side = .right
+
+        steps.append(contentsOf: [left, right])
     }
 
     mutating func updateStep(_ step: CustomRoutineStepDraft) {

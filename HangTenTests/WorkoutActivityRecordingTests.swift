@@ -654,6 +654,43 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testActivityRecordingSingleHandStepSelectsOneEquipmentObject() throws {
+        let board = portableBoard(handCapacity: nil)
+        let workout = portablePlan(handUse: .single)
+
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].holdIDs, ["left-a"])
+        XCTAssertEqual(
+            Set(records[0].holdIDs.compactMap { id in
+                board.holds.first { $0.id == id }?.equipmentObjectID
+            }),
+            ["left"]
+        )
+    }
+
+    func testActivityRecordingDoubleHandStepRejectsExplicitSingleHandPairOnOneObject() {
+        let board = portableBoard(handCapacity: 1)
+        let workout = portablePlan(handUse: .double)
+
+        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "portable-step", segmentIndex: 0)
+            )
+        }
+    }
+
+    func testActivityRecordingDoubleHandStepKeepsLegacyNilHandCapacityCompatible() throws {
+        let board = portableBoard(handCapacity: nil)
+        let workout = portablePlan(handUse: .double)
+
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+
+        XCTAssertEqual(records.map(\.holdIDs), [["left-a"]])
+    }
+
     func testSevenThreeRepeatersResolveExpectedLeftRightEdgePairs() throws {
         let defaults = makeDefaults()
         let store = AppStore(
@@ -1172,6 +1209,52 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     phase: .hang,
                     targets: targets,
                     segments: segments
+                )
+            ]
+        )
+    }
+
+    private func portableBoard(handCapacity: Int?) -> TrainingBoard {
+        TrainingBoard(
+            id: "portable-board",
+            manufacturer: "Fixture",
+            name: "Portable board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            equipmentObjects: [.init(id: "left")],
+            holds: [
+                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left A", shortLabel: "LA", detail: "", kind: .pocket, frame: HoldFrame(x: 0, y: 0, width: 0.1, height: 0.1), handCapacity: handCapacity),
+                BoardHold(id: "left-b", equipmentObjectID: "left", name: "Left B", shortLabel: "LB", detail: "", kind: .pocket, frame: HoldFrame(x: 0.2, y: 0, width: 0.1, height: 0.1), handCapacity: handCapacity)
+            ],
+            productURL: URL(string: "https://example.com/portable")!,
+            photoAssetName: nil
+        )
+    }
+
+    private func portablePlan(handUse: WorkoutHandUse) -> TrainingPlan {
+        TrainingPlan(
+            id: "portable-plan",
+            title: "Portable plan",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/portable-plan")!,
+            provenance: .adapted,
+            boardID: "portable-board",
+            steps: [
+                WorkoutStep(
+                    id: "portable-step",
+                    number: 1,
+                    title: "Portable step",
+                    instruction: "",
+                    accessory: "",
+                    duration: 10,
+                    phase: .hang,
+                    targets: [.kind(.pocket)],
+                    segments: [WorkoutSegment(kind: .work, target: .kind(.pocket), timing: .fixed, duration: 10)],
+                    handUse: handUse,
+                    side: handUse == .single ? .left : .both
                 )
             ]
         )

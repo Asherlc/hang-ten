@@ -614,6 +614,34 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(definition.steps[0].externalLoadKGF, -4)
     }
 
+    func testAddLeftAndRightPairDuplicatesCompatibleStepValues() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        let source = CustomRoutineStepDraft(
+            id: "lift",
+            title: "Loaded lift",
+            instruction: "Lift.",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.jug)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: 4,
+            externalLoadKGF: -5
+        )
+
+        draft.addLeftAndRightPair(from: source)
+
+        XCTAssertEqual(draft.steps.map(\.side), [.left, .right])
+        XCTAssertEqual(draft.steps.map(\.handUse), [.single, .single])
+        XCTAssertEqual(draft.steps.map(\.action), [.loadedLift, .loadedLift])
+        XCTAssertEqual(draft.steps.map(\.repetitions), [4, 4])
+        XCTAssertEqual(draft.steps.map(\.externalLoadKGF), [-5, -5])
+        XCTAssertNotEqual(draft.steps[0].id, draft.steps[1].id)
+    }
+
     private func makeStep(
         id: String,
         title: String,

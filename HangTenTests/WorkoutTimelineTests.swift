@@ -63,6 +63,102 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    private func loadedLiftStep(repetitions: Int) -> WorkoutStep {
+        WorkoutStep(
+            id: "loaded-lift",
+            number: 1,
+            title: "Loaded lift",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.jug)],
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: repetitions
+        )
+    }
+
+    func testLoadedLiftTimelineShowsPrescribedRepetitions() {
+        let step = loadedLiftStep(repetitions: 7)
+
+        XCTAssertTrue(WorkoutTimeline.labels(for: step).contains("7 lifts"))
+    }
+
+    func testLoadedLiftCompletionCapsAtPrescribedRepetitions() {
+        let step = loadedLiftStep(repetitions: 2)
+        var completion = WorkoutLiftCompletion()
+
+        completion.completeLift(for: step)
+        completion.completeLift(for: step)
+        completion.completeLift(for: step)
+
+        XCTAssertEqual(completion.completedRepetitions(for: step), 2)
+    }
+
+    func testHighlightResolverUsesSelectedEquipmentObjectForPortableBoard() {
+        let board = TrainingBoard(
+            id: "portable",
+            manufacturer: "Test",
+            name: "Portable",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            equipmentObjects: [.init(id: "left-ring"), .init(id: "right-ring")],
+            holds: [
+                BoardHold(
+                    id: "left-pocket",
+                    equipmentObjectID: "left-ring",
+                    name: "Left pocket",
+                    shortLabel: "L",
+                    detail: "",
+                    kind: .pocket,
+                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2)
+                ),
+                BoardHold(
+                    id: "left-edge",
+                    equipmentObjectID: "left-ring",
+                    name: "Left edge",
+                    shortLabel: "LE",
+                    detail: "",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.2, y: 0, width: 0.2, height: 0.2)
+                ),
+                BoardHold(
+                    id: "right-pocket",
+                    equipmentObjectID: "right-ring",
+                    name: "Right pocket",
+                    shortLabel: "R",
+                    detail: "",
+                    kind: .pocket,
+                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2)
+                )
+            ],
+            productURL: URL(string: "https://example.com/portable")!,
+            photoAssetName: nil
+        )
+        let step = WorkoutStep(
+            id: "left",
+            number: 1,
+            title: "Left lift",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.pocket)],
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: 1
+        )
+
+        XCTAssertEqual(
+            WorkoutHighlightResolver.holdIDs(for: step, on: board),
+            ["left-pocket", "left-edge"]
+        )
+    }
+
     func testHoldCuePrefersSingleTargetStepGripOverride() {
         let hold = BoardHold(
             id: "cue-edge",
@@ -3293,4 +3389,5 @@ final class WorkoutSessionStateTests: XCTestCase {
         XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 10), 90)
         XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
     }
+
 }

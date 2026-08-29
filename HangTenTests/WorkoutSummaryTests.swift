@@ -2,6 +2,15 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSummaryTests: XCTestCase {
+    func testLoadedLiftSummaryUsesSignedLoadCopy() {
+        XCTAssertEqual(
+            WorkoutStepFormatting.externalLoadText(-5, unit: .kilograms),
+            "5 kg assistance"
+        )
+        XCTAssertEqual(
+            WorkoutStepFormatting.externalLoadText(10, unit: .kilograms), "+10 kg")
+    }
+
     func testHistorySummaryModeIsReadOnly() {
         XCTAssertFalse(WorkoutSummaryMode.pending.isReadOnly)
         XCTAssertTrue(WorkoutSummaryMode.history.isReadOnly)

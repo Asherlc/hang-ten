@@ -225,6 +225,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
     let side: WorkoutSide
     let action: WorkoutAction
     let repetitions: Int?
+    let completedRepetitions: Int?
     let externalLoadKGF: Double?
 
     enum Status: String, Codable {
@@ -235,7 +236,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
 
     private enum CodingKeys: String, CodingKey {
         case stepID, plannedActiveDuration, intervals, peakLoadKGF, sampleCount, status
-        case handUse, side, action, repetitions, externalLoadKGF
+        case handUse, side, action, repetitions, completedRepetitions, externalLoadKGF
     }
 
     init(
@@ -249,6 +250,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         side: WorkoutSide = .both,
         action: WorkoutAction = .hang,
         repetitions: Int? = nil,
+        completedRepetitions: Int? = nil,
         externalLoadKGF: Double? = nil
     ) {
         self.stepID = stepID
@@ -261,6 +263,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         self.side = side
         self.action = action
         self.repetitions = repetitions
+        self.completedRepetitions = completedRepetitions
         self.externalLoadKGF = externalLoadKGF
     }
 
@@ -276,6 +279,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side) ?? .both
         action = try container.decodeIfPresent(WorkoutAction.self, forKey: .action) ?? .hang
         repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
+        completedRepetitions = try container.decodeIfPresent(Int.self, forKey: .completedRepetitions)
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
     }
 
@@ -291,6 +295,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
             side: step.side,
             action: step.action,
             repetitions: step.repetitions,
+            completedRepetitions: completedRepetitions,
             externalLoadKGF: step.externalLoadKGF
         )
     }
