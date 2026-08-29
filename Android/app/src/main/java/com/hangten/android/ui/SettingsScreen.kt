@@ -38,6 +38,7 @@ fun SettingsScreen(
     healthViewModel: HealthViewModel,
     contentPadding: PaddingValues,
     sensorController: SensorConnectionController? = null,
+    onOpenBoardEditor: (() -> Unit)? = null,
     onHealthPermissionRequest: ((Set<String>) -> Unit)? = null,
     onSensorPermissionRequest: ((Array<String>) -> Unit)? = null,
 ) {
@@ -98,6 +99,12 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Restore purchases" },
         ) { Text("Restore purchases") }
         PurchaseStatus(state)
+        if (onOpenBoardEditor != null) {
+            OutlinedButton(
+                onClick = onOpenBoardEditor,
+                modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open board editor" },
+            ) { Text("Board editor") }
+        }
         if (sensorController != null) {
             val controller = sensorController
             Text("Training sensor")

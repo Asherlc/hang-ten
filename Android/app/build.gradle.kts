@@ -6,6 +6,12 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+val githubOauthClientId = providers.gradleProperty("GITHUB_OAUTH_CLIENT_ID").orElse("").get().also {
+    require(it.isEmpty() || it.matches(Regex("[A-Za-z0-9_-]+"))) {
+        "GITHUB_OAUTH_CLIENT_ID must be a public GitHub OAuth client identifier."
+    }
+}
+
 android {
     namespace = "com.hangten.training"
     compileSdk = 36
@@ -17,10 +23,12 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "GITHUB_OAUTH_CLIENT_ID", "\"$githubOauthClientId\"")
     }
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     lint {
@@ -57,6 +65,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("com.android.billingclient:billing:9.1.0")
     implementation("androidx.health.connect:connect-client:1.1.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")

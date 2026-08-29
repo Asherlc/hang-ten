@@ -26,6 +26,16 @@ import com.hangten.android.health.HealthConnectService
 import com.hangten.android.health.SharedPreferencesHealthAuthorizationMemory
 import com.hangten.android.sensors.AndroidBleForceSensorTransport
 import com.hangten.android.sensors.SensorConnectionController
+import com.hangten.android.editor.AndroidAssetBoardPackageSource
+import com.hangten.android.editor.BoardEditorServices
+import com.hangten.android.editor.BoardEditorStore
+import com.hangten.android.editor.EncryptedGitHubTokenStore
+import com.hangten.android.editor.GitHubDeviceFlow
+import com.hangten.android.editor.GitHubPackageSync
+import com.hangten.android.editor.GitHubSyncSession
+import com.hangten.android.editor.OkHttpGitHubApi
+import com.hangten.training.BuildConfig
+import java.io.File
 
 private val Context.androidDataStore by preferencesDataStore(name = "hang_ten")
 
@@ -51,6 +61,23 @@ class MainActivity : ComponentActivity() {
                     val sensorController = remember {
                         SensorConnectionController(AndroidBleForceSensorTransport(applicationContext))
                     }
+                    val boardEditorServices = remember {
+                        val tokenStore = EncryptedGitHubTokenStore(applicationContext)
+                        val github = OkHttpGitHubApi()
+                        BoardEditorServices(
+                            store = BoardEditorStore(
+                                File(applicationContext.filesDir, "BoardEditorPackages"),
+                                AndroidAssetBoardPackageSource(applicationContext.assets),
+                            ),
+                            tokenStore = tokenStore,
+                            syncSession = GitHubSyncSession(
+                                GitHubDeviceFlow(github, tokenStore),
+                                tokenStore,
+                                BuildConfig.GITHUB_OAUTH_CLIENT_ID,
+                            ),
+                            packageSync = GitHubPackageSync(github),
+                        )
+                    }
                     HangTenApp(
                         boards = boards,
                         plans = plans,
@@ -60,6 +87,7 @@ class MainActivity : ComponentActivity() {
                         accessStore = accessStore,
                         healthStore = healthStore,
                         sensorController = sensorController,
+                        boardEditorServices = boardEditorServices,
                     )
                 }
             }

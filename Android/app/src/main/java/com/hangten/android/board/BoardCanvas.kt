@@ -180,12 +180,14 @@ fun BoardCanvas(
     activeHoldIDs: Set<String>,
     onHoldTap: (String) -> Unit,
     modifier: Modifier = Modifier,
+    imageOverride: ImageBitmap? = null,
 ) {
     val presentation = board.presentations.firstOrNull { it.isDefault }
     val context = LocalContext.current
-    val boardImage = remember(board.id, presentation?.assetPath) {
+    val bundledImage = remember(board.id, presentation?.assetPath) {
         presentation?.let { loadBoardImage(context, board.id, it) }
     }
+    val boardImage = imageOverride ?: bundledImage
     var canvasSize by remember { mutableStateOf(IntSize.Zero) }
     val activeDescription = activeHoldIDs.joinToString(separator = ", ")
         .ifEmpty { "No active holds" }
