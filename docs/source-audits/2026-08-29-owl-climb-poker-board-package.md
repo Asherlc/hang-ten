@@ -67,5 +67,6 @@ After the presentation-art replacement, a focused rerun was attempted on a
 fresh owned iPhone 17 Pro / iOS 26.5 simulator, recorded under the workspace's
 exact ownership marker. Xcode could not resolve/link its packages because the
 host volume was full (`errno=28`), so no new app screenshot or alignment claim
-is made for the wood renders. Both owned simulators were archived with
+is made for the wood renders. The prior flat-render PR captures have been
+removed and must not be used to represent the current presentation art. Both owned simulators were archived with
 `scripts/paseo-resource-cleanup.sh archive`; no shared simulator was addressed.
