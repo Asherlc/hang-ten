@@ -165,6 +165,41 @@ class SensorConnectionControllerTest {
         assertTrue(controller.state.value.error!!.contains("stop failed"))
     }
 
+    @Test
+    fun pendingStartWriteDisconnectBecomesVisibleControllerFailure() = runTest {
+        val barrier = CompletableDeferred<Unit>()
+        val transport = FakeForceSensorTransport().apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+            writeBarrier = barrier
+        }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.disconnect(); advanceUntilIdle()
+
+        assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("disconnected while writing"))
+        transport.writeFailure = null
+        controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun delayedWriteCallbackErrorBecomesVisibleControllerFailure() = runTest {
+        val barrier = CompletableDeferred<Unit>()
+        val transport = FakeForceSensorTransport().apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+            writeBarrier = barrier
+        }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.writeFailure = IllegalStateException("callback write failed")
+        barrier.complete(Unit); advanceUntilIdle()
+
+        assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("callback write failed"))
+        transport.writeFailure = null
+        controller.disconnect(); advanceUntilIdle()
+    }
+
     private fun calibration(): List<String> = (0..3).flatMap { sensor ->
         (0..3).map { point -> "$sensor,$point,$point,${point * 10}" }
     }

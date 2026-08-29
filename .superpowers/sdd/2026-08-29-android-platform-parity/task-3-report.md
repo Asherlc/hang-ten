@@ -127,3 +127,28 @@ no AVD was created. All three exact owned SDK roots were then deleted.
   separate CI/release gate described above.
 - Cleanup check: the final root and each prior exact owned root
   (`android-sdk-bitter-scorpion-0o9ylkoo{,-final,-retry,-pty,-min}`) are absent.
+
+### Round 3 callback-queue and write-callback remediation
+
+- The Android GATT callback no longer calls `runBlocking`. It copies each frame
+  into a lock-free serial ingress queue and returns immediately. A single
+  `Dispatchers.Default` pump is the only sender to the bounded 128-frame output
+  channel, so slow delivery suspends away from the callback thread and frames
+  are retained in order rather than `trySend`-dropped.
+- `NotificationQueueState` exposes capacity, total pending frames, and an
+  over-capacity flag through both production and deterministic transports. The
+  production-like capacity-2 fake test sends three frames before collecting;
+  it observes over-capacity, then receives `[1, 2, 3]` in order with zero
+  pending frames. This is explicit pressure visibility without callback-thread
+  blocking or silent loss.
+- Added deterministic pending-write-disconnect and delayed-write-callback-error
+  controller tests. Both await the pending write and end in the UI-visible
+  `Failed` state instead of leaving a continuation/coroutine unresolved.
+- Fresh owned SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round3` with API 36 platform
+  and build tools: focused transport/controller tests — **BUILD SUCCESSFUL**;
+  then `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` — **BUILD
+  SUCCESSFUL**. The connected emulator gate remains separately unrun as noted
+  above.
+- Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round3` root
+  is absent.

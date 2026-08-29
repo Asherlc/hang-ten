@@ -20,18 +20,90 @@ import android.os.Build
 import android.os.SystemClock
 import androidx.core.content.ContextCompat
 import java.util.UUID
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+
+data class NotificationQueueState(
+    val capacityFrames: Int,
+    val pendingFrames: Int = 0,
+    val isOverCapacity: Boolean = false,
+)
+
+/**
+ * Moves callback-thread frames through a single serial pump. The callback only
+ * copies/enqueues; when delivery is slow, the pump suspends off the callback
+ * thread and [state] exposes the retained backlog instead of discarding data.
+ */
+internal class SerialNotificationQueue(
+    private val scope: CoroutineScope,
+    private val capacityFrames: Int = 128,
+) {
+    private val ingress = ConcurrentLinkedQueue<ByteArray>()
+    private val isDraining = AtomicBoolean(false)
+    private val pendingFrames = AtomicInteger(0)
+    private val outgoing = Channel<ByteArray>(capacityFrames)
+    private val _state = MutableStateFlow(NotificationQueueState(capacityFrames))
+    val state: StateFlow<NotificationQueueState> = _state.asStateFlow()
+    val notifications: Flow<ByteArray> = flow {
+        for (frame in outgoing) {
+            try {
+                emit(frame)
+            } finally {
+                delivered()
+            }
+        }
+    }
+
+    fun enqueue(frame: ByteArray) {
+        val pending = pendingFrames.incrementAndGet()
+        ingress.add(frame.copyOf())
+        publishState(pending)
+        if (isDraining.compareAndSet(false, true)) scope.launch { drain() }
+    }
+
+    private suspend fun drain() {
+        while (true) {
+            val frame = ingress.poll()
+            if (frame != null) {
+                outgoing.send(frame)
+                continue
+            }
+            isDraining.set(false)
+            if (ingress.isEmpty() || !isDraining.compareAndSet(false, true)) return
+        }
+    }
+
+    private fun delivered() {
+        publishState(pendingFrames.decrementAndGet())
+    }
+
+    private fun publishState(pending: Int) {
+        _state.value = NotificationQueueState(
+            capacityFrames = capacityFrames,
+            pendingFrames = pending,
+            isOverCapacity = pending > capacityFrames,
+        )
+    }
+}
 
 interface ForceSensorTransport {
     val notifications: Flow<ByteArray>
+    val notificationQueueState: StateFlow<NotificationQueueState>
     val errors: Flow<Throwable>
     suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement>
     suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile)
@@ -41,19 +113,24 @@ interface ForceSensorTransport {
 }
 
 /** Test-only deterministic transport; it never talks to Bluetooth hardware. */
-class FakeForceSensorTransport : ForceSensorTransport {
+class FakeForceSensorTransport(
+    notificationCapacity: Int = 128,
+    notificationScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined),
+) : ForceSensorTransport {
     private val discovered = mutableListOf<ForceSensorAdvertisement>()
-    private val events = Channel<ByteArray>(Channel.UNLIMITED)
+    private val events = SerialNotificationQueue(notificationScope, notificationCapacity)
     private val errorEvents = MutableSharedFlow<Throwable>(extraBufferCapacity = 8)
     val operations = mutableListOf<String>()
     var connectFailure: Throwable? = null
     var writeFailure: Throwable? = null
+    var writeBarrier: kotlinx.coroutines.CompletableDeferred<Unit>? = null
     var connectBarrier: kotlinx.coroutines.CompletableDeferred<Unit>? = null
-    override val notifications: Flow<ByteArray> = events.receiveAsFlow()
+    override val notifications: Flow<ByteArray> = events.notifications
+    override val notificationQueueState: StateFlow<NotificationQueueState> = events.state
     override val errors: Flow<Throwable> = errorEvents
 
     fun enqueue(advertisement: ForceSensorAdvertisement) { discovered += advertisement }
-    fun emit(value: ByteArray) { check(events.trySend(value.copyOf()).isSuccess) }
+    fun emit(value: ByteArray) { events.enqueue(value) }
     fun fail(error: Throwable) { check(errorEvents.tryEmit(error)) }
 
     override suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement> {
@@ -73,10 +150,17 @@ class FakeForceSensorTransport : ForceSensorTransport {
 
     override suspend fun write(characteristic: ForceSensorCharacteristic, value: ByteArray) {
         operations += "write:${characteristic.characteristicUuid}:${value.joinToString("") { "%02x".format(it) }}"
+        writeBarrier?.await()
         writeFailure?.let { throw it }
     }
 
-    override fun disconnect() { operations += "disconnect" }
+    override fun disconnect() {
+        operations += "disconnect"
+        if (writeBarrier?.isCompleted == false) {
+            writeFailure = IllegalStateException("Sensor disconnected while writing.")
+            writeBarrier?.complete(Unit)
+        }
+    }
 }
 
 object BlePermissionRequirements {
@@ -94,9 +178,11 @@ object BlePermissionRequirements {
 class AndroidBleForceSensorTransport(private val context: Context) : ForceSensorTransport {
     private val appContext = context.applicationContext
     private val bluetoothAdapter: BluetoothAdapter? = appContext.getSystemService(BluetoothManager::class.java)?.adapter
-    private val notificationEvents = Channel<ByteArray>(capacity = 128)
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val notificationEvents = SerialNotificationQueue(notificationScope)
     private val errorEvents = MutableSharedFlow<Throwable>(extraBufferCapacity = 8)
-    override val notifications: Flow<ByteArray> = notificationEvents.receiveAsFlow()
+    override val notifications: Flow<ByteArray> = notificationEvents.notifications
+    override val notificationQueueState: StateFlow<NotificationQueueState> = notificationEvents.state
     override val errors: Flow<Throwable> = errorEvents
     private var gatt: BluetoothGatt? = null
     private var scanCallback: ScanCallback? = null
@@ -254,9 +340,7 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     }
 
     private fun enqueueNotification(value: ByteArray) {
-        // This runs on the GATT callback thread. Blocking here is deliberate,
-        // bounded backpressure: notifications are never silently discarded.
-        runBlocking { notificationEvents.send(value.copyOf()) }
+        notificationEvents.enqueue(value)
     }
 
     private companion object {
