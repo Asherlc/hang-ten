@@ -68,6 +68,7 @@ enum class PurchaseState {
     Loading,
     Purchasing,
     Pending,
+    Cancelled,
     Failed,
     ProductLoadFailed,
     NothingToRestore,
@@ -103,7 +104,7 @@ class PurchaseManager(
         when (val result = client.purchase(activity, LIFETIME_PRODUCT_ID)) {
             is PurchaseResult.Purchased -> apply(PurchaseUpdate.Purchased(result.record))
             PurchaseResult.Pending -> _state.value = PurchaseState.Pending
-            PurchaseResult.Cancelled -> _state.value = PurchaseState.Idle
+            PurchaseResult.Cancelled -> _state.value = PurchaseState.Cancelled
             PurchaseResult.Started -> Unit
             PurchaseResult.Failed -> _state.value = PurchaseState.Failed
         }
@@ -131,7 +132,11 @@ class PurchaseManager(
         client.close()
     }
 
-    private suspend fun refreshCurrentPurchases() {
+    /**
+     * Reconciles local access with Google Play's current purchase list.
+     * A successful empty list is authoritative and removes a prior unlock.
+     */
+    suspend fun refreshCurrentPurchases() {
         when (val result = client.restore()) {
             RestoreResult.Failed -> Unit
             is RestoreResult.Purchases -> {
@@ -153,7 +158,7 @@ class PurchaseManager(
                 _hasLifetimeEntitlement.value = false
                 _state.value = PurchaseState.Idle
             }
-            PurchaseUpdate.Cancelled -> _state.value = PurchaseState.Idle
+            PurchaseUpdate.Cancelled -> _state.value = PurchaseState.Cancelled
             PurchaseUpdate.Failed -> _state.value = PurchaseState.Failed
         }
     }

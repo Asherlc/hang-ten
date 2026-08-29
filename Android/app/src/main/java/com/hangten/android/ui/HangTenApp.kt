@@ -27,6 +27,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hangten.android.audio.WorkoutAudioCoach
 import com.hangten.android.billing.AcknowledgementResult
@@ -88,6 +91,7 @@ fun HangTenApp(
 ) {
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
+    val lifecycleOwner = LocalLifecycleOwner.current
     val selections: HangTenSelectionViewModel = viewModel()
     val selectedBoardID by selections.selectedBoardID.collectAsState()
     val selectedPlanID by selections.selectedPlanID.collectAsState()
@@ -99,6 +103,15 @@ fun HangTenApp(
     val destination = backStackEntry?.destination?.route
 
     LaunchedEffect(purchaseManager) { purchaseManager.prepare() }
+    DisposableEffect(lifecycleOwner, purchaseManager) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                coroutineScope.launch { purchaseManager.refreshCurrentPurchases() }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
     DisposableEffect(purchaseManager) { onDispose(purchaseManager::close) }
 
     MaterialTheme {

@@ -31,6 +31,32 @@ class PurchaseManagerTest {
     }
 
     @Test
+    fun acknowledgementFailureKeepsAccessLockedAndRetriesOnCurrentPurchaseRefresh() = runTest {
+        val record = PurchaseRecord(PurchaseManager.LIFETIME_PRODUCT_ID, "purchase-token", acknowledged = false)
+        val client = FakePurchaseClient(
+            purchaseResult = PurchaseResult.Purchased(record),
+            acknowledgementResult = AcknowledgementResult.Failed,
+        )
+        val manager = PurchaseManager(client, this)
+
+        manager.purchase(null)
+
+        assertFalse(manager.hasLifetimeEntitlement.value)
+        assertEquals(PurchaseState.Failed, manager.state.value)
+        assertEquals(listOf("purchase-token"), client.acknowledgedTokens)
+
+        client.acknowledgementResult = AcknowledgementResult.Success
+        client.restoreResult = RestoreResult.Purchases(listOf(PurchaseUpdate.Purchased(record)))
+
+        manager.refreshCurrentPurchases()
+
+        assertTrue(manager.hasLifetimeEntitlement.value)
+        assertEquals(PurchaseState.Idle, manager.state.value)
+        assertEquals(listOf("purchase-token", "purchase-token"), client.acknowledgedTokens)
+        manager.close()
+    }
+
+    @Test
     fun pendingPurchaseDoesNotUnlockLifetimeAccess() = runTest {
         val client = FakePurchaseClient(purchaseResult = PurchaseResult.Pending)
         val manager = PurchaseManager(client, this)
@@ -116,6 +142,7 @@ class PurchaseManagerTest {
         private val product: PurchaseProduct? = PurchaseProduct(PurchaseManager.LIFETIME_PRODUCT_ID, "$2.99"),
         private val purchaseResult: PurchaseResult = PurchaseResult.Cancelled,
         var restoreResult: RestoreResult = RestoreResult.Purchases(emptyList()),
+        var acknowledgementResult: AcknowledgementResult = AcknowledgementResult.Success,
         override val updates: Flow<PurchaseUpdate> = MutableSharedFlow(),
     ) : PurchaseClient {
         val acknowledgedTokens = mutableListOf<String>()
@@ -128,7 +155,7 @@ class PurchaseManagerTest {
 
         override suspend fun acknowledge(purchaseToken: String): AcknowledgementResult {
             acknowledgedTokens += purchaseToken
-            return AcknowledgementResult.Success
+            return acknowledgementResult
         }
     }
 }

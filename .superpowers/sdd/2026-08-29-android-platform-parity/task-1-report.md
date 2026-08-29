@@ -131,3 +131,63 @@ removed the exact owned AVD, `avdmanager list avd` returned no AVDs in its
 isolated home, and `adb devices -l` returned no connected devices. The exact
 isolated Gradle/SDK/AVD directories are then removed and their absence verified.
 No shared Gradle cache, Android SDK, emulator, or AVD was modified.
+
+## Review remediation round 1
+
+The review findings were addressed as follows:
+
+- `HangTenApp` now reconciles `PurchaseManager` current purchases on every
+  lifecycle `ON_RESUME`. A successful current-purchase query with no lifetime
+  product clears the local entitlement; a failed query does not revoke access.
+  `ForegroundPurchaseRefreshTest` drives the activity from background to
+  resumed after changing the authoritative current-purchase result to empty.
+- Purchase cancellation has a distinct `PurchaseState.Cancelled` and the
+  locked purchase gate says, "Purchase cancelled. You weren't charged."
+  `WorkoutAccessGateTest.cancelledPurchaseKeepsGateLockedAndExplainsOutcome`
+  verifies the UI and entitlement.
+- `acknowledgementFailureKeepsAccessLockedAndRetriesOnCurrentPurchaseRefresh`
+  proves acknowledgement failure grants no access and a later current-purchase
+  reconciliation retries acknowledgement before unlocking.
+- `docs/ANDROID_RELEASE.md` now contains the operator-facing Play Console
+  release gate for exact product setup, license/internal-track testing,
+  purchased acknowledgement, pending payment, refund/revocation, foreground
+  reconciliation, and restore verification.
+
+Fresh verification passed with an isolated workspace-owned SDK and Gradle
+cache:
+
+```
+GRADLE_USER_HOME="$PWD/.context/android-billing-gradle-bitter-scorpion-r1" \
+  ./Android/gradlew -p Android :app:testDebugUnitTest \
+  --tests com.hangten.android.billing.PurchaseManagerTest --console=plain
+
+BUILD SUCCESSFUL in 4s
+
+GRADLE_USER_HOME="$PWD/.context/android-billing-gradle-bitter-scorpion-r1" \
+  ./Android/gradlew -p Android :app:assembleDebugAndroidTest --console=plain
+
+BUILD SUCCESSFUL in 16s
+
+GRADLE_USER_HOME="$PWD/.context/android-billing-gradle-bitter-scorpion-r1" \
+  ./Android/gradlew -p Android \
+  :app:testDebugUnitTest :app:lintDebug :app:assembleDebug --console=plain
+
+BUILD SUCCESSFUL in 26s
+```
+
+The new instrumentation sources compile, but this review pass could not run a
+connected suite. The required, isolated API 35 image package
+`system-images;android-35;google_apis;arm64-v8a` remained at a 4 KB installer
+stub after a bounded 94-second retry; it never produced `package.xml`, so no
+owned AVD could be created. No shared AVD or SDK image was used, copied, or
+modified. This is an external device-validation limitation, not a passing
+connected-test result.
+
+Review-round resource cleanup was verified immediately after the failed image
+provisioning attempt. The exact owned resources
+`.context/android-billing-gradle-bitter-scorpion-r1`,
+`.context/android-billing-sdk-bitter-scorpion-r1`,
+`.context/android-billing-avd-bitter-scorpion-r1`, and
+`.context/bitter-scorpion-r1-commandlinetools.zip`, plus generated
+`Android/local.properties`, were removed; their absence and absence of the
+exact owned `sdkmanager` process were checked. No AVD existed to delete.

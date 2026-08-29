@@ -27,6 +27,40 @@ under `Android/app/build/reports/`, JVM test results are under
 `Android/app/build/test-results/`, and connected-test results are under
 `Android/app/build/outputs/androidTest-results/`.
 
+## Google Play Billing release gate
+
+Before promoting an Android build beyond the internal testing track, an
+authorized Play Console operator must run this checklist against the signed
+build installed from Google Play (not an adb-installed APK):
+
+1. In **Monetize with Play > Products > One-time products**, create and
+   activate the one-time product with the exact ID
+   `com.hangten.training.lifetime`. Configure a price in every country offered
+   by the release. The app must not expose a different product ID as an
+   alternative unlock.
+2. Add the test Google account both to the internal-track tester list and to
+   **Settings > License testing**. Upload the candidate AAB to the internal
+   track, publish that track, opt the account into its Play testing link, and
+   install the resulting Play-delivered build.
+3. Start the lifetime purchase. Confirm the Play confirmation completes, the
+   app unlocks only after the purchase reaches `PURCHASED`, and the order shows
+   as acknowledged in Play Console order management. Reopen the app and use
+   **Restore purchases** to confirm the unlock remains available.
+4. Exercise a deferred payment method that produces a `PENDING` transaction
+   (for example, the Play license tester pending-payment instrument). Confirm
+   the app remains locked and describes the pending state; do not treat a
+   pending order as an unlock. Complete or cancel that order in Play, then
+   bring the app to the foreground and confirm its state matches the final
+   order.
+5. Refund the completed test order in **Order management**. Background then
+   foreground the app, or use **Restore purchases**, and confirm the lifetime
+   entitlement is removed and the two-workout access gate returns. Purchase
+   once more and repeat the restore check before recording the gate as passed.
+
+Record the Play Console order IDs, tester account, build version code, and the
+pass/fail result of each step in the release ticket. Do not include purchase
+tokens, service-account keys, or other credentials in the ticket.
+
 ## GitHub Actions verification
 
 The stable branch-protection check is named **Android verification**. It runs

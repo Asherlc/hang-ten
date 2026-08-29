@@ -118,6 +118,7 @@ fun PurchaseStatus(state: PurchaseState) {
         PurchaseState.Loading -> "Loading purchase options…"
         PurchaseState.Purchasing -> "Completing your purchase…"
         PurchaseState.Pending -> "Purchase pending. Your workout will unlock after Google Play approves it."
+        PurchaseState.Cancelled -> "Purchase cancelled. You weren't charged."
         PurchaseState.Failed -> "We couldn’t complete the purchase. Please try again or restore purchases."
         PurchaseState.ProductLoadFailed -> "We couldn’t load purchase options. Check your connection and try again."
         PurchaseState.NothingToRestore -> "Nothing to restore. No lifetime unlock purchase was found."

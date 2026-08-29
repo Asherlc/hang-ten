@@ -3,6 +3,7 @@ package com.hangten.android.ui
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
@@ -51,6 +52,27 @@ class WorkoutAccessGateTest {
         }
     }
 
+    @Test
+    fun cancelledPurchaseKeepsGateLockedAndExplainsOutcome() {
+        val purchaseManager = PurchaseManager(CancelledPurchaseClient())
+        composeRule.setContent {
+            LaunchedEffect(Unit) { purchaseManager.prepare() }
+            LifetimeUnlockPaywall(
+                purchaseManager = purchaseManager,
+                onDismiss = {},
+            )
+        }
+
+        composeRule.waitUntil(timeoutMillis = 5_000) { purchaseManager.product.value != null }
+        composeRule.onNodeWithContentDescription("Purchase lifetime access").performClick()
+
+        composeRule.onNodeWithText("Purchase cancelled. You weren't charged.").assertIsDisplayed()
+        composeRule.runOnIdle {
+            org.junit.Assert.assertFalse(purchaseManager.hasLifetimeEntitlement.value)
+            purchaseManager.close()
+        }
+    }
+
     private class FixedWorkoutAccessPreferences(
         private var freeWorkoutsUsed: Int,
     ) : WorkoutAccessPreferences {
@@ -71,5 +93,17 @@ class WorkoutAccessGateTest {
         override suspend fun restore(): RestoreResult = RestoreResult.Purchases(emptyList())
 
         override suspend fun acknowledge(purchaseToken: String): AcknowledgementResult = AcknowledgementResult.Failed
+    }
+
+    private class CancelledPurchaseClient : PurchaseClient {
+        override val updates = emptyFlow<PurchaseUpdate>()
+
+        override suspend fun load(id: String): PurchaseProduct? = PurchaseProduct(id, "$2.99")
+
+        override suspend fun purchase(activity: android.app.Activity?, id: String): PurchaseResult = PurchaseResult.Cancelled
+
+        override suspend fun restore(): RestoreResult = RestoreResult.Purchases(emptyList())
+
+        override suspend fun acknowledge(purchaseToken: String): AcknowledgementResult = AcknowledgementResult.Success
     }
 }
