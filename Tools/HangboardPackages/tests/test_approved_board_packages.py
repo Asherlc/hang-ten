@@ -275,6 +275,19 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("yy.penta-evo", "yy-penta-evo"),
         ("zlagboard.evo", "zlagboard-evo"),
         ("zlagboard.pro", "zlagboard-pro"),
+        ("aelith.cyclops-011", "aelith-cyclops-011"),
+        ("captain-fingerfood.dual", "captain-fingerfood-dual"),
+        ("captain-fingerfood.pocket", "captain-fingerfood-pocket"),
+        ("captain-fingerfood.pocket-plus", "captain-fingerfood-pocket-plus"),
+        ("captain-fingerfood.unlevel", "captain-fingerfood-unlevel"),
+        ("crimptonite.helium-mobile", "crimptonite-helium-mobile"),
+        ("frictitious.nug", "frictitious-nug"),
+        ("lattice.mini-bar", "lattice-mini-bar"),
+        ("lattice.mxedge-lift-small", "lattice-mxedge-lift-small"),
+        ("lattice.mxedge-lift-large", "lattice-mxedge-lift-large"),
+        ("nature.stone-hanger-mini", "nature-stone-hanger-mini"),
+        ("nature.stone-hanger-mini-karma8a", "nature-stone-hanger-mini-karma8a"),
+        ("plateau.lifting-edge", "plateau-lifting-edge"),
     }
     assert discovered == expected_packages
     assert inventory.drafts == ()
