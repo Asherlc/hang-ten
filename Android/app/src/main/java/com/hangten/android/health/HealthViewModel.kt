@@ -3,6 +3,7 @@ package com.hangten.android.health
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hangten.android.workout.CompletedSession
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +45,7 @@ class HealthViewModel(
                     refreshHistoryNow()
                 }
                 .onFailure { error ->
+                    if (error is CancellationException) throw error
                     _state.value = _state.value.copy(
                         error = error.message ?: "Unable to complete Health Connect authorization",
                     )

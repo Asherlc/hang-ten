@@ -2,6 +2,7 @@ package com.hangten.android.health
 
 import com.hangten.android.workout.CompletedSession
 import java.time.Instant
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -42,6 +43,25 @@ class HealthConnectServiceTest {
             assertTrue(requireNotNull(completion).isFailure)
             assertEquals(HealthAuthorizationState.NotDetermined, viewModel.state.value.authorization)
             assertEquals("Health Connect provider failed", viewModel.state.value.error)
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun authorizationRequestCancellationLeavesUiStableAndDoesNotCallTheOutcomeCallback() = runTest {
+        Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
+        try {
+            val viewModel = HealthViewModel(CancellingAuthorizationStore(), FakeSessionHistory())
+            val initial = viewModel.state.value
+            var callbackCount = 0
+
+            viewModel.authorizationRequestFinished { callbackCount += 1 }
+            advanceUntilIdle()
+
+            assertEquals(0, callbackCount)
+            assertEquals(initial, viewModel.state.value)
         } finally {
             Dispatchers.resetMain()
         }
@@ -212,6 +232,21 @@ private class FailingAuthorizationStore : WorkoutHealthStore {
 
     override suspend fun completeAuthorizationRequest(): HealthAuthorizationState =
         throw IllegalStateException("Health Connect provider failed")
+
+    override suspend fun refreshAuthorization(): HealthAuthorizationState = HealthAuthorizationState.NotDetermined
+
+    override suspend fun saveCompletedWorkout(workout: CompletedHealthWorkout): Result<HangTenHealthWorkout> =
+        error("Not used by this test")
+
+    override suspend fun fetchHangTenWorkouts(): Result<List<HangTenHealthWorkout>> =
+        error("Not used by this test")
+}
+
+private class CancellingAuthorizationStore : WorkoutHealthStore {
+    override fun requestAuthorization(): Set<String> = emptySet()
+
+    override suspend fun completeAuthorizationRequest(): HealthAuthorizationState =
+        throw CancellationException("Permission request cancelled")
 
     override suspend fun refreshAuthorization(): HealthAuthorizationState = HealthAuthorizationState.NotDetermined
 
