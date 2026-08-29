@@ -5,21 +5,28 @@ final class PlanStorageTests: XCTestCase {
 
     func testMegosRepeaterPlanAlternatesStructuredSides() throws {
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
-        let workSteps = plan.steps.filter { $0.phase == .hang }
+        // The composed plan starts with source-provided warm-up hangs. The
+        // source-order assertions below intentionally cover only the 48
+        // unilateral main-set repetitions.
+        let workSteps = plan.steps.filter {
+            $0.phase == .hang && $0.id.hasPrefix("megos-7-3-set-")
+        }
 
         let expectedSides = (1...6).flatMap { _ in
             Array(repeating: WorkoutSide.left, count: 4)
                 + Array(repeating: WorkoutSide.right, count: 4)
         }
 
-        XCTAssertEqual(workSteps.map(\.side), expectedSides)
-        XCTAssertEqual(workSteps.map(\.id), (1...6).flatMap { set in
+        let expectedIDs = (1...6).flatMap { set in
             [WorkoutSide.left, .right].flatMap { side in
                 (1...4).map { repetition in
                     "megos-7-3-set-\(set)-\(side.rawValue)-rep-\(repetition)"
                 }
             }
-        })
+        }
+
+        XCTAssertEqual(workSteps.map(\.side), expectedSides)
+        XCTAssertEqual(workSteps.map(\.id), expectedIDs.map { "\($0).segment-1" })
         XCTAssertTrue(workSteps.allSatisfy { $0.handUse == .single })
         XCTAssertTrue(workSteps.allSatisfy { $0.action == .hang })
         XCTAssertTrue(workSteps.allSatisfy { $0.activeDuration == 7 })
