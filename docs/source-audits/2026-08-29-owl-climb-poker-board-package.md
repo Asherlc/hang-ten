@@ -37,13 +37,16 @@ slopers or two half-circles is art only, not extra hold metadata.
 
 ## Art and geometry review boundary
 
-Each presentation asset is a new transparent 1980 × 300 straight-on schematic
-render made from directly written SVG primitives and rasterized locally. It is
-not a copied, cropped, traced, registered, vectorized, segmented, or otherwise
-transformed manufacturer or retailer image. The official images were evidence
-only. No image-generation model was used because the desired asset is a simple,
-deterministic, code-native diagram rather than a photographic or illustrative
-asset.
+Each presentation asset is a new 1980 × 300 straight-on product render. The
+assets were generated from the direct-authored presentation layouts and then
+reviewed against the `dewoodstok-woodbord` catalog asset as the comparable
+wood-board reference: pale timber, recessed wood interiors, soft studio
+lighting, and an off-white background. This review replaced the original flat
+schematic treatment, which did not meet the catalog's material-render standard.
+The generated studio frames were manually framed to the declared 6.6:1 asset
+canvas; no manufacturer or retailer image was copied, cropped, traced,
+registered, vectorized, segmented, or otherwise transformed. The official
+images remain evidence only.
 
 Every saved normalized path/frame was selected directly against that accepted
 presentation art and then checked through the package validator. Regular slots,
@@ -54,24 +57,15 @@ source image drove geometry extraction or automatic refinement.
 
 ## iOS visual validation
 
-On 2026-08-29, a fresh owned iPhone 17 Pro / iOS 26.3 simulator named
-`Hang Ten Paseo infamous-parrot Review` was recorded before boot and used by
-explicit UUID throughout. A signed Debug build was installed and launched with
-`SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_PICKER=1`. Its standalone cold-launch frame
-remained blank after 30 seconds, so it was discarded rather than presented as
-app evidence.
-
-The focused
+The original flat-render package passed
 `OwlClimbPokerBoardMapInteractionUITests/testPokerFaceBSloperHasAlignedNormalActiveAndHitTestStates`
-then passed (1 test, 0 failures, 52.678 seconds) on that same owned simulator.
-It opened the board picker, searched for Poker, opened Hold specs, captured
-Face A, switched to Face B, tapped the left central sloper, and asserted
-`boardDetail.selectedHold.face-b-sloper-left`. The retained XCTest attachments
-were visually reviewed and show the intended normal and selected states:
+(1 test, 0 failures, 52.678 seconds): it opened Hold specs, captured Face A,
+switched to Face B, tapped the left central sloper, and asserted
+`boardDetail.selectedHold.face-b-sloper-left`.
 
-- [Face A normal](screenshots/pr-371/poker-face-a-normal.png)
-- [Face B left central sloper selected](screenshots/pr-371/poker-face-b-left-sloper-selected.png)
-
-The owned simulator and workspace-local build, result, log, and intermediate
-screenshot artifacts were cleaned using `scripts/paseo-resource-cleanup.sh
-archive`; no shared simulator was addressed.
+After the presentation-art replacement, a focused rerun was attempted on a
+fresh owned iPhone 17 Pro / iOS 26.5 simulator, recorded under the workspace's
+exact ownership marker. Xcode could not resolve/link its packages because the
+host volume was full (`errno=28`), so no new app screenshot or alignment claim
+is made for the wood renders. Both owned simulators were archived with
+`scripts/paseo-resource-cleanup.sh archive`; no shared simulator was addressed.
