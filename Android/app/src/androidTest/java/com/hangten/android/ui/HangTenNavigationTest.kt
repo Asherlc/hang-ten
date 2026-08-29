@@ -18,6 +18,7 @@ import com.hangten.android.content.TrainingPlan
 import com.hangten.android.content.TrainingStep
 import com.hangten.android.workout.SessionHistoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.concurrent.atomic.AtomicInteger
 import org.junit.Rule
 import org.junit.Test
 
@@ -32,7 +33,7 @@ class HangTenNavigationTest {
                 boards = listOf(fixtureBoard()),
                 plans = listOf(fixturePlan()),
                 historyRepository = historyRepository(),
-                audioCoach = FakeAudioCoach(),
+                audioCoach = RecordingAudioCoach(),
             )
         }
 
@@ -68,7 +69,7 @@ internal fun fixturePlan() = TrainingPlan(
             accessory = "",
             durationSeconds = 10f,
             phase = "hang",
-            targets = emptyList(),
+            targets = listOf(com.hangten.android.content.PlanTarget(holdIds = listOf("fixture-edge"))),
             segments = emptyList(),
             activeDurationSeconds = null,
             gripType = null,
@@ -109,14 +110,23 @@ internal fun fixtureBoard() = Board(
     ),
 )
 
-internal class FakeAudioCoach : WorkoutAudioCoach {
+internal open class RecordingAudioCoach : WorkoutAudioCoach {
     override val instructionCoachingEnabled = MutableStateFlow(false)
+    val scheduledCountdowns = AtomicInteger(0)
+    val cancellations = AtomicInteger(0)
+    val spokenInstructions = mutableListOf<String>()
 
-    override fun scheduleCountdown(startElapsedMs: Long) = Unit
+    override fun scheduleCountdown(startElapsedMs: Long) {
+        scheduledCountdowns.incrementAndGet()
+    }
 
-    override fun cancel() = Unit
+    override fun cancel() {
+        cancellations.incrementAndGet()
+    }
 
-    override fun speakInstruction(instruction: String) = Unit
+    override fun speakInstruction(instruction: String) {
+        spokenInstructions += instruction
+    }
 
     override fun setInstructionCoachingEnabled(enabled: Boolean) {
         instructionCoachingEnabled.value = enabled

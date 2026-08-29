@@ -27,6 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.createSavedStateHandle
 import com.hangten.android.audio.WorkoutAudioCoach
 import com.hangten.android.board.BoardCanvas
 import com.hangten.android.board.resolveTargets
@@ -49,12 +53,22 @@ fun WorkoutScreen(
     onSessionEnded: (CompletedSession) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val viewModel = remember(plan.id) {
-        WorkoutViewModel(
-            session = WorkoutSession(plan),
-            audioCancellation = WorkoutAudioCancellation { audioCoach.cancel() },
-        )
+    val factory = remember(plan.id, audioCoach) {
+        viewModelFactory {
+            initializer {
+                val savedStateHandle = createSavedStateHandle()
+                WorkoutViewModel(
+                    session = WorkoutSession(
+                        plan = plan,
+                        restoredState = WorkoutViewModel.restoredSessionState(savedStateHandle),
+                    ),
+                    audioCancellation = WorkoutAudioCancellation { audioCoach.cancel() },
+                    savedStateHandle = savedStateHandle,
+                )
+            }
+        }
     }
+    val viewModel: WorkoutViewModel = viewModel(key = "workout-${plan.id}", factory = factory)
     val snapshot by viewModel.snapshot.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
     val activeStep = plan.steps.getOrNull(snapshot.activeStepIndex)
@@ -64,12 +78,16 @@ fun WorkoutScreen(
             if (event == Lifecycle.Event.ON_STOP) viewModel.onStop()
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            audioCoach.cancel()
+        }
     }
     LaunchedEffect(viewModel) {
-        viewModel.start()
-        audioCoach.scheduleCountdown(SystemClock.elapsedRealtime())
-        activeStep?.instruction?.let(audioCoach::speakInstruction)
+        if (viewModel.startIfNeeded()) {
+            audioCoach.scheduleCountdown(SystemClock.elapsedRealtime())
+            activeStep?.instruction?.let(audioCoach::speakInstruction)
+        }
         while (isActive) {
             val refreshed = viewModel.refresh()
             if (refreshed.phase is SessionPhase.Complete) {

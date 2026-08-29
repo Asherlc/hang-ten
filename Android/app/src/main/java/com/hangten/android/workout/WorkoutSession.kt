@@ -28,18 +28,25 @@ data class CompletedSession(
     val elapsedDurationMs: Long,
 )
 
+data class WorkoutSessionState(
+    val countdownElapsedMs: Long,
+    val elapsedPlanMs: Long,
+    val paused: Boolean,
+    val completed: Boolean,
+)
+
 class WorkoutSession(
     private val plan: TrainingPlan,
     private val wallClockMillis: () -> Long = System::currentTimeMillis,
+    restoredState: WorkoutSessionState? = null,
 ) {
-    private var countdownElapsedMs = 0L
-    private var elapsedPlanMs = 0L
-    private var runningSinceMs: Long? = null
-    private var paused = false
-    private var completedElapsedMs: Long? = null
-
     private val stepDurationsMs = plan.steps.map { (it.durationSeconds * MILLIS_PER_SECOND).toLong().coerceAtLeast(0L) }
     private val totalPlanMs = stepDurationsMs.sum()
+    private var countdownElapsedMs = restoredState?.countdownElapsedMs?.coerceIn(0L, START_COUNTDOWN_MS) ?: 0L
+    private var elapsedPlanMs = restoredState?.elapsedPlanMs?.coerceIn(0L, totalPlanMs) ?: 0L
+    private var runningSinceMs: Long? = null
+    private var paused = restoredState?.paused == true
+    private var completedElapsedMs: Long? = if (restoredState?.completed == true) elapsedPlanMs else null
 
     fun start(nowMs: Long): WorkoutSnapshot {
         if (runningSinceMs == null && !paused && completedElapsedMs == null) {
@@ -99,6 +106,18 @@ class WorkoutSession(
         progressAt(nowMs).elapsedPlanMs,
         (START_COUNTDOWN_MS - progressAt(nowMs).countdownElapsedMs).coerceAtLeast(0L),
     ) !is SessionPhase.Complete
+
+    internal fun hasStarted(): Boolean = runningSinceMs != null || countdownElapsedMs > 0L || elapsedPlanMs > 0L || paused || completedElapsedMs != null
+
+    internal fun savedState(nowMs: Long): WorkoutSessionState {
+        val progress = progressAt(nowMs)
+        return WorkoutSessionState(
+            countdownElapsedMs = progress.countdownElapsedMs,
+            elapsedPlanMs = completedElapsedMs ?: progress.elapsedPlanMs,
+            paused = paused || runningSinceMs != null,
+            completed = completedElapsedMs != null,
+        )
+    }
 
     private fun progressAt(nowMs: Long): Progress {
         val elapsedSinceLastStart = runningSinceMs?.let { (nowMs - it).coerceAtLeast(0L) } ?: 0L

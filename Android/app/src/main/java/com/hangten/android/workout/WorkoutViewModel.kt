@@ -2,6 +2,7 @@ package com.hangten.android.workout
 
 import android.os.SystemClock
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,12 +15,22 @@ class WorkoutViewModel(
     private val session: WorkoutSession,
     private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime,
     private val audioCancellation: WorkoutAudioCancellation = WorkoutAudioCancellation {},
+    private val savedStateHandle: SavedStateHandle? = null,
 ) : ViewModel() {
     private val _snapshot = MutableStateFlow(session.snapshot(elapsedRealtime()))
 
     val snapshot: StateFlow<WorkoutSnapshot> = _snapshot.asStateFlow()
 
     fun start(): WorkoutSnapshot = publish { session.start(elapsedRealtime()) }
+
+    fun startIfNeeded(): Boolean {
+        if (session.hasStarted()) {
+            refresh()
+            return false
+        }
+        start()
+        return true
+    }
 
     fun pause(): WorkoutSnapshot = publish { session.pause(elapsedRealtime()) }
 
@@ -30,6 +41,7 @@ class WorkoutViewModel(
     fun complete(): CompletedSession {
         val completed = session.complete(elapsedRealtime())
         _snapshot.value = session.snapshot(elapsedRealtime())
+        persist()
         return completed
     }
 
@@ -38,7 +50,40 @@ class WorkoutViewModel(
             pause()
         }
         audioCancellation.cancel()
+        persist()
     }
 
-    private fun publish(block: () -> WorkoutSnapshot): WorkoutSnapshot = block().also { _snapshot.value = it }
+    private fun publish(block: () -> WorkoutSnapshot): WorkoutSnapshot = block().also {
+        _snapshot.value = it
+        persist()
+    }
+
+    private fun persist() {
+        val savedState = session.savedState(elapsedRealtime())
+        savedStateHandle?.apply {
+            this[COUNTDOWN_ELAPSED_MS] = savedState.countdownElapsedMs
+            this[ELAPSED_PLAN_MS] = savedState.elapsedPlanMs
+            this[PAUSED] = savedState.paused
+            this[COMPLETED] = savedState.completed
+            this[HAS_SESSION_STATE] = true
+        }
+    }
+
+    companion object {
+        internal fun restoredSessionState(savedStateHandle: SavedStateHandle): WorkoutSessionState? {
+            if (savedStateHandle.get<Boolean>(HAS_SESSION_STATE) != true) return null
+            return WorkoutSessionState(
+                countdownElapsedMs = savedStateHandle[COUNTDOWN_ELAPSED_MS] ?: 0L,
+                elapsedPlanMs = savedStateHandle[ELAPSED_PLAN_MS] ?: 0L,
+                paused = savedStateHandle[PAUSED] ?: false,
+                completed = savedStateHandle[COMPLETED] ?: false,
+            )
+        }
+
+        private const val HAS_SESSION_STATE = "workout.has_session_state"
+        private const val COUNTDOWN_ELAPSED_MS = "workout.countdown_elapsed_ms"
+        private const val ELAPSED_PLAN_MS = "workout.elapsed_plan_ms"
+        private const val PAUSED = "workout.paused"
+        private const val COMPLETED = "workout.completed"
+    }
 }

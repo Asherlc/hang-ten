@@ -8,9 +8,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -22,6 +22,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hangten.android.audio.WorkoutAudioCoach
 import com.hangten.android.content.Board
 import com.hangten.android.content.TrainingPlan
@@ -50,8 +53,11 @@ fun HangTenApp(
 ) {
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
-    var selectedBoard by remember(boards) { mutableStateOf(boards.firstOrNull()) }
-    var selectedPlan by remember { mutableStateOf<TrainingPlan?>(null) }
+    val selections: HangTenSelectionViewModel = viewModel()
+    val selectedBoardID by selections.selectedBoardID.collectAsState()
+    val selectedPlanID by selections.selectedPlanID.collectAsState()
+    val selectedBoard = boards.firstOrNull { it.id == selectedBoardID } ?: boards.firstOrNull()
+    val selectedPlan = plans.firstOrNull { it.id == selectedPlanID }
     var historyVersion by remember { mutableIntStateOf(0) }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val destination = backStackEntry?.destination?.route
@@ -94,8 +100,8 @@ fun HangTenApp(
                 historyRepository = historyRepository,
                 historyVersion = historyVersion,
                 audioCoach = audioCoach,
-                onBoardSelected = { selectedBoard = it },
-                onPlanSelected = { selectedPlan = it },
+                onBoardSelected = selections::selectBoard,
+                onPlanSelected = selections::selectPlan,
                 onOpenSettings = { navController.navigate(HangTenDestination.Settings.route) },
                 onStartWorkout = { navController.navigate(HangTenDestination.Workout.route) },
                 onSessionEnded = { completed ->
@@ -108,6 +114,26 @@ fun HangTenApp(
                 navController = navController,
             )
         }
+    }
+}
+
+class HangTenSelectionViewModel(
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    val selectedBoardID = savedStateHandle.getStateFlow<String?>(SELECTED_BOARD_ID, null)
+    val selectedPlanID = savedStateHandle.getStateFlow<String?>(SELECTED_PLAN_ID, null)
+
+    fun selectBoard(board: Board) {
+        savedStateHandle[SELECTED_BOARD_ID] = board.id
+    }
+
+    fun selectPlan(plan: TrainingPlan) {
+        savedStateHandle[SELECTED_PLAN_ID] = plan.id
+    }
+
+    private companion object {
+        const val SELECTED_BOARD_ID = "selected_board_id"
+        const val SELECTED_PLAN_ID = "selected_plan_id"
     }
 }
 
