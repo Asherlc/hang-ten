@@ -81,6 +81,60 @@ enum WorkoutActivityRecordingError: LocalizedError, Equatable {
 }
 
 internal enum BoardTargetResolver {
+    /// A migration policy for packages that predate physical equipment-object
+    /// resolution. This is app compatibility behavior, not a statement about
+    /// a board's physical hand capacity. New packages must declare bilateral
+    /// capability or provide two equipment objects instead.
+    private static let legacyBilateralFallbackBoardIDs: Set<String> = [
+        "beastmaker-1000",
+        "beastmaker-2000",
+        "dewoodstok-woodbord",
+        "escape-beta-22",
+        "escape.unlimited",
+        "evolv-kilter-basic-long",
+        "frictitious.doormount-pro-7",
+        "frictitious.megalith",
+        "lattice-triple-rung",
+        "mammut.diamond-finger",
+        "metolius.climbers-edge",
+        "metolius.contact",
+        "metolius.foundry",
+        "metolius.light-rail-2",
+        "metolius.prime-rib",
+        "metolius.project",
+        "metolius.rock-rings-3d",
+        "metolius.simulator-3d",
+        "metolius.wood-grips-compact-ii",
+        "metolius.wood-grips-deluxe-ii",
+        "moon.armstrong",
+        "nature.stoak-board-iii",
+        "soill.iron-palm-2",
+        "soill.split-palm",
+        "soill.training-tiles",
+        "target10a.linebreaker-base",
+        "tension.flash-board",
+        "tension.grindstone",
+        "tension.grindstone-original",
+        "tension.grindstone-pro",
+        "tension.honestone",
+        "tension.whetstone",
+        "the-hangboard.the-hangboard",
+        "trango.rock-prodigy-forge",
+        "trango.rock-prodigy-natural",
+        "trango.rock-prodigy-pivot",
+        "trango.rock-prodigy-training-center",
+        "yy.baguette",
+        "yy.baguette-evo",
+        "yy.penta-evo",
+        "yy.travelboard",
+        "yy.verticalboard-evo",
+        "yy.verticalboard-first",
+        "yy.verticalboard-light",
+        "yy.verticalboard-one",
+        "zlagboard.evo",
+        "zlagboard.pro"
+    ]
+
     static func resolveHoldIDs(
         for target: HoldTarget,
         on board: TrainingBoard,
@@ -360,9 +414,10 @@ internal enum BoardTargetResolver {
             if let bilateralHold = candidates.first(where: { $0.handCapacity == 2 }) {
                 return [bilateralHold.id]
             }
-            // Older package metadata has no hand-capacity declaration. Keep
-            // its established selection behavior, but never construct a
-            // bilateral target from a hold explicitly documented for one hand.
+            // Only packages explicitly recognized as legacy retain the old
+            // missing-capacity fallback. Never infer a physical capacity from
+            // omitted board metadata on newer packages.
+            guard legacyBilateralFallbackBoardIDs.contains(board.id) else { return [] }
             guard !candidates.contains(where: { $0.handCapacity == 1 }) else { return [] }
             return candidates.map(\.id)
         }

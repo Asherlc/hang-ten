@@ -20,7 +20,6 @@
       "equipmentObjectID": "primary",
       "name": "30 mm edge",
       "kind": "edge",
-      "handCapacity": 1,
       "sizeMillimeters": 30,
       "presentationID": "primary",
       "geometry": [{
@@ -44,7 +43,6 @@
       "name": "30 mm two-finger / mono pocket contact",
       "kind": "pocket",
       "fingerCapacity": 2,
-      "handCapacity": 1,
       "sizeMillimeters": 30,
       "presentationID": "primary",
       "geometry": [{
@@ -67,7 +65,6 @@
       "equipmentObjectID": "primary",
       "name": "25 mm edge",
       "kind": "edge",
-      "handCapacity": 1,
       "sizeMillimeters": 25,
       "presentationID": "primary",
       "geometry": [{
@@ -89,7 +86,6 @@
       "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
-      "handCapacity": 1,
       "sizeMillimeters": 20,
       "features": ["mediumEdge"],
       "presentationID": "primary",
@@ -112,7 +108,6 @@
       "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
-      "handCapacity": 1,
       "sizeMillimeters": 15,
       "presentationID": "back",
       "geometry": [{
@@ -134,7 +129,6 @@
       "equipmentObjectID": "primary",
       "name": "12 mm edge",
       "kind": "edge",
-      "handCapacity": 1,
       "sizeMillimeters": 12,
       "presentationID": "back",
       "geometry": [{
@@ -156,7 +150,6 @@
       "equipmentObjectID": "primary",
       "name": "10 mm edge",
       "kind": "edge",
-      "handCapacity": 1,
       "sizeMillimeters": 10,
       "presentationID": "back",
       "geometry": [{
@@ -178,7 +171,6 @@
       "equipmentObjectID": "primary",
       "name": "8 mm edge",
       "kind": "edge",
-      "handCapacity": 1,
       "sizeMillimeters": 8,
       "presentationID": "back",
       "geometry": [{
@@ -200,7 +192,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer rim jug contact",
       "kind": "jug",
-      "handCapacity": 1,
       "presentationID": "primary",
       "geometry": [{
         "frame": {"x": 0.17, "y": 0.075, "width": 0.66, "height": 0.12},
@@ -221,7 +212,6 @@
       "equipmentObjectID": "primary",
       "name": "Board body pinch contact",
       "kind": "pinch",
-      "handCapacity": 1,
       "presentationID": "side",
       "geometry": [{
         "frame": {"x": 0.10, "y": 0.16, "width": 0.80, "height": 0.68},

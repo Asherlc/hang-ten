@@ -41,9 +41,12 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         )
     }
 
-    private func board(holds: [BoardHold]) -> TrainingBoard {
+    private func board(
+        id: String = "test-board",
+        holds: [BoardHold]
+    ) -> TrainingBoard {
         TrainingBoard(
-            id: "test-board",
+            id: id,
             manufacturer: "Test",
             name: "Test Board",
             subtitle: "",
@@ -145,7 +148,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     func testDoubleHandTargetPreservesLegacyNilCapacityBehaviorOnOneObject() {
-        let board = board(holds: [
+        let board = board(id: "beastmaker-1000", holds: [
             hold(id: "legacy-pocket", kind: .pocket, fingerCapacity: 3)
         ])
 

@@ -705,9 +705,21 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
     }
 
+    func testActivityRecordingDoubleHandStepRejectsNewPortABoardWithoutHandCapacity() {
+        let board = portableBoard(id: "frictitious.port-a-board", handCapacity: nil)
+        let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
+
+        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "portable-step", segmentIndex: 0)
+            )
+        }
+    }
+
     func testActivityRecordingDoubleHandStepKeepsLegacyNilHandCapacityCompatible() throws {
-        let board = portableBoard(handCapacity: nil)
-        let workout = portablePlan(handUse: .double, side: .both)
+        let board = portableBoard(id: "beastmaker-1000", handCapacity: nil)
+        let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
@@ -1237,9 +1249,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
-    private func portableBoard(handCapacity: Int?) -> TrainingBoard {
+    private func portableBoard(
+        id: String = "portable-board",
+        handCapacity: Int?
+    ) -> TrainingBoard {
         TrainingBoard(
-            id: "portable-board",
+            id: id,
             manufacturer: "Fixture",
             name: "Portable board",
             subtitle: "",
