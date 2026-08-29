@@ -3,7 +3,7 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
-    func testMegosRepeaterPlanAlternatesStructuredSides() throws {
+    func testMegosRepeaterPlanPreservesStructuredSideSequence() throws {
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
         // The composed plan starts with source-provided warm-up hangs. The
         // source-order assertions below intentionally cover only the 48
@@ -20,7 +20,7 @@ final class PlanStorageTests: XCTestCase {
         let expectedIDs = (1...6).flatMap { set in
             [WorkoutSide.left, .right].flatMap { side in
                 (1...4).map { repetition in
-                    "megos-7-3-set-\(set)-\(side.rawValue)-rep-\(repetition)"
+                    "megos-7-3-set-\(set)-\(side.rawValue)-rep-\(repetition).segment-1"
                 }
             }
         }
