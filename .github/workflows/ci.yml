@@ -36,6 +36,7 @@ jobs:
       pull-requests: read
     outputs:
       ios: ${{ steps.filter.outputs.ios }}
+      android: ${{ steps.filter.outputs.android }}
       python: ${{ steps.filter.outputs.python }}
       workbench_web: ${{ steps.filter.outputs.workbench_web }}
       workbench_native: ${{ steps.filter.outputs.workbench_native }}
@@ -146,6 +147,110 @@ jobs:
           name: python-test-results-${{ github.run_id }}
           path: Tools/HangboardPackages/pytest-results.xml
           if-no-files-found: ignore
+
+  android:
+    name: Android validation
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.android == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      # actions/setup-java v4.7.1
+      - name: Set up JDK 17
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # actions/cache v4.2.3
+      - name: Restore Gradle cache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('Android/gradle/wrapper/gradle-wrapper.properties', 'Android/**/*.gradle.kts', 'Android/gradle.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Stage canonical content, test, lint, and assemble Debug APK
+        run: ./Android/gradlew -p Android :app:stageCanonicalAssets :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+
+      # reactivecircus/android-emulator-runner v2.34.0
+      - name: Run Android instrumented tests
+        uses: reactivecircus/android-emulator-runner@324029e2f414c084d8b15ba075288885e74aef9c
+        with:
+          api-level: 35
+          script: ./Android/gradlew -p Android :app:connectedDebugAndroidTest
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload Android APK and reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: android-verification-${{ github.run_id }}
+          path: |
+            Android/app/build/outputs/apk/debug/*.apk
+            Android/app/build/reports/**
+            Android/app/build/test-results/**
+            Android/app/build/outputs/androidTest-results/**
+          if-no-files-found: warn
+
+  android-required:
+    # Keep this stable: branch protection requires this exact check name. An
+    # Android job skipped by path classification is reported here so this
+    # stable check does not leave the pull request waiting forever.
+    name: Android verification
+    needs:
+      - changes
+      - android
+    if: always() && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report required Android status
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          ANDROID_RESULT: ${{ needs.android.result }}
+          ANDROID_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.android == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
+        run: |
+          set -euo pipefail
+          if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
+            echo "Change classification was cancelled for this attempt; evaluating only non-cancelled runs."
+            exit 0
+          fi
+          if [[ "$CHANGES_RESULT" != "success" ]]; then
+            echo "Change classification did not succeed: $CHANGES_RESULT" >&2
+            exit 1
+          fi
+          if [[ "$ANDROID_REQUIRED" == "true" ]]; then
+            if [[ "$ANDROID_RESULT" == "cancelled" ]]; then
+              echo "Required Android validation was cancelled for this attempt; evaluating only non-cancelled runs."
+              exit 0
+            fi
+            if [[ "$ANDROID_RESULT" != "success" ]]; then
+              echo "Required Android validation did not succeed: $ANDROID_RESULT" >&2
+              exit 1
+            fi
+            echo "Required Android validation succeeded."
+          else
+            if [[ "$ANDROID_RESULT" != "skipped" ]]; then
+              echo "Non-required Android validation had unexpected result: $ANDROID_RESULT" >&2
+              exit 1
+            fi
+            echo "Android validation is not required for the changed components."
+          fi
 
   build-required:
     # Keep this stable: branch protection requires this exact check name. A

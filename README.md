@@ -135,6 +135,14 @@ every pull request targeting `main` and every push to `main`. A successful
 `main` run automatically archives the exact tested commit, signs it, and
 uploads the IPA to App Store Connect/TestFlight.
 
+Android verification runs its staged canonical-content check, JVM tests, lint,
+Debug APK build, and API 35 emulator tests whenever Android code, canonical
+board/routine/audio content, or CI wiring changes. The workflow uploads the
+Debug APK and test/lint reports as `android-verification-<run-id>`. Android
+Play delivery is intentionally separate: a `main` push can publish a signed
+Release AAB to the internal track only after an operator configures the
+protected `google-play` environment. See [Android release operations](docs/ANDROID_RELEASE.md).
+
 The release workflow uses a GitHub environment named `app-store-connect`.
 Configure that environment with no required reviewers for zero-touch delivery,
 and restrict it to the `main` branch. Add these environment secrets:
@@ -189,6 +197,7 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 
 - [Add a hangboard](docs/ADDING_A_BOARD.md)
 - [Add a training routine](docs/ADDING_A_ROUTINE.md)
+- [Build, test, and release Android](docs/ANDROID_RELEASE.md)
 - [Validate in an isolated iOS Simulator](docs/IOS_SIMULATOR_VALIDATION.md)
 - [Audio, orientation, and HealthKit](docs/IOS_RUNTIME_SERVICES.md)
 
