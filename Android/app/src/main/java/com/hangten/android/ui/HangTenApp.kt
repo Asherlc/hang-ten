@@ -57,6 +57,8 @@ import com.hangten.android.telemetry.NoOpTelemetry
 import com.hangten.android.telemetry.PlanSource
 import com.hangten.android.telemetry.TelemetryDependencies
 import com.hangten.android.telemetry.WorkoutOutcome
+import com.hangten.android.telemetry.boardFamilyForTelemetry
+import com.hangten.android.telemetry.recordPersistenceSaveDiagnostic
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -206,7 +208,12 @@ fun HangTenApp(
                 sensorController = sensorController,
                 boardEditorServices = boardEditorServices,
                 telemetry = telemetry,
-                onBoardSelected = selections::selectBoard,
+                onBoardSelected = { board ->
+                    boardFamilyForTelemetry(board.id)?.let { family ->
+                        telemetry.tracking.track(HangTenTelemetryEvent.BoardSelected(family))
+                    }
+                    selections.selectBoard(board)
+                },
                 onPlanSelected = selections::selectPlan,
                 onOpenSettings = { navController.navigate(HangTenDestination.Settings.route) },
                 onStartWorkout = { navController.navigate(HangTenDestination.Workout.route) },
@@ -325,6 +332,12 @@ private fun HangTenNavHost(
                 healthViewModel = healthViewModel,
                 sensorController = sensorController,
                 onOpenBoardEditor = boardEditorServices?.let { { navController.navigate(HangTenDestination.BoardEditor.route) } },
+                onHealthAuthorizationFinished = { outcome ->
+                    telemetry.tracking.track(HangTenTelemetryEvent.HealthAuthorizationFinished(outcome))
+                },
+                onMotherboardConnectionFinished = { outcome ->
+                    telemetry.tracking.track(HangTenTelemetryEvent.MotherboardConnectionFinished(outcome))
+                },
                 contentPadding = padding,
             )
         }
@@ -349,6 +362,10 @@ private fun HangTenNavHost(
                     tokenStore = boardEditorServices.tokenStore,
                     packageSync = boardEditorServices.packageSync,
                     contentPadding = padding,
+                    onCustomSave = {
+                        telemetry.tracking.track(HangTenTelemetryEvent.CustomRoutineSaved)
+                    },
+                    onSaveFailure = telemetry::recordPersistenceSaveDiagnostic,
                 )
             }
         }

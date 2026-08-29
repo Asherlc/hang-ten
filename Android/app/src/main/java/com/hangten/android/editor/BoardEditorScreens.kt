@@ -103,6 +103,8 @@ fun BoardEditorScreen(
     tokenStore: GitHubTokenStore,
     packageSync: GitHubPackageSync,
     contentPadding: PaddingValues,
+    onCustomSave: () -> Unit = {},
+    onSaveFailure: (Throwable) -> Unit = {},
 ) {
     var board by remember(slug) { mutableStateOf<Board?>(null) }
     var localImage by remember(slug) { mutableStateOf<ImageBitmap?>(null) }
@@ -167,7 +169,13 @@ fun BoardEditorScreen(
                             val y = initial.second + totalDragY / size.height / frame.height
                             runCatching {
                                 store.movePathPoint(slug, hold.id, selectedGeometry, selectedCommand, EditablePathPoint.To, x, y)
-                            }.onSuccess { version += 1 }.onFailure { error = it.message }
+                            }.onSuccess {
+                                version += 1
+                                onCustomSave()
+                            }.onFailure {
+                                error = it.message
+                                onSaveFailure(it)
+                            }
                             change.consume()
                         },
                     )

@@ -29,6 +29,9 @@ import com.hangten.android.health.HealthAuthorizationState
 import com.hangten.android.health.HealthViewModel
 import com.hangten.android.sensors.ForceSensorProfile
 import com.hangten.android.sensors.SensorConnectionController
+import com.hangten.android.telemetry.HealthAuthorizationOutcome
+import com.hangten.android.telemetry.MotherboardConnectionOutcome
+import com.hangten.android.telemetry.telemetryOutcome
 import kotlinx.coroutines.launch
 
 @Composable
@@ -41,6 +44,8 @@ fun SettingsScreen(
     onOpenBoardEditor: (() -> Unit)? = null,
     onHealthPermissionRequest: ((Set<String>) -> Unit)? = null,
     onSensorPermissionRequest: ((Array<String>) -> Unit)? = null,
+    onHealthAuthorizationFinished: (HealthAuthorizationOutcome) -> Unit = {},
+    onMotherboardConnectionFinished: (MotherboardConnectionOutcome) -> Unit = {},
 ) {
     val instructionCoachingEnabled by audioCoach.instructionCoachingEnabled.collectAsState()
     val hasLifetimeEntitlement by purchaseManager.hasLifetimeEntitlement.collectAsState()
@@ -52,7 +57,9 @@ fun SettingsScreen(
     val isTransacting = state == PurchaseState.Loading || state == PurchaseState.Purchasing
     val healthPermissionLauncher = rememberLauncherForActivityResult(
         contract = PermissionController.createRequestPermissionResultContract(),
-        onResult = { healthViewModel.authorizationRequestFinished() },
+        onResult = { healthViewModel.authorizationRequestFinished { authorization ->
+            authorization.telemetryOutcome()?.let(onHealthAuthorizationFinished)
+        } },
     )
     val sensorPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -66,6 +73,9 @@ fun SettingsScreen(
     )
     val sensorState = sensorController?.state?.collectAsState()?.value
     LaunchedEffect(healthViewModel) { healthViewModel.refreshHistory() }
+    LaunchedEffect(sensorState?.connection) {
+        sensorState?.connection?.telemetryOutcome()?.let(onMotherboardConnectionFinished)
+    }
     Column(
         modifier = Modifier.fillMaxSize().padding(contentPadding).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -145,7 +155,9 @@ fun SettingsScreen(
                 onClick = {
                     val permissions = healthViewModel.requestAuthorization()
                     if (permissions.isEmpty()) {
-                        healthViewModel.authorizationRequestFinished()
+                        healthViewModel.authorizationRequestFinished { authorization ->
+                            authorization.telemetryOutcome()?.let(onHealthAuthorizationFinished)
+                        }
                     } else {
                         (onHealthPermissionRequest ?: healthPermissionLauncher::launch)(permissions)
                     }

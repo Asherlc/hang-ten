@@ -1,7 +1,16 @@
 package com.hangten.android.telemetry
 
+import com.hangten.android.health.HealthAuthorizationState
+import com.hangten.android.sensors.SensorConnectionState
+import io.sentry.Breadcrumb
+import io.sentry.Hint
+import io.sentry.SentryEvent
+import io.sentry.android.core.SentryAndroidOptions
+import io.sentry.protocol.Message
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -113,6 +122,79 @@ class TelemetryTest {
             listOf(mapOf("category" to "persistence", "operation" to "save", "error_kind" to "other")),
             sentry.diagnostics,
         )
+    }
+
+    @Test
+    fun `Sentry diagnostics fail closed to the fixed message and exact typed tags`() {
+        val options = SentryAndroidOptions()
+        configureDiagnosticOnlySentry(options)
+
+        assertFalse(options.isEnableUncaughtExceptionHandler)
+        assertFalse(options.isAnrEnabled)
+        assertFalse(options.isEnableNdk)
+        assertFalse(options.isEnableActivityLifecycleBreadcrumbs)
+        assertFalse(options.isEnableAppLifecycleBreadcrumbs)
+        assertFalse(options.isEnableSystemEventBreadcrumbs)
+        assertFalse(options.isEnableAppComponentBreadcrumbs)
+        assertFalse(options.isEnableNetworkEventBreadcrumbs)
+        assertFalse(options.isEnableUserInteractionBreadcrumbs)
+        assertFalse(options.isEnableUserInteractionTracing)
+        assertFalse(options.isEnableAutoActivityLifecycleTracing)
+        assertEquals(0, options.maxBreadcrumbs)
+        val beforeSend = requireNotNull(options.beforeSend)
+        assertNull(requireNotNull(options.beforeBreadcrumb).execute(Breadcrumb(), Hint()))
+
+        val accepted = diagnosticEvent(
+            tags = mapOf("category" to "persistence", "operation" to "save", "error_kind" to "other"),
+        )
+        assertSame(accepted, beforeSend.execute(accepted, Hint()))
+        assertNull(beforeSend.execute(diagnosticEvent(tags = emptyMap()), Hint()))
+        assertNull(
+            beforeSend.execute(
+                diagnosticEvent(tags = mapOf("category" to "persistence", "operation" to "save", "error_kind" to "other", "detail" to "private workout")),
+                Hint(),
+            ),
+        )
+        val unexpected = diagnosticEvent(tags = mapOf("category" to "persistence", "operation" to "save", "error_kind" to "other"))
+        unexpected.message = Message().apply { formatted = "unexpected error" }
+        assertNull(beforeSend.execute(unexpected, Hint()))
+    }
+
+    @Test
+    fun `production event mappings preserve only approved categorical values`() {
+        assertEquals(BoardFamily.CompactII, boardFamilyForTelemetry("trango-rock-prodigy-compact-ii"))
+        assertEquals(BoardFamily.RockProdigyTrainingCenter, boardFamilyForTelemetry("trango-rock-prodigy-training-center"))
+        assertNull(boardFamilyForTelemetry("private-custom-board"))
+        assertEquals(HealthAuthorizationOutcome.Granted, HealthAuthorizationState.Authorized.telemetryOutcome())
+        assertEquals(HealthAuthorizationOutcome.Denied, HealthAuthorizationState.Denied.telemetryOutcome())
+        assertEquals(HealthAuthorizationOutcome.Unavailable, HealthAuthorizationState.Unavailable.telemetryOutcome())
+        assertNull(HealthAuthorizationState.NotDetermined.telemetryOutcome())
+        assertEquals(MotherboardConnectionOutcome.Connected, SensorConnectionState.Streaming.telemetryOutcome())
+        assertEquals(MotherboardConnectionOutcome.Failed, SensorConnectionState.Failed.telemetryOutcome())
+        assertEquals(MotherboardConnectionOutcome.Disconnected, SensorConnectionState.Disconnected.telemetryOutcome())
+        assertNull(SensorConnectionState.Scanning.telemetryOutcome())
+    }
+
+    @Test
+    fun `persistence save failures report matching typed analytics and diagnostics without error content`() {
+        val amplitude = RecordingAmplitudeClient()
+        val sentry = RecordingSentryClient()
+        val dependencies = TelemetryComposition.make(
+            TelemetryConfiguration(amplitudeApiKey = "amplitude-key", sentryDsn = "https://public@example.ingest.sentry.io/1"),
+            RecordingAdapterFactory(amplitude, sentry),
+        )
+
+        dependencies.recordPersistenceSaveDiagnostic(IllegalStateException("private workout plan title"))
+
+        val expected = mapOf("category" to "persistence", "operation" to "save", "error_kind" to "other")
+        assertEquals(listOf("app diagnostic recorded" to expected), amplitude.events)
+        assertEquals(listOf(expected), sentry.diagnostics)
+        assertFalse(amplitude.events.flatMap { it.second.values }.any { it.contains("private workout") })
+    }
+
+    private fun diagnosticEvent(tags: Map<String, String>): SentryEvent = SentryEvent().apply {
+        message = Message().apply { formatted = SENTRY_DIAGNOSTIC_MESSAGE }
+        setTags(tags)
     }
 
     private class RecordingAmplitudeClient : AmplitudeTrackingClient {

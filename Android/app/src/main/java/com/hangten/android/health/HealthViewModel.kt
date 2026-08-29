@@ -35,11 +35,12 @@ class HealthViewModel(
     /** Called only by the visible Connect Health action. It never launches a request itself. */
     fun requestAuthorization(): Set<String> = healthStore.requestAuthorization()
 
-    fun authorizationRequestFinished() {
+    fun authorizationRequestFinished(onCompleted: (HealthAuthorizationState) -> Unit = {}) {
         viewModelScope.launch {
             val authorization = healthStore.completeAuthorizationRequest()
             _state.value = _state.value.copy(authorization = authorization, error = null)
             refreshHistoryNow()
+            onCompleted(authorization)
         }
     }
 

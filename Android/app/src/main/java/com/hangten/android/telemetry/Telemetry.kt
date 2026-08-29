@@ -1,5 +1,8 @@
 package com.hangten.android.telemetry
 
+import com.hangten.android.health.HealthAuthorizationState
+import com.hangten.android.sensors.SensorConnectionState
+import kotlinx.coroutines.CancellationException
 enum class AppTab(val value: String) { Train("train"), Plans("plans"), History("history") }
 
 enum class PlanSource(val value: String) { Catalog("catalog"), Favorite("favorite"), Custom("custom") }
@@ -161,4 +164,33 @@ private fun durationBucket(elapsedMillis: Long): String = when {
 private fun String.isUsableConfiguration(): Boolean {
     val value = trim()
     return value.isNotEmpty() && !value.startsWith("$(") && value != "your_amplitude_api_key"
+}
+
+fun boardFamilyForTelemetry(boardId: String): BoardFamily? {
+    val normalized = boardId.replace('-', '_')
+    return BoardFamily.entries.firstOrNull { normalized.endsWith(it.value) }
+}
+
+fun HealthAuthorizationState.telemetryOutcome(): HealthAuthorizationOutcome? = when (this) {
+    HealthAuthorizationState.Authorized -> HealthAuthorizationOutcome.Granted
+    HealthAuthorizationState.Denied -> HealthAuthorizationOutcome.Denied
+    HealthAuthorizationState.Unavailable -> HealthAuthorizationOutcome.Unavailable
+    HealthAuthorizationState.NotDetermined -> null
+}
+
+fun SensorConnectionState.telemetryOutcome(): MotherboardConnectionOutcome? = when (this) {
+    SensorConnectionState.Streaming -> MotherboardConnectionOutcome.Connected
+    SensorConnectionState.Failed -> MotherboardConnectionOutcome.Failed
+    SensorConnectionState.Disconnected -> MotherboardConnectionOutcome.Disconnected
+    SensorConnectionState.Idle, SensorConnectionState.Scanning, SensorConnectionState.Calibrating -> null
+}
+
+fun TelemetryDependencies.recordPersistenceSaveDiagnostic(error: Throwable) {
+    val diagnostic = HangTenDiagnostic(
+        category = DiagnosticCategory.Persistence,
+        operation = DiagnosticOperation.Save,
+        errorKind = if (error is CancellationException) DiagnosticErrorKind.Cancellation else DiagnosticErrorKind.Other,
+    )
+    tracking.track(HangTenTelemetryEvent.AppDiagnosticRecorded(diagnostic))
+    diagnostics.record(diagnostic)
 }
