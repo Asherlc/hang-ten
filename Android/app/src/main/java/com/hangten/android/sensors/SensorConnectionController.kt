@@ -145,25 +145,38 @@ class SensorConnectionController(
     }
 
     private suspend fun onMotherboardFrame(frame: ByteArray) {
-        parser.append(frame, System.currentTimeMillis()).forEach { event ->
+        val events = terminalMutex.withLock {
+            if (terminalTransportError == null) parser.append(frame, System.currentTimeMillis()) else emptyList()
+        }
+        events.forEach { event ->
             when (event) {
                 is MotherboardProtocolEvent.Calibration -> {
-                    calibrationRows.removeAll { it.sensor == event.row.sensor && it.calibrationPoint == event.row.calibrationPoint }
-                    calibrationRows += event.row
-                    if (completeCalibration()) {
-                        calibration = MotherboardCalibration(calibrationRows)
-                        writeOrFail(ForceSensorProfile.Motherboard.writeCharacteristic!!, MotherboardProtocol.streamCommand(30))
+                    val streamCommand = terminalMutex.withLock {
+                        if (terminalTransportError != null) return@withLock null
+                        calibrationRows.removeAll { it.sensor == event.row.sensor && it.calibrationPoint == event.row.calibrationPoint }
+                        calibrationRows += event.row
+                        if (completeCalibration()) {
+                            calibration = MotherboardCalibration(calibrationRows)
+                            MotherboardProtocol.streamCommand(30)
+                        } else null
+                    }
+                    if (streamCommand != null && !hasTerminalTransportError()) {
+                        writeOrFail(ForceSensorProfile.Motherboard.writeCharacteristic!!, streamCommand)
                     }
                 }
                 is MotherboardProtocolEvent.RawPacket -> {
-                    val activeCalibration = calibration ?: return@forEach
+                    val activeCalibration = terminalMutex.withLock {
+                        if (terminalTransportError == null) calibration else null
+                    } ?: return@forEach
                     if (state.value.connection != SensorConnectionState.Streaming) return@forEach
                     publish(MotherboardProtocol.decode(event.packet, event.timestampMs, activeCalibration, tareKgf))
                 }
-                is MotherboardProtocolEvent.StreamStarted -> if (event.rate == 30 && calibration != null) {
-                    _state.value = state.value.copy(connection = SensorConnectionState.Streaming, error = null)
+                is MotherboardProtocolEvent.StreamStarted -> updateFromNotification { meter ->
+                    if (event.rate == 30 && calibration != null) {
+                        meter.copy(connection = SensorConnectionState.Streaming, error = null)
+                    } else meter
                 }
-                is MotherboardProtocolEvent.Error -> _state.value = state.value.copy(error = event.message)
+                is MotherboardProtocolEvent.Error -> updateFromNotification { meter -> meter.copy(error = event.message) }
             }
         }
     }
@@ -174,12 +187,17 @@ class SensorConnectionController(
             ForceSensorProfile.PitchSix -> PitchSixProtocolAdapter().decode(frame, System.currentTimeMillis())
             else -> null
         } ?: run {
-            _state.value = state.value.copy(error = "${profile.displayName} sent an invalid force sample.")
+            updateFromNotification { meter -> meter.copy(error = "${profile.displayName} sent an invalid force sample.") }
             return
         }
         samples.forEach { sample ->
-            nextForceSampleNumber = (nextForceSampleNumber.toInt() + 1).toUShort()
-            publish(MotherboardMeasurement(sample.receivedAtMs, nextForceSampleNumber, 0u, emptyList(), emptyList(), sample.kilogramsForce))
+            val measurement = terminalMutex.withLock {
+                if (terminalTransportError != null) null else {
+                    nextForceSampleNumber = (nextForceSampleNumber.toInt() + 1).toUShort()
+                    MotherboardMeasurement(sample.receivedAtMs, nextForceSampleNumber, 0u, emptyList(), emptyList(), sample.kilogramsForce)
+                }
+            }
+            if (measurement != null) publish(measurement)
         }
     }
 
@@ -246,6 +264,10 @@ class SensorConnectionController(
     }
 
     private suspend fun hasTerminalTransportError(): Boolean = terminalMutex.withLock { terminalTransportError != null }
+
+    private suspend fun updateFromNotification(transform: (SensorMeterState) -> SensorMeterState) = terminalMutex.withLock {
+        if (terminalTransportError == null) _state.value = transform(state.value)
+    }
 
     private suspend fun recordWriteFailure(error: Throwable, fallback: String) = terminalMutex.withLock {
         if (terminalTransportError == null) {

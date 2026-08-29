@@ -199,6 +199,30 @@ class SensorConnectionControllerTest {
     }
 
     @Test
+    fun remoteTerminalCannotBeResurrectedByLateMotherboardStreamOrParserError() = runTest {
+        val writeBarrier = CompletableDeferred<Unit>()
+        val transport = FakeForceSensorTransport().apply {
+            enqueue(ForceSensorAdvertisement(name = "Motherboard"))
+            this.writeBarrier = writeBarrier
+        }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Motherboard, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+
+        calibration().take(15).forEach { transport.emit("$it\r\n".encodeToByteArray()) }
+        advanceUntilIdle()
+        val finalCalibration = calibration().last()
+        transport.emit("$finalCalibration\r\nStream:30\r\nError: late parser callback\r\n".encodeToByteArray())
+        advanceUntilIdle()
+        assertTrue(transport.operations.contains("write:${ForceSensorProfile.Motherboard.writeCharacteristic!!.characteristicUuid}:533330"))
+
+        transport.fail(IllegalStateException("Sensor disconnected (GATT 133)"))
+        advanceUntilIdle()
+
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("GATT 133"))
+    }
+
+    @Test
     fun stopWriteFailureBecomesVisibleControllerError() = runTest {
         val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
         val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)

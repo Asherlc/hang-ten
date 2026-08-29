@@ -225,3 +225,27 @@ no AVD was created. All three exact owned SDK roots were then deleted.
   SUCCESSFUL**. The connected-emulator release gate remains separately unrun.
 - Cleanup check: the exact owned
   `.context/android-sdk-bitter-scorpion-0o9ylkoo-round5` root is absent.
+
+### Round 6 notification terminal-fence remediation
+
+- Added a controlled Motherboard interleaving regression: the final calibration
+  row starts a deliberately pending `S30` write while the same parsed callback
+  retains late `Stream:30` and `Error` events. A remote `GATT 133` terminal is
+  then delivered before that callback resumes. The pre-fix regression failed
+  because the late events changed the state back to `Streaming` and replaced
+  the GATT error; it now remains `Disconnected` with the remote error intact.
+- Every notification-derived controller mutation is now admitted through the
+  existing terminal mutex. That includes parser buffer admission, Motherboard
+  calibration/session updates, `StreamStarted`, parser errors, generic invalid
+  sample errors, and generic monotonic sample-number allocation. A terminal
+  transition therefore prevents any in-flight late callback from changing
+  sensor state or retaining parser/session data for a later connection.
+- Fresh verification used only the owned minimal SDK
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round6` (platform-tools,
+  API 36 platform, and build-tools; no image or AVD): the focused
+  `ForceSensorTransportTest`/`SensorConnectionControllerTest` suite and the
+  unfiltered `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` both
+  finished **BUILD SUCCESSFUL**. The connected-emulator release gate remains
+  separately unrun.
+- Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round6` root is absent.
