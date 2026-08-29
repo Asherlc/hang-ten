@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.ExerciseSessionRecord
+import androidx.health.connect.client.records.metadata.DataOrigin
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
@@ -57,7 +58,28 @@ data class HealthConnectRecord(
     val endTime: Instant,
     val exerciseType: ExerciseType,
 ) {
-    enum class ExerciseType { StrengthTraining }
+    sealed interface ExerciseType {
+        data object StrengthTraining : ExerciseType
+        data class Other(val sdkValue: Int) : ExerciseType
+    }
+}
+
+/** SDK-independent read request used to make origin scoping and paging testable. */
+data class ExerciseSessionReadRequest(
+    val dataOriginPackageName: String,
+    val pageToken: String?,
+)
+
+data class ExerciseSessionPage(
+    val records: List<HealthConnectRecord>,
+    val nextPageToken: String?,
+)
+
+interface HealthConnectSdkClient {
+    val available: Boolean
+    suspend fun grantedPermissions(): Set<String>
+    suspend fun insert(record: HealthConnectRecord): String
+    suspend fun readExerciseSessions(request: ExerciseSessionReadRequest): ExerciseSessionPage
 }
 
 interface HealthAuthorizationMemory {
@@ -152,10 +174,42 @@ class HealthConnectService(
     }
 }
 
-class AndroidHealthConnectGateway(
-    context: Context,
+class AndroidHealthConnectGateway internal constructor(
+    private val appPackageName: String,
+    private val sdkClient: HealthConnectSdkClient,
 ) : HealthConnectGateway {
-    private val appContext = context.applicationContext
+    constructor(context: Context) : this(
+        appPackageName = context.applicationContext.packageName,
+        sdkClient = AndroidXHealthConnectSdkClient(context.applicationContext),
+    )
+
+    override val available: Boolean
+        get() = sdkClient.available
+
+    override suspend fun grantedPermissions(): Set<String> = sdkClient.grantedPermissions()
+
+    override suspend fun insert(record: HealthConnectRecord): String = sdkClient.insert(record)
+
+    override suspend fun readRecords(): List<HealthConnectRecord> {
+        val allRecords = mutableListOf<HealthConnectRecord>()
+        var pageToken: String? = null
+        do {
+            val page = sdkClient.readExerciseSessions(
+                ExerciseSessionReadRequest(
+                    dataOriginPackageName = appPackageName,
+                    pageToken = pageToken,
+                ),
+            )
+            allRecords += page.records
+            pageToken = page.nextPageToken
+        } while (pageToken != null)
+        return allRecords
+    }
+}
+
+private class AndroidXHealthConnectSdkClient(
+    private val appContext: Context,
+) : HealthConnectSdkClient {
     private val client: HealthConnectClient by lazy { HealthConnectClient.getOrCreate(appContext) }
 
     override val available: Boolean
@@ -163,15 +217,22 @@ class AndroidHealthConnectGateway(
 
     override suspend fun grantedPermissions(): Set<String> = client.permissionController.getGrantedPermissions()
 
-    override suspend fun insert(record: HealthConnectRecord): String {
-        return client.insertRecords(listOf(record.toExerciseSessionRecord())).recordIdsList.single()
-    }
+    override suspend fun insert(record: HealthConnectRecord): String =
+        client.insertRecords(listOf(record.toExerciseSessionRecord())).recordIdsList.single()
 
-    override suspend fun readRecords(): List<HealthConnectRecord> = client.readRecords(
-        ReadRecordsRequest<ExerciseSessionRecord>(
-            timeRangeFilter = TimeRangeFilter.after(Instant.EPOCH),
-        ),
-    ).records.map(::fromExerciseSessionRecord)
+    override suspend fun readExerciseSessions(request: ExerciseSessionReadRequest): ExerciseSessionPage {
+        val response = client.readRecords(
+            ReadRecordsRequest<ExerciseSessionRecord>(
+                timeRangeFilter = TimeRangeFilter.after(Instant.EPOCH),
+                dataOriginFilter = setOf(DataOrigin(request.dataOriginPackageName)),
+                pageToken = request.pageToken,
+            ),
+        )
+        return ExerciseSessionPage(
+            records = response.records.map(::fromExerciseSessionRecord),
+            nextPageToken = response.pageToken,
+        )
+    }
 
     private fun HealthConnectRecord.toExerciseSessionRecord(): ExerciseSessionRecord = ExerciseSessionRecord(
         startTime = startTime,
@@ -179,7 +240,10 @@ class AndroidHealthConnectGateway(
         endTime = endTime,
         endZoneOffset = ZoneOffset.UTC,
         metadata = Metadata.manualEntry(clientRecordId, clientRecordVersion),
-        exerciseType = ExerciseSessionRecord.EXERCISE_TYPE_STRENGTH_TRAINING,
+        exerciseType = when (val type = exerciseType) {
+            HealthConnectRecord.ExerciseType.StrengthTraining -> ExerciseSessionRecord.EXERCISE_TYPE_STRENGTH_TRAINING
+            is HealthConnectRecord.ExerciseType.Other -> type.sdkValue
+        },
         title = title,
         notes = notes,
     )
@@ -192,8 +256,15 @@ class AndroidHealthConnectGateway(
         notes = record.notes,
         startTime = record.startTime,
         endTime = record.endTime,
-        exerciseType = HealthConnectRecord.ExerciseType.StrengthTraining,
+        exerciseType = record.exerciseType.toHealthConnectExerciseType(),
     )
+
+    private fun Int.toHealthConnectExerciseType(): HealthConnectRecord.ExerciseType =
+        if (this == ExerciseSessionRecord.EXERCISE_TYPE_STRENGTH_TRAINING) {
+            HealthConnectRecord.ExerciseType.StrengthTraining
+        } else {
+            HealthConnectRecord.ExerciseType.Other(this)
+        }
 }
 
 private fun CompletedHealthWorkout.toHealthConnectRecord(): HealthConnectRecord {

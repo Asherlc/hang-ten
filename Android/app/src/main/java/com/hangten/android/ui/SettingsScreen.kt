@@ -34,6 +34,7 @@ fun SettingsScreen(
     purchaseManager: PurchaseManager,
     healthViewModel: HealthViewModel,
     contentPadding: PaddingValues,
+    onHealthPermissionRequest: ((Set<String>) -> Unit)? = null,
 ) {
     val instructionCoachingEnabled by audioCoach.instructionCoachingEnabled.collectAsState()
     val hasLifetimeEntitlement by purchaseManager.hasLifetimeEntitlement.collectAsState()
@@ -92,7 +93,11 @@ fun SettingsScreen(
             OutlinedButton(
                 onClick = {
                     val permissions = healthViewModel.requestAuthorization()
-                    if (permissions.isEmpty()) healthViewModel.authorizationRequestFinished() else healthPermissionLauncher.launch(permissions)
+                    if (permissions.isEmpty()) {
+                        healthViewModel.authorizationRequestFinished()
+                    } else {
+                        (onHealthPermissionRequest ?: healthPermissionLauncher::launch)(permissions)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Connect Health" },
             ) { Text("Connect Health") }

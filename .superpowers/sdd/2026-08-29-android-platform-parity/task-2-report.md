@@ -79,3 +79,51 @@ verification runs; each was checked absent before commit:
 - `.context/android-health-connect-gradle-bitter-scorpion`
 - `.context/android-health-connect-aar-bitter-scorpion`
 - `Android/local.properties` (temporary SDK pointer, ignored by git)
+
+## Review round 1 — origin-safe paginated reads and emulator coverage
+
+The review findings were reproduced with red tests, then fixed as follows:
+
+- Health Connect reads now carry the Hang Ten application package as a
+  `DataOrigin` filter and iterate every response `pageToken` before reconciling.
+- The SDK boundary now preserves the actual `ExerciseSessionRecord.exerciseType`:
+  strength training maps to `StrengthTraining`; every other SDK value maps to an
+  explicit `Other(value)` and is rejected by the existing Hang Ten record
+  validator.
+- Reconciliation deduplicates remote workouts by stable `clientRecordId` before
+  comparing them with local stable IDs.
+- `AndroidHealthConnectGatewayTest` uses a fake SDK client to prove both origin
+  filtering request construction and two-page aggregation/type preservation.
+- `HealthConnectUiTest` uses only fakes and was exercised on-device for: no
+  Health Connect prompt before the explicit Connect button, denied local
+  fallback, write-error local retention, and duplicate remote reconciliation.
+
+Fresh round-1 verification used only these workspace-owned resources:
+
+```text
+env GRADLE_USER_HOME=.context/android-health-connect-round1-gradle-bitter-scorpion \
+  ./Android/gradlew --no-daemon -p Android :app:testDebugUnitTest \
+  --tests '*AndroidHealthConnectGatewayTest' --tests '*HealthConnectServiceTest'
+# BUILD SUCCESSFUL
+
+env GRADLE_USER_HOME=.context/android-health-connect-round1-gradle-bitter-scorpion \
+  ./Android/gradlew --no-daemon -p Android :app:compileDebugAndroidTestKotlin
+# BUILD SUCCESSFUL
+
+# owned API-36 arm64 Google APIs AVD: hangten-health-connect-bitter-scorpion
+# isolated ADB server port: 5038
+./Android/gradlew --no-daemon -p Android :app:connectedDebugAndroidTest
+# BUILD SUCCESSFUL — 16 instrumented tests, 0 failures, 0 errors
+# HealthConnectUiTest: 4 tests, 0 failures
+
+env GRADLE_USER_HOME=.context/android-health-connect-round1-gradle-bitter-scorpion \
+  ./Android/gradlew --no-daemon -p Android \
+  :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+# BUILD SUCCESSFUL — 43 unit tests, 0 failures; lint 0 errors;
+# Debug APK assembled
+```
+
+The connected test launcher installed an exit trap before starting the AVD. It
+stopped emulator-5556 and its isolated port-5038 ADB server when Gradle exited;
+the exact workspace-owned SDK, Gradle cache, AVD directory, emulator log, and
+temporary `Android/local.properties` are removed and checked absent below.

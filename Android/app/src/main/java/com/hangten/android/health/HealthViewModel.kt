@@ -83,7 +83,10 @@ class HealthViewModel(
             emptyList()
         }
         val localClientIDs = local.map(::stableClientRecordId).toSet()
-        val remoteOnly = healthWorkouts.filterNot { it.clientRecordId in localClientIDs }.map(::completedSession)
+        val remoteOnly = healthWorkouts
+            .distinctBy { it.clientRecordId }
+            .filterNot { it.clientRecordId in localClientIDs }
+            .map(::completedSession)
         _state.value = _state.value.copy(
             authorization = authorization,
             historySource = if (healthWorkouts.isNotEmpty()) HealthHistorySource.HealthConnect else if (local.isNotEmpty()) HealthHistorySource.LocalFallback else HealthHistorySource.HealthConnect,

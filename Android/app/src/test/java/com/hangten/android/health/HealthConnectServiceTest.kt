@@ -105,6 +105,36 @@ class HealthConnectServiceTest {
         assertFalse(viewModel.state.value.isLocalFallbackOnly)
     }
 
+    @Test
+    fun reconciliationRejectsMatchingNonStrengthRecordsAndDuplicateRemoteIdentities() = runTest {
+        val remoteID = "3480499de0ba087c6aa9ede55aa8521612f71e09a170e2cbd989971804f40e85"
+        val notes = "{\"schema\":\"com.hangten.health.exercise-session.v1\",\"planId\":\"repeaters\",\"boardId\":\"rock-prodigy\",\"segments\":[]}"
+        val accepted = HealthConnectRecord(
+            id = "accepted",
+            clientRecordId = remoteID,
+            clientRecordVersion = 1,
+            title = "Hang Ten · Repeaters",
+            notes = notes,
+            startTime = Instant.ofEpochMilli(1_700_000_000_000),
+            endTime = Instant.ofEpochMilli(1_700_000_045_000),
+            exerciseType = HealthConnectRecord.ExerciseType.StrengthTraining,
+        )
+        val nonStrength = accepted.copy(id = "not-strength", clientRecordId = "non-strength", exerciseType = HealthConnectRecord.ExerciseType.Other(0))
+        val duplicate = accepted.copy(id = "duplicate")
+        val gateway = FakeHealthConnectGateway(
+            grantedPermissions = HealthConnectPermissions.required,
+            records = mutableListOf(accepted, nonStrength, duplicate),
+        )
+        val viewModel = HealthViewModel(
+            HealthConnectService(gateway, InMemoryHealthAuthorizationMemory()),
+            FakeSessionHistory(),
+        )
+
+        viewModel.reconcileHistory()
+
+        assertEquals(listOf("repeaters"), viewModel.state.value.sessions.map { it.planId })
+    }
+
     private fun fixtureWorkout(): CompletedHealthWorkout = CompletedHealthWorkout(
         session = CompletedSession(
             planId = "repeaters",
