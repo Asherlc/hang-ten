@@ -234,6 +234,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("evolv-kilter-basic-long", "evolv-kilter-basic-long"),
         ("frictitious.doormount-pro-7", "frictitious-doormount-pro-7"),
         ("frictitious.megalith", "frictitious-megalith"),
+        ("frictitious.port-a-board", "frictitious-port-a-board"),
         ("lattice-triple-rung", "lattice-triple-rung"),
         ("mammut.diamond-finger", "mammut-diamond-finger"),
         ("metolius.climbers-edge", "metolius-climbers-edge"),
