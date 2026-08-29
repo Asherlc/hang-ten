@@ -41,6 +41,31 @@ is inferred from a marketing photograph.
   product claims compatibility with inserts but does not make unnamed future
   inserts part of this audited package.
 
+### Frozen package and physical-contact IDs
+
+The package implementation uses the following stable IDs.  These are a direct
+mapping of the inventory in the inclusion table, not additional product
+claims.  A named rotated use of the same physical edge is not duplicated as a
+second hold: Captain Fingerfood's two-finger uses reuse the corresponding edge,
+and its open/undercut routing changes reuse the board's pinch body or outer jug
+rim.  The Plateau blocker's two sourced faces remain separate contacts.
+
+| Package slug | Board ID | Exact physical hold IDs |
+| --- | --- | --- |
+| `nature-stone-hanger-mini` | `nature.stone-hanger-mini` | `granite-edge-15`, `wood-edge-15-incut`, `pinch-60`, `pull-up-jug` |
+| `nature-stone-hanger-mini-karma8a` | `nature.stone-hanger-mini-karma8a` | `granite-edge-15`, `wood-edge-15`, `pinch-60` |
+| `lattice-mini-bar` | `lattice.mini-bar` | `edge-10`, `edge-20`, `ergonomic-jug`, `mini-pinch` |
+| `lattice-mxedge-lift-small` | `lattice.mxedge-lift-small` | `edge-18`, `edge-14`, `edge-8`, `mono-25` |
+| `lattice-mxedge-lift-large` | `lattice.mxedge-lift-large` | `edge-22`, `edge-16`, `edge-12`, `mono-28` |
+| `plateau-lifting-edge` | `plateau.lifting-edge` | `edge-18`, `blocker-edge-15`, `blocker-edge-10` |
+| `frictitious-nug` | `frictitious.nug` | `edge-8`, `edge-13`, `edge-20`, `edge-25`, `jug-40`, `pinch-60` |
+| `captain-fingerfood-pocket` | `captain-fingerfood.pocket` | `edge-15`, `edge-20`, `pinch-body`, `jug-outer-rim` |
+| `captain-fingerfood-pocket-plus` | `captain-fingerfood.pocket-plus` | `edge-6`, `edge-10`, `edge-15`, `edge-20`, `pinch-body`, `jug-outer-rim` |
+| `captain-fingerfood-unlevel` | `captain-fingerfood.unlevel` | `curved-edge-20`, `curved-edge-25` |
+| `captain-fingerfood-dual` | `captain-fingerfood.dual` | `straight-edge-20`, `curved-edge-20` |
+| `aelith-cyclops-011` | `aelith.cyclops-011` | `mono-20` |
+| `crimptonite-helium-mobile` | `crimptonite.helium-mobile` | `edge-14`, `edge-22`, `center-edge-10`, `center-edge-18`, `top-jug`, `back-jug-sloper` |
+
 ## Excluded candidates
 
 | Manufacturer | Candidate / catalog result | Primary URL checked | Disposition and reason |

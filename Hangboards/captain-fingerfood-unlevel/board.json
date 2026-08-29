@@ -1,0 +1,268 @@
+{
+  "id": "captain-fingerfood.unlevel",
+  "manufacturer": "Captain Fingerfood",
+  "name": "UNLEVEL",
+  "subtitle": "Compact board with two curved edge depths.",
+  "productURL": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+  "dimensions": "12 × 7 × 3 cm",
+  "aspectRatio": 1.7142857143,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "20 mm face",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.7142857143,
+      "default": true
+    },
+    {
+      "id": "reverse",
+      "name": "25 mm face",
+      "assetPath": "assets/reverse.png",
+      "aspectRatio": 1.7142857143,
+      "default": false
+    }
+  ],
+  "holds": [
+    {
+      "id": "curved-edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm curved edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.2875,
+            "y": 0.435714,
+            "width": 0.425,
+            "height": 0.121429
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.14,
+                  0.42
+                ],
+                "control2": [
+                  0.18,
+                  0.0
+                ],
+                "to": [
+                  0.34,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.45,
+                  0.0
+                ],
+                "control2": [
+                  0.45,
+                  0.32
+                ],
+                "to": [
+                  0.5,
+                  0.32
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.55,
+                  0.32
+                ],
+                "control2": [
+                  0.55,
+                  0.0
+                ],
+                "to": [
+                  0.66,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.82,
+                  0.0
+                ],
+                "control2": [
+                  0.86,
+                  0.42
+                ],
+                "to": [
+                  1.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 20
+    },
+    {
+      "id": "curved-edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm curved edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "reverse",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.2875,
+            "y": 0.435714,
+            "width": 0.425,
+            "height": 0.121429
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.14,
+                  0.42
+                ],
+                "control2": [
+                  0.18,
+                  0.0
+                ],
+                "to": [
+                  0.34,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.45,
+                  0.0
+                ],
+                "control2": [
+                  0.45,
+                  0.32
+                ],
+                "to": [
+                  0.5,
+                  0.32
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.55,
+                  0.32
+                ],
+                "control2": [
+                  0.55,
+                  0.0
+                ],
+                "to": [
+                  0.66,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.82,
+                  0.0
+                ],
+                "control2": [
+                  0.86,
+                  0.42
+                ],
+                "to": [
+                  1.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.42
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ],
+      "sizeMillimeters": 25
+    }
+  ]
+}
