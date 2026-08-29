@@ -7,6 +7,27 @@ import org.junit.Test
 
 class AndroidHealthConnectGatewayTest {
     @Test
+    fun stopsPagingWhenTheProviderReturnsAnEmptyNextToken() = runTest {
+        val client = RecordingSdkClient(
+            pages = mapOf(
+                null to ExerciseSessionPage(
+                    records = listOf(record("first", HealthConnectRecord.ExerciseType.StrengthTraining)),
+                    nextPageToken = "",
+                ),
+            ),
+        )
+        val gateway = AndroidHealthConnectGateway("com.hangten.training", client)
+
+        val records = gateway.readRecords()
+
+        assertEquals(listOf("first"), records.map { it.id })
+        assertEquals(
+            listOf(ExerciseSessionReadRequest("com.hangten.training", null)),
+            client.readRequests,
+        )
+    }
+
+    @Test
     fun readsOnlyThisAppsDataOriginAcrossEveryPageAndPreservesExerciseType() = runTest {
         val client = RecordingSdkClient(
             pages = mapOf(

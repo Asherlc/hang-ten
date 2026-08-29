@@ -127,3 +127,28 @@ The connected test launcher installed an exit trap before starting the AVD. It
 stopped emulator-5556 and its isolated port-5038 ADB server when Gradle exited;
 the exact workspace-owned SDK, Gradle cache, AVD directory, emulator log, and
 temporary `Android/local.properties` are removed and checked absent below.
+
+## Re-review round 2 — empty pagination token
+
+`AndroidHealthConnectGateway.readRecords` now terminates after the first page
+when `nextPageToken` is null, empty, or whitespace-only. The new
+`stopsPagingWhenTheProviderReturnsAnEmptyNextToken` fake-client test was first
+run red: the previous implementation made a second request for `""`, and the
+fake failed because that page did not exist. After changing the guard to
+`!pageToken.isNullOrBlank()`, the focused gateway/service test command passed.
+
+```text
+env GRADLE_USER_HOME=.context/android-health-connect-round2-gradle-bitter-scorpion \
+  ./Android/gradlew --no-daemon -p Android :app:testDebugUnitTest \
+  --tests '*AndroidHealthConnectGatewayTest' --tests '*HealthConnectServiceTest'
+# BUILD SUCCESSFUL
+
+env GRADLE_USER_HOME=.context/android-health-connect-round2-gradle-bitter-scorpion \
+  ./Android/gradlew --no-daemon -p Android \
+  :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+# BUILD SUCCESSFUL — 44 unit tests, 0 failures; lint 0 errors; Debug APK assembled
+```
+
+The round-2 temporary SDK, Gradle cache, downloaded command-line tools archive,
+and `Android/local.properties` SDK pointer are workspace-owned and removed after
+the verification commands.

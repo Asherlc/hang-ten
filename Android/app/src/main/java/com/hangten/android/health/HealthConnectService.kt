@@ -202,7 +202,7 @@ class AndroidHealthConnectGateway internal constructor(
             )
             allRecords += page.records
             pageToken = page.nextPageToken
-        } while (pageToken != null)
+        } while (!pageToken.isNullOrBlank())
         return allRecords
     }
 }
