@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import shlex
 from pathlib import Path
 
@@ -43,7 +44,14 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     worker_flag = "-maximum-parallel-testing-workers"
     assert xctest_tokens.count(worker_flag) == 1
     assert xctest_tokens[xctest_tokens.index(worker_flag) + 1] == "1"
-    assert "test 2>&1" in xctest_command
+    assert "run_xctest_attempt() {" in xctest_command
+    assert re.search(
+        r"run_xctest_attempt\(\) \{.*?xcodebuild \\.*?\n\s+test\s+>",
+        xctest_command,
+        flags=re.DOTALL,
+    )
+    assert "if ! run_xctest_attempt 1; then" in xctest_command
+    assert "run_xctest_attempt 2" in xctest_command
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
     assert "exactly two states" not in active_docs
