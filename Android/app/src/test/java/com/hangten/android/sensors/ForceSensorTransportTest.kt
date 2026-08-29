@@ -15,20 +15,37 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ForceSensorTransportTest {
     @Test
-    fun boundedFakeSerializesOverflowBurstWithoutDroppingFrames() = runTest {
+    fun productionGattDisconnectSequenceFailsWriteBeforePublishingRemoteError() {
+        val observed = mutableListOf<String>()
+
+        GattRemoteDisconnectSequence(status = 133).dispatch(
+            failPendingWrite = { observed += it.message!! },
+            publishTransportError = { observed += it.message!! },
+        )
+
+        assertEquals(
+            listOf("Sensor disconnected while writing (GATT 133).", "Sensor disconnected (GATT 133)."),
+            observed,
+        )
+    }
+
+    @Test
+    fun boundedFakeStopsAtCapacityAndPublishesTerminalOverload() = runTest {
         val transport = FakeForceSensorTransport(notificationCapacity = 2, notificationScope = this)
         transport.emit(byteArrayOf(1))
         transport.emit(byteArrayOf(2))
         transport.emit(byteArrayOf(3))
 
-        assertEquals(3, transport.notificationQueueState.value.pendingFrames)
-        assertTrue(transport.notificationQueueState.value.isOverCapacity)
-        val received = async { transport.notifications.take(3).map { it.single().toInt() }.toList() }
+        val terminal = transport.errors.first()
+        assertTrue(terminal is SensorNotificationOverloadException)
+        assertEquals(2, transport.notificationQueueState.value.pendingFrames)
+        assertTrue(transport.notificationQueueState.value.isTerminal)
+        val received = async { transport.notifications.take(2).map { it.single().toInt() }.toList() }
         advanceUntilIdle()
 
-        assertEquals(listOf(1, 2, 3), received.await())
+        assertEquals(listOf(1, 2), received.await())
         assertEquals(0, transport.notificationQueueState.value.pendingFrames)
-        assertTrue(!transport.notificationQueueState.value.isOverCapacity)
+        assertTrue(transport.notificationQueueState.value.isTerminal)
     }
 
     @Test

@@ -90,7 +90,9 @@ class SensorConnectionControllerTest {
 
     @Test
     fun burstNotificationsKeepEveryGenericSampleInArrivalOrder() = runTest {
-        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
+        val transport = FakeForceSensorTransport(notificationCapacity = 512).apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+        }
         val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
         controller.connectAfterPermissionsGranted(); advanceUntilIdle()
         val received = mutableListOf<UShort>()
@@ -116,6 +118,22 @@ class SensorConnectionControllerTest {
         assertEquals(null, controller.state.value.latestMeasurement)
         assertTrue(received.isEmpty())
         collection.cancel()
+    }
+
+    @Test
+    fun terminalNotificationOverloadIsVisibleToControllerAndStopsMeasurements() = runTest {
+        val transport = FakeForceSensorTransport(notificationCapacity = 2, notificationScope = this).apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+        }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        repeat(3) { transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0)) }
+        advanceUntilIdle()
+
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("notification queue"))
+        assertEquals(null, controller.state.value.latestMeasurement)
+        assertEquals(0, transport.notificationQueueState.value.pendingFrames)
     }
 
     @Test
@@ -179,6 +197,22 @@ class SensorConnectionControllerTest {
         assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
         assertTrue(controller.state.value.error!!.contains("disconnected while writing"))
         transport.writeFailure = null
+        controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun remoteGattDisconnectDuringPendingWriteWinsTheTerminalStateRace() = runTest {
+        val barrier = CompletableDeferred<Unit>()
+        val transport = FakeForceSensorTransport().apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+            writeBarrier = barrier
+        }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.onRemoteGattDisconnected(status = 133); advanceUntilIdle()
+
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("GATT 133"))
         controller.disconnect(); advanceUntilIdle()
     }
 

@@ -152,3 +152,48 @@ no AVD was created. All three exact owned SDK roots were then deleted.
   above.
 - Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round3` root
   is absent.
+
+### Round 4 finite overload and remote-write-race remediation
+
+- The notification bridge now has a real finite total pending-frame budget:
+  `ArrayBlockingQueue` ingress plus an atomic reservation count includes frames
+  waiting in the serial pump. The callback remains nonblocking. At capacity,
+  the first additional callback is explicitly rejected before capture, puts the
+  queue in terminal state, emits `SensorNotificationOverloadException`, and
+  disconnects the GATT source. Subsequent callbacks are rejected without any
+  continued silent capture. Frames accepted before that terminal transition
+  retain arrival order.
+- The terminal error is retained on the transport error channel and therefore
+  reaches `SensorConnectionController`: notification collection is cancelled,
+  the meter/measurement handoff stops, and the existing Settings error text
+  displays the reason. Workout recording consumes no late measurements after
+  this controller teardown.
+- The production-like capacity-2 fake test verifies the terminal overload is
+  observable and that exactly the two accepted frames are delivered in order.
+  A controller regression verifies that the same overload reaches a
+  `Disconnected` state with visible queue error.
+- `GattRemoteDisconnectSequence` is now shared by the production GATT callback
+  and fake. Its direct test verifies the exact callback order (pending write
+  failure, then remote error); the controller race test verifies the documented
+  terminal result is `Disconnected` with the `GATT 133` error, never an
+  indeterminate write-only `Failed` state.
+- Fresh owned SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round4`: focused
+  transport/controller tests — **BUILD SUCCESSFUL**; then
+  `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` — **BUILD
+  SUCCESSFUL**. The emulator limitation and its separate release gate are
+  unchanged.
+- Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round4` root
+  is absent.
+
+### Final shutdown-accounting check
+
+- Queue delivery accounting now clamps at zero if a receiver is cancelled while
+  disconnect clears retained frames; the overload-controller test asserts zero
+  pending frames after its terminal teardown.
+- This final guard was freshly verified with the separately owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round4-final` root: focused
+  transport/controller tests and full `:app:testDebugUnitTest :app:lintDebug
+  :app:assembleDebug` both finished **BUILD SUCCESSFUL**.
+- Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round4-final`
+  root is absent.

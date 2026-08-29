@@ -43,6 +43,7 @@ class SensorConnectionController(
     val measurements = measurementChannel.receiveAsFlow()
     private var notificationJob: Job? = null
     private var transportErrorJob: Job? = null
+    private var terminalTransportError: Throwable? = null
     private val parser = MotherboardProtocolParser()
     private val calibrationRows = mutableListOf<MotherboardCalibrationRow>()
     private var calibration: MotherboardCalibration? = null
@@ -59,6 +60,7 @@ class SensorConnectionController(
     fun connectAfterPermissionsGranted() {
         scope.launch {
             val requested = state.value.profile
+            terminalTransportError = null
             _state.value = state.value.copy(connection = SensorConnectionState.Scanning, error = null)
             try {
                 val advertised = transport.scan(requested)
@@ -75,11 +77,13 @@ class SensorConnectionController(
                     writeOrFail(active.writeCharacteristic!!, MotherboardProtocol.command("C"))
                 } else {
                     commandPayload(active, ForceSensorCommand.Start)?.let { writeOrFail(active.writeCharacteristic!!, it) }
-                    if (state.value.connection == SensorConnectionState.Failed) return@launch
+                    if (terminalTransportError != null || state.value.connection != SensorConnectionState.Scanning) return@launch
                     _state.value = state.value.copy(connection = SensorConnectionState.Streaming)
                 }
             } catch (error: Throwable) {
-                _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: "Unable to connect to sensor.")
+                if (terminalTransportError == null) {
+                    _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: "Unable to connect to sensor.")
+                }
             }
         }
     }
@@ -122,6 +126,7 @@ class SensorConnectionController(
         }
         transportErrorJob = scope.launch {
             transport.errors.first { error ->
+                terminalTransportError = error
                 notificationJob?.cancel()
                 notificationJob = null
                 transport.disconnect()
@@ -221,7 +226,11 @@ class SensorConnectionController(
 
     private suspend fun writeOrFail(characteristic: ForceSensorCharacteristic, payload: ByteArray) {
         try { transport.write(characteristic, payload) }
-        catch (error: Throwable) { _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: "Sensor write failed.") }
+        catch (error: Throwable) {
+            if (terminalTransportError == null) {
+                _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: "Sensor write failed.")
+            }
+        }
     }
 
     private var nextForceSampleNumber: UShort = 0u

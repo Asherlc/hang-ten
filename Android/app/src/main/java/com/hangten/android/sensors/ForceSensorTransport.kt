@@ -20,43 +20,67 @@ import android.os.Build
 import android.os.SystemClock
 import androidx.core.content.ContextCompat
 import java.util.UUID
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 data class NotificationQueueState(
     val capacityFrames: Int,
     val pendingFrames: Int = 0,
-    val isOverCapacity: Boolean = false,
+    val isTerminal: Boolean = false,
+    val terminalMessage: String? = null,
 )
+
+class SensorNotificationOverloadException(capacityFrames: Int) : IllegalStateException(
+    "Sensor notification queue capacity ($capacityFrames) was reached; sensor stream stopped before another frame was captured.",
+)
+
+/** The production callback order for a remote disconnect while a write is pending. */
+internal class GattRemoteDisconnectSequence(status: Int) {
+    private val writeError = IllegalStateException("Sensor disconnected while writing (GATT $status).")
+    private val transportError = IllegalStateException("Sensor disconnected (GATT $status).")
+
+    fun dispatch(
+        failPendingWrite: (Throwable) -> Unit,
+        publishTransportError: (Throwable) -> Unit,
+    ) {
+        failPendingWrite(writeError)
+        publishTransportError(transportError)
+    }
+}
 
 /**
  * Moves callback-thread frames through a single serial pump. The callback only
  * copies/enqueues; when delivery is slow, the pump suspends off the callback
- * thread and [state] exposes the retained backlog instead of discarding data.
+ * thread. The finite pending-frame budget makes the first overload terminal,
+ * rather than silently dropping or continuing to capture frames.
  */
 internal class SerialNotificationQueue(
     private val scope: CoroutineScope,
     private val capacityFrames: Int = 128,
+    private val onTerminal: (Throwable) -> Unit,
 ) {
-    private val ingress = ConcurrentLinkedQueue<ByteArray>()
+    private val ingress = ArrayBlockingQueue<ByteArray>(capacityFrames)
     private val isDraining = AtomicBoolean(false)
     private val pendingFrames = AtomicInteger(0)
-    private val outgoing = Channel<ByteArray>(capacityFrames)
+    private val isTerminal = AtomicBoolean(false)
+    private var drainJob: Job? = null
+    private val outgoing = Channel<ByteArray>(Channel.RENDEZVOUS)
     private val _state = MutableStateFlow(NotificationQueueState(capacityFrames))
     val state: StateFlow<NotificationQueueState> = _state.asStateFlow()
     val notifications: Flow<ByteArray> = flow {
@@ -69,11 +93,32 @@ internal class SerialNotificationQueue(
         }
     }
 
-    fun enqueue(frame: ByteArray) {
-        val pending = pendingFrames.incrementAndGet()
-        ingress.add(frame.copyOf())
+    fun enqueue(frame: ByteArray): Boolean {
+        if (!reservePendingFrame()) return false
+        if (!ingress.offer(frame.copyOf())) {
+            pendingFrames.decrementAndGet()
+            terminal()
+            return false
+        }
+        val pending = pendingFrames.get()
         publishState(pending)
-        if (isDraining.compareAndSet(false, true)) scope.launch { drain() }
+        if (isDraining.compareAndSet(false, true)) drainJob = scope.launch { drain() }
+        return true
+    }
+
+    fun stop() {
+        drainJob?.cancel()
+        drainJob = null
+        isDraining.set(false)
+        ingress.clear()
+        pendingFrames.set(0)
+        publishState(0)
+    }
+
+    fun reset() {
+        stop()
+        isTerminal.set(false)
+        _state.value = NotificationQueueState(capacityFrames)
     }
 
     private suspend fun drain() {
@@ -88,15 +133,43 @@ internal class SerialNotificationQueue(
         }
     }
 
-    private fun delivered() {
-        publishState(pendingFrames.decrementAndGet())
+    private fun reservePendingFrame(): Boolean {
+        while (true) {
+            if (isTerminal.get()) return false
+            val pending = pendingFrames.get()
+            if (pending >= capacityFrames) {
+                terminal()
+                return false
+            }
+            if (pendingFrames.compareAndSet(pending, pending + 1)) return true
+        }
     }
 
-    private fun publishState(pending: Int) {
+    private fun terminal() {
+        if (isTerminal.compareAndSet(false, true)) {
+            val error = SensorNotificationOverloadException(capacityFrames)
+            publishState(pendingFrames.get(), error)
+            onTerminal(error)
+        }
+    }
+
+    private fun delivered() {
+        while (true) {
+            val pending = pendingFrames.get()
+            if (pending == 0) return
+            if (pendingFrames.compareAndSet(pending, pending - 1)) {
+                publishState(pending - 1)
+                return
+            }
+        }
+    }
+
+    private fun publishState(pending: Int, terminalError: Throwable? = null) {
         _state.value = NotificationQueueState(
             capacityFrames = capacityFrames,
             pendingFrames = pending,
-            isOverCapacity = pending > capacityFrames,
+            isTerminal = isTerminal.get(),
+            terminalMessage = terminalError?.message ?: _state.value.terminalMessage,
         )
     }
 }
@@ -118,8 +191,8 @@ class FakeForceSensorTransport(
     notificationScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined),
 ) : ForceSensorTransport {
     private val discovered = mutableListOf<ForceSensorAdvertisement>()
-    private val events = SerialNotificationQueue(notificationScope, notificationCapacity)
-    private val errorEvents = MutableSharedFlow<Throwable>(extraBufferCapacity = 8)
+    private val errorEvents = Channel<Throwable>(Channel.UNLIMITED)
+    private val events = SerialNotificationQueue(notificationScope, notificationCapacity, ::reportError)
     val operations = mutableListOf<String>()
     var connectFailure: Throwable? = null
     var writeFailure: Throwable? = null
@@ -127,11 +200,24 @@ class FakeForceSensorTransport(
     var connectBarrier: kotlinx.coroutines.CompletableDeferred<Unit>? = null
     override val notifications: Flow<ByteArray> = events.notifications
     override val notificationQueueState: StateFlow<NotificationQueueState> = events.state
-    override val errors: Flow<Throwable> = errorEvents
+    override val errors: Flow<Throwable> = errorEvents.receiveAsFlow()
 
     fun enqueue(advertisement: ForceSensorAdvertisement) { discovered += advertisement }
     fun emit(value: ByteArray) { events.enqueue(value) }
-    fun fail(error: Throwable) { check(errorEvents.tryEmit(error)) }
+    fun fail(error: Throwable) { reportError(error) }
+
+    /** Mirrors the production GATT callback: fail the pending write, then emit the remote error. */
+    fun onRemoteGattDisconnected(status: Int) {
+        GattRemoteDisconnectSequence(status).dispatch(
+            failPendingWrite = { error ->
+                if (writeBarrier?.isCompleted == false) {
+                    writeFailure = error
+                    writeBarrier?.complete(Unit)
+                }
+            },
+            publishTransportError = ::reportError,
+        )
+    }
 
     override suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement> {
         operations += "scan:${profile.name}"
@@ -140,6 +226,7 @@ class FakeForceSensorTransport(
 
     override suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile) {
         operations += "connect:${profile.name}"
+        events.reset()
         connectBarrier?.await()
         connectFailure?.let { throw it }
     }
@@ -156,11 +243,14 @@ class FakeForceSensorTransport(
 
     override fun disconnect() {
         operations += "disconnect"
+        events.stop()
         if (writeBarrier?.isCompleted == false) {
             writeFailure = IllegalStateException("Sensor disconnected while writing.")
             writeBarrier?.complete(Unit)
         }
     }
+
+    private fun reportError(error: Throwable) { check(errorEvents.trySend(error).isSuccess) }
 }
 
 object BlePermissionRequirements {
@@ -179,11 +269,11 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     private val appContext = context.applicationContext
     private val bluetoothAdapter: BluetoothAdapter? = appContext.getSystemService(BluetoothManager::class.java)?.adapter
     private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private val notificationEvents = SerialNotificationQueue(notificationScope)
-    private val errorEvents = MutableSharedFlow<Throwable>(extraBufferCapacity = 8)
+    private val errorEvents = Channel<Throwable>(Channel.UNLIMITED)
+    private val notificationEvents = SerialNotificationQueue(notificationScope, onTerminal = ::reportError)
     override val notifications: Flow<ByteArray> = notificationEvents.notifications
     override val notificationQueueState: StateFlow<NotificationQueueState> = notificationEvents.state
-    override val errors: Flow<Throwable> = errorEvents
+    override val errors: Flow<Throwable> = errorEvents.receiveAsFlow()
     private var gatt: BluetoothGatt? = null
     private var scanCallback: ScanCallback? = null
     private var connectedAdvertisement: ForceSensorAdvertisement? = null
@@ -218,6 +308,7 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     @SuppressLint("MissingPermission")
     override suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile) = suspendCancellableCoroutine { continuation ->
         requirePermissions()
+        notificationEvents.reset()
         val device = scannedDevices[advertisement]
             ?: run {
                 continuation.resumeWithException(IllegalStateException("Select a discovered sensor before connecting."))
@@ -270,6 +361,7 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
         gatt?.close()
         gatt = null
         connectedAdvertisement = null
+        notificationEvents.stop()
         failSetup(IllegalStateException("Sensor disconnected during setup."))
         failDescriptor(IllegalStateException("Sensor disconnected while enabling notifications."))
         failWrite(IllegalStateException("Sensor disconnected while writing."))
@@ -289,8 +381,7 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED || status != BluetoothGatt.GATT_SUCCESS) {
                 failSetup(IllegalStateException("Sensor disconnected during setup (GATT $status)."))
                 failDescriptor(IllegalStateException("Sensor disconnected while enabling notifications (GATT $status)."))
-                failWrite(IllegalStateException("Sensor disconnected while writing (GATT $status)."))
-                errorEvents.tryEmit(IllegalStateException("Sensor disconnected (GATT $status)."))
+                GattRemoteDisconnectSequence(status).dispatch(::failWrite, ::reportError)
             }
         }
 
@@ -339,9 +430,12 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
         writeContinuation?.also { continuation -> writeContinuation = null; continuation.resumeWithException(error) }
     }
 
+    @SuppressLint("MissingPermission")
     private fun enqueueNotification(value: ByteArray) {
-        notificationEvents.enqueue(value)
+        if (!notificationEvents.enqueue(value)) gatt?.disconnect()
     }
+
+    private fun reportError(error: Throwable) { check(errorEvents.trySend(error).isSuccess) }
 
     private companion object {
         const val SCAN_WINDOW_MS = 4_000L
