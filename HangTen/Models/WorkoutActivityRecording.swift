@@ -146,7 +146,7 @@ internal enum BoardTargetResolver {
             let selectedExact = preserveGenericPocketCandidates
                 && feature.holdKind == .pocket
                 && target.fingerCapacity == nil
-                ? exact
+                ? oneHoldPerEquipmentObject(from: exact)
                 : selectingGenericPocketPair(
                     from: exact,
                     feature: feature,
@@ -163,7 +163,7 @@ internal enum BoardTargetResolver {
                 let selectedMatches = preserveGenericPocketCandidates
                     && fallback.holdKind == .pocket
                     && target.fingerCapacity == nil
-                    ? matches
+                    ? oneHoldPerEquipmentObject(from: matches)
                     : selectingGenericPocketPair(
                         from: matches,
                         feature: fallback,
@@ -179,7 +179,7 @@ internal enum BoardTargetResolver {
                 let selectedCapacityAgnosticMatches = preserveGenericPocketCandidates
                     && fallback.holdKind == .pocket
                     && target.fingerCapacity == nil
-                    ? capacityAgnosticMatches
+                    ? oneHoldPerEquipmentObject(from: capacityAgnosticMatches)
                     : selectingGenericPocketPair(
                         from: capacityAgnosticMatches,
                         feature: fallback,
@@ -204,7 +204,7 @@ internal enum BoardTargetResolver {
             }
             if target.fingerCapacity == nil {
                 return (preserveGenericPocketCandidates
-                    ? matches
+                    ? oneHoldPerEquipmentObject(from: matches)
                     : genericPocketSelection(from: matches)).map(\.id)
             }
         }
@@ -658,6 +658,11 @@ internal enum BoardTargetResolver {
     private static func genericPocketSelection(from holds: [BoardHold]) -> [BoardHold] {
         if let pair = matchingPocketPair(from: holds) { return pair }
         return holds.first(where: isWhollyOnOneSide).map { [$0] } ?? []
+    }
+
+    private static func oneHoldPerEquipmentObject(from holds: [BoardHold]) -> [BoardHold] {
+        var selectedObjectIDs: Set<String> = []
+        return holds.filter { selectedObjectIDs.insert($0.equipmentObjectID).inserted }
     }
 
     private static func isWhollyOnOneSide(_ hold: BoardHold) -> Bool {
