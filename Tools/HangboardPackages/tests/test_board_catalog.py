@@ -107,6 +107,29 @@ def test_board_schema_rejects_hold_with_unknown_equipment_object_id() -> None:
         module._load_board(document)
 
 
+def test_board_schema_accepts_missing_hand_capacity_policy() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
+    ]
+
+    board = module._load_board(document)
+
+    assert board.equipment_objects == ("primary",)
+
+
+def test_board_schema_rejects_unknown_missing_hand_capacity_policy() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "invented"}
+    ]
+
+    with pytest.raises(ValueError, match="missingHandCapacityPolicy"):
+        module._load_board(document)
+
+
 def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
     module = load_board_catalog_module()
     document = board_document()

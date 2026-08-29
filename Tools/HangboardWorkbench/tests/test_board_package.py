@@ -71,6 +71,25 @@ def test_catalog_validator_rejects_hold_with_unknown_equipment_object_id() -> No
         board_package.validate_catalog_board(document)
 
 
+def test_catalog_validator_accepts_missing_hand_capacity_policy() -> None:
+    document = board_document("fixture.board")
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
+    ]
+
+    board_package.validate_catalog_board(document)
+
+
+def test_catalog_validator_rejects_unknown_missing_hand_capacity_policy() -> None:
+    document = board_document("fixture.board")
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "invented"}
+    ]
+
+    with pytest.raises(BoardPackageError, match="missingHandCapacityPolicy"):
+        board_package.validate_catalog_board(document)
+
+
 def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
     return (
         struct.pack(">I", len(payload))

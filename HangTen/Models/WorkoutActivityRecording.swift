@@ -81,60 +81,6 @@ enum WorkoutActivityRecordingError: LocalizedError, Equatable {
 }
 
 internal enum BoardTargetResolver {
-    /// A migration policy for packages that predate physical equipment-object
-    /// resolution. This is app compatibility behavior, not a statement about
-    /// a board's physical hand capacity. New packages must declare bilateral
-    /// capability or provide two equipment objects instead.
-    private static let legacyBilateralFallbackBoardIDs: Set<String> = [
-        "beastmaker-1000",
-        "beastmaker-2000",
-        "dewoodstok-woodbord",
-        "escape-beta-22",
-        "escape.unlimited",
-        "evolv-kilter-basic-long",
-        "frictitious.doormount-pro-7",
-        "frictitious.megalith",
-        "lattice-triple-rung",
-        "mammut.diamond-finger",
-        "metolius.climbers-edge",
-        "metolius.contact",
-        "metolius.foundry",
-        "metolius.light-rail-2",
-        "metolius.prime-rib",
-        "metolius.project",
-        "metolius.rock-rings-3d",
-        "metolius.simulator-3d",
-        "metolius.wood-grips-compact-ii",
-        "metolius.wood-grips-deluxe-ii",
-        "moon.armstrong",
-        "nature.stoak-board-iii",
-        "soill.iron-palm-2",
-        "soill.split-palm",
-        "soill.training-tiles",
-        "target10a.linebreaker-base",
-        "tension.flash-board",
-        "tension.grindstone",
-        "tension.grindstone-original",
-        "tension.grindstone-pro",
-        "tension.honestone",
-        "tension.whetstone",
-        "the-hangboard.the-hangboard",
-        "trango.rock-prodigy-forge",
-        "trango.rock-prodigy-natural",
-        "trango.rock-prodigy-pivot",
-        "trango.rock-prodigy-training-center",
-        "yy.baguette",
-        "yy.baguette-evo",
-        "yy.penta-evo",
-        "yy.travelboard",
-        "yy.verticalboard-evo",
-        "yy.verticalboard-first",
-        "yy.verticalboard-light",
-        "yy.verticalboard-one",
-        "zlagboard.evo",
-        "zlagboard.pro"
-    ]
-
     static func resolveHoldIDs(
         for target: HoldTarget,
         on board: TrainingBoard,
@@ -150,8 +96,13 @@ internal enum BoardTargetResolver {
         on board: TrainingBoard,
         gripType: GripType? = nil
     ) -> [String] {
-        selectHoldIDs(
-            resolveHoldIDs(for: target, on: board, gripType: gripType),
+        let holds = compatibleHolds(on: board, gripType: gripType)
+        return selectHoldIDs(
+            resolveHoldIDs(
+                for: target,
+                among: holds,
+                preserveGenericPocketCandidates: handUse == .single
+            ),
             for: handUse,
             side: side,
             on: board
@@ -181,18 +132,26 @@ internal enum BoardTargetResolver {
         return objectIDs
     }
 
-    private static func resolveHoldIDs(for target: HoldTarget, among holds: [BoardHold]) -> [String] {
+    private static func resolveHoldIDs(
+        for target: HoldTarget,
+        among holds: [BoardHold],
+        preserveGenericPocketCandidates: Bool = false
+    ) -> [String] {
         if !target.holdIDs.isEmpty {
             let available = Set(holds.map(\.id))
             return target.holdIDs.filter(available.contains)
         }
         if let feature = target.feature {
             let exact = matching(feature, fingerCapacity: target.fingerCapacity, among: holds)
-            let selectedExact = selectingGenericPocketPair(
-                from: exact,
-                feature: feature,
-                fingerCapacity: target.fingerCapacity
-            )
+            let selectedExact = preserveGenericPocketCandidates
+                && feature.holdKind == .pocket
+                && target.fingerCapacity == nil
+                ? exact
+                : selectingGenericPocketPair(
+                    from: exact,
+                    feature: feature,
+                    fingerCapacity: target.fingerCapacity
+                )
             if !selectedExact.isEmpty {
                 if feature.holdKind == .pocket, target.fingerCapacity != nil {
                     return oneHoldPerHand(from: selectedExact).map(\.id)
@@ -201,11 +160,15 @@ internal enum BoardTargetResolver {
             }
             for fallback in target.fallbackFeatures {
                 let matches = matching(fallback, fingerCapacity: target.fingerCapacity, among: holds)
-                let selectedMatches = selectingGenericPocketPair(
-                    from: matches,
-                    feature: fallback,
-                    fingerCapacity: target.fingerCapacity
-                )
+                let selectedMatches = preserveGenericPocketCandidates
+                    && fallback.holdKind == .pocket
+                    && target.fingerCapacity == nil
+                    ? matches
+                    : selectingGenericPocketPair(
+                        from: matches,
+                        feature: fallback,
+                        fingerCapacity: target.fingerCapacity
+                    )
                 if !selectedMatches.isEmpty { return selectedMatches.map(\.id) }
 
                 // A fallback identifies a physically available substitute, not
@@ -213,11 +176,15 @@ internal enum BoardTargetResolver {
                 // the primary target, but do not reject an explicit fallback
                 // merely because that substitute has no matching capacity.
                 let capacityAgnosticMatches = matching(fallback, fingerCapacity: nil, among: holds)
-                let selectedCapacityAgnosticMatches = selectingGenericPocketPair(
-                    from: capacityAgnosticMatches,
-                    feature: fallback,
-                    fingerCapacity: target.fingerCapacity
-                )
+                let selectedCapacityAgnosticMatches = preserveGenericPocketCandidates
+                    && fallback.holdKind == .pocket
+                    && target.fingerCapacity == nil
+                    ? capacityAgnosticMatches
+                    : selectingGenericPocketPair(
+                        from: capacityAgnosticMatches,
+                        feature: fallback,
+                        fingerCapacity: target.fingerCapacity
+                    )
                 if !selectedCapacityAgnosticMatches.isEmpty {
                     return selectedCapacityAgnosticMatches.map(\.id)
                 }
@@ -236,7 +203,9 @@ internal enum BoardTargetResolver {
                 return oneHoldPerHand(from: matches).map(\.id)
             }
             if target.fingerCapacity == nil {
-                return genericPocketSelection(from: matches).map(\.id)
+                return (preserveGenericPocketCandidates
+                    ? matches
+                    : genericPocketSelection(from: matches)).map(\.id)
             }
         }
         if !matches.isEmpty { return matches.map(\.id) }
@@ -327,7 +296,11 @@ internal enum BoardTargetResolver {
         gripType: GripType? = nil
     ) -> [String] {
         let holds = compatibleHolds(on: board, gripType: gripType)
-        let primary = resolveHoldIDs(for: target, among: holds)
+        let primary = resolveHoldIDs(
+            for: target,
+            among: holds,
+            preserveGenericPocketCandidates: handUse == .single
+        )
         if !primary.isEmpty {
             return selectHoldIDs(primary, for: handUse, side: side, on: board)
         }
@@ -414,10 +387,10 @@ internal enum BoardTargetResolver {
             if let bilateralHold = candidates.first(where: { $0.handCapacity == 2 }) {
                 return [bilateralHold.id]
             }
-            // Only packages explicitly recognized as legacy retain the old
-            // missing-capacity fallback. Never infer a physical capacity from
-            // omitted board metadata on newer packages.
-            guard legacyBilateralFallbackBoardIDs.contains(board.id) else { return [] }
+            guard let objectID = selectedObjectIDs.first,
+                  board.object(id: objectID)?.missingHandCapacityPolicy == .legacyBilateral else {
+                return []
+            }
             guard !candidates.contains(where: { $0.handCapacity == 1 }) else { return [] }
             return candidates.map(\.id)
         }

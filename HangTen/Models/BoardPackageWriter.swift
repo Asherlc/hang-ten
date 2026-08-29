@@ -33,7 +33,9 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL: URL,
         dimensions: String?,
         aspectRatio: Double,
-        equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
+        equipmentObjects: [EquipmentObject] = [
+            .init(id: "primary", missingHandCapacityPolicy: .unavailable)
+        ],
         holds: [BoardEditableHold],
         presentations: [BoardEditablePresentation]
     ) {
@@ -79,19 +81,28 @@ struct BoardEditableDocument: Equatable, Decodable {
 
 private struct BoardEditableEquipmentObjectDocument: Decodable {
     let id: String
+    let missingHandCapacityPolicy: MissingHandCapacityPolicy
 
     private enum CodingKeys: String, CodingKey {
         case id
+        case missingHandCapacityPolicy
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownEditorKeys(["id"])
+        try decoder.rejectUnknownEditorKeys(["id", "missingHandCapacityPolicy"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
+        missingHandCapacityPolicy = try container.decodeIfPresent(
+            MissingHandCapacityPolicy.self,
+            forKey: .missingHandCapacityPolicy
+        ) ?? .legacyBilateral
     }
 
     var equipmentObject: EquipmentObject {
-        EquipmentObject(id: id)
+        EquipmentObject(
+            id: id,
+            missingHandCapacityPolicy: missingHandCapacityPolicy
+        )
     }
 }
 
@@ -655,8 +666,17 @@ enum BoardPackageWriter {
             ("subtitle", .string(document.subtitle)),
             ("productURL", .string(document.productURL.absoluteString)),
             ("aspectRatio", .double(document.aspectRatio)),
-            ("equipmentObjects", .array(document.equipmentObjects.map {
-                .object([("id", .string($0.id))])
+            ("equipmentObjects", .array(document.equipmentObjects.map { object in
+                var entries: [(String, CanonicalJSONValue)] = [
+                    ("id", .string(object.id))
+                ]
+                if object.missingHandCapacityPolicy != .legacyBilateral {
+                    entries.append((
+                        "missingHandCapacityPolicy",
+                        .string(object.missingHandCapacityPolicy.rawValue)
+                    ))
+                }
+                return .object(entries)
             })),
             ("holds", .array(document.holds.map(canonicalHoldValue))),
             ("presentations", .array(document.presentations.map(canonicalPresentationValue))),

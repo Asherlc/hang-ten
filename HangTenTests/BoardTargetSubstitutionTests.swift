@@ -148,7 +148,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
     }
 
     func testDoubleHandTargetPreservesLegacyNilCapacityBehaviorOnOneObject() {
-        let board = board(id: "beastmaker-1000", holds: [
+        let board = board(id: "fixture.legacy-board", holds: [
             hold(id: "legacy-pocket", kind: .pocket, fingerCapacity: 3)
         ])
 

@@ -649,11 +649,23 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         for index, item in enumerate(raw_equipment_objects)
     )
     for index, item in enumerate(raw_equipment_objects):
+        source = f"board.json.equipmentObjects[{index}]"
+        equipment_object = _mapping(item, source)
         _closed(
-            _mapping(item, f"board.json.equipmentObjects[{index}]"),
+            equipment_object,
             {"id"},
-            f"board.json.equipmentObjects[{index}]",
+            source,
+            optional={"missingHandCapacityPolicy"},
         )
+        if "missingHandCapacityPolicy" in equipment_object:
+            policy = _string(
+                equipment_object["missingHandCapacityPolicy"],
+                f"{source}.missingHandCapacityPolicy",
+            )
+            if policy not in {"legacyBilateral", "unavailable"}:
+                raise ValueError(
+                    f"{source}.missingHandCapacityPolicy must be legacyBilateral or unavailable"
+                )
     if len(set(equipment_objects)) != len(equipment_objects):
         raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")

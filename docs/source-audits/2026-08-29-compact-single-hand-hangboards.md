@@ -50,6 +50,11 @@ second hold: Captain Fingerfood's two-finger uses reuse the corresponding edge,
 and its open/undercut routing changes reuse the board's pinch body or outer jug
 rim.  The Plateau blocker's two sourced faces remain separate contacts.
 
+Every included package sets `missingHandCapacityPolicy` to `unavailable`.
+That field conservatively prevents omitted simultaneous-hand capacity from
+satisfying a bilateral workout; it is an app migration policy, not a physical
+capacity claim about any product.
+
 | Package slug | Board ID | Exact physical hold IDs |
 | --- | --- | --- |
 | `nature-stone-hanger-mini` | `nature.stone-hanger-mini` | `granite-edge-15`, `wood-edge-15-incut`, `pinch-60`, `pull-up-jug` |

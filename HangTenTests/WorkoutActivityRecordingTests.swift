@@ -706,7 +706,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testActivityRecordingDoubleHandStepRejectsNewPortABoardWithoutHandCapacity() {
-        let board = portableBoard(id: "frictitious.port-a-board", handCapacity: nil)
+        let board = portableBoard(
+            id: "new-single-object-board",
+            handCapacity: nil,
+            missingHandCapacityPolicy: .unavailable
+        )
         let workout = portablePlan(handUse: .double, side: .both, boardID: board.id)
 
         XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
@@ -1251,7 +1255,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     private func portableBoard(
         id: String = "portable-board",
-        handCapacity: Int?
+        handCapacity: Int?,
+        missingHandCapacityPolicy: MissingHandCapacityPolicy = .legacyBilateral
     ) -> TrainingBoard {
         TrainingBoard(
             id: id,
@@ -1260,7 +1265,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
-            equipmentObjects: [.init(id: "left")],
+            equipmentObjects: [
+                .init(
+                    id: "left",
+                    missingHandCapacityPolicy: missingHandCapacityPolicy
+                )
+            ],
             holds: [
                 BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left A", shortLabel: "LA", detail: "", kind: .pocket, frame: HoldFrame(x: 0, y: 0, width: 0.1, height: 0.1), handCapacity: handCapacity),
                 BoardHold(id: "left-b", equipmentObjectID: "left", name: "Left B", shortLabel: "LB", detail: "", kind: .pocket, frame: HoldFrame(x: 0.2, y: 0, width: 0.1, height: 0.1), handCapacity: handCapacity)

@@ -8,7 +8,8 @@
   "aspectRatio": 1.6666666667,
   "equipmentObjects": [
     {
-      "id": "primary"
+      "id": "primary",
+      "missingHandCapacityPolicy": "unavailable"
     }
   ],
   "presentations": [

@@ -62,6 +62,7 @@ _HOLD_OPTIONAL_FIELDS = frozenset(
 )
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 _SLOPER_TYPES = frozenset({"flat", "round"})
+_MISSING_HAND_CAPACITY_POLICIES = frozenset({"legacyBilateral", "unavailable"})
 _GRIP_TYPES = frozenset(
     {
         "openHand",
@@ -1201,8 +1202,19 @@ def _validate_equipment_objects(board: Mapping[str, Any]) -> set[str]:
         label = f"board.json.equipmentObjects[{index}]"
         if not isinstance(value, Mapping):
             raise BoardPackageError(f"{label} must be an object")
-        _required_and_allowed_keys(value, {"id"}, {"id"}, label)
+        _required_and_allowed_keys(
+            value,
+            {"id"},
+            {"id", "missingHandCapacityPolicy"},
+            label,
+        )
         object_id = _identifier(value.get("id"), f"{label}.id")
+        if "missingHandCapacityPolicy" in value:
+            _enum(
+                value["missingHandCapacityPolicy"],
+                _MISSING_HAND_CAPACITY_POLICIES,
+                f"{label}.missingHandCapacityPolicy",
+            )
         if object_id in object_ids:
             raise BoardPackageError(f"duplicate equipment object ID {object_id}")
         object_ids.add(object_id)

@@ -34,7 +34,32 @@ final class BoardPackageStoreTests: XCTestCase {
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
 
         XCTAssertEqual(board.equipmentObjects.map(\.id), ["primary"])
+        XCTAssertEqual(
+            board.equipmentObjects.map(\.missingHandCapacityPolicy),
+            [.legacyBilateral]
+        )
         XCTAssertTrue(board.holds.allSatisfy { $0.equipmentObjectID == "primary" })
+    }
+
+    func testStoreLoadsStrictMissingHandCapacityPolicy() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["equipmentObjects"] = [[
+                    "id": "primary",
+                    "missingHandCapacityPolicy": "unavailable"
+                ]]
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+
+        XCTAssertEqual(
+            board.equipmentObjects.first?.missingHandCapacityPolicy,
+            .unavailable
+        )
     }
 
     func testStoreRejectsExplicitNullEquipmentObjectFields() throws {

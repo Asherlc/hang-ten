@@ -7,7 +7,7 @@
   "dimensions": "128 × 140 × 48 mm",
   "aspectRatio": 0.9142857143,
   "equipmentObjects": [
-    {"id": "primary"}
+    {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
   ],
   "presentations": [
     {"id": "primary", "name": "Primary", "assetPath": "assets/primary.png", "aspectRatio": 0.9142857143, "default": true},

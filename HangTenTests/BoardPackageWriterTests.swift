@@ -112,6 +112,7 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertEqual(lhs.productURL.absoluteString, rhs.productURL.absoluteString, file: file, line: line)
         XCTAssertEqual(lhs.dimensions, rhs.dimensions, file: file, line: line)
         XCTAssertEqual(lhs.aspectRatio, rhs.aspectRatio, accuracy: 1e-12, file: file, line: line)
+        XCTAssertEqual(lhs.equipmentObjects, rhs.equipmentObjects, file: file, line: line)
         XCTAssertEqual(lhs.presentations, rhs.presentations, file: file, line: line)
         XCTAssertEqual(lhs.holds.count, rhs.holds.count, file: file, line: line)
         for (leftHold, rightHold) in zip(lhs.holds, rhs.holds) {
@@ -236,6 +237,34 @@ final class BoardPackageWriterTests: XCTestCase {
 
         XCTAssertEqual(redecoded.equipmentObjects.map(\.id), ["left", "right"])
         XCTAssertEqual(redecoded.holds.map(\.equipmentObjectID), ["left", "right"])
+    }
+
+    func testWriterRoundTripsStrictMissingHandCapacityPolicy() throws {
+        var document = makeDocument()
+        document.equipmentObjects = [
+            EquipmentObject(
+                id: "primary",
+                missingHandCapacityPolicy: .unavailable
+            )
+        ]
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(
+            redecoded.equipmentObjects.first?.missingHandCapacityPolicy,
+            .unavailable
+        )
+        let json = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let equipmentObjects = try XCTUnwrap(
+            json["equipmentObjects"] as? [[String: Any]]
+        )
+        XCTAssertEqual(
+            equipmentObjects.first?["missingHandCapacityPolicy"] as? String,
+            "unavailable"
+        )
     }
 
     func testWriterRejectsInvalidSloperMetadataCombinations() throws {
