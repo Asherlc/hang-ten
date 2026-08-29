@@ -7,7 +7,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         app.launch()
 
         let search = app.searchFields["Search boards"]
-        XCTAssertTrue(search.waitForExistence(timeout: 10))
+        XCTAssertTrue(search.waitForExistence(timeout: 30))
         search.tap()
         search.typeText("Poker")
 
@@ -15,7 +15,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertTrue(holdSpecs.waitForExistence(timeout: 10))
         holdSpecs.tap()
 
-        let map = app.otherElements["boardDetail.map"]
+        let map = app.buttons["boardDetail.map"]
         XCTAssertTrue(map.waitForExistence(timeout: 10))
         addScreenshot(named: "Poker normal Face A")
 

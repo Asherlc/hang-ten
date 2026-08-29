@@ -54,18 +54,24 @@ source image drove geometry extraction or automatic refinement.
 
 ## iOS validation limitation
 
-An owned iPhone 17 Pro / iOS 26.5 simulator was created and cleaned up twice
-under the exact `Hang Ten Paseo infamous-parrot` ownership marker. The bounded
-`launchctl print system` readiness probe passed. The focused
-`OwlClimbPokerBoardMapInteractionUITests` build reached installation of its
-runner but Xcode then launched the runner with an empty XCTest configuration
-and `wait_for_debugger=1`; no test body or app process started. A separate
-signed direct-app launch remained on the simulator's system splash screen, so
-no valid Hang Ten normal, active/highlight, or hit-test screenshot was emitted.
-The owned UUIDs and build artifacts were removed through
-`scripts/paseo-resource-cleanup.sh archive`; both local manifests are empty.
+On 2026-08-29, an owned iPhone 17 Pro / iOS 26.3 simulator was created and
+cleaned under the exact `Hang Ten Paseo infamous-parrot` ownership marker for
+each attempt. A signed direct launch did reach the Hang Ten board picker, but
+only after the cold launch's UIKit scene became ready roughly 24 seconds after
+`simctl launch`; the earlier 12-second splash capture was discarded. The
+focused UI test is registered in the `HangTenUITests` target and uses a
+30-second board-picker wait for that observed cold-start boundary.
 
-Consequently, package-schema validation and the added focused UI test source
-are present, but simulator visual validation remains an infrastructure follow-up
-on a healthy Xcode/simulator runner. No splash-screen capture is retained or
-claimed as product evidence.
+One execution reached Poker, switched to Face B, and tapped the left central
+sloper. It exposed an assertion-only test defect: `boardDetail.map` is an
+accessible button rather than an `Other` element. The test now queries that
+actual element type. The verification retry then stalled before launching
+either the app or XCTest runner; `launchctl` on the explicit owned UUID showed
+neither process, and Xcode could not finish writing its interrupted result
+bundle after its 30-second record-finalization wait.
+
+No normal Face A or active Face B screenshot is retained or claimed as product
+evidence. The owned simulator resources and workspace Derived Data were
+removed through `scripts/paseo-resource-cleanup.sh archive`; the local
+manifests are empty. Focused visual validation still needs a healthy
+Xcode/simulator test-runner session.

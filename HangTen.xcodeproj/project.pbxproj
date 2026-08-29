@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
 		AA0000000000000000000003 /* TrainingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000003 /* TrainingModels.swift */; };
@@ -166,6 +167,7 @@
 		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
+		C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwlClimbPokerBoardMapInteractionUITests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
 		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
 		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
@@ -473,6 +475,7 @@
 				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
 				AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */,
 				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
+				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -802,6 +805,7 @@
 				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
 				AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */,
 				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
+				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
