@@ -39,6 +39,7 @@ fun SettingsScreen(
     contentPadding: PaddingValues,
     sensorController: SensorConnectionController? = null,
     onHealthPermissionRequest: ((Set<String>) -> Unit)? = null,
+    onSensorPermissionRequest: ((Array<String>) -> Unit)? = null,
 ) {
     val instructionCoachingEnabled by audioCoach.instructionCoachingEnabled.collectAsState()
     val hasLifetimeEntitlement by purchaseManager.hasLifetimeEntitlement.collectAsState()
@@ -101,7 +102,7 @@ fun SettingsScreen(
             val controller = sensorController
             Text("Training sensor")
             Text("Sensor type: ${sensorState?.profile?.displayName}")
-            ForceSensorProfile.connectable.forEach { profile ->
+            (listOf(ForceSensorProfile.Automatic) + ForceSensorProfile.connectable).forEach { profile ->
                 OutlinedButton(
                     onClick = { controller.selectProfile(profile) },
                     modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Select ${profile.displayName}" },
@@ -109,9 +110,8 @@ fun SettingsScreen(
             }
             OutlinedButton(
                 onClick = {
-                    sensorPermissionLauncher.launch(
-                        controller.userInitiatedConnectPermissions(android.os.Build.VERSION.SDK_INT).toTypedArray(),
-                    )
+                    val permissions = controller.userInitiatedConnectPermissions(android.os.Build.VERSION.SDK_INT).toTypedArray()
+                    (onSensorPermissionRequest ?: sensorPermissionLauncher::launch)(permissions)
                 },
                 modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Connect sensor" },
             ) { Text("Connect sensor") }

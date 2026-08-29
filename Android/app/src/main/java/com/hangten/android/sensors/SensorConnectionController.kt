@@ -8,12 +8,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 enum class SensorConnectionState { Idle, Scanning, Calibrating, Streaming, Failed, Disconnected }
 
 data class SensorMeterState(
     val connection: SensorConnectionState = SensorConnectionState.Idle,
     val profile: ForceSensorProfile,
+    val activeProfile: ForceSensorProfile? = null,
     val latestMeasurement: MotherboardMeasurement? = null,
     val error: String? = null,
     val isTaring: Boolean = false,
@@ -34,6 +37,9 @@ class SensorConnectionController(
 ) {
     private val _state = MutableStateFlow(SensorMeterState(profile = initialProfile))
     val state: StateFlow<SensorMeterState> = _state.asStateFlow()
+    private val measurementChannel = Channel<MotherboardMeasurement>(Channel.UNLIMITED)
+    /** Every notification in arrival order; unlike the meter StateFlow this is not conflated. */
+    val measurements = measurementChannel.receiveAsFlow()
     private var notificationJob: Job? = null
     private val parser = MotherboardProtocolParser()
     private val calibrationRows = mutableListOf<MotherboardCalibrationRow>()
@@ -57,6 +63,7 @@ class SensorConnectionController(
                 val matched = advertised.firstOrNull { matches(requested, it) }
                     ?: throw IllegalStateException("No compatible ${requested.displayName} sensor was found.")
                 val active = if (requested == ForceSensorProfile.Automatic) resolveAutomatic(matched) else requested
+                _state.value = state.value.copy(profile = requested, activeProfile = active)
                 transport.connect(matched, active)
                 active.notificationCharacteristics.forEach { characteristic -> transport.subscribe(characteristic) }
                 listen(active)
@@ -75,7 +82,7 @@ class SensorConnectionController(
     }
 
     fun tare() {
-        val active = state.value.profile
+        val active = state.value.activeProfile ?: state.value.profile
         if (state.value.connection != SensorConnectionState.Streaming) return
         if (active == ForceSensorProfile.Motherboard) {
             tareAccumulator = List(4) { 0.0 }
@@ -89,9 +96,15 @@ class SensorConnectionController(
     }
 
     fun disconnect() {
+        val active = state.value.activeProfile ?: state.value.profile
         notificationJob?.cancel()
         notificationJob = null
-        transport.disconnect()
+        val stop = commandPayload(active, ForceSensorCommand.Stop)
+        val write = active.writeCharacteristic
+        if (stop != null && write != null) scope.launch {
+            runCatching { transport.write(write, stop) }
+            transport.disconnect()
+        } else transport.disconnect()
         _state.value = state.value.copy(connection = SensorConnectionState.Disconnected)
     }
 
@@ -128,7 +141,7 @@ class SensorConnectionController(
         }
     }
 
-    private fun onForceFrame(profile: ForceSensorProfile, frame: ByteArray) {
+    private suspend fun onForceFrame(profile: ForceSensorProfile, frame: ByteArray) {
         val samples = when (profile) {
             ForceSensorProfile.Progressor, ForceSensorProfile.GenericProgressor -> ProgressorProtocolAdapter(profile).decode(frame, System.currentTimeMillis())
             ForceSensorProfile.PitchSix -> PitchSixProtocolAdapter().decode(frame, System.currentTimeMillis())
@@ -137,12 +150,13 @@ class SensorConnectionController(
             _state.value = state.value.copy(error = "${profile.displayName} sent an invalid force sample.")
             return
         }
-        samples.forEachIndexed { index, sample ->
-            publish(MotherboardMeasurement(sample.receivedAtMs, index.toUShort(), 0u, emptyList(), emptyList(), sample.kilogramsForce))
+        samples.forEach { sample ->
+            nextForceSampleNumber = (nextForceSampleNumber.toInt() + 1).toUShort()
+            publish(MotherboardMeasurement(sample.receivedAtMs, nextForceSampleNumber, 0u, emptyList(), emptyList(), sample.kilogramsForce))
         }
     }
 
-    private fun publish(measurement: MotherboardMeasurement) {
+    private suspend fun publish(measurement: MotherboardMeasurement) {
         val meter = state.value
         if (meter.isTaring && measurement.sensorLoadsKgf.size == 4) {
             tareAccumulator = tareAccumulator.zip(measurement.sensorLoadsKgf).map { (total, load) -> total + load }
@@ -152,6 +166,7 @@ class SensorConnectionController(
                 _state.value = meter.copy(latestMeasurement = measurement, isTaring = false, tareSamplesCollected = 0, tareCompletionCount = meter.tareCompletionCount + 1)
             } else _state.value = meter.copy(latestMeasurement = measurement, tareSamplesCollected = count)
         } else _state.value = meter.copy(latestMeasurement = measurement)
+        measurementChannel.send(measurement)
     }
 
     private fun resetMotherboardSession() {
@@ -159,6 +174,7 @@ class SensorConnectionController(
         calibration = null
         tareKgf = List(4) { 0.0 }
         tareAccumulator = List(4) { 0.0 }
+        nextForceSampleNumber = 0u
     }
 
     private fun completeCalibration(): Boolean = (0..3).all { sensor ->
@@ -181,4 +197,6 @@ class SensorConnectionController(
         ForceSensorProfile.PitchSix -> PitchSixProtocolAdapter().payload(command)
         else -> null
     }
+
+    private var nextForceSampleNumber: UShort = 0u
 }

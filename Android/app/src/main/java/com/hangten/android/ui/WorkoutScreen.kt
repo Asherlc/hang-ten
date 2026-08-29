@@ -68,7 +68,9 @@ fun WorkoutScreen(
                     ),
                     audioCancellation = WorkoutAudioCancellation { audioCoach.cancel() },
                     savedStateHandle = savedStateHandle,
-                    sensorRecorder = sensorController?.let { SensorWorkoutRecorder(it.state.value.profile) },
+                    sensorRecorder = sensorController?.let { controller ->
+                        SensorWorkoutRecorder(profile = { controller.state.value.activeProfile ?: controller.state.value.profile })
+                    },
                 )
             }
         }
@@ -103,8 +105,8 @@ fun WorkoutScreen(
             delay(250)
         }
     }
-    LaunchedEffect(sensorMeter?.latestMeasurement?.timestampMs, sensorMeter?.latestMeasurement?.sampleNumber) {
-        sensorMeter?.latestMeasurement?.let(viewModel::consumeSensorMeasurement)
+    LaunchedEffect(sensorController, viewModel) {
+        sensorController?.measurements?.collect(viewModel::consumeSensorMeasurement)
     }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize().padding(contentPadding).padding(20.dp)) {

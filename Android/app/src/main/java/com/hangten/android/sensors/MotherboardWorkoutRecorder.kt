@@ -138,6 +138,10 @@ class MotherboardWorkoutRecorder(
         WorkoutStepMeasurement(stepId, state.plannedDurationMs, state.intervals.toList(), state.peakLoadKgf, state.sampleCount, state.status)
     }
 
+    fun ensureStep(stepId: String, plannedActiveDurationMs: Long, stepStartElapsedMs: Long) {
+        state(stepId, plannedActiveDurationMs, stepStartElapsedMs)
+    }
+
     private fun state(stepId: String, durationMs: Long, startMs: Long): State = states.getOrPut(stepId) {
         State(durationMs.coerceAtLeast(0), startMs)
     }
@@ -163,21 +167,23 @@ class MotherboardWorkoutRecorder(
 }
 
 class SensorWorkoutRecorder(
-    private val profile: ForceSensorProfile,
+    private val profile: () -> ForceSensorProfile,
     configuration: MotherboardDetectionConfiguration = MotherboardDetectionConfiguration(),
 ) {
     private val samples = MeasuredWorkoutCollector()
     private val intervals = MotherboardWorkoutRecorder(configuration)
 
     fun consume(measurement: MotherboardMeasurement, stepId: String, plannedActiveDurationMs: Long, elapsedMs: Long, stepStartMs: Long, isActive: Boolean) {
+        if (!isActive) return
         samples.append(measurement)
         intervals.consume(measurement, stepId, plannedActiveDurationMs, elapsedMs, stepStartMs, isActive)
     }
 
     fun pause(elapsedMs: Long) = intervals.pause(elapsedMs)
 
-    fun complete(elapsedMs: Long): SensorWorkoutActivity {
+    fun complete(elapsedMs: Long, plannedSteps: List<Triple<String, Long, Long>> = emptyList()): SensorWorkoutActivity {
+        plannedSteps.forEach { (id, duration, start) -> intervals.ensureStep(id, duration, start) }
         val recorded = samples.complete()
-        return SensorWorkoutActivity(profile, recorded.measurements, recorded.truncated, intervals.finish(elapsedMs))
+        return SensorWorkoutActivity(profile(), recorded.measurements, recorded.truncated, intervals.finish(elapsedMs))
     }
 }

@@ -48,7 +48,7 @@ class WorkoutViewModel(
         val completed = session.complete(elapsedRealtime())
         _snapshot.value = session.snapshot(elapsedRealtime())
         persist()
-        return completed.copy(sensorActivity = sensorRecorder?.complete(_snapshot.value.elapsedPlanMs))
+        return completed.copy(sensorActivity = sensorRecorder?.complete(_snapshot.value.elapsedPlanMs, plannedSensorSteps()))
     }
 
     fun consumeSensorMeasurement(measurement: MotherboardMeasurement) {
@@ -91,6 +91,10 @@ class WorkoutViewModel(
     private fun planStep(index: Int) = session.plan.steps.getOrNull(index)
 
     private fun stepStartElapsedMs(index: Int): Long = session.plan.steps.take(index).sumOf { (it.durationSeconds * 1_000).toLong() }
+
+    private fun plannedSensorSteps(): List<Triple<String, Long, Long>> = session.plan.steps.mapIndexed { index, step ->
+        Triple(step.id, (step.durationSeconds * 1_000).toLong(), stepStartElapsedMs(index))
+    }
 
     companion object {
         internal fun restoredSessionState(savedStateHandle: SavedStateHandle): WorkoutSessionState? {

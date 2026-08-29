@@ -3,6 +3,7 @@ package com.hangten.android.sensors
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.CompletableDeferred
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -53,6 +54,25 @@ class SensorConnectionControllerTest {
         assertTrue(transport.operations.contains("write:${ForceSensorProfile.Motherboard.writeCharacteristic!!.characteristicUuid}:533330"))
         controller.disconnect()
         advanceUntilIdle()
+    }
+
+    @Test
+    fun setupWaitsForTransportReadinessAndSurfacesSetupDisconnect() = runTest {
+        val barrier = CompletableDeferred<Unit>()
+        val transport = FakeForceSensorTransport().apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+            connectBarrier = barrier
+        }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted()
+        advanceUntilIdle()
+        assertEquals(SensorConnectionState.Scanning, controller.state.value.connection)
+        assertTrue(transport.operations.none { it.startsWith("subscribe") || it.startsWith("write") })
+        barrier.complete(Unit)
+        transport.connectFailure = IllegalStateException("disconnected during discovery")
+        advanceUntilIdle()
+        assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("disconnected during discovery"))
     }
 
     private fun calibration(): List<String> = (0..3).flatMap { sensor ->

@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothStatusCodes
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
@@ -19,6 +20,9 @@ import android.os.Build
 import android.os.SystemClock
 import androidx.core.content.ContextCompat
 import java.util.UUID
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -38,6 +42,8 @@ class FakeForceSensorTransport : ForceSensorTransport {
     private val discovered = mutableListOf<ForceSensorAdvertisement>()
     private val events = MutableSharedFlow<ByteArray>(replay = 1, extraBufferCapacity = 32, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val operations = mutableListOf<String>()
+    var connectFailure: Throwable? = null
+    var connectBarrier: kotlinx.coroutines.CompletableDeferred<Unit>? = null
     override val notifications: Flow<ByteArray> = events
 
     fun enqueue(advertisement: ForceSensorAdvertisement) { discovered += advertisement }
@@ -50,6 +56,8 @@ class FakeForceSensorTransport : ForceSensorTransport {
 
     override suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile) {
         operations += "connect:${profile.name}"
+        connectBarrier?.await()
+        connectFailure?.let { throw it }
     }
 
     override suspend fun subscribe(characteristic: ForceSensorCharacteristic) {
@@ -84,6 +92,8 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     private var scanCallback: ScanCallback? = null
     private var connectedAdvertisement: ForceSensorAdvertisement? = null
     private val scannedDevices = linkedMapOf<ForceSensorAdvertisement, BluetoothDevice>()
+    private var connectionContinuation: kotlinx.coroutines.CancellableContinuation<Unit>? = null
+    private var descriptorContinuation: kotlinx.coroutines.CancellableContinuation<Unit>? = null
 
     @SuppressLint("MissingPermission")
     override suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement> {
@@ -109,25 +119,37 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     }
 
     @SuppressLint("MissingPermission")
-    override suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile) {
+    override suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile) = suspendCancellableCoroutine { continuation ->
         requirePermissions()
         val device = scannedDevices[advertisement]
-            ?: throw IllegalStateException("Select a discovered sensor before connecting.")
+            ?: run {
+                continuation.resumeWithException(IllegalStateException("Select a discovered sensor before connecting."))
+                return@suspendCancellableCoroutine
+            }
         connectedAdvertisement = advertisement
+        connectionContinuation = continuation
         gatt = device.connectGatt(appContext, false, callback, BluetoothDevice.TRANSPORT_LE)
+        if (gatt == null) failSetup(IllegalStateException("Unable to open a BLE connection."))
+        continuation.invokeOnCancellation { disconnect() }
     }
 
     @SuppressLint("MissingPermission")
-    override suspend fun subscribe(characteristic: ForceSensorCharacteristic) {
+    override suspend fun subscribe(characteristic: ForceSensorCharacteristic) = suspendCancellableCoroutine { continuation ->
         requirePermissions()
         val target = gatt?.getService(UUID.fromString(characteristic.serviceUuid))
             ?.getCharacteristic(UUID.fromString(characteristic.characteristicUuid))
-            ?: throw IllegalStateException("Sensor notification characteristic is unavailable.")
-        check(gatt?.setCharacteristicNotification(target, true) == true) { "Unable to enable sensor notifications." }
+            ?: run { continuation.resumeWithException(IllegalStateException("Sensor notification characteristic is unavailable.")); return@suspendCancellableCoroutine }
+        if (gatt?.setCharacteristicNotification(target, true) != true) {
+            continuation.resumeWithException(IllegalStateException("Unable to enable sensor notifications."))
+            return@suspendCancellableCoroutine
+        }
         val descriptor = target.getDescriptor(CLIENT_CHARACTERISTIC_CONFIGURATION)
-            ?: throw IllegalStateException("Sensor notification descriptor is unavailable.")
-        if (Build.VERSION.SDK_INT >= 33) gatt?.writeDescriptor(descriptor, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
-        else @Suppress("DEPRECATION") run { descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE; gatt?.writeDescriptor(descriptor) }
+            ?: run { continuation.resumeWithException(IllegalStateException("Sensor notification descriptor is unavailable.")); return@suspendCancellableCoroutine }
+        descriptorContinuation = continuation
+        val accepted = if (Build.VERSION.SDK_INT >= 33) gatt?.writeDescriptor(descriptor, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE) == BluetoothStatusCodes.SUCCESS
+        else @Suppress("DEPRECATION") run { descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE; gatt?.writeDescriptor(descriptor) == true }
+        if (!accepted) failDescriptor(IllegalStateException("Unable to write sensor notification descriptor."))
+        continuation.invokeOnCancellation { descriptorContinuation = null }
     }
 
     @SuppressLint("MissingPermission")
@@ -148,6 +170,8 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
         gatt?.close()
         gatt = null
         connectedAdvertisement = null
+        failSetup(IllegalStateException("Sensor disconnected during setup."))
+        failDescriptor(IllegalStateException("Sensor disconnected while enabling notifications."))
     }
 
     private fun requirePermissions() {
@@ -159,7 +183,22 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     @SuppressLint("MissingPermission")
     private val callback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-            if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothGatt.STATE_CONNECTED) gatt.discoverServices()
+            if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothGatt.STATE_CONNECTED) {
+                if (!gatt.discoverServices()) failSetup(IllegalStateException("Unable to discover sensor services."))
+            } else if (newState == BluetoothGatt.STATE_DISCONNECTED || status != BluetoothGatt.GATT_SUCCESS) {
+                failSetup(IllegalStateException("Sensor disconnected during setup (GATT $status)."))
+                failDescriptor(IllegalStateException("Sensor disconnected while enabling notifications (GATT $status)."))
+            }
+        }
+
+        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) connectionContinuation?.also { continuation -> connectionContinuation = null; continuation.resume(Unit) }
+            else failSetup(IllegalStateException("Sensor service discovery failed (GATT $status)."))
+        }
+
+        override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) descriptorContinuation?.also { continuation -> descriptorContinuation = null; continuation.resume(Unit) }
+            else failDescriptor(IllegalStateException("Sensor notification setup failed (GATT $status)."))
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray) {
@@ -178,6 +217,14 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
         ForceSensorProfile.Progressor -> ProgressorProtocolAdapter(profile).matches(advertisement)
         ForceSensorProfile.GenericProgressor -> ProgressorProtocolAdapter(profile).matches(advertisement)
         ForceSensorProfile.PitchSix -> PitchSixProtocolAdapter().matches(advertisement)
+    }
+
+    private fun failSetup(error: Throwable) {
+        connectionContinuation?.also { continuation -> connectionContinuation = null; continuation.resumeWithException(error) }
+    }
+
+    private fun failDescriptor(error: Throwable) {
+        descriptorContinuation?.also { continuation -> descriptorContinuation = null; continuation.resumeWithException(error) }
     }
 
     private companion object {
