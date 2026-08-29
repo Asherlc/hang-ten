@@ -4,6 +4,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -91,10 +93,76 @@ class SensorConnectionControllerTest {
         val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
         val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
         controller.connectAfterPermissionsGranted(); advanceUntilIdle()
-        repeat(80) { transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0)) }
+        val received = mutableListOf<UShort>()
+        val collection = launch { controller.measurements.collect { received += it.sampleNumber } }
+        repeat(256) { transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0)) }
         advanceUntilIdle()
-        assertEquals(80.toUShort(), controller.state.value.latestMeasurement!!.sampleNumber)
+        assertEquals(256.toUShort(), controller.state.value.latestMeasurement!!.sampleNumber)
+        assertEquals((1..256).map(Int::toUShort), received)
+        collection.cancel()
         controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun remoteErrorTearsDownCollectorSoLateFramesCannotUpdateTheMeter() = runTest {
+        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        val received = mutableListOf<MotherboardMeasurement>()
+        val collection = launch { controller.measurements.collect { received += it } }
+        transport.fail(IllegalStateException("gone")); advanceUntilIdle()
+        transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0)); advanceUntilIdle()
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertEquals(null, controller.state.value.latestMeasurement)
+        assertTrue(received.isEmpty())
+        collection.cancel()
+    }
+
+    @Test
+    fun startWriteFailureBecomesVisibleControllerError() = runTest {
+        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")); writeFailure = IllegalStateException("write failed") }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("write failed"))
+        controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun tareWriteFailureBecomesVisibleControllerError() = runTest {
+        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.writeFailure = IllegalStateException("tare failed")
+        controller.tare(); advanceUntilIdle()
+        assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("tare failed"))
+        transport.writeFailure = null
+        controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun motherboardStreamWriteFailureBecomesVisibleControllerError() = runTest {
+        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Motherboard")) }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Motherboard, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.writeFailure = IllegalStateException("stream failed")
+        calibration().forEach { transport.emit("$it\r\n".encodeToByteArray()) }
+        advanceUntilIdle()
+        assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("stream failed"))
+        controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun stopWriteFailureBecomesVisibleControllerError() = runTest {
+        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.writeFailure = IllegalStateException("stop failed")
+        controller.disconnect(); advanceUntilIdle()
+        assertEquals(SensorConnectionState.Failed, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("stop failed"))
     }
 
     private fun calibration(): List<String> = (0..3).flatMap { sensor ->

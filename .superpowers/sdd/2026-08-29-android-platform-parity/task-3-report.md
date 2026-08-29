@@ -103,3 +103,27 @@ no AVD was created. All three exact owned SDK roots were then deleted.
 - Focused sensor tests, full `:app:testDebugUnitTest`, `:app:lintDebug`, and
   `:app:assembleDebug` were rerun using the minimal owned SDK and finished
   **BUILD SUCCESSFUL**. The exact minimal SDK root was removed after the run.
+
+### Final data-integrity remediation
+
+- A remote GATT error is now one-shot: the controller cancels its notification
+  collector, closes GATT, resets the live meter/tare state, and completes the
+  error collector. A subsequent callback frame therefore cannot reach either
+  the meter or the non-conflated measurement/workout handoff.
+- Production notification delivery uses a 128-frame bounded `Channel` and
+  blocks the GATT callback when full. This is explicit upstream backpressure,
+  not `trySend`/`DROP_OLDEST` loss. The controller handoff itself uses ordered
+  `send`; the focused fake test asserts all 256 (>128) samples arrive in sample
+  number order.
+- All controller protocol writes now go through the awaited GATT write result,
+  including Motherboard calibration (`C`) and stream (`S30`), generic Start,
+  Tare, and Stop. A failed write sets a UI-visible `Failed` state rather than
+  escaping a coroutine or being swallowed.
+- Fresh verification with the owned minimal SDK root
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-final`:
+  `:app:testDebugUnitTest --tests 'com.hangten.android.sensors.*'` — **BUILD
+  SUCCESSFUL**; then `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug`
+  — **BUILD SUCCESSFUL**. The connected emulator test remains unrun and is the
+  separate CI/release gate described above.
+- Cleanup check: the final root and each prior exact owned root
+  (`android-sdk-bitter-scorpion-0o9ylkoo{,-final,-retry,-pty,-min}`) are absent.

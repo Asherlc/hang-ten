@@ -23,6 +23,7 @@ import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -253,9 +254,9 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     }
 
     private fun enqueueNotification(value: ByteArray) {
-        if (!notificationEvents.trySend(value.copyOf()).isSuccess) {
-            errorEvents.tryEmit(IllegalStateException("Sensor notification queue is full; disconnect and reconnect."))
-        }
+        // This runs on the GATT callback thread. Blocking here is deliberate,
+        // bounded backpressure: notifications are never silently discarded.
+        runBlocking { notificationEvents.send(value.copyOf()) }
     }
 
     private companion object {

@@ -7,6 +7,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -71,9 +72,10 @@ class SensorConnectionController(
                 if (active == ForceSensorProfile.Motherboard) {
                     resetMotherboardSession()
                     _state.value = state.value.copy(connection = SensorConnectionState.Calibrating)
-                    transport.write(active.writeCharacteristic!!, MotherboardProtocol.command("C"))
+                    writeOrFail(active.writeCharacteristic!!, MotherboardProtocol.command("C"))
                 } else {
-                    commandPayload(active, ForceSensorCommand.Start)?.let { transport.write(active.writeCharacteristic!!, it) }
+                    commandPayload(active, ForceSensorCommand.Start)?.let { writeOrFail(active.writeCharacteristic!!, it) }
+                    if (state.value.connection == SensorConnectionState.Failed) return@launch
                     _state.value = state.value.copy(connection = SensorConnectionState.Streaming)
                 }
             } catch (error: Throwable) {
@@ -90,8 +92,8 @@ class SensorConnectionController(
             _state.value = state.value.copy(isTaring = true, tareSamplesCollected = 0)
         } else {
             scope.launch {
-                commandPayload(active, ForceSensorCommand.Tare)?.let { transport.write(active.writeCharacteristic!!, it) }
-                _state.value = state.value.copy(tareCompletionCount = state.value.tareCompletionCount + 1)
+                commandPayload(active, ForceSensorCommand.Tare)?.let { writeOrFail(active.writeCharacteristic!!, it) }
+                if (state.value.connection != SensorConnectionState.Failed) _state.value = state.value.copy(tareCompletionCount = state.value.tareCompletionCount + 1)
             }
         }
     }
@@ -105,7 +107,7 @@ class SensorConnectionController(
         val stop = commandPayload(active, ForceSensorCommand.Stop)
         val write = active.writeCharacteristic
         if (stop != null && write != null) scope.launch {
-            runCatching { transport.write(write, stop) }
+            writeOrFail(write, stop)
             transport.disconnect()
         } else transport.disconnect()
         _state.value = state.value.copy(connection = SensorConnectionState.Disconnected)
@@ -119,12 +121,19 @@ class SensorConnectionController(
             }
         }
         transportErrorJob = scope.launch {
-            transport.errors.collect { error ->
+            transport.errors.first { error ->
+                notificationJob?.cancel()
+                notificationJob = null
+                transport.disconnect()
                 _state.value = state.value.copy(
                     connection = SensorConnectionState.Disconnected,
                     activeProfile = null,
+                    latestMeasurement = null,
+                    isTaring = false,
+                    tareSamplesCollected = 0,
                     error = error.message ?: "Sensor disconnected.",
                 )
+                true
             }
         }
     }
@@ -137,7 +146,7 @@ class SensorConnectionController(
                     calibrationRows += event.row
                     if (completeCalibration()) {
                         calibration = MotherboardCalibration(calibrationRows)
-                        transport.write(ForceSensorProfile.Motherboard.writeCharacteristic!!, MotherboardProtocol.streamCommand(30))
+                        writeOrFail(ForceSensorProfile.Motherboard.writeCharacteristic!!, MotherboardProtocol.streamCommand(30))
                     }
                 }
                 is MotherboardProtocolEvent.RawPacket -> {
@@ -208,6 +217,11 @@ class SensorConnectionController(
         ForceSensorProfile.Progressor, ForceSensorProfile.GenericProgressor -> ProgressorProtocolAdapter(profile).payload(command)
         ForceSensorProfile.PitchSix -> PitchSixProtocolAdapter().payload(command)
         else -> null
+    }
+
+    private suspend fun writeOrFail(characteristic: ForceSensorCharacteristic, payload: ByteArray) {
+        try { transport.write(characteristic, payload) }
+        catch (error: Throwable) { _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: "Sensor write failed.") }
     }
 
     private var nextForceSampleNumber: UShort = 0u
