@@ -159,6 +159,57 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testHighlightResolverUsesSubstitutedFallbackObjectsForPortableBoard() {
+        let board = TrainingBoard(
+            id: "portable-fallback",
+            manufacturer: "Test",
+            name: "Portable fallback",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            equipmentObjects: [.init(id: "left"), .init(id: "right")],
+            holds: [
+                BoardHold(
+                    id: "left-edge",
+                    equipmentObjectID: "left",
+                    name: "Left edge",
+                    shortLabel: "L",
+                    detail: "",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2)
+                ),
+                BoardHold(
+                    id: "right-edge",
+                    equipmentObjectID: "right",
+                    name: "Right edge",
+                    shortLabel: "R",
+                    detail: "",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2)
+                )
+            ],
+            productURL: URL(string: "https://example.com/portable-fallback")!,
+            photoAssetName: nil
+        )
+        let step = WorkoutStep(
+            id: "fallback",
+            number: 1,
+            title: "Fallback",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.feature(.smallEdge)],
+            action: .loadedLift,
+            repetitions: 1
+        )
+
+        XCTAssertEqual(
+            WorkoutHighlightResolver.holdIDs(for: step, on: board),
+            ["left-edge", "right-edge"]
+        )
+    }
+
     func testHoldCuePrefersSingleTargetStepGripOverride() {
         let hold = BoardHold(
             id: "cue-edge",

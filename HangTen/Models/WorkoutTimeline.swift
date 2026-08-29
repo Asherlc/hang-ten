@@ -342,14 +342,11 @@ enum WorkoutHighlightResolver {
                 gripType: gripType
             )
         }
-        let selectedObjectIDs = Set(step.targets.flatMap {
-            BoardTargetResolver.resolveObjects(
-                for: $0,
-                handUse: step.handUse,
-                on: board,
-                gripType: gripType
-            )
-        })
+        let selectedObjectIDs = Set(
+            board.holds
+                .filter { selectedHoldIDs.contains($0.id) }
+                .map(\.equipmentObjectID)
+        )
 
         // Legacy boards treat the board itself as the sole equipment object.
         // Preserve their hold-level cues while portable multi-object boards
