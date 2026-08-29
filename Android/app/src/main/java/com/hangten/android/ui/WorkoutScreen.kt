@@ -37,7 +37,8 @@ import com.hangten.android.board.resolveTargets
 import com.hangten.android.content.Board
 import com.hangten.android.content.TrainingPlan
 import com.hangten.android.content.TrainingStep
-import com.hangten.android.workout.CompletedSession
+import com.hangten.android.health.CompletedHealthWorkout
+import com.hangten.android.health.HealthWorkoutSegment
 import com.hangten.android.workout.SessionPhase
 import com.hangten.android.workout.WorkoutAudioCancellation
 import com.hangten.android.workout.WorkoutSession
@@ -50,7 +51,7 @@ fun WorkoutScreen(
     plan: TrainingPlan,
     board: Board,
     audioCoach: WorkoutAudioCoach,
-    onSessionEnded: (CompletedSession) -> Unit,
+    onSessionEnded: (CompletedHealthWorkout) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val factory = remember(plan.id, audioCoach) {
@@ -102,6 +103,8 @@ fun WorkoutScreen(
         val horizontal = maxWidth >= 700.dp
         val details: @Composable () -> Unit = {
             WorkoutDetails(
+                plan = plan,
+                board = board,
                 step = activeStep,
                 snapshot = snapshot,
                 viewModel = viewModel,
@@ -139,11 +142,13 @@ fun WorkoutScreen(
 
 @Composable
 private fun WorkoutDetails(
+    plan: TrainingPlan,
+    board: Board,
     step: TrainingStep?,
     snapshot: com.hangten.android.workout.WorkoutSnapshot,
     viewModel: WorkoutViewModel,
     audioCoach: WorkoutAudioCoach,
-    onSessionEnded: (CompletedSession) -> Unit,
+    onSessionEnded: (CompletedHealthWorkout) -> Unit,
 ) {
     val task = step?.title ?: "Workout complete"
     Column(
@@ -175,9 +180,16 @@ private fun WorkoutDetails(
         }
         OutlinedButton(
             onClick = {
-                val completed = viewModel.complete()
+                val completed = viewModel.complete().copy(boardId = board.id, planTitle = plan.title)
                 audioCoach.cancel()
-                onSessionEnded(completed)
+                onSessionEnded(
+                    CompletedHealthWorkout(
+                        session = completed,
+                        segments = plan.steps.map { step ->
+                            HealthWorkoutSegment(step.id, step.title, step.phase, step.durationSeconds)
+                        },
+                    ),
+                )
             },
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = "End session" },
         ) { Text("End session") }

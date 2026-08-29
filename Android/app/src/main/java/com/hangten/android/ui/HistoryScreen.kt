@@ -9,38 +9,42 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.hangten.android.workout.CompletedSession
-import com.hangten.android.workout.SessionHistoryRepository
+import com.hangten.android.health.HealthHistorySource
+import com.hangten.android.health.HealthViewModel
 import java.text.DateFormat
 import java.util.Date
 
 @Composable
 fun HistoryScreen(
-    historyRepository: SessionHistoryRepository,
+    healthViewModel: HealthViewModel,
     refreshKey: Int,
     contentPadding: PaddingValues,
 ) {
-    var sessions by remember { mutableStateOf<List<CompletedSession>>(emptyList()) }
-    LaunchedEffect(historyRepository, refreshKey) {
-        sessions = runCatching { historyRepository.completedSessions() }.getOrDefault(emptyList())
+    val healthState by healthViewModel.state.collectAsState()
+    LaunchedEffect(healthViewModel, refreshKey) {
+        healthViewModel.refreshHistory()
     }
     Column(
         modifier = Modifier.fillMaxSize().padding(contentPadding).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text("History")
-        if (sessions.isEmpty()) {
+        when (healthState.historySource) {
+            HealthHistorySource.HealthConnect -> Text("History reconciled with Health Connect.")
+            HealthHistorySource.LocalFallback -> Text("Showing local workout history.")
+            HealthHistorySource.Unavailable -> Unit
+        }
+        healthState.error?.let { Text(it) }
+        if (healthState.sessions.isEmpty()) {
             Text("No completed sessions yet.")
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(sessions, key = { "${it.planId}-${it.completedAtWallClockMs}" }) { session ->
+                items(healthState.sessions, key = { "${it.planId}-${it.completedAtWallClockMs}" }) { session ->
                     Text("${session.planId} · ${formatDuration(session.elapsedDurationMs)} · ${DateFormat.getDateTimeInstance().format(Date(session.completedAtWallClockMs))}")
                 }
             }

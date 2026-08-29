@@ -21,6 +21,9 @@ import com.hangten.android.ui.SharedPreferencesWorkoutAccessPreferences
 import com.hangten.android.ui.WorkoutAccessStore
 import androidx.compose.runtime.remember
 import com.hangten.android.workout.SessionHistoryRepository
+import com.hangten.android.health.AndroidHealthConnectGateway
+import com.hangten.android.health.HealthConnectService
+import com.hangten.android.health.SharedPreferencesHealthAuthorizationMemory
 
 private val Context.androidDataStore by preferencesDataStore(name = "hang_ten")
 
@@ -37,6 +40,12 @@ class MainActivity : ComponentActivity() {
                     val accessStore = remember {
                         WorkoutAccessStore(SharedPreferencesWorkoutAccessPreferences(applicationContext))
                     }
+                    val healthStore = remember {
+                        HealthConnectService(
+                            gateway = AndroidHealthConnectGateway(applicationContext),
+                            authorizationMemory = SharedPreferencesHealthAuthorizationMemory(applicationContext),
+                        )
+                    }
                     HangTenApp(
                         boards = boards,
                         plans = plans,
@@ -44,6 +53,7 @@ class MainActivity : ComponentActivity() {
                         audioCoach = AndroidWorkoutAudioCoach(applicationContext, applicationContext.androidDataStore),
                         purchaseManager = purchaseManager,
                         accessStore = accessStore,
+                        healthStore = healthStore,
                     )
                 }
             }

@@ -31,6 +31,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hangten.android.audio.WorkoutAudioCoach
 import com.hangten.android.billing.AcknowledgementResult
 import com.hangten.android.billing.PurchaseClient
@@ -41,7 +43,9 @@ import com.hangten.android.billing.PurchaseUpdate
 import com.hangten.android.billing.RestoreResult
 import com.hangten.android.content.Board
 import com.hangten.android.content.TrainingPlan
-import com.hangten.android.workout.CompletedSession
+import com.hangten.android.health.HealthViewModel
+import com.hangten.android.health.WorkoutHealthStore
+import com.hangten.android.health.CompletedHealthWorkout
 import com.hangten.android.workout.SessionHistoryRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.emptyFlow
@@ -63,6 +67,7 @@ fun HangTenApp(
     plans: List<TrainingPlan>,
     historyRepository: SessionHistoryRepository,
     audioCoach: WorkoutAudioCoach,
+    healthStore: WorkoutHealthStore = UnavailableHealthStore,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current.applicationContext
@@ -75,6 +80,7 @@ fun HangTenApp(
         audioCoach = audioCoach,
         purchaseManager = purchaseManager,
         accessStore = accessStore,
+        healthStore = healthStore,
         modifier = modifier,
     )
 }
@@ -87,12 +93,19 @@ fun HangTenApp(
     audioCoach: WorkoutAudioCoach,
     purchaseManager: PurchaseManager,
     accessStore: WorkoutAccessStore,
+    healthStore: WorkoutHealthStore = UnavailableHealthStore,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
     val selections: HangTenSelectionViewModel = viewModel()
+    val healthViewModel: HealthViewModel = viewModel(
+        key = "health-connect",
+        factory = remember(healthStore, historyRepository) {
+            viewModelFactory { initializer { HealthViewModel(healthStore, historyRepository) } }
+        },
+    )
     val selectedBoardID by selections.selectedBoardID.collectAsState()
     val selectedPlanID by selections.selectedPlanID.collectAsState()
     val selectedBoard = boards.firstOrNull { it.id == selectedBoardID } ?: boards.firstOrNull()
@@ -150,6 +163,7 @@ fun HangTenApp(
                 selectedBoard = selectedBoard,
                 selectedPlan = selectedPlan,
                 historyRepository = historyRepository,
+                healthViewModel = healthViewModel,
                 historyVersion = historyVersion,
                 audioCoach = audioCoach,
                 purchaseManager = purchaseManager,
@@ -160,7 +174,7 @@ fun HangTenApp(
                 onStartWorkout = { navController.navigate(HangTenDestination.Workout.route) },
                 onSessionEnded = { completed ->
                     coroutineScope.launch {
-                        historyRepository.record(completed)
+                        healthViewModel.recordCompletion(completed)
                         accessStore.recordSavedWorkout(hasLifetimeEntitlement)
                         historyVersion += 1
                         navController.popBackStack(HangTenDestination.Train.route, inclusive = false)
@@ -200,6 +214,7 @@ private fun HangTenNavHost(
     selectedBoard: Board?,
     selectedPlan: TrainingPlan?,
     historyRepository: SessionHistoryRepository,
+    healthViewModel: HealthViewModel,
     historyVersion: Int,
     audioCoach: WorkoutAudioCoach,
     purchaseManager: PurchaseManager,
@@ -208,7 +223,7 @@ private fun HangTenNavHost(
     onPlanSelected: (TrainingPlan) -> Unit,
     onOpenSettings: () -> Unit,
     onStartWorkout: () -> Unit,
-    onSessionEnded: (CompletedSession) -> Unit,
+    onSessionEnded: (CompletedHealthWorkout) -> Unit,
     navController: androidx.navigation.NavHostController,
 ) {
     NavHost(
@@ -245,7 +260,7 @@ private fun HangTenNavHost(
         }
         composable(HangTenDestination.History.route) {
             HistoryScreen(
-                historyRepository = historyRepository,
+                healthViewModel = healthViewModel,
                 refreshKey = historyVersion,
                 contentPadding = padding,
             )
@@ -254,6 +269,7 @@ private fun HangTenNavHost(
             SettingsScreen(
                 audioCoach = audioCoach,
                 purchaseManager = purchaseManager,
+                healthViewModel = healthViewModel,
                 contentPadding = padding,
             )
         }
@@ -285,4 +301,20 @@ private object UnavailablePurchaseClient : PurchaseClient {
     override suspend fun restore(): RestoreResult = RestoreResult.Purchases(emptyList())
 
     override suspend fun acknowledge(purchaseToken: String): AcknowledgementResult = AcknowledgementResult.Failed
+}
+
+private object UnavailableHealthStore : WorkoutHealthStore {
+    override fun requestAuthorization(): Set<String> = emptySet()
+
+    override suspend fun completeAuthorizationRequest() = com.hangten.android.health.HealthAuthorizationState.Unavailable
+
+    override suspend fun refreshAuthorization() = com.hangten.android.health.HealthAuthorizationState.Unavailable
+
+    override suspend fun saveCompletedWorkout(workout: CompletedHealthWorkout) = Result.failure<com.hangten.android.health.HangTenHealthWorkout>(
+        IllegalStateException("Health Connect is unavailable"),
+    )
+
+    override suspend fun fetchHangTenWorkouts() = Result.failure<List<com.hangten.android.health.HangTenHealthWorkout>>(
+        IllegalStateException("Health Connect is unavailable"),
+    )
 }

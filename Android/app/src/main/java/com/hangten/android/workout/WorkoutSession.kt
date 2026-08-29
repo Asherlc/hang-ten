@@ -26,6 +26,8 @@ data class CompletedSession(
     val planId: String,
     val completedAtWallClockMs: Long,
     val elapsedDurationMs: Long,
+    val boardId: String? = null,
+    val planTitle: String? = null,
 )
 
 data class WorkoutSessionState(

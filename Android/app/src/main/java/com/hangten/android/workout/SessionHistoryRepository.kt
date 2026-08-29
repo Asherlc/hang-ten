@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.first
 
 class SessionHistoryRepository(
     private val dataStore: DataStore<Preferences>,
-) {
-    suspend fun record(completedSession: CompletedSession) {
+) : com.hangten.android.health.WorkoutHistory {
+    override suspend fun record(completedSession: CompletedSession) {
         dataStore.edit { preferences ->
             val sessions = decode(preferences[HISTORY_KEY]).toMutableList()
             sessions += completedSession
@@ -20,13 +20,15 @@ class SessionHistoryRepository(
         }
     }
 
-    suspend fun completedSessions(): List<CompletedSession> = decode(dataStore.data.first()[HISTORY_KEY])
+    override suspend fun completedSessions(): List<CompletedSession> = decode(dataStore.data.first()[HISTORY_KEY])
 
     private fun encode(sessions: List<CompletedSession>): String = sessions.joinToString("\n") { session ->
         listOf(
             planIdEncoder.encodeToString(session.planId.toByteArray(Charsets.UTF_8)),
             session.completedAtWallClockMs.toString(),
             session.elapsedDurationMs.toString(),
+            planIdEncoder.encodeToString(session.boardId.orEmpty().toByteArray(Charsets.UTF_8)),
+            planIdEncoder.encodeToString(session.planTitle.orEmpty().toByteArray(Charsets.UTF_8)),
         ).joinToString(",")
     }
 
@@ -37,12 +39,14 @@ class SessionHistoryRepository(
         .toList()
 
     private fun decodeSession(encoded: String): CompletedSession? = runCatching {
-        val fields = encoded.split(',', limit = 3)
-        require(fields.size == 3)
+        val fields = encoded.split(',')
+        require(fields.size == 3 || fields.size == 5)
         CompletedSession(
             planId = String(planIdDecoder.decode(fields[0]), Charsets.UTF_8),
             completedAtWallClockMs = fields[1].toLong(),
             elapsedDurationMs = fields[2].toLong().also(::requireNonNegative),
+            boardId = fields.getOrNull(3)?.let { String(planIdDecoder.decode(it), Charsets.UTF_8).ifBlank { null } },
+            planTitle = fields.getOrNull(4)?.let { String(planIdDecoder.decode(it), Charsets.UTF_8).ifBlank { null } },
         )
     }.getOrNull()
 
