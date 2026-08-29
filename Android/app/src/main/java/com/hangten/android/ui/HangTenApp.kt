@@ -8,12 +8,15 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -26,11 +29,19 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hangten.android.audio.WorkoutAudioCoach
+import com.hangten.android.billing.AcknowledgementResult
+import com.hangten.android.billing.PurchaseClient
+import com.hangten.android.billing.PurchaseManager
+import com.hangten.android.billing.PurchaseProduct
+import com.hangten.android.billing.PurchaseResult
+import com.hangten.android.billing.PurchaseUpdate
+import com.hangten.android.billing.RestoreResult
 import com.hangten.android.content.Board
 import com.hangten.android.content.TrainingPlan
 import com.hangten.android.workout.CompletedSession
 import com.hangten.android.workout.SessionHistoryRepository
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.emptyFlow
 
 private enum class HangTenDestination(
     val route: String,
@@ -51,6 +62,30 @@ fun HangTenApp(
     audioCoach: WorkoutAudioCoach,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current.applicationContext
+    val purchaseManager = remember { PurchaseManager(UnavailablePurchaseClient) }
+    val accessStore = remember { WorkoutAccessStore(SharedPreferencesWorkoutAccessPreferences(context)) }
+    HangTenApp(
+        boards = boards,
+        plans = plans,
+        historyRepository = historyRepository,
+        audioCoach = audioCoach,
+        purchaseManager = purchaseManager,
+        accessStore = accessStore,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun HangTenApp(
+    boards: List<Board>,
+    plans: List<TrainingPlan>,
+    historyRepository: SessionHistoryRepository,
+    audioCoach: WorkoutAudioCoach,
+    purchaseManager: PurchaseManager,
+    accessStore: WorkoutAccessStore,
+    modifier: Modifier = Modifier,
+) {
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val selections: HangTenSelectionViewModel = viewModel()
@@ -58,9 +93,13 @@ fun HangTenApp(
     val selectedPlanID by selections.selectedPlanID.collectAsState()
     val selectedBoard = boards.firstOrNull { it.id == selectedBoardID } ?: boards.firstOrNull()
     val selectedPlan = plans.firstOrNull { it.id == selectedPlanID }
+    val hasLifetimeEntitlement by purchaseManager.hasLifetimeEntitlement.collectAsState()
     var historyVersion by remember { mutableIntStateOf(0) }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val destination = backStackEntry?.destination?.route
+
+    LaunchedEffect(purchaseManager) { purchaseManager.prepare() }
+    DisposableEffect(purchaseManager) { onDispose(purchaseManager::close) }
 
     MaterialTheme {
         Scaffold(
@@ -100,6 +139,8 @@ fun HangTenApp(
                 historyRepository = historyRepository,
                 historyVersion = historyVersion,
                 audioCoach = audioCoach,
+                purchaseManager = purchaseManager,
+                accessStore = accessStore,
                 onBoardSelected = selections::selectBoard,
                 onPlanSelected = selections::selectPlan,
                 onOpenSettings = { navController.navigate(HangTenDestination.Settings.route) },
@@ -107,6 +148,7 @@ fun HangTenApp(
                 onSessionEnded = { completed ->
                     coroutineScope.launch {
                         historyRepository.record(completed)
+                        accessStore.recordSavedWorkout(hasLifetimeEntitlement)
                         historyVersion += 1
                         navController.popBackStack(HangTenDestination.Train.route, inclusive = false)
                     }
@@ -147,6 +189,8 @@ private fun HangTenNavHost(
     historyRepository: SessionHistoryRepository,
     historyVersion: Int,
     audioCoach: WorkoutAudioCoach,
+    purchaseManager: PurchaseManager,
+    accessStore: WorkoutAccessStore,
     onBoardSelected: (Board) -> Unit,
     onPlanSelected: (TrainingPlan) -> Unit,
     onOpenSettings: () -> Unit,
@@ -160,14 +204,20 @@ private fun HangTenNavHost(
         modifier = Modifier.fillMaxSize(),
     ) {
         composable(HangTenDestination.Train.route) {
-            TrainScreen(
-                board = selectedBoard,
-                plan = selectedPlan,
-                onOpenPlans = { navController.navigate(HangTenDestination.Plans.route) },
-                onOpenSettings = onOpenSettings,
-                onStartWorkout = onStartWorkout,
-                contentPadding = padding,
-            )
+            WorkoutAccessGate(
+                accessStore = accessStore,
+                purchaseManager = purchaseManager,
+                onWorkoutAllowed = onStartWorkout,
+            ) { requestWorkout ->
+                TrainScreen(
+                    board = selectedBoard,
+                    plan = selectedPlan,
+                    onOpenPlans = { navController.navigate(HangTenDestination.Plans.route) },
+                    onOpenSettings = onOpenSettings,
+                    onStartWorkout = requestWorkout,
+                    contentPadding = padding,
+                )
+            }
         }
         composable(HangTenDestination.Plans.route) {
             PlansScreen(
@@ -190,6 +240,7 @@ private fun HangTenNavHost(
         composable(HangTenDestination.Settings.route) {
             SettingsScreen(
                 audioCoach = audioCoach,
+                purchaseManager = purchaseManager,
                 contentPadding = padding,
             )
         }
@@ -209,4 +260,16 @@ private fun HangTenNavHost(
             }
         }
     }
+}
+
+private object UnavailablePurchaseClient : PurchaseClient {
+    override val updates = emptyFlow<PurchaseUpdate>()
+
+    override suspend fun load(id: String): PurchaseProduct? = null
+
+    override suspend fun purchase(activity: android.app.Activity?, id: String): PurchaseResult = PurchaseResult.Failed
+
+    override suspend fun restore(): RestoreResult = RestoreResult.Purchases(emptyList())
+
+    override suspend fun acknowledge(purchaseToken: String): AcknowledgementResult = AcknowledgementResult.Failed
 }

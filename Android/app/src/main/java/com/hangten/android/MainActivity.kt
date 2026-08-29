@@ -11,10 +11,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.preferencesDataStore
 import com.hangten.android.audio.AndroidWorkoutAudioCoach
+import com.hangten.android.billing.PlayBillingClient
+import com.hangten.android.billing.PurchaseManager
 import com.hangten.android.content.AssetBoardRepository
 import com.hangten.android.content.AssetPlanRepository
 import com.hangten.android.content.ContentAssets
 import com.hangten.android.ui.HangTenApp
+import com.hangten.android.ui.SharedPreferencesWorkoutAccessPreferences
+import com.hangten.android.ui.WorkoutAccessStore
+import androidx.compose.runtime.remember
 import com.hangten.android.workout.SessionHistoryRepository
 
 private val Context.androidDataStore by preferencesDataStore(name = "hang_ten")
@@ -28,11 +33,17 @@ class MainActivity : ComponentActivity() {
                     val contentAssets = AndroidContentAssets(assets)
                     val boards = AssetBoardRepository(contentAssets).loadBoards().getOrDefault(emptyList())
                     val plans = AssetPlanRepository(contentAssets).loadPlans().getOrDefault(emptyList())
+                    val purchaseManager = remember { PurchaseManager(PlayBillingClient(applicationContext)) }
+                    val accessStore = remember {
+                        WorkoutAccessStore(SharedPreferencesWorkoutAccessPreferences(applicationContext))
+                    }
                     HangTenApp(
                         boards = boards,
                         plans = plans,
                         historyRepository = SessionHistoryRepository(applicationContext.androidDataStore),
                         audioCoach = AndroidWorkoutAudioCoach(applicationContext, applicationContext.androidDataStore),
+                        purchaseManager = purchaseManager,
+                        accessStore = accessStore,
                     )
                 }
             }
