@@ -47,6 +47,7 @@ import com.hangten.android.health.HealthViewModel
 import com.hangten.android.health.WorkoutHealthStore
 import com.hangten.android.health.CompletedHealthWorkout
 import com.hangten.android.workout.SessionHistoryRepository
+import com.hangten.android.sensors.SensorConnectionController
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -68,6 +69,7 @@ fun HangTenApp(
     historyRepository: SessionHistoryRepository,
     audioCoach: WorkoutAudioCoach,
     healthStore: WorkoutHealthStore = UnavailableHealthStore,
+    sensorController: SensorConnectionController? = null,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current.applicationContext
@@ -81,6 +83,7 @@ fun HangTenApp(
         purchaseManager = purchaseManager,
         accessStore = accessStore,
         healthStore = healthStore,
+        sensorController = sensorController,
         modifier = modifier,
     )
 }
@@ -94,6 +97,7 @@ fun HangTenApp(
     purchaseManager: PurchaseManager,
     accessStore: WorkoutAccessStore,
     healthStore: WorkoutHealthStore = UnavailableHealthStore,
+    sensorController: SensorConnectionController? = null,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
@@ -168,6 +172,7 @@ fun HangTenApp(
                 audioCoach = audioCoach,
                 purchaseManager = purchaseManager,
                 accessStore = accessStore,
+                sensorController = sensorController,
                 onBoardSelected = selections::selectBoard,
                 onPlanSelected = selections::selectPlan,
                 onOpenSettings = { navController.navigate(HangTenDestination.Settings.route) },
@@ -219,6 +224,7 @@ private fun HangTenNavHost(
     audioCoach: WorkoutAudioCoach,
     purchaseManager: PurchaseManager,
     accessStore: WorkoutAccessStore,
+    sensorController: SensorConnectionController?,
     onBoardSelected: (Board) -> Unit,
     onPlanSelected: (TrainingPlan) -> Unit,
     onOpenSettings: () -> Unit,
@@ -270,6 +276,7 @@ private fun HangTenNavHost(
                 audioCoach = audioCoach,
                 purchaseManager = purchaseManager,
                 healthViewModel = healthViewModel,
+                sensorController = sensorController,
                 contentPadding = padding,
             )
         }
@@ -283,6 +290,7 @@ private fun HangTenNavHost(
                     plan = plan,
                     board = board,
                     audioCoach = audioCoach,
+                    sensorController = sensorController,
                     onSessionEnded = onSessionEnded,
                     contentPadding = padding,
                 )

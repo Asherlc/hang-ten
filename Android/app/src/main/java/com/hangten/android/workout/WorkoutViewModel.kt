@@ -3,6 +3,8 @@ package com.hangten.android.workout
 import android.os.SystemClock
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.SavedStateHandle
+import com.hangten.android.sensors.MotherboardMeasurement
+import com.hangten.android.sensors.SensorWorkoutRecorder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +18,7 @@ class WorkoutViewModel(
     private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime,
     private val audioCancellation: WorkoutAudioCancellation = WorkoutAudioCancellation {},
     private val savedStateHandle: SavedStateHandle? = null,
+    private val sensorRecorder: SensorWorkoutRecorder? = null,
 ) : ViewModel() {
     private val _snapshot = MutableStateFlow(session.snapshot(elapsedRealtime()))
 
@@ -32,7 +35,10 @@ class WorkoutViewModel(
         return true
     }
 
-    fun pause(): WorkoutSnapshot = publish { session.pause(elapsedRealtime()) }
+    fun pause(): WorkoutSnapshot = publish {
+        session.snapshot(elapsedRealtime()).also { snapshot -> sensorRecorder?.pause(snapshot.elapsedPlanMs) }
+        session.pause(elapsedRealtime())
+    }
 
     fun resume(): WorkoutSnapshot = publish { session.resume(elapsedRealtime()) }
 
@@ -42,7 +48,20 @@ class WorkoutViewModel(
         val completed = session.complete(elapsedRealtime())
         _snapshot.value = session.snapshot(elapsedRealtime())
         persist()
-        return completed
+        return completed.copy(sensorActivity = sensorRecorder?.complete(_snapshot.value.elapsedPlanMs))
+    }
+
+    fun consumeSensorMeasurement(measurement: MotherboardMeasurement) {
+        val current = snapshot.value
+        val step = planStep(current.activeStepIndex) ?: return
+        sensorRecorder?.consume(
+            measurement = measurement,
+            stepId = step.id,
+            plannedActiveDurationMs = (step.durationSeconds * 1_000).toLong(),
+            elapsedMs = current.elapsedPlanMs,
+            stepStartMs = stepStartElapsedMs(current.activeStepIndex),
+            isActive = current.phase is SessionPhase.Active,
+        )
     }
 
     fun onStop() {
@@ -68,6 +87,10 @@ class WorkoutViewModel(
             this[HAS_SESSION_STATE] = true
         }
     }
+
+    private fun planStep(index: Int) = session.plan.steps.getOrNull(index)
+
+    private fun stepStartElapsedMs(index: Int): Long = session.plan.steps.take(index).sumOf { (it.durationSeconds * 1_000).toLong() }
 
     companion object {
         internal fun restoredSessionState(savedStateHandle: SavedStateHandle): WorkoutSessionState? {

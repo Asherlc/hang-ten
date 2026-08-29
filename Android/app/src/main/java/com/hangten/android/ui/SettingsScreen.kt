@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.health.connect.client.PermissionController
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
@@ -26,6 +27,8 @@ import com.hangten.android.billing.PurchaseManager
 import com.hangten.android.billing.PurchaseState
 import com.hangten.android.health.HealthAuthorizationState
 import com.hangten.android.health.HealthViewModel
+import com.hangten.android.sensors.ForceSensorProfile
+import com.hangten.android.sensors.SensorConnectionController
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,6 +37,7 @@ fun SettingsScreen(
     purchaseManager: PurchaseManager,
     healthViewModel: HealthViewModel,
     contentPadding: PaddingValues,
+    sensorController: SensorConnectionController? = null,
     onHealthPermissionRequest: ((Set<String>) -> Unit)? = null,
 ) {
     val instructionCoachingEnabled by audioCoach.instructionCoachingEnabled.collectAsState()
@@ -48,6 +52,17 @@ fun SettingsScreen(
         contract = PermissionController.createRequestPermissionResultContract(),
         onResult = { healthViewModel.authorizationRequestFinished() },
     )
+    val sensorPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { granted ->
+            sensorController?.let { controller ->
+                if (controller.userInitiatedConnectPermissions(android.os.Build.VERSION.SDK_INT).all { granted[it] == true }) {
+                    controller.connectAfterPermissionsGranted()
+                }
+            }
+        },
+    )
+    val sensorState = sensorController?.state?.collectAsState()?.value
     LaunchedEffect(healthViewModel) { healthViewModel.refreshHistory() }
     Column(
         modifier = Modifier.fillMaxSize().padding(contentPadding).padding(20.dp),
@@ -82,6 +97,35 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Restore purchases" },
         ) { Text("Restore purchases") }
         PurchaseStatus(state)
+        if (sensorController != null) {
+            val controller = sensorController
+            Text("Training sensor")
+            Text("Sensor type: ${sensorState?.profile?.displayName}")
+            ForceSensorProfile.connectable.forEach { profile ->
+                OutlinedButton(
+                    onClick = { controller.selectProfile(profile) },
+                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Select ${profile.displayName}" },
+                ) { Text(profile.displayName) }
+            }
+            OutlinedButton(
+                onClick = {
+                    sensorPermissionLauncher.launch(
+                        controller.userInitiatedConnectPermissions(android.os.Build.VERSION.SDK_INT).toTypedArray(),
+                    )
+                },
+                modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Connect sensor" },
+            ) { Text("Connect sensor") }
+            sensorState?.latestMeasurement?.let { measurement ->
+                Text("Live force: ${"%.1f".format(measurement.aggregateLoadKgf)} kgf")
+            }
+            if (sensorState?.connection == com.hangten.android.sensors.SensorConnectionState.Streaming) {
+                OutlinedButton(
+                    onClick = controller::tare,
+                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Tare sensor" },
+                ) { Text(if (sensorState.isTaring) "Taring…" else "Tare sensor") }
+            }
+            sensorState?.error?.let { error -> Text(error) }
+        }
         Text("Health Connect")
         when (healthState.authorization) {
             HealthAuthorizationState.Authorized -> Text("Health workout history connected")

@@ -43,6 +43,8 @@ import com.hangten.android.workout.SessionPhase
 import com.hangten.android.workout.WorkoutAudioCancellation
 import com.hangten.android.workout.WorkoutSession
 import com.hangten.android.workout.WorkoutViewModel
+import com.hangten.android.sensors.SensorConnectionController
+import com.hangten.android.sensors.SensorWorkoutRecorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
@@ -51,10 +53,11 @@ fun WorkoutScreen(
     plan: TrainingPlan,
     board: Board,
     audioCoach: WorkoutAudioCoach,
+    sensorController: SensorConnectionController? = null,
     onSessionEnded: (CompletedHealthWorkout) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val factory = remember(plan.id, audioCoach) {
+    val factory = remember(plan.id, audioCoach, sensorController) {
         viewModelFactory {
             initializer {
                 val savedStateHandle = createSavedStateHandle()
@@ -65,12 +68,14 @@ fun WorkoutScreen(
                     ),
                     audioCancellation = WorkoutAudioCancellation { audioCoach.cancel() },
                     savedStateHandle = savedStateHandle,
+                    sensorRecorder = sensorController?.let { SensorWorkoutRecorder(it.state.value.profile) },
                 )
             }
         }
     }
     val viewModel: WorkoutViewModel = viewModel(key = "workout-${plan.id}", factory = factory)
     val snapshot by viewModel.snapshot.collectAsState()
+    val sensorMeter = sensorController?.state?.collectAsState()?.value
     val lifecycleOwner = LocalLifecycleOwner.current
     val activeStep = plan.steps.getOrNull(snapshot.activeStepIndex)
 
@@ -97,6 +102,9 @@ fun WorkoutScreen(
             }
             delay(250)
         }
+    }
+    LaunchedEffect(sensorMeter?.latestMeasurement?.timestampMs, sensorMeter?.latestMeasurement?.sampleNumber) {
+        sensorMeter?.latestMeasurement?.let(viewModel::consumeSensorMeasurement)
     }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize().padding(contentPadding).padding(20.dp)) {

@@ -24,6 +24,8 @@ import com.hangten.android.workout.SessionHistoryRepository
 import com.hangten.android.health.AndroidHealthConnectGateway
 import com.hangten.android.health.HealthConnectService
 import com.hangten.android.health.SharedPreferencesHealthAuthorizationMemory
+import com.hangten.android.sensors.AndroidBleForceSensorTransport
+import com.hangten.android.sensors.SensorConnectionController
 
 private val Context.androidDataStore by preferencesDataStore(name = "hang_ten")
 
@@ -46,6 +48,9 @@ class MainActivity : ComponentActivity() {
                             authorizationMemory = SharedPreferencesHealthAuthorizationMemory(applicationContext),
                         )
                     }
+                    val sensorController = remember {
+                        SensorConnectionController(AndroidBleForceSensorTransport(applicationContext))
+                    }
                     HangTenApp(
                         boards = boards,
                         plans = plans,
@@ -54,6 +59,7 @@ class MainActivity : ComponentActivity() {
                         purchaseManager = purchaseManager,
                         accessStore = accessStore,
                         healthStore = healthStore,
+                        sensorController = sensorController,
                     )
                 }
             }

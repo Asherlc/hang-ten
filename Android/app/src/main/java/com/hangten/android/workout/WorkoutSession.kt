@@ -1,6 +1,7 @@
 package com.hangten.android.workout
 
 import com.hangten.android.content.TrainingPlan
+import com.hangten.android.sensors.SensorWorkoutActivity
 
 sealed interface SessionPhase {
     data object StartCountdown : SessionPhase
@@ -28,6 +29,7 @@ data class CompletedSession(
     val elapsedDurationMs: Long,
     val boardId: String? = null,
     val planTitle: String? = null,
+    val sensorActivity: SensorWorkoutActivity? = null,
 )
 
 data class WorkoutSessionState(
@@ -38,7 +40,7 @@ data class WorkoutSessionState(
 )
 
 class WorkoutSession(
-    private val plan: TrainingPlan,
+    internal val plan: TrainingPlan,
     private val wallClockMillis: () -> Long = System::currentTimeMillis,
     restoredState: WorkoutSessionState? = null,
 ) {

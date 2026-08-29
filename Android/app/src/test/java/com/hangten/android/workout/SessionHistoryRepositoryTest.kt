@@ -3,6 +3,9 @@ package com.hangten.android.workout
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.hangten.android.sensors.ForceSensorProfile
+import com.hangten.android.sensors.MotherboardMeasurement
+import com.hangten.android.sensors.SensorWorkoutActivity
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +45,30 @@ class SessionHistoryRepositoryTest {
             readerScope.coroutineContext[Job]?.cancelAndJoin()
             file.delete()
         }
+    }
+
+    @Test
+    fun measuredSensorActivityIsPersistedWithTheCompletedSession() = runTest {
+        val file = File.createTempFile("sensor-session-history", ".preferences_pb").also(File::delete)
+        val expected = CompletedSession(
+            planId = "max-hangs", completedAtWallClockMs = 1, elapsedDurationMs = 2,
+            sensorActivity = SensorWorkoutActivity(
+                ForceSensorProfile.Progressor,
+                listOf(MotherboardMeasurement(3, 1u, 0u, emptyList(), emptyList(), 12.5)),
+                measurementsTruncated = false,
+                steps = emptyList(),
+            ),
+        )
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        try {
+            SessionHistoryRepository(PreferenceDataStoreFactory.create(scope = scope, produceFile = { file })).record(expected)
+            scope.coroutineContext[Job]?.cancelAndJoin()
+            val readerScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+            try {
+                val restored = SessionHistoryRepository(PreferenceDataStoreFactory.create(scope = readerScope, produceFile = { file })).completedSessions()
+                assertEquals(listOf(expected), restored)
+            } finally { readerScope.coroutineContext[Job]?.cancelAndJoin() }
+        } finally { scope.coroutineContext[Job]?.cancelAndJoin(); file.delete() }
     }
 
     @Test
