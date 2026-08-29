@@ -249,3 +249,25 @@ no AVD was created. All three exact owned SDK roots were then deleted.
   separately unrun.
 - Cleanup check: the exact owned
   `.context/android-sdk-bitter-scorpion-0o9ylkoo-round6` root is absent.
+
+### Round 7 late-event regression repair
+
+- Replaced the prior pre-event block with a finite, test-only controlled
+  Motherboard transport. It explicitly latches when the in-flight `S30` write
+  begins, delivers the remote `GATT 133` terminal and observes `Disconnected`,
+  then explicitly releases that non-cancellable in-flight callback and runs
+  its already-parsed `Stream:30` and parser-error events. The final assertion
+  proves those events cannot resurrect `Streaming` or overwrite the terminal
+  error.
+- The exact test was run once with the Round 6 notification fences temporarily
+  removed: it failed (`BUILD FAILED`, assertion at the post-release terminal
+  check), proving the regression detects the prior behavior. The fence was
+  restored unchanged; no production source change is included in this round.
+- Fresh owned minimal-SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round7` (no system image or
+  AVD): focused `ForceSensorTransportTest`/`SensorConnectionControllerTest`
+  and unfiltered `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug`
+  both finished **BUILD SUCCESSFUL**. The connected-emulator release gate
+  remains separately unrun.
+- Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round7` root is absent.

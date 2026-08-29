@@ -2,10 +2,16 @@ package com.hangten.android.sensors
 
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -200,11 +206,7 @@ class SensorConnectionControllerTest {
 
     @Test
     fun remoteTerminalCannotBeResurrectedByLateMotherboardStreamOrParserError() = runTest {
-        val writeBarrier = CompletableDeferred<Unit>()
-        val transport = FakeForceSensorTransport().apply {
-            enqueue(ForceSensorAdvertisement(name = "Motherboard"))
-            this.writeBarrier = writeBarrier
-        }
+        val transport = LateMotherboardCallbackTransport()
         val controller = SensorConnectionController(transport, ForceSensorProfile.Motherboard, scope = this)
         controller.connectAfterPermissionsGranted(); advanceUntilIdle()
 
@@ -212,12 +214,16 @@ class SensorConnectionControllerTest {
         advanceUntilIdle()
         val finalCalibration = calibration().last()
         transport.emit("$finalCalibration\r\nStream:30\r\nError: late parser callback\r\n".encodeToByteArray())
-        advanceUntilIdle()
-        assertTrue(transport.operations.contains("write:${ForceSensorProfile.Motherboard.writeCharacteristic!!.characteristicUuid}:533330"))
+        runCurrent()
+        transport.streamWriteEntered.await()
 
-        transport.fail(IllegalStateException("Sensor disconnected (GATT 133)"))
-        advanceUntilIdle()
+        transport.remoteDisconnect()
+        runCurrent()
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("GATT 133"))
 
+        transport.resumeLateCallback.complete(Unit)
+        runCurrent()
         assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
         assertTrue(controller.state.value.error!!.contains("GATT 133"))
     }
@@ -310,5 +316,37 @@ class SensorConnectionControllerTest {
     private fun packet(adc: Int): ByteArray {
         val channel = "%06x".format(adc)
         return "01000100$channel$channel$channel$channel\r\n".encodeToByteArray()
+    }
+
+    private class LateMotherboardCallbackTransport : ForceSensorTransport {
+        private val notificationEvents = Channel<ByteArray>(32)
+        private val errorEvents = Channel<Throwable>(1)
+        override val notifications = notificationEvents.receiveAsFlow()
+        override val notificationQueueState = MutableStateFlow(NotificationQueueState(capacityFrames = 1))
+        override val errors = errorEvents.receiveAsFlow()
+        val streamWriteEntered = CompletableDeferred<Unit>()
+        val resumeLateCallback = CompletableDeferred<Unit>()
+
+        fun emit(frame: ByteArray) { check(notificationEvents.trySend(frame).isSuccess) }
+
+        fun remoteDisconnect() {
+            check(errorEvents.trySend(IllegalStateException("Sensor disconnected (GATT 133)")).isSuccess)
+        }
+
+        override suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement> =
+            listOf(ForceSensorAdvertisement(name = "Motherboard"))
+
+        override suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile) = Unit
+
+        override suspend fun subscribe(characteristic: ForceSensorCharacteristic) = Unit
+
+        override suspend fun write(characteristic: ForceSensorCharacteristic, value: ByteArray) {
+            if (value.contentEquals(MotherboardProtocol.streamCommand(30))) {
+                streamWriteEntered.complete(Unit)
+                withContext(NonCancellable) { resumeLateCallback.await() }
+            }
+        }
+
+        override fun disconnect() = Unit
     }
 }
