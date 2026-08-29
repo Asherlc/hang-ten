@@ -2566,7 +2566,26 @@ struct WorkoutView: View {
 	private func liftCompletionControl(for step: WorkoutStep) -> some View {
 		let prescribed = step.repetitions ?? 0
 		let completed = liftCompletion.completedRepetitions(for: step)
+		let unit = motherboardSettingsStore.forceUnit
 		return VStack(spacing: 6) {
+			HStack(spacing: 8) {
+				Text("External load")
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+				TextField(
+					"0",
+					value: loadedLiftExternalLoadBinding(for: step, unit: unit),
+					format: .number.precision(.fractionLength(1))
+				)
+				.keyboardType(.numbersAndPunctuation)
+				.multilineTextAlignment(.center)
+				.frame(maxWidth: 100)
+				.textFieldStyle(.roundedBorder)
+				.accessibilityIdentifier("workout.loadedLiftExternalLoad")
+				Text(unit.label)
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+			}
 			Text("\(completed) of \(prescribed) lifts complete")
 				.font(.system(size: 13, weight: .bold, design: .rounded))
 				.foregroundStyle(Color.hangMuted)
@@ -2581,6 +2600,23 @@ struct WorkoutView: View {
 			.disabled(completed >= prescribed)
 			.accessibilityIdentifier("workout.completeLift")
 		}
+	}
+
+	private func loadedLiftExternalLoadBinding(
+		for step: WorkoutStep,
+		unit: MotherboardForceUnit
+	) -> Binding<Double> {
+		Binding(
+			get: {
+				unit.value(fromKilogramsForce: liftCompletion.externalLoadKGF(for: step) ?? 0)
+			},
+			set: { displayedValue in
+				liftCompletion.setExternalLoadKGF(
+					unit.kilogramsForce(fromDisplayedForce: displayedValue),
+					for: step
+				)
+			}
+		)
 	}
 
 	private func skipStepButton(step: WorkoutStep, canNavigate: Bool, compact: Bool = false) -> some View {
@@ -2944,7 +2980,10 @@ struct WorkoutView: View {
 				completedRepetitions: step.action == .loadedLift
 					? liftCompletion.completedRepetitions(for: step)
 					: nil,
-				externalLoadKGF: step.externalLoadKGF
+				externalLoadKGF: step.action == .loadedLift
+					? liftCompletion.externalLoadKGF(for: step)
+					: step.externalLoadKGF,
+				isRest: step.isRestStep
 			)
 		}
 		let recordedAt = Date()

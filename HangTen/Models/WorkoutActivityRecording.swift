@@ -92,12 +92,14 @@ internal enum BoardTargetResolver {
     static func resolveHoldIDs(
         for target: HoldTarget,
         handUse: WorkoutHandUse,
+        side: WorkoutSide,
         on board: TrainingBoard,
         gripType: GripType? = nil
     ) -> [String] {
         selectHoldIDs(
             resolveHoldIDs(for: target, on: board, gripType: gripType),
             for: handUse,
+            side: side,
             on: board
         )
     }
@@ -105,12 +107,14 @@ internal enum BoardTargetResolver {
     static func resolveObjects(
         for target: HoldTarget,
         handUse: WorkoutHandUse,
+        side: WorkoutSide,
         on board: TrainingBoard,
         gripType: GripType? = nil
     ) -> [String] {
         let selectedHoldIDs = Set(resolveHoldIDs(
             for: target,
             handUse: handUse,
+            side: side,
             on: board,
             gripType: gripType
         ))
@@ -225,12 +229,14 @@ internal enum BoardTargetResolver {
     static func resolveHolds(
         for target: HoldTarget,
         handUse: WorkoutHandUse,
+        side: WorkoutSide,
         on board: TrainingBoard,
         gripType: GripType? = nil
     ) -> [BoardHold] {
         let ids = Set(resolveHoldIDs(
             for: target,
             handUse: handUse,
+            side: side,
             on: board,
             gripType: gripType
         ))
@@ -262,17 +268,18 @@ internal enum BoardTargetResolver {
     static func substituteHoldIDs(
         for target: HoldTarget,
         handUse: WorkoutHandUse,
+        side: WorkoutSide,
         on board: TrainingBoard,
         gripType: GripType? = nil
     ) -> [String] {
         let holds = compatibleHolds(on: board, gripType: gripType)
         let primary = resolveHoldIDs(for: target, among: holds)
         if !primary.isEmpty {
-            return selectHoldIDs(primary, for: handUse, on: board)
+            return selectHoldIDs(primary, for: handUse, side: side, on: board)
         }
         let closestPrimary = closestMatch(for: target, among: holds)
         if !closestPrimary.isEmpty {
-            return selectHoldIDs(closestPrimary, for: handUse, on: board)
+            return selectHoldIDs(closestPrimary, for: handUse, side: side, on: board)
         }
         guard target.feature?.holdKind == .pocket || target.kind == .pocket else { return [] }
         for fallback in target.fallbackFeatures where fallback.holdKind == .edge {
@@ -282,7 +289,7 @@ internal enum BoardTargetResolver {
             )
             let closestFallback = closestMatch(for: fallbackTarget, among: holds)
             if !closestFallback.isEmpty {
-                return selectHoldIDs(closestFallback, for: handUse, on: board)
+                return selectHoldIDs(closestFallback, for: handUse, side: side, on: board)
             }
         }
         return []
@@ -300,12 +307,14 @@ internal enum BoardTargetResolver {
     static func substituteHolds(
         for target: HoldTarget,
         handUse: WorkoutHandUse,
+        side: WorkoutSide,
         on board: TrainingBoard,
         gripType: GripType? = nil
     ) -> [BoardHold] {
         let ids = Set(substituteHoldIDs(
             for: target,
             handUse: handUse,
+            side: side,
             on: board,
             gripType: gripType
         ))
@@ -315,6 +324,7 @@ internal enum BoardTargetResolver {
     private static func selectHoldIDs(
         _ candidateIDs: [String],
         for handUse: WorkoutHandUse,
+        side: WorkoutSide,
         on board: TrainingBoard
     ) -> [String] {
         let candidates = candidateIDs.compactMap { id in
@@ -322,9 +332,23 @@ internal enum BoardTargetResolver {
         }
         switch handUse {
         case .single:
-            guard let objectID = candidates.first?.equipmentObjectID else { return [] }
+            guard side != .both else { return [] }
+            let objectIDs = candidates.reduce(into: [String]()) { result, hold in
+                if !result.contains(hold.equipmentObjectID) {
+                    result.append(hold.equipmentObjectID)
+                }
+            }
+            guard !objectIDs.isEmpty else { return [] }
+            let rankedObjectIDs = objectIDs.sorted { lhs, rhs in
+                let lhsCenter = horizontalCenter(of: lhs, among: candidates)
+                let rhsCenter = horizontalCenter(of: rhs, among: candidates)
+                if lhsCenter != rhsCenter { return lhsCenter < rhsCenter }
+                return lhs < rhs
+            }
+            let objectID = side == .left ? rankedObjectIDs.first! : rankedObjectIDs.last!
             return candidates.filter { $0.equipmentObjectID == objectID }.map(\.id)
         case .double:
+            guard side == .both else { return [] }
             var selectedObjectIDs: [String] = []
             for hold in candidates where !selectedObjectIDs.contains(hold.equipmentObjectID) {
                 selectedObjectIDs.append(hold.equipmentObjectID)
@@ -342,6 +366,17 @@ internal enum BoardTargetResolver {
             guard !candidates.contains(where: { $0.handCapacity == 1 }) else { return [] }
             return candidates.map(\.id)
         }
+    }
+
+    private static func horizontalCenter(
+        of equipmentObjectID: String,
+        among holds: [BoardHold]
+    ) -> Double {
+        let centers = holds
+            .filter { $0.equipmentObjectID == equipmentObjectID }
+            .map { $0.frame.x + $0.frame.width / 2 }
+        guard !centers.isEmpty else { return 0.5 }
+        return centers.reduce(0, +) / Double(centers.count)
     }
 
     private static func compatibleHolds(on board: TrainingBoard, gripType: GripType?) -> [BoardHold] {
@@ -727,6 +762,7 @@ struct WorkoutActivityRecorder {
                     BoardTargetResolver.substituteHolds(
                         for: $0,
                         handUse: step.handUse,
+                        side: step.side,
                         on: board,
                         gripType: step.gripType
                     )

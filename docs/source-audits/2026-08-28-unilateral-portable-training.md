@@ -11,16 +11,23 @@ Primary image evidence from the same product page:
 - [front](https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840)
 - [back](https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840)
 - [side](https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840)
+- [one-hand front use](https://frictitiousclimbing.com/cdn/shop/files/PAB-homewall-3.jpg?v=1784658885&width=3840)
+- [front presentation in use](https://frictitiousclimbing.com/cdn/shop/files/PAB-homewall-2_6d2bac74-600a-42d4-8d1b-a8e2bcb44f42.jpg?v=1784659418&width=3840)
+- [back presentation in use](https://frictitiousclimbing.com/cdn/shop/files/PAB-outside.jpg?v=1784658885&width=3840)
+- [one-hand back use](https://frictitiousclimbing.com/cdn/shop/files/PAB-homewall-1.jpg?v=1784658897&width=3840)
 
 | Package field | Source mapping |
 | --- | --- |
 | `id`, manufacturer, name, product URL | Product title and publisher. |
 | one `primary` equipment object | The listing's box contents says `Port-A-Board` singular; this is one board even though it has multiple usable edges. |
 | dimensions | Product spec: 5 × 5.5 × 1.8 in (128 × 140 × 48 mm). |
-| eight hold IDs and `sizeMillimeters` | Product spec lists exactly: 30, 30 (2 finger and mono), 25, 20, 15, 12, 10, and 8 mm. |
-| all hold kinds `edge` | The same spec calls the inventory eight unique edges. No finger capacity, hand capacity, posture, or depth is asserted because the listing does not establish it. |
+| eight measured contact IDs and `sizeMillimeters` | Product spec lists exactly: 30, 30 (2 finger and mono), 25, 20, 15, 12, 10, and 8 mm. |
+| `pocket-30-two-finger-mono`, kind `pocket`, `fingerCapacity = 2` | The listing both advertises pockets and labels one 30 mm contact “2 finger and mono.” The app classifies that documented contact as the pocket contact and records the largest documented finger count; mono use remains valid on a two-finger-capacity contact. This classification is an explicit semantic adaptation, not a claim that Frictitious names a particular recess “the pocket.” |
+| `jug-outer-rim`, kind `jug` | The listing advertises jug training. It does not label a specific face as the jug. The package conservatively maps that advertised use to the visible rounded outer rim as an explicit app adaptation and does not attach unsupported dimensions or coaching text. |
+| `pinch-body`, kind `pinch`, `side` presentation | The listing advertises pinch training and the primary side image establishes the board body's 48 mm side face. It does not label a specific face as the pinch. The package conservatively maps that advertised use to the visible side body as an explicit app adaptation and does not attach an unsupported pinch width or prescription. |
+| every contact `handCapacity = 1` | Explicit app capacity adaptation for one physical Port-A-Board object, grounded in the singular 128 mm-wide product and the manufacturer's one-hand use images. This prevents a bilateral step from being treated as physically resolved by one board object. It is not a manufacturer-issued numeric capacity rating. |
 | `edge-20.features = [mediumEdge]` | App semantic adaptation: the factual 20 mm size is the exact source range's lower bound (20–24 mm), allowing the board-flexible Megos plan to resolve its documented edge. It does not change product metadata. |
-| presentations and every path | Deliberately hand-authored, simplified `Primary` (front) and `Back` presentations after direct visual review of the official front/back/side images. Each of the eight documented contacts has a separately authored closed pill path and manually selected `pill` editing constraint. The source photos were evidence only; no source raster, registration, segmentation, tracing, vectorization, contour extraction, or generated geometry was used. |
+| presentations and every path | Deliberately hand-authored, simplified `Primary`, `Back`, and `Side` schematics after direct review of the official manufacturer images. An operator deliberately drew each canonical contact path: pills for the measured recess contacts and outer-rim jug, and a rounded rectangle for the side-body pinch. The source photos were evidence only; no source raster, registration, alignment, segmentation, tracing, vectorization, automatic cropping, contour extraction, generated mask, or proposal/refine workflow was used. The saved paths are the rendering, highlighting, and hit-testing source of truth. |
 
 The product page also says the board can attach to weights, a foot, or the Foot Plate. That establishes supported setup modes only; it does **not** establish a sets/repetitions/rest routine, so this package adds no Port-A-Board training prescription.
 

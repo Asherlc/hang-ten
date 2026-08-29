@@ -53,6 +53,29 @@ enum WorkoutSummaryFormatting {
         }
         return "Pulley assistance: -\(String(format: "%.1f %@", displayedValue, unit.label))"
     }
+
+    static func semanticText(for step: WorkoutStepMeasurement) -> String {
+        guard !step.isRest else { return "Rest" }
+        let side: String
+        switch step.side {
+        case .left: side = "Left hand"
+        case .right: side = "Right hand"
+        case .both: side = "Both hands"
+        }
+        switch step.action {
+        case .hang:
+            return "Hang • \(side)"
+        case .isometricPull:
+            return "Isometric pull • \(side)"
+        case .loadedLift:
+            let completed = step.completedRepetitions ?? 0
+            let prescribed = step.repetitions ?? 0
+            let load = step.externalLoadKGF.map {
+                " • \(WorkoutStepFormatting.externalLoadText($0, unit: .kilograms))"
+            } ?? ""
+            return "Loaded lift • \(side) • \(completed) of \(prescribed) lifts complete\(load)"
+        }
+    }
 }
 
 struct WorkoutSummaryView: View {
@@ -283,19 +306,9 @@ private struct WorkoutSummaryContent: View {
                 summaryValue(title: "Peak", value: peakText(for: step))
             }
 
-            if step.action == .loadedLift {
-                let completed = step.completedRepetitions ?? 0
-                let prescribed = step.repetitions ?? 0
-                Text(
-                    "Loaded lift • \(sideText(for: step.side)) • \(completed) of \(prescribed) lifts complete\(externalLoadText(for: step).map { " • \($0)" } ?? "")"
-                )
+            Text(WorkoutSummaryFormatting.semanticText(for: step))
                 .font(.system(size: 12, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.hangMuted)
-            } else {
-                Text("\(actionText(for: step.action)) • \(sideText(for: step.side))")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangMuted)
-            }
 
             if step.intervals.count > 1 {
                 Text("\(step.intervals.count) intervals: \(step.intervals.map { $0.duration.durationText }.joined(separator: ", "))")

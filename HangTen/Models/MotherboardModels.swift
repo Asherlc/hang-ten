@@ -227,6 +227,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
     let repetitions: Int?
     let completedRepetitions: Int?
     let externalLoadKGF: Double?
+    let isRest: Bool
 
     enum Status: String, Codable {
         case measured
@@ -236,7 +237,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
 
     private enum CodingKeys: String, CodingKey {
         case stepID, plannedActiveDuration, intervals, peakLoadKGF, sampleCount, status
-        case handUse, side, action, repetitions, completedRepetitions, externalLoadKGF
+        case handUse, side, action, repetitions, completedRepetitions, externalLoadKGF, isRest
     }
 
     init(
@@ -251,7 +252,8 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         action: WorkoutAction = .hang,
         repetitions: Int? = nil,
         completedRepetitions: Int? = nil,
-        externalLoadKGF: Double? = nil
+        externalLoadKGF: Double? = nil,
+        isRest: Bool = false
     ) {
         self.stepID = stepID
         self.plannedActiveDuration = plannedActiveDuration
@@ -265,6 +267,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         self.repetitions = repetitions
         self.completedRepetitions = completedRepetitions
         self.externalLoadKGF = externalLoadKGF
+        self.isRest = isRest
     }
 
     init(from decoder: Decoder) throws {
@@ -281,6 +284,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
         completedRepetitions = try container.decodeIfPresent(Int.self, forKey: .completedRepetitions)
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
+        isRest = try container.decodeIfPresent(Bool.self, forKey: .isRest) ?? false
     }
 
     func applyingSemantics(from step: WorkoutStep) -> WorkoutStepMeasurement {
@@ -296,7 +300,8 @@ struct WorkoutStepMeasurement: Codable, Equatable {
             action: step.action,
             repetitions: step.repetitions,
             completedRepetitions: completedRepetitions,
-            externalLoadKGF: step.externalLoadKGF
+            externalLoadKGF: step.externalLoadKGF,
+            isRest: step.isRestStep
         )
     }
 

@@ -34,6 +34,8 @@ export interface HoldInspectorProps {
   onSizeMillimetersChange(size: number | undefined): void;
   onDepthRangeChange(depthRange: MillimeterRange | undefined): void;
   onHandCapacityChange(capacity: number | undefined): void;
+  equipmentObjects: readonly string[];
+  onEquipmentObjectIDChange(equipmentObjectID: string): void;
   onOutlineShapeChange(shape: string): void;
   onRotate(direction: -1 | 1, shiftKey: boolean): void;
   onApplyRotation(): void;
@@ -58,6 +60,8 @@ export function HoldInspector({
   onSizeMillimetersChange,
   onDepthRangeChange,
   onHandCapacityChange,
+  equipmentObjects,
+  onEquipmentObjectIDChange,
   onOutlineShapeChange,
   onRotate,
   onApplyRotation,
@@ -114,6 +118,18 @@ export function HoldInspector({
             {HOLD_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
         </label>
+        {equipmentObjects.length > 1 && <label>Equipment object
+          <select
+            id="equipment-object-select"
+            disabled={busy}
+            value={hold?.equipmentObjectID ?? equipmentObjects[0] ?? ""}
+            onChange={(event) => onEquipmentObjectIDChange(event.currentTarget.value)}
+          >
+            {equipmentObjects.map((equipmentObjectID) => (
+              <option key={equipmentObjectID} value={equipmentObjectID}>{equipmentObjectID}</option>
+            ))}
+          </select>
+        </label>}
         {hold?.type === "gaston" && (hold.pairedHoldID
           ? <div>
               <span className="field-label">Paired gaston hold</span>

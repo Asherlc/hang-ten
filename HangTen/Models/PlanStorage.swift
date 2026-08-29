@@ -1132,6 +1132,8 @@ enum PlanLibraryValidator {
                         mappingByBoardID: mappingByBoardID,
                         boardByID: boardByID,
                         availableBoards: availableBoards,
+                        handUse: step.handUse,
+                        side: step.side,
                         issues: &issues
                     )
                     for (segmentIndex, segment) in step.segments.enumerated() {
@@ -1143,6 +1145,8 @@ enum PlanLibraryValidator {
                             mappingByBoardID: mappingByBoardID,
                             boardByID: boardByID,
                             availableBoards: availableBoards,
+                            handUse: step.handUse,
+                            side: step.side,
                             issues: &issues
                         )
                     }
@@ -1269,6 +1273,8 @@ enum PlanLibraryValidator {
         mappingByBoardID: [String: BoardMappingDefinition],
         boardByID: [String: [TrainingBoard]],
         availableBoards: [TrainingBoard],
+        handUse: WorkoutHandUse,
+        side: WorkoutSide,
         issues: inout [PlanValidationIssue]
     ) {
         let boardIDs: [String]
@@ -1300,8 +1306,48 @@ enum PlanLibraryValidator {
                         issues.append(PlanValidationIssue(path: targetPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(boardID)\"."))
                     }
                 }
-            case .kind:
-                break
+                if !holdIDs.isEmpty {
+                    let hasCompatibleBoard = boardIDs.contains { boardID in
+                        guard let board = boardByID[boardID]?.first else { return false }
+                        return !BoardTargetResolver.substituteHoldIDs(
+                            for: .ids(holdIDs),
+                            handUse: handUse,
+                            side: side,
+                            on: board
+                        ).isEmpty
+                    }
+                    if !hasCompatibleBoard {
+                        issues.append(
+                            PlanValidationIssue(
+                                path: targetPath,
+                                message: "The direct hold target cannot satisfy the step's hand use and side."
+                            )
+                        )
+                    }
+                }
+            case let .kind(kind, fallbacks, fingerCapacity):
+                let runtimeTarget = HoldTarget.kind(
+                    kind,
+                    fallbacks: fallbacks,
+                    fingerCapacity: fingerCapacity
+                )
+                let hasCompatibleBoard = boardIDs.contains { boardID in
+                    guard let board = boardByID[boardID]?.first else { return false }
+                    return !BoardTargetResolver.substituteHoldIDs(
+                        for: runtimeTarget,
+                        handUse: handUse,
+                        side: side,
+                        on: board
+                    ).isEmpty
+                }
+                if !hasCompatibleBoard {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: targetPath,
+                            message: "No compatible board exposes the requested hold kind for this hand use and side."
+                        )
+                    )
+                }
             case let .feature(feature, fallbacks, fingerCapacity):
                 let runtimeTarget = HoldTarget(
                     holdIDs: [],
@@ -1312,7 +1358,12 @@ enum PlanLibraryValidator {
                 )
                 let hasCompatibleBoard = boardIDs.contains { boardID in
                     guard let board = boardByID[boardID]?.first else { return false }
-                    return !BoardTargetResolver.substituteHoldIDs(for: runtimeTarget, on: board).isEmpty
+                    return !BoardTargetResolver.substituteHoldIDs(
+                        for: runtimeTarget,
+                        handUse: handUse,
+                        side: side,
+                        on: board
+                    ).isEmpty
                 }
                 if !hasCompatibleBoard {
                     issues.append(

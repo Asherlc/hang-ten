@@ -112,6 +112,8 @@ enum WorkoutHoldCuePolicy {
               let hold,
               BoardTargetResolver.substituteHoldIDs(
                   for: target,
+                  handUse: step.handUse,
+                  side: step.side,
                   on: board,
                   gripType: step.gripType
               ).contains(hold.id),
@@ -146,6 +148,7 @@ struct WorkoutTimeline {
     let duration: TimeInterval
 
     static func labels(for step: WorkoutStep) -> [String] {
+        guard !step.isRestStep else { return ["Rest"] }
         let actionLabel: String
         switch step.action {
         case .hang: actionLabel = "Hang"
@@ -317,6 +320,7 @@ struct WorkoutTimeline {
 
 struct WorkoutLiftCompletion: Equatable {
     private var repetitionsByStepID: [String: Int] = [:]
+    private var externalLoadKGFByStepID: [String: Double] = [:]
 
     mutating func completeLift(for step: WorkoutStep) {
         guard step.action == .loadedLift, let prescribed = step.repetitions else { return }
@@ -329,6 +333,15 @@ struct WorkoutLiftCompletion: Equatable {
     func completedRepetitions(for step: WorkoutStep) -> Int {
         repetitionsByStepID[step.id, default: 0]
     }
+
+    mutating func setExternalLoadKGF(_ value: Double, for step: WorkoutStep) {
+        guard step.action == .loadedLift, value.isFinite else { return }
+        externalLoadKGFByStepID[step.id] = value
+    }
+
+    func externalLoadKGF(for step: WorkoutStep) -> Double? {
+        externalLoadKGFByStepID[step.id] ?? step.externalLoadKGF
+    }
 }
 
 enum WorkoutHighlightResolver {
@@ -338,6 +351,7 @@ enum WorkoutHighlightResolver {
             BoardTargetResolver.substituteHoldIDs(
                 for: $0,
                 handUse: step.handUse,
+                side: step.side,
                 on: board,
                 gripType: gripType
             )

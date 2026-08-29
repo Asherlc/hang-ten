@@ -297,6 +297,11 @@ private struct CustomRoutineStepEditor: View {
                 if phase == .rest {
                     step.targets = []
                     step.timing = .fixed
+                    step.handUse = .double
+                    step.side = .both
+                    step.action = .hang
+                    step.repetitions = nil
+                    step.externalLoadKGF = nil
                 }
             }
 

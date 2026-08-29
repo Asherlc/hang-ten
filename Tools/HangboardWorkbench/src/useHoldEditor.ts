@@ -181,6 +181,7 @@ export interface HoldEditorActions {
   changeHoldSizeMillimeters(size: number | undefined): void;
   changeHoldDepthRange(depthRange: MillimeterRange | undefined): void;
   changeHandCapacity(capacity: number | undefined): void;
+  changeEquipmentObjectID(equipmentObjectID: string): void;
   changeOutlineShape(shape: string): void;
   rotateHold(degrees: number): void;
   applyRotation(): void;
@@ -817,6 +818,9 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
         id: nextRegionId(candidate),
         key,
         type: "edge",
+        ...(candidate.equipmentObjects?.[0]
+          ? { equipmentObjectID: candidate.equipmentObjects[0] }
+          : {}),
         displayPath: `M ${centerX - size} ${centerY - size} L ${centerX + size} ${centerY - size} L ${centerX + size} ${centerY + size} L ${centerX - size} ${centerY + size} Z`,
         metadata: {
           holdID: holdId,
@@ -1123,6 +1127,22 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     }, {
       status: "Hand capacity changed. Save when ready.",
       failureMessage: "Hand capacity is invalid.",
+    });
+  }, [actions, busy, document, selectedHold, selectedKeys]);
+
+  const changeEquipmentObjectID = useCallback((equipmentObjectID: string): void => {
+    if (busy || !document || !selectedHold
+      || !document.equipmentObjects?.includes(equipmentObjectID)) return;
+    const siblingKeys = new Set(
+      selectedPhysicalHolds(document, selectedKeys).flatMap((hold) => hold.map((region) => region.key)),
+    );
+    actions.editDocument((candidate) => {
+      for (const region of candidate.regions) {
+        if (siblingKeys.has(region.key)) region.equipmentObjectID = equipmentObjectID;
+      }
+    }, {
+      status: "Equipment object changed. Save when ready.",
+      failureMessage: "Equipment object is invalid.",
     });
   }, [actions, busy, document, selectedHold, selectedKeys]);
 
@@ -1837,6 +1857,7 @@ export function useHoldEditor(options: UseHoldEditorOptions): HoldEditorActions 
     changeHoldSizeMillimeters,
     changeHoldDepthRange,
     changeHandCapacity,
+    changeEquipmentObjectID,
     changeOutlineShape,
     rotateHold,
     applyRotation,

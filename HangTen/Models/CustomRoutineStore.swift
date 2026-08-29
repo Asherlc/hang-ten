@@ -224,6 +224,8 @@ enum CustomRoutineValidator {
                     segmentIndex: nil,
                     boards: boards,
                     targetMode: definition.targetMode,
+                    handUse: step.handUse,
+                    side: step.side,
                     issues: &issues
                 )
             }
@@ -241,6 +243,8 @@ enum CustomRoutineValidator {
                         segmentIndex: segmentIndex,
                         boards: boards,
                         targetMode: definition.targetMode,
+                        handUse: step.handUse,
+                        side: step.side,
                         issues: &issues
                     )
                 }
@@ -308,8 +312,18 @@ enum CustomRoutineValidator {
     ) -> [TrainingBoard] {
         availableBoards.filter { board in
             definition.steps.allSatisfy { step in
-                (step.phase == .rest || targetsResolve(step.targets, on: board)) && step.segments.allSatisfy { segment in
-                    segment.kind == .rest || targetsResolve(segment.targets, on: board)
+                (step.phase == .rest || targetsResolve(
+                    step.targets,
+                    handUse: step.handUse,
+                    side: step.side,
+                    on: board
+                )) && step.segments.allSatisfy { segment in
+                    segment.kind == .rest || targetsResolve(
+                        segment.targets,
+                        handUse: step.handUse,
+                        side: step.side,
+                        on: board
+                    )
                 }
             }
         }
@@ -333,6 +347,8 @@ enum CustomRoutineValidator {
         segmentIndex: Int?,
         boards: [TrainingBoard],
         targetMode: CustomRoutineTargetMode,
+        handUse: WorkoutHandUse,
+        side: WorkoutSide,
         issues: inout [CustomRoutineValidationIssue]
     ) {
         guard targets.allSatisfy({ targetMatchesMode($0, targetMode: targetMode) }) else {
@@ -350,7 +366,9 @@ enum CustomRoutineValidator {
             }
         }
 
-        guard targets.allSatisfy({ targetResolves($0, onAny: boards) }) else {
+        guard targets.allSatisfy({
+            targetResolves($0, handUse: handUse, side: side, onAny: boards)
+        }) else {
             if let segmentIndex {
                 issues.append(.unresolvableSegmentTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
             } else {
@@ -374,27 +392,47 @@ enum CustomRoutineValidator {
 
     private static func targetsResolve(
         _ targets: [WorkoutTargetDefinition],
+        handUse: WorkoutHandUse,
+        side: WorkoutSide,
         on board: TrainingBoard
     ) -> Bool {
-        !targets.isEmpty && targets.allSatisfy { targetResolves($0, on: board) }
+        !targets.isEmpty && targets.allSatisfy {
+            targetResolves($0, handUse: handUse, side: side, on: board)
+        }
     }
 
     private static func targetResolves(
         _ target: WorkoutTargetDefinition,
+        handUse: WorkoutHandUse,
+        side: WorkoutSide,
         onAny boards: [TrainingBoard]
     ) -> Bool {
-        boards.contains { targetResolves(target, on: $0) }
+        boards.contains {
+            targetResolves(target, handUse: handUse, side: side, on: $0)
+        }
     }
 
-    private static func targetResolves(_ target: WorkoutTargetDefinition, on board: TrainingBoard) -> Bool {
+    private static func targetResolves(
+        _ target: WorkoutTargetDefinition,
+        handUse: WorkoutHandUse,
+        side: WorkoutSide,
+        on board: TrainingBoard
+    ) -> Bool {
         switch target {
         case .semantic, .semantics:
             return false
         case let .holdIDs(holdIDs):
-            return !holdIDs.isEmpty && Set(holdIDs).isSubset(of: Set(board.holds.map(\.id)))
+            return !holdIDs.isEmpty && !BoardTargetResolver.substituteHoldIDs(
+                for: .ids(holdIDs),
+                handUse: handUse,
+                side: side,
+                on: board
+            ).isEmpty
         case let .kind(kind, fallbacks, fingerCapacity):
             return !BoardTargetResolver.substituteHoldIDs(
                 for: .kind(kind, fallbacks: fallbacks, fingerCapacity: fingerCapacity),
+                handUse: handUse,
+                side: side,
                 on: board
             ).isEmpty
         case let .feature(feature, fallbacks, fingerCapacity):
@@ -404,6 +442,8 @@ enum CustomRoutineValidator {
                     fallbacks: fallbacks,
                     fingerCapacity: fingerCapacity
                 ),
+                handUse: handUse,
+                side: side,
                 on: board
             ).isEmpty
         }

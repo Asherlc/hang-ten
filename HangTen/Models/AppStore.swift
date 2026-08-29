@@ -311,6 +311,7 @@ final class AppStore: ObservableObject {
             BoardTargetResolver.substituteHoldIDs(
                 for: $0,
                 handUse: step.handUse,
+                side: step.side,
                 on: board,
                 gripType: gripType
             )
@@ -328,6 +329,7 @@ final class AppStore: ObservableObject {
                 return !hasExactMatch && !BoardTargetResolver.resolveHoldIDs(
                     for: target,
                     handUse: step.handUse,
+                    side: step.side,
                     on: board,
                     gripType: gripType
                 ).isEmpty
@@ -342,6 +344,7 @@ final class AppStore: ObservableObject {
                 BoardTargetResolver.substituteHoldIDs(
                     for: target,
                     handUse: step.handUse,
+                    side: step.side,
                     on: board,
                     gripType: gripType
                 ).isEmpty

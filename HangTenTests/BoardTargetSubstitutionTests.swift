@@ -61,6 +61,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         let ids = BoardTargetResolver.resolveHoldIDs(
             for: .kind(.pocket),
             handUse: .single,
+            side: .left,
             on: rockRings
         )
 
@@ -69,12 +70,37 @@ final class BoardTargetSubstitutionTests: XCTestCase {
         }).count, 1)
     }
 
+    func testSingleHandRockRingTargetUsesRequestedSide() throws {
+        let rockRings = BoardCatalog.board(for: "metolius.rock-rings-3d")
+
+        let left = BoardTargetResolver.resolveHoldIDs(
+            for: .kind(.pocket),
+            handUse: .single,
+            side: .left,
+            on: rockRings
+        )
+        let right = BoardTargetResolver.resolveHoldIDs(
+            for: .kind(.pocket),
+            handUse: .single,
+            side: .right,
+            on: rockRings
+        )
+
+        XCTAssertEqual(Set(left.compactMap { id in
+            rockRings.holds.first(where: { $0.id == id })?.equipmentObjectID
+        }), ["left-ring"])
+        XCTAssertEqual(Set(right.compactMap { id in
+            rockRings.holds.first(where: { $0.id == id })?.equipmentObjectID
+        }), ["right-ring"])
+    }
+
     func testDoubleHandRockRingTargetResolvesMatchingHoldsOnTwoRings() throws {
         let rockRings = BoardCatalog.board(for: "metolius.rock-rings-3d")
 
         let ids = BoardTargetResolver.resolveHoldIDs(
             for: .kind(.pocket),
             handUse: .double,
+            side: .both,
             on: rockRings
         )
 
@@ -95,6 +121,7 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             BoardTargetResolver.resolveHoldIDs(
                 for: .kind(.pocket),
                 handUse: .double,
+                side: .both,
                 on: board
             ),
             ["bilateral-pocket"]
@@ -111,8 +138,25 @@ final class BoardTargetSubstitutionTests: XCTestCase {
             BoardTargetResolver.resolveHoldIDs(
                 for: .kind(.pocket),
                 handUse: .double,
+                side: .both,
                 on: board
             ).isEmpty
+        )
+    }
+
+    func testDoubleHandTargetPreservesLegacyNilCapacityBehaviorOnOneObject() {
+        let board = board(holds: [
+            hold(id: "legacy-pocket", kind: .pocket, fingerCapacity: 3)
+        ])
+
+        XCTAssertEqual(
+            BoardTargetResolver.resolveHoldIDs(
+                for: .kind(.pocket, fingerCapacity: 3),
+                handUse: .double,
+                side: .both,
+                on: board
+            ),
+            ["legacy-pocket"]
         )
     }
 

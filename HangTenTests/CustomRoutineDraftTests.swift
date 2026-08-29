@@ -243,7 +243,12 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 15,
                 phase: .rest,
                 targets: [.kind(.jug)],
-                timing: .stopwatch
+                timing: .stopwatch,
+                handUse: .single,
+                side: .right,
+                action: .loadedLift,
+                repetitions: 7,
+                externalLoadKGF: 12
             )
         ]
 
@@ -251,6 +256,11 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         XCTAssertEqual(step.targets, [])
         XCTAssertNil(step.gripType)
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.action, .hang)
+        XCTAssertNil(step.repetitions)
+        XCTAssertNil(step.externalLoadKGF)
         XCTAssertEqual(step.segments, [
             WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 15)
         ])

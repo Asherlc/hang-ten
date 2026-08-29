@@ -16,6 +16,22 @@ final class WorkoutSummaryTests: XCTestCase {
         XCTAssertTrue(WorkoutSummaryMode.history.isReadOnly)
     }
 
+    func testRestSummaryDoesNotClaimHangOrBothHands() {
+        let rest = WorkoutStepMeasurement(
+            stepID: "rest",
+            plannedActiveDuration: 30,
+            intervals: [],
+            peakLoadKGF: nil,
+            sampleCount: 0,
+            status: .unmeasured,
+            isRest: true
+        )
+
+        XCTAssertEqual(WorkoutSummaryFormatting.semanticText(for: rest), "Rest")
+        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest).contains("Hang"))
+        XCTAssertFalse(WorkoutSummaryFormatting.semanticText(for: rest).contains("hands"))
+    }
+
     func testSummaryUsesActualLoadedDurationAndPeakInSelectedUnit() {
         let step = WorkoutStepMeasurement(
             stepID: "step",

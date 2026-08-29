@@ -225,7 +225,8 @@ struct CustomRoutineDraft: Equatable {
     }
 
     private static func stepDraft(from definition: WorkoutStepDefinition) -> CustomRoutineStepDraft {
-        CustomRoutineStepDraft(
+        let isRest = definition.phase == .rest
+        return CustomRoutineStepDraft(
             id: definition.id,
             title: definition.title,
             instruction: definition.instruction,
@@ -235,17 +236,20 @@ struct CustomRoutineDraft: Equatable {
             targets: definition.targets,
             timing: definition.segments.first?.timing ?? .fixed,
             activeDuration: definition.activeDuration,
-            handUse: definition.handUse,
-            side: definition.side,
-            action: definition.action,
-            repetitions: definition.repetitions,
-            externalLoadKGF: definition.externalLoadKGF
+            handUse: isRest ? .double : definition.handUse,
+            side: isRest ? .both : definition.side,
+            action: isRest ? .hang : definition.action,
+            repetitions: isRest ? nil : definition.repetitions,
+            externalLoadKGF: isRest ? nil : definition.externalLoadKGF
         )
     }
 
     private static func stepDefinition(from step: CustomRoutineStepDraft) -> WorkoutStepDefinition {
         let timing: WorkoutSegmentTiming = step.isRest ? .fixed : step.timing
         let targets = step.isRest ? [] : step.targets
+        let handUse: WorkoutHandUse = step.isRest ? .double : step.handUse
+        let side: WorkoutSide = step.isRest ? .both : step.side
+        let action: WorkoutAction = step.isRest ? .hang : step.action
         let segmentDuration: TimeInterval? = timing == .fixed ? step.duration : nil
         let segment = WorkoutSegmentDefinition(
             kind: step.isRest ? .rest : .work,
@@ -263,11 +267,11 @@ struct CustomRoutineDraft: Equatable {
             targets: targets,
             segments: [segment],
             activeDuration: step.activeDuration,
-            handUse: step.handUse,
-            side: step.side,
-            action: step.action,
-            repetitions: step.repetitions,
-            externalLoadKGF: step.externalLoadKGF
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: step.isRest ? nil : step.repetitions,
+            externalLoadKGF: step.isRest ? nil : step.externalLoadKGF
         )
     }
 

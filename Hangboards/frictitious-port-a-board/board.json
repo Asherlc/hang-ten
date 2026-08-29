@@ -2,23 +2,242 @@
   "id": "frictitious.port-a-board",
   "manufacturer": "Frictitious Climbing",
   "name": "Port-A-Board",
-  "subtitle": "Portable single-object finger-training board with eight edge sizes.",
+  "subtitle": "Portable single-object board with edges, pocket, jug, and pinch contacts.",
   "productURL": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
   "dimensions": "128 × 140 × 48 mm",
   "aspectRatio": 0.9142857143,
-  "equipmentObjects": [{"id": "primary"}],
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {"id": "primary", "name": "Primary", "assetPath": "assets/primary.png", "aspectRatio": 0.9142857143, "default": true},
-    {"id": "back", "name": "Back", "assetPath": "assets/back.png", "aspectRatio": 0.9142857143, "default": false}
+    {"id": "back", "name": "Back", "assetPath": "assets/back.png", "aspectRatio": 0.9142857143, "default": false},
+    {"id": "side", "name": "Side", "assetPath": "assets/side.png", "aspectRatio": 0.3428571429, "default": false}
   ],
   "holds": [
-    {"id": "edge-30", "equipmentObjectID": "primary", "name": "30 mm edge", "kind": "edge", "sizeMillimeters": 30, "presentationID": "primary", "geometry": [{"frame": {"x": 0.19, "y": 0.70, "width": 0.62, "height": 0.10}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]},
-    {"id": "edge-30-two-finger-mono", "equipmentObjectID": "primary", "name": "30 mm two-finger and mono edge", "kind": "edge", "sizeMillimeters": 30, "presentationID": "primary", "geometry": [{"frame": {"x": 0.32, "y": 0.779, "width": 0.36, "height": 0.045}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]},
-    {"id": "edge-25", "equipmentObjectID": "primary", "name": "25 mm edge", "kind": "edge", "sizeMillimeters": 25, "presentationID": "primary", "geometry": [{"frame": {"x": 0.19, "y": 0.44, "width": 0.62, "height": 0.08}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]},
-    {"id": "edge-20", "equipmentObjectID": "primary", "name": "20 mm edge", "kind": "edge", "sizeMillimeters": 20, "features": ["mediumEdge"], "presentationID": "primary", "geometry": [{"frame": {"x": 0.19, "y": 0.30, "width": 0.62, "height": 0.065}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]},
-    {"id": "edge-15", "equipmentObjectID": "primary", "name": "15 mm edge", "kind": "edge", "sizeMillimeters": 15, "presentationID": "back", "geometry": [{"frame": {"x": 0.19, "y": 0.30, "width": 0.62, "height": 0.05}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]},
-    {"id": "edge-12", "equipmentObjectID": "primary", "name": "12 mm edge", "kind": "edge", "sizeMillimeters": 12, "presentationID": "back", "geometry": [{"frame": {"x": 0.19, "y": 0.44, "width": 0.62, "height": 0.045}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]},
-    {"id": "edge-10", "equipmentObjectID": "primary", "name": "10 mm edge", "kind": "edge", "sizeMillimeters": 10, "presentationID": "back", "geometry": [{"frame": {"x": 0.19, "y": 0.76, "width": 0.62, "height": 0.04}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]},
-    {"id": "edge-8", "equipmentObjectID": "primary", "name": "8 mm edge", "kind": "edge", "sizeMillimeters": 8, "presentationID": "back", "geometry": [{"frame": {"x": 0.19, "y": 0.63, "width": 0.62, "height": 0.035}, "shape": {"type": "path", "commands": [{"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]}, {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]}, {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]}, {"command": "line", "to": [0.10, 1]}, {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]}, {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]}, {"command": "close"}]}, "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}}]}
+    {
+      "id": "edge-30",
+      "equipmentObjectID": "primary",
+      "name": "30 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "sizeMillimeters": 30,
+      "presentationID": "primary",
+      "geometry": [{
+        "frame": {"x": 0.19, "y": 0.70, "width": 0.62, "height": 0.10},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]},
+          {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "pocket-30-two-finger-mono",
+      "equipmentObjectID": "primary",
+      "name": "30 mm two-finger / mono pocket contact",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "handCapacity": 1,
+      "sizeMillimeters": 30,
+      "presentationID": "primary",
+      "geometry": [{
+        "frame": {"x": 0.32, "y": 0.779, "width": 0.36, "height": 0.045},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]},
+          {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "sizeMillimeters": 25,
+      "presentationID": "primary",
+      "geometry": [{
+        "frame": {"x": 0.19, "y": 0.44, "width": 0.62, "height": 0.08},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "sizeMillimeters": 20,
+      "features": ["mediumEdge"],
+      "presentationID": "primary",
+      "geometry": [{
+        "frame": {"x": 0.19, "y": 0.30, "width": 0.62, "height": 0.065},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "sizeMillimeters": 15,
+      "presentationID": "back",
+      "geometry": [{
+        "frame": {"x": 0.19, "y": 0.30, "width": 0.62, "height": 0.05},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "edge-12",
+      "equipmentObjectID": "primary",
+      "name": "12 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "sizeMillimeters": 12,
+      "presentationID": "back",
+      "geometry": [{
+        "frame": {"x": 0.19, "y": 0.44, "width": 0.62, "height": 0.045},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "edge-10",
+      "equipmentObjectID": "primary",
+      "name": "10 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "sizeMillimeters": 10,
+      "presentationID": "back",
+      "geometry": [{
+        "frame": {"x": 0.19, "y": 0.76, "width": 0.62, "height": 0.04},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "edge-8",
+      "equipmentObjectID": "primary",
+      "name": "8 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "sizeMillimeters": 8,
+      "presentationID": "back",
+      "geometry": [{
+        "frame": {"x": 0.19, "y": 0.63, "width": 0.62, "height": 0.035},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "jug-outer-rim",
+      "equipmentObjectID": "primary",
+      "name": "Outer rim jug contact",
+      "kind": "jug",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [{
+        "frame": {"x": 0.17, "y": 0.075, "width": 0.66, "height": 0.12},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
+          {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
+          {"command": "curve", "control1": [1, 0.776], "control2": [0.955, 1], "to": [0.90, 1]},
+          {"command": "line", "to": [0.10, 1]},
+          {"command": "curve", "control1": [0.045, 1], "control2": [0, 0.776], "to": [0, 0.5]},
+          {"command": "curve", "control1": [0, 0.224], "control2": [0.045, 0], "to": [0.10, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "pill", "rotationDegrees": 0}
+      }]
+    },
+    {
+      "id": "pinch-body",
+      "equipmentObjectID": "primary",
+      "name": "Board body pinch contact",
+      "kind": "pinch",
+      "handCapacity": 1,
+      "presentationID": "side",
+      "geometry": [{
+        "frame": {"x": 0.10, "y": 0.16, "width": 0.80, "height": 0.68},
+        "shape": {"type": "path", "commands": [
+          {"command": "move", "to": [0.16, 0]}, {"command": "line", "to": [0.84, 0]},
+          {"command": "curve", "control1": [0.93, 0], "control2": [1, 0.07], "to": [1, 0.16]},
+          {"command": "line", "to": [1, 0.84]},
+          {"command": "curve", "control1": [1, 0.93], "control2": [0.93, 1], "to": [0.84, 1]},
+          {"command": "line", "to": [0.16, 1]},
+          {"command": "curve", "control1": [0.07, 1], "control2": [0, 0.93], "to": [0, 0.84]},
+          {"command": "line", "to": [0, 0.16]},
+          {"command": "curve", "control1": [0, 0.07], "control2": [0.07, 0], "to": [0.16, 0]},
+          {"command": "close"}
+        ]},
+        "shapeConstraint": {"shape": "roundedRectangle", "rotationDegrees": 0}
+      }]
+    }
   ]
 }

@@ -656,7 +656,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testActivityRecordingSingleHandStepSelectsOneEquipmentObject() throws {
         let board = portableBoard(handCapacity: nil)
-        let workout = portablePlan(handUse: .single)
+        let workout = portablePlan(handUse: .single, side: .left)
 
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
@@ -670,9 +670,32 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testActivityRecordingSingleHandStepRecordsRequestedRightObject() throws {
+        let board = TrainingBoard(
+            id: "paired-portable-board",
+            manufacturer: "Fixture",
+            name: "Paired portable board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            equipmentObjects: [.init(id: "left"), .init(id: "right")],
+            holds: [
+                BoardHold(id: "left-a", equipmentObjectID: "left", name: "Left", shortLabel: "L", detail: "", kind: .pocket, frame: HoldFrame(x: 0, y: 0, width: 0.1, height: 0.1), handCapacity: 1),
+                BoardHold(id: "right-a", equipmentObjectID: "right", name: "Right", shortLabel: "R", detail: "", kind: .pocket, frame: HoldFrame(x: 0.9, y: 0, width: 0.1, height: 0.1), handCapacity: 1)
+            ],
+            productURL: URL(string: "https://example.com/paired-portable")!,
+            photoAssetName: nil
+        )
+        let workout = portablePlan(handUse: .single, side: .right, boardID: board.id)
+
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+
+        XCTAssertEqual(records.map(\.holdIDs), [["right-a"]])
+    }
+
     func testActivityRecordingDoubleHandStepRejectsExplicitSingleHandPairOnOneObject() {
         let board = portableBoard(handCapacity: 1)
-        let workout = portablePlan(handUse: .double)
+        let workout = portablePlan(handUse: .double, side: .both)
 
         XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board)) { error in
             XCTAssertEqual(
@@ -684,7 +707,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
     func testActivityRecordingDoubleHandStepKeepsLegacyNilHandCapacityCompatible() throws {
         let board = portableBoard(handCapacity: nil)
-        let workout = portablePlan(handUse: .double)
+        let workout = portablePlan(handUse: .double, side: .both)
 
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
@@ -1232,7 +1255,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
-    private func portablePlan(handUse: WorkoutHandUse) -> TrainingPlan {
+    private func portablePlan(
+        handUse: WorkoutHandUse,
+        side: WorkoutSide,
+        boardID: String = "portable-board"
+    ) -> TrainingPlan {
         TrainingPlan(
             id: "portable-plan",
             title: "Portable plan",
@@ -1241,7 +1268,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             sourceLabel: "",
             sourceURL: URL(string: "https://example.com/portable-plan")!,
             provenance: .adapted,
-            boardID: "portable-board",
+            boardID: boardID,
             steps: [
                 WorkoutStep(
                     id: "portable-step",
@@ -1254,7 +1281,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     targets: [.kind(.pocket)],
                     segments: [WorkoutSegment(kind: .work, target: .kind(.pocket), timing: .fixed, duration: 10)],
                     handUse: handUse,
-                    side: handUse == .single ? .left : .both
+                    side: side
                 )
             ]
         )

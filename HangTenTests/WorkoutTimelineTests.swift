@@ -63,9 +63,13 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
-    private func loadedLiftStep(repetitions: Int) -> WorkoutStep {
+    private func loadedLiftStep(
+        id: String = "loaded-lift",
+        repetitions: Int,
+        externalLoadKGF: Double? = nil
+    ) -> WorkoutStep {
         WorkoutStep(
-            id: "loaded-lift",
+            id: id,
             number: 1,
             title: "Loaded lift",
             instruction: "",
@@ -76,7 +80,8 @@ final class WorkoutTimelineTests: XCTestCase {
             handUse: .single,
             side: .left,
             action: .loadedLift,
-            repetitions: repetitions
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF
         )
     }
 
@@ -95,6 +100,35 @@ final class WorkoutTimelineTests: XCTestCase {
         completion.completeLift(for: step)
 
         XCTAssertEqual(completion.completedRepetitions(for: step), 2)
+    }
+
+    func testLoadedLiftRuntimeLoadDefaultsFromPlanAndCanBeChangedPerStep() {
+        let first = loadedLiftStep(repetitions: 2, externalLoadKGF: 12)
+        let second = loadedLiftStep(id: "second-lift", repetitions: 2, externalLoadKGF: -5)
+        var completion = WorkoutLiftCompletion()
+
+        XCTAssertEqual(completion.externalLoadKGF(for: first), 12)
+        XCTAssertEqual(completion.externalLoadKGF(for: second), -5)
+
+        completion.setExternalLoadKGF(18.5, for: first)
+
+        XCTAssertEqual(completion.externalLoadKGF(for: first), 18.5)
+        XCTAssertEqual(completion.externalLoadKGF(for: second), -5)
+    }
+
+    func testRestTimelineLabelDoesNotClaimHangOrBothHands() {
+        let rest = WorkoutStep(
+            id: "rest",
+            number: 1,
+            title: "Rest",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .rest,
+            targets: []
+        )
+
+        XCTAssertEqual(WorkoutTimeline.labels(for: rest), ["Rest"])
     }
 
     func testHighlightResolverUsesSelectedEquipmentObjectForPortableBoard() {
@@ -156,6 +190,25 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(
             WorkoutHighlightResolver.holdIDs(for: step, on: board),
             ["left-pocket", "left-edge"]
+        )
+
+        let rightStep = WorkoutStep(
+            id: "right",
+            number: 2,
+            title: "Right lift",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.pocket)],
+            handUse: .single,
+            side: .right,
+            action: .loadedLift,
+            repetitions: 1
+        )
+        XCTAssertEqual(
+            WorkoutHighlightResolver.holdIDs(for: rightStep, on: board),
+            ["right-pocket"]
         )
     }
 

@@ -631,7 +631,8 @@ final class MotherboardModelsTests: XCTestCase {
             side: .left,
             action: .loadedLift,
             repetitions: 7,
-            externalLoadKGF: -8
+            externalLoadKGF: -8,
+            isRest: false
         )
         let data = try JSONEncoder().encode(measurement)
         var legacyObject = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
@@ -640,6 +641,7 @@ final class MotherboardModelsTests: XCTestCase {
         legacyObject.removeValue(forKey: "action")
         legacyObject.removeValue(forKey: "repetitions")
         legacyObject.removeValue(forKey: "externalLoadKGF")
+        legacyObject.removeValue(forKey: "isRest")
 
         let decoded = try JSONDecoder().decode(WorkoutStepMeasurement.self, from: data)
         let legacy = try JSONDecoder().decode(
@@ -653,6 +655,7 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(legacy.action, .hang)
         XCTAssertNil(legacy.repetitions)
         XCTAssertNil(legacy.externalLoadKGF)
+        XCTAssertFalse(legacy.isRest)
     }
 
     private func measurement(sensorLoads: [Double], aggregate: Double) -> MotherboardMeasurement {

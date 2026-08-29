@@ -20,12 +20,22 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
     assert {hold["equipmentObjectID"] for hold in board["holds"]} == {"primary"}
     assert {hold["id"] for hold in board["holds"]} == {
         "edge-30",
-        "edge-30-two-finger-mono",
+        "pocket-30-two-finger-mono",
         "edge-25",
         "edge-20",
         "edge-15",
         "edge-12",
         "edge-10",
         "edge-8",
+        "jug-outer-rim",
+        "pinch-body",
+    }
+    assert all(hold.get("handCapacity") == 1 for hold in board["holds"])
+    assert {hold["kind"] for hold in board["holds"]} >= {"edge", "pocket", "jug", "pinch"}
+    assert {presentation["id"] for presentation in board["presentations"]} == {
+        "primary",
+        "back",
+        "side",
     }
     assert (package_root / "assets" / "primary.png").is_file()
+    assert (package_root / "assets" / "side.png").is_file()
