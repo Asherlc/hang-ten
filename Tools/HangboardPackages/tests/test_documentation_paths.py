@@ -45,8 +45,13 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert xctest_tokens.count(worker_flag) == 1
     assert xctest_tokens[xctest_tokens.index(worker_flag) + 1] == "1"
     assert "run_xctest_attempt() {" in xctest_command
+    assert "os.setsid()" in xctest_command
+    assert "os.execvp(sys.argv[1], sys.argv[1:])" in xctest_command
+    assert 'kill -TERM -- "-$xcodebuild_pid"' in xctest_command
+    assert 'kill -KILL -- "-$xcodebuild_pid"' in xctest_command
+    assert xctest_command.count('kill -0 -- "-$xcodebuild_pid"') == 2
     assert re.search(
-        r"run_xctest_attempt\(\) \{.*?xcodebuild \\.*?\n\s+test\s+>",
+        r"run_xctest_attempt\(\) \{.*?python3 -c .*?\\\n\s+xcodebuild \\.*?\n\s+test\s+>",
         xctest_command,
         flags=re.DOTALL,
     )

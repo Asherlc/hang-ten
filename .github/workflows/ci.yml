@@ -335,7 +335,14 @@ jobs:
             # still-running process before it is terminated; the complete log
             # is printed and uploaded after either outcome.
             attempt_started=$SECONDS
-            xcodebuild \
+            # Give xcodebuild and its XCTest/simulator descendants their own
+            # process group. A background command normally inherits this
+            # script's group, so signalling that inherited group could kill
+            # the Actions shell itself. Python is present on hosted macOS
+            # runners and setsid() makes the exec'd xcodebuild PID its group
+            # leader, which lets the timeout clean up the whole attempt.
+            python3 -c 'import os, sys; os.setsid(); os.execvp(sys.argv[1], sys.argv[1:])' \
+              xcodebuild \
               -project HangTen.xcodeproj \
               -scheme HangTen \
               -configuration Debug \
@@ -359,14 +366,19 @@ jobs:
                 echo "XCTest attempt $attempt exceeded ${timeout_seconds}s; collecting diagnostics before retrying." | tee -a "$attempt_log"
                 sample "$xcodebuild_pid" 10 -file "$attempt_log_dir/xcodebuild.sample.txt" || true
                 xcrun simctl list devices >> "$attempt_log_dir/simctl-devices.txt" 2>&1 || true
-                kill -TERM "$xcodebuild_pid" 2>/dev/null || true
+                # Signal the isolated process group, not merely xcodebuild:
+                # XCTest and Simulator children can otherwise outlive a timed
+                # out attempt and interfere with the clean retry below.
+                kill -TERM -- "-$xcodebuild_pid" 2>/dev/null || true
                 for _ in $(seq 1 30); do
-                  kill -0 "$xcodebuild_pid" 2>/dev/null || break
+                  # Keep waiting for the group even if xcodebuild itself has
+                  # already exited: its children may still be shutting down.
+                  kill -0 -- "-$xcodebuild_pid" 2>/dev/null || break
                   sleep 1
                 done
-                if kill -0 "$xcodebuild_pid" 2>/dev/null; then
+                if kill -0 -- "-$xcodebuild_pid" 2>/dev/null; then
                   echo "XCTest attempt $attempt ignored SIGTERM; sending SIGKILL." | tee -a "$attempt_log"
-                  kill -KILL "$xcodebuild_pid" 2>/dev/null || true
+                  kill -KILL -- "-$xcodebuild_pid" 2>/dev/null || true
                 fi
                 wait "$xcodebuild_pid" || true
                 cat "$attempt_log"
