@@ -266,7 +266,9 @@ jobs:
       needs.changes.outputs.workflow == 'true' ||
       needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
-    timeout-minutes: 45
+    # Two bounded attempts plus result-bundle upload need a little headroom,
+    # while each attempt has its own watchdog below.
+    timeout-minutes: 50
 
     steps:
       # actions/checkout v4.2.2
@@ -303,6 +305,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
+          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1200"
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/hang-ten-test-logs" "$RUNNER_TEMP/hang-ten-test-derived-data"
@@ -318,8 +321,20 @@ jobs:
             local attempt_derived_data="$RUNNER_TEMP/hang-ten-test-derived-data/attempt-$attempt"
             local attempt_result_bundle="$RUNNER_TEMP/HangTenTests-attempt-$attempt.xcresult"
             local attempt_log_dir="$RUNNER_TEMP/hang-ten-test-logs/attempt-$attempt"
+            local attempt_log="$attempt_log_dir/test.log"
+            local timeout_seconds="$XCTEST_ATTEMPT_TIMEOUT_SECONDS"
+            local attempt_started
+            local xcodebuild_pid
+            local xcodebuild_status=0
 
             mkdir -p "$attempt_derived_data" "$attempt_log_dir"
+            : > "$attempt_log"
+
+            # Do not let a simulator/XCTest deadlock consume the whole job.
+            # Writing xcodebuild output to a file lets the watchdog sample the
+            # still-running process before it is terminated; the complete log
+            # is printed and uploaded after either outcome.
+            attempt_started=$SECONDS
             xcodebuild \
               -project HangTen.xcodeproj \
               -scheme HangTen \
@@ -336,7 +351,33 @@ jobs:
               CODE_SIGNING_ALLOWED=YES \
               CODE_SIGNING_REQUIRED=YES \
               CODE_SIGN_IDENTITY="-" \
-              test 2>&1 | tee "$attempt_log_dir/test.log"
+              test > "$attempt_log" 2>&1 &
+            xcodebuild_pid=$!
+
+            while kill -0 "$xcodebuild_pid" 2>/dev/null; do
+              if (( SECONDS - attempt_started >= timeout_seconds )); then
+                echo "XCTest attempt $attempt exceeded ${timeout_seconds}s; collecting diagnostics before retrying." | tee -a "$attempt_log"
+                sample "$xcodebuild_pid" 10 -file "$attempt_log_dir/xcodebuild.sample.txt" || true
+                xcrun simctl list devices >> "$attempt_log_dir/simctl-devices.txt" 2>&1 || true
+                kill -TERM "$xcodebuild_pid" 2>/dev/null || true
+                for _ in $(seq 1 30); do
+                  kill -0 "$xcodebuild_pid" 2>/dev/null || break
+                  sleep 1
+                done
+                if kill -0 "$xcodebuild_pid" 2>/dev/null; then
+                  echo "XCTest attempt $attempt ignored SIGTERM; sending SIGKILL." | tee -a "$attempt_log"
+                  kill -KILL "$xcodebuild_pid" 2>/dev/null || true
+                fi
+                wait "$xcodebuild_pid" || true
+                cat "$attempt_log"
+                return 124
+              fi
+              sleep 5
+            done
+
+            wait "$xcodebuild_pid" || xcodebuild_status=$?
+            cat "$attempt_log"
+            return "$xcodebuild_status"
           }
 
           if ! run_xctest_attempt 1; then
