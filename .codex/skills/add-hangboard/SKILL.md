@@ -22,9 +22,14 @@ geometry, and validation contract.
 4. Create the flat `Hangboards/<slug>/board.json` plus the PNG assets declared
    by its presentations. Use a clean, simplified, straight-on presentation
    render that preserves the revision's distinguishable layout; use source
-   photos as evidence, not as the primary asset. Use the Trango Rock Prodigy
-   Pivot only as a structural and path-style precedent; do not copy its
-   product-specific geometry.
+   photos as evidence, not as the primary asset. Match the established catalog
+   material/render style for the real product: wood boards use pale timber,
+   realistic recesses, soft studio lighting, and an off-white background;
+   non-wood boards use a comparable style for their actual material. Before PR
+   submission, compare the asset side by side with a similar existing catalog
+   board that matches the product's material and form factor. Use the Trango
+   Rock Prodigy Pivot only as a structural and path-style precedent; do not
+   copy its product-specific geometry.
 5. Deliberately author each normalized closed path, then refine it directly in
    Workbench. Mirror one reviewed side exactly when official evidence shows
    symmetry. Keep one logical hold with multiple pieces when a single physical
@@ -48,6 +53,9 @@ geometry, and validation contract.
   testing.
 - Keep each revision's presentation asset head-on and visually distinguishable;
   do not substitute an angled archival photograph for the rendered asset.
+- Match each presentation asset to the catalog render style for the product's
+  actual material and form factor, and side-by-side review it against a
+  comparable existing catalog board before PR submission.
 - Do not split one physical product into separate catalog packages solely
   because its selectable surface or mounting orientation changes.
 - Record provenance and caveats for every non-primary source; never turn an
