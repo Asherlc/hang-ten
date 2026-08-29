@@ -21,6 +21,7 @@ import android.os.SystemClock
 import androidx.core.content.ContextCompat
 import java.util.UUID
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.locks.ReentrantLock
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
@@ -76,6 +77,8 @@ internal class SerialNotificationQueue(
     private val onTerminal: (Throwable) -> Unit,
 ) {
     private val ingress = ArrayBlockingQueue<ByteArray>(capacityFrames)
+    private val admissionLock = ReentrantLock()
+    private val terminalRequested = AtomicBoolean(false)
     private val isDraining = AtomicBoolean(false)
     private val pendingFrames = AtomicInteger(0)
     private val isTerminal = AtomicBoolean(false)
@@ -94,31 +97,55 @@ internal class SerialNotificationQueue(
     }
 
     fun enqueue(frame: ByteArray): Boolean {
-        if (!reservePendingFrame()) return false
-        if (!ingress.offer(frame.copyOf())) {
-            pendingFrames.decrementAndGet()
-            terminal()
+        if (terminalRequested.get()) return false
+        if (!admissionLock.tryLock()) {
+            terminalRequested.set(true)
             return false
         }
-        val pending = pendingFrames.get()
-        publishState(pending)
-        if (isDraining.compareAndSet(false, true)) drainJob = scope.launch { drain() }
-        return true
+        try {
+            if (terminalRequested.get() || isTerminal.get()) {
+                terminalLocked()
+                return false
+            }
+            val pending = pendingFrames.get()
+            if (pending >= capacityFrames || !ingress.offer(frame.copyOf())) {
+                terminalLocked()
+                return false
+            }
+            pendingFrames.incrementAndGet()
+            publishState(pending + 1)
+            if (isDraining.compareAndSet(false, true)) drainJob = scope.launch { drain() }
+            if (terminalRequested.get()) terminalLocked()
+            return true
+        } finally {
+            admissionLock.unlock()
+        }
     }
 
     fun stop() {
-        drainJob?.cancel()
-        drainJob = null
-        isDraining.set(false)
-        ingress.clear()
-        pendingFrames.set(0)
-        publishState(0)
+        admissionLock.lock()
+        try {
+            drainJob?.cancel()
+            drainJob = null
+            isDraining.set(false)
+            ingress.clear()
+            pendingFrames.set(0)
+            publishState(0)
+        } finally {
+            admissionLock.unlock()
+        }
     }
 
     fun reset() {
         stop()
-        isTerminal.set(false)
-        _state.value = NotificationQueueState(capacityFrames)
+        admissionLock.lock()
+        try {
+            terminalRequested.set(false)
+            isTerminal.set(false)
+            _state.value = NotificationQueueState(capacityFrames)
+        } finally {
+            admissionLock.unlock()
+        }
     }
 
     private suspend fun drain() {
@@ -133,19 +160,9 @@ internal class SerialNotificationQueue(
         }
     }
 
-    private fun reservePendingFrame(): Boolean {
-        while (true) {
-            if (isTerminal.get()) return false
-            val pending = pendingFrames.get()
-            if (pending >= capacityFrames) {
-                terminal()
-                return false
-            }
-            if (pendingFrames.compareAndSet(pending, pending + 1)) return true
-        }
-    }
-
-    private fun terminal() {
+    /** Must run while [admissionLock] is held; callers never block a BLE callback. */
+    private fun terminalLocked() {
+        terminalRequested.set(true)
         if (isTerminal.compareAndSet(false, true)) {
             val error = SensorNotificationOverloadException(capacityFrames)
             publishState(pendingFrames.get(), error)

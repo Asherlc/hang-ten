@@ -2,6 +2,7 @@ package com.hangten.android.sensors
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 enum class SensorConnectionState { Idle, Scanning, Calibrating, Streaming, Failed, Disconnected }
 
@@ -25,6 +29,10 @@ data class SensorMeterState(
     val tareCompletionCount: Int = 0,
 )
 
+class MeasurementHandoffOverloadException(capacity: Int) : IllegalStateException(
+    "Sensor measurement handoff capacity ($capacity) was reached; recording stopped.",
+)
+
 /**
  * Platform-neutral connection lifecycle. Calling [connectAfterPermissionsGranted]
  * is deliberately separate from [userInitiatedConnectPermissions]: UI owns the
@@ -34,15 +42,18 @@ class SensorConnectionController(
     private val transport: ForceSensorTransport,
     initialProfile: ForceSensorProfile = ForceSensorProfile.Automatic,
     private val tareSampleCount: Int = 15,
+    private val measurementHandoffCapacity: Int = 128,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
 ) {
     private val _state = MutableStateFlow(SensorMeterState(profile = initialProfile))
     val state: StateFlow<SensorMeterState> = _state.asStateFlow()
-    private val measurementChannel = Channel<MotherboardMeasurement>(Channel.UNLIMITED)
+    private val measurementChannels = MutableStateFlow(newMeasurementHandoff())
     /** Every notification in arrival order; unlike the meter StateFlow this is not conflated. */
-    val measurements = measurementChannel.receiveAsFlow()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val measurements = measurementChannels.flatMapLatest { channel -> channel.receiveAsFlow() }
     private var notificationJob: Job? = null
     private var transportErrorJob: Job? = null
+    private val terminalMutex = Mutex()
     private var terminalTransportError: Throwable? = null
     private val parser = MotherboardProtocolParser()
     private val calibrationRows = mutableListOf<MotherboardCalibrationRow>()
@@ -60,7 +71,7 @@ class SensorConnectionController(
     fun connectAfterPermissionsGranted() {
         scope.launch {
             val requested = state.value.profile
-            terminalTransportError = null
+            terminalMutex.withLock { terminalTransportError = null }
             _state.value = state.value.copy(connection = SensorConnectionState.Scanning, error = null)
             try {
                 val advertised = transport.scan(requested)
@@ -77,13 +88,11 @@ class SensorConnectionController(
                     writeOrFail(active.writeCharacteristic!!, MotherboardProtocol.command("C"))
                 } else {
                     commandPayload(active, ForceSensorCommand.Start)?.let { writeOrFail(active.writeCharacteristic!!, it) }
-                    if (terminalTransportError != null || state.value.connection != SensorConnectionState.Scanning) return@launch
+                    if (hasTerminalTransportError() || state.value.connection != SensorConnectionState.Scanning) return@launch
                     _state.value = state.value.copy(connection = SensorConnectionState.Streaming)
                 }
             } catch (error: Throwable) {
-                if (terminalTransportError == null) {
-                    _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: "Unable to connect to sensor.")
-                }
+                recordWriteFailure(error, "Unable to connect to sensor.")
             }
         }
     }
@@ -97,7 +106,9 @@ class SensorConnectionController(
         } else {
             scope.launch {
                 commandPayload(active, ForceSensorCommand.Tare)?.let { writeOrFail(active.writeCharacteristic!!, it) }
-                if (state.value.connection != SensorConnectionState.Failed) _state.value = state.value.copy(tareCompletionCount = state.value.tareCompletionCount + 1)
+                if (state.value.connection == SensorConnectionState.Streaming) {
+                    _state.value = state.value.copy(tareCompletionCount = state.value.tareCompletionCount + 1)
+                }
             }
         }
     }
@@ -108,6 +119,7 @@ class SensorConnectionController(
         notificationJob = null
         transportErrorJob?.cancel()
         transportErrorJob = null
+        replaceMeasurementHandoff()
         val stop = commandPayload(active, ForceSensorCommand.Stop)
         val write = active.writeCharacteristic
         if (stop != null && write != null) scope.launch {
@@ -126,18 +138,7 @@ class SensorConnectionController(
         }
         transportErrorJob = scope.launch {
             transport.errors.first { error ->
-                terminalTransportError = error
-                notificationJob?.cancel()
-                notificationJob = null
-                transport.disconnect()
-                _state.value = state.value.copy(
-                    connection = SensorConnectionState.Disconnected,
-                    activeProfile = null,
-                    latestMeasurement = null,
-                    isTaring = false,
-                    tareSamplesCollected = 0,
-                    error = error.message ?: "Sensor disconnected.",
-                )
+                handleTerminalTransportError(error, cancelErrorListener = false)
                 true
             }
         }
@@ -183,16 +184,23 @@ class SensorConnectionController(
     }
 
     private suspend fun publish(measurement: MotherboardMeasurement) {
-        val meter = state.value
-        if (meter.isTaring && measurement.sensorLoadsKgf.size == 4) {
-            tareAccumulator = tareAccumulator.zip(measurement.sensorLoadsKgf).map { (total, load) -> total + load }
-            val count = meter.tareSamplesCollected + 1
-            if (count >= tareSampleCount.coerceAtLeast(1)) {
-                tareKgf = tareKgf.zip(tareAccumulator.map { it / count }).map { (old, average) -> old + average }
-                _state.value = meter.copy(latestMeasurement = measurement, isTaring = false, tareSamplesCollected = 0, tareCompletionCount = meter.tareCompletionCount + 1)
-            } else _state.value = meter.copy(latestMeasurement = measurement, tareSamplesCollected = count)
-        } else _state.value = meter.copy(latestMeasurement = measurement)
-        measurementChannel.send(measurement)
+        val handoffOverloaded = terminalMutex.withLock {
+            if (terminalTransportError != null) return
+            val meter = state.value
+            if (meter.isTaring && measurement.sensorLoadsKgf.size == 4) {
+                tareAccumulator = tareAccumulator.zip(measurement.sensorLoadsKgf).map { (total, load) -> total + load }
+                val count = meter.tareSamplesCollected + 1
+                if (count >= tareSampleCount.coerceAtLeast(1)) {
+                    tareKgf = tareKgf.zip(tareAccumulator.map { it / count }).map { (old, average) -> old + average }
+                    _state.value = meter.copy(latestMeasurement = measurement, isTaring = false, tareSamplesCollected = 0, tareCompletionCount = meter.tareCompletionCount + 1)
+                } else _state.value = meter.copy(latestMeasurement = measurement, tareSamplesCollected = count)
+            } else _state.value = meter.copy(latestMeasurement = measurement)
+            !measurementChannels.value.trySend(measurement).isSuccess
+        }
+        if (handoffOverloaded) handleTerminalTransportError(
+            MeasurementHandoffOverloadException(measurementHandoffCapacity.coerceAtLeast(1)),
+            cancelErrorListener = true,
+        )
     }
 
     private fun resetMotherboardSession() {
@@ -226,11 +234,44 @@ class SensorConnectionController(
 
     private suspend fun writeOrFail(characteristic: ForceSensorCharacteristic, payload: ByteArray) {
         try { transport.write(characteristic, payload) }
-        catch (error: Throwable) {
-            if (terminalTransportError == null) {
-                _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: "Sensor write failed.")
-            }
+        catch (error: Throwable) { recordWriteFailure(error, "Sensor write failed.") }
+    }
+
+    private fun newMeasurementHandoff(): Channel<MotherboardMeasurement> = Channel(measurementHandoffCapacity.coerceAtLeast(1))
+
+    private fun replaceMeasurementHandoff() {
+        val current = measurementChannels.value
+        measurementChannels.value = newMeasurementHandoff()
+        current.cancel()
+    }
+
+    private suspend fun hasTerminalTransportError(): Boolean = terminalMutex.withLock { terminalTransportError != null }
+
+    private suspend fun recordWriteFailure(error: Throwable, fallback: String) = terminalMutex.withLock {
+        if (terminalTransportError == null) {
+            _state.value = state.value.copy(connection = SensorConnectionState.Failed, error = error.message ?: fallback)
         }
+    }
+
+    private suspend fun handleTerminalTransportError(error: Throwable, cancelErrorListener: Boolean) = terminalMutex.withLock {
+        if (terminalTransportError != null) return
+        terminalTransportError = error
+        notificationJob?.cancel()
+        notificationJob = null
+        if (cancelErrorListener) {
+            transportErrorJob?.cancel()
+            transportErrorJob = null
+        }
+        replaceMeasurementHandoff()
+        transport.disconnect()
+        _state.value = state.value.copy(
+            connection = SensorConnectionState.Disconnected,
+            activeProfile = null,
+            latestMeasurement = null,
+            isTaring = false,
+            tareSamplesCollected = 0,
+            error = error.message ?: "Sensor disconnected.",
+        )
     }
 
     private var nextForceSampleNumber: UShort = 0u

@@ -197,3 +197,31 @@ no AVD was created. All three exact owned SDK roots were then deleted.
   :app:assembleDebug` both finished **BUILD SUCCESSFUL**.
 - Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round4-final`
   root is absent.
+
+### Round 5 finite handoff and terminal-arbitration remediation
+
+- Controller-to-workout measurement delivery is now a finite, per-lifecycle
+  channel (128 by default), not `Channel.UNLIMITED`. On a slow or absent
+  workout consumer, the next frame that cannot enter the handoff creates a
+  terminal `MeasurementHandoffOverloadException`; the controller cancels
+  notification collection, rotates/cancels the channel to discard retained
+  Settings samples, disconnects transport, and exposes the existing UI error.
+  The workout collector therefore receives neither retained stale samples nor
+  late post-terminal samples.
+- Notification admission is now atomic through capacity decision and ingress
+  insertion. BLE callbacks use nonblocking `tryLock`; contention requests the
+  same one-shot terminal transition rather than waiting. The concurrent-callback
+  regression verifies every callback completes within one second, exactly one
+  frame is admitted into a capacity-one queue, and no item is accepted after
+  the terminal error.
+- Terminal state/error arbitration is mutex-owned in the controller. Both the
+  normal production GATT callback order and the schedule where a write failure
+  is already queued resolve to the documented terminal state: `Disconnected`
+  with the remote `GATT 133` error, not a race-dependent `Failed` state.
+- Fresh owned SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round5`: focused
+  transport/controller tests — **BUILD SUCCESSFUL**; then the unfiltered
+  `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` — **BUILD
+  SUCCESSFUL**. The connected-emulator release gate remains separately unrun.
+- Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round5` root is absent.

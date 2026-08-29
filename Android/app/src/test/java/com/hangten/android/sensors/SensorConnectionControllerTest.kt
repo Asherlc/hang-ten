@@ -93,10 +93,16 @@ class SensorConnectionControllerTest {
         val transport = FakeForceSensorTransport(notificationCapacity = 512).apply {
             enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
         }
-        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        val controller = SensorConnectionController(
+            transport = transport,
+            initialProfile = ForceSensorProfile.Progressor,
+            measurementHandoffCapacity = 512,
+            scope = this,
+        )
         controller.connectAfterPermissionsGranted(); advanceUntilIdle()
         val received = mutableListOf<UShort>()
         val collection = launch { controller.measurements.collect { received += it.sampleNumber } }
+        advanceUntilIdle()
         repeat(256) { transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0)) }
         advanceUntilIdle()
         assertEquals(256.toUShort(), controller.state.value.latestMeasurement!!.sampleNumber)
@@ -134,6 +140,26 @@ class SensorConnectionControllerTest {
         assertTrue(controller.state.value.error!!.contains("notification queue"))
         assertEquals(null, controller.state.value.latestMeasurement)
         assertEquals(0, transport.notificationQueueState.value.pendingFrames)
+    }
+
+    @Test
+    fun slowOrAbsentWorkoutConsumerTriggersTerminalMeasurementHandoffOverload() = runTest {
+        val transport = FakeForceSensorTransport(notificationCapacity = 512, notificationScope = this).apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+        }
+        val controller = SensorConnectionController(
+            transport = transport,
+            initialProfile = ForceSensorProfile.Progressor,
+            measurementHandoffCapacity = 2,
+            scope = this,
+        )
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        repeat(3) { transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0)) }
+        advanceUntilIdle()
+
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("measurement handoff"))
+        assertEquals(null, controller.state.value.latestMeasurement)
     }
 
     @Test
@@ -210,6 +236,25 @@ class SensorConnectionControllerTest {
         val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
         controller.connectAfterPermissionsGranted(); advanceUntilIdle()
         transport.onRemoteGattDisconnected(status = 133); advanceUntilIdle()
+
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("GATT 133"))
+        controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun remoteDisconnectWinsWhenPendingWriteFailureIsAlreadyScheduled() = runTest {
+        val barrier = CompletableDeferred<Unit>()
+        val transport = FakeForceSensorTransport().apply {
+            enqueue(ForceSensorAdvertisement(name = "Progressor 200"))
+            writeBarrier = barrier
+        }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.writeFailure = IllegalStateException("write callback failed")
+        barrier.complete(Unit)
+        transport.onRemoteGattDisconnected(status = 133)
+        advanceUntilIdle()
 
         assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
         assertTrue(controller.state.value.error!!.contains("GATT 133"))
