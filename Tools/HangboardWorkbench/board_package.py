@@ -1471,6 +1471,7 @@ def _validate_editor_document(
         Any,
         dict[str, object] | None,
         tuple[int, ...],
+        tuple[int, ...],
         int | None,
         int | float | None,
         dict[str, int | float] | None,
@@ -1481,9 +1482,9 @@ def _validate_editor_document(
 ]:
     """Parse and cross-validate an editor document, allowing added/removed/
     recategorized holds. Returns key -> (holdID, pieceIndex, kind, sloper
-    metadata, parsed path, shape constraint, bendable command indexes, finger
-    capacity, fixed depth, depth range, hand capacity, paired hold, equipment
-    object ID)."""
+    metadata, parsed path, shape constraint, bendable command indexes, smooth
+    anchor indexes, finger capacity, fixed depth, depth range, hand capacity,
+    paired hold, equipment object ID)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
     _required_and_allowed_keys(
@@ -1523,6 +1524,7 @@ def _validate_editor_document(
             dict[str, object] | None,
             Any,
             dict[str, object] | None,
+            tuple[int, ...],
             tuple[int, ...],
             int | None,
             int | float | None,
