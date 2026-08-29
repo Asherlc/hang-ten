@@ -3,6 +3,17 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testMegosRepeaterPlanAlternatesStructuredSides() throws {
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.megos-one-arm-7-3"))
+        let workSteps = plan.steps.filter { $0.phase == .hang }
+
+        XCTAssertEqual(workSteps.filter { $0.side == .left }.count, 24)
+        XCTAssertEqual(workSteps.filter { $0.side == .right }.count, 24)
+        XCTAssertTrue(workSteps.allSatisfy { $0.handUse == .single })
+        XCTAssertTrue(workSteps.allSatisfy { $0.action == .hang })
+        XCTAssertTrue(workSteps.allSatisfy { $0.activeDuration == 7 })
+    }
+
     func testLandscapePreStartPresentationKeepsCueContentAndAvailableStopwatch() {
         let step = WorkoutStep(
             id: "stopwatch-step",

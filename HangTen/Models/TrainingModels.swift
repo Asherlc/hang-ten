@@ -2324,6 +2324,63 @@ enum LegacyPlanSeedCatalog {
         }())
     )
 
+    /// Faithful step-level expansion of the reported Megos protocol. The
+    /// source states the work/rest cycle and side/set order, while the app
+    /// exposes each source repetition as its own unilateral timer step.
+    static let megoOneArmSevenThree = TrainingPlan(
+        id: "research.megos-one-arm-7-3",
+        title: "Megos · One-arm 7/3 Repeaters",
+        subtitle: "Six sets of four 7/3 one-arm repeaters per side, with 2m set recovery.",
+        level: "Advanced",
+        sourceLabel: "Alex Megos finger-training power-endurance protocol (reported by Eric Hörst)",
+        sourceURL: URL(string: "https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/")!,
+        provenance: .adapted,
+        boardID: nil,
+        steps: numbered({
+            var steps: [WorkoutStep] = []
+            let target: [HoldTarget] = [.feature(.mediumEdge)]
+
+            for set in 1...6 {
+                for side in [WorkoutSide.left, .right] {
+                    for repetition in 1...4 {
+                        let finalRepetitionForSide = repetition == 4
+                        steps.append(
+                            WorkoutStep(
+                                id: "megos-7-3-set-\(set)-\(side.rawValue)-rep-\(repetition)",
+                                number: 0,
+                                title: "Megos 7/3 · set \(set) · \(side.rawValue) · rep \(repetition) of 4",
+                                instruction: "Hang one-armed from a comfortable 20–24 mm edge for 7 seconds.",
+                                accessory: finalRepetitionForSide
+                                    ? "7s hang · switch sides"
+                                    : "7s hang · 3s rest",
+                                duration: finalRepetitionForSide ? 7 : 10,
+                                phase: .hang,
+                                targets: target,
+                                segments: [fixedWork(target[0], 7)] + (finalRepetitionForSide ? [] : [fixedRest(3)]),
+                                gripType: .halfCrimp,
+                                handUse: .single,
+                                side: side,
+                                action: .hang,
+                                timedWorkDuration: 7
+                            )
+                        )
+                    }
+                }
+                if set < 6 {
+                    steps.append(
+                        recoveryStep(
+                            id: "megos-7-3-set-\(set)-recovery",
+                            title: "Megos 7/3 · set recovery",
+                            duration: 120,
+                            accessory: "2m recovery"
+                        )
+                    )
+                }
+            }
+            return steps
+        }())
+    )
+
     /// The Rock Prodigy instructions leave grip identity, grip order, and set
     /// count to the athlete. This one-set template deliberately has no board
     /// target: selecting one would turn a manufacturer choice into an app
@@ -2854,6 +2911,7 @@ enum LegacyPlanSeedCatalog {
             forceF100,
             evaIntHangs,
             repeaters,
+            megoOneArmSevenThree,
             abrahangs,
             horst753,
             ladders,
