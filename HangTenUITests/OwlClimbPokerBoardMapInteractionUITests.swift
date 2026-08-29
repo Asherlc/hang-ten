@@ -19,16 +19,16 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertTrue(map.waitForExistence(timeout: 10))
         addScreenshot(named: "Poker normal Face A")
 
-        let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — slopers"]
+        let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — deep slopers"]
         XCTAssertTrue(faceB.waitForExistence(timeout: 5))
         faceB.tap()
 
-        let sloper = app.buttons["Face B left central sloper"]
+        let sloper = app.buttons["Face B left deep sloper"]
         XCTAssertTrue(sloper.waitForExistence(timeout: 5))
         sloper.tap()
 
         XCTAssertTrue(
-            app.otherElements["boardDetail.selectedHold.face-b-sloper-left"].waitForExistence(timeout: 5),
+            app.otherElements["boardDetail.selectedHold.face-b-left-deep-sloper"].waitForExistence(timeout: 5),
             "The canonical Face B sloper path must be the tappable element and selected highlight."
         )
         addScreenshot(named: "Poker Face B sloper active")
