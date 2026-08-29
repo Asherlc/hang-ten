@@ -23,13 +23,15 @@ import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.first
 
 interface ForceSensorTransport {
     val notifications: Flow<ByteArray>
+    val errors: Flow<Throwable>
     suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement>
     suspend fun connect(advertisement: ForceSensorAdvertisement, profile: ForceSensorProfile)
     suspend fun subscribe(characteristic: ForceSensorCharacteristic)
@@ -40,14 +42,18 @@ interface ForceSensorTransport {
 /** Test-only deterministic transport; it never talks to Bluetooth hardware. */
 class FakeForceSensorTransport : ForceSensorTransport {
     private val discovered = mutableListOf<ForceSensorAdvertisement>()
-    private val events = MutableSharedFlow<ByteArray>(replay = 1, extraBufferCapacity = 32, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val events = Channel<ByteArray>(Channel.UNLIMITED)
+    private val errorEvents = MutableSharedFlow<Throwable>(extraBufferCapacity = 8)
     val operations = mutableListOf<String>()
     var connectFailure: Throwable? = null
+    var writeFailure: Throwable? = null
     var connectBarrier: kotlinx.coroutines.CompletableDeferred<Unit>? = null
-    override val notifications: Flow<ByteArray> = events
+    override val notifications: Flow<ByteArray> = events.receiveAsFlow()
+    override val errors: Flow<Throwable> = errorEvents
 
     fun enqueue(advertisement: ForceSensorAdvertisement) { discovered += advertisement }
-    fun emit(value: ByteArray) { events.tryEmit(value.copyOf()) }
+    fun emit(value: ByteArray) { check(events.trySend(value.copyOf()).isSuccess) }
+    fun fail(error: Throwable) { check(errorEvents.tryEmit(error)) }
 
     override suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement> {
         operations += "scan:${profile.name}"
@@ -66,6 +72,7 @@ class FakeForceSensorTransport : ForceSensorTransport {
 
     override suspend fun write(characteristic: ForceSensorCharacteristic, value: ByteArray) {
         operations += "write:${characteristic.characteristicUuid}:${value.joinToString("") { "%02x".format(it) }}"
+        writeFailure?.let { throw it }
     }
 
     override fun disconnect() { operations += "disconnect" }
@@ -86,14 +93,17 @@ object BlePermissionRequirements {
 class AndroidBleForceSensorTransport(private val context: Context) : ForceSensorTransport {
     private val appContext = context.applicationContext
     private val bluetoothAdapter: BluetoothAdapter? = appContext.getSystemService(BluetoothManager::class.java)?.adapter
-    private val notificationEvents = MutableSharedFlow<ByteArray>(extraBufferCapacity = 64, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    override val notifications: Flow<ByteArray> = notificationEvents
+    private val notificationEvents = Channel<ByteArray>(capacity = 128)
+    private val errorEvents = MutableSharedFlow<Throwable>(extraBufferCapacity = 8)
+    override val notifications: Flow<ByteArray> = notificationEvents.receiveAsFlow()
+    override val errors: Flow<Throwable> = errorEvents
     private var gatt: BluetoothGatt? = null
     private var scanCallback: ScanCallback? = null
     private var connectedAdvertisement: ForceSensorAdvertisement? = null
     private val scannedDevices = linkedMapOf<ForceSensorAdvertisement, BluetoothDevice>()
     private var connectionContinuation: kotlinx.coroutines.CancellableContinuation<Unit>? = null
     private var descriptorContinuation: kotlinx.coroutines.CancellableContinuation<Unit>? = null
+    private var writeContinuation: kotlinx.coroutines.CancellableContinuation<Unit>? = null
 
     @SuppressLint("MissingPermission")
     override suspend fun scan(profile: ForceSensorProfile): List<ForceSensorAdvertisement> {
@@ -153,13 +163,16 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
     }
 
     @SuppressLint("MissingPermission")
-    override suspend fun write(characteristic: ForceSensorCharacteristic, value: ByteArray) {
+    override suspend fun write(characteristic: ForceSensorCharacteristic, value: ByteArray) = suspendCancellableCoroutine { continuation ->
         requirePermissions()
         val target = gatt?.getService(UUID.fromString(characteristic.serviceUuid))
             ?.getCharacteristic(UUID.fromString(characteristic.characteristicUuid))
-            ?: throw IllegalStateException("Sensor write characteristic is unavailable.")
-        if (Build.VERSION.SDK_INT >= 33) gatt?.writeCharacteristic(target, value, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT)
-        else @Suppress("DEPRECATION") run { target.value = value; target.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT; gatt?.writeCharacteristic(target) }
+            ?: run { continuation.resumeWithException(IllegalStateException("Sensor write characteristic is unavailable.")); return@suspendCancellableCoroutine }
+        writeContinuation = continuation
+        val accepted = if (Build.VERSION.SDK_INT >= 33) gatt?.writeCharacteristic(target, value, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT) == BluetoothStatusCodes.SUCCESS
+        else @Suppress("DEPRECATION") run { target.value = value; target.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT; gatt?.writeCharacteristic(target) == true }
+        if (!accepted) failWrite(IllegalStateException("Sensor write request was rejected."))
+        continuation.invokeOnCancellation { writeContinuation = null }
     }
 
     @SuppressLint("MissingPermission")
@@ -172,6 +185,7 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
         connectedAdvertisement = null
         failSetup(IllegalStateException("Sensor disconnected during setup."))
         failDescriptor(IllegalStateException("Sensor disconnected while enabling notifications."))
+        failWrite(IllegalStateException("Sensor disconnected while writing."))
     }
 
     private fun requirePermissions() {
@@ -188,6 +202,8 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED || status != BluetoothGatt.GATT_SUCCESS) {
                 failSetup(IllegalStateException("Sensor disconnected during setup (GATT $status)."))
                 failDescriptor(IllegalStateException("Sensor disconnected while enabling notifications (GATT $status)."))
+                failWrite(IllegalStateException("Sensor disconnected while writing (GATT $status)."))
+                errorEvents.tryEmit(IllegalStateException("Sensor disconnected (GATT $status)."))
             }
         }
 
@@ -201,13 +217,18 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
             else failDescriptor(IllegalStateException("Sensor notification setup failed (GATT $status)."))
         }
 
+        override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) writeContinuation?.also { continuation -> writeContinuation = null; continuation.resume(Unit) }
+            else failWrite(IllegalStateException("Sensor write failed (GATT $status)."))
+        }
+
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray) {
-            notificationEvents.tryEmit(value.copyOf())
+            enqueueNotification(value)
         }
 
         @Deprecated("Deprecated in Java")
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-            notificationEvents.tryEmit(characteristic.value?.copyOf() ?: return)
+            enqueueNotification(characteristic.value?.copyOf() ?: return)
         }
     }
 
@@ -225,6 +246,16 @@ class AndroidBleForceSensorTransport(private val context: Context) : ForceSensor
 
     private fun failDescriptor(error: Throwable) {
         descriptorContinuation?.also { continuation -> descriptorContinuation = null; continuation.resumeWithException(error) }
+    }
+
+    private fun failWrite(error: Throwable) {
+        writeContinuation?.also { continuation -> writeContinuation = null; continuation.resumeWithException(error) }
+    }
+
+    private fun enqueueNotification(value: ByteArray) {
+        if (!notificationEvents.trySend(value.copyOf()).isSuccess) {
+            errorEvents.tryEmit(IllegalStateException("Sensor notification queue is full; disconnect and reconnect."))
+        }
     }
 
     private companion object {

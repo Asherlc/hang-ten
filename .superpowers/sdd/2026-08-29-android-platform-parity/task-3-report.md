@@ -92,3 +92,14 @@ the platform tools, emulator, build tools, API 36 platform, and API 36 ARM64
 image was again terminated by the runner after about 28 seconds. Inspection
 found only `emulator/.installer`, no `system-images/**/package.xml`; therefore
 no AVD was created. All three exact owned SDK roots were then deleted.
+
+### Final transport hardening
+
+- Streaming disconnects now move the controller to `Disconnected` with a
+  visible error. Notifications use an explicit bounded queue: queue overflow
+  is surfaced as an error rather than silently dropping a sample. GATT writes
+  now suspend through `onCharacteristicWrite` and surface write/disconnect
+  failures to Start, Tare, and Stop callers.
+- Focused sensor tests, full `:app:testDebugUnitTest`, `:app:lintDebug`, and
+  `:app:assembleDebug` were rerun using the minimal owned SDK and finished
+  **BUILD SUCCESSFUL**. The exact minimal SDK root was removed after the run.

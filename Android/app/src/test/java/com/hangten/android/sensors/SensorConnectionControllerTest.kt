@@ -75,6 +75,28 @@ class SensorConnectionControllerTest {
         assertTrue(controller.state.value.error!!.contains("disconnected during discovery"))
     }
 
+    @Test
+    fun streamingDisconnectResetsMeterAndReportsError() = runTest {
+        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        transport.fail(IllegalStateException("remote disconnect")); advanceUntilIdle()
+        assertEquals(SensorConnectionState.Disconnected, controller.state.value.connection)
+        assertTrue(controller.state.value.error!!.contains("remote disconnect"))
+        controller.disconnect(); advanceUntilIdle()
+    }
+
+    @Test
+    fun burstNotificationsKeepEveryGenericSampleInArrivalOrder() = runTest {
+        val transport = FakeForceSensorTransport().apply { enqueue(ForceSensorAdvertisement(name = "Progressor 200")) }
+        val controller = SensorConnectionController(transport, ForceSensorProfile.Progressor, scope = this)
+        controller.connectAfterPermissionsGranted(); advanceUntilIdle()
+        repeat(80) { transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0)) }
+        advanceUntilIdle()
+        assertEquals(80.toUShort(), controller.state.value.latestMeasurement!!.sampleNumber)
+        controller.disconnect(); advanceUntilIdle()
+    }
+
     private fun calibration(): List<String> = (0..3).flatMap { sensor ->
         (0..3).map { point -> "$sensor,$point,$point,${point * 10}" }
     }

@@ -41,6 +41,7 @@ class SensorConnectionController(
     /** Every notification in arrival order; unlike the meter StateFlow this is not conflated. */
     val measurements = measurementChannel.receiveAsFlow()
     private var notificationJob: Job? = null
+    private var transportErrorJob: Job? = null
     private val parser = MotherboardProtocolParser()
     private val calibrationRows = mutableListOf<MotherboardCalibrationRow>()
     private var calibration: MotherboardCalibration? = null
@@ -99,6 +100,8 @@ class SensorConnectionController(
         val active = state.value.activeProfile ?: state.value.profile
         notificationJob?.cancel()
         notificationJob = null
+        transportErrorJob?.cancel()
+        transportErrorJob = null
         val stop = commandPayload(active, ForceSensorCommand.Stop)
         val write = active.writeCharacteristic
         if (stop != null && write != null) scope.launch {
@@ -113,6 +116,15 @@ class SensorConnectionController(
         notificationJob = scope.launch {
             transport.notifications.collect { frame ->
                 if (active == ForceSensorProfile.Motherboard) onMotherboardFrame(frame) else onForceFrame(active, frame)
+            }
+        }
+        transportErrorJob = scope.launch {
+            transport.errors.collect { error ->
+                _state.value = state.value.copy(
+                    connection = SensorConnectionState.Disconnected,
+                    activeProfile = null,
+                    error = error.message ?: "Sensor disconnected.",
+                )
             }
         }
     }
