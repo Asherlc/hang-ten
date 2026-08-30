@@ -24,10 +24,9 @@ is inferred from a marketing photograph.
 | Lattice | MXEdge Lift Large | [2025 catalogue, p. 3](https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf): large is a distinct SKU; MX22, MX16, MX12 and 28 mm mono. | included |
 | Plateau | Lifting Edge base kit | [product](https://www.plateauclimbing.com/products/plateau-lifting-edge): current add-to-cart compact aluminium body, 18 mm Oak-or-Pine edge, and supplied 15/10 mm blocker.  Separate aftermarket inserts only when their own current page provides a complete direct visual inventory. | included |
 | Frictitious | The NUG | [product](https://frictitiousclimbing.com/products/the-nug): 130 x 60 x 40 mm; 40 mm jug, 60 mm pinch, and 8/13/20/25 mm edges. | included |
-| Captain Fingerfood | POCKET (two-depth revision, including Lines cosmetic edition) | [product](https://captainfingerfood.rocks/en/products/das-hangboard-fur-die-hosentasche): 110 x 66 x 29 mm, 15/20 mm bars, their rotated two-finger uses, open/undercut pinch, and open/undercut jug. [Lines edition](https://en.captainfingerfood.rocks/products/lines-hangboard) names the same original two-depth inventory and is therefore artwork only. | included |
-| Captain Fingerfood | POCKET+ | [product](https://en.captainfingerfood.rocks/Products/The-hangboard-for-your-pocket): distinct 110 x 66 x 35 mm revision with 6/10/15/20 mm bars, listed rotated two-finger uses, open/undercut pinch, and open/undercut jug. | included |
-| Captain Fingerfood | UNLEVEL | [product](https://en.captainfingerfood.rocks/products/unlevel-hangboard): 12 x 7 x 3 cm, two curved rung depths (20/25 mm). | included |
-| Captain Fingerfood | DUAL | [product](https://en.captainfingerfood.rocks/products/dual-hangboard): 12 x 7 x 3 cm, one straight and one curved 20 mm edge. | included |
+| Captain Fingerfood | POCKET (two-depth revision, Lines cosmetic edition) | [Lines product](https://en.captainfingerfood.rocks/products/lines-hangboard): 110 x 66 x 29 mm and the current grip chart names the 15/20 mm bars and their rotated two-finger use. The current Lines evidence supports one continuous outer edge used for one-arm pulling / fitting a hand, not two independently selectable outer contacts. | included |
+| Captain Fingerfood | UNLEVEL | [product](https://en.captainfingerfood.rocks/products/unlevel-hangboard): 12 x 7 x 3 cm, two curved rung depths (20/25 mm), and a jug explicitly shown in the manufacturer grip chart. | included |
+| Captain Fingerfood | DUAL | [product](https://en.captainfingerfood.rocks/products/dual-hangboard): 12 x 7 x 3 cm, one straight and one single centrally curved 20 mm edge on opposing sides of the same cavity, plus a jug explicitly shown in the manufacturer grip chart. | included |
 | Aelith | Cyclops Portable Hangboard (current SKU 1001-011, Blue x Black) | [current product](https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/): product is in stock and add-to-cart. The complete selectable inventory is one 20 mm mono edge; the lanyard and carabiner hole are suspension hardware, not contacts. Other grip postures named on the page use that same mono edge and are not separate holds. | included |
 | Crimptonite | Helium Mobile | [product](https://crimptonite.com/product/helium-mobile/): current 400 × 58 × 24 mm, 125 g portable board; 14 mm, 22 mm, 10/18 mm centre hold, top jug, and a back jug/sloper are explicitly described. | included |
 
@@ -40,9 +39,10 @@ is inferred from a marketing photograph.
 - Plateau's body plus supplied edge/blocker is the included revision.  The
   product claims compatibility with inserts but does not make unnamed future
   inserts part of this audited package.
-- Aelith Cyclops and Plateau Lifting Edge sources establish a mono edge and
-  compact aluminium construction, respectively, but not overall dimensions;
-  their packages therefore omit `dimensions`. Crimptonite's current Helium
+- Aelith's explicit mono label supports `fingerCapacity = 1` for `mono-20`;
+  the Aelith Cyclops and Plateau Lifting Edge sources establish a mono edge and
+  compact aluminium construction, respectively, but not overall dimensions,
+  so their packages omit `dimensions`. Crimptonite's current Helium
   Mobile page explicitly specifies 400 × 58 × 24 mm, so that package records
   the physical dimensions while leaving its separately stated mass out of the
   dimension field.
@@ -51,10 +51,13 @@ is inferred from a marketing photograph.
 
 The package implementation uses the following stable IDs.  These are a direct
 mapping of the inventory in the inclusion table, not additional product
-claims.  A named rotated use of the same physical edge is not duplicated as a
-second hold: Captain Fingerfood's two-finger uses reuse the corresponding edge,
-and its open/undercut routing changes reuse the board's pinch body or outer jug
-rim.  The Plateau blocker's two sourced faces remain separate contacts.
+claims. A named rotated use of the same physical edge is not duplicated as a
+second hold: Captain Fingerfood's two-finger uses reuse the corresponding edge.
+DUAL and UNLEVEL each add one `outer-jug` because their own grip charts
+explicitly name the top exterior band as a jug. The current Lines evidence
+supports only one continuous outer edge, mapped as `jug-outer-rim`; it does not
+support splitting the same body into a separate pinch and jug. The Plateau
+blocker's two sourced faces remain separate contacts.
 
 Every included package sets `missingHandCapacityPolicy` to `unavailable`.
 That field conservatively prevents omitted simultaneous-hand capacity from
@@ -70,10 +73,9 @@ capacity claim about any product.
 | `lattice-mxedge-lift-large` | `lattice.mxedge-lift-large` | `edge-22`, `edge-16`, `edge-12`, `mono-28` |
 | `plateau-lifting-edge` | `plateau.lifting-edge` | `edge-18`, `blocker-edge-15`, `blocker-edge-10` |
 | `frictitious-nug` | `frictitious.nug` | `edge-8`, `edge-13`, `edge-20`, `edge-25`, `jug-40`, `pinch-60` |
-| `captain-fingerfood-pocket` | `captain-fingerfood.pocket` | `edge-15`, `edge-20`, `pinch-body`, `jug-outer-rim` |
-| `captain-fingerfood-pocket-plus` | `captain-fingerfood.pocket-plus` | `edge-6`, `edge-10`, `edge-15`, `edge-20`, `pinch-body`, `jug-outer-rim` |
-| `captain-fingerfood-unlevel` | `captain-fingerfood.unlevel` | `curved-edge-20`, `curved-edge-25` |
-| `captain-fingerfood-dual` | `captain-fingerfood.dual` | `straight-edge-20`, `curved-edge-20` |
+| `captain-fingerfood-pocket` | `captain-fingerfood.pocket` | `edge-15`, `edge-20`, `jug-outer-rim` |
+| `captain-fingerfood-unlevel` | `captain-fingerfood.unlevel` | `curved-edge-20`, `curved-edge-25`, `outer-jug` |
+| `captain-fingerfood-dual` | `captain-fingerfood.dual` | `straight-edge-20`, `curved-edge-20`, `outer-jug` |
 | `aelith-cyclops-011` | `aelith.cyclops-011` | `mono-20` |
 | `crimptonite-helium-mobile` | `crimptonite.helium-mobile` | `edge-14`, `edge-22`, `center-edge-10`, `center-edge-18`, `top-jug`, `back-jug-sloper` |
 
@@ -93,6 +95,7 @@ capacity claim about any product.
 | Metolius | Light Rail 2.0, Rock Rings 3D, and current fixed boards | [current hangboard catalogue](https://www.metoliusclimbing.com/collections/training-boards) | excluded — no current compact single-hand product located; the previously audited Light Rail/Rock Rings are multi-surface/two-unit devices outside this import, and fixed boards are not unilateral compact boards. |
 | Captain Fingerfood | 180° Hangboard | [product](https://en.captainfingerfood.rocks/products/180-hangboard) | excluded — 45 cm / about 650 g broad portable board, not a compact one-hand board under the defined distinction. |
 | Captain Fingerfood | ROCKER Hangboard | [product](https://captainfingerfood.rocks/en/products/rocker-hangboard) | excluded — manufacturer calls it a two-handed mobile board. |
+| Captain Fingerfood | POCKET+ | [product](https://en.captainfingerfood.rocks/Products/The-hangboard-for-your-pocket) | deferred — the primary source establishes a distinct 110 x 66 x 35 mm revision with 6/10/15/20 mm bars, listed rotated two-finger uses, open/undercut pinch, and open/undercut jug, but the available first-party presentation evidence does not expose the reverse 6/10 mm contact surfaces well enough to author and review canonical paths. Those mixed four-depth / 35 mm POCKET+ grip claims belong only to POCKET+ and cannot justify two outer contacts on the 29 mm Lines revision. The accepted POCKET+ primary and outer candidates remain audit-only artifacts under `.context`; they are not package assets and the revision is not included until source-supported reverse evidence exists. |
 | Captain Fingerfood | 360° Hangboard | [product](https://captainfingerfood.rocks/en/products/hangboard-360-togo) | deferred — current product page gives dimensions and an aggregate “12 different grip options,” but does not enumerate every edge, pinch, jug, and rotated contact. A package-ready inventory would require us to invent the mapping from unsourced labels. |
 | Problemsolver | Motion | [product](https://www.problemsolver.rocks/shop/problemsolver-motion) | excluded — manufacturer marks it “sold out”; no current product is admitted. |
 | Problemsolver | Robot | [product](https://www.problemsolver.rocks/shop/robot) | excluded — manufacturer marks both Training and Rehab variants “sold out.” |
@@ -102,6 +105,17 @@ capacity claim about any product.
 | Zodiac | 22VXE and 22RXE | [22VXE](https://zodiac-holds.com/products/dual-edge-block-vxe), [22RXE](https://zodiac-holds.com/products/dual-edge-block-22rxe) | excluded — both direct manufacturer pages are marked “Sold out.” |
 | AEVORN | Full-Size Grip Training Hangboard | [product](https://theaevorn.com/full-size-hangboard) | excluded — manufacturer calls it a wider two-hand platform (19.69 in), explicitly outside the category. |
 | AEVORN | Portable Wooden Hangboard Block | [product](https://theaevorn.com/portable-hangboard) | deferred — primary text gives 6/15/20 mm depths but calls the rest “multiple grip orientations”; it does not enumerate which physical contacts/orientations form the complete inventory. |
+
+For POCKET+, the accepted primary candidate at
+`.context/pretty-impala-generated-captain/outputs/captain-fingerfood-pocket-plus-primary.png`
+and outer candidate at
+`.context/pretty-impala-regenerated-gaps/outputs/captain-fingerfood-pocket-plus-outer-attempt-1.png`
+remain audit-only review artifacts. They are not implemented package assets and
+must not be promoted until primary evidence supports a clean, correctly
+proportioned reverse presentation for the 6/10 mm contacts. In particular, the
+POCKET+ outer-use copy is not revision-compatible evidence for splitting the
+current 29 mm Lines board's one outer edge into separate `pinch-body` and jug
+holds.
 
 ## Manufacturer coverage and verification
 

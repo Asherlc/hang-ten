@@ -5,7 +5,7 @@
   "subtitle": "Ergonomic single-hand lifting edge with three edge sizes and a mono.",
   "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
   "dimensions": "20 × 11 × 5 cm",
-  "aspectRatio": 1.8181818182,
+  "aspectRatio": 1.0,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,7 +17,7 @@
       "id": "primary",
       "name": "Primary",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.8181818182,
+      "aspectRatio": 1.0,
       "default": true
     }
   ],
@@ -32,10 +32,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.208333,
-            "y": 0.333333,
-            "width": 0.508333,
-            "height": 0.159091
+            "x": 0.29,
+            "y": 0.748,
+            "width": 0.316,
+            "height": 0.089
           },
           "shape": {
             "type": "path",
@@ -147,10 +147,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.208333,
-            "y": 0.590909,
-            "width": 0.508333,
-            "height": 0.090909
+            "x": 0.29,
+            "y": 0.635,
+            "width": 0.397,
+            "height": 0.044
           },
           "shape": {
             "type": "path",
@@ -262,10 +262,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.208333,
-            "y": 0.69697,
-            "width": 0.508333,
-            "height": 0.083333
+            "x": 0.29,
+            "y": 0.588,
+            "width": 0.397,
+            "height": 0.041
           },
           "shape": {
             "type": "path",
@@ -377,10 +377,10 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.7625,
-            "y": 0.613636,
-            "width": 0.079167,
-            "height": 0.174242
+            "x": 0.615,
+            "y": 0.766,
+            "width": 0.071,
+            "height": 0.071
           },
           "shape": {
             "type": "path",
@@ -461,7 +461,7 @@
             "type": "surface"
           },
           "shapeConstraint": {
-            "shape": "oval",
+            "shape": "circle",
             "rotationDegrees": 0
           }
         }

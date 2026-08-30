@@ -14,7 +14,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "beastmaker-2000",
             "captain-fingerfood.dual",
             "captain-fingerfood.pocket",
-            "captain-fingerfood.pocket-plus",
             "captain-fingerfood.unlevel",
             "crimptonite.helium-mobile",
             "dewoodstok-woodbord",

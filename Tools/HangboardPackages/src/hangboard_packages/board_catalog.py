@@ -846,18 +846,16 @@ def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
                     raise ValueError(f"{asset_path} has trailing data after IEND")
                 if width is None or height is None or width <= 0 or height <= 0:
                     raise ValueError(f"{asset_path} must declare positive dimensions")
-                if asset_path == "assets/primary.png" and not _png_has_alpha_zero(
-                    width=width,
-                    height=height,
-                    bit_depth=bit_depth,
-                    color_type=color_type,
-                    interlace_method=interlace_method,
-                    idat_parts=idat_parts,
-                    transparency=transparency,
-                    asset_path=asset_path,
-                ):
-                    raise ValueError(
-                        f"{asset_path} must contain at least one fully transparent pixel"
+                if asset_path == "assets/primary.png":
+                    _validate_primary_png_decoding(
+                        width=width,
+                        height=height,
+                        bit_depth=bit_depth,
+                        color_type=color_type,
+                        interlace_method=interlace_method,
+                        idat_parts=idat_parts,
+                        transparency=transparency,
+                        asset_path=asset_path,
                     )
                 return width, height
             offset = crc_end
@@ -867,7 +865,7 @@ def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
     raise ValueError(f"{asset_path} is missing its IEND chunk")
 
 
-def _png_has_alpha_zero(
+def _validate_primary_png_decoding(
     *,
     width: int,
     height: int,
@@ -877,8 +875,8 @@ def _png_has_alpha_zero(
     idat_parts: list[bytes],
     transparency: bytes | None,
     asset_path: str,
-) -> bool:
-    """Inspect decoded PNG samples for alpha zero using only the stdlib."""
+) -> None:
+    """Validate decoded primary PNG image data using only the stdlib."""
     channels_by_color_type = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
     channels = channels_by_color_type.get(color_type)
     if channels is None or bit_depth not in {1, 2, 4, 8, 16}:
@@ -886,9 +884,7 @@ def _png_has_alpha_zero(
     if color_type in {2, 4, 6} and bit_depth not in {8, 16}:
         raise ValueError(f"{asset_path} has an unsupported PNG bit depth")
     if interlace_method != 0:
-        raise ValueError(
-            f"{asset_path} must be non-interlaced for transparency validation"
-        )
+        raise ValueError(f"{asset_path} must be non-interlaced for PNG validation")
 
     bits_per_pixel = channels * bit_depth
     stride = (width * bits_per_pixel + 7) // 8
@@ -950,7 +946,6 @@ def _png_has_alpha_zero(
         or pending
     ):
         raise ValueError(f"{asset_path} has malformed image data")
-    return transparent_pixel_found
 
 
 def _row_has_alpha_zero(
@@ -1081,7 +1076,7 @@ def load_board_package(package_root: Path) -> BoardPackage:
 def is_primary_only_draft(root: Path) -> bool:
     """Return whether *root* has exactly ``assets/primary.png`` and no manifest.
 
-    Raises ``ValueError`` when the sole primary PNG is malformed or fully opaque.
+    Raises ``ValueError`` when the sole primary PNG is malformed.
     """
     _require_no_symlinks(root)
     if {item.name for item in root.iterdir()} != {"assets"}:

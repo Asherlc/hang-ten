@@ -85,15 +85,7 @@ def test_captain_fingerfood_pocket_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-pocket",
         "captain-fingerfood.pocket",
-        {"edge-15", "edge-20", "pinch-body", "jug-outer-rim"},
-    )
-
-
-def test_captain_fingerfood_pocket_plus_matches_audited_inventory() -> None:
-    _assert_audited_single_hand_package(
-        "captain-fingerfood-pocket-plus",
-        "captain-fingerfood.pocket-plus",
-        {"edge-6", "edge-10", "edge-15", "edge-20", "pinch-body", "jug-outer-rim"},
+        {"edge-15", "edge-20", "jug-outer-rim"},
     )
 
 
@@ -101,7 +93,7 @@ def test_captain_fingerfood_unlevel_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-unlevel",
         "captain-fingerfood.unlevel",
-        {"curved-edge-20", "curved-edge-25"},
+        {"curved-edge-20", "curved-edge-25", "outer-jug"},
     )
 
 
@@ -109,7 +101,7 @@ def test_captain_fingerfood_dual_matches_audited_inventory() -> None:
     _assert_audited_single_hand_package(
         "captain-fingerfood-dual",
         "captain-fingerfood.dual",
-        {"straight-edge-20", "curved-edge-20"},
+        {"straight-edge-20", "curved-edge-20", "outer-jug"},
     )
 
 

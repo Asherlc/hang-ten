@@ -12,6 +12,7 @@ CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 README = REPO_ROOT / "README.md"
 ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
+ANDROID_APP_BUILD = REPO_ROOT / "Android/app/build.gradle.kts"
 
 
 def _shell_function_body(script: str, function_name: str) -> str:
@@ -166,8 +167,8 @@ def test_ci_concurrency_cancels_stale_work_only_within_same_event_ref_group() ->
     assert concurrency["cancel-in-progress"] is True
 
 
-def test_android_instrumented_tests_use_a_published_api_35_system_image() -> None:
-    """API 35 no longer ships the action's default `default;x86` image."""
+def test_android_instrumented_tests_use_a_published_api_36_x86_64_system_image() -> None:
+    """API/build tooling tracks compileSdk 36; its published runner image is x86_64."""
     workflow = _ci_workflow()
     android_job = workflow["jobs"]["android"]
     emulator_step = next(
@@ -178,9 +179,10 @@ def test_android_instrumented_tests_use_a_published_api_35_system_image() -> Non
 
     assert emulator_step["uses"] == (
         "reactivecircus/android-emulator-runner@"
-        "1dcd0090116d15e7c562f8db72807de5e036a4ed"
+        "e89f39f1abbbd05b1113a29cf4db69e7540cae5a"
     )
-    assert emulator_step["with"]["api-level"] == 35
+    assert re.search(r"^\s*compileSdk\s*=\s*36\s*$", ANDROID_APP_BUILD.read_text(encoding="utf-8"), re.MULTILINE)
+    assert emulator_step["with"]["api-level"] == 36
     assert emulator_step["with"]["arch"] == "x86_64"
 
 

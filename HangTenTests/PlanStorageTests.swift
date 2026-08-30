@@ -26,7 +26,7 @@ final class PlanStorageTests: XCTestCase {
         }
 
         XCTAssertEqual(workSteps.map(\.side), expectedSides)
-        XCTAssertEqual(workSteps.map(\.id), expectedIDs.map { "\($0).segment-1" })
+        XCTAssertEqual(workSteps.map(\.id), expectedIDs)
         XCTAssertTrue(workSteps.allSatisfy { $0.handUse == .single })
         XCTAssertTrue(workSteps.allSatisfy { $0.action == .hang })
         XCTAssertTrue(workSteps.allSatisfy { $0.activeDuration == 7 })

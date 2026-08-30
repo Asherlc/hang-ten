@@ -278,7 +278,6 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("aelith.cyclops-011", "aelith-cyclops-011"),
         ("captain-fingerfood.dual", "captain-fingerfood-dual"),
         ("captain-fingerfood.pocket", "captain-fingerfood-pocket"),
-        ("captain-fingerfood.pocket-plus", "captain-fingerfood-pocket-plus"),
         ("captain-fingerfood.unlevel", "captain-fingerfood-unlevel"),
         ("crimptonite.helium-mobile", "crimptonite-helium-mobile"),
         ("frictitious.nug", "frictitious-nug"),

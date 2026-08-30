@@ -1,11 +1,11 @@
 {
   "id": "captain-fingerfood.pocket",
   "manufacturer": "Captain Fingerfood",
-  "name": "POCKET",
-  "subtitle": "Two-depth pocket-size board with reusable outer jug and pinch contacts.",
-  "productURL": "https://captainfingerfood.rocks/en/products/das-hangboard-fur-die-hosentasche",
+  "name": "POCKET Hangboard | Lines Edition",
+  "subtitle": "Current Lines colorway of the 110 × 66 × 29 mm two-depth POCKET revision.",
+  "productURL": "https://en.captainfingerfood.rocks/products/lines-hangboard",
   "dimensions": "110 × 66 × 29 mm",
-  "aspectRatio": 1.7142857143,
+  "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -15,17 +15,10 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "15 / 20 mm face",
+      "name": "15 / 20 mm face and outer contacts",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 1.7142857143,
+      "aspectRatio": 1.5,
       "default": true
-    },
-    {
-      "id": "outer",
-      "name": "Outer contacts",
-      "assetPath": "assets/outer.png",
-      "aspectRatio": 1.2857142857,
-      "default": false
     }
   ],
   "holds": [
@@ -39,106 +32,28 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.279167,
-            "y": 0.4,
-            "width": 0.441667,
-            "height": 0.078571
+            "x": 0.209,
+            "y": 0.398,
+            "width": 0.582,
+            "height": 0.055
           },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.9,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.96,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.22
-                ],
-                "to": [
-                  1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.78
-                ],
-                "control2": [
-                  0.96,
-                  1.0
-                ],
-                "to": [
-                  0.9,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.1,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.04,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.78
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.22
-                ],
-                "control2": [
-                  0.04,
-                  0.0
-                ],
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.0, 0.32] },
+              { "command": "curve", "control1": [0.06, 0.08], "control2": [0.1, 0.0], "to": [0.16, 0.0] },
+              { "command": "line", "to": [0.84, 0.0] },
+              { "command": "curve", "control1": [0.9, 0.0], "control2": [0.94, 0.08], "to": [1.0, 0.32] },
+              { "command": "line", "to": [1.0, 0.84] },
+              { "command": "curve", "control1": [0.91, 0.96], "control2": [0.87, 1.0], "to": [0.82, 1.0] },
+              { "command": "line", "to": [0.18, 1.0] },
+              { "command": "curve", "control1": [0.13, 1.0], "control2": [0.09, 0.96], "to": [0.0, 0.84] },
+              { "command": "line", "to": [0.0, 0.32] },
+              { "command": "close" }
             ]
           },
           "treatment": {
             "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 0
           }
         }
       ],
@@ -154,238 +69,32 @@
       "geometry": [
         {
           "frame": {
-            "x": 0.279167,
-            "y": 0.621429,
-            "width": 0.441667,
-            "height": 0.107143
+            "x": 0.205,
+            "y": 0.638,
+            "width": 0.59,
+            "height": 0.065
           },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.9,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.96,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.22
-                ],
-                "to": [
-                  1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.78
-                ],
-                "control2": [
-                  0.96,
-                  1.0
-                ],
-                "to": [
-                  0.9,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.1,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.04,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.78
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.22
-                ],
-                "control2": [
-                  0.04,
-                  0.0
-                ],
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.0, 0.18] },
+              { "command": "curve", "control1": [0.08, 0.04], "control2": [0.12, 0.0], "to": [0.18, 0.0] },
+              { "command": "line", "to": [0.82, 0.0] },
+              { "command": "curve", "control1": [0.88, 0.0], "control2": [0.92, 0.04], "to": [1.0, 0.18] },
+              { "command": "line", "to": [1.0, 0.72] },
+              { "command": "curve", "control1": [0.92, 0.94], "control2": [0.88, 1.0], "to": [0.82, 1.0] },
+              { "command": "line", "to": [0.18, 1.0] },
+              { "command": "curve", "control1": [0.12, 1.0], "control2": [0.08, 0.94], "to": [0.0, 0.72] },
+              { "command": "line", "to": [0.0, 0.18] },
+              { "command": "close" }
             ]
           },
           "treatment": {
             "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 0
           }
         }
       ],
       "sizeMillimeters": 20
-    },
-    {
-      "id": "pinch-body",
-      "equipmentObjectID": "primary",
-      "name": "Outer pinch contact",
-      "kind": "pinch",
-      "handCapacity": 1,
-      "presentationID": "outer",
-      "geometry": [
-        {
-          "frame": {
-            "x": 0.35,
-            "y": 0.342857,
-            "width": 0.3,
-            "height": 0.228571
-          },
-          "shape": {
-            "type": "path",
-            "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.12,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.88,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.95,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.05
-                ],
-                "to": [
-                  1.0,
-                  0.12
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.88
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.95
-                ],
-                "control2": [
-                  0.95,
-                  1.0
-                ],
-                "to": [
-                  0.88,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.12,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.05,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.95
-                ],
-                "to": [
-                  0.0,
-                  0.88
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.12
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.05
-                ],
-                "control2": [
-                  0.05,
-                  0.0
-                ],
-                "to": [
-                  0.12,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
-            ]
-          },
-          "treatment": {
-            "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0
-          }
-        }
-      ]
     },
     {
       "id": "jug-outer-rim",
@@ -393,110 +102,38 @@
       "name": "Outer jug rim",
       "kind": "jug",
       "handCapacity": 1,
-      "presentationID": "outer",
+      "presentationID": "primary",
       "geometry": [
         {
           "frame": {
-            "x": 0.35,
-            "y": 0.692857,
-            "width": 0.3,
-            "height": 0.128571
+            "x": 0.112,
+            "y": 0.407,
+            "width": 0.776,
+            "height": 0.407
           },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.9,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.96,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.22
-                ],
-                "to": [
-                  1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.78
-                ],
-                "control2": [
-                  0.96,
-                  1.0
-                ],
-                "to": [
-                  0.9,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.1,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.04,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.78
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.22
-                ],
-                "control2": [
-                  0.04,
-                  0.0
-                ],
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.153, 0.0] },
+              { "command": "line", "to": [0.055, 0.0] },
+              { "command": "curve", "control1": [0.02, 0.0], "control2": [0.0, 0.11], "to": [0.0, 0.2] },
+              { "command": "line", "to": [0.0, 0.78] },
+              { "command": "curve", "control1": [0.0, 0.92], "control2": [0.04, 1.0], "to": [0.1, 1.0] },
+              { "command": "line", "to": [0.9, 1.0] },
+              { "command": "curve", "control1": [0.96, 1.0], "control2": [1.0, 0.92], "to": [1.0, 0.78] },
+              { "command": "line", "to": [1.0, 0.2] },
+              { "command": "curve", "control1": [1.0, 0.11], "control2": [0.98, 0.0], "to": [0.945, 0.0] },
+              { "command": "line", "to": [0.847, 0.0] },
+              { "command": "line", "to": [0.847, 0.62] },
+              { "command": "curve", "control1": [0.847, 0.72], "control2": [0.82, 0.76], "to": [0.78, 0.76] },
+              { "command": "line", "to": [0.22, 0.76] },
+              { "command": "curve", "control1": [0.18, 0.76], "control2": [0.153, 0.72], "to": [0.153, 0.62] },
+              { "command": "line", "to": [0.153, 0.0] },
+              { "command": "close" }
             ]
           },
           "treatment": {
             "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 0
           }
         }
       ]

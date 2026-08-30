@@ -5,14 +5,14 @@
   "subtitle": "Portable single-object board with edges, pocket, jug, and pinch contacts.",
   "productURL": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
   "dimensions": "128 × 140 × 48 mm",
-  "aspectRatio": 0.9142857143,
+  "aspectRatio": 1.0,
   "equipmentObjects": [
     {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
   ],
   "presentations": [
-    {"id": "primary", "name": "Primary", "assetPath": "assets/primary.png", "aspectRatio": 0.9142857143, "default": true},
-    {"id": "back", "name": "Back", "assetPath": "assets/back.png", "aspectRatio": 0.9142857143, "default": false},
-    {"id": "side", "name": "Side", "assetPath": "assets/side.png", "aspectRatio": 0.3428571429, "default": false}
+    {"id": "primary", "name": "Primary", "assetPath": "assets/primary.png", "aspectRatio": 1.0, "default": true},
+    {"id": "back", "name": "Back", "assetPath": "assets/back.png", "aspectRatio": 1.0, "default": false},
+    {"id": "side", "name": "Side", "assetPath": "assets/side.png", "aspectRatio": 1.0, "default": false}
   ],
   "holds": [
     {
@@ -23,7 +23,7 @@
       "sizeMillimeters": 30,
       "presentationID": "primary",
       "geometry": [{
-        "frame": {"x": 0.19, "y": 0.70, "width": 0.62, "height": 0.10},
+        "frame": {"x": 0.305, "y": 0.648, "width": 0.39, "height": 0.073},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]},
           {"command": "line", "to": [0.90, 0]},
@@ -46,7 +46,7 @@
       "sizeMillimeters": 30,
       "presentationID": "primary",
       "geometry": [{
-        "frame": {"x": 0.32, "y": 0.779, "width": 0.36, "height": 0.045},
+        "frame": {"x": 0.34, "y": 0.734, "width": 0.32, "height": 0.047},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]},
           {"command": "line", "to": [0.90, 0]},
@@ -68,7 +68,7 @@
       "sizeMillimeters": 25,
       "presentationID": "primary",
       "geometry": [{
-        "frame": {"x": 0.19, "y": 0.44, "width": 0.62, "height": 0.08},
+        "frame": {"x": 0.3, "y": 0.468, "width": 0.4, "height": 0.101},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -90,7 +90,7 @@
       "features": ["mediumEdge"],
       "presentationID": "primary",
       "geometry": [{
-        "frame": {"x": 0.19, "y": 0.30, "width": 0.62, "height": 0.065},
+        "frame": {"x": 0.314, "y": 0.401, "width": 0.378, "height": 0.067},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -111,7 +111,7 @@
       "sizeMillimeters": 15,
       "presentationID": "back",
       "geometry": [{
-        "frame": {"x": 0.19, "y": 0.30, "width": 0.62, "height": 0.05},
+        "frame": {"x": 0.316, "y": 0.401, "width": 0.376, "height": 0.101},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -132,7 +132,7 @@
       "sizeMillimeters": 12,
       "presentationID": "back",
       "geometry": [{
-        "frame": {"x": 0.19, "y": 0.44, "width": 0.62, "height": 0.045},
+        "frame": {"x": 0.299, "y": 0.508, "width": 0.402, "height": 0.112},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -153,7 +153,7 @@
       "sizeMillimeters": 10,
       "presentationID": "back",
       "geometry": [{
-        "frame": {"x": 0.19, "y": 0.76, "width": 0.62, "height": 0.04},
+        "frame": {"x": 0.315, "y": 0.718, "width": 0.37, "height": 0.105},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -174,7 +174,7 @@
       "sizeMillimeters": 8,
       "presentationID": "back",
       "geometry": [{
-        "frame": {"x": 0.19, "y": 0.63, "width": 0.62, "height": 0.035},
+        "frame": {"x": 0.315, "y": 0.628, "width": 0.37, "height": 0.09},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -194,7 +194,7 @@
       "kind": "jug",
       "presentationID": "primary",
       "geometry": [{
-        "frame": {"x": 0.17, "y": 0.075, "width": 0.66, "height": 0.12},
+        "frame": {"x": 0.333, "y": 0.344, "width": 0.335, "height": 0.061},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -214,7 +214,7 @@
       "kind": "pinch",
       "presentationID": "side",
       "geometry": [{
-        "frame": {"x": 0.10, "y": 0.16, "width": 0.80, "height": 0.68},
+        "frame": {"x": 0.4, "y": 0.332, "width": 0.2, "height": 0.535},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.16, 0]}, {"command": "line", "to": [0.84, 0]},
           {"command": "curve", "control1": [0.93, 0], "control2": [1, 0.07], "to": [1, 0.16]},

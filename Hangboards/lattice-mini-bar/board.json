@@ -5,7 +5,7 @@
   "subtitle": "Single-hand portable bar with two edges, jug, and pinch.",
   "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
   "dimensions": "15.5 cm long",
-  "aspectRatio": 3.0,
+  "aspectRatio": 1.5,
   "equipmentObjects": [
     {
       "id": "primary",
@@ -17,7 +17,7 @@
       "id": "primary",
       "name": "Lengthwise",
       "assetPath": "assets/primary.png",
-      "aspectRatio": 3.0,
+      "aspectRatio": 1.5,
       "default": true
     },
     {
@@ -38,108 +38,65 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": {
-            "x": 0.1125,
-            "y": 0.375,
-            "width": 0.775,
-            "height": 0.0875
-          },
+          "frame": { "x": 0.081, "y": 0.4, "width": 0.844, "height": 0.095 },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.9,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.96,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.22
-                ],
-                "to": [
-                  1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.78
-                ],
-                "control2": [
-                  0.96,
-                  1.0
-                ],
-                "to": [
-                  0.9,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.1,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.04,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.78
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.22
-                ],
-                "control2": [
-                  0.04,
-                  0.0
-                ],
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.07, 0.05] },
+              { "command": "curve", "control1": [0.03, 0.04], "control2": [0.0, 0.25], "to": [0.0, 0.55] },
+              { "command": "line", "to": [0.055, 1.0] },
+              { "command": "line", "to": [0.94, 1.0] },
+              { "command": "curve", "control1": [0.98, 0.85], "control2": [1.0, 0.58], "to": [1.0, 0.3] },
+              { "command": "curve", "control1": [1.0, 0.1], "control2": [0.98, 0.0], "to": [0.94, 0.0] },
+              { "command": "line", "to": [0.07, 0.05] },
+              { "command": "close" }
             ]
           },
-          "treatment": {
-            "type": "surface"
+          "treatment": { "type": "surface" }
+        },
+        {
+          "frame": { "x": 0.081, "y": 0.476, "width": 0.111, "height": 0.16 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [1.0, 0.0] },
+              { "command": "line", "to": [1.0, 1.0] },
+              { "command": "line", "to": [0.4, 1.0] },
+              { "command": "curve", "control1": [0.12, 0.96], "control2": [0.0, 0.72], "to": [0.0, 0.46] },
+              { "command": "curve", "control1": [0.0, 0.2], "control2": [0.18, 0.02], "to": [0.42, 0.0] },
+              { "command": "close" }
+            ]
           },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 0
-          }
+          "treatment": { "type": "surface" }
+        },
+        {
+          "frame": { "x": 0.873, "y": 0.476, "width": 0.052, "height": 0.16 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.0, 0.0] },
+              { "command": "line", "to": [0.58, 0.0] },
+              { "command": "curve", "control1": [0.82, 0.02], "control2": [1.0, 0.2], "to": [1.0, 0.46] },
+              { "command": "curve", "control1": [1.0, 0.72], "control2": [0.88, 0.96], "to": [0.6, 1.0] },
+              { "command": "line", "to": [0.0, 1.0] },
+              { "command": "close" }
+            ]
+          },
+          "treatment": { "type": "surface" }
+        },
+        {
+          "frame": { "x": 0.235, "y": 0.621, "width": 0.532, "height": 0.077 },
+          "shape": {
+            "type": "path",
+            "commands": [
+              { "command": "move", "to": [0.0, 0.0] },
+              { "command": "line", "to": [1.0, 0.0] },
+              { "command": "line", "to": [1.0, 0.78] },
+              { "command": "curve", "control1": [0.72, 0.9], "control2": [0.28, 1.0], "to": [0.0, 1.0] },
+              { "command": "close" }
+            ]
+          },
+          "treatment": { "type": "surface" }
         }
       ]
     },
@@ -152,108 +109,19 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": {
-            "x": 0.2125,
-            "y": 0.475,
-            "width": 0.575,
-            "height": 0.1
-          },
+          "frame": { "x": 0.19, "y": 0.577, "width": 0.685, "height": 0.043 },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.9,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.96,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.22
-                ],
-                "to": [
-                  1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.78
-                ],
-                "control2": [
-                  0.96,
-                  1.0
-                ],
-                "to": [
-                  0.9,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.1,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.04,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.78
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.22
-                ],
-                "control2": [
-                  0.04,
-                  0.0
-                ],
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.0, 0.15] },
+              { "command": "curve", "control1": [0.2, 0.1], "control2": [0.75, 0.02], "to": [0.96, 0.0] },
+              { "command": "curve", "control1": [0.99, 0.05], "control2": [1.0, 0.25], "to": [1.0, 0.45] },
+              { "command": "curve", "control1": [0.76, 0.7], "control2": [0.25, 1.0], "to": [0.04, 1.0] },
+              { "command": "curve", "control1": [0.01, 0.8], "control2": [0.0, 0.4], "to": [0.0, 0.15] },
+              { "command": "close" }
             ]
           },
-          "treatment": {
-            "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 0
-          }
+          "treatment": { "type": "surface" }
         }
       ],
       "sizeMillimeters": 10
@@ -267,108 +135,21 @@
       "presentationID": "primary",
       "geometry": [
         {
-          "frame": {
-            "x": 0.2125,
-            "y": 0.6625,
-            "width": 0.575,
-            "height": 0.1375
-          },
+          "frame": { "x": 0.19, "y": 0.478, "width": 0.685, "height": 0.099 },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.9,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.96,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.22
-                ],
-                "to": [
-                  1.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.78
-                ],
-                "control2": [
-                  0.96,
-                  1.0
-                ],
-                "to": [
-                  0.9,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.1,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.04,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.78
-                ],
-                "to": [
-                  0.0,
-                  0.5
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.22
-                ],
-                "control2": [
-                  0.04,
-                  0.0
-                ],
-                "to": [
-                  0.1,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.055, 0.0] },
+              { "command": "line", "to": [0.945, 0.0] },
+              { "command": "curve", "control1": [0.98, 0.0], "control2": [1.0, 0.2], "to": [1.0, 0.5] },
+              { "command": "line", "to": [0.98, 1.0] },
+              { "command": "line", "to": [0.04, 1.0] },
+              { "command": "line", "to": [0.0, 0.65] },
+              { "command": "curve", "control1": [0.0, 0.25], "control2": [0.02, 0.0], "to": [0.055, 0.0] },
+              { "command": "close" }
             ]
           },
-          "treatment": {
-            "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "pill",
-            "rotationDegrees": 0
-          }
+          "treatment": { "type": "surface" }
         }
       ],
       "sizeMillimeters": 20
@@ -382,122 +163,22 @@
       "presentationID": "end",
       "geometry": [
         {
-          "frame": {
-            "x": 0.39375,
-            "y": 0.36875,
-            "width": 0.2125,
-            "height": 0.3
-          },
+          "frame": { "x": 0.216, "y": 0.193, "width": 0.57, "height": 0.617 },
           "shape": {
             "type": "path",
             "commands": [
-              {
-                "command": "move",
-                "to": [
-                  0.12,
-                  0.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.88,
-                  0.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.95,
-                  0.0
-                ],
-                "control2": [
-                  1.0,
-                  0.05
-                ],
-                "to": [
-                  1.0,
-                  0.12
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  1.0,
-                  0.88
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  1.0,
-                  0.95
-                ],
-                "control2": [
-                  0.95,
-                  1.0
-                ],
-                "to": [
-                  0.88,
-                  1.0
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.12,
-                  1.0
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.05,
-                  1.0
-                ],
-                "control2": [
-                  0.0,
-                  0.95
-                ],
-                "to": [
-                  0.0,
-                  0.88
-                ]
-              },
-              {
-                "command": "line",
-                "to": [
-                  0.0,
-                  0.12
-                ]
-              },
-              {
-                "command": "curve",
-                "control1": [
-                  0.0,
-                  0.05
-                ],
-                "control2": [
-                  0.05,
-                  0.0
-                ],
-                "to": [
-                  0.12,
-                  0.0
-                ]
-              },
-              {
-                "command": "close"
-              }
+              { "command": "move", "to": [0.5, 0.0] },
+              { "command": "curve", "control1": [0.77, 0.0], "control2": [1.0, 0.2], "to": [1.0, 0.5] },
+              { "command": "curve", "control1": [1.0, 0.78], "control2": [0.8, 0.96], "to": [0.61, 1.0] },
+              { "command": "curve", "control1": [0.56, 1.0], "control2": [0.545, 0.91], "to": [0.52, 0.84] },
+              { "command": "curve", "control1": [0.51, 0.81], "control2": [0.49, 0.81], "to": [0.475, 0.84] },
+              { "command": "curve", "control1": [0.45, 0.92], "control2": [0.43, 1.0], "to": [0.38, 1.0] },
+              { "command": "curve", "control1": [0.18, 0.96], "control2": [0.0, 0.78], "to": [0.0, 0.5] },
+              { "command": "curve", "control1": [0.0, 0.22], "control2": [0.23, 0.0], "to": [0.5, 0.0] },
+              { "command": "close" }
             ]
           },
-          "treatment": {
-            "type": "surface"
-          },
-          "shapeConstraint": {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0
-          }
+          "treatment": { "type": "surface" }
         }
       ]
     }
