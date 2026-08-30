@@ -43,6 +43,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "nature.stoak-board-iii",
             "nature.stone-hanger-mini",
             "nature.stone-hanger-mini-karma8a",
+            "owl-climb.poker",
             "plateau.lifting-edge",
             "soill.iron-palm-2",
             "soill.split-palm",
@@ -77,25 +78,37 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testEveryCatalogBoardUsesItsPackagePrimaryPNG() throws {
+    func testEveryCatalogBoardUsesItsDefaultPackagePresentationPNG() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
 
         for board in BoardCatalog.all {
             let packagePath = try XCTUnwrap(packagePaths[board.id])
+            let documentURL = repositoryRoot
+                .appendingPathComponent("Hangboards", isDirectory: true)
+                .appendingPathComponent(packagePath, isDirectory: true)
+                .appendingPathComponent("board.json")
+            let document = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: Data(contentsOf: documentURL)) as? [String: Any]
+            )
+            let presentations = try XCTUnwrap(document["presentations"] as? [[String: Any]])
+            let defaultPresentation = try XCTUnwrap(
+                presentations.first { ($0["default"] as? Bool) == true }
+            )
+            let defaultAssetPath = try XCTUnwrap(defaultPresentation["assetPath"] as? String)
             let imageURL = try XCTUnwrap(
                 BoardCatalog.packageStore.presentationImageURL(for: board)
             )
-            let expectedAssetsURL = Bundle.main.resourceURL!
+            let expectedImageURL = Bundle.main.resourceURL!
                 .appendingPathComponent("Hangboards", isDirectory: true)
                 .appendingPathComponent(packagePath, isDirectory: true)
-                .appendingPathComponent("assets", isDirectory: true)
+                .appendingPathComponent(defaultAssetPath)
                 .standardizedFileURL
 
-            XCTAssertEqual(imageURL.lastPathComponent, "primary.png")
-            XCTAssertTrue(
-                imageURL.standardizedFileURL.path.hasPrefix(expectedAssetsURL.path + "/"),
-                "Expected \(board.id) presentation image below \(expectedAssetsURL.path), got \(imageURL.path)."
+            XCTAssertEqual(
+                imageURL.standardizedFileURL,
+                expectedImageURL,
+                "Expected \(board.id) to use its declared default presentation asset."
             )
         }
     }
