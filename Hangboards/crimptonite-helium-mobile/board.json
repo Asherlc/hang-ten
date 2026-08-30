@@ -370,7 +370,7 @@
       "equipmentObjectID": "primary",
       "name": "Back jug / sloper surface",
       "kind": "sloper",
-      "handCapacity": 1,
+      "handCapacity": 2,
       "presentationID": "reverse",
       "geometry": [
         {
