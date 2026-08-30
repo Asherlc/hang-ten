@@ -1,0 +1,295 @@
+# Task 3 — Android BLE force sensors and measured recording
+
+## Delivered
+
+- Ported the reviewed Motherboard parser, signed 24-bit framing, bounded receive
+  buffer, calibration interpolation, polarity-before-tare conversion, stream
+  commands, software tare, hysteretic threshold/debounce, interval merge, and
+  20,000-sample persistence cap.
+- Added reviewed Progressor and PitchSix profile contracts, command payloads,
+  advertisement matching, and frame decoding.
+- Added Android BLE scan/GATT/notification transport behind a deterministic
+  fake; runtime Bluetooth permissions are requested only from the explicit
+  Settings **Connect sensor** action.
+- Added a Settings profile selector, live kgf meter, tare control, workout
+  measurement handoff, per-session DataStore round-trip persistence, and a
+  backward-compatible history decoder.
+
+## Automated evidence
+
+- RED: initial protocol/controller tests were compiled and exercised against
+  absent adapters, then exposed the Android-runtime `List.removeLast` ABI issue.
+  The recorder now uses `removeAt(lastIndex)`.
+- GREEN: `:app:testDebugUnitTest --tests 'com.hangten.android.sensors.*'
+  --tests 'com.hangten.android.workout.SessionHistoryRepositoryTest'
+  --rerun-tasks` — **BUILD SUCCESSFUL**, 14 tests.
+- Full local verification: `:app:testDebugUnitTest :app:lintDebug
+  :app:assembleDebug` and then `:app:lintDebug :app:assembleDebug` —
+  **BUILD SUCCESSFUL**.
+
+## Emulator and physical hardware
+
+The deterministic fake transport is covered by the focused unit/controller
+suite. No emulator system image or AVD was already owned by this workspace;
+the temporary owned SDK contained API 36 platform/build tools only. To avoid
+using a shared AVD or asserting an unrun device test, no emulator BLE claim is
+made. This is a required remaining release validation gate.
+
+Before release, on a physical Motherboard, Tindeq Progressor, and PitchSix:
+
+1. Tap Connect sensor and verify Android's Bluetooth prompt occurs only then.
+2. Scan/connect each device, verify the selected profile and live kgf meter.
+3. Motherboard: verify all calibration rows, `C`, `S30`/`Stream:30`, tare, and
+   raw/sample/battery values against a captured notification trace.
+4. Progressor/PitchSix: verify start, tare, stop, values/unit conversion, and
+   reconnect/disconnect behavior against each device.
+5. Complete a workout and inspect local history for samples, thresholds,
+   intervals, profile, and 20,000-sample truncation marker.
+
+## Owned resource cleanup
+
+The temporary SDK/cache is named
+`.context/android-sdk-bitter-scorpion-0o9ylkoo`; it is deleted and checked for
+absence before this task is handed off.
+
+## Review-remediation evidence
+
+- GATT connection now suspends through service discovery; descriptor enablement
+  suspends through its callback. Discovery, descriptor, and setup disconnect
+  errors reach the controller before subscribe/start can proceed.
+- The controller retains requested and resolved profiles separately, delivers
+  every measurement through a non-conflated channel, and creates monotonic
+  generic-profile sample IDs. Workout recording accepts samples only in the
+  active session and emits unmeasured records for untouched plan steps.
+- Re-run: `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` — BUILD
+  SUCCESSFUL. `:app:compileDebugAndroidTestKotlin` also passed.
+- Added `SensorSettingsUiTest` for the deterministic fake Settings connect,
+  meter, and tare flow. It was compiled but could not be executed because the
+  uniquely-owned AVD could not be created. `sdkmanager --list` advertises
+  `system-images;android-36;google_apis;arm64-v8a`, but repeated install calls
+  left no image package under the owned SDK and `avdmanager create avd` returned
+`Package path is not valid` with valid paths `null`. No shared/corrupt AVD was
+used. This remains an infrastructure release gate, not a passed emulator run.
+
+### Provisioning diagnosis
+
+A fresh owned root, `.context/android-sdk-bitter-scorpion-0o9ylkoo-retry`, was
+used for a single explicit install attempt. The runner terminated the initial
+command-line-tools download after roughly 28 seconds, leaving a 97 MB partial
+archive. An HTTP resume produced a 155,049,280-byte archive, but `unzip -t`
+still reported `At least one error was detected`. Thus `sdkmanager` and
+`avdmanager` never ran from a verified command-line-tools package; this is an
+execution-environment download interruption, not an emulator result. The exact
+retry root is deleted after recording this evidence. The instrumentation test
+compiles, but its connected-device execution must be rerun in an environment
+where the owned SDK archive download can complete uninterrupted.
+
+The persistent-PTY recovery confirmed that diagnosis: the first download
+stopped at 143,224,832 bytes, then `curl --continue-at -` completed a valid
+153,607,488-byte archive (`unzip -t`: no errors). Command-line tools and
+licenses installed successfully. One sequential `sdkmanager` install of only
+the platform tools, emulator, build tools, API 36 platform, and API 36 ARM64
+image was again terminated by the runner after about 28 seconds. Inspection
+found only `emulator/.installer`, no `system-images/**/package.xml`; therefore
+no AVD was created. All three exact owned SDK roots were then deleted.
+
+### Final transport hardening
+
+- Streaming disconnects now move the controller to `Disconnected` with a
+  visible error. Notifications use an explicit bounded queue: queue overflow
+  is surfaced as an error rather than silently dropping a sample. GATT writes
+  now suspend through `onCharacteristicWrite` and surface write/disconnect
+  failures to Start, Tare, and Stop callers.
+- Focused sensor tests, full `:app:testDebugUnitTest`, `:app:lintDebug`, and
+  `:app:assembleDebug` were rerun using the minimal owned SDK and finished
+  **BUILD SUCCESSFUL**. The exact minimal SDK root was removed after the run.
+
+### Final data-integrity remediation
+
+- A remote GATT error is now one-shot: the controller cancels its notification
+  collector, closes GATT, resets the live meter/tare state, and completes the
+  error collector. A subsequent callback frame therefore cannot reach either
+  the meter or the non-conflated measurement/workout handoff.
+- Production notification delivery uses a 128-frame bounded `Channel` and
+  blocks the GATT callback when full. This is explicit upstream backpressure,
+  not `trySend`/`DROP_OLDEST` loss. The controller handoff itself uses ordered
+  `send`; the focused fake test asserts all 256 (>128) samples arrive in sample
+  number order.
+- All controller protocol writes now go through the awaited GATT write result,
+  including Motherboard calibration (`C`) and stream (`S30`), generic Start,
+  Tare, and Stop. A failed write sets a UI-visible `Failed` state rather than
+  escaping a coroutine or being swallowed.
+- Fresh verification with the owned minimal SDK root
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-final`:
+  `:app:testDebugUnitTest --tests 'com.hangten.android.sensors.*'` — **BUILD
+  SUCCESSFUL**; then `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug`
+  — **BUILD SUCCESSFUL**. The connected emulator test remains unrun and is the
+  separate CI/release gate described above.
+- Cleanup check: the final root and each prior exact owned root
+  (`android-sdk-bitter-scorpion-0o9ylkoo{,-final,-retry,-pty,-min}`) are absent.
+
+### Round 3 callback-queue and write-callback remediation
+
+- The Android GATT callback no longer calls `runBlocking`. It copies each frame
+  into a lock-free serial ingress queue and returns immediately. A single
+  `Dispatchers.Default` pump is the only sender to the bounded 128-frame output
+  channel, so slow delivery suspends away from the callback thread and frames
+  are retained in order rather than `trySend`-dropped.
+- `NotificationQueueState` exposes capacity, total pending frames, and an
+  over-capacity flag through both production and deterministic transports. The
+  production-like capacity-2 fake test sends three frames before collecting;
+  it observes over-capacity, then receives `[1, 2, 3]` in order with zero
+  pending frames. This is explicit pressure visibility without callback-thread
+  blocking or silent loss.
+- Added deterministic pending-write-disconnect and delayed-write-callback-error
+  controller tests. Both await the pending write and end in the UI-visible
+  `Failed` state instead of leaving a continuation/coroutine unresolved.
+- Fresh owned SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round3` with API 36 platform
+  and build tools: focused transport/controller tests — **BUILD SUCCESSFUL**;
+  then `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` — **BUILD
+  SUCCESSFUL**. The connected emulator gate remains separately unrun as noted
+  above.
+- Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round3` root
+  is absent.
+
+### Round 4 finite overload and remote-write-race remediation
+
+- The notification bridge now has a real finite total pending-frame budget:
+  `ArrayBlockingQueue` ingress plus an atomic reservation count includes frames
+  waiting in the serial pump. The callback remains nonblocking. At capacity,
+  the first additional callback is explicitly rejected before capture, puts the
+  queue in terminal state, emits `SensorNotificationOverloadException`, and
+  disconnects the GATT source. Subsequent callbacks are rejected without any
+  continued silent capture. Frames accepted before that terminal transition
+  retain arrival order.
+- The terminal error is retained on the transport error channel and therefore
+  reaches `SensorConnectionController`: notification collection is cancelled,
+  the meter/measurement handoff stops, and the existing Settings error text
+  displays the reason. Workout recording consumes no late measurements after
+  this controller teardown.
+- The production-like capacity-2 fake test verifies the terminal overload is
+  observable and that exactly the two accepted frames are delivered in order.
+  A controller regression verifies that the same overload reaches a
+  `Disconnected` state with visible queue error.
+- `GattRemoteDisconnectSequence` is now shared by the production GATT callback
+  and fake. Its direct test verifies the exact callback order (pending write
+  failure, then remote error); the controller race test verifies the documented
+  terminal result is `Disconnected` with the `GATT 133` error, never an
+  indeterminate write-only `Failed` state.
+- Fresh owned SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round4`: focused
+  transport/controller tests — **BUILD SUCCESSFUL**; then
+  `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` — **BUILD
+  SUCCESSFUL**. The emulator limitation and its separate release gate are
+  unchanged.
+- Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round4` root
+  is absent.
+
+### Final shutdown-accounting check
+
+- Queue delivery accounting now clamps at zero if a receiver is cancelled while
+  disconnect clears retained frames; the overload-controller test asserts zero
+  pending frames after its terminal teardown.
+- This final guard was freshly verified with the separately owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round4-final` root: focused
+  transport/controller tests and full `:app:testDebugUnitTest :app:lintDebug
+  :app:assembleDebug` both finished **BUILD SUCCESSFUL**.
+- Cleanup check: the exact `android-sdk-bitter-scorpion-0o9ylkoo-round4-final`
+  root is absent.
+
+### Round 5 finite handoff and terminal-arbitration remediation
+
+- Controller-to-workout measurement delivery is now a finite, per-lifecycle
+  channel (128 by default), not `Channel.UNLIMITED`. On a slow or absent
+  workout consumer, the next frame that cannot enter the handoff creates a
+  terminal `MeasurementHandoffOverloadException`; the controller cancels
+  notification collection, rotates/cancels the channel to discard retained
+  Settings samples, disconnects transport, and exposes the existing UI error.
+  The workout collector therefore receives neither retained stale samples nor
+  late post-terminal samples.
+- Notification admission is now atomic through capacity decision and ingress
+  insertion. BLE callbacks use nonblocking `tryLock`; contention requests the
+  same one-shot terminal transition rather than waiting. The concurrent-callback
+  regression verifies every callback completes within one second, exactly one
+  frame is admitted into a capacity-one queue, and no item is accepted after
+  the terminal error.
+- Terminal state/error arbitration is mutex-owned in the controller. Both the
+  normal production GATT callback order and the schedule where a write failure
+  is already queued resolve to the documented terminal state: `Disconnected`
+  with the remote `GATT 133` error, not a race-dependent `Failed` state.
+- Fresh owned SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round5`: focused
+  transport/controller tests — **BUILD SUCCESSFUL**; then the unfiltered
+  `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` — **BUILD
+  SUCCESSFUL**. The connected-emulator release gate remains separately unrun.
+- Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round5` root is absent.
+
+### Round 6 notification terminal-fence remediation
+
+- Added a controlled Motherboard interleaving regression: the final calibration
+  row starts a deliberately pending `S30` write while the same parsed callback
+  retains late `Stream:30` and `Error` events. A remote `GATT 133` terminal is
+  then delivered before that callback resumes. The pre-fix regression failed
+  because the late events changed the state back to `Streaming` and replaced
+  the GATT error; it now remains `Disconnected` with the remote error intact.
+- Every notification-derived controller mutation is now admitted through the
+  existing terminal mutex. That includes parser buffer admission, Motherboard
+  calibration/session updates, `StreamStarted`, parser errors, generic invalid
+  sample errors, and generic monotonic sample-number allocation. A terminal
+  transition therefore prevents any in-flight late callback from changing
+  sensor state or retaining parser/session data for a later connection.
+- Fresh verification used only the owned minimal SDK
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round6` (platform-tools,
+  API 36 platform, and build-tools; no image or AVD): the focused
+  `ForceSensorTransportTest`/`SensorConnectionControllerTest` suite and the
+  unfiltered `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` both
+  finished **BUILD SUCCESSFUL**. The connected-emulator release gate remains
+  separately unrun.
+- Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round8` root is absent.
+- Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round6` root is absent.
+
+### Round 7 late-event regression repair
+
+- Replaced the prior pre-event block with a finite, test-only controlled
+  Motherboard transport. It explicitly latches when the in-flight `S30` write
+  begins, delivers the remote `GATT 133` terminal and observes `Disconnected`,
+  then explicitly releases that non-cancellable in-flight callback and runs
+  its already-parsed `Stream:30` and parser-error events. The final assertion
+  proves those events cannot resurrect `Streaming` or overwrite the terminal
+  error.
+- The exact test was run once with the Round 6 notification fences temporarily
+  removed: it failed (`BUILD FAILED`, assertion at the post-release terminal
+  check), proving the regression detects the prior behavior. The fence was
+  restored unchanged; no production source change is included in this round.
+- Fresh owned minimal-SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round7` (no system image or
+  AVD): focused `ForceSensorTransportTest`/`SensorConnectionControllerTest`
+  and unfiltered `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug`
+  both finished **BUILD SUCCESSFUL**. The connected-emulator release gate
+  remains separately unrun.
+- Cleanup check: the exact owned
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round7` root is absent.
+
+### Round 8 post-terminal callback execution correction
+
+- The late-event regression now models a non-cancellable callback already
+  delivered after teardown without violating Kotlin Flow context rules. A
+  test-only latch releases a `NonCancellable` invocation of the controller's
+  real private Motherboard frame handler; a second latch is completed only
+  after that handler returns. The terminal state/error assertion occurs after
+  this explicit post-handler completion.
+- With the Round 6 notification fences temporarily removed, the harness
+  reached the post-handler latch and then failed because late `Stream:30` and
+  parser-error handling overwrote the remote `GATT 133` terminal. Restoring
+  the existing fence unchanged made the same test pass. No production source
+  change is included in this correction.
+- Fresh owned minimal-SDK verification used
+  `.context/android-sdk-bitter-scorpion-0o9ylkoo-round8` (no image or AVD):
+  focused `ForceSensorTransportTest`/`SensorConnectionControllerTest` and
+  unfiltered `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug` both
+  finished **BUILD SUCCESSFUL**. The connected-emulator release gate remains
+  separately unrun.

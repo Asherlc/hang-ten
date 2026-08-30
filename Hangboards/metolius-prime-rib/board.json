@@ -6,6 +6,9 @@
   "productURL": "https://www.metoliusclimbing.com/products/prime-rib",
   "dimensions": "20 \u00d7 4.2 \u00d7 1.5 in",
   "aspectRatio": 1.8461538461538463,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "front",
@@ -18,6 +21,7 @@
   "holds": [
     {
       "id": "edge-38",
+      "equipmentObjectID": "primary",
       "name": "38 mm edge",
       "kind": "edge",
       "sizeMillimeters": 38,
@@ -142,6 +146,7 @@
     },
     {
       "id": "edge-23",
+      "equipmentObjectID": "primary",
       "name": "23 mm edge",
       "kind": "edge",
       "sizeMillimeters": 23,
@@ -266,6 +271,7 @@
     },
     {
       "id": "edge-15",
+      "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,

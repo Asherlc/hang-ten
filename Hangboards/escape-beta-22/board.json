@@ -6,9 +6,13 @@
   "productURL": "https://escapeclimbing.com/products/ec72100",
   "dimensions": "26 \u00d7 6 \u00d7 2 in",
   "aspectRatio": 3.814720812182741,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "hold-01-left",
+      "equipmentObjectID": "primary",
       "name": "Left Thin Pinch",
       "kind": "pinch",
       "geometry": [
@@ -77,6 +81,7 @@
     },
     {
       "id": "hold-01-right",
+      "equipmentObjectID": "primary",
       "name": "Right Thin Pinch",
       "kind": "pinch",
       "geometry": [
@@ -145,6 +150,7 @@
     },
     {
       "id": "hold-02-left",
+      "equipmentObjectID": "primary",
       "name": "Left Wide Pinch",
       "kind": "pinch",
       "features": [
@@ -219,6 +225,7 @@
     },
     {
       "id": "hold-02-right",
+      "equipmentObjectID": "primary",
       "name": "Right Wide Pinch",
       "kind": "pinch",
       "features": [
@@ -293,6 +300,7 @@
     },
     {
       "id": "hold-03-left",
+      "equipmentObjectID": "primary",
       "name": "Left 38mm Mini-Jug",
       "kind": "jug",
       "sizeMillimeters": 38,
@@ -361,6 +369,7 @@
     },
     {
       "id": "hold-03-right",
+      "equipmentObjectID": "primary",
       "name": "Right 38mm Mini-Jug",
       "kind": "jug",
       "sizeMillimeters": 38,
@@ -429,6 +438,7 @@
     },
     {
       "id": "hold-04-left",
+      "equipmentObjectID": "primary",
       "name": "Left 29mm Incut Jug",
       "kind": "jug",
       "sizeMillimeters": 29,
@@ -497,6 +507,7 @@
     },
     {
       "id": "hold-04-right",
+      "equipmentObjectID": "primary",
       "name": "Right 29mm Incut Jug",
       "kind": "jug",
       "sizeMillimeters": 29,
@@ -565,6 +576,7 @@
     },
     {
       "id": "hold-05-left",
+      "equipmentObjectID": "primary",
       "name": "Left 12mm Incut Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -625,6 +637,7 @@
     },
     {
       "id": "hold-05-right",
+      "equipmentObjectID": "primary",
       "name": "Right 12mm Incut Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -685,6 +698,7 @@
     },
     {
       "id": "hold-06-left",
+      "equipmentObjectID": "primary",
       "name": "Left 38mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 38,
@@ -749,6 +763,7 @@
     },
     {
       "id": "hold-06-right",
+      "equipmentObjectID": "primary",
       "name": "Right 38mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 38,
@@ -813,6 +828,7 @@
     },
     {
       "id": "hold-07-left",
+      "equipmentObjectID": "primary",
       "name": "Left 29mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 29,
@@ -880,6 +896,7 @@
     },
     {
       "id": "hold-07-right",
+      "equipmentObjectID": "primary",
       "name": "Right 29mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 29,
@@ -947,6 +964,7 @@
     },
     {
       "id": "hold-08-left",
+      "equipmentObjectID": "primary",
       "name": "Left 12mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -1014,6 +1032,7 @@
     },
     {
       "id": "hold-08-right",
+      "equipmentObjectID": "primary",
       "name": "Right 12mm Flat Edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -1081,6 +1100,7 @@
     },
     {
       "id": "hold-09-left",
+      "equipmentObjectID": "primary",
       "name": "Left 50mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 50,
@@ -1165,6 +1185,7 @@
     },
     {
       "id": "hold-09-right",
+      "equipmentObjectID": "primary",
       "name": "Right 50mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 50,
@@ -1249,6 +1270,7 @@
     },
     {
       "id": "hold-10-left",
+      "equipmentObjectID": "primary",
       "name": "Left 31mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 31,
@@ -1333,6 +1355,7 @@
     },
     {
       "id": "hold-10-right",
+      "equipmentObjectID": "primary",
       "name": "Right 31mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 31,
@@ -1417,6 +1440,7 @@
     },
     {
       "id": "hold-11-left",
+      "equipmentObjectID": "primary",
       "name": "Left 12mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 12,
@@ -1501,6 +1525,7 @@
     },
     {
       "id": "hold-11-right",
+      "equipmentObjectID": "primary",
       "name": "Right 12mm Sloper Edge",
       "kind": "sloper",
       "sizeMillimeters": 12,

@@ -81,6 +81,7 @@ function isHoldRegion(value: unknown): value is EditorDocument["regions"][number
     && typeof value.displayPath === "string"
     && (value.id === undefined || typeof value.id === "number")
     && isOptionalString(value.type)
+    && isOptionalString(value.equipmentObjectID)
     && (value.sloper === undefined
       || (value.type === "sloper" && isSloperMetadata(value.sloper)))
     && (value.fingerCapacity === undefined || isFingerCapacity(value.fingerCapacity))
@@ -118,21 +119,34 @@ function isBoardSummary(value: unknown): value is BoardSummary {
 
 function isEditorDocumentPayload(value: unknown): value is EditorDocument {
   if (!(isRecord(value)
-    && Object.keys(value).every((key) => key === "presentationID" || key === "canvas" || key === "regions")
+    && Object.keys(value).every((key) => key === "presentationID" || key === "equipmentObjects" || key === "canvas" || key === "regions")
     && (value.presentationID === undefined || typeof value.presentationID === "string")
+    && (value.equipmentObjects === undefined
+      || (isStringArray(value.equipmentObjects)
+        && value.equipmentObjects.length > 0
+        && new Set(value.equipmentObjects).size === value.equipmentObjects.length))
     && isRecord(value.canvas)
     && typeof value.canvas.width === "number"
     && typeof value.canvas.height === "number"
     && Array.isArray(value.regions)
     && value.regions.every(isHoldRegion))) return false;
 
+  const equipmentObjectIDs = value.equipmentObjects ? new Set(value.equipmentObjects) : null;
+  if (equipmentObjectIDs && value.regions.some((region) => (
+    !region.equipmentObjectID || !equipmentObjectIDs.has(region.equipmentObjectID)
+  ))) return false;
+
   const sizeMillimetersByHoldId = new Map<string, number | undefined>();
   const sloperByHoldId = new Map<string, unknown>();
   const depthRangeByHoldId = new Map<string, { lowerBound: number; upperBound: number } | undefined>();
   const depthRepresentationByHoldId = new Map<string, "fixed" | "variable" | "unset">();
+  const equipmentObjectByHoldId = new Map<string, string | undefined>();
   for (const region of value.regions) {
     if (!region.metadata) continue;
     const { holdID } = region.metadata;
+    if (equipmentObjectByHoldId.has(holdID)
+      && equipmentObjectByHoldId.get(holdID) !== region.equipmentObjectID) return false;
+    equipmentObjectByHoldId.set(holdID, region.equipmentObjectID);
     if (sloperByHoldId.has(holdID)
       && !sameSloperMetadata(sloperByHoldId.get(holdID), region.sloper)) return false;
     sloperByHoldId.set(holdID, region.sloper);

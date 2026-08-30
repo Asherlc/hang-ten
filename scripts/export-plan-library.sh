@@ -21,6 +21,7 @@ xcrun swiftc \
   "$repo_root/HangTen/Models/BoardStorage.swift" \
   "$repo_root/HangTen/Models/BoardPackageStore.swift" \
   "$repo_root/HangTen/Models/TrainingModels.swift" \
+  "$repo_root/HangTen/Models/WorkoutActivityRecording.swift" \
   "$script_dir/ExportPlanLibrarySupport.swift" \
   "$repo_root/HangTen/Models/WorkoutStepNormalization.swift" \
   "$repo_root/HangTen/Models/PlanStorage.swift" \

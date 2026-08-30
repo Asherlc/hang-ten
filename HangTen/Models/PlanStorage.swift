@@ -395,6 +395,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
     let activeDuration: TimeInterval?
+    let handUse: WorkoutHandUse
+    let side: WorkoutSide
+    let action: WorkoutAction
+    let repetitions: Int?
+    let externalLoadKGF: Double?
 
     init(
         id: String,
@@ -407,7 +412,12 @@ struct WorkoutStepDefinition: Codable, Hashable {
         segments: [WorkoutSegmentDefinition] = [],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
-        activeDuration: TimeInterval? = nil
+        activeDuration: TimeInterval? = nil,
+        handUse: WorkoutHandUse = .double,
+        side: WorkoutSide = .both,
+        action: WorkoutAction = .hang,
+        repetitions: Int? = nil,
+        externalLoadKGF: Double? = nil
     ) {
         self.id = id
         self.title = title
@@ -420,6 +430,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
         self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
         self.activeDuration = activeDuration
+        self.handUse = handUse
+        self.side = side
+        self.action = action
+        self.repetitions = repetitions
+        self.externalLoadKGF = externalLoadKGF
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -434,6 +449,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
         case gripType
         case fingerConfiguration
         case activeDuration
+        case handUse
+        case side
+        case action
+        case repetitions
+        case externalLoadKGF
     }
 
     init(from decoder: Decoder) throws {
@@ -458,6 +478,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
             TimeInterval.self,
             forKey: .activeDuration
         )
+        handUse = try container.decodeIfPresent(WorkoutHandUse.self, forKey: .handUse) ?? .double
+        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side) ?? .both
+        action = try container.decodeIfPresent(WorkoutAction.self, forKey: .action) ?? .hang
+        repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
+        externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -473,6 +498,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
         try container.encodeIfPresent(gripType, forKey: .gripType)
         try container.encodeIfPresent(fingerConfiguration, forKey: .fingerConfiguration)
         try container.encodeIfPresent(activeDuration, forKey: .activeDuration)
+        try container.encode(handUse, forKey: .handUse)
+        try container.encode(side, forKey: .side)
+        try container.encode(action, forKey: .action)
+        try container.encodeIfPresent(repetitions, forKey: .repetitions)
+        try container.encodeIfPresent(externalLoadKGF, forKey: .externalLoadKGF)
     }
 }
 
@@ -529,7 +559,12 @@ extension WorkoutStepDefinition {
             },
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration,
-            activeDuration: step.timedWorkDuration
+            activeDuration: step.timedWorkDuration,
+            handUse: step.handUse,
+            side: step.side,
+            action: step.action,
+            repetitions: step.repetitions,
+            externalLoadKGF: step.externalLoadKGF
         )
     }
 
@@ -543,7 +578,12 @@ extension WorkoutStepDefinition {
             phase: phase,
             targets: targets,
             segments: segments,
-            activeDuration: activeDuration
+            activeDuration: activeDuration,
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF
         )
     }
 }
@@ -861,6 +901,30 @@ enum PlanLibraryValidator {
         if !step.duration.isFinite || step.duration <= 0 {
             issues.append(PlanValidationIssue(path: "\(path).duration", message: "Duration must be finite and greater than zero."))
         }
+        if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
+            issues.append(
+                PlanValidationIssue(
+                    path: "\(path).side",
+                    message: "Single-hand steps require a left or right side, while double-hand steps require both sides."
+                )
+            )
+        }
+        if !WorkoutStepSemantics.hasValidActionAndRepetitions(step.action, step.repetitions) {
+            issues.append(
+                PlanValidationIssue(
+                    path: "\(path).repetitions",
+                    message: "Loaded lifts require positive repetitions; hangs and isometric pulls cannot define repetitions."
+                )
+            )
+        }
+        if !WorkoutStepSemantics.hasValidExternalLoad(step.externalLoadKGF) {
+            issues.append(
+                PlanValidationIssue(
+                    path: "\(path).externalLoadKGF",
+                    message: "External load must be finite."
+                )
+            )
+        }
         if let activeDuration = step.activeDuration {
             if !activeDuration.isFinite || activeDuration <= 0 {
                 issues.append(PlanValidationIssue(path: "\(path).activeDuration", message: "Active duration must be finite and greater than zero."))
@@ -1062,6 +1126,8 @@ enum PlanLibraryValidator {
                         mappingByBoardID: mappingByBoardID,
                         boardByID: boardByID,
                         availableBoards: availableBoards,
+                        handUse: step.handUse,
+                        side: step.side,
                         issues: &issues
                     )
                     for (segmentIndex, segment) in step.segments.enumerated() {
@@ -1073,6 +1139,8 @@ enum PlanLibraryValidator {
                             mappingByBoardID: mappingByBoardID,
                             boardByID: boardByID,
                             availableBoards: availableBoards,
+                            handUse: step.handUse,
+                            side: step.side,
                             issues: &issues
                         )
                     }
@@ -1086,7 +1154,8 @@ enum PlanLibraryValidator {
                reference.repeatCount > 0,
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
-               stepEndsInRestAfterNormalization(terminalStep) {
+               stepEndsInRestAfterNormalization(terminalStep),
+               !allowsSourceRequiredTerminalRest(in: plan, terminalStep: terminalStep) {
                 issues.append(
                     PlanValidationIssue(
                         path: "\(path).blocks[\(index)].steps[\(block.steps.count - 1)]",
@@ -1138,6 +1207,32 @@ enum PlanLibraryValidator {
         return step.phase == .rest
     }
 
+    /// The reported Megos protocol defines a 3-second recovery after every
+    /// 7-second work interval, including its final repetition. Preserve that
+    /// source-required terminal recovery rather than silently dropping it to
+    /// satisfy the usual end-on-work-step convention.
+    private static func allowsSourceRequiredTerminalRest(
+        in plan: PlanDefinition,
+        terminalStep: WorkoutStepDefinition
+    ) -> Bool {
+        guard plan.id == "research.megos-one-arm-7-3",
+              plan.metadata.provenance == .adapted,
+              plan.metadata.sourceURL == URL(string: "https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/"),
+              terminalStep.id == "megos-7-3-set-6-right-rep-4",
+              terminalStep.duration == 10,
+              terminalStep.activeDuration == 7,
+              terminalStep.segments.count == 2,
+              terminalStep.segments[0].kind == .work,
+              terminalStep.segments[0].timing == .fixed,
+              terminalStep.segments[0].duration == 7,
+              terminalStep.segments[1].kind == .rest,
+              terminalStep.segments[1].timing == .fixed,
+              terminalStep.segments[1].duration == 3 else {
+            return false
+        }
+        return true
+    }
+
     private static func expandedIDsEmittedByNormalizer(
         for step: WorkoutStepDefinition,
         resolvedID: String
@@ -1172,6 +1267,8 @@ enum PlanLibraryValidator {
         mappingByBoardID: [String: BoardMappingDefinition],
         boardByID: [String: [TrainingBoard]],
         availableBoards: [TrainingBoard],
+        handUse: WorkoutHandUse,
+        side: WorkoutSide,
         issues: inout [PlanValidationIssue]
     ) {
         let boardIDs: [String]
@@ -1203,8 +1300,48 @@ enum PlanLibraryValidator {
                         issues.append(PlanValidationIssue(path: targetPath, message: "Unknown hold ID \"\(holdID)\" for board \"\(boardID)\"."))
                     }
                 }
-            case .kind:
-                break
+                if !holdIDs.isEmpty {
+                    let hasCompatibleBoard = boardIDs.contains { boardID in
+                        guard let board = boardByID[boardID]?.first else { return false }
+                        return !BoardTargetResolver.substituteHoldIDs(
+                            for: .ids(holdIDs),
+                            handUse: handUse,
+                            side: side,
+                            on: board
+                        ).isEmpty
+                    }
+                    if !hasCompatibleBoard {
+                        issues.append(
+                            PlanValidationIssue(
+                                path: targetPath,
+                                message: "The direct hold target cannot satisfy the step's hand use and side."
+                            )
+                        )
+                    }
+                }
+            case let .kind(kind, fallbacks, fingerCapacity):
+                let runtimeTarget = HoldTarget.kind(
+                    kind,
+                    fallbacks: fallbacks,
+                    fingerCapacity: fingerCapacity
+                )
+                let hasCompatibleBoard = boardIDs.contains { boardID in
+                    guard let board = boardByID[boardID]?.first else { return false }
+                    return !BoardTargetResolver.substituteHoldIDs(
+                        for: runtimeTarget,
+                        handUse: handUse,
+                        side: side,
+                        on: board
+                    ).isEmpty
+                }
+                if !hasCompatibleBoard {
+                    issues.append(
+                        PlanValidationIssue(
+                            path: targetPath,
+                            message: "No compatible board exposes the requested hold kind for this hand use and side."
+                        )
+                    )
+                }
             case let .feature(feature, fallbacks, fingerCapacity):
                 let runtimeTarget = HoldTarget(
                     holdIDs: [],
@@ -1215,7 +1352,12 @@ enum PlanLibraryValidator {
                 )
                 let hasCompatibleBoard = boardIDs.contains { boardID in
                     guard let board = boardByID[boardID]?.first else { return false }
-                    return !BoardTargetResolver.substituteHoldIDs(for: runtimeTarget, on: board).isEmpty
+                    return !BoardTargetResolver.substituteHoldIDs(
+                        for: runtimeTarget,
+                        handUse: handUse,
+                        side: side,
+                        on: board
+                    ).isEmpty
                 }
                 if !hasCompatibleBoard {
                     issues.append(
@@ -1316,6 +1458,11 @@ struct PlanDefinitionResolver {
                         segments: segments,
                         gripType: stepDefinition.gripType,
                         fingerConfiguration: stepDefinition.fingerConfiguration,
+                        handUse: stepDefinition.handUse,
+                        side: stepDefinition.side,
+                        action: stepDefinition.action,
+                        repetitions: stepDefinition.repetitions,
+                        externalLoadKGF: stepDefinition.externalLoadKGF,
                         timedWorkDuration: stepDefinition.activeDuration
                     )
                     let canonicalStep = WorkoutStepNormalizer.materializingImplicitSegments(resolvedStep)

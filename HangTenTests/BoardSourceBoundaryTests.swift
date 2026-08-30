@@ -9,15 +9,25 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     func testCatalogContainsExactlyRegisteredPackageBoards() {
         let expectedIDs = [
+            "aelith.cyclops-011",
             "beastmaker-1000",
             "beastmaker-2000",
+            "captain-fingerfood.dual",
+            "captain-fingerfood.pocket",
+            "captain-fingerfood.unlevel",
+            "crimptonite.helium-mobile",
             "dewoodstok-woodbord",
             "escape-beta-22",
             "escape.unlimited",
             "evolv-kilter-basic-long",
             "frictitious.doormount-pro-7",
             "frictitious.megalith",
+            "frictitious.nug",
+            "frictitious.port-a-board",
             "lattice-triple-rung",
+            "lattice.mini-bar",
+            "lattice.mxedge-lift-large",
+            "lattice.mxedge-lift-small",
             "mammut.diamond-finger",
             "metolius.climbers-edge",
             "metolius.contact",
@@ -31,6 +41,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "metolius.wood-grips-deluxe-ii",
             "moon.armstrong",
             "nature.stoak-board-iii",
+            "nature.stone-hanger-mini",
+            "nature.stone-hanger-mini-karma8a",
+            "plateau.lifting-edge",
             "soill.iron-palm-2",
             "soill.split-palm",
             "soill.training-tiles",
@@ -510,7 +523,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 let assetURL = URL(fileURLWithPath: assetPath)
                 identifiers.insert(assetPath)
                 identifiers.insert(assetURL.lastPathComponent)
-                identifiers.insert(assetURL.deletingPathExtension().lastPathComponent)
+                let stem = assetURL.deletingPathExtension().lastPathComponent
+                // Very short presentation stems such as `top` and `end` are
+                // ordinary source vocabulary and create path-name collisions
+                // (for example, WorkoutStopwatch.swift). The full package
+                // asset path and filename remain protected by the audit.
+                if stem.count >= 5 {
+                    identifiers.insert(stem)
+                }
             }
 
         }

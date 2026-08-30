@@ -6,9 +6,13 @@
   "productURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
   "dimensions": "24\" \u00d7 6.2\"",
   "aspectRatio": 3.88,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left outer jug",
       "kind": "jug",
       "geometry": [
@@ -72,6 +76,7 @@
     },
     {
       "id": "sloper-flat-left",
+      "equipmentObjectID": "primary",
       "name": "Left 56 mm flat sloper",
       "kind": "sloper",
       "sloper": {
@@ -130,6 +135,7 @@
     },
     {
       "id": "sloper-round-center",
+      "equipmentObjectID": "primary",
       "name": "Center 56 mm round sloper",
       "kind": "sloper",
       "sloper": {
@@ -195,6 +201,7 @@
     },
     {
       "id": "sloper-flat-right",
+      "equipmentObjectID": "primary",
       "name": "Right 56 mm flat sloper",
       "kind": "sloper",
       "sloper": {
@@ -253,6 +260,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right outer jug",
       "kind": "jug",
       "geometry": [
@@ -323,6 +331,7 @@
     },
     {
       "id": "edge-29-left",
+      "equipmentObjectID": "primary",
       "name": "Left 29 mm edge",
       "kind": "edge",
       "geometry": [
@@ -388,6 +397,7 @@
     },
     {
       "id": "pocket-29-three-left",
+      "equipmentObjectID": "primary",
       "name": "Left 29 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -505,6 +515,7 @@
     },
     {
       "id": "pocket-29-two-left",
+      "equipmentObjectID": "primary",
       "name": "Left 29 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -622,6 +633,7 @@
     },
     {
       "id": "pocket-29-four-center",
+      "equipmentObjectID": "primary",
       "name": "Center 29 mm four-finger pocket",
       "kind": "pocket",
       "gripType": "fourFingerPocket",
@@ -739,6 +751,7 @@
     },
     {
       "id": "pocket-29-two-right",
+      "equipmentObjectID": "primary",
       "name": "Right 29 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -856,6 +869,7 @@
     },
     {
       "id": "pocket-29-three-right",
+      "equipmentObjectID": "primary",
       "name": "Right 29 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -973,6 +987,7 @@
     },
     {
       "id": "edge-29-right",
+      "equipmentObjectID": "primary",
       "name": "Right 29 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1038,6 +1053,7 @@
     },
     {
       "id": "edge-19-left",
+      "equipmentObjectID": "primary",
       "name": "Left 19 mm edge",
       "kind": "edge",
       "geometry": [
@@ -1110,6 +1126,7 @@
     },
     {
       "id": "pocket-19-three-left",
+      "equipmentObjectID": "primary",
       "name": "Left 19 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -1227,6 +1244,7 @@
     },
     {
       "id": "pocket-19-three-right",
+      "equipmentObjectID": "primary",
       "name": "Right 19 mm three-finger pocket",
       "kind": "pocket",
       "gripType": "threeFingerPocket",
@@ -1344,6 +1362,7 @@
     },
     {
       "id": "pocket-19-two-left",
+      "equipmentObjectID": "primary",
       "name": "Left 19 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1461,6 +1480,7 @@
     },
     {
       "id": "pocket-19-two-right",
+      "equipmentObjectID": "primary",
       "name": "Right 19 mm two-finger pocket",
       "kind": "pocket",
       "gripType": "twoFingerPocket",
@@ -1578,6 +1598,7 @@
     },
     {
       "id": "pocket-19-four-center",
+      "equipmentObjectID": "primary",
       "name": "Center 19 mm four-finger pocket",
       "kind": "pocket",
       "gripType": "fourFingerPocket",
@@ -1695,6 +1716,7 @@
     },
     {
       "id": "edge-19-right",
+      "equipmentObjectID": "primary",
       "name": "Right 19 mm edge",
       "kind": "edge",
       "geometry": [

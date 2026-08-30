@@ -53,6 +53,32 @@ enum WorkoutSummaryFormatting {
         }
         return "Pulley assistance: -\(String(format: "%.1f %@", displayedValue, unit.label))"
     }
+
+    static func semanticText(
+        for step: WorkoutStepMeasurement,
+        unit: MotherboardForceUnit
+    ) -> String {
+        guard !step.isRest else { return "Rest" }
+        let side: String
+        switch step.side {
+        case .left: side = "Left hand"
+        case .right: side = "Right hand"
+        case .both: side = "Both hands"
+        }
+        switch step.action {
+        case .hang:
+            return "Hang • \(side)"
+        case .isometricPull:
+            return "Isometric pull • \(side)"
+        case .loadedLift:
+            let completed = step.completedRepetitions ?? 0
+            let prescribed = step.repetitions ?? 0
+            let load = step.externalLoadKGF.map {
+                " • \(WorkoutStepFormatting.externalLoadText($0, unit: unit))"
+            } ?? ""
+            return "Loaded lift • \(side) • \(completed) of \(prescribed) lifts complete\(load)"
+        }
+    }
 }
 
 struct WorkoutSummaryView: View {
@@ -293,6 +319,10 @@ private struct WorkoutSummaryContent: View {
                 summaryValue(title: "Peak", value: peakText(for: step))
             }
 
+            Text(WorkoutSummaryFormatting.semanticText(for: step, unit: unit))
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+
             if step.intervals.count > 1 {
                 Text("\(step.intervals.count) intervals: \(step.intervals.map { $0.duration.durationText }.joined(separator: ", "))")
                     .font(.system(size: 12, weight: .medium, design: .rounded))
@@ -310,6 +340,28 @@ private struct WorkoutSummaryContent: View {
             Text(value)
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.hangInk)
+        }
+    }
+
+    private func actionText(for action: WorkoutAction) -> String {
+        switch action {
+        case .hang: "Hang"
+        case .isometricPull: "Isometric pull"
+        case .loadedLift: "Loaded lift"
+        }
+    }
+
+    private func sideText(for side: WorkoutSide) -> String {
+        switch side {
+        case .left: "Left hand"
+        case .right: "Right hand"
+        case .both: "Both hands"
+        }
+    }
+
+    private func externalLoadText(for step: WorkoutStepMeasurement) -> String? {
+        step.externalLoadKGF.map {
+            WorkoutStepFormatting.externalLoadText($0, unit: .kilograms)
         }
     }
 

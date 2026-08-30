@@ -3,6 +3,11 @@ ios:
   - 'HangTenTests/**'
   - 'HangTen.xcodeproj/**'
   - '.github/ExportOptions.plist'
+android:
+  - 'Android/**'
+  - 'Hangboards/**'
+  - 'HangTen/Resources/PlanLibrary.json'
+  - 'HangTen/Resources/CountdownAudio/**'
 python:
   - 'Tools/HangboardPackages/**'
   - 'Tools/HangboardWorkbench/**/*.py'

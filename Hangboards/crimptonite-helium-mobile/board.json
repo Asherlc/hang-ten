@@ -1,0 +1,921 @@
+{
+  "id": "crimptonite.helium-mobile",
+  "manufacturer": "Crimptonite",
+  "name": "Helium Mobile",
+  "subtitle": "Ultra-light mobile board with four edges and jug/sloper surfaces.",
+  "productURL": "https://crimptonite.com/product/helium-mobile/",
+  "dimensions": "400 × 58 × 24 mm",
+  "aspectRatio": 1.5,
+  "equipmentObjects": [
+    {
+      "id": "primary",
+      "missingHandCapacityPolicy": "unavailable"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Front",
+      "assetPath": "assets/primary.png",
+      "aspectRatio": 1.5,
+      "default": true
+    },
+    {
+      "id": "reverse",
+      "name": "Back",
+      "assetPath": "assets/reverse.png",
+      "aspectRatio": 1.5,
+      "default": false
+    }
+  ],
+  "holds": [
+    {
+      "id": "edge-14",
+      "equipmentObjectID": "primary",
+      "name": "14 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "sizeMillimeters": 14,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.132,
+            "y": 0.543,
+            "width": 0.234,
+            "height": 0.057
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.08
+                ],
+                "control2": [
+                  0.0,
+                  0.28
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01,
+                  0.72
+                ],
+                "control2": [
+                  0.04,
+                  0.92
+                ],
+                "to": [
+                  0.09,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.91,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.92
+                ],
+                "control2": [
+                  1.0,
+                  0.72
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.99,
+                  0.28
+                ],
+                "control2": [
+                  0.96,
+                  0.08
+                ],
+                "to": [
+                  0.91,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        },
+        {
+          "frame": {
+            "x": 0.634,
+            "y": 0.543,
+            "width": 0.234,
+            "height": 0.057
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.08
+                ],
+                "control2": [
+                  0.0,
+                  0.28
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01,
+                  0.72
+                ],
+                "control2": [
+                  0.04,
+                  0.92
+                ],
+                "to": [
+                  0.09,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.91,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.92
+                ],
+                "control2": [
+                  1.0,
+                  0.72
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.99,
+                  0.28
+                ],
+                "control2": [
+                  0.96,
+                  0.08
+                ],
+                "to": [
+                  0.91,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "center-edge-18",
+      "equipmentObjectID": "primary",
+      "name": "18 mm center edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "sizeMillimeters": 18,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.378,
+            "y": 0.469,
+            "width": 0.244,
+            "height": 0.071
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.04
+                ],
+                "control2": [
+                  0.02,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.43
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.66
+                ],
+                "control2": [
+                  0.04,
+                  0.87
+                ],
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.87
+                ],
+                "control2": [
+                  1.0,
+                  0.66
+                ],
+                "to": [
+                  1.0,
+                  0.43
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.98,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.04
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "edge-22",
+      "equipmentObjectID": "primary",
+      "name": "22 mm edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "sizeMillimeters": 22,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.127,
+            "y": 0.469,
+            "width": 0.244,
+            "height": 0.071
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.04
+                ],
+                "control2": [
+                  0.02,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.43
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.66
+                ],
+                "control2": [
+                  0.04,
+                  0.87
+                ],
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.87
+                ],
+                "control2": [
+                  1.0,
+                  0.66
+                ],
+                "to": [
+                  1.0,
+                  0.43
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.98,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.04
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        },
+        {
+          "frame": {
+            "x": 0.629,
+            "y": 0.469,
+            "width": 0.244,
+            "height": 0.071
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.07,
+                  0.04
+                ],
+                "control2": [
+                  0.02,
+                  0.2
+                ],
+                "to": [
+                  0.0,
+                  0.43
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.0,
+                  0.66
+                ],
+                "control2": [
+                  0.04,
+                  0.87
+                ],
+                "to": [
+                  0.1,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.9,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.87
+                ],
+                "control2": [
+                  1.0,
+                  0.66
+                ],
+                "to": [
+                  1.0,
+                  0.43
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.98,
+                  0.2
+                ],
+                "control2": [
+                  0.93,
+                  0.04
+                ],
+                "to": [
+                  0.88,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.12,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "center-edge-10",
+      "equipmentObjectID": "primary",
+      "name": "10 mm center edge",
+      "kind": "edge",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "sizeMillimeters": 10,
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.382,
+            "y": 0.543,
+            "width": 0.236,
+            "height": 0.057
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.04,
+                  0.08
+                ],
+                "control2": [
+                  0.0,
+                  0.28
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.01,
+                  0.72
+                ],
+                "control2": [
+                  0.04,
+                  0.92
+                ],
+                "to": [
+                  0.09,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.91,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.96,
+                  0.92
+                ],
+                "control2": [
+                  1.0,
+                  0.72
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.99,
+                  0.28
+                ],
+                "control2": [
+                  0.96,
+                  0.08
+                ],
+                "to": [
+                  0.91,
+                  0.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.09,
+                  0.0
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "back-jug-sloper",
+      "equipmentObjectID": "primary",
+      "name": "Back jug / sloper surface",
+      "kind": "sloper",
+      "handCapacity": 1,
+      "presentationID": "reverse",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.178,
+            "y": 0.406,
+            "width": 0.648,
+            "height": 0.176
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.04,
+                  0.27
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.22,
+                  0.23
+                ],
+                "control2": [
+                  0.7,
+                  0.07
+                ],
+                "to": [
+                  0.925,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.965,
+                  0.0
+                ],
+                "control2": [
+                  0.995,
+                  0.08
+                ],
+                "to": [
+                  1.0,
+                  0.17
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  1.0,
+                  0.36
+                ],
+                "control2": [
+                  0.99,
+                  0.66
+                ],
+                "to": [
+                  0.963,
+                  0.76
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.72,
+                  0.83
+                ],
+                "control2": [
+                  0.25,
+                  0.96
+                ],
+                "to": [
+                  0.04,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.012,
+                  0.97
+                ],
+                "control2": [
+                  0.0,
+                  0.78
+                ],
+                "to": [
+                  0.0,
+                  0.48
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.005,
+                  0.37
+                ],
+                "control2": [
+                  0.018,
+                  0.29
+                ],
+                "to": [
+                  0.04,
+                  0.27
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    },
+    {
+      "id": "top-jug",
+      "equipmentObjectID": "primary",
+      "name": "Top jug",
+      "kind": "jug",
+      "handCapacity": 1,
+      "presentationID": "primary",
+      "geometry": [
+        {
+          "frame": {
+            "x": 0.114,
+            "y": 0.451,
+            "width": 0.772,
+            "height": 0.018
+          },
+          "shape": {
+            "type": "path",
+            "commands": [
+              {
+                "command": "move",
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.02,
+                  0.18
+                ],
+                "control2": [
+                  0.035,
+                  0.03
+                ],
+                "to": [
+                  0.07,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.31,
+                  0.0
+                ],
+                "control2": [
+                  0.69,
+                  0.0
+                ],
+                "to": [
+                  0.93,
+                  0.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.965,
+                  0.03
+                ],
+                "control2": [
+                  1.0,
+                  0.18
+                ],
+                "to": [
+                  1.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.98,
+                  0.82
+                ],
+                "control2": [
+                  0.965,
+                  0.97
+                ],
+                "to": [
+                  0.93,
+                  1.0
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.07,
+                  1.0
+                ]
+              },
+              {
+                "command": "curve",
+                "control1": [
+                  0.035,
+                  0.97
+                ],
+                "control2": [
+                  0.0,
+                  0.82
+                ],
+                "to": [
+                  0.0,
+                  0.5
+                ]
+              },
+              {
+                "command": "close"
+              }
+            ]
+          },
+          "treatment": {
+            "type": "surface"
+          }
+        }
+      ]
+    }
+  ]
+}

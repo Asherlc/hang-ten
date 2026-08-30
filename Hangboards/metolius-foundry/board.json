@@ -6,6 +6,9 @@
   "productURL": "https://www.metoliusclimbing.com/products/foundry-training-board",
   "dimensions": "22.75 \u00d7 8.5 in",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "front",
@@ -18,6 +21,7 @@
   "holds": [
     {
       "id": "pinch-1-left",
+      "equipmentObjectID": "primary",
       "name": "Left #1 variable pinch",
       "kind": "pinch",
       "presentationID": "front",
@@ -97,6 +101,7 @@
     },
     {
       "id": "jug-2-left",
+      "equipmentObjectID": "primary",
       "name": "Left #2 outer jug",
       "kind": "jug",
       "presentationID": "front",
@@ -169,6 +174,7 @@
     },
     {
       "id": "pocket-3-left",
+      "equipmentObjectID": "primary",
       "name": "Left #3 32 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 32,
@@ -281,6 +287,7 @@
     },
     {
       "id": "pocket-4-left",
+      "equipmentObjectID": "primary",
       "name": "Left #4 22 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -393,6 +400,7 @@
     },
     {
       "id": "pocket-5-left",
+      "equipmentObjectID": "primary",
       "name": "Left #5 30 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -505,6 +513,7 @@
     },
     {
       "id": "pocket-6-left",
+      "equipmentObjectID": "primary",
       "name": "Left #6 15 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 15,
@@ -617,6 +626,7 @@
     },
     {
       "id": "pocket-7-left",
+      "equipmentObjectID": "primary",
       "name": "Left #7 21 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 21,
@@ -729,6 +739,7 @@
     },
     {
       "id": "sloper-8-center",
+      "equipmentObjectID": "primary",
       "name": "Center #8 53 mm flat sloper",
       "kind": "sloper",
       "sloper": {
@@ -810,6 +821,7 @@
     },
     {
       "id": "edge-9-center",
+      "equipmentObjectID": "primary",
       "name": "Center #9 16 mm edge",
       "kind": "edge",
       "sizeMillimeters": 16,
@@ -920,6 +932,7 @@
     },
     {
       "id": "edge-10-center",
+      "equipmentObjectID": "primary",
       "name": "Center #10 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -1030,6 +1043,7 @@
     },
     {
       "id": "edge-11-center",
+      "equipmentObjectID": "primary",
       "name": "Center #11 23 mm edge",
       "kind": "edge",
       "sizeMillimeters": 23,
@@ -1140,6 +1154,7 @@
     },
     {
       "id": "pocket-7-right",
+      "equipmentObjectID": "primary",
       "name": "Right #7 21 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 21,
@@ -1252,6 +1267,7 @@
     },
     {
       "id": "pocket-6-right",
+      "equipmentObjectID": "primary",
       "name": "Right #6 15 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 15,
@@ -1364,6 +1380,7 @@
     },
     {
       "id": "pocket-5-right",
+      "equipmentObjectID": "primary",
       "name": "Right #5 30 mm 2-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -1476,6 +1493,7 @@
     },
     {
       "id": "pocket-4-right",
+      "equipmentObjectID": "primary",
       "name": "Right #4 22 mm 3-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 22,
@@ -1588,6 +1606,7 @@
     },
     {
       "id": "pocket-3-right",
+      "equipmentObjectID": "primary",
       "name": "Right #3 32 mm 4-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 32,
@@ -1700,6 +1719,7 @@
     },
     {
       "id": "jug-2-right",
+      "equipmentObjectID": "primary",
       "name": "Right #2 outer jug",
       "kind": "jug",
       "presentationID": "front",
@@ -1772,6 +1792,7 @@
     },
     {
       "id": "pinch-1-right",
+      "equipmentObjectID": "primary",
       "name": "Right #1 variable pinch",
       "kind": "pinch",
       "presentationID": "front",

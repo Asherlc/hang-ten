@@ -6,9 +6,13 @@
   "productURL": "https://www.yyvertical.com/en/products/verticalboard-light",
   "dimensions": "54 \u00d7 9 \u00d7 5 cm",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left top jug",
       "kind": "jug",
       "geometry": [
@@ -80,6 +84,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right top jug",
       "kind": "jug",
       "geometry": [
@@ -151,6 +156,7 @@
     },
     {
       "id": "sloper-30-left",
+      "equipmentObjectID": "primary",
       "name": "Left 30-degree sloper",
       "kind": "sloper",
       "sloper": {
@@ -234,6 +240,7 @@
     },
     {
       "id": "sloper-30-right",
+      "equipmentObjectID": "primary",
       "name": "Right 30-degree sloper",
       "kind": "sloper",
       "sloper": {
@@ -317,6 +324,7 @@
     },
     {
       "id": "sloper-20-center",
+      "equipmentObjectID": "primary",
       "name": "Center 20-degree sloper",
       "kind": "sloper",
       "sloper": {
@@ -394,6 +402,7 @@
     },
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -504,6 +513,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -614,6 +624,7 @@
     },
     {
       "id": "edge-45-left",
+      "equipmentObjectID": "primary",
       "name": "Left 45 mm edge",
       "kind": "edge",
       "sizeMillimeters": 45,
@@ -724,6 +735,7 @@
     },
     {
       "id": "edge-45-right",
+      "equipmentObjectID": "primary",
       "name": "Right 45 mm edge",
       "kind": "edge",
       "sizeMillimeters": 45,
@@ -834,6 +846,7 @@
     },
     {
       "id": "edge-25-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -944,6 +957,7 @@
     },
     {
       "id": "edge-25-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -1054,6 +1068,7 @@
     },
     {
       "id": "edge-40-center",
+      "equipmentObjectID": "primary",
       "name": "Center 40 mm edge and elastic notch",
       "kind": "edge",
       "sizeMillimeters": 40,

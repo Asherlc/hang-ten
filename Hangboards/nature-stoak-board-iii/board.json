@@ -6,9 +6,13 @@
   "productURL": "https://natureclimbing.com/products/stoak-board-iii",
   "dimensions": "57 \u00d7 12 \u00d7 5.5 cm",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "top-jug",
+      "equipmentObjectID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
       "geometry": [
@@ -110,6 +114,7 @@
     },
     {
       "id": "edge-22-center",
+      "equipmentObjectID": "primary",
       "name": "Center 22 mm edge",
       "kind": "edge",
       "sizeMillimeters": 22,
@@ -220,6 +225,7 @@
     },
     {
       "id": "gradient-edge-left",
+      "equipmentObjectID": "primary",
       "name": "Left gradient 10\u201325 mm edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -350,6 +356,7 @@
     },
     {
       "id": "gradient-edge-right",
+      "equipmentObjectID": "primary",
       "name": "Right gradient 10\u201325 mm edge",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -480,6 +487,7 @@
     },
     {
       "id": "lower-composite-left",
+      "equipmentObjectID": "primary",
       "name": "Left continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -593,6 +601,7 @@
     },
     {
       "id": "lower-composite-right",
+      "equipmentObjectID": "primary",
       "name": "Right continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
       "depthRangeMillimeters": {
@@ -706,6 +715,7 @@
     },
     {
       "id": "lower-composite-center",
+      "equipmentObjectID": "primary",
       "name": "Center continuous 30 mm granite / ergonomic wood contact",
       "kind": "edge",
       "sizeMillimeters": 30,

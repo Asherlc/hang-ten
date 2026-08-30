@@ -112,6 +112,7 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertEqual(lhs.productURL.absoluteString, rhs.productURL.absoluteString, file: file, line: line)
         XCTAssertEqual(lhs.dimensions, rhs.dimensions, file: file, line: line)
         XCTAssertEqual(lhs.aspectRatio, rhs.aspectRatio, accuracy: 1e-12, file: file, line: line)
+        XCTAssertEqual(lhs.equipmentObjects, rhs.equipmentObjects, file: file, line: line)
         XCTAssertEqual(lhs.presentations, rhs.presentations, file: file, line: line)
         XCTAssertEqual(lhs.holds.count, rhs.holds.count, file: file, line: line)
         for (leftHold, rightHold) in zip(lhs.holds, rhs.holds) {
@@ -214,6 +215,58 @@ final class BoardPackageWriterTests: XCTestCase {
         ])
     }
 
+    func testWriterRejectsHoldWithUnknownEquipmentObject() throws {
+        var document = makeDocument()
+        document.equipmentObjects = [EquipmentObject(id: "primary")]
+        document.holds[0].equipmentObjectID = "missing"
+
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document))
+    }
+
+    func testWriterRoundTripsExplicitEquipmentObjectAssignments() throws {
+        var document = makeDocument()
+        document.equipmentObjects = [EquipmentObject(id: "left"), EquipmentObject(id: "right")]
+        document.holds = [
+            makeHold(id: "left-hold", name: "Left hold"),
+            makeHold(id: "right-hold", name: "Right hold"),
+        ]
+        document.holds[0].equipmentObjectID = "left"
+        document.holds[1].equipmentObjectID = "right"
+
+        let redecoded = try BoardEditableDocument(data: BoardPackageWriter.data(for: document))
+
+        XCTAssertEqual(redecoded.equipmentObjects.map(\.id), ["left", "right"])
+        XCTAssertEqual(redecoded.holds.map(\.equipmentObjectID), ["left", "right"])
+    }
+
+    func testWriterRoundTripsStrictMissingHandCapacityPolicy() throws {
+        var document = makeDocument()
+        document.equipmentObjects = [
+            EquipmentObject(
+                id: "primary",
+                missingHandCapacityPolicy: .unavailable
+            )
+        ]
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let redecoded = try BoardEditableDocument(data: encoded)
+
+        XCTAssertEqual(
+            redecoded.equipmentObjects.first?.missingHandCapacityPolicy,
+            .unavailable
+        )
+        let json = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let equipmentObjects = try XCTUnwrap(
+            json["equipmentObjects"] as? [[String: Any]]
+        )
+        XCTAssertEqual(
+            equipmentObjects.first?["missingHandCapacityPolicy"] as? String,
+            "unavailable"
+        )
+    }
+
     func testWriterRejectsInvalidSloperMetadataCombinations() throws {
         let invalidHolds = [
             makeHold(
@@ -283,6 +336,29 @@ final class BoardPackageWriterTests: XCTestCase {
                 encoded, reencoded,
                 "encoding must be a deterministic fixpoint for \(slug)"
             )
+        }
+    }
+
+    func testEveryBundledPackageExplicitlyAssignsEveryHoldToAnEquipmentObject() throws {
+        for slug in try bundledSlugs() {
+            let data = try Data(
+                contentsOf: repositoryHangboardsURL().appendingPathComponent("\(slug)/board.json")
+            )
+            let document = try XCTUnwrap(
+                JSONSerialization.jsonObject(with: data) as? [String: Any],
+                "\(slug) board document"
+            )
+            let objects = try XCTUnwrap(document["equipmentObjects"] as? [[String: Any]])
+            XCTAssertFalse(objects.isEmpty, "\(slug) must declare equipment objects")
+            let holds = try XCTUnwrap(document["holds"] as? [[String: Any]])
+
+            for hold in holds {
+                let holdID = try XCTUnwrap(hold["id"] as? String)
+                XCTAssertNotNil(
+                    hold["equipmentObjectID"] as? String,
+                    "\(slug) hold \(holdID) must explicitly declare equipmentObjectID"
+                )
+            }
         }
     }
 
@@ -729,6 +805,18 @@ final class BoardPackageWriterTests: XCTestCase {
         let constrainedBytes = try BoardPackageWriter.data(for: document)
         let redecoded = try BoardEditableDocument(data: constrainedBytes)
         XCTAssertEqual(redecoded.holds[0].geometry[0].shapeConstraint?.rotationDegrees, -179.5)
+    }
+
+    func testEditorDecoderRejectsUnknownKeysInEquipmentObjects() throws {
+        let encoded = try BoardPackageWriter.data(for: makeDocument())
+        var document = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        document["equipmentObjects"] = [["id": "primary", "unexpected": true]]
+
+        XCTAssertThrowsError(
+            try BoardEditableDocument(data: JSONSerialization.data(withJSONObject: document))
+        )
     }
 
     func testEditorDecoderPreservesOmittedKindButRejectsNullKind() throws {

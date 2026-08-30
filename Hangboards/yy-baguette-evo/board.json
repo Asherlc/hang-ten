@@ -6,6 +6,9 @@
   "subtitle": "Portable rotating bar with twelve documented grip types",
   "dimensions": "52 \u00d7 5 \u00d7 5 cm",
   "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "presentations": [
     {
       "id": "paired-25-20-15-10",
@@ -46,6 +49,7 @@
   "holds": [
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -170,6 +174,7 @@
     },
     {
       "id": "edge-10-left",
+      "equipmentObjectID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -294,6 +299,7 @@
     },
     {
       "id": "edge-25-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -418,6 +424,7 @@
     },
     {
       "id": "edge-15-left",
+      "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -542,6 +549,7 @@
     },
     {
       "id": "edge-15-right",
+      "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -666,6 +674,7 @@
     },
     {
       "id": "edge-25-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -790,6 +799,7 @@
     },
     {
       "id": "edge-10-right",
+      "equipmentObjectID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -914,6 +924,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1038,6 +1049,7 @@
     },
     {
       "id": "edge-12-left",
+      "equipmentObjectID": "primary",
       "name": "Left 12 mm edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -1148,6 +1160,7 @@
     },
     {
       "id": "edge-12-right",
+      "equipmentObjectID": "primary",
       "name": "Right 12 mm edge",
       "kind": "edge",
       "sizeMillimeters": 12,
@@ -1258,6 +1271,7 @@
     },
     {
       "id": "edge-8-left",
+      "equipmentObjectID": "primary",
       "name": "Left 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -1368,6 +1382,7 @@
     },
     {
       "id": "edge-8-right",
+      "equipmentObjectID": "primary",
       "name": "Right 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -1478,6 +1493,7 @@
     },
     {
       "id": "edge-6-upper",
+      "equipmentObjectID": "primary",
       "name": "Upper 6 mm edge",
       "kind": "edge",
       "sizeMillimeters": 6,
@@ -1588,6 +1604,7 @@
     },
     {
       "id": "edge-6-lower",
+      "equipmentObjectID": "primary",
       "name": "Lower 6 mm edge",
       "kind": "edge",
       "sizeMillimeters": 6,
@@ -1698,6 +1715,7 @@
     },
     {
       "id": "edge-central-30",
+      "equipmentObjectID": "primary",
       "name": "Central 30 mm edge",
       "kind": "edge",
       "sizeMillimeters": 30,
@@ -1755,6 +1773,7 @@
     },
     {
       "id": "edge-central-25",
+      "equipmentObjectID": "primary",
       "name": "Central 25 mm edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -1812,6 +1831,7 @@
     },
     {
       "id": "edge-central-20",
+      "equipmentObjectID": "primary",
       "name": "Central 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -1869,6 +1889,7 @@
     },
     {
       "id": "edge-central-6",
+      "equipmentObjectID": "primary",
       "name": "Central 6 mm edge",
       "kind": "edge",
       "sizeMillimeters": 6,
@@ -1926,6 +1947,7 @@
     },
     {
       "id": "rounded-tray",
+      "equipmentObjectID": "primary",
       "name": "Rounded tray",
       "kind": "jug",
       "presentationID": "rounded-tray",
