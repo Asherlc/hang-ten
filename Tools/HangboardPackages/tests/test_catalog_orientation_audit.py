@@ -22,6 +22,18 @@ RECORD_HEADER = (
     "source limitation",
 )
 URL_PATTERN = re.compile(r"https?://[^\s<>)|]+")
+MEDIA_LINK_PATTERN = re.compile(r"\[([^\]]+)]\((https://[^)]+)\)")
+PRESENTATION_ENTRY_PATTERN = re.compile(r"`([^`]+)`\s*=>\s*(.+)")
+PRODUCT_PAGE_PATH_PATTERN = re.compile(r"/products?/", re.IGNORECASE)
+DIRECT_MEDIA_PATTERN = re.compile(
+    r"\.(?:pdf|jpe?g|png|webp|avif)(?:[?#]|$)", re.IGNORECASE
+)
+
+
+@dataclass(frozen=True)
+class MediaEvidence:
+    role: str
+    url: str
 
 
 @dataclass(frozen=True)
@@ -30,12 +42,45 @@ class OrientationAuditRecord:
     physical_revision: str
     reviewed_date: str
     primary_urls: tuple[str, ...]
-    presentation_evidence: str
+    media_evidence: tuple[MediaEvidence, ...]
+    presentation_evidence: dict[str, str]
+    hold_mappings: dict[str, str]
     limitation: str
 
 
 def _cells(line: str) -> tuple[str, ...]:
     return tuple(cell.strip() for cell in line.strip().strip("|").split("|"))
+
+
+def _entries(cell: str) -> tuple[str, ...]:
+    return tuple(entry.strip() for entry in cell.split("<br>") if entry.strip())
+
+
+def _parse_media_evidence(package: str, cell: str) -> tuple[MediaEvidence, ...]:
+    if cell == "—":
+        return ()
+    evidence: list[MediaEvidence] = []
+    for entry in _entries(cell):
+        match = MEDIA_LINK_PATTERN.fullmatch(entry)
+        assert match, f"{package}: malformed reviewed-media entry: {entry}"
+        role, url = match.groups()
+        assert role.strip(), f"{package}: reviewed-media role is empty"
+        evidence.append(MediaEvidence(role=role.strip(), url=url))
+    return tuple(evidence)
+
+
+def _parse_presentation_entries(package: str, cell: str) -> dict[str, str]:
+    evidence: dict[str, str] = {}
+    for entry in _entries(cell):
+        match = PRESENTATION_ENTRY_PATTERN.fullmatch(entry)
+        assert match, f"{package}: malformed presentation entry: {entry}"
+        presentation_id, description = match.groups()
+        assert presentation_id not in evidence, (
+            f"{package}: duplicate presentation entry: {presentation_id}"
+        )
+        assert description.strip(), f"{package}: empty presentation evidence"
+        evidence[presentation_id] = description.strip()
+    return evidence
 
 
 def parse_orientation_audit(path: Path) -> dict[str, OrientationAuditRecord]:
@@ -63,7 +108,9 @@ def parse_orientation_audit(path: Path) -> dict[str, OrientationAuditRecord]:
             physical_revision=cells[1],
             reviewed_date=cells[2],
             primary_urls=urls,
-            presentation_evidence=f"{cells[5]} {cells[6]}".strip(),
+            media_evidence=_parse_media_evidence(package, cells[4]),
+            presentation_evidence=_parse_presentation_entries(package, cells[5]),
+            hold_mappings=_parse_presentation_entries(package, cells[6]),
             limitation=cells[7],
         )
 
@@ -92,8 +139,28 @@ def test_orientation_audit_covers_every_discovered_package() -> None:
         assert record.reviewed_date == "2026-08-30"
         assert record.primary_urls, f"{record.package}: no first-party source URL"
         assert all(url.startswith("https://") for url in record.primary_urls)
-        assert record.presentation_evidence or record.limitation
+        assert record.media_evidence or record.limitation, (
+            f"{package}: missing media evidence requires an explicit limitation"
+        )
+        assert len({item.url for item in record.media_evidence}) == len(
+            record.media_evidence
+        ), f"{package}: duplicate reviewed-media URL"
         assert all(
-            presentation_id in record.presentation_evidence
-            for presentation_id in declared_presentations
-        ), f"{package}: presentation evidence is incomplete"
+            item.role.lower()
+            not in {"product page", "first-party supporting page"}
+            for item in record.media_evidence
+        ), f"{package}: reviewed media must state a specific evidence role"
+        assert all(
+            item.url not in record.primary_urls for item in record.media_evidence
+        ), f"{package}: a product page cannot stand in for gallery media"
+        assert all(
+            not PRODUCT_PAGE_PATH_PATTERN.search(item.url)
+            or DIRECT_MEDIA_PATTERN.search(item.url)
+            for item in record.media_evidence
+        ), f"{package}: a product-page URL cannot be reviewed-media evidence"
+        assert set(record.presentation_evidence) == declared_presentations, (
+            f"{package}: presentation evidence IDs do not match board.json"
+        )
+        assert set(record.hold_mappings) == declared_presentations, (
+            f"{package}: hold-mapping IDs do not match board.json"
+        )
