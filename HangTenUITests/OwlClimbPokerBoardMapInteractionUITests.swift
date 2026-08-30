@@ -1,7 +1,7 @@
 import XCTest
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
-    func testPokerFaceBSloperHasAlignedNormalActiveAndHitTestStates() throws {
+    func testTappingFaceBSloperMapElementSelectsSloper() throws {
         let app = XCUIApplication()
         app.launchEnvironment = ["HANGTEN_REVIEW_BOARD_PICKER": "1"]
         app.launch()
@@ -15,21 +15,27 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertTrue(holdSpecs.waitForExistence(timeout: 10))
         holdSpecs.tap()
 
-        let map = app.buttons["boardDetail.map"]
-        XCTAssertTrue(map.waitForExistence(timeout: 10))
-        addScreenshot(named: "Poker normal Face A")
-
         let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — deep slopers"]
         XCTAssertTrue(faceB.waitForExistence(timeout: 5))
         faceB.tap()
 
-        let sloper = app.buttons["Face B left deep sloper"]
+        let sloper = app.buttons
+            .matching(identifier: "boardDetail.map")
+            .matching(NSPredicate(format: "label == %@", "Face B left deep sloper"))
+            .element
         XCTAssertTrue(sloper.waitForExistence(timeout: 5))
+        XCTAssertTrue(sloper.isHittable)
+        addScreenshot(named: "Poker Face B normal")
+
+        let selected = app.otherElements[
+            "boardDetail.selectedHold.face-b-left-deep-sloper"
+        ]
+        XCTAssertFalse(selected.exists)
         sloper.tap()
 
         XCTAssertTrue(
-            app.otherElements["boardDetail.selectedHold.face-b-left-deep-sloper"].waitForExistence(timeout: 5),
-            "The canonical Face B sloper path must be the tappable element and selected highlight."
+            selected.waitForExistence(timeout: 5),
+            "Tapping the Face B sloper map element must select the matching hold."
         )
         addScreenshot(named: "Poker Face B sloper active")
     }
