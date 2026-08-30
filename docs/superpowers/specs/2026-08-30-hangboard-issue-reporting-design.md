@@ -12,6 +12,10 @@ Ship the report entry point in both iOS and Android. Reports are text-only in
 this release. The form collects no contact information and has no attachment
 support.
 
+Platform parity is required: when an iOS hangboard-facing flow is added or
+changed for this feature, Android must expose the equivalent capability and
+destination rather than a reduced alternative.
+
 ## Architecture
 
 Tally hosts the public report form. Its URL accepts URL-encoded hidden fields,
@@ -40,10 +44,13 @@ authenticate with GitHub.
 ## App Behavior
 
 Each hangboard detail page includes a `Report a hangboard issue` action with
-brief supporting copy that says it opens a report form. The app opens the form
-in the system browser, not an embedded web view. The form URL is platform
-configuration rather than a UI literal. If it is absent or malformed, the
-action is unavailable. If opening the valid URL fails, the app presents a
+brief supporting copy that says it opens a report form. iOS adds the action to
+its existing hold-specification detail screen. Android adds a board-details
+screen, reached from the selected-board card, and presents the action there so
+the two platforms provide the same board-specific destination. The apps open
+the form in the system browser, not an embedded web view. The form URL is
+platform configuration rather than a UI literal. If it is absent or malformed,
+the action is unavailable. If opening the valid URL fails, the app presents a
 retryable error.
 
 The iOS and Android URL builders use exactly the hidden-field names above and
@@ -80,8 +87,8 @@ that every report is immediately visible on GitHub.
 
 - iOS unit tests verify complete report URL construction and encoding, and UI
   tests verify the detail-page action is visible only with configuration.
-- Android unit tests verify the same URL contract and UI tests verify its
-  detail-page entry point.
+- Android unit tests verify the same URL contract and UI tests verify the new
+  board-details destination and its report action.
 - A documented manual provisioning test submits a representative form response
   and verifies a labelled GitHub issue with the expected Markdown body.
 
