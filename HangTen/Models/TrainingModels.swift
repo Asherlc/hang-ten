@@ -479,8 +479,30 @@ enum GripType: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum MissingHandCapacityPolicy: String, Codable, Hashable {
+    /// Compatibility for equipment modeled before simultaneous hand capacity
+    /// was recorded. This is a migration rule, not physical source data.
+    case legacyBilateral
+    /// Missing capacity cannot satisfy a bilateral step.
+    case unavailable
+}
+
+struct EquipmentObject: Codable, Hashable, Identifiable {
+    let id: String
+    let missingHandCapacityPolicy: MissingHandCapacityPolicy
+
+    init(
+        id: String,
+        missingHandCapacityPolicy: MissingHandCapacityPolicy = .legacyBilateral
+    ) {
+        self.id = id
+        self.missingHandCapacityPolicy = missingHandCapacityPolicy
+    }
+}
+
 struct BoardHold: Identifiable, Hashable {
     let id: String
+    let equipmentObjectID: String
     let name: String
     let kind: HoldKind
     let sloper: SloperMetadata?
@@ -522,6 +544,7 @@ struct BoardHold: Identifiable, Hashable {
 
     init(
         id: String,
+        equipmentObjectID: String = "primary",
         name: String,
         kind: HoldKind,
         geometry: [BoardHoldPiece],
@@ -556,6 +579,7 @@ struct BoardHold: Identifiable, Hashable {
         }
 
         self.id = id
+        self.equipmentObjectID = equipmentObjectID
         self.name = name
         self.kind = kind
         self.sloper = sloper
@@ -592,6 +616,7 @@ struct BoardHold: Identifiable, Hashable {
     /// this frame-only path or its retired presentation arguments.
     init(
         id: String,
+        equipmentObjectID: String = "primary",
         name: String,
         shortLabel _: String,
         detail _: String,
@@ -607,6 +632,7 @@ struct BoardHold: Identifiable, Hashable {
     ) {
         self.init(
             id: id,
+            equipmentObjectID: equipmentObjectID,
             name: name,
             kind: kind,
             geometry: [
@@ -674,6 +700,7 @@ struct TrainingBoard: Identifiable, Hashable {
     let subtitle: String
     let dimensions: String?
     let aspectRatio: CGFloat
+    let equipmentObjects: [EquipmentObject]
     let holds: [BoardHold]
     let presentations: [BoardPresentation]
     /// Board-owned semantic targets loaded alongside the physical hold data.
@@ -691,6 +718,7 @@ struct TrainingBoard: Identifiable, Hashable {
         subtitle: String,
         dimensions: String?,
         aspectRatio: CGFloat,
+        equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         holds: [BoardHold],
         semanticHolds: [String: SemanticHoldMappingDefinition] = [:],
         productURL: URL,
@@ -703,6 +731,7 @@ struct TrainingBoard: Identifiable, Hashable {
         self.subtitle = subtitle
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.equipmentObjects = equipmentObjects
         self.holds = holds
         self.presentations = presentations.isEmpty
             ? [
@@ -726,6 +755,10 @@ struct TrainingBoard: Identifiable, Hashable {
     func presentation(id: String?) -> BoardPresentation? {
         guard let id else { return nil }
         return presentations.first { $0.id == id }
+    }
+
+    func object(id: String) -> EquipmentObject? {
+        equipmentObjects.first { $0.id == id }
     }
 }
 
@@ -905,6 +938,48 @@ enum WorkoutPhase: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum WorkoutHandUse: String, Codable, CaseIterable, Hashable {
+    case single
+    case double
+}
+
+enum WorkoutSide: String, Codable, CaseIterable, Hashable {
+    case left
+    case right
+    case both
+}
+
+enum WorkoutAction: String, Codable, CaseIterable, Hashable {
+    case hang
+    case isometricPull
+    case loadedLift
+}
+
+enum WorkoutStepSemantics {
+    static func hasValidHandUseAndSide(_ handUse: WorkoutHandUse, _ side: WorkoutSide) -> Bool {
+        switch handUse {
+        case .single:
+            side == .left || side == .right
+        case .double:
+            side == .both
+        }
+    }
+
+    static func hasValidActionAndRepetitions(_ action: WorkoutAction, _ repetitions: Int?) -> Bool {
+        switch action {
+        case .loadedLift:
+            guard let repetitions else { return false }
+            return repetitions > 0
+        case .hang, .isometricPull:
+            return repetitions == nil
+        }
+    }
+
+    static func hasValidExternalLoad(_ externalLoadKGF: Double?) -> Bool {
+        externalLoadKGF?.isFinite ?? true
+    }
+}
+
 struct WorkoutStep: Identifiable, Hashable {
     let id: String
     let number: Int
@@ -917,6 +992,11 @@ struct WorkoutStep: Identifiable, Hashable {
     let segments: [WorkoutSegment]
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
+    let handUse: WorkoutHandUse
+    let side: WorkoutSide
+    let action: WorkoutAction
+    let repetitions: Int?
+    let externalLoadKGF: Double?
     /// When set, the app splits the minute into timed work and timed rest.
     /// Manufacturer task cycles leave this nil because the athlete completes
     /// the listed reps/hangs, then rests for whatever remains in the minute.
@@ -934,6 +1014,11 @@ struct WorkoutStep: Identifiable, Hashable {
         segments: [WorkoutSegment] = [],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
+        handUse: WorkoutHandUse = .double,
+        side: WorkoutSide = .both,
+        action: WorkoutAction = .hang,
+        repetitions: Int? = nil,
+        externalLoadKGF: Double? = nil,
         timedWorkDuration: TimeInterval? = nil
     ) {
         self.id = id
@@ -947,6 +1032,11 @@ struct WorkoutStep: Identifiable, Hashable {
         self.segments = segments
         self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
+        self.handUse = handUse
+        self.side = side
+        self.action = action
+        self.repetitions = repetitions
+        self.externalLoadKGF = externalLoadKGF
         self.timedWorkDuration = timedWorkDuration
     }
 
@@ -993,6 +1083,11 @@ struct WorkoutStep: Identifiable, Hashable {
             segments: segments,
             gripType: gripType,
             fingerConfiguration: fingerConfiguration,
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF,
             timedWorkDuration: timedWorkDuration
         )
     }
@@ -2246,6 +2341,60 @@ enum LegacyPlanSeedCatalog {
         }())
     )
 
+    /// Faithful step-level expansion of the reported Megos protocol. The
+    /// source states the work/rest cycle and side/set order, while the app
+    /// exposes each source repetition as its own unilateral timer step.
+    static let megoOneArmSevenThree = TrainingPlan(
+        id: "research.megos-one-arm-7-3",
+        title: "Megos · One-arm 7/3 Repeaters",
+        subtitle: "Six sets of four 7/3 one-arm repeaters per side, with 2m set recovery.",
+        level: "Advanced",
+        sourceLabel: "Alex Megos finger-training power-endurance protocol (reported by Eric Hörst)",
+        sourceURL: URL(string: "https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/")!,
+        provenance: .adapted,
+        boardID: nil,
+        steps: numbered({
+            var steps: [WorkoutStep] = []
+            let target: [HoldTarget] = [.feature(.mediumEdge)]
+
+            for set in 1...6 {
+                for side in [WorkoutSide.left, .right] {
+                    for repetition in 1...4 {
+                        steps.append(
+                            WorkoutStep(
+                                id: "megos-7-3-set-\(set)-\(side.rawValue)-rep-\(repetition)",
+                                number: 0,
+                                title: "Megos 7/3 · set \(set) · \(side.rawValue) · rep \(repetition) of 4",
+                                instruction: "Hang one-armed from a comfortable 20–24 mm edge for 7 seconds.",
+                                accessory: "7s hang · 3s rest",
+                                duration: 10,
+                                phase: .hang,
+                                targets: target,
+                                segments: [fixedWork(target[0], 7), fixedRest(3)],
+                                gripType: .halfCrimp,
+                                handUse: .single,
+                                side: side,
+                                action: .hang,
+                                timedWorkDuration: 7
+                            )
+                        )
+                    }
+                }
+                if set < 6 {
+                    steps.append(
+                        recoveryStep(
+                            id: "megos-7-3-set-\(set)-recovery",
+                            title: "Megos 7/3 · set recovery",
+                            duration: 120,
+                            accessory: "2m recovery"
+                        )
+                    )
+                }
+            }
+            return steps
+        }())
+    )
+
     /// The Rock Prodigy instructions leave grip identity, grip order, and set
     /// count to the athlete. This one-set template deliberately has no board
     /// target: selecting one would turn a manufacturer choice into an app
@@ -2776,6 +2925,7 @@ enum LegacyPlanSeedCatalog {
             forceF100,
             evaIntHangs,
             repeaters,
+            megoOneArmSevenThree,
             abrahangs,
             horst753,
             ladders,

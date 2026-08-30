@@ -409,6 +409,7 @@ class BoardPresentation:
 @dataclass(frozen=True)
 class BoardHold:
     id: str
+    equipment_object_id: str
     name: str
     kind: str
     sloper: SloperMetadata | None
@@ -435,6 +436,7 @@ class BoardHold:
 class BoardDocument:
     id: str
     facts: Mapping[str, Any]
+    equipment_objects: tuple[str, ...]
     holds: tuple[BoardHold, ...]
     presentations: tuple[BoardPresentation, ...]
 
@@ -489,6 +491,7 @@ def _load_hold(
         {"id", "name", "kind", "geometry"},
         source,
         optional={
+            "equipmentObjectID",
             "sizeMillimeters",
             "depthRangeMillimeters",
             "gripType",
@@ -563,6 +566,10 @@ def _load_hold(
             raise ValueError(f"{source}.features must be unique")
     return BoardHold(
         _identifier(payload["id"], f"{source}.id"),
+        _identifier(
+            payload.get("equipmentObjectID", "primary"),
+            f"{source}.equipmentObjectID",
+        ),
         _string(payload["name"], f"{source}.name"),
         kind,
         sloper,
@@ -622,7 +629,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
         "presentations",
         "holds",
     }
-    _closed(value, required, "board.json", optional={"dimensions"})
+    _closed(value, required, "board.json", optional={"dimensions", "equipmentObjects"})
     facts: dict[str, Any] = {}
     for key in ("manufacturer", "name", "subtitle", "productURL"):
         facts[key] = _string(value[key], f"board.json.{key}")
@@ -631,6 +638,36 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")
+    raw_equipment_objects = value.get("equipmentObjects", [{"id": "primary"}])
+    if not isinstance(raw_equipment_objects, list) or not raw_equipment_objects:
+        raise ValueError("board.json.equipmentObjects must be a non-empty array")
+    equipment_objects = tuple(
+        _identifier(
+            _mapping(item, f"board.json.equipmentObjects[{index}]").get("id"),
+            f"board.json.equipmentObjects[{index}].id",
+        )
+        for index, item in enumerate(raw_equipment_objects)
+    )
+    for index, item in enumerate(raw_equipment_objects):
+        source = f"board.json.equipmentObjects[{index}]"
+        equipment_object = _mapping(item, source)
+        _closed(
+            equipment_object,
+            {"id"},
+            source,
+            optional={"missingHandCapacityPolicy"},
+        )
+        if "missingHandCapacityPolicy" in equipment_object:
+            policy = _string(
+                equipment_object["missingHandCapacityPolicy"],
+                f"{source}.missingHandCapacityPolicy",
+            )
+            if policy not in {"legacyBilateral", "unavailable"}:
+                raise ValueError(
+                    f"{source}.missingHandCapacityPolicy must be legacyBilateral or unavailable"
+                )
+    if len(set(equipment_objects)) != len(equipment_objects):
+        raise ValueError("duplicate equipment object id")
     presentations = _load_presentations(value["presentations"], "board.json.presentations")
     raw_holds = value["holds"]
     if not isinstance(raw_holds, list) or not raw_holds:
@@ -664,6 +701,18 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     holds_tuple = tuple(holds)
     if len({hold.id for hold in holds_tuple}) != len(holds_tuple):
         raise ValueError("duplicate physical hold id")
+    equipment_object_ids = set(equipment_objects)
+    for hold in holds_tuple:
+        if hold.equipment_object_id not in equipment_object_ids:
+            raise ValueError(
+                f"hold {hold.id} references unknown equipment object {hold.equipment_object_id}"
+            )
+    owned_equipment_object_ids = {hold.equipment_object_id for hold in holds_tuple}
+    for equipment_object_id in equipment_objects:
+        if equipment_object_id not in owned_equipment_object_ids:
+            raise ValueError(
+                f"equipment object {equipment_object_id} must own at least one hold"
+            )
     holds_by_id = {hold.id: hold for hold in holds_tuple}
     for hold in holds_tuple:
         if hold.kind != "gaston":
@@ -676,6 +725,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardDocument:
     return BoardDocument(
         _identifier(value["id"], "board.json.id"),
         MappingProxyType(facts),
+        equipment_objects,
         holds_tuple,
         presentations,
     )
@@ -796,18 +846,16 @@ def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
                     raise ValueError(f"{asset_path} has trailing data after IEND")
                 if width is None or height is None or width <= 0 or height <= 0:
                     raise ValueError(f"{asset_path} must declare positive dimensions")
-                if asset_path == "assets/primary.png" and not _png_has_alpha_zero(
-                    width=width,
-                    height=height,
-                    bit_depth=bit_depth,
-                    color_type=color_type,
-                    interlace_method=interlace_method,
-                    idat_parts=idat_parts,
-                    transparency=transparency,
-                    asset_path=asset_path,
-                ):
-                    raise ValueError(
-                        f"{asset_path} must contain at least one fully transparent pixel"
+                if asset_path == "assets/primary.png":
+                    _validate_primary_png_decoding(
+                        width=width,
+                        height=height,
+                        bit_depth=bit_depth,
+                        color_type=color_type,
+                        interlace_method=interlace_method,
+                        idat_parts=idat_parts,
+                        transparency=transparency,
+                        asset_path=asset_path,
                     )
                 return width, height
             offset = crc_end
@@ -817,7 +865,7 @@ def _validate_png_structure(path: Path, asset_path: str) -> tuple[int, int]:
     raise ValueError(f"{asset_path} is missing its IEND chunk")
 
 
-def _png_has_alpha_zero(
+def _validate_primary_png_decoding(
     *,
     width: int,
     height: int,
@@ -827,8 +875,8 @@ def _png_has_alpha_zero(
     idat_parts: list[bytes],
     transparency: bytes | None,
     asset_path: str,
-) -> bool:
-    """Inspect decoded PNG samples for alpha zero using only the stdlib."""
+) -> None:
+    """Validate decoded primary PNG image data using only the stdlib."""
     channels_by_color_type = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
     channels = channels_by_color_type.get(color_type)
     if channels is None or bit_depth not in {1, 2, 4, 8, 16}:
@@ -836,9 +884,7 @@ def _png_has_alpha_zero(
     if color_type in {2, 4, 6} and bit_depth not in {8, 16}:
         raise ValueError(f"{asset_path} has an unsupported PNG bit depth")
     if interlace_method != 0:
-        raise ValueError(
-            f"{asset_path} must be non-interlaced for transparency validation"
-        )
+        raise ValueError(f"{asset_path} must be non-interlaced for PNG validation")
 
     bits_per_pixel = channels * bit_depth
     stride = (width * bits_per_pixel + 7) // 8
@@ -900,7 +946,6 @@ def _png_has_alpha_zero(
         or pending
     ):
         raise ValueError(f"{asset_path} has malformed image data")
-    return transparent_pixel_found
 
 
 def _row_has_alpha_zero(
@@ -1031,7 +1076,7 @@ def load_board_package(package_root: Path) -> BoardPackage:
 def is_primary_only_draft(root: Path) -> bool:
     """Return whether *root* has exactly ``assets/primary.png`` and no manifest.
 
-    Raises ``ValueError`` when the sole primary PNG is malformed or fully opaque.
+    Raises ``ValueError`` when the sole primary PNG is malformed.
     """
     _require_no_symlinks(root)
     if {item.name for item in root.iterdir()} != {"assets"}:

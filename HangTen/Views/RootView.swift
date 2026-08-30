@@ -1713,6 +1713,7 @@ struct WorkoutView: View {
 	    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
 	    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
 	    @State private var completedStopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
+	    @State private var liftCompletion = WorkoutLiftCompletion()
 	    @State private var pendingCountdownStart: PendingCountdownStart?
 	    @State private var countdownArmTask: Task<Void, Never>?
 
@@ -1742,7 +1743,7 @@ struct WorkoutView: View {
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
-				let previewHoldIDs = highlightedStep.map { store.holdIDs(for: $0, on: board) } ?? []
+				let previewHoldIDs = highlightedStep.map { WorkoutHighlightResolver.holdIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
@@ -2320,6 +2321,10 @@ struct WorkoutView: View {
 				if let stopwatchKey = presentation.stopwatchKey {
 					compactStopwatchControl(for: stopwatchKey, at: monotonicTime)
 				}
+
+				if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
+					liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
+				}
 			}
 			.frame(maxWidth: 400)
 			.layoutPriority(1)
@@ -2361,9 +2366,15 @@ struct WorkoutView: View {
             .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
             .accessibilityIdentifier("workout.routinePicker")
 
-            Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
-                .font(.system(size: 30, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
+			Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
+				.font(.system(size: 30, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangInk)
+
+			if !step.isRestStep {
+				Text(WorkoutStepFormatting.labels(for: step).joined(separator: " • "))
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(step.phase.textTint)
+			}
 
             ViewThatFits(in: .horizontal) {
                 HStack(alignment: .center, spacing: 12) {
@@ -2466,7 +2477,11 @@ struct WorkoutView: View {
 		canNavigate: Bool
 	) -> some View {
         VStack(spacing: 10) {
-            controlButton(isComplete: isComplete, countdown: countdown)
+			controlButton(isComplete: isComplete, countdown: countdown)
+
+			if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
+				liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
+			}
 
             if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
                 stopwatchControl(for: key, at: monotonicTime)
@@ -2528,6 +2543,71 @@ struct WorkoutView: View {
 			set: { displayedValue in
 				didSetLoadAdjustment = true
 				loadAdjustmentKGF = motherboardSettingsStore.loadAdjustmentUnit.kilogramsForce(fromDisplayedForce: displayedValue)
+			}
+		)
+	}
+
+	private func liftCompletionControl(
+		for step: WorkoutStep,
+		sessionCanNavigate: Bool
+	) -> some View {
+		let prescribed = step.repetitions ?? 0
+		let completed = liftCompletion.completedRepetitions(for: step)
+		let unit = motherboardSettingsStore.forceUnit
+		return VStack(spacing: 6) {
+			HStack(spacing: 8) {
+				Text("External load")
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+				TextField(
+					"0",
+					value: loadedLiftExternalLoadBinding(for: step, unit: unit),
+					format: .number.precision(.fractionLength(1))
+				)
+				.keyboardType(.numbersAndPunctuation)
+				.multilineTextAlignment(.center)
+				.frame(maxWidth: 100)
+				.textFieldStyle(.roundedBorder)
+				.accessibilityIdentifier("workout.loadedLiftExternalLoad")
+				Text(unit.label)
+					.font(.system(size: 13, weight: .bold, design: .rounded))
+					.foregroundStyle(Color.hangMuted)
+			}
+			Text("\(completed) of \(prescribed) lifts complete")
+				.font(.system(size: 13, weight: .bold, design: .rounded))
+				.foregroundStyle(Color.hangMuted)
+			Button("Complete lift") {
+				liftCompletion.completeLift(for: step)
+			}
+			.frame(maxWidth: .infinity)
+			.font(.system(size: 15, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangGreenDark)
+			.padding(.vertical, 10)
+			.background(Color.hangGreen.opacity(0.16), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+			.disabled(
+				!WorkoutLiftCompletionPolicy.isEnabled(
+					completedRepetitions: completed,
+					prescribedRepetitions: prescribed,
+					sessionCanNavigate: sessionCanNavigate
+				)
+			)
+			.accessibilityIdentifier("workout.completeLift")
+		}
+	}
+
+	private func loadedLiftExternalLoadBinding(
+		for step: WorkoutStep,
+		unit: MotherboardForceUnit
+	) -> Binding<Double> {
+		Binding(
+			get: {
+				unit.value(fromKilogramsForce: liftCompletion.externalLoadKGF(for: step) ?? 0)
+			},
+			set: { displayedValue in
+				liftCompletion.setExternalLoadKGF(
+					unit.kilogramsForce(fromDisplayedForce: displayedValue),
+					for: step
+				)
 			}
 		)
 	}
@@ -2871,13 +2951,32 @@ struct WorkoutView: View {
 			uniqueKeysWithValues: recorder.finish(at: plan.duration).map { ($0.stepID, $0) }
 		)
 		let steps = plan.steps.map { step in
-			completedMeasurements[step.id] ?? WorkoutStepMeasurement(
+			let measurement = completedMeasurements[step.id] ?? WorkoutStepMeasurement(
 				stepID: step.id,
 				plannedActiveDuration: step.activeDuration,
 				intervals: [],
 				peakLoadKGF: nil,
 				sampleCount: 0,
 				status: .unmeasured
+			)
+			return WorkoutStepMeasurement(
+				stepID: measurement.stepID,
+				plannedActiveDuration: measurement.plannedActiveDuration,
+				intervals: measurement.intervals,
+				peakLoadKGF: measurement.peakLoadKGF,
+				sampleCount: measurement.sampleCount,
+				status: measurement.status,
+				handUse: step.handUse,
+				side: step.side,
+				action: step.action,
+				repetitions: step.repetitions,
+				completedRepetitions: step.action == .loadedLift
+					? liftCompletion.completedRepetitions(for: step)
+					: nil,
+				externalLoadKGF: step.action == .loadedLift
+					? liftCompletion.externalLoadKGF(for: step)
+					: step.externalLoadKGF,
+				isRest: step.isRestStep
 			)
 		}
 		let recordedAt = Date()

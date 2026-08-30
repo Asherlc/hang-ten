@@ -6,9 +6,13 @@
   "productURL": "https://tensionclimbing.com/products/honestone",
   "dimensions": "25 \u00d7 6 \u00d7 2.5 in",
   "aspectRatio": 1.7768331562167907,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "macro-sloper-left",
+      "equipmentObjectID": "primary",
       "name": "Left macro sloper region",
       "kind": "sloper",
       "geometry": [
@@ -80,6 +84,7 @@
     },
     {
       "id": "mono-left",
+      "equipmentObjectID": "primary",
       "name": "Left 25 mm one-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -191,6 +196,7 @@
     },
     {
       "id": "mono-right",
+      "equipmentObjectID": "primary",
       "name": "Right 25 mm one-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 25,
@@ -302,6 +308,7 @@
     },
     {
       "id": "edge-25-center",
+      "equipmentObjectID": "primary",
       "name": "25 mm center incut edge",
       "kind": "edge",
       "sizeMillimeters": 25,
@@ -412,6 +419,7 @@
     },
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -536,6 +544,7 @@
     },
     {
       "id": "edge-15-left",
+      "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -626,6 +635,7 @@
     },
     {
       "id": "edge-15-right",
+      "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
@@ -750,6 +760,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -833,6 +844,7 @@
     },
     {
       "id": "edge-10-left",
+      "equipmentObjectID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -957,6 +969,7 @@
     },
     {
       "id": "edge-8-left",
+      "equipmentObjectID": "primary",
       "name": "Left 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -1047,6 +1060,7 @@
     },
     {
       "id": "edge-8-right",
+      "equipmentObjectID": "primary",
       "name": "Right 8 mm edge",
       "kind": "edge",
       "sizeMillimeters": 8,
@@ -1171,6 +1185,7 @@
     },
     {
       "id": "edge-10-right",
+      "equipmentObjectID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
       "sizeMillimeters": 10,
@@ -1254,6 +1269,7 @@
     },
     {
       "id": "macro-sloper-right-center",
+      "equipmentObjectID": "primary",
       "name": "Right-center macro sloper region",
       "kind": "sloper",
       "geometry": [
@@ -1306,6 +1322,7 @@
     },
     {
       "id": "macro-sloper-left-center",
+      "equipmentObjectID": "primary",
       "name": "Left-center macro sloper region",
       "kind": "sloper",
       "geometry": [
@@ -1365,6 +1382,7 @@
     },
     {
       "id": "macro-sloper-right",
+      "equipmentObjectID": "primary",
       "name": "Right macro sloper region",
       "kind": "sloper",
       "geometry": [

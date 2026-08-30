@@ -187,6 +187,30 @@ test("model helpers group physical holds and derive collision-free identifiers",
   assert.equal(nextRegionId(document), 10);
 });
 
+test("multi-object boards assign new holds and allow deliberate object reassignment", async () => {
+  const document: EditorDocument = {
+    equipmentObjects: ["left-ring", "right-ring"],
+    canvas: { width: 100, height: 50 },
+    regions: [
+      { id: 1, key: "left-piece-0", type: "pocket", equipmentObjectID: "left-ring", displayPath: FIRST_PATH, metadata: { holdID: "left", pieceIndex: 0 } },
+      { id: 2, key: "right-piece-0", type: "pocket", equipmentObjectID: "right-ring", displayPath: OTHER_PATH, metadata: { holdID: "right", pieceIndex: 0 } },
+    ],
+  };
+  const client = clientFixture([boardFixture(document)]);
+
+  await withEditor(async (app) => {
+    await app.click("#add-hold-button");
+    assert.equal(app.documentValue("#equipment-object-select"), "left-ring");
+
+    await app.change("#equipment-object-select", "right-ring");
+    await app.click("#save-button");
+    await app.flush();
+
+    const added = client.saveCalls[0]?.document.regions.find((region) => region.metadata?.holdID === "hold-3");
+    assert.equal(added?.equipmentObjectID, "right-ring");
+  }, dependenciesFixture(boardFixture(document), { client }));
+});
+
 test("metadata warning marks every region of a physical hold missing required metadata", async () => {
   const document = documentFixture([
     { id: 1, key: "a-piece-0", type: "jug", displayPath: FIRST_PATH, metadata: { holdID: "a", pieceIndex: 0 }, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 },

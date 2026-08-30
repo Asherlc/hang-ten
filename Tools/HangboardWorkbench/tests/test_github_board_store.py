@@ -1411,6 +1411,65 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     assert saved.board_json_sha == expected_sha
 
 
+def test_changed_hosted_save_reassigns_a_hold_between_equipment_objects() -> None:
+    board = board_document("fixture.board")
+    board["equipmentObjects"] = [{"id": "left"}, {"id": "right"}]
+    left_a = board["holds"][0]
+    left_a.update(id="left-a", name="Left A", equipmentObjectID="left")
+    left_b = copy.deepcopy(left_a)
+    left_b.update(id="left-b", name="Left B")
+    right_a = copy.deepcopy(left_a)
+    right_a.update(id="right-a", name="Right A", equipmentObjectID="right")
+    board["holds"] = [left_a, left_b, right_a]
+    client = _client(("fixture-board", board))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    for region in document["regions"]:
+        if region["metadata"]["holdID"] == "left-b":
+            region["equipmentObjectID"] = "right"
+
+    saved, _commit_sha = github_board_store.save_editor_document(
+        client, TOKEN, BRANCH, "fixture-board", document
+    )
+
+    stored = json.loads(
+        client.file_bytes(BRANCH, "Hangboards/fixture-board/board.json")
+    )
+    assert saved.board["equipmentObjects"] == [{"id": "left"}, {"id": "right"}]
+    assert {
+        hold["id"]: hold["equipmentObjectID"] for hold in saved.board["holds"]
+    } == {"left-a": "left", "left-b": "right", "right-a": "right"}
+    assert {
+        hold["id"]: hold["equipmentObjectID"] for hold in stored["holds"]
+    } == {"left-a": "left", "left-b": "right", "right-a": "right"}
+
+
+def test_hosted_save_rejects_changed_equipment_object_inventory() -> None:
+    board = board_document("fixture.board")
+    board["equipmentObjects"] = [{"id": "left"}, {"id": "right"}]
+    left = board["holds"][0]
+    left.update(equipmentObjectID="left")
+    right = copy.deepcopy(left)
+    right.update(id="hold-right", name="Right hold", equipmentObjectID="right")
+    board["holds"] = [left, right]
+    client = _client(("fixture-board", board))
+    document = board_package.editor_document(
+        github_board_store.open_package(client, TOKEN, BRANCH, "fixture.board")
+    )
+    document["equipmentObjects"] = ["right", "left"]
+
+    with pytest.raises(
+        board_package.BoardPackageError,
+        match="equipment objects do not match the board package",
+    ):
+        github_board_store.save_editor_document(
+            client, TOKEN, BRANCH, "fixture-board", document
+        )
+
+    assert client.calls_named("put_file") == ()
+
+
 def test_changed_hosted_save_preserves_reciprocal_gaston_pair_metadata() -> None:
     board = board_document("fixture.board")
     left = board["holds"][0]

@@ -45,7 +45,7 @@ _BOARD_REQUIRED_FIELDS = frozenset(
         "holds",
     }
 )
-_BOARD_OPTIONAL_FIELDS = frozenset({"dimensions"})
+_BOARD_OPTIONAL_FIELDS = frozenset({"dimensions", "equipmentObjects"})
 _HOLD_REQUIRED_FIELDS = frozenset({"id", "name", "kind", "geometry"})
 _HOLD_OPTIONAL_FIELDS = frozenset(
     {
@@ -57,10 +57,12 @@ _HOLD_OPTIONAL_FIELDS = frozenset(
         "handCapacity",
         "features",
         "pairedHoldID",
+        "equipmentObjectID",
     }
 )
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 _SLOPER_TYPES = frozenset({"flat", "round"})
+_MISSING_HAND_CAPACITY_POLICIES = frozenset({"legacyBilateral", "unavailable"})
 _GRIP_TYPES = frozenset(
     {
         "openHand",
@@ -194,6 +196,7 @@ _EditorPiece = tuple[
     dict[str, int | float] | None,
     int | None,
     str | None,
+    str,
 ]
 
 
@@ -395,6 +398,7 @@ def editor_document(
                     "pieceIndex": piece_index,
                     "presentationID": presentation.id,
                 },
+                "equipmentObjectID": hold.get("equipmentObjectID", "primary"),
             }
             if "kind" in hold:
                 region["type"] = hold["kind"]
@@ -424,6 +428,9 @@ def editor_document(
             region_id += 1
     return {
         "presentationID": presentation.id,
+        "equipmentObjects": [
+            item["id"] for item in package.board.get("equipmentObjects", [{"id": "primary"}])
+        ],
         "canvas": {"width": width, "height": height},
         "regions": regions,
     }
@@ -470,6 +477,13 @@ def save_editor_document(
         if presentation.source_presentation_id is not None:
             raise BoardPackageError("alias presentations cannot be edited")
         width, height = presentation.image_width, presentation.image_height
+        expected_equipment_objects = [
+            item["id"] for item in live.board.get("equipmentObjects", [{"id": "primary"}])
+        ]
+        if document.get("equipmentObjects", ["primary"]) != expected_equipment_objects:
+            raise BoardPackageError(
+                "editor document equipment objects do not match the board package"
+            )
         parsed_regions = _validate_editor_document(
             document,
             width,
@@ -495,6 +509,7 @@ def save_editor_document(
             depth_range,
             hand_capacity,
             paired_hold_id,
+            equipment_object_id,
         ) in parsed_regions.values():
             pieces_by_hold.setdefault(hold_id, []).append(
                 (
@@ -510,6 +525,7 @@ def save_editor_document(
                     depth_range,
                     hand_capacity,
                     paired_hold_id,
+                    equipment_object_id,
                 )
             )
         for pieces in pieces_by_hold.values():
@@ -593,6 +609,7 @@ def _apply_editor_document(
             _depth_range,
             _hand_capacity,
             _paired_hold_id,
+            _equipment_object_id,
         ) in pieces:
             existing_geometry = existing["geometry"] if existing is not None else []
             if piece_index < len(existing_geometry):
@@ -652,6 +669,7 @@ def _apply_editor_document(
             hold_json.pop("pairedHoldID", None)
         else:
             hold_json["pairedHoldID"] = pieces[0][11]
+        hold_json["equipmentObjectID"] = pieces[0][12]
         hold_json["geometry"] = geometry
         if presentation_id is not None:
             hold_json["presentationID"] = presentation_id
@@ -704,6 +722,7 @@ def _current_display_paths(
             _depth_range,
             _hand_capacity,
             _paired_hold_id,
+            _equipment_object_id,
         ) in pieces:
             if piece_index < len(geometry):
                 piece = geometry[piece_index]
@@ -731,7 +750,8 @@ def _editor_document_is_dirty(
             or hold.get("fingerCapacity") != pieces[0][7]
             or hold.get("sizeMillimeters") != pieces[0][8]
             or hold.get("depthRangeMillimeters") != pieces[0][9]
-            or hold.get("handCapacity") != pieces[0][10]):
+            or hold.get("handCapacity") != pieces[0][10]
+            or hold.get("equipmentObjectID", "primary") != pieces[0][12]):
             return True
         if hold.get("pairedHoldID") != pieces[0][11]:
             return True
@@ -748,6 +768,7 @@ def _editor_document_is_dirty(
             _depth_range,
             _hand_capacity,
             _paired_hold_id,
+            _equipment_object_id,
         ) in pieces:
             current_path = current_paths.get((hold_id, piece_index))
             if current_path is None or path.data != current_path.data:
@@ -1038,6 +1059,7 @@ def _validate_board(
     allow_missing_kind: bool = False,
 ) -> None:
     parsed_presentations = _parse_board_presentations(board)
+    equipment_object_ids = _validate_equipment_objects(board)
     _identifier(board.get("id"), "board.json.id")
     for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
@@ -1065,6 +1087,7 @@ def _validate_board(
     if not isinstance(holds, list) or not holds:
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
+    owned_equipment_object_ids: set[str] = set()
     presentation_ids = {item[0] for item in parsed_presentations}
     canonical_presentation_ids = {
         item[0] for item in parsed_presentations if item[5] is None
@@ -1086,6 +1109,15 @@ def _validate_board(
                 f"{label}.presentationID must be owned by a canonical presentation"
             )
         hold_width, hold_height = dimensions_by_id.get(hold_presentation_id, (width, height))
+        equipment_object_id = _identifier(
+            hold.get("equipmentObjectID", "primary") if isinstance(hold, Mapping) else None,
+            f"{label}.equipmentObjectID",
+        )
+        if equipment_object_id not in equipment_object_ids:
+            raise BoardPackageError(
+                f"{label} references unknown equipment object {equipment_object_id}"
+            )
+        owned_equipment_object_ids.add(equipment_object_id)
         hold_id = _validate_hold(
             hold,
             hold_width,
@@ -1098,6 +1130,7 @@ def _validate_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
     _validate_gaston_pairs(holds)
 
 
@@ -1106,6 +1139,7 @@ def validate_catalog_board(
 ) -> None:
     """Validate board metadata that does not depend on decoding its primary image."""
     parsed_presentations = _parse_board_presentations(board)
+    equipment_object_ids = _validate_equipment_objects(board)
     _identifier(board.get("id"), "board.json.id")
     for field in ("manufacturer", "name", "subtitle"):
         _non_empty_string(board.get(field), f"board.json.{field}")
@@ -1117,6 +1151,7 @@ def validate_catalog_board(
     if not isinstance(holds, list) or not holds:
         raise BoardPackageError("board.json.holds must be a non-empty array")
     identifiers: set[str] = set()
+    owned_equipment_object_ids: set[str] = set()
     presentation_ids = {item[0] for item in parsed_presentations}
     canonical_presentation_ids = {
         item[0] for item in parsed_presentations if item[5] is None
@@ -1133,6 +1168,15 @@ def validate_catalog_board(
             raise BoardPackageError(
                 f"{label}.presentationID must be owned by a canonical presentation"
             )
+        equipment_object_id = _identifier(
+            hold.get("equipmentObjectID", "primary") if isinstance(hold, Mapping) else None,
+            f"{label}.equipmentObjectID",
+        )
+        if equipment_object_id not in equipment_object_ids:
+            raise BoardPackageError(
+                f"{label} references unknown equipment object {equipment_object_id}"
+            )
+        owned_equipment_object_ids.add(equipment_object_id)
         hold_id = _validate_hold(
             hold,
             1,
@@ -1145,7 +1189,46 @@ def validate_catalog_board(
         if hold_id in identifiers:
             raise BoardPackageError("duplicate hold ID")
         identifiers.add(hold_id)
+    _validate_equipment_object_ownership(equipment_object_ids, owned_equipment_object_ids)
     _validate_gaston_pairs(holds)
+
+
+def _validate_equipment_objects(board: Mapping[str, Any]) -> set[str]:
+    raw_objects = board.get("equipmentObjects", [{"id": "primary"}])
+    if not isinstance(raw_objects, list) or not raw_objects:
+        raise BoardPackageError("board.json.equipmentObjects must be a non-empty array")
+    object_ids: set[str] = set()
+    for index, value in enumerate(raw_objects):
+        label = f"board.json.equipmentObjects[{index}]"
+        if not isinstance(value, Mapping):
+            raise BoardPackageError(f"{label} must be an object")
+        _required_and_allowed_keys(
+            value,
+            {"id"},
+            {"id", "missingHandCapacityPolicy"},
+            label,
+        )
+        object_id = _identifier(value.get("id"), f"{label}.id")
+        if "missingHandCapacityPolicy" in value:
+            _enum(
+                value["missingHandCapacityPolicy"],
+                _MISSING_HAND_CAPACITY_POLICIES,
+                f"{label}.missingHandCapacityPolicy",
+            )
+        if object_id in object_ids:
+            raise BoardPackageError(f"duplicate equipment object ID {object_id}")
+        object_ids.add(object_id)
+    return object_ids
+
+
+def _validate_equipment_object_ownership(
+    equipment_object_ids: set[str], owned_equipment_object_ids: set[str]
+) -> None:
+    for object_id in equipment_object_ids:
+        if object_id not in owned_equipment_object_ids:
+            raise BoardPackageError(
+                f"equipment object {object_id} must own at least one hold"
+            )
 
 
 def _validate_hold(
@@ -1388,25 +1471,37 @@ def _validate_editor_document(
         Any,
         dict[str, object] | None,
         tuple[int, ...],
+        tuple[int, ...],
         int | None,
         int | float | None,
         dict[str, int | float] | None,
         int | None,
         str | None,
+        str,
     ],
 ]:
     """Parse and cross-validate an editor document, allowing added/removed/
     recategorized holds. Returns key -> (holdID, pieceIndex, kind, sloper
-    metadata, parsed path, shape constraint, bendable command indexes, finger
-    capacity, fixed depth, depth range, hand capacity)."""
+    metadata, parsed path, shape constraint, bendable command indexes, smooth
+    anchor indexes, finger capacity, fixed depth, depth range, hand capacity,
+    paired hold, equipment object ID)."""
     if not isinstance(document, Mapping):
         raise BoardPackageError("editor document must be an object")
     _required_and_allowed_keys(
         document,
         {"canvas", "regions"},
-        {"presentationID", "canvas", "regions"},
+        {"presentationID", "equipmentObjects", "canvas", "regions"},
         "editor document",
     )
+    raw_equipment_objects = document.get("equipmentObjects", ["primary"])
+    if not isinstance(raw_equipment_objects, list) or not raw_equipment_objects:
+        raise BoardPackageError("editor document equipmentObjects must be a non-empty array")
+    equipment_object_ids = [
+        _identifier(item, f"editor document.equipmentObjects[{index}]")
+        for index, item in enumerate(raw_equipment_objects)
+    ]
+    if len(set(equipment_object_ids)) != len(equipment_object_ids):
+        raise BoardPackageError("editor document equipmentObjects must be unique")
     document_presentation_id = document.get("presentationID")
     if document_presentation_id is not None:
         document_presentation_id = _identifier(
@@ -1430,11 +1525,13 @@ def _validate_editor_document(
             Any,
             dict[str, object] | None,
             tuple[int, ...],
+            tuple[int, ...],
             int | None,
             int | float | None,
             dict[str, int | float] | None,
             int | None,
             str | None,
+            str,
         ],
     ] = {}
     pieces_by_hold: dict[str, dict[int, str]] = {}
@@ -1446,6 +1543,7 @@ def _validate_editor_document(
     depth_representation_by_hold: dict[str, str] = {}
     hand_capacity_by_hold: dict[str, int | None] = {}
     paired_hold_id_by_hold: dict[str, str | None] = {}
+    equipment_object_id_by_hold: dict[str, str] = {}
     for region in regions:
         if not isinstance(region, Mapping):
             raise BoardPackageError("editor document contains an invalid hold piece")
@@ -1467,6 +1565,7 @@ def _validate_editor_document(
                 "sizeMillimeters",
                 "depthRangeMillimeters",
                 "handCapacity",
+                "equipmentObjectID",
             },
             "editor region",
         )
@@ -1618,6 +1717,14 @@ def _validate_editor_document(
                 )
         else:
             hand_capacity = None
+        equipment_object_id = _identifier(
+            region.get("equipmentObjectID", "primary"),
+            f"editor region {key}.equipmentObjectID",
+        )
+        if equipment_object_id not in equipment_object_ids:
+            raise BoardPackageError(
+                f"editor region {key} references unknown equipment object {equipment_object_id}"
+            )
 
         pieces = pieces_by_hold.setdefault(hold_id, {})
         if piece_index in pieces:
@@ -1654,6 +1761,12 @@ def _validate_editor_document(
             and paired_hold_id_by_hold[hold_id] != paired_hold_id):
             raise BoardPackageError(f"hold {hold_id} pieces must share one paired hold")
         paired_hold_id_by_hold[hold_id] = paired_hold_id
+        if (hold_id in equipment_object_id_by_hold
+            and equipment_object_id_by_hold[hold_id] != equipment_object_id):
+            raise BoardPackageError(
+                f"hold {hold_id} pieces must share one equipment object"
+            )
+        equipment_object_id_by_hold[hold_id] = equipment_object_id
         parsed[key] = (
             hold_id,
             piece_index,
@@ -1668,6 +1781,7 @@ def _validate_editor_document(
             depth_range,
             hand_capacity,
             paired_hold_id,
+            equipment_object_id,
         )
 
     for hold_id, pieces in pieces_by_hold.items():

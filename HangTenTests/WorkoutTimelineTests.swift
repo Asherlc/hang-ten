@@ -63,6 +63,230 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    private func loadedLiftStep(
+        id: String = "loaded-lift",
+        repetitions: Int,
+        externalLoadKGF: Double? = nil
+    ) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: 1,
+            title: "Loaded lift",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.jug)],
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF
+        )
+    }
+
+    func testLoadedLiftTimelineShowsPrescribedRepetitions() {
+        let step = loadedLiftStep(repetitions: 7)
+
+        XCTAssertTrue(WorkoutTimeline.labels(for: step).contains("7 lifts"))
+    }
+
+    func testLoadedLiftCompletionCapsAtPrescribedRepetitions() {
+        let step = loadedLiftStep(repetitions: 2)
+        var completion = WorkoutLiftCompletion()
+
+        completion.completeLift(for: step)
+        completion.completeLift(for: step)
+        completion.completeLift(for: step)
+
+        XCTAssertEqual(completion.completedRepetitions(for: step), 2)
+    }
+
+    func testLoadedLiftCompletionRequiresAnActiveStartedSession() {
+        XCTAssertFalse(
+            WorkoutLiftCompletionPolicy.isEnabled(
+                completedRepetitions: 0,
+                prescribedRepetitions: 7,
+                sessionCanNavigate: false
+            )
+        )
+        XCTAssertFalse(
+            WorkoutLiftCompletionPolicy.isEnabled(
+                completedRepetitions: 7,
+                prescribedRepetitions: 7,
+                sessionCanNavigate: true
+            )
+        )
+        XCTAssertTrue(
+            WorkoutLiftCompletionPolicy.isEnabled(
+                completedRepetitions: 6,
+                prescribedRepetitions: 7,
+                sessionCanNavigate: true
+            )
+        )
+    }
+
+    func testLoadedLiftRuntimeLoadDefaultsFromPlanAndCanBeChangedPerStep() {
+        let first = loadedLiftStep(repetitions: 2, externalLoadKGF: 12)
+        let second = loadedLiftStep(id: "second-lift", repetitions: 2, externalLoadKGF: -5)
+        var completion = WorkoutLiftCompletion()
+
+        XCTAssertEqual(completion.externalLoadKGF(for: first), 12)
+        XCTAssertEqual(completion.externalLoadKGF(for: second), -5)
+
+        completion.setExternalLoadKGF(18.5, for: first)
+
+        XCTAssertEqual(completion.externalLoadKGF(for: first), 18.5)
+        XCTAssertEqual(completion.externalLoadKGF(for: second), -5)
+    }
+
+    func testRestTimelineLabelDoesNotClaimHangOrBothHands() {
+        let rest = WorkoutStep(
+            id: "rest",
+            number: 1,
+            title: "Rest",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .rest,
+            targets: []
+        )
+
+        XCTAssertEqual(WorkoutTimeline.labels(for: rest), ["Rest"])
+    }
+
+    func testHighlightResolverUsesSelectedEquipmentObjectForPortableBoard() {
+        let board = TrainingBoard(
+            id: "portable",
+            manufacturer: "Test",
+            name: "Portable",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            equipmentObjects: [.init(id: "left-ring"), .init(id: "right-ring")],
+            holds: [
+                BoardHold(
+                    id: "left-pocket",
+                    equipmentObjectID: "left-ring",
+                    name: "Left pocket",
+                    shortLabel: "L",
+                    detail: "",
+                    kind: .pocket,
+                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2)
+                ),
+                BoardHold(
+                    id: "left-edge",
+                    equipmentObjectID: "left-ring",
+                    name: "Left edge",
+                    shortLabel: "LE",
+                    detail: "",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.2, y: 0, width: 0.2, height: 0.2)
+                ),
+                BoardHold(
+                    id: "right-pocket",
+                    equipmentObjectID: "right-ring",
+                    name: "Right pocket",
+                    shortLabel: "R",
+                    detail: "",
+                    kind: .pocket,
+                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2)
+                )
+            ],
+            productURL: URL(string: "https://example.com/portable")!,
+            photoAssetName: nil
+        )
+        let step = WorkoutStep(
+            id: "left",
+            number: 1,
+            title: "Left lift",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.pocket)],
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: 1
+        )
+
+        XCTAssertEqual(
+            WorkoutHighlightResolver.holdIDs(for: step, on: board),
+            ["left-pocket", "left-edge"]
+        )
+
+        let rightStep = WorkoutStep(
+            id: "right",
+            number: 2,
+            title: "Right lift",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.pocket)],
+            handUse: .single,
+            side: .right,
+            action: .loadedLift,
+            repetitions: 1
+        )
+        XCTAssertEqual(
+            WorkoutHighlightResolver.holdIDs(for: rightStep, on: board),
+            ["right-pocket"]
+        )
+    }
+
+    func testHighlightResolverUsesSubstitutedFallbackObjectsForPortableBoard() {
+        let board = TrainingBoard(
+            id: "portable-fallback",
+            manufacturer: "Test",
+            name: "Portable fallback",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            equipmentObjects: [.init(id: "left"), .init(id: "right")],
+            holds: [
+                BoardHold(
+                    id: "left-edge",
+                    equipmentObjectID: "left",
+                    name: "Left edge",
+                    shortLabel: "L",
+                    detail: "",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0, y: 0, width: 0.2, height: 0.2)
+                ),
+                BoardHold(
+                    id: "right-edge",
+                    equipmentObjectID: "right",
+                    name: "Right edge",
+                    shortLabel: "R",
+                    detail: "",
+                    kind: .edge,
+                    frame: HoldFrame(x: 0.8, y: 0, width: 0.2, height: 0.2)
+                )
+            ],
+            productURL: URL(string: "https://example.com/portable-fallback")!,
+            photoAssetName: nil
+        )
+        let step = WorkoutStep(
+            id: "fallback",
+            number: 1,
+            title: "Fallback",
+            instruction: "",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.feature(.smallEdge)],
+            action: .loadedLift,
+            repetitions: 1
+        )
+
+        XCTAssertEqual(
+            WorkoutHighlightResolver.holdIDs(for: step, on: board),
+            ["left-edge", "right-edge"]
+        )
+    }
+
     func testHoldCuePrefersSingleTargetStepGripOverride() {
         let hold = BoardHold(
             id: "cue-edge",
@@ -203,7 +427,8 @@ final class WorkoutTimelineTests: XCTestCase {
             shortLabel: "E",
             detail: "Edge",
             kind: .edge,
-            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1)
+            frame: HoldFrame(x: 0, y: 0, width: 1, height: 1),
+            handCapacity: 2
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -3293,4 +3518,5 @@ final class WorkoutSessionStateTests: XCTestCase {
         XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: now + 10), 90)
         XCTAssertFalse(state.canNavigate(planDuration: timeline.duration, at: now))
     }
+
 }

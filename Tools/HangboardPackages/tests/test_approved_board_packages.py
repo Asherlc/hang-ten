@@ -234,6 +234,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("evolv-kilter-basic-long", "evolv-kilter-basic-long"),
         ("frictitious.doormount-pro-7", "frictitious-doormount-pro-7"),
         ("frictitious.megalith", "frictitious-megalith"),
+        ("frictitious.port-a-board", "frictitious-port-a-board"),
         ("lattice-triple-rung", "lattice-triple-rung"),
         ("mammut.diamond-finger", "mammut-diamond-finger"),
         ("metolius.climbers-edge", "metolius-climbers-edge"),
@@ -274,6 +275,18 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("yy.penta-evo", "yy-penta-evo"),
         ("zlagboard.evo", "zlagboard-evo"),
         ("zlagboard.pro", "zlagboard-pro"),
+        ("aelith.cyclops-011", "aelith-cyclops-011"),
+        ("captain-fingerfood.dual", "captain-fingerfood-dual"),
+        ("captain-fingerfood.pocket", "captain-fingerfood-pocket"),
+        ("captain-fingerfood.unlevel", "captain-fingerfood-unlevel"),
+        ("crimptonite.helium-mobile", "crimptonite-helium-mobile"),
+        ("frictitious.nug", "frictitious-nug"),
+        ("lattice.mini-bar", "lattice-mini-bar"),
+        ("lattice.mxedge-lift-small", "lattice-mxedge-lift-small"),
+        ("lattice.mxedge-lift-large", "lattice-mxedge-lift-large"),
+        ("nature.stone-hanger-mini", "nature-stone-hanger-mini"),
+        ("nature.stone-hanger-mini-karma8a", "nature-stone-hanger-mini-karma8a"),
+        ("plateau.lifting-edge", "plateau-lifting-edge"),
     }
     assert discovered == expected_packages
     assert inventory.drafts == ()
@@ -890,6 +903,7 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
         "depthRangeMillimeters",
         "fingerCapacity",
         "handCapacity",
+        "equipmentObjectID",
         "gripType",
         "features",
         "sloper",
@@ -899,6 +913,7 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
     assert all(not (set(hold) & retired_fields) for hold in holds)
     assert all({"id", "name", "kind", "geometry"} <= set(hold) for hold in holds)
     assert all(set(hold) <= supported_fields for hold in holds)
+    assert {hold.get("equipmentObjectID") for hold in holds} == {"primary"}
     assert all("depthRangeMillimeters" not in hold for hold in holds)
     expected_pocket_grips = {
         2: "twoFingerPocket",

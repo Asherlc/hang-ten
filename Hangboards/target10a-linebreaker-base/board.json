@@ -6,9 +6,13 @@
   "productURL": "https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html",
   "dimensions": "58 \u00d7 15 \u00d7 5.5 cm",
   "aspectRatio": 1.3333333333333333,
+  "equipmentObjects": [
+    {"id": "primary"}
+  ],
   "holds": [
     {
       "id": "jug-left",
+      "equipmentObjectID": "primary",
       "name": "Left jug",
       "kind": "jug",
       "geometry": [
@@ -118,6 +122,7 @@
     },
     {
       "id": "jug-right",
+      "equipmentObjectID": "primary",
       "name": "Right jug",
       "kind": "jug",
       "geometry": [
@@ -227,6 +232,7 @@
     },
     {
       "id": "sloper-32-left",
+      "equipmentObjectID": "primary",
       "name": "Left 32.5-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -307,6 +313,7 @@
     },
     {
       "id": "sloper-32-right",
+      "equipmentObjectID": "primary",
       "name": "Right 32.5-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -387,6 +394,7 @@
     },
     {
       "id": "sloper-22-center",
+      "equipmentObjectID": "primary",
       "name": "Center 22.5-degree sloper",
       "kind": "sloper",
       "geometry": [
@@ -466,6 +474,7 @@
     },
     {
       "id": "pocket-28-left",
+      "equipmentObjectID": "primary",
       "name": "Left 28 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 28,
@@ -578,6 +587,7 @@
     },
     {
       "id": "pocket-28-right",
+      "equipmentObjectID": "primary",
       "name": "Right 28 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 28,
@@ -690,6 +700,7 @@
     },
     {
       "id": "edge-16-left",
+      "equipmentObjectID": "primary",
       "name": "Left 16 mm four-finger bar",
       "kind": "edge",
       "sizeMillimeters": 16,
@@ -748,6 +759,7 @@
     },
     {
       "id": "edge-16-right",
+      "equipmentObjectID": "primary",
       "name": "Right 16 mm four-finger bar",
       "kind": "edge",
       "sizeMillimeters": 16,
@@ -806,6 +818,7 @@
     },
     {
       "id": "pocket-37-left",
+      "equipmentObjectID": "primary",
       "name": "Left 37 mm four-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 37,
@@ -865,6 +878,7 @@
     },
     {
       "id": "pocket-37-right",
+      "equipmentObjectID": "primary",
       "name": "Right 37 mm four-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 37,
@@ -924,6 +938,7 @@
     },
     {
       "id": "pocket-45-left",
+      "equipmentObjectID": "primary",
       "name": "Left 45 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 45,
@@ -1036,6 +1051,7 @@
     },
     {
       "id": "pocket-45-right",
+      "equipmentObjectID": "primary",
       "name": "Right 45 mm three-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 45,
@@ -1148,6 +1164,7 @@
     },
     {
       "id": "pocket-50-left",
+      "equipmentObjectID": "primary",
       "name": "Left 50 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 50,
@@ -1260,6 +1277,7 @@
     },
     {
       "id": "pocket-50-right",
+      "equipmentObjectID": "primary",
       "name": "Right 50 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 50,
@@ -1372,6 +1390,7 @@
     },
     {
       "id": "sloper-bar-35-center",
+      "equipmentObjectID": "primary",
       "name": "Center 35-degree, 35 mm sloper bar",
       "kind": "sloper",
       "sizeMillimeters": 35,
@@ -1482,6 +1501,7 @@
     },
     {
       "id": "pocket-30-left",
+      "equipmentObjectID": "primary",
       "name": "Left 30 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -1594,6 +1614,7 @@
     },
     {
       "id": "pocket-30-right",
+      "equipmentObjectID": "primary",
       "name": "Right 30 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 30,
@@ -1706,6 +1727,7 @@
     },
     {
       "id": "pocket-24-left",
+      "equipmentObjectID": "primary",
       "name": "Left 24 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 24,
@@ -1818,6 +1840,7 @@
     },
     {
       "id": "pocket-24-right",
+      "equipmentObjectID": "primary",
       "name": "Right 24 mm two-finger pocket",
       "kind": "pocket",
       "sizeMillimeters": 24,
@@ -1930,6 +1953,7 @@
     },
     {
       "id": "edge-20-left",
+      "equipmentObjectID": "primary",
       "name": "Left 20 mm four-finger bar",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -2041,6 +2065,7 @@
     },
     {
       "id": "edge-20-right",
+      "equipmentObjectID": "primary",
       "name": "Right 20 mm four-finger bar",
       "kind": "edge",
       "sizeMillimeters": 20,
@@ -2152,6 +2177,7 @@
     },
     {
       "id": "edge-18-left",
+      "equipmentObjectID": "primary",
       "name": "Left 18 mm three-finger bar",
       "kind": "edge",
       "sizeMillimeters": 18,
@@ -2263,6 +2289,7 @@
     },
     {
       "id": "edge-18-right",
+      "equipmentObjectID": "primary",
       "name": "Right 18 mm three-finger bar",
       "kind": "edge",
       "sizeMillimeters": 18,

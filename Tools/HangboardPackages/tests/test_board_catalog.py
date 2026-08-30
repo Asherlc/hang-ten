@@ -97,6 +97,39 @@ def test_board_schema_accepts_fractional_fixed_millimeter_measurement() -> None:
     assert board.holds[0].depth_range_millimeters is None
 
 
+def test_board_schema_rejects_hold_with_unknown_equipment_object_id() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["equipmentObjects"] = [{"id": "primary"}]
+    document["holds"][0]["equipmentObjectID"] = "missing"
+
+    with pytest.raises(ValueError, match="unknown equipment object"):
+        module._load_board(document)
+
+
+def test_board_schema_accepts_missing_hand_capacity_policy() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
+    ]
+
+    board = module._load_board(document)
+
+    assert board.equipment_objects == ("primary",)
+
+
+def test_board_schema_rejects_unknown_missing_hand_capacity_policy() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["equipmentObjects"] = [
+        {"id": "primary", "missingHandCapacityPolicy": "invented"}
+    ]
+
+    with pytest.raises(ValueError, match="missingHandCapacityPolicy"):
+        module._load_board(document)
+
+
 def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
     module = load_board_catalog_module()
     document = board_document()
@@ -253,13 +286,15 @@ def test_final_inventory_rejects_a_primary_only_draft(tmp_path: Path) -> None:
         module.discover_board_packages(tmp_path, require_complete_inventory=True)
 
 
-def test_discovery_rejects_an_opaque_primary_only_draft(tmp_path: Path) -> None:
+def test_discovery_accepts_an_opaque_primary_only_draft(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     draft = write_primary_only_draft(tmp_path / "draft-model")
     (draft / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
 
-    with pytest.raises(ValueError, match="fully transparent pixel"):
-        module.discover_board_packages(tmp_path)
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert inventory.packages == ()
+    assert inventory.drafts == (draft.resolve(),)
 
 
 def test_discovery_rejects_duplicate_board_ids(tmp_path: Path) -> None:
@@ -315,13 +350,14 @@ def test_completed_package_requires_the_exact_finished_shape(
         module.discover_board_packages(tmp_path)
 
 
-def test_completed_package_rejects_an_opaque_primary_png(tmp_path: Path) -> None:
+def test_completed_package_accepts_a_fully_opaque_primary_png(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package = write_board_package(tmp_path / "fixture-model")
     (package / "assets" / "primary.png").write_bytes(OPAQUE_PRIMARY_PNG_BYTES)
 
-    with pytest.raises(ValueError, match="fully transparent pixel"):
-        module.discover_board_packages(tmp_path)
+    inventory = module.discover_board_packages(tmp_path)
+
+    assert [item.root.name for item in inventory.packages] == ["fixture-model"]
 
 
 def test_completed_package_accepts_a_primary_png_with_actual_alpha_zero(
@@ -336,7 +372,7 @@ def test_completed_package_accepts_a_primary_png_with_actual_alpha_zero(
     assert [item.root.name for item in inventory.packages] == ["fixture-model"]
 
 
-def test_primary_transparency_validation_uses_the_streaming_zlib_api(
+def test_primary_png_decoder_uses_the_streaming_zlib_api(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     module = load_board_catalog_module()
@@ -352,7 +388,7 @@ def test_primary_transparency_validation_uses_the_streaming_zlib_api(
     assert [item.root.name for item in inventory.packages] == ["fixture-model"]
 
 
-def test_primary_transparency_validation_rejects_an_invalid_filter_after_alpha_zero(
+def test_primary_png_decoder_rejects_an_invalid_filter_after_alpha_zero(
     tmp_path: Path,
 ) -> None:
     """Alpha discovery must not skip structural validation of later scanlines."""
@@ -372,7 +408,7 @@ def test_primary_transparency_validation_rejects_an_invalid_filter_after_alpha_z
         module.discover_board_packages(tmp_path)
 
 
-def test_primary_transparency_validation_checks_later_filters_without_unfiltering(
+def test_primary_png_decoder_checks_later_filters_without_unfiltering(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Keep full structural checks without Python pixel work after alpha-zero."""

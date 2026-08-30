@@ -243,7 +243,12 @@ final class CustomRoutineDraftTests: XCTestCase {
                 duration: 15,
                 phase: .rest,
                 targets: [.kind(.jug)],
-                timing: .stopwatch
+                timing: .stopwatch,
+                handUse: .single,
+                side: .right,
+                action: .loadedLift,
+                repetitions: 7,
+                externalLoadKGF: 12
             )
         ]
 
@@ -251,6 +256,11 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         XCTAssertEqual(step.targets, [])
         XCTAssertNil(step.gripType)
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.action, .hang)
+        XCTAssertNil(step.repetitions)
+        XCTAssertNil(step.externalLoadKGF)
         XCTAssertEqual(step.segments, [
             WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 15)
         ])
@@ -579,6 +589,67 @@ final class CustomRoutineDraftTests: XCTestCase {
         )
 
         XCTAssertEqual(CustomRoutineDraft(editing: source).definition(), source)
+    }
+
+    func testEditingDraftPreservesUnilateralStepSemantics() {
+        let source = CustomRoutineDefinition(
+            id: "custom.unilateral",
+            title: "Unilateral",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "left-pull",
+                title: "Left pull",
+                instruction: "Pull.",
+                accessory: "",
+                duration: 10,
+                phase: .pull,
+                targets: [.kind(.jug)],
+                handUse: .single,
+                side: .left,
+                action: .isometricPull,
+                externalLoadKGF: -4
+            )]
+        )
+
+        let definition = CustomRoutineDraft(editing: source).definition()
+
+        XCTAssertEqual(definition.steps[0].handUse, .single)
+        XCTAssertEqual(definition.steps[0].side, .left)
+        XCTAssertEqual(definition.steps[0].action, .isometricPull)
+        XCTAssertNil(definition.steps[0].repetitions)
+        XCTAssertEqual(definition.steps[0].externalLoadKGF, -4)
+    }
+
+    func testAddLeftAndRightPairDuplicatesCompatibleStepValues() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        let source = CustomRoutineStepDraft(
+            id: "lift",
+            title: "Loaded lift",
+            instruction: "Lift.",
+            accessory: "",
+            duration: 30,
+            phase: .pull,
+            targets: [.kind(.jug)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left,
+            action: .loadedLift,
+            repetitions: 4,
+            externalLoadKGF: -5
+        )
+
+        draft.addLeftAndRightPair(from: source)
+
+        XCTAssertEqual(draft.steps.map(\.side), [.left, .right])
+        XCTAssertEqual(draft.steps.map(\.handUse), [.single, .single])
+        XCTAssertEqual(draft.steps.map(\.action), [.loadedLift, .loadedLift])
+        XCTAssertEqual(draft.steps.map(\.repetitions), [4, 4])
+        XCTAssertEqual(draft.steps.map(\.externalLoadKGF), [-5, -5])
+        XCTAssertNotEqual(draft.steps[0].id, draft.steps[1].id)
     }
 
     private func makeStep(
