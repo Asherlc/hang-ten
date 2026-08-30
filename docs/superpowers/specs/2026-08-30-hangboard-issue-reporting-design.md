@@ -26,6 +26,9 @@ which each app supplies when opening the system browser:
 | `board_id` | Canonical selected board ID |
 | `board_name` | Selected board display name |
 | `manufacturer` | Selected board manufacturer |
+| `presentation_id` | Selected board face or variant ID |
+| `presentation_name` | Selected board face or variant display name |
+| `interface_orientation` | `portrait` or `landscape` when the form opens |
 | `platform` | `iOS` or `Android` |
 | `app_version` | Installed app marketing version |
 | `build` | Installed build/version code |
@@ -47,11 +50,14 @@ Each hangboard detail page includes a `Report a hangboard issue` action with
 brief supporting copy that says it opens a report form. iOS adds the action to
 its existing hold-specification detail screen. Android adds a board-details
 screen, reached from the selected-board card, and presents the action there so
-the two platforms provide the same board-specific destination. The apps open
-the form in the system browser, not an embedded web view. The form URL is
-platform configuration rather than a UI literal. If it is absent or malformed,
-the action is unavailable. If opening the valid URL fails, the app presents a
-retryable error.
+the two platforms provide the same board-specific destination. A board with
+multiple presentations offers its face or variant selector on both platforms;
+the active presentation is included in the report context. Both detail screens
+remain usable in portrait and landscape, with no report control clipped or
+hidden. The apps open the form in the system browser, not an embedded web view.
+The form URL is platform configuration rather than a UI literal. If it is
+absent or malformed, the action is unavailable. If opening the valid URL fails,
+the app presents a retryable error.
 
 The iOS and Android URL builders use exactly the hidden-field names above and
 URL-encode every value. They add no device identifier, account data, workout
@@ -85,10 +91,12 @@ that every report is immediately visible on GitHub.
 
 ## Testing
 
-- iOS unit tests verify complete report URL construction and encoding, and UI
-  tests verify the detail-page action is visible only with configuration.
-- Android unit tests verify the same URL contract and UI tests verify the new
-  board-details destination and its report action.
+- iOS unit tests verify complete report URL construction and encoding for every
+  presentation and interface orientation, and UI tests verify the detail-page
+  action is visible only with configuration in portrait and landscape.
+- Android unit tests verify the same URL contract for every presentation and
+  orientation, and UI tests verify the new board-details destination, its
+  presentation selector, and report action in both layouts.
 - A documented manual provisioning test submits a representative form response
   and verifies a labelled GitHub issue with the expected Markdown body.
 
