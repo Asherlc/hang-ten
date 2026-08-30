@@ -113,7 +113,7 @@ class BoardCanvasTest {
 
         composeRule.onNodeWithContentDescription("Board Fixture Board").performTouchInput {
             click(percentOffset(x = 0.375f, y = 0.375f))
-            click(percentOffset(x = 0.875f, y = 0.875f))
+            click(percentOffset(x = 0.9f, y = 0.9f))
         }
 
         composeRule.runOnIdle {

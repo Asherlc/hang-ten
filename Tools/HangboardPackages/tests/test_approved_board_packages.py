@@ -229,6 +229,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("beastmaker-1000", "beastmaker-1000"),
         ("beastmaker-2000", "beastmaker-2000"),
         ("dewoodstok-woodbord", "dewoodstok-woodbord"),
+        ("owl-climb.poker", "owl-climb-poker"),
         ("escape-beta-22", "escape-beta-22"),
         ("escape.unlimited", "escape-unlimited"),
         ("evolv-kilter-basic-long", "evolv-kilter-basic-long"),

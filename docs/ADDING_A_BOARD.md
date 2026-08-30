@@ -96,6 +96,14 @@ physical board is symmetric, and multiple pieces only for one genuinely
 disconnected contact. It is not a geometry template. Never copy its coordinates
 or product-specific hold layout to another board.
 
+Presentation assets must match the established catalog render style for the
+real product's material and form factor. For a wood board, use the comparable
+wood-board treatment: pale timber, realistic recessed holds, soft studio
+lighting, and an off-white background. Do not render a non-wood board as wood;
+select a comparable catalog board whose material and form factor match the
+product being authored. Before PR submission, review the new asset side by side
+with that comparable catalog render and correct visible style mismatches.
+
 ## 4. Author canonical geometry directly
 
 Start Workbench from the repository root and open the complete package:
@@ -158,6 +166,9 @@ rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen \
 - Exactly one named presentation is the default. A simple one-surface package
   uses the `Primary` / `assets/primary.png` convention; genuine sourced
   variations remain presentations of the same board.
+- Each presentation asset matches the catalog render style for the product's
+  actual material and form factor. It has been reviewed side by side with a
+  comparable existing catalog board before PR submission.
 - Every hold has unique identity and nonempty normalized geometry.
 - Unsupported optional physical facts remain omitted.
 - Each physical contact is represented once; disconnected pieces share a hold
