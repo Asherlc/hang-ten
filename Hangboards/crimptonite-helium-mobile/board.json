@@ -246,7 +246,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "fingerCapacity": 4
     },
     {
       "id": "center-edge-10",
@@ -361,7 +362,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "fingerCapacity": 4
     },
     {
       "id": "back-jug-sloper",
