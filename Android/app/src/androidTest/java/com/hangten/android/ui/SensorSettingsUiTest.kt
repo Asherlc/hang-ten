@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.hangten.android.audio.WorkoutAudioCoach
 import com.hangten.android.billing.*
 import com.hangten.android.health.*
@@ -28,11 +29,12 @@ class SensorSettingsUiTest {
             SettingsScreen(TestCoach(), PurchaseManager(TestPurchaseClient()), HealthViewModel(TestHealthStore(), TestHistory()), PaddingValues(), controller,
                 onSensorPermissionRequest = { controller.connectAfterPermissionsGranted() })
         }
-        rule.onNodeWithContentDescription("Connect sensor").assertIsDisplayed().performClick()
+        rule.onNodeWithContentDescription("Connect sensor").performScrollTo().assertIsDisplayed().performClick()
         rule.waitUntil(5_000) { controller.state.value.connection == SensorConnectionState.Streaming }
         transport.emit(byteArrayOf(1, 8, 0, 0, 72, 65, 7, 0, 0, 0))
-        rule.onNodeWithText("Live force: 12.5 kgf").assertIsDisplayed()
-        rule.onNodeWithContentDescription("Tare sensor").performClick()
+        rule.waitUntil(5_000) { controller.state.value.latestMeasurement?.aggregateLoadKgf == 12.5 }
+        rule.onNodeWithText("Live force: 12.5 kgf").performScrollTo().assertIsDisplayed()
+        rule.onNodeWithContentDescription("Tare sensor").performScrollTo().assertIsDisplayed().performClick()
     }
 }
 
