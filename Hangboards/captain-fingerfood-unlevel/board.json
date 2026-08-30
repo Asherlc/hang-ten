@@ -281,7 +281,8 @@
             "type": "surface"
           }
         }
-      ]
+      ],
+      "fingerCapacity": 4
     },
     {
       "id": "curved-edge-25",
