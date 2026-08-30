@@ -250,7 +250,8 @@
           }
         }
       ],
-      "sizeMillimeters": 16
+      "sizeMillimeters": 16,
+      "fingerCapacity": 4
     },
     {
       "id": "mono-28",
