@@ -273,7 +273,8 @@
             "rotationDegrees": 0.0
           }
         }
-      ]
+      ],
+      "fingerCapacity": 4
     }
   ]
 }
