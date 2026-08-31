@@ -588,14 +588,14 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
             "id": "20mm-side",
             "name": "40 mm jug and 20 mm edge",
             "assetPath": "assets/primary.png",
-            "aspectRatio": 1.5,
+            "aspectRatio": 1.0,
             "default": True,
         },
         {
             "id": "15mm-side",
             "name": "40 mm jug and 15 mm edge",
             "assetPath": "assets/15mm-surface.png",
-            "aspectRatio": 1672 / 941,
+            "aspectRatio": 1.0,
             "default": False,
         },
     ]
@@ -637,8 +637,8 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
     )
 
     for asset_path, expected_size in {
-        "assets/primary.png": (1536, 1024),
-        "assets/15mm-surface.png": (1672, 941),
+        "assets/primary.png": (1254, 1254),
+        "assets/15mm-surface.png": (1254, 1254),
     }.items():
         with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
             assert image.format == "PNG"
