@@ -1409,20 +1409,68 @@ def test_production_prompt_renderer_uses_exact_literal_record_fields(
     )
 
 
-def _validate_real_phase2_document(
+def _validate_historical_phase2_document(
     tmp_path: Path,
     document: dict[str, object],
 ) -> PresentationRemediationReport:
-    inventory = discover_board_packages(
+    live_inventory = discover_board_packages(
         REPO_ROOT / "Hangboards",
         require_complete_inventory=True,
     )
-    return validate_presentation_remediation_manifest(
-        load_presentation_remediation_manifest(_write_manifest(tmp_path, document)),
-        inventory,
-        hangboards_root=REPO_ROOT / "Hangboards",
-        validation_mode=presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
+    historical_presentation_keys = {
+        (record["packageID"], record["presentationID"])
+        for record in document["records"]
+    }
+    inventory = replace(
+        live_inventory,
+        packages=tuple(
+            replace(
+                package,
+                board=replace(
+                    package.board,
+                    presentations=tuple(
+                        presentation
+                        for presentation in package.board.presentations
+                        if (package.board.id, presentation.id)
+                        in historical_presentation_keys
+                    ),
+                ),
+            )
+            for package in live_inventory.packages
+        ),
     )
+    historical_facts = {
+        (REPO_ROOT / record["assetPath"]).resolve(): (
+            record["currentAsset"]["sha256"],
+            record["currentAsset"]["widthPixels"],
+            record["currentAsset"]["heightPixels"],
+        )
+        for record in document["records"]
+    }
+    read_live_png_facts = presentation_audit._current_png_facts
+
+    def read_historical_png_facts(path: Path) -> tuple[str, int, int]:
+        facts = historical_facts.get(path.resolve())
+        return facts if facts is not None else read_live_png_facts(path)
+
+    # The schema-2 document is an intentionally immutable initial-state ledger.
+    # Later bounded repairs deliberately leave it unchanged, so contract tests
+    # replay its recorded PNG facts while production validation remains strict
+    # against the live package bytes.
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        monkeypatch.setattr(
+            presentation_audit,
+            "_current_png_facts",
+            read_historical_png_facts,
+        )
+        return validate_presentation_remediation_manifest(
+            load_presentation_remediation_manifest(
+                _write_manifest(tmp_path, document)
+            ),
+            inventory,
+            hangboards_root=REPO_ROOT / "Hangboards",
+            validation_mode=presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
+        )
 
 
 def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
@@ -1430,7 +1478,7 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
 ) -> None:
     document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
 
-    report = _validate_real_phase2_document(tmp_path, document)
+    report = _validate_historical_phase2_document(tmp_path, document)
 
     assert document["schemaVersion"] == 2
     assert document["phase"] == "assetRemediation"
@@ -1501,7 +1549,7 @@ def test_production_action_requires_passed_canvas_preflight(tmp_path: Path) -> N
         PresentationRemediationAuditError,
         match="production actions require passed canvas preflight",
     ):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 def test_phase2_canonical_matrix_rejects_repair_reclassified_as_removal(
@@ -1533,7 +1581,7 @@ def test_phase2_canonical_matrix_rejects_repair_reclassified_as_removal(
         PresentationRemediationAuditError,
         match="Phase 2 remediation decision/batch matrix does not match canonical catalog",
     ):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 def test_started_production_requires_canonical_prompt_and_inputs(tmp_path: Path) -> None:
@@ -1581,7 +1629,7 @@ def test_started_production_requires_canonical_prompt_and_inputs(tmp_path: Path)
         PresentationRemediationAuditError,
         match="started production requires canonical prompt and complete inputs",
     ):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 def test_source_reclassification_rejects_schema2_manifest(tmp_path: Path) -> None:
@@ -1655,7 +1703,7 @@ def test_pending_action_cannot_promote_accepted_final_bytes(tmp_path: Path) -> N
         PresentationRemediationAuditError,
         match="only completed actions may promote accepted candidate or final bytes",
     ):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 def test_pending_batch_cannot_prewrite_passed_checks(tmp_path: Path) -> None:
@@ -1669,7 +1717,7 @@ def test_pending_batch_cannot_prewrite_passed_checks(tmp_path: Path) -> None:
         PresentationRemediationAuditError,
         match="pending batch cannot prewrite passed checks",
     ):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 @pytest.mark.parametrize("path_bytes", [b"\x89PNG\r\n\x1a\n", b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR"])
@@ -1694,7 +1742,7 @@ def test_pending_preflight_reason_fields_fail_closed(tmp_path: Path) -> None:
         PresentationRemediationAuditError,
         match="pending/passed preflight probe cannot have blockedReason",
     ):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 def test_preflight_rejects_untracked_comparator_input(tmp_path: Path) -> None:
@@ -1708,15 +1756,16 @@ def test_preflight_rejects_untracked_comparator_input(tmp_path: Path) -> None:
         if f'{record["packageID"]}/{record["presentationID"]}'
         == "soill.iron-palm-2/primary"
     )
+    unrelated_path = REPO_ROOT / unrelated["assetPath"]
     probe["sourceInputs"].append(
         {
             "id": "untracked-comparator",
             "sourceType": "comparator",
             "evidencePointer": None,
             "sourceURL": None,
-            "assetPath": unrelated["assetPath"],
+            "assetPath": str(unrelated_path),
             "role": "Unapproved material reference.",
-            "sha256": unrelated["currentAsset"]["sha256"],
+            "sha256": hashlib.sha256(unrelated_path.read_bytes()).hexdigest(),
             "suppliedToImagegen": True,
             "byteVerification": {
                 "status": "pending",
@@ -1731,7 +1780,7 @@ def test_preflight_rejects_untracked_comparator_input(tmp_path: Path) -> None:
         PresentationRemediationAuditError,
         match="preflight source input ID is not authorized",
     ):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
 
 
 @pytest.mark.parametrize(
@@ -1856,4 +1905,4 @@ def test_real_phase2_schema_and_coverage_fail_closed(
     mutation(document)  # type: ignore[operator]
 
     with pytest.raises(PresentationRemediationAuditError, match=message):
-        _validate_real_phase2_document(tmp_path, document)
+        _validate_historical_phase2_document(tmp_path, document)
