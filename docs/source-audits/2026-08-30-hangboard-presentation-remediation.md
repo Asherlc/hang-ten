@@ -952,26 +952,39 @@ frames `(0.314, 0.401, 0.378, 0.067)` and
 transform for the alias views. No hold ID, kind, depth, path command,
 constraint, or other physical fact changed. `board.json` changed from
 `1260faa04c3032ed725906e78910d968b75a57106e9412badfe7984c7beba4b3`
-to `dfd69600b01be66d9c50a57a2fbe4fbe7b92394cdf1cc39e6d44133de9a68206`.
+to `dfd69600b01be66d9c50a57a2fbe4fbe7b92394cdf1cc39e6d44133de9a68206`
+in the five-position correction, then to
+`f72fe73da584187800f2802cc341c805f260d37f665f7609e5d80e25e4adf6d7`
+when the sourced option-4 presentation alias was added.
 
-The five verified head-on views are Front Upright, Front Inverted, Back
-Upright, Back Inverted, and Pinch Side. They do **not** constitute the complete
-manufacturer-published cord-position set. The old manual separately enumerates
+The six verified head-on views are Front Upright, Front Inverted, Cord Option 4
+— 20 mm In-cut, Back Upright, Back Inverted, and Pinch Side. A fresh 2026-08-31
+review of the older manufacturer manual confirms that it separately enumerates
 mounted mode and four portable routes: option 1 is a longer flat-edge setup,
 option 2 is for pinch training, option 3 is a shorter flat-edge/no-cheat setup,
 and option 4 creates an in-cut 20 mm edge. Options 1 and 3 do not require
 duplicate face presentations when their working surface and pitch are the same;
-option 2 is represented by Pinch Side. Option 4 changes the 20 mm contact pitch
-and is intentionally **BLOCKED and unmodeled** here: neither the current
-official gallery nor the old revision's lifestyle manual photo provides a
-head-on current-revision image that can depict that cord routing and pitch
-without invention. A flat rotated alias must not be mislabeled as the in-cut
-configuration.
+option 2 is represented by Pinch Side.
+
+`cord-option-4-20mm-incut` is an explicitly labeled adaptation of the older
+manufacturer's cord-routing instruction to the current eight-edge beech
+revision. The manual establishes only the manufacturer-defined option-4
+semantics; the live product page and official photos remain the truth for the
+current board pixels and hold inventory. Option 4 changes suspension routing
+and the resulting board pitch, not the current board's machined front face.
+Once the camera is kept exactly head-on to that 20 mm working surface, the
+orthographic face is pixel-identical to Front Inverted: the routing/pitch
+difference lies outside the square canonical crop or in depth and cannot be
+made visible without violating the head-on requirement. The new presentation
+therefore reuses the exact `assets/front-inverted.png` bytes
+(`52010a47bd55f82ad00acfbc8511b0a69e7d983b7dddb31ce64652181fb76a58`,
+1440 x 1440 RGB), aliases canonical `primary` with `isInverted: true`, and
+introduces no raster, hold, or geometry duplication. Workbench resolved its
+source-owned regions and included the transformed `edge-20-piece-0` hit target.
 
 Final-inventory validation and package status passed with 61 packages and no
-drafts. The five retained presentations load under the package contract; this
-corrective pass makes no false claim that the separate option-4 position has
-already been visually validated or completed.
+drafts. The focused approved-package test passed and explicitly checked the
+option-4 alias, exact reused asset path, inversion metadata, and 20 mm region.
 
 ## Lattice MXEdge Lift Large and Small three-position repair (2026-08-31)
 

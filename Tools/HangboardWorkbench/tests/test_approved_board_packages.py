@@ -166,8 +166,25 @@ def test_port_a_board_has_one_object_and_declared_primary_asset() -> None:
     assert {hold["kind"] for hold in board["holds"]} >= {"edge", "pocket", "jug", "pinch"}
     assert {presentation["id"] for presentation in board["presentations"]} == {
         "primary",
+        "front-inverted",
+        "cord-option-4-20mm-incut",
         "back",
+        "back-inverted",
         "side",
+    }
+    option_4 = next(
+        presentation
+        for presentation in board["presentations"]
+        if presentation["id"] == "cord-option-4-20mm-incut"
+    )
+    assert option_4["sourcePresentationID"] == "primary"
+    assert option_4["isInverted"] is True
+    assert option_4["assetPath"] == "assets/front-inverted.png"
+    option_4_document = board_package.editor_document(
+        package, "cord-option-4-20mm-incut"
+    )
+    assert "edge-20-piece-0" in {
+        region["key"] for region in option_4_document["regions"]
     }
     assert (package_root / "assets" / "primary.png").is_file()
     assert (package_root / "assets" / "side.png").is_file()

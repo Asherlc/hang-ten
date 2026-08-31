@@ -12,6 +12,7 @@
   "presentations": [
     {"id": "primary", "name": "Front Upright", "assetPath": "assets/primary.png", "aspectRatio": 1.0, "default": true},
     {"id": "front-inverted", "name": "Front Inverted", "assetPath": "assets/front-inverted.png", "aspectRatio": 1.0, "default": false, "sourcePresentationID": "primary", "isInverted": true},
+    {"id": "cord-option-4-20mm-incut", "name": "Cord Option 4 — 20 mm In-cut", "assetPath": "assets/front-inverted.png", "aspectRatio": 1.0, "default": false, "sourcePresentationID": "primary", "isInverted": true},
     {"id": "back", "name": "Back Upright", "assetPath": "assets/back.png", "aspectRatio": 1.0, "default": false},
     {"id": "back-inverted", "name": "Back Inverted", "assetPath": "assets/back-inverted.png", "aspectRatio": 1.0, "default": false, "sourcePresentationID": "back", "isInverted": true},
     {"id": "side", "name": "Pinch Side", "assetPath": "assets/side.png", "aspectRatio": 1.0, "default": false}
