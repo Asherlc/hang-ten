@@ -898,3 +898,50 @@ package validation and package status passed with 61 packages and no drafts;
 the focused Workbench package suite passed 173 tests. The repair therefore
 passes the all-presentations/all-positions requirement atomically. The
 schema-2 machine manifest is intentionally unchanged in this bounded pass.
+
+## Frictitious Port-A-Board five-position repair (2026-08-31)
+
+The current Port-A-Board was freshly checked against the [manufacturer product
+page](https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard),
+its published [front](https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=1280),
+[back](https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=1280),
+and [side](https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=1280)
+photographs, and owner photographs in the [Frictitious Loox review
+feed](https://loox.io/s/E1bdwTzdzp): [2026](https://images.loox.io/uploads/2026/7/28/PsCeBZeaj.jpg),
+[2025](https://images.loox.io/uploads/2025/12/27/ZQ09gpZd9.jpg), and a
+[nearby-revision example](https://images.loox.io/uploads/2025/7/10/z4jJr2jVP.jpg).
+The official copy identifies poplar wood, eight edges (30 open, 30, 25, 20,
+15, 12, 10, and 8 mm), pinch grips, and black cord. The existing head-on
+front, back, and side images match the current official views and remain
+byte-for-byte unchanged, including authentic branding and published framing.
+
+The older [manufacturer instruction manual mirror](https://manuals.plus/m/5cffc637e35befbac3738553e529f0eb508e575af7073cf198b9592e35a4a5c0)
+was used only for its physical orientation principle: suspend the board with
+the selected depth number upright and cord above it. Its seven-edge revision
+was not used as current geometry evidence. The complete set is Front Upright,
+Front Inverted (20 mm), Back Upright, Back Inverted (15 mm), and Pinch Side.
+Inverting the continuous side pinch exposes no distinct contact, and the
+manual's other cord options change routing or pitch rather than expose another
+surface, so no sixth routing-only presentation was added.
+
+Two source-constrained image generations supplied the missing inverted views.
+Each required the exact published body topology, pale poplar, authentic
+markings rotated with the board, black cord and grommets, orthographic head-on
+framing, and the selected 20 mm or 15 mm marking upright; extra recesses,
+hardware, hands, walls, and invented labels were prohibited. The accepted
+1254-square candidates were proportionally normalized to 1440-square without
+crop or stretch. Final SHA-256 hashes are
+`75db93338c4b5f2053aa7b5ea24aeb184e04695f1f3d476767c53d350e688129`
+(`front-inverted.png`) and
+`dcde12e1c4f180e2280d9ed33fcec307c392f09841851d4a60435c5df420c4a3`
+(`back-inverted.png`). The unchanged official front, back, and side hashes are
+`13bef16f346030dbe383d320beedc4034ae2da6c82b122ed8b349590132c0a17`,
+`5c4e9f36a31311ea2d88cd58a2acc441898fef28182dc5ed74e0b1ae48bc0092`,
+and `ff23a2bbeb4b7d08ae530775a7ec7c328474b9e5b19db99fc4f9b126aeb45866`.
+
+The existing 20 mm and 15 mm pill paths were deliberately reassigned to the
+new positions at `(0.308, 0.633, 0.378, 0.067)` and
+`(0.308, 0.322, 0.376, 0.101)`. Workbench review confirmed both core overlays
+occupy the correct recesses on the individually head-on inverted assets; the
+other three assets and geometry are unchanged. Final package validation and
+focused test results are recorded with the implementing commit.

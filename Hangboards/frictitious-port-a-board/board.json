@@ -10,9 +10,11 @@
     {"id": "primary", "missingHandCapacityPolicy": "unavailable"}
   ],
   "presentations": [
-    {"id": "primary", "name": "Primary", "assetPath": "assets/primary.png", "aspectRatio": 1.0, "default": true},
-    {"id": "back", "name": "Back", "assetPath": "assets/back.png", "aspectRatio": 1.0, "default": false},
-    {"id": "side", "name": "Side", "assetPath": "assets/side.png", "aspectRatio": 1.0, "default": false}
+    {"id": "primary", "name": "Front Upright", "assetPath": "assets/primary.png", "aspectRatio": 1.0, "default": true},
+    {"id": "front-inverted", "name": "Front Inverted", "assetPath": "assets/front-inverted.png", "aspectRatio": 1.0, "default": false},
+    {"id": "back", "name": "Back Upright", "assetPath": "assets/back.png", "aspectRatio": 1.0, "default": false},
+    {"id": "back-inverted", "name": "Back Inverted", "assetPath": "assets/back-inverted.png", "aspectRatio": 1.0, "default": false},
+    {"id": "side", "name": "Pinch Side", "assetPath": "assets/side.png", "aspectRatio": 1.0, "default": false}
   ],
   "holds": [
     {
@@ -88,9 +90,9 @@
       "kind": "edge",
       "sizeMillimeters": 20,
       "features": ["mediumEdge"],
-      "presentationID": "primary",
+      "presentationID": "front-inverted",
       "geometry": [{
-        "frame": {"x": 0.314, "y": 0.401, "width": 0.378, "height": 0.067},
+        "frame": {"x": 0.308, "y": 0.633, "width": 0.378, "height": 0.067},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
@@ -109,9 +111,9 @@
       "name": "15 mm edge",
       "kind": "edge",
       "sizeMillimeters": 15,
-      "presentationID": "back",
+      "presentationID": "back-inverted",
       "geometry": [{
-        "frame": {"x": 0.316, "y": 0.401, "width": 0.376, "height": 0.101},
+        "frame": {"x": 0.308, "y": 0.322, "width": 0.376, "height": 0.101},
         "shape": {"type": "path", "commands": [
           {"command": "move", "to": [0.10, 0]}, {"command": "line", "to": [0.90, 0]},
           {"command": "curve", "control1": [0.955, 0], "control2": [1, 0.224], "to": [1, 0.5]},
