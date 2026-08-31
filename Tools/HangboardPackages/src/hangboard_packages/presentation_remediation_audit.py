@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, urlsplit
+from urllib.parse import urlsplit
 
 from .board_catalog import (
     BoardInventory,
@@ -100,20 +100,12 @@ _SEARCH_HOSTS = frozenset(
         "www.yandex.com",
     }
 )
-_SEARCH_QUERY_KEYS = frozenset({"q", "query", "search", "search_query", "keyword"})
-_COMPARATOR_GEOMETRY_TERMS = (
-    "contact layout",
-    "working surface",
-    "geometry",
-    "geometric",
-    "silhouette",
-    "topology",
-    "contacts",
-    "contact",
-    "holds",
-)
 _NAMED_REVISION = re.compile(
     r"\b(?:revision|model|version|generation|mk)\s*[a-z0-9]", re.IGNORECASE
+)
+_CANONICAL_DETAILS_DELIMITER = "\n\nDetails:\n"
+_STYLE_ONLY_TERMS = frozenset(
+    {"framing", "lighting", "background", "texture", "smoothing", "edge treatment"}
 )
 
 
@@ -301,12 +293,7 @@ def _url(value: Any, source: str) -> str:
     if parsed.scheme != "https" or not parsed.hostname:
         raise PresentationRemediationAuditError(f"{source} must be a direct HTTPS URL")
     hostname = parsed.hostname.lower()
-    query_keys = {key.lower() for key, _ in parse_qsl(parsed.query)}
-    if (
-        "/search" in parsed.path.lower()
-        or hostname in _SEARCH_HOSTS
-        or bool(query_keys & _SEARCH_QUERY_KEYS)
-    ):
+    if "/search" in parsed.path.lower() or hostname in _SEARCH_HOSTS:
         raise PresentationRemediationAuditError(
             f"{source} must not be a search-result URL"
         )
@@ -702,14 +689,42 @@ def _is_evidence_blocked(record: PresentationRemediationRecord) -> bool:
     )
 
 
-def _source_text(source: PresentationRemediationSource) -> str:
-    return f"{source.image_role} {source.supported_claim}".casefold()
+def _canonical_statement_matches(value: str, statement: str) -> bool:
+    if value == statement:
+        return True
+    details_prefix = statement + _CANONICAL_DETAILS_DELIMITER
+    return value.startswith(details_prefix) and bool(
+        value.removeprefix(details_prefix).strip()
+    )
 
 
-def _states_surface_is_not_usable(text: str, working_surface: str) -> bool:
-    lowered_surface = working_surface.casefold()
-    return lowered_surface in text.casefold() and (
-        "not usable" in text.casefold() or "unusable" in text.casefold()
+def _surface_unusable_statement(working_surface: str) -> str:
+    return f'Surface "{working_surface}" is unusable.'
+
+
+def _revision_conflict_statement(
+    working_surface: str, first_revision: str, second_revision: str
+) -> str:
+    return (
+        f'Surface "{working_surface}" has conflicting physical revisions: '
+        f'"{first_revision}" versus "{second_revision}".'
+    )
+
+
+def _is_canonical_style_only_reason(reason: str) -> bool:
+    prefix = "Accepted cohort baseline; style-only: "
+    if not reason.startswith(prefix):
+        return False
+    statement, delimiter, details = reason.partition(_CANONICAL_DETAILS_DELIMITER)
+    if delimiter and not details.strip():
+        return False
+    if not statement.endswith("."):
+        return False
+    terms = tuple(statement.removeprefix(prefix).removesuffix(".").split(", "))
+    return (
+        bool(terms)
+        and len(terms) == len(set(terms))
+        and set(terms) <= _STYLE_ONLY_TERMS
     )
 
 
@@ -718,19 +733,18 @@ def _validate_unsupported_surface_removal(
 ) -> None:
     finding = record.findings["topology"]
     cited_sources = (*record.evidence.official, *record.evidence.independent)
+    statement = _surface_unusable_statement(record.working_surface)
     if (
         _is_evidence_blocked(record)
         or finding.outcome != "nonconforming"
-        or not _states_surface_is_not_usable(
-            finding.explanation, record.working_surface
-        )
+        or not _canonical_statement_matches(finding.explanation, statement)
         or not any(
-            _states_surface_is_not_usable(_source_text(source), record.working_surface)
+            _canonical_statement_matches(source.supported_claim, statement)
             for source in cited_sources
         )
     ):
         raise PresentationRemediationAuditError(
-            "removeUnsupportedPresentation requires cited proof that the declared working surface is not usable"
+            "removeUnsupportedPresentation requires canonical cited proof that the declared working surface is unusable"
         )
 
 
@@ -742,31 +756,28 @@ def _validate_physical_revision_split(record: PresentationRemediationRecord) -> 
         if _NAMED_REVISION.search(source.revision_applicability)
     )
     named_revisions = {
-        source.revision_applicability.casefold() for source in named_sources
+        source.revision_applicability.casefold(): source.revision_applicability
+        for source in named_sources
     }
-    physical_revision = record.physical_revision.casefold()
     if (
         _is_evidence_blocked(record)
-        or len(named_revisions) < 2
-        or not all(revision in physical_revision for revision in named_revisions)
+        or len(named_revisions) != 2
+        or not all(
+            revision.casefold() in record.physical_revision.casefold()
+            for revision in named_revisions.values()
+        )
     ):
         raise PresentationRemediationAuditError(
-            "splitPhysicalRevision requires cited conflicting named physical revisions"
+            "splitPhysicalRevision requires canonical cited conflict proof for named physical revisions"
         )
+    first_revision, second_revision = sorted(named_revisions.values(), key=str.casefold)
+    statement = _revision_conflict_statement(
+        record.working_surface, first_revision, second_revision
+    )
     for source in named_sources:
-        source_revision = source.revision_applicability.casefold()
-        other_revisions = named_revisions - {source_revision}
-        source_text = _source_text(source)
-        if (
-            record.working_surface.casefold() not in source_text
-            or source_revision not in source_text
-            or not any(
-                other_revision in source_text for other_revision in other_revisions
-            )
-            or "conflict" not in source_text
-        ):
+        if not _canonical_statement_matches(source.supported_claim, statement):
             raise PresentationRemediationAuditError(
-                "splitPhysicalRevision requires cited conflicting named physical revisions"
+                "splitPhysicalRevision requires canonical cited conflict proof for named physical revisions"
             )
 
 
@@ -960,17 +971,9 @@ def validate_presentation_remediation_manifest(
             raise PresentationRemediationAuditError(
                 "comparator form factor is incompatible"
             )
-        if (
-            target is record
-            and "accepted cohort baseline" not in comparator.reason.lower()
-        ):
+        if not _is_canonical_style_only_reason(comparator.reason):
             raise PresentationRemediationAuditError(
-                "self comparator reason must name the accepted cohort baseline"
-            )
-        reason = comparator.reason.casefold()
-        if any(term in reason for term in _COMPARATOR_GEOMETRY_TERMS):
-            raise PresentationRemediationAuditError(
-                "comparator reason must not claim geometry evidence"
+                "comparator reason must use canonical style-only statement"
             )
     selected_records = [
         record for record in manifest.records if record.package_id in required_ids

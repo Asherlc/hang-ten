@@ -110,7 +110,7 @@ def _record(
             "assetPath": asset,
             "materialMatch": "Warm diffuse wood with bounded face-grain detail",
             "formFactorMatch": "Full-width fixed board",
-            "reason": "This record is the accepted cohort baseline for framing and lighting only.",
+            "reason": "Accepted cohort baseline; style-only: framing, lighting.",
             "baselineGap": None,
         },
         "generation": {
@@ -188,6 +188,17 @@ def _mark_phase_2_repair(record: dict[str, object], decision: str) -> None:
         "reason": None,
         "baselineGap": "No current accepted comparator is available for this Phase 2 repair.",
     }
+
+
+def _surface_unusable_statement(record: dict[str, object]) -> str:
+    return f'Surface "{record["workingSurface"]}" is unusable.'
+
+
+def _revision_conflict_statement(record: dict[str, object]) -> str:
+    return (
+        f'Surface "{record["workingSurface"]}" has conflicting physical revisions: '
+        '"Revision A" versus "Revision B".'
+    )
 
 
 def test_manifest_inventory_must_equal_every_declared_presentation(
@@ -302,6 +313,19 @@ def test_evidence_rejects_duckduckgo_search_result_url(tmp_path: Path) -> None:
         _validate_document(tmp_path, boards, inventory, [record])
 
 
+def test_evidence_accepts_direct_product_url_with_unrelated_q_parameter(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["url"] = (
+        "https://manufacturer.example/fixture-board?q=campaign"
+    )
+
+    report = _validate_document(tmp_path, boards, inventory, [record])
+
+    assert report.to_json()["decisions"] == {"keep": 1}
+
+
 def test_each_evidence_class_requires_sources_or_gap(tmp_path: Path) -> None:
     boards, inventory, record = _single_board_fixture(tmp_path)
     record["evidence"]["official"] = []
@@ -365,7 +389,7 @@ def test_comparator_reason_cannot_claim_geometry_evidence(tmp_path: Path) -> Non
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="comparator reason must not claim geometry evidence",
+        match="comparator reason must use canonical style-only statement",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
@@ -380,7 +404,22 @@ def test_comparator_reason_cannot_claim_silhouette_or_contact_evidence(
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="comparator reason must not claim geometry evidence",
+        match="comparator reason must use canonical style-only statement",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_comparator_reason_rejects_unlisted_geometry_proof_wording(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["comparator"]["reason"] = (
+        "Accepted cohort baseline proves matching cutout arrangement and grip placement."
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="comparator reason must use canonical style-only statement",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
@@ -508,7 +547,7 @@ def test_removal_requires_sourced_nonconforming_findings(tmp_path: Path) -> None
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="removeUnsupportedPresentation requires cited proof that the declared working surface is not usable",
+        match="removeUnsupportedPresentation requires canonical cited proof",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
@@ -526,7 +565,33 @@ def test_removal_rejects_nonconforming_but_usable_surface(tmp_path: Path) -> Non
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="removeUnsupportedPresentation requires cited proof that the declared working surface is not usable",
+        match="removeUnsupportedPresentation requires canonical cited proof",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+@pytest.mark.parametrize(
+    "denial",
+    [
+        'Not true: Surface "Published front working face" is not usable.',
+        'Surface "Published front working face" is not usable, but it remains usable.',
+        'The quote "Surface \\"Published front working face\\" is not usable." is false.',
+    ],
+)
+def test_removal_rejects_negated_or_quoted_unusability_claim(
+    tmp_path: Path, denial: str
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "removeUnsupportedPresentation")
+    record["findings"]["topology"] = {
+        "outcome": "nonconforming",
+        "explanation": denial,
+    }
+    record["evidence"]["official"][0]["supportedClaim"] = denial
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="removeUnsupportedPresentation requires canonical cited proof",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
@@ -536,10 +601,10 @@ def test_removal_accepts_cited_proof_that_surface_is_not_usable(tmp_path: Path) 
     _mark_phase_2_repair(record, "removeUnsupportedPresentation")
     record["findings"]["topology"] = {
         "outcome": "nonconforming",
-        "explanation": "Published front working face is not usable because the cited layout is a different surface.",
+        "explanation": _surface_unusable_statement(record),
     }
-    record["evidence"]["official"][0]["supportedClaim"] = (
-        "Published front working face is not usable because the official layout is a different surface."
+    record["evidence"]["official"][0]["supportedClaim"] = _surface_unusable_statement(
+        record
     )
 
     report = _validate_document(tmp_path, boards, inventory, [record])
@@ -555,7 +620,7 @@ def test_revision_split_requires_two_named_conflicting_revisions(
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="splitPhysicalRevision requires cited conflicting named physical revisions",
+        match="splitPhysicalRevision requires canonical cited conflict proof",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
@@ -571,7 +636,28 @@ def test_revision_split_rejects_distinct_but_nonconflicting_labels(
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="splitPhysicalRevision requires cited conflicting named physical revisions",
+        match="splitPhysicalRevision requires canonical cited conflict proof",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_revision_split_rejects_negated_conflict_claim(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "splitPhysicalRevision")
+    record["physicalRevision"] = "Revision A versus Revision B"
+    denial = 'Surface "Published front working face" has no conflict between Revision A and Revision B.'
+    record["evidence"]["official"][0].update(
+        revisionApplicability="Revision A",
+        supportedClaim=denial,
+    )
+    record["evidence"]["independent"][0].update(
+        revisionApplicability="Revision B",
+        supportedClaim=denial,
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="splitPhysicalRevision requires canonical cited conflict proof",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
@@ -582,13 +668,14 @@ def test_revision_split_accepts_cited_named_physical_revision_conflict(
     boards, inventory, record = _single_board_fixture(tmp_path)
     _mark_phase_2_repair(record, "splitPhysicalRevision")
     record["physicalRevision"] = "Revision A versus Revision B"
+    statement = _revision_conflict_statement(record)
     record["evidence"]["official"][0].update(
         revisionApplicability="Revision A",
-        supportedClaim="Published front working face is Revision A and conflicts with Revision B.",
+        supportedClaim=statement,
     )
     record["evidence"]["independent"][0].update(
         revisionApplicability="Revision B",
-        supportedClaim="Published front working face is Revision B and conflicts with Revision A.",
+        supportedClaim=statement,
     )
 
     report = _validate_document(tmp_path, boards, inventory, [record])
