@@ -334,12 +334,38 @@ Resolutions are added only when direct live sources establish the named revision
   58 cm length, 15 cm height, and 1.7 kg weight. Its erroneous 55 cm
   product-depth field is excluded; the correct 5.5 cm depth and Yellow Poplar
   species are supported only by target10a.
-- All four Flash Board orientations are `regenerate`. The current official page calls
-  the smallest contacts `Small Crimps` and separately names 8/10/15/20 mm; the
-  audit no longer attributes 6 mm to Tension. The manufacturer demonstration
-  establishes the intended flipped surfaces, while each current asset omits or
-  crops the adjustable cord and knots from the source-confirmed topology and
-  the three-edge-inverted asset also uses a transparent cutout.
+- Flash Board remediation completed 2026-08-31. The current
+  [Tension product page](https://tensionclimbing.com/products/flash-board-2)
+  identifies a compact cylindrical board, calls the smallest contacts `Small
+  Crimps`, and separately names 8/10/15/20 mm; no 6 mm claim is retained. Its
+  live first-party
+  [`FlashBoard2.png`](https://tensionclimbing.com/cdn/shop/files/FlashBoard2.png?v=1726542491&width=2048)
+  supplies the straight-on three-edge face and confirms pale wood, the rounded
+  cylinder, paired end cord passages, and the over/under cord wrap. The current
+  [Mad Rock distributor page](https://madrock.com/products/tension-climbing-flash-hangboard)
+  independently republishes that same straight-on three-edge product shot and
+  repeats the cylindrical construction and five named edge classes. The
+  published So iLL retailer asset
+  [`809198`](https://soillholds.com/cdn/shop/products/tension-flash-board-so-ill-so-ill-809198_2000x.jpg?v=1677258525)
+  supplies the straight-on two-edge/logo face with the complete adjustable cord
+  loop, visible knot, tails, four passage points, and lower end wraps; its former
+  product page now returns 404, so it is treated as archival image evidence and
+  not as current metadata. The independent
+  [Treeline tested review](https://www.treelinereview.com/gearreviews/best-hangboards-for-climbing)
+  corroborates wood, edges on both faces, eight usable edge positions, and the
+  adjustable dual-cord routing through and around the cylinder. By explicit
+  product-presentation choice, all four catalog rasters are board-only views:
+  the suspension cord and hardware are omitted so each orientation is
+  unambiguous and no inverted view shows physically misleading dangling cord.
+  These are therefore faithful catalog renders of the verified wooden body and
+  working-surface topology, not complete-assembly photographs. The upright
+  three-edge and two-edge base rasters retain their verified head-on geometry,
+  material, lighting, and framing; bounded edits at the four end-cord regions
+  reconstruct continuous natural wood and the empty passage holes. The package
+  represents all four working orientations independently: three-edge upright,
+  its exact 180° decoded-pixel rotation, two-edge upright, and its exact 180°
+  decoded-pixel rotation. All four share the same smooth studio treatment and
+  off-white background.
 - The 2017 base Grindstone is `regenerate`, not a background-only edit. The
   launch-period founder interview describes jugs plus paired
   35/30/25/20/15 mm edges and central 50/22 mm edges, and explicitly reserves
