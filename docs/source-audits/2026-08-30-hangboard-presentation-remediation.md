@@ -768,6 +768,51 @@ and package status passed with 61 packages and no drafts. This deterministic
 recolor/manual-bore repair is the user-approved exception to image generation;
 the schema-2 machine manifest is intentionally unchanged in this bounded pass.
 
+### Escape lower center-right opening shading follow-up (2026-08-31)
+
+The official Escape product page, its current straight-on gray publication
+image, StrengthClimbing's independent owner review, and Power Company
+Climbing's original-owner review were freshly reopened before this follow-up.
+They continue to establish the gray molded-plastic/resin body, dual-texture
+finish, 11 through-openings, ten recessed mounting bores, and a restrained
+shadow transition from each molded rim into the open background:
+
+- <https://escapeclimbing.com/products/ec72100>
+- <https://escapeclimbing.com/cdn/shop/products/2020_Website_ProductImage_BetaBoardListing_04-02.jpg?v=1700454580>
+- <https://strengthclimbing.com/beta-board-from-escape-climbing-hangboard-review/>
+- <https://www.powercompanyclimbing.com/blog/2011/03/review-v512-hangboard-from-detroit-rock.html>
+
+Original-detail rereview found the previously reopened lower center-right
+opening had the right footprint but an overly thick, bright inner band along
+its upper-left and lower edges. That band read as a pasted inset rather than
+the same open recess shown by its neighbors. Two manually parameterized
+shading candidates retained the exact established opening path and 1503 x 394
+canvas. Both used a four-stop linear falloff from neutral gray through a muted
+middle gray and near-white to the exact `#F6F2EA` opening center. Candidate 1
+used edge/middle sRGB values `(0.50, 0.51, 0.50)` and
+`(0.79, 0.78, 0.75)` at locations `0.00, 0.22, 0.48, 1.00`; candidate 2 used
+`(0.55, 0.56, 0.55)` and `(0.83, 0.82, 0.79)` at locations
+`0.00, 0.18, 0.43, 1.00`. Candidate 1 was accepted because its restrained
+inner-wall depth matches the neighboring lower center-left opening without a
+bright outline; candidate 2 was rejected as slightly too light.
+
+The prior asset SHA-256 was
+`f7d79b4777b99c81688a64e8e83b6d4c52fd082e893e10cd44cc4e9a9af9a342`.
+Candidate 1 and the accepted asset are
+`84d413b55d8ada97f6af5f0cc32312314da923d7ba87558f7436236b03ddfdd6`;
+rejected candidate 2 was
+`77a3d5941e2800ed2807bd7b6b7a4a018766b8a5007120c25094607951390894`.
+Decoded-pixel comparison found 6,384 changed pixels, bounded exactly by the
+top-origin box `x=783...944, y=211...272`, with zero changed pixels outside.
+The accepted image remains 1503 x 394 RGBA and visibly retains all 11 open
+background regions and all ten mounting bores. `board.json` remains
+byte-identical at
+`eb27ddc4b9f92332e1133db6ade1ce1a81de92edf7896a7790bbe3bfc1310873`.
+No hold, silhouette, opening footprint, perspective, material texture, canvas,
+or geometry changed. The correction was direct deliberate raster shading,
+without image-driven detection, segmentation, generated masks, contours,
+vectorization, registration, crop, resize, warp, or image generation.
+
 ## Metolius Light Rail 2.0 two-position repair (2026-08-31)
 
 The complete current-revision Light Rail 2.0 was freshly re-researched and
