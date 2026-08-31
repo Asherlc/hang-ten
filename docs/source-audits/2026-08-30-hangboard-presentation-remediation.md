@@ -251,3 +251,26 @@ exact evidence gap in their manifest records. The remaining three
 evidence-blocked assets are Phase 2 repairs. Every non-keep record has null
 final output and either a ready accepted comparator or an explicit repair-only
 cohort gap.
+
+## Phase 1 verification
+
+The following Phase 1 checks were run on 2026-08-31 and passed:
+
+```bash
+rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
+  Tools/HangboardPackages/tests
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+rtk scripts/hangboard-packages.sh audit-presentations \
+  --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json
+rtk git diff --name-only 2e74fc8..HEAD -- Hangboards
+rtk git diff --name-only -- Hangboards
+```
+
+The full package-tool suite passed (323 tests). Final inventory validation
+returned successfully with 61 valid packages and no draft inventory. Manifest
+validation returned 61 packages and 85 presentations with 19 `keep`, 17
+`edit`, 48 `regenerate`, and 1 `removeUnsupportedPresentation` decisions.
+Both `Hangboards` diff commands produced no paths, proving that no Hangboards
+PNG or `board.json` changed from approved-spec commit `2e74fc8` through this
+Phase 1 verification, or in the working tree.

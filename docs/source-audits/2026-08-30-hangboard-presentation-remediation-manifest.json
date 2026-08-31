@@ -11219,20 +11219,20 @@
   ],
   "phase1Checks": {
     "manifestValidation": {
-      "status": "pending",
-      "command": null
+      "status": "passed",
+      "command": "rtk scripts/hangboard-packages.sh audit-presentations \\\n  --root Hangboards \\\n  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json"
     },
     "packageValidation": {
-      "status": "pending",
-      "command": null
+      "status": "passed",
+      "command": "rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory"
     },
     "packageTestSuite": {
-      "status": "pending",
-      "command": null
+      "status": "passed",
+      "command": "rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \\\n  Tools/HangboardPackages/tests"
     },
     "hangboardsDiff": {
-      "status": "pending",
-      "command": null
+      "status": "passed",
+      "command": "rtk git diff --name-only 2e74fc8..HEAD -- Hangboards\nrtk git diff --name-only -- Hangboards"
     }
   }
 }
