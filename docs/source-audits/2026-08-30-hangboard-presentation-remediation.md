@@ -579,3 +579,95 @@ This source-backed correction accepts all four presentations together as
 no-ops under the user's material, published-likeness, head-on, and uniform
 smoothing requirements; the schema-2 machine manifest is intentionally not
 updated in this bounded pass.
+
+## Crimptonite Helium Mobile four-position repair (2026-08-31)
+
+The complete Helium Mobile was freshly re-researched and repaired as one
+atomic two-surface, four-position product on 2026-08-31. Crimptonite's current
+page identifies a 400 x 58 x 24 mm, approximately 125 g wooden mobile board
+with 14 mm, 22 mm, 10/18 mm center edges, a top jug, and a back usable as a
+jug or sloper. Its current gallery publishes the front, back, and end profile.
+The 9c Bouldering listing independently publishes the same front/back product,
+dimensions, four edge sizes, suspension system, and back jug/sloper use. Its
+customer review independently reports that the edge angle changes with the
+hang configuration. The front engravings themselves establish the mutually
+exclusive rotations: 14/10 mm read upright in one position and 22/18 mm read
+upright after a 180-degree rotation. The published end profile and broad back
+face establish the two opposite rear-edge treatments: rounded/sloping edge
+upright and sharper jug edge after inversion.
+
+Freshly opened evidence:
+
+- Crimptonite official product page:
+  <https://crimptonite.com/product/helium-mobile/>
+- Current official front, back, and end-profile gallery inputs:
+  <https://crimptonite.com/wp-content/uploads/2026/01/DSCF6544-1.jpg>,
+  <https://crimptonite.com/wp-content/uploads/2026/01/DSCF6545-1.jpg>, and
+  <https://crimptonite.com/wp-content/uploads/2026/01/DSCF6546-1.jpg>.
+- 9c Bouldering independent listing, gallery, and customer image/review:
+  <https://9cbouldering.com/products/helium-mobile-hangboard>,
+  <https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_06.jpg?v=1704979580>,
+  <https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_08.jpg?v=1704979580>, and
+  the listing's `_05`, `_07`, and `_09` published gallery views at the same
+  CDN/version.
+
+The two inherited candidate renders were generated before this geometry
+takeover from the following explicit prompts and published inputs:
+
+- Reverse call 1 used official `DSCF6545` back, official `DSCF6544` front,
+  and the old primary/reverse assets: `strict 3:2 straight-on orthographic
+  back working face; broad face parallel to image plane; horizontal parallel
+  long edges; equal ends/holes; no visible thickness/foreshortening; exact
+  pill pale-beech silhouette; exactly 2 far-end cord holes; authentic centered
+  Cr+IMPTONITE laser mark; red-white cord below; #F6F2EA; no recesses/extra
+  topology/angle/props.`
+- Front call 2 used official `DSCF6544`, the independent 9c product image, the
+  old primary, and the accepted reverse: `strict 3:2 straight-on orthographic
+  front; exact pill silhouette, exactly 3 equal rounded nested-depth recesses,
+  exactly 2 holes, red-white cord; authentic labels L 22mm upside-down + 14mm
+  upright, C 18mm upside-down + 10mm upright, R 22mm upside-down + 14mm
+  upright; #F6F2EA; no angle/thickness/extra topology.`
+
+Both accepted canonical assets are 1536 x 1024, 8-bit RGB PNGs. They preserve
+the source-published pale beech, pill silhouette, three front recesses, two
+end holes, engraved depth labels/logo, and red-white cord. Both are strictly
+head-on to their own working plane: their long axes and long edges are
+horizontal, their ends and holes are bilaterally matched, and neither exposes
+perspective thickness or foreshortening. They share the same off-white studio
+field, pale-beech grain, soft recess lighting, edge softness, and smoothing.
+No raster mutation was made during the geometry takeover. The two additional
+assets are exact, non-interpolated 180-degree pixel rotations of their
+canonical sources; a decoded-pixel comparison verified every RGBA sample at
+`(x, y)` against `(width - 1 - x, height - 1 - y)`.
+
+| Presentation | Asset | Canonical hold inventory | Old SHA-256 | New SHA-256 | Dimensions | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| `primary` — front, 14/10 mm upright (default) | `assets/primary.png` | `edge-14` (2 pieces), `center-edge-18` (1), `edge-22` (2), `center-edge-10` (1), `top-jug` (1) | `7283a9e58ca9e1176fb5517061fb9a78e611e7af9fcd6943a021edcb70c56b7c` | `1a031e83bf62533046d1571ad9c5c96844b354bfeeffb76611053e7a8036e161` | 1536 x 1024 | accepted head-on canonical front |
+| `front-inverted` — front, 22/18 mm upright | `assets/front-inverted.png` | alias of all 7 `primary` pieces | absent | `873a7a68577cffc5f0a8e10cec5864b338197c842464490549873f2edb1e45a5` | 1536 x 1024 | exact 180-degree primary rotation; `sourcePresentationID: primary`, `isInverted: true` |
+| `reverse` — back, sloper upright | `assets/reverse.png` | `back-jug-sloper` (1 piece) | `74804c611a453220579c5728ac7964d3ab6956ebfbd197871b3bf881a0612429` | `f63c32694b7bd2150fbdc8141e60bad936910939b8051d3d5b537a65e63fa5da` | 1536 x 1024 | accepted head-on canonical back |
+| `reverse-inverted` — back, jug upright | `assets/reverse-inverted.png` | alias of the 1 `reverse` piece | absent | `ca157604706f06df353a64d7d90825a1532a222d650845ea887d3df15a3775ba` | 1536 x 1024 | exact 180-degree reverse rotation; `sourcePresentationID: reverse`, `isInverted: true` |
+
+The checked-in orientation-alias schema and Tension Flash package precedent
+allow each inverted presentation to reuse one canonical surface and its stable
+physical hold IDs. This avoids duplicating physical contacts while rotating
+the canonical render, highlight, and hit-testing path in both Workbench and the
+app. The former reverse `back-jug-sloper` path retained its stable hold ID,
+kind, treatment, equipment object, and single-piece inventory. Its stale
+oblique frame `(0.178, 0.406, 0.648, 0.176)` and diagonally biased seven-curve
+outline were deliberately replaced with frame `(0.178, 0.412, 0.648, 0.156)`
+and a symmetric horizontal four-corner path (four lines, four cubic rounded
+corners, close). An operator-selected `roundedRectangle` constraint at zero
+degrees records the genuinely regular contact; the saved path remains the
+rendering and hit-testing truth. All seven front pieces are byte-for-byte
+unchanged within `board.json`. The board hash changed from
+`69823a96c38fa709ff21a3e856249b2d4ac960230b2681e5fc06fbb4d83de376`
+to `11b753ff43c178b547cc00dd451660182d5d23436e9c3e2ed780bf9a55a590a6`.
+
+Workbench loaded and visually inspected all four presentation IDs. Normal and
+all-active captures passed independently. `primary` and `front-inverted` each
+rendered all 7 front pieces; `reverse` and `reverse-inverted` each rendered the
+single horizontal back piece. All-active counts were 7, 7, 1, and 1. Every one
+of the 16 presentation-scoped path checks was clicked individually and became
+the sole selected hit target. The inverted bounds were the expected 180-degree
+counterparts of their canonical paths. Final-inventory package validation and
+package status completed successfully with 61 packages and no drafts.

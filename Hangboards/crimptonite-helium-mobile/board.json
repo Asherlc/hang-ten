@@ -15,17 +15,35 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Front",
+      "name": "Front — 14/10 mm side right-side up",
       "assetPath": "assets/primary.png",
       "aspectRatio": 1.5,
       "default": true
     },
     {
+      "id": "front-inverted",
+      "name": "Front — 22/18 mm side right-side up",
+      "assetPath": "assets/front-inverted.png",
+      "aspectRatio": 1.5,
+      "default": false,
+      "sourcePresentationID": "primary",
+      "isInverted": true
+    },
+    {
       "id": "reverse",
-      "name": "Back",
+      "name": "Back — sloper side right-side up",
       "assetPath": "assets/reverse.png",
       "aspectRatio": 1.5,
       "default": false
+    },
+    {
+      "id": "reverse-inverted",
+      "name": "Back — jug side right-side up",
+      "assetPath": "assets/reverse-inverted.png",
+      "aspectRatio": 1.5,
+      "default": false,
+      "sourcePresentationID": "reverse",
+      "isInverted": true
     }
   ],
   "holds": [
@@ -684,9 +702,9 @@
         {
           "frame": {
             "x": 0.178,
-            "y": 0.406,
+            "y": 0.412,
             "width": 0.648,
-            "height": 0.176
+            "height": 0.156
           },
           "shape": {
             "type": "path",
@@ -694,104 +712,106 @@
               {
                 "command": "move",
                 "to": [
-                  0.04,
-                  0.27
+                  0.032,
+                  0.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.22,
-                  0.23
-                ],
-                "control2": [
-                  0.7,
-                  0.07
-                ],
+                "command": "line",
                 "to": [
-                  0.925,
+                  0.968,
                   0.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.965,
+                  0.986,
                   0.0
                 ],
                 "control2": [
-                  0.995,
-                  0.08
+                  1.0,
+                  0.09
                 ],
                 "to": [
                   1.0,
-                  0.17
+                  0.2
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  1.0,
+                  0.8
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
                   1.0,
-                  0.36
+                  0.91
                 ],
                 "control2": [
-                  0.99,
-                  0.66
+                  0.986,
+                  1.0
                 ],
                 "to": [
-                  0.963,
-                  0.76
+                  0.968,
+                  1.0
                 ]
               },
               {
-                "command": "curve",
-                "control1": [
-                  0.72,
-                  0.83
-                ],
-                "control2": [
-                  0.25,
-                  0.96
-                ],
+                "command": "line",
                 "to": [
-                  0.04,
+                  0.032,
                   1.0
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.012,
-                  0.97
+                  0.014,
+                  1.0
                 ],
                 "control2": [
                   0.0,
-                  0.78
+                  0.91
                 ],
                 "to": [
                   0.0,
-                  0.48
+                  0.8
+                ]
+              },
+              {
+                "command": "line",
+                "to": [
+                  0.0,
+                  0.2
                 ]
               },
               {
                 "command": "curve",
                 "control1": [
-                  0.005,
-                  0.37
+                  0.0,
+                  0.09
                 ],
                 "control2": [
-                  0.018,
-                  0.29
+                  0.014,
+                  0.0
                 ],
                 "to": [
-                  0.04,
-                  0.27
+                  0.032,
+                  0.0
                 ]
               },
               {
                 "command": "close"
               }
             ]
+          },
+          "shapeConstraint": {
+            "shape": "roundedRectangle",
+            "rotationDegrees": 0.0
           },
           "treatment": {
             "type": "surface"
