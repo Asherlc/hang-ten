@@ -899,52 +899,79 @@ the focused Workbench package suite passed 173 tests. The repair therefore
 passes the all-presentations/all-positions requirement atomically. The
 schema-2 machine manifest is intentionally unchanged in this bounded pass.
 
-## Frictitious Port-A-Board five-position repair (2026-08-31)
+## Frictitious Port-A-Board corrective five-position audit (2026-08-31)
 
-The current Port-A-Board was freshly checked against the [manufacturer product
-page](https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard),
-its published [front](https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=1280),
-[back](https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=1280),
-and [side](https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=1280)
-photographs, and owner photographs in the [Frictitious Loox review
-feed](https://loox.io/s/E1bdwTzdzp): [2026](https://images.loox.io/uploads/2026/7/28/PsCeBZeaj.jpg),
-[2025](https://images.loox.io/uploads/2025/12/27/ZQ09gpZd9.jpg), and a
-[nearby-revision example](https://images.loox.io/uploads/2025/7/10/z4jJr2jVP.jpg).
-The official copy identifies poplar wood, eight edges (30 open, 30, 25, 20,
-15, 12, 10, and 8 mm), pinch grips, and black cord. The existing head-on
-front, back, and side images match the current official views and remain
-byte-for-byte unchanged, including authentic branding and published framing.
-
-The older [manufacturer instruction manual mirror](https://manuals.plus/m/5cffc637e35befbac3738553e529f0eb508e575af7073cf198b9592e35a4a5c0)
-was used only for its physical orientation principle: suspend the board with
-the selected depth number upright and cord above it. Its seven-edge revision
-was not used as current geometry evidence. The complete set is Front Upright,
-Front Inverted (20 mm), Back Upright, Back Inverted (15 mm), and Pinch Side.
-Inverting the continuous side pinch exposes no distinct contact, and the
-manual's other cord options change routing or pitch rather than expose another
-surface, so no sixth routing-only presentation was added.
-
-Two source-constrained image generations supplied the missing inverted views.
-Each required the exact published body topology, pale poplar, authentic
-markings rotated with the board, black cord and grommets, orthographic head-on
-framing, and the selected 20 mm or 15 mm marking upright; extra recesses,
-hardware, hands, walls, and invented labels were prohibited. The accepted
-1254-square candidates were proportionally normalized to 1440-square without
-crop or stretch. Final SHA-256 hashes are
-`75db93338c4b5f2053aa7b5ea24aeb184e04695f1f3d476767c53d350e688129`
-(`front-inverted.png`) and
-`dcde12e1c4f180e2280d9ed33fcec307c392f09841851d4a60435c5df420c4a3`
-(`back-inverted.png`). The unchanged official front, back, and side hashes are
+This entry supersedes the generated-image and completeness claims in the
+earlier Port-A-Board repair. Fresh review of Frictitious's current US
+[product page](https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard)
+and current [Canadian storefront](https://frictitiousclimbing.com/en-ca/products/the-port-a-board-portable-and-mountable-portable-hangboard)
+identifies the photographed eight-edge product as **beech**, not poplar. Its
+published [front](https://frictitiousclimbing.com/cdn/shop/files/PAB-Front.jpg?v=1780418977&width=3840),
+[back](https://frictitiousclimbing.com/cdn/shop/files/PAB-Back.jpg?v=1780418977&width=3840),
+and [side](https://frictitiousclimbing.com/cdn/shop/files/PAB-Side.jpg?v=1780418977&width=3840)
+photos match the three byte-preserved canonical package assets: the same eight
+30/open, 30, 25, 20, 15, 12, 10, and 8 mm contacts, branding, black cord,
+grommets, grain, and framing. The current canonical hashes remain
 `13bef16f346030dbe383d320beedc4034ae2da6c82b122ed8b349590132c0a17`,
 `5c4e9f36a31311ea2d88cd58a2acc441898fef28182dc5ed74e0b1ae48bc0092`,
 and `ff23a2bbeb4b7d08ae530775a7ec7c328474b9e5b19db99fc4f9b126aeb45866`.
 
-The existing 20 mm and 15 mm pill paths were deliberately reassigned to the
-new positions at `(0.308, 0.633, 0.378, 0.067)` and
-`(0.308, 0.322, 0.376, 0.101)`. Workbench review confirmed both core overlays
-occupy the correct recesses on the individually head-on inverted assets; the
-other three assets and geometry are unchanged. Final package validation and
-focused test results are recorded with the implementing commit.
+The material evidence is revision-sensitive. The archived first-party image
+`PAB-1_2aea9215-8656-4c3a-b51a-e37fdc246a09.jpg`, the independent
+[Hooper's Beta comparison](https://www.hoopersbeta.com/edge-chart), and the
+[portable-board review](https://thehangboard.com/blogs/news/portable-hangboards)
+describe Port-A-Boards as poplar. Frictitious's older [manufacturer manual
+mirror](https://manuals.plus/m/5cffc637e35befbac3738553e529f0eb508e575af7073cf198b9592e35a4a5c0)
+also documents a different seven-edge product (6, 8, 10, 12, 15, 20, and 25
+mm, plus a bonus 35 mm contact). Those sources establish an older/other
+revision and a historical material conflict; they do not override the live
+manufacturer's beech specification for the exact current official photos in
+this package. The independent [Frictitious owner-review
+feed](https://loox.io/s/E1bdwTzdzp) contains both seven-contact owner reports
+and current product photos, further supporting the need not to merge revision
+claims.
+
+The two generated inverted images were removed. `front-inverted.png` is now a
+decoded-pixel-exact 180-degree rotation of `primary.png`, and
+`back-inverted.png` is the same exact rotation of `back.png`; an RGBA pixel
+comparison checked every output coordinate against the opposite source
+coordinate. Their hashes are
+`52010a47bd55f82ad00acfbc8511b0a69e7d983b7dddb31ce64652181fb76a58`
+and `bee1249b2f07b798c4d31b5edd69e9f01289345ad0f519ff4d3df22510614975`,
+both 1440 x 1440. There was no generation, interpolation, resize, crop,
+padding, warp, smoothing, masking, segmentation, registration, redraw, or new
+product pixel. All five retained assets therefore share the manufacturer's
+published photographic material, smoothing, grain, lighting, and head-on
+framing.
+
+`front-inverted` and `back-inverted` are now schema aliases of `primary` and
+`back` with `isInverted: true`. The physical `edge-20` and `edge-15` records
+remain canonically owned by their source faces at their previously reviewed
+frames `(0.314, 0.401, 0.378, 0.067)` and
+`(0.316, 0.401, 0.376, 0.101)`; Workbench performs the exact 180-degree path
+transform for the alias views. No hold ID, kind, depth, path command,
+constraint, or other physical fact changed. `board.json` changed from
+`1260faa04c3032ed725906e78910d968b75a57106e9412badfe7984c7beba4b3`
+to `dfd69600b01be66d9c50a57a2fbe4fbe7b92394cdf1cc39e6d44133de9a68206`.
+
+The five verified head-on views are Front Upright, Front Inverted, Back
+Upright, Back Inverted, and Pinch Side. They do **not** constitute the complete
+manufacturer-published cord-position set. The old manual separately enumerates
+mounted mode and four portable routes: option 1 is a longer flat-edge setup,
+option 2 is for pinch training, option 3 is a shorter flat-edge/no-cheat setup,
+and option 4 creates an in-cut 20 mm edge. Options 1 and 3 do not require
+duplicate face presentations when their working surface and pitch are the same;
+option 2 is represented by Pinch Side. Option 4 changes the 20 mm contact pitch
+and is intentionally **BLOCKED and unmodeled** here: neither the current
+official gallery nor the old revision's lifestyle manual photo provides a
+head-on current-revision image that can depict that cord routing and pitch
+without invention. A flat rotated alias must not be mislabeled as the in-cut
+configuration.
+
+Final-inventory validation and package status passed with 61 packages and no
+drafts. The five retained presentations load under the package contract; this
+corrective pass makes no false claim that the separate option-4 position has
+already been visually validated or completed.
 
 ## Lattice MXEdge Lift Large and Small three-position repair (2026-08-31)
 
