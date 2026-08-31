@@ -2,84 +2,334 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Repair or remove all 66 Phase 1 non-keep presentation records while preserving all 19 keep assets byte-for-byte, then prove the resulting 61-package/84-presentation catalog in Workbench and on isolated iOS Simulators.
+**Goal:** Repair 65 Phase 1 presentation assets, remove only the unsupported Mini Bar end presentation while retaining all four physical grips, preserve 19 keep assets byte-for-byte, and prove the resulting 61-package/84-presentation catalog.
 
-**Architecture:** Extend the Phase 1 manifest validator into a schema-version-2, phase-aware state machine that distinguishes original bytes, transient generated candidates, promoted assets, removed presentations, sequential batch completion, and final catalog truth. Fifteen non-overlapping repair sub-batches run strictly in order, each under a fresh implementation subagent: every target is re-sourced live, generated or edited only with the built-in image-generation tool, manually reviewed, directly geometry-reviewed in Workbench, validated, committed, and pushed before the next batch. Final read-only gates review the entire catalog for shared rendering consistency, exercise representative phone and tablet flows with the `validate-hang-ten-ios` skill, and require complete cleanup.
+**Architecture:** A schema-version-2 manifest separates historical Phase 1 evidence from Phase 2 action state, 20-class canvas preflight, transient input/output byte verification, acyclic style-comparator promotion, product-scoped repair, direct Workbench geometry review, and per-presentation simulator evidence. Seven preflight tasks prove built-in edit and generation behavior for every required canvas before any package mutation; 42 product-scoped repair tasks then run sequentially inside four material/form-factor batches, followed by the sourced Mini Bar inventory/geometry change and complete catalog/iOS gates. Every implementation or configuration task uses a fresh subagent and is reviewed before the next task.
 
-**Tech Stack:** Python 3.11.4+ standard library, pytest 9, existing `hangboard_packages` discovery and CLI, JSON, PNG IHDR/SHA-256 byte inspection, built-in `image_gen` and `view_image` tools, Hangboard Workbench, Swift/Xcode, `xcrun simctl`, and Markdown.
+**Tech Stack:** Python 3.11.4+ standard library, pytest 9, existing `hangboard_packages` discovery/CLI, JSON, SHA-256 and PNG IHDR byte inspection, built-in `view_image` and `image_gen`, Hangboard Workbench, Swift/Xcode, `xcrun simctl`, and Markdown.
 
 **Spec:** `docs/superpowers/specs/2026-08-30-hangboard-presentation-remediation-design.md`
 
 ## Global Constraints
 
-- Execute this plan sequentially with `superpowers:subagent-driven-development`. `AGENTS.md` requires a fresh implementation subagent for every task or configuration change, followed by controller spec-compliance and quality reviews before the next task. Do not parallelize any repair because all tasks mutate the same manifest.
-- Use `rtk` for shell commands. Commit and push every completed task and every rejected-candidate provenance checkpoint to the current remote branch.
-- Preserve all 19 records whose Phase 1 decision is `keep`; their package PNG bytes and `board.json` files must remain unchanged. This includes the accepted `lattice.mini-bar/primary` self-baseline and the two evidence-blocked keeps.
-- Implement exactly 17 `edit`, 48 `regenerate`, and one `removeUnsupportedPresentation` record. The 15 exclusive sub-batches below partition those 66 records by immutable `packageID/presentationID` key; a final review may send a defect back to that record's owning batch but may not create a second asset owner.
-- Preserve Phase 1 package identity semantics: `packageIDs` remains a literal unique array whose set is validated against inventory; do not add a sorted-order requirement or silently rewrite its order. Reports may remain deterministically sorted.
-- Preserve Phase 1 comparator semantics across all comparator fields. A ready comparator must remain a ready accepted keep with compatible material and form factor, and its reason must start with `Accepted cohort baseline; style-only: `, end with `.`, and contain a unique comma-separated subset of the literal terms `framing`, `lighting`, `background`, `texture`, `smoothing`, and `edge treatment`. A comparator never supplies product geometry. Preserve Mini Bar primary as an allowed accepted self-baseline.
-- Before each target is generated, freshly reopen every nonempty official and independent URL routed from that record's `evidence` object, repeat any recorded evidence-gap searches, inspect straight-on and oblique evidence, and record the actual Phase 2 review date and result. Local docs, `board.json`, current assets, manifest prose, comparators, and generated outputs are routing or visual-comparison inputs, never product proof.
-- Use only the built-in `image_gen` capability. Never use the imagegen CLI/API fallback, `scripts/image_gen.py`, `OPENAI_API_KEY`, a destination-path argument, or a batch generation command. Issue one built-in call per candidate. For edits, inspect every local edit target and reference with `view_image` before calling `image_gen`; pass the exact local paths through `referenced_image_paths`. For regenerations, pass only the minimum locally saved official/independent evidence images and the declared style comparator, each with an explicit role.
-- The built-in tool schema has no explicit size argument. Put the required existing width, height, and aspect ratio in the prompt and accept only untouched model output whose PNG IHDR exactly matches those values. Do not crop, resize, rotate, pad, register, align, mask, composite, recolor, sharpen, smooth, vectorize, simplify, trace, detect, segment, or otherwise post-process any candidate. A byte-preserving `mv`/`cp` is permitted only to place an untouched output or restore an exact backup.
-- Never ship a source photograph. The accepted asset must be an original simplified, unbranded render with an off-white studio background, orthographic head-on view of the selected working surface, neutral lighting, restrained contact shadow, clean antialiasing, cohort-consistent framing, and the material-specific cues in the binding design. Omit every detail the reopened evidence does not establish.
-- An `edit` uses the current PNG as the built-in edit target and as a topology/likeness invariant; change only the bounded failures identified by that record's findings. A `regenerate` treats the current PNG as human comparison only, not evidence and not an imagegen input; construct only source-proved topology. The removal task performs no generation.
-- Store copied web inputs, exact current-byte backups, candidates, side-by-side review captures, Workbench captures, logs, Derived Data, and simulator screenshots only below an exact `.context/sincere-otter-*` directory. Create an `OWNER-sincere-otter` marker immediately, record every exact returned built-in output path and simulator UUID, and install `EXIT`, `INT`, and `TERM` cleanup traps before creating external resources.
-- Hash each untouched source input and candidate immediately. A rejected candidate's role, hash, dimensions, built-in provenance, disposition, and evidence-specific reason must be added to the manifest, transiently byte-verified, committed, and pushed before its exact bytes are deleted. Durable final validation checks hash format, provenance, disposition, and verification evidence without requiring rejected bytes to remain. An accepted output ends only at its one declared package asset path.
-- Permit at most three prompt-only imagegen attempts per asset. If an attempt changes a proved contact, component, silhouette, material, working-surface orientation, or required canvas, reject it. If no acceptable untouched output exists after three attempts, mark the record and owning batch blocked with the exact reason, commit and push that truth, clean owned resources, and stop later batches; never authorize CLI fallback, post-processing, schema/aspect changes, or approximate likeness.
-- For every changed presentation, manually inspect the current target, source images, chosen comparator (or recorded comparator gap), and each candidate side by side. Then use Workbench to inspect normal, all-active, every individual logical hold and every piece, and hit testing against primary evidence. Directly redraw canonical paths only when they are wrong. Use exact mirroring only when the reopened sources prove physical symmetry; select a shape constraint only by operator judgment for a genuinely regular hold. Never derive geometry from raster pixels.
-- After each sub-batch, run final-inventory package validation, the focused package/manifest tests, and the complete `Tools/HangboardPackages/tests` suite. Record exact commands/results in the manifest and narrative. If a promoted asset or geometry change fails, move its untouched bytes back to the rejected-candidate context path, restore the exact backed-up current bytes, record the rejection, commit the provenance, and continue only after validation is green.
-- Do not add or modify training plans, timer behavior, unrelated metadata, product claims, or app navigation. Do not infer material, color, finish, hardware, dimensions, hold names, hold sizes, usable surfaces, grip guidance, or coaching claims.
+- Execute Tasks 1–62 in order with `superpowers:subagent-driven-development`; `AGENTS.md` requires a fresh implementation subagent and separate controller spec/quality reviews per task. Do not parallelize tasks that share the manifest.
+- Use `rtk` for shell commands. Commit and push every completed task, rejected-input/output provenance checkpoint, batch gate, and final gate.
+- Preserve all 19 Phase 1 `keep` PNGs byte-for-byte. Their `board.json` files also remain byte-for-byte except `Hangboards/lattice-mini-bar/board.json`, which Task 56 must deliberately change to retain and reassign `mini-pinch` while removing only the unsupported end presentation.
+- Implement exactly 17 edits and 48 regenerations. Task 56 performs the sole `removeUnsupportedPresentation`. The exclusive repair matrix assigns all 66 non-keep records exactly once; no later review creates another owner.
+- Preserve literal/set validation of `packageIDs`: require unique identifiers and set equality to inventory without imposing or rewriting sorted order. Reports remain deterministically sorted.
+- Preserve the Phase 1 `comparator` object unchanged as historical classification. Phase 2 uses the separate `phase2Comparator` lifecycle defined below; all reasons remain canonical style-only and never supply geometry.
+- Before each canvas probe and product repair, freshly reopen every literal URL below the routed record's `/evidence/official` and `/evidence/independent` arrays, repeat every non-null evidence-gap search, inspect straight-on and oblique evidence, and record the actual date/result. Local docs, current assets, package geometry, comparators, prompts, and generated output are never product proof.
+- Use only built-in `image_gen`, one call per candidate or canvas attempt. Never use the imagegen CLI/API fallback, `scripts/image_gen.py`, `OPENAI_API_KEY`, a destination-path or size argument, or batch generation.
+- For built-in edits, inspect the local current target and every reference with `view_image`, then pass their exact paths via `referenced_image_paths`. For built-in generations, do not supply the current asset; supply only minimum copied official/independent inputs and a non-null ready style comparator.
+- Required dimensions and aspect ratio appear in the prompt because the built-in tool has no size field. Accept only untouched PNG output whose IHDR already matches exactly. Never crop, resize, rotate, pad, register, align, mask, composite, recolor, sharpen, smooth, trace, vectorize, simplify, detect, segment, or otherwise post-process a package candidate.
+- A byte-preserving move or copy is allowed only to move untouched generated bytes, create an exact rollback copy, or restore exact original bytes after rejection. Accepted generated bytes end only at their declared package path. Source photographs never enter `Hangboards`.
+- Preserve the common off-white studio background, centered orthographic working-surface view, neutral lighting, restrained contact shadows, clean antialiasing, cohort-consistent framing, and source-proved material cues. Omit unsupported facts instead of filling gaps.
+- An `edit` uses the current PNG as target and topology/likeness invariant. A `regenerate` treats current bytes as human comparison only. A repair task leaves `board.json` byte-for-byte when deliberate Workbench review proves its paths correct; when primary evidence proves a mismatch, the same task directly redraws only the named path and records that terminal branch. No raster-derived geometry is allowed.
+- Every changed presentation receives human side-by-side source/current/candidate/comparator review plus Workbench normal, all-active, every logical hold/piece, and hit-test review. Exact mirroring requires primary proof; a shape constraint is selected only by an operator for a genuinely regular hold.
+- Each product task runs package validation and focused tests. Each material/form-factor batch gate runs the complete package test suite. Final validation runs all tests again.
+- Phase 2 action blocking is distinct from historical evidence blocking. Final success requires zero blocked Phase 2 actions while retaining the two historical evidence-blocked keeps and every other Phase 1 evidence-gap value unchanged.
+- No task changes training plans, timer behavior, unrelated metadata, product claims, or navigation. Do not infer materials, colors, finishes, components, dimensions, contacts, usable faces, grip guidance, or coaching claims.
 
-## File structure and phase interfaces
+## Files and responsibilities
 
-- `Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py` owns schema-version-2 parsing, original/promoted/removed byte semantics, candidate provenance, batch ordering, transient candidate verification, partial validation, and final validation.
-- `Tools/HangboardPackages/tests/test_presentation_remediation_audit.py` owns TDD coverage for Phase 2 lifecycle truth, keep preservation, candidate/promoted hashes, batch partition/order, removal, Workbench/validation states, and partial/final operation.
-- `Tools/HangboardPackages/src/hangboard_packages/cli.py`, `Tools/HangboardPackages/tests/test_cli.py`, and `Tools/HangboardPackages/README.md` expose `--phase2-partial`, `--batch-id`, `--candidate-file SHA256 PATH`, and `--phase2-final` while retaining Phase 1 validation compatibility.
-- `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json` remains the only machine-readable audit ledger. Record order and original `currentAsset` facts stay immutable so every record keeps its Phase 1 identity.
-- `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md` records batch status, source conflicts/gaps, candidate decisions, direct geometry changes, validation, cross-catalog review, and simulator results without becoming product proof.
-- `Hangboards/*/assets/*.png` changes only in its exclusive sub-batch below. A package's `board.json` changes only when manual evidence review proves its saved path wrong, except the explicitly sourced Mini Bar removal.
+- `Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py`: schema 2, prompt rendering, canvas coverage, source/candidate byte verification, comparator DAG, partial/final lifecycle, removal truth, and per-presentation simulator truth.
+- `Tools/HangboardPackages/tests/test_presentation_remediation_audit.py`: exact schema/lifecycle/hash/comparator/canvas/removal/simulator tests.
+- `Tools/HangboardPackages/src/hangboard_packages/cli.py`, `Tools/HangboardPackages/tests/test_cli.py`, `Tools/HangboardPackages/README.md`: Phase 2 CLI flags and durable/transient semantics.
+- `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`: sole machine ledger; original record order, decisions, `currentAsset`, evidence, findings, and Phase 1 comparator values remain historical.
+- `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`: batch/source/candidate/geometry/validation narrative.
+- `Hangboards/*`: only the exclusive task owner changes its declared PNG; `board.json` follows the exact Workbench branch above. Task 56 alone removes a presentation asset and reassigns a physical hold.
 
-The Phase 2 manifest root is a closed schema-version-2 object. Retain all Phase 1 root fields and add exactly:
+## Complete Phase 2 schema and interfaces
+
+The root is closed over exactly `schemaVersion`, `phase`, `reviewDate`, `packageIDs`, `records`, `phase1Checks`, and `phase2`. Schema 2 requires `schemaVersion: 2` and `phase: "assetRemediation"`; it preserves the other five Phase 1 root fields literally.
+
+`phase2` is closed over:
 
 ```json
 {
-  "schemaVersion": 2,
-  "phase": "assetRemediation",
-  "phase2": {
-    "batches": [],
-    "finalChecks": {
-      "crossCatalogReview": {"status": "pending", "evidence": null},
-      "manifestValidation": {"status": "pending", "evidence": null},
-      "finalInventory": {"status": "pending", "evidence": null},
-      "packageTestSuite": {"status": "pending", "evidence": null},
-      "buildForTesting": {"status": "pending", "evidence": null},
-      "simulatorReview": {"status": "pending", "evidence": null},
-      "contextCleanup": {"status": "pending", "evidence": null}
-    }
+  "canvasPreflight": {
+    "status": "pending",
+    "blockedReason": null,
+    "classes": []
+  },
+  "batches": [],
+  "finalChecks": {
+    "crossCatalogReview": {"status": "pending", "evidence": null},
+    "manifestValidation": {"status": "pending", "evidence": null},
+    "finalInventory": {"status": "pending", "evidence": null},
+    "packageTestSuite": {"status": "pending", "evidence": null},
+    "buildForTesting": {"status": "pending", "evidence": null},
+    "simulatorReview": {"status": "pending", "evidence": null},
+    "contextCleanup": {"status": "pending", "evidence": null}
   }
 }
 ```
 
-Each batch is closed over `id`, `order`, `kind`, `recordKeys`, `status`, `blockedReason`, and `checks`. `recordKeys` uses exact `packageID/presentationID` strings and partitions every non-keep record once; keep records appear in no batch. `status` is `pending`, `inProgress`, `passed`, or `blocked`; statuses must form a sequential prefix, and `passed` requires every owned record terminal plus passed `packageValidation`, `focusedTests`, and `fullPackageSuite` checks. Each non-keep record adds `repairBatchID` and a closed `phase2EvidenceReview` object with actual `reviewedAt`, literal reopened URL arrays, repeated evidence-gap searches, `result` (`pending`, `confirmed`, or `blocked`), and notes. Keep records use null `repairBatchID` and a `notRequired` Phase 2 evidence result.
+All check objects are closed over `status` and `evidence`. `status` is `pending`, `passed`, `failed`, `blocked`, or `notRequired`. Only `pending` uses null evidence. `notRequired` requires a nonempty factual reason.
 
-Replace the Phase 1 string arrays under `generation` with these exact structured concepts: `mode` (`none`, `builtInGenerate`, or `builtInEdit`), exact committed `prompt`, `requiredCanvas`, `sourceImages` entries containing `sourceType`, `reference`, `sha256`, `role`, and `suppliedToImagegen`, the exact `currentAssetRole`, and `candidates`. A candidate contains `attempt`, lowercase `sha256`, positive PNG dimensions, `disposition` (`accepted` or `rejected`), concrete `reason`, and provenance fixed to built-in imagegen, untouched model output, and no post-processing, plus a passed transient byte-hash check with actual date and command. There is exactly one accepted candidate for a completed edit/regeneration, and its hash/dimensions equal the on-disk final asset and `final` state.
+Each batch is closed over `id`, `order`, `kind`, `recordKeys`, `status`, `blockedReason`, and `checks`. `kind` is `repair` or `removal`; `status` is `pending`, `inProgress`, `passed`, or `blocked`; `checks` contains exactly `packageValidation`, `focusedTests`, and `fullPackageSuite`. Statuses form a prefix: passed batches, at most one in-progress/blocked batch, then pending batches. A passed batch owns only completed actions and three passed checks.
 
-Add `hitTest` to `final.workbenchReview`. Check status is `pending`, `passed`, `failed`, or `notRequired`, with null evidence only for `pending`; `notRequired` requires a concrete reason. Completed changed presentations require passed normal, all-active, individual-hold, hit-test, package-validation, focused-test, and full-suite checks. Build/simulator checks remain pending until final QA. Removed presentations use `removedUnsupportedPresentation`, null accepted hash/dimensions, no generation candidates, absent package presentation/hold/asset inventory, and truthful `notRequired` visual states.
+Every record adds these closed fields:
 
-The public Phase 2 interfaces are:
+```json
+{
+  "repairBatchID": null,
+  "phase2Action": {
+    "state": "notRequired",
+    "blockedReason": null
+  },
+  "phase2EvidenceReview": {
+    "result": "notRequired",
+    "reviewedAt": null,
+    "officialURLsReopened": [],
+    "independentURLsReopened": [],
+    "evidenceGapSearchesRepeated": [],
+    "notes": "Phase 1 keep; Phase 2 product repair does not apply."
+  },
+  "phase2Comparator": {
+    "generationTime": null,
+    "final": null
+  }
+}
+```
+
+`phase2Action.state` is `notRequired`, `pending`, `inProgress`, `completed`, or `blocked`. Only blocked has a non-null reason. Keeps require `notRequired`; non-keeps never use it. For `phase2EvidenceReview`, not-required keeps have null time, empty URL/search arrays, and the exact note `Phase 1 keep; Phase 2 product repair does not apply.`; pending actions have null time, empty arrays, and `Phase 2 evidence review pending.`; confirmed/blocked reviews have an aware timestamp and nonempty factual notes. Completed Phase 2 actions require `confirmed`; an evidence failure requires both result/action `blocked` and the same nonempty reason in notes. Confirmed `officialURLsReopened` and `independentURLsReopened` preserve literal URL order and exactly equal their corresponding historical evidence URL arrays. `evidenceGapSearchesRepeated` has one result string per non-null Phase 1 gap leaf and is empty when both gap leaves are null. Gap searches are added Phase 2 audit text without changing any Phase 1 gap field.
+
+Keeps and the removal record require both `phase2Comparator` leaves null. For edit/regenerate records, `phase2Comparator.generationTime` is null until work starts, then closed over `mode`, `assetPath`, `sourceRecordKey`, `acceptedAssetSHA256`, `reason`, `gap`, and `selectedAt`. Mode is `readyBaseline` or `temporaryGap`. Ready mode requires non-null asset/key/hash/canonical reason and null gap. Gap mode requires those four ready fields null and a nonempty gap copied from or refining the historical gap. A null/gap comparator is never opened or supplied to imagegen.
+
+For edit/regenerate records, `phase2Comparator.final` is null until completion, then uses the same fields with mode `readyBaseline` or `uniqueSelfBaseline`; final never permits a gap. A ready Phase 1 keep has batch order 0. A repaired baseline must be completed in a strictly earlier batch/task, match at least one material and the exact form factor, have a passed visual review, and make the graph acyclic. `uniqueSelfBaseline` requires asset/key/hash to name the same accepted record, a canonical style-only reason, and validator proof that no compatible ready Phase 1 keep or earlier repair exists. Later repairs update their Phase 2 comparator to this accepted baseline where compatible. Comparator hashes must equal accepted on-disk bytes.
+
+The schema uses these exact scalar aliases; every object below is closed and rejects extra keys:
+
+```python
+SHA256 = str              # regex: ^[0-9a-f]{64}$
+ISOInstant = str          # aware datetime.fromisoformat succeeds, has UTC offset, and round-trips
+NonEmpty = str            # value.strip() is nonempty
+RecordKey = str           # exact "packageID/presentationID"
+CheckStatus = Literal["pending", "passed", "failed", "blocked", "notRequired"]
+ActionState = Literal["notRequired", "pending", "inProgress", "completed", "blocked"]
+EvidenceResult = Literal["notRequired", "pending", "confirmed", "blocked"]
+InputType = Literal["officialEvidence", "independentEvidence", "currentAsset", "comparator"]
+ByteStatus = Literal["pending", "passed", "failed"]
+GenerationMode = Literal["none", "builtInEdit", "builtInGenerate"]
+CandidateDisposition = Literal["accepted", "rejected"]
+ComparatorMode = Literal["readyBaseline", "temporaryGap", "uniqueSelfBaseline"]
+SimulatorState = Literal[
+    "pending", "passedDirectInspection", "notApplicableRemovedPresentation", "blocked"
+]
+FlowState = Literal[
+    "passed", "notApplicableSinglePresentation", "notApplicableNoCompatiblePlan", "blocked"
+]
+```
+
+The nested generation types are exactly:
+
+```python
+class ByteVerification(TypedDict):
+    status: ByteStatus
+    checkedAt: ISOInstant | None
+    command: NonEmpty | None
+    observedSHA256: SHA256 | None
+
+class GenerationSourceInput(TypedDict):
+    id: NonEmpty
+    sourceType: InputType
+    evidencePointer: str | None
+    sourceURL: str | None
+    assetPath: str | None
+    role: NonEmpty
+    sha256: SHA256
+    suppliedToImagegen: bool
+    byteVerification: ByteVerification
+
+class RequiredCanvas(TypedDict):
+    widthPixels: int
+    heightPixels: int
+
+class CandidateProvenance(TypedDict):
+    tool: Literal["builtInImageGen"]
+    untouchedModelOutput: Literal[True]
+    postProcessing: Literal["none"]
+
+class GenerationCandidate(TypedDict):
+    attempt: Literal[1, 2, 3]
+    sha256: SHA256
+    widthPixels: int
+    heightPixels: int
+    disposition: CandidateDisposition
+    reason: NonEmpty
+    provenance: CandidateProvenance
+    byteVerification: ByteVerification
+
+class Generation(TypedDict):
+    mode: GenerationMode
+    prompt: str | None
+    requiredCanvas: RequiredCanvas | None
+    sourceInputs: list[GenerationSourceInput]
+    currentAssetRole: str | None
+    candidates: list[GenerationCandidate]
+```
+
+The remaining record/root additions are exactly:
+
+```python
+class ReviewCheck(TypedDict):
+    status: CheckStatus
+    evidence: NonEmpty | None
+
+class Phase2Action(TypedDict):
+    state: ActionState
+    blockedReason: NonEmpty | None
+
+class Phase2EvidenceReview(TypedDict):
+    result: EvidenceResult
+    reviewedAt: ISOInstant | None
+    officialURLsReopened: list[str]
+    independentURLsReopened: list[str]
+    evidenceGapSearchesRepeated: list[NonEmpty]
+    notes: NonEmpty
+
+class ComparatorSelection(TypedDict):
+    mode: ComparatorMode
+    assetPath: str | None
+    sourceRecordKey: RecordKey | None
+    acceptedAssetSHA256: SHA256 | None
+    reason: NonEmpty | None
+    gap: NonEmpty | None
+    selectedAt: ISOInstant
+
+class Phase2Comparator(TypedDict):
+    generationTime: ComparatorSelection | None
+    final: ComparatorSelection | None
+
+class CanvasAttempt(TypedDict):
+    attempt: Literal[1, 2, 3]
+    sha256: SHA256
+    widthPixels: int
+    heightPixels: int
+    disposition: Literal["canvasPass", "canvasFail"]
+    reason: NonEmpty
+    provenance: CandidateProvenance
+    byteVerification: ByteVerification
+
+class CanvasBehaviorProbe(TypedDict):
+    behavior: Literal["edit", "generate"]
+    representativeRecordKey: RecordKey
+    prompt: NonEmpty
+    sourceInputs: list[GenerationSourceInput]
+    attempts: list[CanvasAttempt]
+    status: Literal["pending", "passed", "blocked"]
+    blockedReason: NonEmpty | None
+
+class CanvasClass(TypedDict):
+    widthPixels: int
+    heightPixels: int
+    coveredRecordKeys: list[RecordKey]
+    status: Literal["pending", "passed", "blocked"]
+    blockedReason: NonEmpty | None
+    behaviorProbes: list[CanvasBehaviorProbe]
+
+class CanvasPreflight(TypedDict):
+    status: Literal["pending", "passed", "blocked"]
+    blockedReason: NonEmpty | None
+    classes: list[CanvasClass]
+
+class BatchChecks(TypedDict):
+    packageValidation: ReviewCheck
+    focusedTests: ReviewCheck
+    fullPackageSuite: ReviewCheck
+
+class RemediationBatch(TypedDict):
+    id: Literal["nonwood-fixed", "wood-fixed", "portable", "multi-orientation", "mini-bar-removal"]
+    order: Literal[1, 2, 3, 4, 5]
+    kind: Literal["repair", "removal"]
+    recordKeys: list[RecordKey]
+    status: Literal["pending", "inProgress", "passed", "blocked"]
+    blockedReason: NonEmpty | None
+    checks: BatchChecks
+
+class Phase2FinalChecks(TypedDict):
+    crossCatalogReview: ReviewCheck
+    manifestValidation: ReviewCheck
+    finalInventory: ReviewCheck
+    packageTestSuite: ReviewCheck
+    buildForTesting: ReviewCheck
+    simulatorReview: ReviewCheck
+    contextCleanup: ReviewCheck
+
+class Phase2Root(TypedDict):
+    canvasPreflight: CanvasPreflight
+    batches: list[RemediationBatch]
+    finalChecks: Phase2FinalChecks
+```
+
+The five batches occur once in the literal enum order. Their `recordKeys` are exactly the exclusive matrix rows owned by Tasks 10–25, 27–36, 38–46, 48–54, and Task 56 respectively; the removal batch has only `lattice.mini-bar/end`. A repair row's `repairBatchID` equals its batch ID, the removal row equals `mini-bar-removal`, and every keep uses null. No record may appear in two batch lists.
+
+Evidence inputs require their exact `/records/N/evidence/official/I` or `/records/N/evidence/independent/I` pointer, the byte-for-byte URL at that leaf, null `assetPath`, and a `role` equal to that leaf's `imageRole`. Current/comparator inputs require null pointer/URL and their declared package path. A `current-target` hash equals historical `currentAsset.sha256`; a `style-comparator` hash equals the generation-time comparator hash. Both must match bytes when transient verification runs, but durable validation uses that committed verification because the target or upstream baseline may later change. Input IDs are unique within a record and equal `official-I-image-J`, `independent-I-image-J`, `current-target`, or `style-comparator`, with zero-based evidence/image ordinals in source-page order. A supplied evidence input must have been copied from the corresponding freshly reopened URL. Edit requires one supplied `current-target`; regenerate prohibits it. Generation requires one supplied ready comparator except while the record has a generation-time temporary gap, in which case no comparator input exists. The exact current roles are `Built-in edit target and topology/likeness invariant.` and `Human comparison only; not evidence and not supplied to imagegen.`
+
+Pending byte verification has all three remaining values null. Passed/failed verification has a date, the literal command executed, and the observed hash; passed additionally requires observed/declared equality. Before deletion, every copied input and candidate requires passed verification. Durable validation checks the record, URL/role/hash linkage, and passed command/result; it never requires deleted transient bytes to exist.
+
+`mode: none` requires null prompt/canvas/current role and empty inputs/candidates. The two image modes require positive canvas dimensions equal to original `currentAsset`, a non-null canonical prompt, the applicable exact current role, and the source rules above. Candidate attempts are unique, strictly increasing, and bounded 1–3. Every candidate requires built-in/untouched/none provenance and passed transient verification before deletion or promotion. Completed edits/regenerations have exactly one accepted candidate; its hash/dimensions equal final/on-disk bytes. Rejected bytes may be absent only after their passed verification/provenance was committed and pushed.
+
+Canvas preflight classes are closed over `widthPixels`, `heightPixels`, `coveredRecordKeys`, `status`, `blockedReason`, and `behaviorProbes`. Each behavior probe is closed over `behavior` (`edit` or `generate`), `representativeRecordKey`, exact `prompt`, `sourceInputs`, `attempts`, `status`, and `blockedReason`. Attempts use candidate hash/dimensions/provenance/byteVerification, with disposition `canvasPass` or `canvasFail`; no preflight output is accepted or promoted. A behavior passes after one exact-dimension untouched output within three prompt-only attempts. A class passes when all behaviors used by its 65 covered targets pass. Root preflight passes only when 20 unique classes cover the exact 65 edit/regenerate keys once and all 22 behavior probes pass.
+
+`final` is closed over `acceptedAssetSHA256`, `finalDimensions`, `visualReviewerDecision`, `workbenchReview`, and `validation`. `acceptedAssetSHA256` and `finalDimensions` are null for keep/pending/removal and are the accepted on-disk values for a completed image repair. `finalDimensions` is the exact `RequiredCanvas` shape. `visualReviewerDecision` is exactly `acceptedCurrentAsset`, `blockedEvidence`, `pendingPhase2`, `acceptedPhase2`, `blockedPhase2`, or `removedUnsupportedPresentation`. The first two preserve the 19 historical keep values; completed image repairs use `acceptedPhase2`; an action block uses `blockedPhase2`; and Task 56 uses `removedUnsupportedPresentation`. `workbenchReview` contains exactly `normal`, `allActive`, `individualHolds`, and `hitTest`, each an exact check object. Completed image repairs require all four passed. Removal uses four passed checks after reauthoring `mini-pinch`; it is not visually `notRequired`.
+
+`final.validation` is closed over `packageValidation`, `focusedTests`, `fullPackageSuite`, `buildForTesting`, and `simulatorReview`. The first four are exact check objects. `simulatorReview` uses these exact nested types:
+
+```python
+class SimulatorFlows(TypedDict):
+    catalog: FlowState
+    plan: FlowState
+    normal: FlowState
+    active: FlowState
+    individualHold: FlowState
+    presentationSelector: FlowState
+    hitTest: FlowState
+
+class SimulatorDeviceRun(TypedDict):
+    deviceClass: Literal["phone", "tablet"]
+    simulatorUUID: NonEmpty
+    captureSHA256s: list[SHA256]
+    flows: SimulatorFlows
+
+class SimulatorReview(TypedDict):
+    state: SimulatorState
+    reviewedAt: ISOInstant | None
+    environmentEvidenceIDs: list[NonEmpty]
+    deviceRuns: list[SimulatorDeviceRun]
+```
+
+Only pending simulator review has null date and empty evidence/runs. Direct inspection has a date, nonempty environment IDs, exactly one phone and one tablet run, unique UUIDs, and nonempty capture hashes. Only selector may use `notApplicableSinglePresentation`; only plan may use `notApplicableNoCompatiblePlan`; all other applicable flows pass. Blocked has a date and evidence that agrees with the Phase 2 action's block reason. Removal uses `notApplicableRemovedPresentation`, a date and sourced removal evidence, and no device runs. Shared environment evidence does not replace per-record runs.
+
+The public interfaces are exact:
 
 ```python
 class PresentationValidationMode(str, Enum):
     SOURCE_RECLASSIFICATION = "sourceReclassification"
+    PHASE2_PREFLIGHT = "phase2Preflight"
     PHASE2_PARTIAL = "phase2Partial"
     PHASE2_FINAL = "phase2Final"
+
+
+def render_phase2_generation_prompt(
+    record: PresentationRemediationRecord,
+) -> str:
+    """Return the canonical prompt assembled from the record's literal Phase 2 fields."""
+
+
+def verify_transient_source_files(
+    manifest: PresentationRemediationManifest,
+    source_files: Mapping[str, Path],
+) -> tuple[str, ...]:
+    """Verify supplied source-input SHA keys against temporary bytes."""
 
 
 def verify_transient_candidate_files(
     manifest: PresentationRemediationManifest,
     candidate_files: Mapping[str, Path],
 ) -> tuple[str, ...]:
-    """Verify each supplied SHA-256 key against untouched PNG bytes and declared dimensions."""
+    """Verify supplied candidate SHA keys against temporary PNG bytes and IHDR."""
 
 
 def validate_presentation_remediation_manifest(
@@ -91,38 +341,143 @@ def validate_presentation_remediation_manifest(
     final_validation: bool = False,
     validation_mode: PresentationValidationMode = PresentationValidationMode.SOURCE_RECLASSIFICATION,
     selected_batch_id: str | None = None,
+    transient_source_files: Mapping[str, Path] | None = None,
     transient_candidate_files: Mapping[str, Path] | None = None,
 ) -> PresentationRemediationReport:
-    """Validate Phase 1 compatibility or Phase 2 partial/final catalog truth."""
+    """Validate historical, preflight, partial, or final catalog truth."""
 ```
 
-The report retains Phase 1 fields and adds `phase`, `batchID`, `batchStatus`, `originalPresentationCount`, `inventoryPresentationCount`, `keptPresentationCount`, `completedRepairCount`, `pendingRepairCount`, and `removedPresentationCount`. Final success is exactly 61 packages, 85 historical records, 19 keeps, 65 completed image repairs, one completed removal, zero pending repairs, and 84 current inventory presentations.
+CLI keeps `--final-validation` for Phase 1 and adds mutually exclusive `--phase2-preflight`, `--phase2-partial`, and `--phase2-final`; `--batch-id` is partial-only; repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH` are preflight/partial-only. The report adds `phase`, `batchID`, `canvasClassCount`, `canvasCoveredRepairCount`, `historicalEvidenceBlockedKeeps`, `blockedPhase2ActionCount`, `originalPresentationCount`, `inventoryPresentationCount`, `keptPresentationCount`, `completedEditCount`, `completedRegenerationCount`, `completedRemovalCount`, and `pendingPhase2ActionCount`.
 
-Use these exact ordered `phase2.batches` identities and record keys. This is the machine-validated execution partition; each table in Tasks 2–16 supplies the one exact package asset path for each key.
+Partial mode validates every record and current byte state: keep/pending/in-progress actions remain at original bytes; completed repairs match accepted bytes; completed removal matches historical-record/absent-presentation truth. It accepts historical evidence gaps without reclassifying them as Phase 2 blocks. Final mode requires passed preflight, all batches/final checks passed, 61 packages, 85 historical records, 84 current presentations, 19 unchanged keeps including two historical evidence-blocked keeps, 17 completed edits, 48 completed regenerations, one completed removal, zero pending Phase 2 actions, and zero blocked Phase 2 actions.
 
-| Order | Batch ID | Kind | Exact `recordKeys` |
-| ---: | --- | --- | --- |
-| 1 | `capability-pilot-forge` | `pilot` | `trango.rock-prodigy-forge/primary` |
-| 2 | `nonwood-fixed-resin` | `repair` | `escape-beta-22/primary`, `evolv-kilter-basic-long/primary`, `metolius.contact/primary`, `metolius.foundry/front`, `metolius.project/primary`, `metolius.simulator-3d/primary` |
-| 3 | `nonwood-fixed-urethane` | `repair` | `soill.iron-palm-2/primary`, `soill.split-palm/primary`, `soill.training-tiles/primary`, `trango.rock-prodigy-training-center/primary` |
-| 4 | `mixed-fixed-assemblies` | `repair` | `escape.unlimited/primary`, `frictitious.doormount-pro-7/primary`, `mammut.diamond-finger/primary`, `nature.stoak-board-iii/primary`, `zlagboard.evo/primary`, `zlagboard.pro/primary` |
-| 5 | `wood-fixed-classic` | `repair` | `beastmaker-1000/primary`, `metolius.climbers-edge/primary`, `metolius.wood-grips-compact-ii/primary`, `moon.armstrong/primary`, `tension.grindstone-original/primary`, `tension.grindstone-pro/primary`, `trango.rock-prodigy-natural/primary` |
-| 6 | `wood-fixed-verticalboard` | `repair` | `yy.verticalboard-evo/primary`, `yy.verticalboard-first/primary`, `yy.verticalboard-light/primary`, `yy.verticalboard-one/primary` |
-| 7 | `portable-captain-fingerfood` | `repair` | `captain-fingerfood.dual/primary`, `captain-fingerfood.dual/reverse`, `captain-fingerfood.pocket/primary`, `captain-fingerfood.unlevel/primary`, `captain-fingerfood.unlevel/reverse` |
-| 8 | `portable-reversible-edges` | `repair` | `crimptonite.helium-mobile/primary`, `crimptonite.helium-mobile/reverse`, `frictitious.nug/primary`, `frictitious.nug/reverse`, `metolius.light-rail-2/20mm-side`, `metolius.light-rail-2/15mm-side` |
-| 9 | `portable-lifting-suspended` | `repair` | `lattice.mxedge-lift-large/primary`, `lattice.mxedge-lift-small/primary`, `metolius.rock-rings-3d/front-pair`, `plateau.lifting-edge/primary` |
-| 10 | `multi-port-a-board-flash` | `repair` | `frictitious.port-a-board/primary`, `frictitious.port-a-board/back`, `frictitious.port-a-board/side`, `tension.flash-board/three-edge-upright`, `tension.flash-board/three-edge-inverted`, `tension.flash-board/two-edge-upright`, `tension.flash-board/two-edge-inverted` |
-| 11 | `multi-poker` | `repair` | `owl-climb.poker/face-a`, `owl-climb.poker/face-b`, `owl-climb.poker/face-c`, `owl-climb.poker/face-d` |
-| 12 | `multi-rock-prodigy-pivot` | `repair` | `trango.rock-prodigy-pivot/orientation-1`, `trango.rock-prodigy-pivot/orientation-2`, `trango.rock-prodigy-pivot/orientation-3`, `trango.rock-prodigy-pivot/orientation-4` |
-| 13 | `multi-baguette-evo` | `repair` | `yy.baguette-evo/paired-25-20-15-10`, `yy.baguette-evo/paired-12-8-6`, `yy.baguette-evo/central-30-25`, `yy.baguette-evo/central-20-6` |
-| 14 | `multi-yy-penta-travel` | `repair` | `yy.penta-evo/front-pair`, `yy.travelboard/front-25-15`, `yy.travelboard/reverse-10` |
-| 15 | `lattice-mini-bar-removal` | `removal` | `lattice.mini-bar/end` |
+## Canonical prompt transformation
 
-Every `/records/N/evidence` entry in a repair table is an exact JSON-pointer route into the committed manifest. It means: reopen every literal `official[*].url` and `independent[*].url` below that object, preserve each entry's `publisher`, `sourceKind`, `revisionApplicability`, `imageRole`, and `supportedClaim`, and repeat each non-null evidence-gap search. Likewise, material/render prompts resolve the named record's exact `/materials`, `/formFactor`, `/physicalRevision`, `/workingSurface`, `/findings`, `/currentAsset`, and `/comparator` fields; executors commit the fully expanded prompt and source roles, never pointer text, before calling imagegen.
+`render_phase2_generation_prompt` joins arrays in stored order and must return these labeled lines with literal values, not JSON pointers:
+
+```text
+Use case: precise-object-edit OR product-mockup, selected from generation.mode
+Asset type: Hang Ten package presentation PNG at the record's assetPath
+Primary request: edit OR regenerate the exact productName, physicalRevision, and workingSurface
+Input images: one semicolon-separated item per supplied sourceInputs entry: id, sourceType, role, sourceURL or assetPath
+Scene/backdrop: common off-white studio background; no wall or mounting scenery
+Subject: exact supportedClaim text from every reopened evidence entry, in manifest order
+Style/medium: original simplified unbranded catalog product render, not a photograph
+Composition/framing: orthographic head-on to workingSurface; centered; complete uncropped product; untouched output canvas exactly widthPixels by heightPixels
+Lighting/mood: neutral direction; restrained contact shadow; controlled depth relief
+Materials/textures: materials joined with " + "; preserve only evidence-supported finish and construction cues
+Repair findings: finding-key and explanation for every nonconforming or uncertain finding, in the fixed seven-key order
+Comparator: literal generation-time ready asset/hash/canonical reason, or literal temporary gap followed by "No comparator image is supplied."
+Current asset role: exact currentAssetRole
+Constraints: preserve every source-proved contact, component, silhouette, and usable-surface orientation; add no unsupported detail; output must already have exact dimensions
+Avoid: branding, labels, logos, text, watermark, transparent background, camera tilt, source-photo styling, invented contacts, invented hardware, and every forbidden post-processing operation
+```
+
+Edits use `precise-object-edit`; regenerations use `product-mockup`. The validator reconstructs this string and rejects any manifest prompt mismatch.
+
+## Exact ownership, transient verification, and cleanup recipe
+
+Every preflight and product task runs this recipe with its task's literal context directory. Variables use task-specific names and never reuse `HOME`, `home`, or `CODEX_HOME`.
+
+```zsh
+set -euo pipefail
+phase2_workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"
+test "${phase2_workspace_path:t}" = "sincere-otter"
+test -n "$phase2_context_path"
+case "$phase2_context_path" in "$phase2_workspace_path"/.context/sincere-otter-*) ;; *) exit 64 ;; esac
+phase2_ledger_path="$phase2_context_path/owned-resources.tsv"
+mkdir -p "$phase2_context_path/inputs" "$phase2_context_path/candidates" "$phase2_context_path/review"
+```
+
+Before this block, each task sets `phase2_context_path` to the literal absolute directory stated in that task's Interfaces line; no synthesized slug is permitted. Immediately create `OWNER-sincere-otter` and `owned-resources.tsv` with `apply_patch`. `OWNER-sincere-otter` contains exactly `sincere-otter`, the ledger header is exactly `kind<TAB>absolute_path<TAB>sha256`, and every subsequent row is added with `apply_patch`, never shell redirection.
+
+Install these traps before browsing, generation, Workbench launch, or simulator creation:
+
+```zsh
+phase2_cleanup_owned() {
+  phase2_original_status=$?
+  trap - EXIT INT TERM
+  phase2_cleanup_status=0
+  while IFS=$'\t' read -r phase2_kind phase2_owned_path phase2_owned_hash; do
+    [[ "$phase2_kind" == "kind" ]] && continue
+    case "$phase2_owned_path" in
+      "$phase2_context_path"/*|/Users/asherlc/.codex/generated_images/*) ;;
+      *) print -u2 "refusing unowned cleanup path: $phase2_owned_path"; phase2_cleanup_status=1; continue ;;
+    esac
+    if [[ -e "$phase2_owned_path" ]]; then
+      rm -f -- "$phase2_owned_path" || phase2_cleanup_status=1
+    fi
+    [[ ! -e "$phase2_owned_path" ]] || phase2_cleanup_status=1
+  done < "$phase2_ledger_path"
+  if (( phase2_cleanup_status == 0 )); then
+    rm -rf -- "$phase2_context_path" || phase2_cleanup_status=1
+    [[ ! -e "$phase2_context_path" ]] || phase2_cleanup_status=1
+  else
+    print -u2 "cleanup failed; retaining ownership ledger at $phase2_ledger_path"
+  fi
+  if (( phase2_original_status != 0 )); then exit "$phase2_original_status"; fi
+  exit "$phase2_cleanup_status"
+}
+trap phase2_cleanup_owned EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+```
+
+For each copied web input, use a deterministic filename `inputs/record-N-official-I-image-J.ext` or `inputs/record-N-independent-I-image-J.ext`, preserve original bytes, run `rtk shasum -a 256` on the exact file, add its exact ledger row and `GenerationSourceInput`, then run:
+
+```bash
+phase2_source_input_sha256="$(rtk shasum -a 256 "$phase2_source_input_path" | rtk awk '{print $1}')"
+rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-partial --source-file "$phase2_source_input_sha256" "$phase2_source_input_path"
+```
+
+The command is executed with the literal computed hash/path, and its actual date/command/result is committed in `byteVerification` before deletion.
+
+After each built-in call, take the exact absolute path returned by the tool as `phase2_generated_path`. Before moving it, require its path to match `/Users/asherlc/.codex/generated_images/*`, run `rtk shasum -a 256 "$phase2_generated_path"`, append its exact path/hash to the ledger with `apply_patch`, and inspect PNG IHDR through the validator. Move it byte-for-byte to the deterministic context candidate filename assigned to `phase2_candidate_path`, rehash into `phase2_candidate_sha256`, and require equality with the pre-move hash. Add the candidate record, then execute:
+
+```bash
+rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-partial --candidate-file "$phase2_candidate_sha256" "$phase2_candidate_path"
+```
+
+No rejected candidate or input is deleted until source/candidate roles, URLs, hashes, dispositions, reasons, and passed transient commands are committed and pushed.
+
+For acceptance, first byte-copy the original package PNG into the owned context and ledger. Move the accepted context candidate to the declared package path without modification and rehash it. If package/Workbench validation fails, move those candidate bytes back to their exact context path, restore the original copy byte-for-byte, record rejection, commit/push provenance, and only then clean. The trap never lists or deletes an accepted package path. Cleanup success is proved by absence of every ledger path and the exact context directory; cleanup failure retains the ledger and makes the task fail.
+
+## Exact 20-class canvas preflight
+
+The 65 edit/regenerate records span these 20 canvas classes. The two mixed-mode classes require separate edit and generation probes, for 22 behavior probes total. `coveredRecordKeys` is exactly the following list per class and partitions all 65 repair keys once.
+
+| Class | Count | Required behavior representative(s) | Exact covered record keys |
+| --- | ---: | --- | --- |
+| 1000×1000 | 2 | edit `lattice.mxedge-lift-large/primary` | `lattice.mxedge-lift-large/primary`, `lattice.mxedge-lift-small/primary` |
+| 1000×259 | 1 | edit `beastmaker-1000/primary` | `beastmaker-1000/primary` |
+| 1233×435 | 1 | generate `trango.rock-prodigy-training-center/primary` | `trango.rock-prodigy-training-center/primary` |
+| 1254×1254 | 1 | generate `soill.split-palm/primary` | `soill.split-palm/primary` |
+| 1440×1440 | 3 | edit `frictitious.port-a-board/primary` | `frictitious.port-a-board/primary`, `frictitious.port-a-board/back`, `frictitious.port-a-board/side` |
+| 1503×394 | 1 | edit `escape-beta-22/primary` | `escape-beta-22/primary` |
+| 1536×1024 | 20 | edit `crimptonite.helium-mobile/primary`; generate `captain-fingerfood.dual/primary` | `captain-fingerfood.dual/primary`, `captain-fingerfood.dual/reverse`, `captain-fingerfood.pocket/primary`, `captain-fingerfood.unlevel/primary`, `captain-fingerfood.unlevel/reverse`, `crimptonite.helium-mobile/primary`, `crimptonite.helium-mobile/reverse`, `frictitious.nug/primary`, `metolius.light-rail-2/20mm-side`, `metolius.rock-rings-3d/front-pair`, `plateau.lifting-edge/primary`, `soill.iron-palm-2/primary`, `soill.training-tiles/primary`, `tension.flash-board/three-edge-upright`, `tension.flash-board/three-edge-inverted`, `trango.rock-prodigy-forge/primary`, `trango.rock-prodigy-natural/primary`, `yy.baguette-evo/central-30-25`, `yy.penta-evo/front-pair`, `yy.travelboard/front-25-15` |
+| 1537×1023 | 2 | edit `evolv-kilter-basic-long/primary`; generate `tension.grindstone-original/primary` | `evolv-kilter-basic-long/primary`, `tension.grindstone-original/primary` |
+| 1614×975 | 1 | generate `metolius.simulator-3d/primary` | `metolius.simulator-3d/primary` |
+| 1654×951 | 1 | edit `tension.grindstone-pro/primary` | `tension.grindstone-pro/primary` |
+| 1672×941 | 1 | edit `metolius.light-rail-2/15mm-side` | `metolius.light-rail-2/15mm-side` |
+| 1697×1200 | 1 | edit `moon.armstrong/primary` | `moon.armstrong/primary` |
+| 1717×916 | 1 | generate `metolius.climbers-edge/primary` | `metolius.climbers-edge/primary` |
+| 1774×457 | 1 | generate `metolius.wood-grips-compact-ii/primary` | `metolius.wood-grips-compact-ii/primary` |
+| 1774×887 | 20 | generate `escape.unlimited/primary` | `escape.unlimited/primary`, `frictitious.doormount-pro-7/primary`, `metolius.contact/primary`, `metolius.foundry/front`, `metolius.project/primary`, `nature.stoak-board-iii/primary`, `tension.flash-board/two-edge-upright`, `tension.flash-board/two-edge-inverted`, `trango.rock-prodigy-pivot/orientation-1`, `trango.rock-prodigy-pivot/orientation-2`, `trango.rock-prodigy-pivot/orientation-3`, `trango.rock-prodigy-pivot/orientation-4`, `yy.baguette-evo/paired-25-20-15-10`, `yy.baguette-evo/paired-12-8-6`, `yy.baguette-evo/central-20-6`, `yy.travelboard/reverse-10`, `yy.verticalboard-evo/primary`, `yy.verticalboard-first/primary`, `yy.verticalboard-light/primary`, `yy.verticalboard-one/primary` |
+| 1842×854 | 1 | generate `frictitious.nug/reverse` | `frictitious.nug/reverse` |
+| 1980×300 | 4 | edit `owl-climb.poker/face-a` | `owl-climb.poker/face-a`, `owl-climb.poker/face-b`, `owl-climb.poker/face-c`, `owl-climb.poker/face-d` |
+| 1980×495 | 1 | generate `mammut.diamond-finger/primary` | `mammut.diamond-finger/primary` |
+| 2081×755 | 1 | generate `zlagboard.evo/primary` | `zlagboard.evo/primary` |
+| 2112×745 | 1 | generate `zlagboard.pro/primary` | `zlagboard.pro/primary` |
+
+Each probe freshly reopens the representative record's evidence, hashes/verifies copied inputs, uses the canonical prompt with the exact required canvas, and makes at most three prompt-only built-in calls. Edit probes supply the actual current target; generation probes do not. A dimension-pass output is still a preflight artifact: record/commit/push its untouched hash and passed byte verification, then delete it. No preflight output is promoted or reused as a product candidate.
 
 ---
 
-### Task 1: Extend the manifest validator for Phase 2 lifecycle truth
+### Task 1: Implement the complete Phase 2 validator, prompt renderer, and CLI
 
 **Files:**
 - Modify: `Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py`
@@ -134,38 +489,182 @@ Every `/records/N/evidence` entry in a repair table is an exact JSON-pointer rou
 - Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
 
 **Interfaces:**
-- Consumes: the existing Phase 1 dataclasses and validator, immutable `currentAsset` facts, literal/set-validated package identities, canonical style-only comparator rule, ready accepted self-baselines, `BoardInventory`, PNG IHDR bytes, and the exact 15-batch key partition declared in this plan.
-- Produces: `PresentationValidationMode`, structured Phase 2 records/batches, `verify_transient_candidate_files(...)`, the extended `validate_presentation_remediation_manifest(...)` signature above, and CLI modes `--phase2-partial [--batch-id ID] [--candidate-file SHA256 PATH ...]` and `--phase2-final`.
-- Does not consume or produce visual truth: tests may create tiny PNG fixtures and inspect bytes/IHDR only. Do not add Pillow-based image comparison, pixel sampling, similarity, detection, masks, contours, or any other image-analysis helper.
+- Consumes: the complete schema, enums, prompt transformation, 20-class coverage, comparator DAG, resource verification, partial/final rules, and public signatures above.
+- Produces: schema 2 parser/domain, prompt equality validation, source/candidate transient verifiers, preflight/partial/final validator, exact CLI flags, initial pending Phase 2 manifest, and no `Hangboards` changes.
 
-- [ ] **Step 1: Write failing schema and lifecycle tests before production code.**
+- [ ] **Step 1: Add exact table-driven failing schema tests.**
 
-  Extend fixture builders with `_phase2_manifest(...)`, `_mark_candidate(...)`, `_pass_batch(...)`, and `_remove_presentation(...)`. Add tests that prove the exact schema, enums, and invariants above, including this promoted-byte transition:
+  `_phase2_fixture` copies the real manifest's `/records/0`, `/records/1`, `/records/3`, and `/records/23` into a temporary four-package inventory, then writes respectively a keep, completed edit, completed regenerate, and completed removal using valid one-pixel PNG bytes resized only inside the test fixture constructor. It writes passed checks, source/candidate hashes, and terminal comparator/simulator values exactly matching the schema; `_validate_phase2_document` serializes, publicly reloads, and calls the public validator. Use this exact test body and mutation table; every mutation goes through public load and validation:
 
   ```python
-  def test_phase2_partial_accepts_promoted_bytes_and_preserves_original_facts(tmp_path: Path) -> None:
-      boards, inventory, record = _single_board_fixture(tmp_path)
-      original_sha = record["currentAsset"]["sha256"]
-      candidate_path = tmp_path / "candidate.png"
-      candidate_path.write_bytes(_png_bytes(width=1200, height=600, color=(8, 9, 10)))
-      candidate_sha = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
-      _mark_completed_generated_record(record, candidate_sha, 1200, 600)
-      (boards / "fixture-board/assets/primary.png").write_bytes(candidate_path.read_bytes())
-      document = _phase2_manifest(records=[record], batches=[_passed_batch("fixture", record)])
-
-      report = _validate_phase2_document(tmp_path, boards, inventory, document, batch_id="fixture")
-
-      assert record["currentAsset"]["sha256"] == original_sha
-      assert report.completed_repair_count == 1
+  @pytest.mark.parametrize(
+      ("mutation", "message"),
+      [
+          (lambda d: d["phase2"].update(extra=True), "phase2 has unknown keys"),
+          (lambda d: d["records"][0]["phase2Action"].update(state="pending"), "keep requires notRequired"),
+          (lambda d: d["records"][1]["phase2EvidenceReview"].update(result="notRequired"), "repair evidence review cannot be notRequired"),
+          (lambda d: d["records"][1]["generation"].update(mode="builtInGenerate"), "edit requires builtInEdit"),
+          (lambda d: d["records"][2]["generation"].update(mode="builtInEdit"), "regenerate requires builtInGenerate"),
+          (lambda d: d["records"][1]["final"]["workbenchReview"].pop("hitTest"), "workbenchReview is missing keys"),
+          (lambda d: d["records"][1]["phase2Comparator"]["final"].update(mode="temporaryGap"), "final comparator cannot be a gap"),
+          (lambda d: d["records"][1]["generation"]["candidates"][0]["provenance"].update(postProcessing="resize"), "postProcessing must equal none"),
+      ],
+  )
+  def test_phase2_closed_schema_and_enums_fail_closed(
+      tmp_path: Path,
+      mutation: Callable[[dict[str, object]], None],
+      message: str,
+  ) -> None:
+      boards, inventory, document = _phase2_fixture(tmp_path)
+      mutation(document)
+      with pytest.raises(PresentationRemediationAuditError, match=message):
+          _validate_phase2_document(tmp_path, boards, inventory, document)
   ```
 
-  Add explicit tests for: schema 2 closed keys; literal package order accepted but duplicate/set mismatch rejected; all 66 non-keeps assigned once and keeps assigned zero times; duplicate/missing/unknown batch keys; product-coupled records resolving through one batch; non-sequential passed/in-progress/blocked states; partial validation with earlier promoted assets and later original assets; wrong on-disk state for pending/promoted/keep; 19 keep hashes immutable; structured source roles; exact prompt/canvas; one accepted candidate; candidate hash format; provenance fixed to built-in/untouched/no-postprocessing; transient candidate bytes/hash/dimensions; rejected-byte absence allowed only after passed transient verification; accepted candidate hash equals final/on-disk hash; Workbench `hitTest`; invalid status/evidence pairs; passed batch completion; blocked batch truth; and final 61/85-history/19/65/1/84 totals.
+- [ ] **Step 2: Add exact failing canvas coverage and lifecycle tests.**
 
-- [ ] **Step 2: Write failing removal and CLI tests.**
+  ```python
+  def test_canvas_preflight_requires_twenty_classes_and_exact_sixty_five_key_partition(
+      tmp_path: Path,
+  ) -> None:
+      boards, inventory, document = _catalog_phase2_fixture(tmp_path)
+      document["phase2"]["canvasPreflight"]["classes"][0]["coveredRecordKeys"].pop()
+      with pytest.raises(
+          PresentationRemediationAuditError,
+          match="canvas preflight must cover exactly 65 edit/regenerate record keys",
+      ):
+          _validate_phase2_document(
+              tmp_path,
+              boards,
+              inventory,
+              document,
+              mode=PresentationValidationMode.PHASE2_PREFLIGHT,
+          )
 
-  Test that the historical removal record remains in the manifest while its presentation, `mini-pinch` hold, and `assets/end.png` are absent from inventory; reject a removed record when any of those three remains. Test that other Mini Bar presentation/hold/asset bytes remain unchanged. Add CLI tests for mutually exclusive lifecycle flags, required `--batch-id` relationships, repeated two-argument `--candidate-file`, unknown candidate SHA, hash mismatch, Phase 2 partial JSON, final rejection with pending batches, and final 84-presentation success.
 
-- [ ] **Step 3: Run the new focused tests and confirm RED.**
+  def test_partial_mode_accepts_completed_repairs_pending_later_actions_and_historical_keep_block(
+      tmp_path: Path,
+  ) -> None:
+      boards, inventory, document = _mixed_phase2_fixture(tmp_path)
+      report = _validate_phase2_document(
+          tmp_path,
+          boards,
+          inventory,
+          document,
+          mode=PresentationValidationMode.PHASE2_PARTIAL,
+      )
+      assert report.completed_edit_count == 1
+      assert report.pending_phase2_action_count == 2
+      assert report.historical_evidence_blocked_keeps == 1
+      assert report.blocked_phase2_action_count == 0
+
+
+  def test_final_mode_requires_no_pending_or_blocked_phase2_actions_but_preserves_historical_gaps(
+      tmp_path: Path,
+  ) -> None:
+      boards, inventory, document = _final_phase2_fixture(tmp_path)
+      document["records"][1]["phase2Action"] = {
+          "state": "blocked",
+          "blockedReason": "Exact-canvas output unavailable.",
+      }
+      with pytest.raises(
+          PresentationRemediationAuditError,
+          match="final Phase 2 validation requires zero blocked Phase 2 actions",
+      ):
+          _validate_phase2_document(
+              tmp_path,
+              boards,
+              inventory,
+              document,
+              mode=PresentationValidationMode.PHASE2_FINAL,
+          )
+  ```
+
+- [ ] **Step 3: Add exact failing source/candidate byte-verification tests.**
+
+  ```python
+  def test_transient_source_verifier_hashes_present_bytes_and_final_validation_uses_durable_record(
+      tmp_path: Path,
+  ) -> None:
+      boards, inventory, document, source_path = _completed_edit_with_source(tmp_path)
+      source_sha = hashlib.sha256(source_path.read_bytes()).hexdigest()
+      manifest = load_presentation_remediation_manifest(_write_manifest(tmp_path, document))
+      assert verify_transient_source_files(manifest, {source_sha: source_path}) == (source_sha,)
+      source_path.unlink()
+      report = validate_presentation_remediation_manifest(
+          manifest,
+          inventory,
+          hangboards_root=boards,
+          validation_mode=PresentationValidationMode.PHASE2_PARTIAL,
+      )
+      assert report.completed_edit_count == 1
+
+
+  def test_deleted_source_requires_passed_transient_verification_record(tmp_path: Path) -> None:
+      boards, inventory, document, source_path = _completed_edit_with_source(tmp_path)
+      source_path.unlink()
+      document["records"][1]["generation"]["sourceInputs"][0]["byteVerification"] = {
+          "status": "pending",
+          "checkedAt": None,
+          "command": None,
+          "observedSHA256": None,
+      }
+      with pytest.raises(
+          PresentationRemediationAuditError,
+          match="deleted source input requires passed transient byte verification",
+      ):
+          _validate_phase2_document(tmp_path, boards, inventory, document)
+  ```
+
+  Add these exact candidate assertions using `_completed_edit_with_candidate`, which returns the edit fixture plus a temporary candidate path whose bytes equal the fixture's accepted package bytes:
+
+  ```python
+  def test_transient_candidate_verifier_requires_hash_and_ihdr_equality(tmp_path: Path) -> None:
+      boards, inventory, document, candidate_path = _completed_edit_with_candidate(tmp_path)
+      sha = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
+      manifest = load_presentation_remediation_manifest(_write_manifest(tmp_path, document))
+      assert verify_transient_candidate_files(manifest, {sha: candidate_path}) == (sha,)
+      candidate_path.write_bytes(candidate_path.read_bytes() + b"changed")
+      with pytest.raises(PresentationRemediationAuditError, match="candidate SHA-256 mismatch"):
+          verify_transient_candidate_files(manifest, {sha: candidate_path})
+
+
+  def test_completed_repair_requires_accepted_candidate_to_equal_on_disk_bytes(tmp_path: Path) -> None:
+      boards, inventory, document, candidate_path = _completed_edit_with_candidate(tmp_path)
+      document["records"][1]["generation"]["candidates"][0]["sha256"] = "0" * 64
+      with pytest.raises(PresentationRemediationAuditError, match="accepted candidate must equal on-disk asset"):
+          _validate_phase2_document(tmp_path, boards, inventory, document)
+
+
+  def test_rejected_candidate_may_be_deleted_only_after_passed_verification(tmp_path: Path) -> None:
+      boards, inventory, document, candidate_path = _completed_edit_with_rejected_candidate(tmp_path)
+      candidate_path.unlink()
+      assert _validate_phase2_document(tmp_path, boards, inventory, document).completed_edit_count == 1
+      rejected = document["records"][1]["generation"]["candidates"][0]
+      rejected["byteVerification"]["observedSHA256"] = "0" * 64
+      with pytest.raises(PresentationRemediationAuditError, match="candidate verification hash mismatch"):
+          _validate_phase2_document(tmp_path, boards, inventory, document)
+  ```
+
+- [ ] **Step 4: Add exact failing comparator DAG, prompt, removal, and simulator tests.**
+
+  Parameterize the comparator fixture with this exact outcome table and assert the listed error substring or success:
+
+  | Fixture comparator | Expected result |
+  | --- | --- |
+  | compatible Phase 1 keep at order 0 | success |
+  | compatible completed repair in earlier task/batch | success |
+  | compatible repair in later task/batch | `comparator must precede consumer` |
+  | proved same-record `uniqueSelfBaseline` with no earlier compatible record | success |
+  | `uniqueSelfBaseline` while an earlier compatible record exists | `self baseline is not unique` |
+  | material mismatch | `comparator material is incompatible` |
+  | form-factor mismatch | `comparator form factor is incompatible` |
+  | two-record cycle | `comparator graph contains a cycle` |
+  | final `temporaryGap` | `final comparator cannot be a gap` |
+
+  Then add exact equality/one-character-drift tests for `render_phase2_generation_prompt`; exact Mini Bar assertions for one `primary` presentation plus `ergonomic-jug`, `edge-10`, `edge-20`, and `mini-pinch` all assigned to it; and a simulator parameterization that deletes each device class, each of the seven flow keys, and the capture hash list in turn and asserts public validation fails. Add separate invalid-state rows proving only `presentationSelector` accepts `notApplicableSinglePresentation` and only `plan` accepts `notApplicableNoCompatiblePlan`.
+
+- [ ] **Step 5: Run the focused tests and confirm RED.**
 
   ```bash
   rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
@@ -173,321 +672,240 @@ Every `/records/N/evidence` entry in a repair table is an exact JSON-pointer rou
     Tools/HangboardPackages/tests/test_cli.py
   ```
 
-  Expected: FAIL because Phase 2 schema, candidate verification, removal semantics, and CLI flags do not exist.
+  Expected: FAIL for missing schema 2, preflight, source verification, comparator DAG, prompt rendering, removal, simulator, and CLI behavior.
 
-- [ ] **Step 4: Implement the minimal Phase 2 parser and validator.**
+- [ ] **Step 6: Implement the schema/domain and prompt renderer.**
 
-  Add the exact interfaces above. Keep `_current_png_facts` limited to PNG signature/IHDR and SHA-256. In Phase 2 partial mode, compare each keep or pending record to `currentAsset`, each completed repair to its accepted candidate/final hash, and the historical removal record to deliberate absence. Validate all manifest records even when `selected_batch_id` narrows completion reporting. Validate candidate bytes before cleanup only when `transient_candidate_files` is supplied; final durable validation checks the committed verification fields without expecting rejected paths to exist.
+  Add frozen dataclasses or enums matching every closed object and enum above. Parse schema 1 only in `SOURCE_RECLASSIFICATION` compatibility mode and schema 2 in the three Phase 2 modes. Keep byte inspection limited to SHA-256, PNG signature, and IHDR. Implement the canonical prompt transformation exactly and reject stored prompt drift.
 
-- [ ] **Step 5: Implement CLI parsing and documentation.**
+- [ ] **Step 7: Implement transient verification and Phase 2 validation.**
 
-  Retain `--final-validation` for the Phase 1 gate. Make `--phase2-partial` and `--phase2-final` mutually exclusive with it and each other. Parse every `--candidate-file SHA256 PATH` pair into a collision-rejecting mapping. `--batch-id` is legal only with partial mode; candidate files are legal only with partial mode. Document the exact transient-versus-durable hash contract and state that no CLI performs generation or image processing.
+  Implement both verifier functions, 20-class/65-key/22-probe coverage, input/candidate durable rules, exact batch prefix, partial on-disk states, comparator acyclicity/compatibility/self-baseline proof, Mini Bar absent-end/retained-mini-pinch truth, per-record simulator rules, historical-gap separation, and exact final totals.
 
-- [ ] **Step 6: Migrate the manifest to schema 2 without changing package input.**
+- [ ] **Step 8: Implement and test CLI flags.**
 
-  Preserve record and `packageIDs` order, every Phase 1 field/value, all original hashes/dimensions, all decisions, and all comparator fields. Add the 15 ordered batch IDs and exact record-key partition from Tasks 2–16, initialize Phase 2 evidence/generation/final state truthfully, add `hitTest`, and set all Phase 2 final checks pending. Add a narrative `## Phase 2 lifecycle` section with 19/17/48/1 input totals and the transient candidate deletion rule. Confirm no `Hangboards` path changed.
+  Parse lifecycle flags as mutually exclusive. Parse each `--source-file` and `--candidate-file` as exactly two arguments, reject duplicate hash keys and illegal lifecycle combinations, and print the extended report. CLI tests assert first-line errors and exact JSON for preflight, partial, and final modes.
 
-- [ ] **Step 7: Run focused tests, full package tests, and initial partial validation.**
+- [ ] **Step 9: Migrate the real manifest without package mutation.**
+
+  Before editing, assign `phase2_baseline_sha="$(rtk git rev-parse HEAD)"` and write that exact 40-character SHA under the narrative's `Phase 2 baseline SHA` field. Preserve record order and every value in `packageID`, `productName`, `presentationID`, `assetPath`, `workingSurface`, `physicalRevision`, `manufacturer`, `materials`, `formFactor`, `currentAsset`, `decision`, `findings`, `evidence`, and historical `comparator`. Preserve the 19 keep `final.visualReviewerDecision` values. Replace only the Phase 1 empty/pending `generation` and `final` lifecycle scaffolding with the schema-2 forms, then add Phase 2 record/root fields, the exact 20-class table, and the exact batch matrix below. Keeps use generation `none`, null Phase 2 comparators, action/evidence not-required, and not-required Phase 2 checks with factual evidence. Preserve all five Phase 1 evidence-gap paths and strings. Add narrative lifecycle/resource/comparator/preflight sections. Do not change any PNG or `board.json`.
+
+- [ ] **Step 10: Run GREEN verification.**
 
   ```bash
   rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
     Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
     Tools/HangboardPackages/tests/test_cli.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations \
-    --root Hangboards \
+  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
+  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
     --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial
+    --phase2-preflight
   rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
   rtk git diff --name-only -- Hangboards
   ```
 
-  Expected: tests PASS; partial report is 61 packages, 85 inventory presentations, 19 keeps, 0 completed repairs, 66 pending actions, and 0 removals; package validation passes; the final diff command prints nothing.
+  Expected: tests and inventory pass; preflight report has 20 pending classes covering 65 keys; final diff command prints nothing.
 
-- [ ] **Step 8: Commit and push the validator gate.**
+- [ ] **Step 11: Commit and push.**
 
   ```bash
-  rtk git add \
-    Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py \
+  rtk git add Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py \
     Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
     Tools/HangboardPackages/src/hangboard_packages/cli.py \
-    Tools/HangboardPackages/tests/test_cli.py \
-    Tools/HangboardPackages/README.md \
+    Tools/HangboardPackages/tests/test_cli.py Tools/HangboardPackages/README.md \
     docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
     docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Validate hangboard remediation phase two"
+  rtk git commit -m "Validate phase two remediation lifecycle"
   rtk git push
   ```
 
 ---
 
-### Task 2: Prove built-in imagegen canvas fidelity and repair Rock Prodigy Forge
+## Canvas preflight task recipe
 
-**Files:**
-- Modify: `Hangboards/trango-rock-prodigy-forge/assets/primary.png`
-- Inspect and modify only if primary evidence proves it wrong: `Hangboards/trango-rock-prodigy-forge/board.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
+Each Task 2–8 supplies its literal context directory and class rows. For every behavior probe: run the exact ownership recipe; reopen all representative `/evidence` URL leaves and gap searches; copy/hash/transiently verify source inputs; write the canonical prompt; inspect local references with `view_image`; call built-in `image_gen` once per attempt with `referenced_image_paths`; hash at the returned path before moving; move to context; transiently verify; record `canvasPass` only for exact IHDR; commit/push attempts before cleanup. Stop the probe after its first pass or its third failure. A third failure sets probe/class/root preflight blocked, commits/pushes the exact reason, cleans owned paths, and stops Tasks 3–62. No package path changes.
 
-**Interfaces:**
-- Consumes: record `/records/62`, batch `capability-pilot-forge`, built-in `view_image`/`image_gen`, `verify_transient_candidate_files`, and the global source/render/geometry contract.
-- Produces: the first completed `regenerate` record and proof that prompt-only built-in output can preserve a required 1536×1024 canvas; or a committed blocked pilot that stops Tasks 3–19.
+The command after each task's probes is:
 
-**Exclusive repair sub-batch (one-asset pilot exception):**
+```bash
+rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight
+rtk git diff --name-only -- Hangboards
+```
 
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/62` `trango.rock-prodigy-forge/primary` | `Hangboards/trango-rock-prodigy-forge/assets/primary.png` | `regenerate` | `urethane`, `splitFixedBoard`; render exact sourced matte molded finish and relief, no wood grain; current image is human comparison only and is not supplied | explicit gap at `/records/62/comparator/baselineGap` | every URL and recorded gap under `/records/62/evidence` |
+Expected: validator passes the completed probe prefix; `Hangboards` diff is empty.
 
-- [ ] **Step 1: Create and own the pilot workspace before gathering inputs.**
+### Task 2: Preflight canvases 1000×1000, 1000×259, and 1233×435
 
-  Create `.context/sincere-otter-phase2-capability-pilot`, immediately create `OWNER-sincere-otter`, and install exit traps that delete only that exact directory plus every exact built-in output path recorded after each call. Copy the current asset byte-for-byte into the directory as a rollback/reference backup and hash it; do not alter it.
+**Files:** manifest and narrative only.
 
-- [ ] **Step 2: Reopen and inspect the exact live evidence.**
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-preflight-canvas-a`; probes edit `lattice.mxedge-lift-large/primary`, edit `beastmaker-1000/primary`, and generate `trango.rock-prodigy-training-center/primary`; produces three passed class records or a committed global block.
 
-  Reopen every official and independent URL under `/records/62/evidence`; repeat any gap search; save only the minimum unmodified official/independent images needed to establish the two-piece silhouette, every contact, urethane material, relief, and mounting context. Inspect those local files, the current asset, and the comparator-gap context manually with `view_image`. Update `/records/62/phase2EvidenceReview` with literal reopened URL arrays, actual date, repeated searches, and either `confirmed` or a concrete block.
+- [ ] **Step 1: Run the canvas preflight recipe for all three probes, at most nine built-in calls total.**
+- [ ] **Step 2: Run the preflight validator and prove no `Hangboards` diff.**
+- [ ] **Step 3: Commit/push passed records with `rtk git commit -m "Preflight small hangboard canvases"`, then execute and verify exact cleanup.**
 
-- [ ] **Step 3: Commit the exact generation prompt before calling the tool.**
+### Task 3: Preflight canvases 1254×1254, 1440×1440, and 1503×394
 
-  Set `generation.mode` to `builtInGenerate`, `currentAssetRole` to human comparison only/not evidence/not supplied, and `requiredCanvas` to 1536×1024. Populate the prompt fields with literal values from `/records/62/{physicalRevision,workingSurface,materials,formFactor,findings,evidence}`:
+**Files:** manifest and narrative only.
 
-  ```text
-  Use case: product-mockup
-  Asset type: Hang Ten package presentation PNG
-  Primary request: create an original simplified unbranded render of the exact cited Rock Prodigy Forge revision and its two-piece advanced front working face
-  Input images: identify each supplied official or independent image by its committed source role; identify the accepted style comparator gap explicitly
-  Scene/backdrop: common off-white studio background, no wall or mounting scenery
-  Subject: only the source-proved product silhouette, contacts, and identity-bearing components
-  Style/medium: restrained catalog product render, not a photograph
-  Composition/framing: orthographic head-on to the working surface, centered, complete uncropped product, required untouched output canvas exactly 1536 by 1024 pixels
-  Lighting/mood: neutral direction, restrained contact shadow, controlled relief shading
-  Materials/textures: source-proved matte urethane with no wood grain
-  Constraints: preserve every source-proved contact and component; no inferred details; output PNG dimensions and aspect must already be exact from the model
-  Avoid: branding, text, labels, logos, watermarks, transparent background, camera tilt, post-processing, invented hardware, invented contacts
-  ```
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-preflight-canvas-b`; probes generate `soill.split-palm/primary`, edit `frictitious.port-a-board/primary`, and edit `escape-beta-22/primary`; produces three passed class records or a committed global block.
 
-- [ ] **Step 4: Run at most three one-candidate built-in attempts.**
+- [ ] **Step 1: Run the canvas preflight recipe for all three probes, at most nine built-in calls total.**
+- [ ] **Step 2: Run the preflight validator and prove no `Hangboards` diff.**
+- [ ] **Step 3: Commit/push passed records with `rtk git commit -m "Preflight square and wide hangboard canvases"`, then execute and verify exact cleanup.**
 
-  For each attempt, call built-in `image_gen` once with the committed prompt and exact local source/comparator reference paths through `referenced_image_paths`; do not pass a size or output-path argument. Immediately move the returned file byte-for-byte into the owned context directory, hash it, parse only PNG IHDR, and invoke partial validation with `--candidate-file SHA256 PATH`. Reject any output that is not exactly 1536×1024 before visual promotion. Narrow only the prompt between attempts.
+### Task 4: Preflight mixed-mode canvases 1536×1024 and 1537×1023
 
-- [ ] **Step 5: Resolve the pilot gate truthfully.**
+**Files:** manifest and narrative only.
 
-  If all three attempts miss the exact canvas or fail product/material/topology review, set the record and batch `blocked`, commit each candidate hash/dimensions/reason and the exact capability failure, push, delete rejected bytes only after their transient checks are committed, clean the exact owned directory, and stop the plan. Do not continue to Task 3 and do not use CLI fallback, resize, crop, padding, or a schema/aspect change.
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-preflight-canvas-c`; probes edit `crimptonite.helium-mobile/primary`, generate `captain-fingerfood.dual/primary`, edit `evolv-kilter-basic-long/primary`, and generate `tension.grindstone-original/primary`; produces both modes passed for both classes or a committed global block.
 
-  If a candidate has the exact untouched canvas and passes side-by-side evidence/current review, mark exactly that candidate accepted, promote it byte-for-byte to the declared asset path, and retain other candidates only until their committed rejection provenance is pushed.
+- [ ] **Step 1: Run the canvas preflight recipe for all four probes, at most twelve built-in calls total.**
+- [ ] **Step 2: Run the preflight validator and prove no `Hangboards` diff.**
+- [ ] **Step 3: Commit/push passed records with `rtk git commit -m "Preflight mixed-mode hangboard canvases"`, then execute and verify exact cleanup.**
 
-- [ ] **Step 6: Deliberately review geometry and visual states.**
+### Task 5: Preflight canvases 1614×975, 1654×951, and 1672×941
 
-  Open Forge in Workbench. Compare primary evidence and the accepted render; inspect normal, all-active, each individual logical hold and every piece, and hit testing. Directly edit `board.json` only for a proved mismatch, use mirroring only if proved, capture review evidence under the owned directory, hash the captures, and record the hashes/results in all four Workbench checks.
+**Files:** manifest and narrative only.
 
-- [ ] **Step 7: Validate the pilot batch.**
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-preflight-canvas-d`; probes generate `metolius.simulator-3d/primary`, edit `tension.grindstone-pro/primary`, and edit `metolius.light-rail-2/15mm-side`; produces three passed classes or a committed global block.
 
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py \
-    Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations \
-    --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id capability-pilot-forge
-  ```
+- [ ] **Step 1: Run the canvas preflight recipe for all three probes, at most nine built-in calls total.**
+- [ ] **Step 2: Run the preflight validator and prove no `Hangboards` diff.**
+- [ ] **Step 3: Commit/push passed records with `rtk git commit -m "Preflight medium landscape hangboard canvases"`, then execute and verify exact cleanup.**
 
-  Record exact commands and results; mark the batch passed only after all succeed.
+### Task 6: Preflight canvases 1697×1200, 1717×916, and 1774×457
 
-- [ ] **Step 8: Commit, push, and clean the pilot.**
+**Files:** manifest and narrative only.
 
-  ```bash
-  rtk git add \
-    Hangboards/trango-rock-prodigy-forge/assets/primary.png \
-    Hangboards/trango-rock-prodigy-forge/board.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Pilot exact-canvas hangboard generation"
-  rtk git push
-  ```
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-preflight-canvas-e`; probes edit `moon.armstrong/primary`, generate `metolius.climbers-edge/primary`, and generate `metolius.wood-grips-compact-ii/primary`; produces three passed classes or a committed global block.
 
-  Remove copied inputs, rejected outputs, review captures, and the exact owned directory through the installed trap; verify it and every recorded external output path are absent before reporting completion.
+- [ ] **Step 1: Run the canvas preflight recipe for all three probes, at most nine built-in calls total.**
+- [ ] **Step 2: Run the preflight validator and prove no `Hangboards` diff.**
+- [ ] **Step 3: Commit/push passed records with `rtk git commit -m "Preflight wood fixed hangboard canvases"`, then execute and verify exact cleanup.**
 
----
+### Task 7: Preflight canvases 1774×887, 1842×854, and 1980×300
 
-### Task 3: Repair non-wood fixed resin and molded boards
+**Files:** manifest and narrative only.
 
-**Files:**
-- Inspect and conditionally modify: `Hangboards/escape-beta-22/board.json`, `Hangboards/evolv-kilter-basic-long/board.json`, `Hangboards/metolius-contact/board.json`, `Hangboards/metolius-foundry/board.json`, `Hangboards/metolius-project/board.json`, `Hangboards/metolius-simulator-3d/board.json`
-- Modify: the six exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-preflight-canvas-f`; probes generate `escape.unlimited/primary`, generate `frictitious.nug/reverse`, and edit `owl-climb.poker/face-a`; produces three passed classes or a committed global block.
 
-**Interfaces:**
-- Consumes: passed `capability-pilot-forge`; records 11, 13, 28, 29, 33, and 35; batch `nonwood-fixed-resin`; built-in-only candidate workflow and Phase 2 partial validator.
-- Produces: two bounded edits and four exact-revision regenerations with passed manual/Workbench/package validation.
+- [ ] **Step 1: Run the canvas preflight recipe for all three probes, at most nine built-in calls total.**
+- [ ] **Step 2: Run the preflight validator and prove no `Hangboards` diff.**
+- [ ] **Step 3: Commit/push passed records with `rtk git commit -m "Preflight catalog-standard and bar canvases"`, then execute and verify exact cleanup.**
 
-**Exclusive repair sub-batch (6 presentations):**
+### Task 8: Preflight canvases 1980×495, 2081×755, and 2112×745
 
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/11` `escape-beta-22/primary` | `Hangboards/escape-beta-22/assets/primary.png` | `edit` | `moldedPlastic`, full-width; current is edit target/topology lock; correct only cited treatment defects, retain sourced dual texture | gap `/records/11/comparator/baselineGap` | `/records/11/evidence` |
-| `/records/13` `evolv-kilter-basic-long/primary` | `Hangboards/evolv-kilter-basic-long/assets/primary.png` | `edit` | `resin`, full-width; current is edit target/topology lock; retain sourced jug/three-edge layout and real finish | gap `/records/13/comparator/baselineGap` | `/records/13/evidence` |
-| `/records/28` `metolius.contact/primary` | `Hangboards/metolius-contact/assets/primary.png` | `regenerate` | `resin`, full-width; matte manufactured surface and exact 11-pocket/four-edge/sloper/jug/pinch topology; current comparison only | gap `/records/28/comparator/baselineGap` | `/records/28/evidence` |
-| `/records/29` `metolius.foundry/front` | `Hangboards/metolius-foundry/assets/primary.png` | `regenerate` | `resin`, full-width; source-proved arched pinch/edge/pocket/jug/sloper topology; current comparison only | gap `/records/29/comparator/baselineGap` | `/records/29/evidence` |
-| `/records/33` `metolius.project/primary` | `Hangboards/metolius-project/assets/primary.png` | `regenerate` | `resin`, full-width; source-proved compact edge/pocket/jug/sloper topology; current comparison only | gap `/records/33/comparator/baselineGap` | `/records/33/evidence` |
-| `/records/35` `metolius.simulator-3d/primary` | `Hangboards/metolius-simulator-3d/assets/primary.png` | `regenerate` | `resin`, full-width; exact seventh-generation topology and controlled depth shading; current comparison only | gap `/records/35/comparator/baselineGap` | `/records/35/evidence` |
+**Files:** manifest and narrative only.
 
-- [ ] **Step 1: Establish exact ownership and rollback bytes.**
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-preflight-canvas-g`; probes generate `mammut.diamond-finger/primary`, generate `zlagboard.evo/primary`, and generate `zlagboard.pro/primary`; produces three passed classes or a committed global block.
 
-  Create `.context/sincere-otter-phase2-nonwood-fixed-resin`, add `OWNER-sincere-otter`, install exact cleanup traps, record every returned built-in path, and copy all six current assets byte-for-byte as rollback/current-review inputs.
+- [ ] **Step 1: Run the canvas preflight recipe for all three probes, at most nine built-in calls total.**
+- [ ] **Step 2: Run the preflight validator and prove no `Hangboards` diff.**
+- [ ] **Step 3: Commit/push passed records with `rtk git commit -m "Preflight wide mixed-material canvases"`, then execute and verify exact cleanup.**
 
-- [ ] **Step 2: Freshly reopen evidence for all six records.**
+### Task 9: Close the exact-canvas preflight gate
 
-  For each exact `/records/N/evidence`, reopen every official and independent URL and repeat recorded gaps. Save the minimum unmodified straight-on/oblique images, hash them, inspect source/current/comparator-gap evidence with `view_image`, and fill each `phase2EvidenceReview`. Stop only the affected record if material, exact revision, topology, or usable face remains unproved; do not borrow facts between Metolius revisions.
+**Files:** manifest and narrative only.
 
-- [ ] **Step 3: Commit one exact prompt per record and generate one candidate per call.**
+**Interfaces:** consumes all 20 classes/22 probes; produces root preflight `passed`, exactly 65 covered repair keys, and authorization for Task 10. No package change is permitted.
 
-  Use `precise-object-edit` for records 11 and 13, supplying the local target first and locking likeness/topology; use `product-mockup` for records 28, 29, 33, and 35 without supplying current assets. Populate subject/revision/surface/material/form-factor/failure fields from each exact record; include the global studio treatment, literal existing canvas dimensions, no-brand/no-text constraints, source-image roles, comparator gap, and a prohibition on inferred details. Use `view_image` on every local reference, then one `image_gen` call per candidate with `referenced_image_paths`; maximum three candidates per record.
-
-- [ ] **Step 4: Hash, review, record, and promote candidates without post-processing.**
-
-  Immediately byte-hash and IHDR-check every output. Review official/independent/current/candidate/comparator-gap evidence side by side. Before deleting any rejection, record and transiently verify its exact bytes, commit and push with message `Record rejected nonwood fixed resin candidates`. Promote only the accepted untouched output to its one declared path and set all accepted/final fields truthfully.
-
-- [ ] **Step 5: Review every changed presentation in Workbench.**
-
-  Inspect normal, all-active, each individual logical hold/piece, and hit testing for all six presentations. Directly correct a canonical path only if primary evidence proves it wrong; do not infer symmetry or constraints. Hash owned review captures and record all four Workbench results plus any deliberate `board.json` edits.
-
-- [ ] **Step 6: Run package, focused, full-suite, and batch validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_escape_beta_22_board_package.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id nonwood-fixed-resin
-  ```
-
-- [ ] **Step 7: Commit, push, and verify cleanup.**
-
-  ```bash
-  rtk git add Hangboards/escape-beta-22 Hangboards/evolv-kilter-basic-long \
-    Hangboards/metolius-contact Hangboards/metolius-foundry Hangboards/metolius-project \
-    Hangboards/metolius-simulator-3d \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair resin and molded fixed presentations"
-  rtk git push
-  ```
-
-  Trigger and verify exact owned cleanup; accepted PNGs must exist only at declared package paths.
+- [ ] **Step 1: Run a validator test that removes each class and each covered key in turn; require every mutation to fail.**
+- [ ] **Step 2: Run `--phase2-preflight`; require `canvasClassCount: 20`, `canvasCoveredRepairCount: 65`, all 22 behavior probes passed, and no blocked reason.**
+- [ ] **Step 3: Run the full package tests, final inventory, and `rtk git diff --name-only -- Hangboards`; require green tests/61 packages/85 presentations/empty diff.**
+- [ ] **Step 4: Commit/push manifest and narrative with `rtk git commit -m "Verify exact-canvas image generation preflight"`.**
 
 ---
 
-### Task 4: Repair non-wood fixed urethane boards
+## Exclusive product repair matrix
 
-**Files:**
-- Inspect and conditionally modify: `Hangboards/soill-iron-palm-2/board.json`, `Hangboards/soill-split-palm/board.json`, `Hangboards/soill-training-tiles/board.json`, `Hangboards/trango-rock-prodigy-training-center/board.json`
-- Modify: the four exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
+This table is the sole ownership map for the 65 image repairs. `Record` is the literal manifest JSON pointer; `Evidence` and `historical comparator` are exactly `Record + /evidence` and `Record + /comparator`. A task may not change a row owned by another task. Batch order is `nonwood-fixed` (Tasks 10–25), `wood-fixed` (Tasks 27–36), `portable` (Tasks 38–46), and `multi-orientation` (Tasks 48–54). The table contains 17 edit rows and 48 regenerate rows.
 
-**Interfaces:**
-- Consumes: records 48, 49, 50, and 68 and passed earlier batches.
-- Produces: batch `nonwood-fixed-urethane` with four completed regenerations.
+| Task | Record / key | Exact asset path | Action / canvas | Evidence-routed material / form factor |
+| ---: | --- | --- | --- | --- |
+| 10 | `/records/11` `escape-beta-22/primary` | `Hangboards/escape-beta-22/assets/primary.png` | edit / 1503×394 | moldedPlastic / fullWidthFixedBoard |
+| 11 | `/records/13` `evolv-kilter-basic-long/primary` | `Hangboards/evolv-kilter-basic-long/assets/primary.png` | edit / 1537×1023 | resin / fullWidthFixedBoard |
+| 12 | `/records/28` `metolius.contact/primary` | `Hangboards/metolius-contact/assets/primary.png` | regenerate / 1774×887 | resin / fullWidthFixedBoard |
+| 13 | `/records/29` `metolius.foundry/front` | `Hangboards/metolius-foundry/assets/primary.png` | regenerate / 1774×887 | resin / fullWidthFixedBoard |
+| 14 | `/records/33` `metolius.project/primary` | `Hangboards/metolius-project/assets/primary.png` | regenerate / 1774×887 | resin / fullWidthFixedBoard |
+| 15 | `/records/35` `metolius.simulator-3d/primary` | `Hangboards/metolius-simulator-3d/assets/primary.png` | regenerate / 1614×975 | resin / fullWidthFixedBoard |
+| 16 | `/records/48` `soill.iron-palm-2/primary` | `Hangboards/soill-iron-palm-2/assets/primary.png` | regenerate / 1536×1024 | urethane / fullWidthFixedBoard |
+| 17 | `/records/49` `soill.split-palm/primary` | `Hangboards/soill-split-palm/assets/primary.png` | regenerate / 1254×1254 | urethane / splitFixedBoard |
+| 18 | `/records/50` `soill.training-tiles/primary` | `Hangboards/soill-training-tiles/assets/primary.png` | regenerate / 1536×1024 | urethane / splitFixedBoard |
+| 19 | `/records/62` `trango.rock-prodigy-forge/primary` | `Hangboards/trango-rock-prodigy-forge/assets/primary.png` | regenerate / 1536×1024 | urethane / splitFixedBoard |
+| 20 | `/records/68` `trango.rock-prodigy-training-center/primary` | `Hangboards/trango-rock-prodigy-training-center/assets/primary.png` | regenerate / 1233×435 | urethane / splitFixedBoard |
+| 21 | `/records/12` `escape.unlimited/primary` | `Hangboards/escape-unlimited/assets/primary.png` | regenerate / 1774×887 | wood+metal / fullWidthFixedBoard |
+| 22 | `/records/14` `frictitious.doormount-pro-7/primary` | `Hangboards/frictitious-doormount-pro-7/assets/primary.png` | regenerate / 1774×887 | wood+metal+mixedOther / fullWidthFixedBoard |
+| 23 | `/records/26` `mammut.diamond-finger/primary` | `Hangboards/mammut-diamond-finger/assets/primary.png` | regenerate / 1980×495 | wood+metal+mixedOther / fullWidthFixedBoard |
+| 24 | `/records/39` `nature.stoak-board-iii/primary` | `Hangboards/nature-stoak-board-iii/assets/primary.png` | regenerate / 1774×887 | wood+stoneMineralComposite+metal / fullWidthFixedBoard |
+| 25 | `/records/83` `zlagboard.evo/primary` | `Hangboards/zlagboard-evo/assets/primary.png` | regenerate / 2081×755 | wood+metal+mixedOther / fullWidthFixedBoard |
+| 25 | `/records/84` `zlagboard.pro/primary` | `Hangboards/zlagboard-pro/assets/primary.png` | regenerate / 2112×745 | wood+metal+mixedOther / fullWidthFixedBoard |
+| 27 | `/records/1` `beastmaker-1000/primary` | `Hangboards/beastmaker-1000/assets/primary.png` | edit / 1000×259 | wood / fullWidthFixedBoard |
+| 28 | `/records/27` `metolius.climbers-edge/primary` | `Hangboards/metolius-climbers-edge/assets/primary.png` | regenerate / 1717×916 | wood / fullWidthFixedBoard |
+| 29 | `/records/36` `metolius.wood-grips-compact-ii/primary` | `Hangboards/metolius-wood-grips-compact-ii/assets/primary.png` | regenerate / 1774×457 | wood / fullWidthFixedBoard |
+| 30 | `/records/38` `moon.armstrong/primary` | `Hangboards/moon-armstrong/assets/primary.png` | edit / 1697×1200 | wood / fullWidthFixedBoard |
+| 31 | `/records/56` `tension.grindstone-original/primary` | `Hangboards/tension-grindstone-original/assets/primary.png` | regenerate / 1537×1023 | wood / fullWidthFixedBoard |
+| 31 | `/records/57` `tension.grindstone-pro/primary` | `Hangboards/tension-grindstone-pro/assets/primary.png` | edit / 1654×951 | wood / fullWidthFixedBoard |
+| 32 | `/records/63` `trango.rock-prodigy-natural/primary` | `Hangboards/trango-rock-prodigy-natural/assets/primary.png` | regenerate / 1536×1024 | wood / splitFixedBoard |
+| 33 | `/records/79` `yy.verticalboard-evo/primary` | `Hangboards/yy-verticalboard-evo/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 34 | `/records/80` `yy.verticalboard-first/primary` | `Hangboards/yy-verticalboard-first/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 35 | `/records/81` `yy.verticalboard-light/primary` | `Hangboards/yy-verticalboard-light/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 36 | `/records/82` `yy.verticalboard-one/primary` | `Hangboards/yy-verticalboard-one/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 38 | `/records/3` `captain-fingerfood.dual/primary` | `Hangboards/captain-fingerfood-dual/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 38 | `/records/4` `captain-fingerfood.dual/reverse` | `Hangboards/captain-fingerfood-dual/assets/reverse.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 39 | `/records/5` `captain-fingerfood.pocket/primary` | `Hangboards/captain-fingerfood-pocket/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 40 | `/records/6` `captain-fingerfood.unlevel/primary` | `Hangboards/captain-fingerfood-unlevel/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 40 | `/records/7` `captain-fingerfood.unlevel/reverse` | `Hangboards/captain-fingerfood-unlevel/assets/reverse.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 41 | `/records/8` `crimptonite.helium-mobile/primary` | `Hangboards/crimptonite-helium-mobile/assets/primary.png` | edit / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 41 | `/records/9` `crimptonite.helium-mobile/reverse` | `Hangboards/crimptonite-helium-mobile/assets/reverse.png` | edit / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 42 | `/records/16` `frictitious.nug/primary` | `Hangboards/frictitious-nug/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 42 | `/records/17` `frictitious.nug/reverse` | `Hangboards/frictitious-nug/assets/reverse.png` | regenerate / 1842×854 | wood+ropeCord / reversiblePortable |
+| 43 | `/records/30` `metolius.light-rail-2/20mm-side` | `Hangboards/metolius-light-rail-2/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 43 | `/records/31` `metolius.light-rail-2/15mm-side` | `Hangboards/metolius-light-rail-2/assets/15mm-surface.png` | edit / 1672×941 | wood+ropeCord / reversiblePortable |
+| 44 | `/records/24` `lattice.mxedge-lift-large/primary` | `Hangboards/lattice-mxedge-lift-large/assets/primary.png` | edit / 1000×1000 | wood+ropeCord / liftingEdge |
+| 44 | `/records/25` `lattice.mxedge-lift-small/primary` | `Hangboards/lattice-mxedge-lift-small/assets/primary.png` | edit / 1000×1000 | wood+ropeCord / liftingEdge |
+| 45 | `/records/34` `metolius.rock-rings-3d/front-pair` | `Hangboards/metolius-rock-rings-3d/assets/primary.png` | regenerate / 1536×1024 | resin+ropeCord / suspendedPortable |
+| 46 | `/records/47` `plateau.lifting-edge/primary` | `Hangboards/plateau-lifting-edge/assets/primary.png` | regenerate / 1536×1024 | metal+wood+ropeCord+mixedOther / liftingEdge |
+| 48 | `/records/18` `frictitious.port-a-board/primary` | `Hangboards/frictitious-port-a-board/assets/primary.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
+| 48 | `/records/19` `frictitious.port-a-board/back` | `Hangboards/frictitious-port-a-board/assets/back.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
+| 48 | `/records/20` `frictitious.port-a-board/side` | `Hangboards/frictitious-port-a-board/assets/side.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
+| 49 | `/records/52` `tension.flash-board/three-edge-upright` | `Hangboards/tension-flash-board/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 49 | `/records/53` `tension.flash-board/three-edge-inverted` | `Hangboards/tension-flash-board/assets/three-edge-inverted.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 49 | `/records/54` `tension.flash-board/two-edge-upright` | `Hangboards/tension-flash-board/assets/two-edge-surface.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 49 | `/records/55` `tension.flash-board/two-edge-inverted` | `Hangboards/tension-flash-board/assets/two-edge-inverted.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 50 | `/records/43` `owl-climb.poker/face-a` | `Hangboards/owl-climb-poker/assets/face-a.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 50 | `/records/44` `owl-climb.poker/face-b` | `Hangboards/owl-climb-poker/assets/face-b.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 50 | `/records/45` `owl-climb.poker/face-c` | `Hangboards/owl-climb-poker/assets/face-c.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 50 | `/records/46` `owl-climb.poker/face-d` | `Hangboards/owl-climb-poker/assets/face-d.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 51 | `/records/64` `trango.rock-prodigy-pivot/orientation-1` | `Hangboards/trango-rock-prodigy-pivot/assets/primary.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 51 | `/records/65` `trango.rock-prodigy-pivot/orientation-2` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-2.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 51 | `/records/66` `trango.rock-prodigy-pivot/orientation-3` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-3.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 51 | `/records/67` `trango.rock-prodigy-pivot/orientation-4` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-4.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 52 | `/records/69` `yy.baguette-evo/paired-25-20-15-10` | `Hangboards/yy-baguette-evo/assets/primary.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 52 | `/records/70` `yy.baguette-evo/paired-12-8-6` | `Hangboards/yy-baguette-evo/assets/shallow-pairs.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 52 | `/records/71` `yy.baguette-evo/central-30-25` | `Hangboards/yy-baguette-evo/assets/central-30-25.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 52 | `/records/72` `yy.baguette-evo/central-20-6` | `Hangboards/yy-baguette-evo/assets/central-20-6.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 53 | `/records/76` `yy.penta-evo/front-pair` | `Hangboards/yy-penta-evo/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 54 | `/records/77` `yy.travelboard/front-25-15` | `Hangboards/yy-travelboard/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 54 | `/records/78` `yy.travelboard/reverse-10` | `Hangboards/yy-travelboard/assets/reverse.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
 
-**Exclusive repair sub-batch (4 presentations):**
+### Exact manifest-to-prompt and task routing
 
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/48` `soill.iron-palm-2/primary` | `Hangboards/soill-iron-palm-2/assets/primary.png` | `regenerate` | `urethane`, full-width; exact cited sloper/pinch/jug-rail/crimp-rail revision, matte manufactured finish; current comparison only | gap `/records/48/comparator/baselineGap` | `/records/48/evidence`, including the recorded depth conflict |
-| `/records/49` `soill.split-palm/primary` | `Hangboards/soill-split-palm/assets/primary.png` | `regenerate` | `urethane`, split fixed; preserve only source-proved mirrored two-piece topology and mounting points; current comparison only | gap `/records/49/comparator/baselineGap` | `/records/49/evidence` |
-| `/records/50` `soill.training-tiles/primary` | `Hangboards/soill-training-tiles/assets/primary.png` | `regenerate` | `urethane`, split fixed; exact two-tile pocket/sloper/progressive-edge topology and sourced hardware context; current comparison only | gap `/records/50/comparator/baselineGap` | `/records/50/evidence` |
-| `/records/68` `trango.rock-prodigy-training-center/primary` | `Hangboards/trango-rock-prodigy-training-center/assets/primary.png` | `regenerate` | `urethane`, split fixed; controlled recess relief and source-proved body mounting context without depicting excluded screws as supplied; current comparison only | gap `/records/68/comparator/baselineGap` | `/records/68/evidence` |
+For each matrix row, let `R` be its already-literal `/records/N` value. The executor reads, without inference: key from `R/packageID` + `/` + `R/presentationID`; target from `R/assetPath`; action from `R/decision`; dimensions/hash from `R/currentAsset`; identity from `R/productName`, `R/physicalRevision`, and `R/workingSurface`; materials/form factor from `R/materials` and `R/formFactor`; source claims/roles/URLs from every leaf of `R/evidence/official` then `R/evidence/independent`; repeated searches from the two gap leaves; findings in this exact order: `productLikeness`, `material`, `topology`, `headOnPerspective`, `smoothing`, `framing`, `crossCatalogConsistency`; and historical comparator only from `R/comparator`. The executor writes only `R/repairBatchID`, `R/phase2Action`, `R/phase2EvidenceReview`, `R/phase2Comparator`, `R/generation`, and `R/final`, except for Task 56's explicit package topology change. `render_phase2_generation_prompt` alone transforms those literal fields into the canonical prompt.
 
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-nonwood-fixed-urethane`, record ownership, install exact cleanup traps, and byte-copy/hash all four current assets for rollback and comparison.**
+### Product repair task recipe
 
-- [ ] **Step 2: Reopen every URL under records 48, 49, 50, and 68 evidence, repeat gaps/conflicts, save and hash only minimum unmodified references, inspect all local images with `view_image`, and commit truthful Phase 2 evidence reviews.**
+Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in matrix row order, with its literal absolute context path, package directory, batch ID, focused tests, and commit message. A multi-row task finishes one row through package validation before starting the next; one failed/blocked row stops the task.
 
-- [ ] **Step 3: Populate four `product-mockup` prompts from each record's literal revision, working surface, material, form factor, findings, source roles, comparator gap, and canvas. Require the shared studio contract, exact source topology, exact untouched dimensions, matte urethane, no wood grain, no branding/text, and no inferred mounting hardware. Call built-in `image_gen` once per candidate with exact `referenced_image_paths`, at most three per asset.**
-
-- [ ] **Step 4: Hash/IHDR-check untouched output, manually compare source/current/candidate/gap side by side, transiently validate candidate bytes, and commit/push all rejection provenance with message `Record rejected urethane fixed candidates` before deletion. Promote only exact-canvas accepted outputs.**
-
-- [ ] **Step 5: In Workbench, review normal, all-active, every individual hold/piece, and hit testing for all four presentations. Edit paths directly only for proved mismatches, prove any mirroring, hash captures, and record truthful geometry/check results.**
-
-- [ ] **Step 6: Run and record validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id nonwood-fixed-urethane
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/soill-iron-palm-2 Hangboards/soill-split-palm \
-    Hangboards/soill-training-tiles Hangboards/trango-rock-prodigy-training-center \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair urethane fixed presentations"
-  rtk git push
-  ```
-
-  Verify the exact owned directory and every recorded external output are gone.
-
----
-
-### Task 5: Repair mixed-material fixed assemblies
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/escape-unlimited/board.json`, `Hangboards/frictitious-doormount-pro-7/board.json`, `Hangboards/mammut-diamond-finger/board.json`, `Hangboards/nature-stoak-board-iii/board.json`, `Hangboards/zlagboard-evo/board.json`, `Hangboards/zlagboard-pro/board.json`
-- Modify: the six exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 12, 14, 26, 39, 83, and 84.
-- Produces: batch `mixed-fixed-assemblies` with six completed regenerations preserving every separately sourced component material.
-
-**Exclusive repair sub-batch (6 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/12` `escape.unlimited/primary` | `Hangboards/escape-unlimited/assets/primary.png` | `regenerate` | `wood+metal`, full-width; restore four sourced mounting positions/hardware without inventing geometry; current comparison only | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/12/evidence` |
-| `/records/14` `frictitious.doormount-pro-7/primary` | `Hangboards/frictitious-doormount-pro-7/assets/primary.png` | `regenerate` | `wood+metal+mixedOther`, full-width; complete source-proved metal/rubber clamp assembly; current comparison only | gap `/records/14/comparator/baselineGap` | `/records/14/evidence` |
-| `/records/26` `mammut.diamond-finger/primary` | `Hangboards/mammut-diamond-finger/assets/primary.png` | `regenerate` | `wood+metal+mixedOther`, full-width; restore mounting plate, sourced phone mount, and complete topology; current comparison only | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/26/evidence` |
-| `/records/39` `nature.stoak-board-iii/primary` | `Hangboards/nature-stoak-board-iii/assets/primary.png` | `regenerate` | `wood+stoneMineralComposite+metal`, full-width; FSC oak, visibly real recycled Norwegian granite, and sourced magnetic/mounting parts stay materially distinct; current comparison only | `Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.png` | `/records/39/evidence` |
-| `/records/83` `zlagboard.evo/primary` | `Hangboards/zlagboard-evo/assets/primary.png` | `regenerate` | `wood+metal+mixedOther`, full-width; compact Evo electronic/steel/plate/phone-interface/fastener assembly, without choosing unresolved species; current comparison only | gap `/records/83/comparator/baselineGap` | `/records/83/evidence`, preserving species conflict |
-| `/records/84` `zlagboard.pro/primary` | `Hangboards/zlagboard-pro/assets/primary.png` | `regenerate` | `wood+metal+mixedOther`, full-width; exact Pro 2.0 electronic/steel/plate/phone-interface/fastener assembly; current comparison only | gap `/records/84/comparator/baselineGap` | `/records/84/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-mixed-fixed-assemblies`, record ownership, install exact traps, and byte-copy/hash all six originals.**
-
-- [ ] **Step 2: Freshly reopen every routed official/independent URL and gap/conflict for all six exact revisions. Save/hash only minimum unmodified straight-on, oblique, and component references; inspect sources, current assets, and actual comparator or explicit gap with `view_image`; record literal reopened URLs and results.**
-
-- [ ] **Step 3: Write one `product-mockup` prompt per record from literal manifest fields. Name every supplied image role and each separately sourced material/component, require exact original canvas and head-on working face, apply style comparators only to framing/lighting/background/texture/smoothing/edge treatment, and prohibit inferred hardware/species. Call built-in `image_gen` once per candidate, maximum three per asset.**
-
-- [ ] **Step 4: Hash and IHDR-check every untouched output, compare source/current/candidate/comparator side by side, transiently validate bytes, commit/push rejections with message `Record rejected mixed fixed candidates`, then delete only committed rejected bytes. Promote one exact accepted candidate per record.**
-
-- [ ] **Step 5: Review all six accepted presentations in Workbench normal/all-active/individual/hit-test states. Directly correct only proved canonical-path errors, never derive paths from the new raster, hash captures, and record checks/geometry changes.**
-
-- [ ] **Step 6: Run and record batch gates.**
+- [ ] **Step R1 — Own resources and prove a clean start.** Set `phase2_context_path` to the task's literal absolute context and `phase2_batch_id` to the task's literal batch ID. Install the ownership/trap recipe before opening external sources; `OWNER-sincere-otter` records ownership of the context itself, while the ledger records every owned file outside it and every copied input/candidate/rollback file inside it. Require the task's matrix asset hash to equal `currentAsset.sha256`; require all 19 keep hashes unchanged; require root preflight passed; require this batch `inProgress`, all prior batches passed, all later batches pending; and require every owned action pending.
+- [ ] **Step R2 — Reopen and verify source inputs.** Open every literal URL in the row's official array, then independent array, in stored order. Repeat each non-null gap search using its literal query and record the search command/result/date. Select only bytes that directly implement the stored `imageRole`; save them at the deterministic input path; hash before any move; add the exact URL, role, evidence pointer, SHA-256, acquisition command/result/date, and ledger row; run `verify_transient_source_files`; commit/push the passed records before any input can be deleted. Set `phase2EvidenceReview.result` to `confirmed` only after the reopened arrays equal the historical arrays exactly. A URL/search/byte failure sets evidence/action to `blocked` with the same reason, commits/pushes, cleans exact resources, and stops the task.
+- [ ] **Step R3 — Resolve an acyclic style comparator.** First inspect the historical comparator path when it is non-null and still hash-valid. Then ask partial validation for compatible baselines. Select the first compatible ready Phase 1 keep in manifest order; if none exists, select the earliest completed compatible repair by batch order, task number, then record index. Write a ready generation-time comparator with accepted hash and the canonical style-only reason. Add `style-comparator` to `sourceInputs`, hash its exact package path, write its verification command/status/timestamp, and pass that hash/path to `verify_transient_source_files`. If no compatible baseline exists, write `temporaryGap`, create no comparator source input, and supply no comparator path. Never open a null path. After candidate acceptance, repeat the search including the accepted record: use a ready compatible earlier baseline if one now exists, otherwise write `uniqueSelfBaseline` for the accepted asset. The validator proves compatibility and acyclicity and rejects a self baseline when an earlier compatible baseline exists.
+- [ ] **Step R4 — Produce candidates without post-processing.** Inspect target/current, selected source inputs, and ready comparator paths with `view_image`. For an edit, add the exact package target as `current-target`, hash it, write its verification command/status/timestamp, and pass its hash/path to `verify_transient_source_files`; for a regenerate, create no current-target input. Use the renderer-produced exact prompt. For an edit, call built-in `image_gen` with current target plus supplied source/comparator paths. For a regenerate, call it with supplied source/comparator paths and never the current target. With a temporary comparator gap, omit comparator path and include the renderer's literal no-comparator sentence. Make one call per attempt and at most three attempts. Hash at the returned generated-images path before moving; ledger it; byte-move to deterministic `candidates/record-N-attempt-I.png`; require hash equality and exact IHDR; run `verify_transient_candidate_files`; record and commit/push every rejected attempt before deleting it. Third rejection sets action blocked, commits/pushes, restores original bytes, cleans, and stops the task.
+- [ ] **Step R5 — Accept only direct human/source agreement.** Compare source/current/candidate/comparator side-by-side. Require exact canvas, supported identity/topology/material/working-surface orientation, common studio treatment, complete uncropped silhouette, and no unsupported detail. Record a specific rejection or acceptance reason. Byte-copy original target to context and hash/ledger it before moving accepted candidate bytes to the exact matrix asset. Require package-path hash equal candidate hash. Write exactly one accepted candidate, final hash/dimensions, accepted visual decision, completed action, and final comparator.
+- [ ] **Step R6 — Review geometry directly in Workbench.** Open the package and accepted presentation. Exercise normal, all-active, every logical hold/piece individually, and hit testing. Compare paths only to reopened primary evidence. If all boundaries agree, record all four passed checks and prove `board.json` SHA-256 equals its R1 hash. If one or more boundaries disagree, directly redraw only those named paths in Workbench, select a constraint only for a human-identified regular shape, repeat all four modes, and record every edited hold ID plus evidence pointer. Never derive geometry from raster pixels.
+- [ ] **Step R7 — Validate exact partial state.** Run package validation, the four common tests below plus the task's focused extras, and `audit-presentations --phase2-partial --batch-id "$phase2_batch_id"`. Require current/accepted hash equality, passed Workbench checks, no changes outside the task package/manifest/narrative, unchanged keeps, and no Phase 2 block. Write package/focused checks passed; leave full-suite/build/simulator pending.
 
   ```bash
   rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
@@ -496,923 +914,529 @@ Every `/records/N/evidence` entry in a repair table is an exact JSON-pointer rou
     Tools/HangboardPackages/tests/test_board_catalog.py \
     Tools/HangboardPackages/tests/test_approved_board_packages.py \
     Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
   rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
     --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id mixed-fixed-assemblies
+    --phase2-partial --batch-id "$phase2_batch_id"
   ```
+- [ ] **Step R8 — Commit, push, and clean.** Stage only the task's declared package directory, manifest, and narrative. Commit with the task's literal message and push. Execute the trap cleanup, then require absence of every ledger path, exact context directory, and owned generated-image path. Do not delete shared or unknown files.
 
-- [ ] **Step 7: Commit, push, and clean.**
+## Batch 1 — Nonwood and mixed-material fixed boards
 
-  ```bash
-  rtk git add Hangboards/escape-unlimited Hangboards/frictitious-doormount-pro-7 \
-    Hangboards/mammut-diamond-finger Hangboards/nature-stoak-board-iii \
-    Hangboards/zlagboard-evo Hangboards/zlagboard-pro \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair mixed-material fixed presentations"
-  rtk git push
-  ```
+### Task 10: Repair Escape Beta 22
 
-  Verify exact context/external cleanup and that no source image entered a package.
+**Files:** `Hangboards/escape-beta-22/assets/primary.png`, `Hangboards/escape-beta-22/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/11`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-escape-beta-22`; focused extra `Tools/HangboardPackages/tests/test_escape_beta_22_board_package.py`; commit `Repair Escape Beta 22 presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 11: Repair Evolv Kilter Basic Long
+
+**Files:** `Hangboards/evolv-kilter-basic-long/assets/primary.png`, `Hangboards/evolv-kilter-basic-long/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/13`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-evolv-kilter`; no focused extra; commit `Repair Evolv Kilter presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 12: Repair Metolius Contact
+
+**Files:** `Hangboards/metolius-contact/assets/primary.png`, `Hangboards/metolius-contact/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/28`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-metolius-contact`; no focused extra; commit `Repair Metolius Contact presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 13: Repair Metolius Foundry
+
+**Files:** `Hangboards/metolius-foundry/assets/primary.png`, `Hangboards/metolius-foundry/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/29`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-metolius-foundry`; no focused extra; commit `Repair Metolius Foundry presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 14: Repair Metolius Project
+
+**Files:** `Hangboards/metolius-project/assets/primary.png`, `Hangboards/metolius-project/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/33`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-metolius-project`; no focused extra; commit `Repair Metolius Project presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 15: Repair Metolius Simulator 3D
+
+**Files:** `Hangboards/metolius-simulator-3d/assets/primary.png`, `Hangboards/metolius-simulator-3d/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/35`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-metolius-simulator`; no focused extra; commit `Repair Metolius Simulator presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 16: Repair So iLL Iron Palm 2
+
+**Files:** `Hangboards/soill-iron-palm-2/assets/primary.png`, `Hangboards/soill-iron-palm-2/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/48`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-soill-iron-palm`; no focused extra; commit `Repair So iLL Iron Palm presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 17: Repair So iLL Split Palm
+
+**Files:** `Hangboards/soill-split-palm/assets/primary.png`, `Hangboards/soill-split-palm/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/49`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-soill-split-palm`; no focused extra; commit `Repair So iLL Split Palm presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 18: Repair So iLL Training Tiles
+
+**Files:** `Hangboards/soill-training-tiles/assets/primary.png`, `Hangboards/soill-training-tiles/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/50`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-soill-training-tiles`; no focused extra; commit `Repair So iLL Training Tiles presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 19: Repair Trango Rock Prodigy Forge
+
+**Files:** `Hangboards/trango-rock-prodigy-forge/assets/primary.png`, `Hangboards/trango-rock-prodigy-forge/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/62`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-forge`; no focused extra—the Training Center test is deliberately not run for Forge; commit `Repair Trango Rock Prodigy Forge presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 20: Repair Trango Rock Prodigy Training Center
+
+**Files:** `Hangboards/trango-rock-prodigy-training-center/assets/primary.png`, `Hangboards/trango-rock-prodigy-training-center/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/68`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-training-center`; focused extra `Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py`; commit `Repair Trango Rock Prodigy Training Center presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 21: Repair Escape Unlimited
+
+**Files:** `Hangboards/escape-unlimited/assets/primary.png`, `Hangboards/escape-unlimited/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/12`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-escape-unlimited`; no focused extra; commit `Repair Escape Unlimited presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 22: Repair Frictitious DoorMount Pro 7
+
+**Files:** `Hangboards/frictitious-doormount-pro-7/assets/primary.png`, `Hangboards/frictitious-doormount-pro-7/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/14`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-doormount-pro`; no focused extra; commit `Repair Frictitious DoorMount presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 23: Repair Mammut Diamond Finger
+
+**Files:** `Hangboards/mammut-diamond-finger/assets/primary.png`, `Hangboards/mammut-diamond-finger/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/26`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-mammut-diamond-finger`; no focused extra; commit `Repair Mammut Diamond Finger presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 24: Repair Nature Climbing Stoak Board III
+
+**Files:** `Hangboards/nature-stoak-board-iii/assets/primary.png`, `Hangboards/nature-stoak-board-iii/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/39`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-stoak-board`; no focused extra; commit `Repair Stoak Board presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 25: Repair the Zlagboard Evo and Pro family
+
+**Files:** `Hangboards/zlagboard-evo/assets/primary.png`, `Hangboards/zlagboard-evo/board.json`, `Hangboards/zlagboard-pro/assets/primary.png`, `Hangboards/zlagboard-pro/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/83` then `/records/84`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-zlagboard-family`; no focused extra; commit `Repair Zlagboard presentation family`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two inseparable current-revision family rows.**
+
+### Task 26: Gate the nonwood and mixed-material fixed-board batch
+
+**Files:** manifest and narrative only.
+
+- [ ] **Step 1:** Require exactly the 17 Batch 1 matrix rows completed, current/accepted hashes equal, four passed Workbench checks each, no blocked action, and all other action rows pending.
+- [ ] **Step 2:** Run `rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests`, final inventory, and partial audit with literal `--batch-id nonwood-fixed`; require all pass.
+- [ ] **Step 3:** Set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate nonwood fixed-board presentation repairs"`.
+
+## Batch 2 — Wood fixed and split boards
+
+### Task 27: Repair Beastmaker 1000
+
+**Files:** `Hangboards/beastmaker-1000/assets/primary.png`, `Hangboards/beastmaker-1000/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/1`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-beastmaker-1000`; focused extra `Tools/HangboardPackages/tests/test_beastmaker_depth_metadata.py`; commit `Repair Beastmaker 1000 presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 28: Repair Metolius Climber's Edge
+
+**Files:** `Hangboards/metolius-climbers-edge/assets/primary.png`, `Hangboards/metolius-climbers-edge/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/27`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-climbers-edge`; no focused extra; commit `Repair Metolius Climbers Edge presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 29: Repair Metolius Wood Grips Compact II
+
+**Files:** `Hangboards/metolius-wood-grips-compact-ii/assets/primary.png`, `Hangboards/metolius-wood-grips-compact-ii/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/36`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-wood-grips-compact`; no focused extra; commit `Repair Metolius Wood Grips Compact presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 30: Repair Moon Armstrong
+
+**Files:** `Hangboards/moon-armstrong/assets/primary.png`, `Hangboards/moon-armstrong/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/38`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-moon-armstrong`; focused extra `Tools/HangboardPackages/tests/test_moon_armstrong_geometry_repair.py`; commit `Repair Moon Armstrong presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 31: Repair the Tension Grindstone family
+
+**Files:** `Hangboards/tension-grindstone-original/assets/primary.png`, `Hangboards/tension-grindstone-original/board.json`, `Hangboards/tension-grindstone-pro/assets/primary.png`, `Hangboards/tension-grindstone-pro/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/56` then `/records/57`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-grindstone-family`; focused extra `Tools/HangboardPackages/tests/test_tension_grindstone_legacy_board_packages.py`; commit `Repair Tension Grindstone presentation family`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two inseparable family rows.**
+
+### Task 32: Repair Trango Rock Prodigy Natural
+
+**Files:** `Hangboards/trango-rock-prodigy-natural/assets/primary.png`, `Hangboards/trango-rock-prodigy-natural/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/63`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-natural`; no focused extra; commit `Repair Trango Rock Prodigy Natural presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 33: Repair YY VerticalBoard Evo
+
+**Files:** `Hangboards/yy-verticalboard-evo/assets/primary.png`, `Hangboards/yy-verticalboard-evo/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/79`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-verticalboard-evo`; no focused extra; commit `Repair YY VerticalBoard Evo presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 34: Repair YY VerticalBoard First
+
+**Files:** `Hangboards/yy-verticalboard-first/assets/primary.png`, `Hangboards/yy-verticalboard-first/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/80`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-verticalboard-first`; no focused extra; commit `Repair YY VerticalBoard First presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 35: Repair YY VerticalBoard Light
+
+**Files:** `Hangboards/yy-verticalboard-light/assets/primary.png`, `Hangboards/yy-verticalboard-light/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/81`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-verticalboard-light`; no focused extra; commit `Repair YY VerticalBoard Light presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 36: Repair YY VerticalBoard One
+
+**Files:** `Hangboards/yy-verticalboard-one/assets/primary.png`, `Hangboards/yy-verticalboard-one/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/82`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-verticalboard-one`; no focused extra; commit `Repair YY VerticalBoard One presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 37: Gate the wood fixed/split batch
+
+**Files:** manifest and narrative only.
+
+- [ ] **Step 1:** Require exactly the 11 Batch 2 matrix rows completed in addition to passed Batch 1, with accepted hashes/four Workbench checks/no blocks, and later rows pending.
+- [ ] **Step 2:** Run the full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id wood-fixed`; require all pass.
+- [ ] **Step 3:** Set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate wood fixed-board presentation repairs"`.
+
+## Batch 3 — Reversible and lifting portable devices
+
+### Task 38: Repair Captain Fingerfood Dual
+
+**Files:** `Hangboards/captain-fingerfood-dual/assets/primary.png`, `Hangboards/captain-fingerfood-dual/assets/reverse.png`, `Hangboards/captain-fingerfood-dual/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/3` then `/records/4`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-captain-dual`; no focused extra; commit `Repair Captain Fingerfood Dual presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
+
+### Task 39: Repair Captain Fingerfood Pocket
+
+**Files:** `Hangboards/captain-fingerfood-pocket/assets/primary.png`, `Hangboards/captain-fingerfood-pocket/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/5`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-captain-pocket`; no focused extra; commit `Repair Captain Fingerfood Pocket presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 40: Repair Captain Fingerfood Unlevel
+
+**Files:** `Hangboards/captain-fingerfood-unlevel/assets/primary.png`, `Hangboards/captain-fingerfood-unlevel/assets/reverse.png`, `Hangboards/captain-fingerfood-unlevel/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/6` then `/records/7`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-captain-unlevel`; no focused extra; commit `Repair Captain Fingerfood Unlevel presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
+
+### Task 41: Repair Crimptonite Helium Mobile
+
+**Files:** `Hangboards/crimptonite-helium-mobile/assets/primary.png`, `Hangboards/crimptonite-helium-mobile/assets/reverse.png`, `Hangboards/crimptonite-helium-mobile/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/8` then `/records/9`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-crimptonite-helium`; no focused extra; commit `Repair Crimptonite Helium presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
+
+### Task 42: Repair Frictitious NUG
+
+**Files:** `Hangboards/frictitious-nug/assets/primary.png`, `Hangboards/frictitious-nug/assets/reverse.png`, `Hangboards/frictitious-nug/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/16` then `/records/17`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-frictitious-nug`; no focused extra; commit `Repair Frictitious NUG presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
+
+### Task 43: Repair Metolius Light Rail 2
+
+**Files:** `Hangboards/metolius-light-rail-2/assets/primary.png`, `Hangboards/metolius-light-rail-2/assets/15mm-surface.png`, `Hangboards/metolius-light-rail-2/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/30` then `/records/31`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-light-rail`; no focused extra; commit `Repair Metolius Light Rail presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
+
+### Task 44: Repair Lattice MXEdge Lift Large and Small
+
+**Files:** `Hangboards/lattice-mxedge-lift-large/assets/primary.png`, `Hangboards/lattice-mxedge-lift-large/board.json`, `Hangboards/lattice-mxedge-lift-small/assets/primary.png`, `Hangboards/lattice-mxedge-lift-small/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/24` then `/records/25`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-mxedge-lift-family`; no focused extra; commit `Repair Lattice MXEdge Lift presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two size-family rows.**
+
+### Task 45: Repair Metolius Rock Rings 3D
+
+**Files:** `Hangboards/metolius-rock-rings-3d/assets/primary.png`, `Hangboards/metolius-rock-rings-3d/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/34`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-rock-rings`; no focused extra; commit `Repair Metolius Rock Rings presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 46: Repair Plateau Lifting Edge
+
+**Files:** `Hangboards/plateau-lifting-edge/assets/primary.png`, `Hangboards/plateau-lifting-edge/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/47`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-plateau-lifting-edge`; no focused extra; commit `Repair Plateau Lifting Edge presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 47: Gate the portable-device batch
+
+**Files:** manifest and narrative only.
+
+- [ ] **Step 1:** Require exactly the 15 Batch 3 rows completed in addition to Batches 1–2, with accepted hashes/four Workbench checks/no blocks, and later rows pending.
+- [ ] **Step 2:** Run the full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id portable`; require all pass.
+- [ ] **Step 3:** Set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate portable presentation repairs"`.
+
+## Batch 4 — Multi-orientation devices
+
+### Task 48: Repair Frictitious Port-A-Board
+
+**Files:** `Hangboards/frictitious-port-a-board/assets/primary.png`, `Hangboards/frictitious-port-a-board/assets/back.png`, `Hangboards/frictitious-port-a-board/assets/side.png`, `Hangboards/frictitious-port-a-board/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/18`, `/records/19`, then `/records/20`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-port-a-board`; no focused extra; commit `Repair Frictitious Port-A-Board presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the three orientations.**
+
+### Task 49: Repair Tension Flash Board
+
+**Files:** `Hangboards/tension-flash-board/assets/primary.png`, `Hangboards/tension-flash-board/assets/three-edge-inverted.png`, `Hangboards/tension-flash-board/assets/two-edge-surface.png`, `Hangboards/tension-flash-board/assets/two-edge-inverted.png`, `Hangboards/tension-flash-board/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/52`, `/records/53`, `/records/54`, then `/records/55`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-flash-board`; no focused extra; commit `Repair Tension Flash Board presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the four source-proved orientations.**
+
+### Task 50: Repair Owl Climb Poker
+
+**Files:** `Hangboards/owl-climb-poker/assets/face-a.png`, `Hangboards/owl-climb-poker/assets/face-b.png`, `Hangboards/owl-climb-poker/assets/face-c.png`, `Hangboards/owl-climb-poker/assets/face-d.png`, `Hangboards/owl-climb-poker/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/43`, `/records/44`, `/records/45`, then `/records/46`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-owl-poker`; no focused extra; commit `Repair Owl Climb Poker presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for faces A, B, C, and D.**
+
+### Task 51: Repair Trango Rock Prodigy Pivot
+
+**Files:** `Hangboards/trango-rock-prodigy-pivot/assets/primary.png`, `Hangboards/trango-rock-prodigy-pivot/assets/orientation-2.png`, `Hangboards/trango-rock-prodigy-pivot/assets/orientation-3.png`, `Hangboards/trango-rock-prodigy-pivot/assets/orientation-4.png`, `Hangboards/trango-rock-prodigy-pivot/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/64`, `/records/65`, `/records/66`, then `/records/67`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-pivot`; focused extra `Tools/HangboardPackages/tests/test_coderabbit_mirrored_geometry.py`; commit `Repair Trango Rock Prodigy Pivot presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the four source-proved orientations.**
+
+### Task 52: Repair YY Baguette Evo
+
+**Files:** `Hangboards/yy-baguette-evo/assets/primary.png`, `Hangboards/yy-baguette-evo/assets/shallow-pairs.png`, `Hangboards/yy-baguette-evo/assets/central-30-25.png`, `Hangboards/yy-baguette-evo/assets/central-20-6.png`, `Hangboards/yy-baguette-evo/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/69`, `/records/70`, `/records/71`, then `/records/72`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-baguette-evo`; no focused extra; commit `Repair YY Baguette Evo presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the four source-proved surfaces.**
+
+### Task 53: Repair YY Penta Evo
+
+**Files:** `Hangboards/yy-penta-evo/assets/primary.png`, `Hangboards/yy-penta-evo/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/76`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-penta-evo`; no focused extra; commit `Repair YY Penta Evo presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 54: Repair YY TravelBoard
+
+**Files:** `Hangboards/yy-travelboard/assets/primary.png`, `Hangboards/yy-travelboard/assets/reverse.png`, `Hangboards/yy-travelboard/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/77` then `/records/78`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-travelboard`; no focused extra; commit `Repair YY TravelBoard presentations`.
+
+- [ ] **Execute Steps R1–R8 sequentially for the two source-proved surfaces.**
+
+### Task 55: Gate the multi-orientation batch
+
+**Files:** manifest and narrative only.
+
+- [ ] **Step 1:** Require exactly the 22 Batch 4 rows completed in addition to Batches 1–3, with accepted hashes/four Workbench checks/no blocks.
+- [ ] **Step 2:** Run the full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id multi-orientation`; require all pass.
+- [ ] **Step 3:** Require cumulative totals 17 edits, 48 regenerations, zero removals, 19 byte-identical keeps, 85 current presentations, and zero Phase 2 blocks; set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate multi-orientation presentation repairs"`.
 
 ---
 
-### Task 6: Repair classic wood fixed boards
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/beastmaker-1000/board.json`, `Hangboards/metolius-climbers-edge/board.json`, `Hangboards/metolius-wood-grips-compact-ii/board.json`, `Hangboards/moon-armstrong/board.json`, `Hangboards/tension-grindstone-original/board.json`, `Hangboards/tension-grindstone-pro/board.json`, `Hangboards/trango-rock-prodigy-natural/board.json`
-- Modify: the seven exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 1, 27, 36, 38, 56, 57, and 63.
-- Produces: batch `wood-fixed-classic` with four regenerations and three bounded edits preserving source-proved grain, finish, topology, and revision identity.
-
-**Exclusive repair sub-batch (7 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/1` `beastmaker-1000/primary` | `Hangboards/beastmaker-1000/assets/primary.png` | `edit` | `wood`, full-width; current is edit target/topology lock; remove transparent/photo-like treatment while preserving exact pockets/slopers | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/1/evidence` |
-| `/records/27` `metolius.climbers-edge/primary` | `Hangboards/metolius-climbers-edge/assets/primary.png` | `regenerate` | `wood`, full-width; exact three-rail edge/sloper/jug face and source-proved mounting holes; current comparison only | `Hangboards/metolius-prime-rib/assets/primary.png` | `/records/27/evidence` |
-| `/records/36` `metolius.wood-grips-compact-ii/primary` | `Hangboards/metolius-wood-grips-compact-ii/assets/primary.png` | `regenerate` | `wood`, full-width; exact two-row Compact II face and production mounting points; current comparison only | `Hangboards/metolius-prime-rib/assets/primary.png` | `/records/36/evidence` |
-| `/records/38` `moon.armstrong/primary` | `Hangboards/moon-armstrong/assets/primary.png` | `edit` | `wood`, full-width; current is edit target/topology lock; convert branded/depth-labeled underscaled photo to unbranded studio treatment without changing hardwood geometry | `Hangboards/metolius-wood-grips-deluxe-ii/assets/primary.png` | `/records/38/evidence` |
-| `/records/56` `tension.grindstone-original/primary` | `Hangboards/tension-grindstone-original/assets/primary.png` | `regenerate` | `wood`, full-width; 2017 base revision with jugs and source-cited edge inventory, not Pro pockets; current comparison only | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/56/evidence`, repeating the first-party gap search |
-| `/records/57` `tension.grindstone-pro/primary` | `Hangboards/tension-grindstone-pro/assets/primary.png` | `edit` | `wood`, full-width; current is edit target/topology lock; remove transparent cutout while preserving Pro pocket/mono/jug/edge face | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/57/evidence`, repeating the first-party gap search |
-| `/records/63` `trango.rock-prodigy-natural/primary` | `Hangboards/trango-rock-prodigy-natural/assets/primary.png` | `regenerate` | `wood`, split fixed; exact beech two-piece face plus complete source-proved cleat/fastener assembly; current comparison only | gap `/records/63/comparator/baselineGap` | `/records/63/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-wood-fixed-classic`, mark ownership, install exact output/context traps, and byte-copy/hash all seven current assets.**
-
-- [ ] **Step 2: Reopen every URL and repeat every gap under records 1, 27, 36, 38, 56, 57, and 63. Save/hash minimum unmodified evidence, distinguish Grindstone 2017 from Pro and each Metolius revision, inspect source/current/comparator with `view_image`, and record actual Phase 2 evidence results.**
-
-- [ ] **Step 3: Populate exact prompts from each record. Use `precise-object-edit` with the current local target for records 1, 38, and 57, locking topology; use `product-mockup` for records 27, 36, 56, and 63 without current as input. Require exact existing canvas, orthographic working face, sourced wood species/finish/grain/lamination only, warm diffuse response without plastic gloss, and no invented mounting parts. Use one built-in call per candidate, maximum three.**
-
-- [ ] **Step 4: Hash/IHDR-check outputs, review evidence/current/candidate/comparator side by side, transiently verify candidates, and commit/push rejected provenance with message `Record rejected classic wood candidates` before deletion. Promote only one accepted untouched output per record.**
-
-- [ ] **Step 5: Review all seven in Workbench normal/all-active/every individual hold or piece/hit-test states. Edit canonical paths directly only if evidence proves them wrong; do not treat visible grain or raster shading as geometry. Hash review captures and record exact results.**
-
-- [ ] **Step 6: Run and record validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_moon_armstrong_geometry_repair.py \
-    Tools/HangboardPackages/tests/test_tension_grindstone_legacy_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id wood-fixed-classic
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/beastmaker-1000 Hangboards/metolius-climbers-edge \
-    Hangboards/metolius-wood-grips-compact-ii Hangboards/moon-armstrong \
-    Hangboards/tension-grindstone-original Hangboards/tension-grindstone-pro \
-    Hangboards/trango-rock-prodigy-natural \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair classic wood fixed presentations"
-  rtk git push
-  ```
-
-  Verify removal of only the exact owned context and built-in output paths.
-
----
-
-### Task 7: Repair the VerticalBoard wood fixed family
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/yy-verticalboard-evo/board.json`, `Hangboards/yy-verticalboard-first/board.json`, `Hangboards/yy-verticalboard-light/board.json`, `Hangboards/yy-verticalboard-one/board.json`
-- Modify: the four exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 79–82 as four distinct physical revisions.
-- Produces: batch `wood-fixed-verticalboard` with four completed regenerations; no model borrows component topology from another VerticalBoard revision.
-
-**Exclusive repair sub-batch (4 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/79` `yy.verticalboard-evo/primary` | `Hangboards/yy-verticalboard-evo/assets/primary.png` | `regenerate` | `wood`, full-width; exact expert face, two included -10 mm magnetic wedges, integrated storage, hidden inserts/six-screw mounting without invented front holes; current comparison only | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/79/evidence` |
-| `/records/80` `yy.verticalboard-first/primary` | `Hangboards/yy-verticalboard-first/assets/primary.png` | `regenerate` | `wood`, full-width; exact intermediate progressive-contact face and four included wall screws; optional magnetic inserts are not included; current comparison only | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/80/evidence` |
-| `/records/81` `yy.verticalboard-light/primary` | `Hangboards/yy-verticalboard-light/assets/primary.png` | `regenerate` | `wood`, full-width; exact beginner deep-contact face and source-proved four-point installation only; current comparison only | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/81/evidence`, preserving the raw-page limitation |
-| `/records/82` `yy.verticalboard-one/primary` | `Hangboards/yy-verticalboard-one/assets/primary.png` | `regenerate` | `wood`, full-width; exact all-level progressive face, two included wedges, integrated storage, hidden inserts/four-screw system; current comparison only | `Hangboards/beastmaker-2000/assets/primary.png` | `/records/82/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-wood-fixed-verticalboard`, mark ownership, trap exact resources, and byte-copy/hash all four originals.**
-
-- [ ] **Step 2: Reopen each record's complete evidence independently, repeat the Light limitation search, save/hash minimum unmodified references, and manually inspect sources/current/comparator with `view_image`. Record exact reopened URLs and do not let family resemblance substitute for revision proof.**
-
-- [ ] **Step 3: Write four separate `product-mockup` prompts populated from the exact record fields and explicit component rules in the table. Require existing untouched canvas, source-proved timber treatment, orthographic complete framing, and the Beastmaker comparator for style only. Call built-in `image_gen` once per candidate with local evidence/comparator paths, maximum three candidates per asset.**
-
-- [ ] **Step 4: Hash/IHDR-check and manually review all candidates; transiently validate bytes; commit/push rejection provenance with message `Record rejected VerticalBoard candidates` before deleting exact rejected files. Promote one accepted untouched output per revision.**
-
-- [ ] **Step 5: Inspect all four packages in Workbench normal/all-active/individual/hit-test states against their own primary evidence. Directly edit only proved paths, hash captures, and record truthful checks.**
-
-- [ ] **Step 6: Run package validation, the common focused tests, full package tests, and `--phase2-partial --batch-id wood-fixed-verticalboard`; all must pass.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id wood-fixed-verticalboard
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/yy-verticalboard-evo Hangboards/yy-verticalboard-first \
-    Hangboards/yy-verticalboard-light Hangboards/yy-verticalboard-one \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair VerticalBoard presentations"
-  rtk git push
-  ```
-
-  Verify all exact owned temporary and external outputs are absent.
-
----
-
-### Task 8: Repair Captain Fingerfood portable boards
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/captain-fingerfood-dual/board.json`, `Hangboards/captain-fingerfood-pocket/board.json`, `Hangboards/captain-fingerfood-unlevel/board.json`
-- Modify: the five exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 3–7 and keeps each product's coupled presentations together.
-- Produces: batch `portable-captain-fingerfood` with five completed regenerations and complete source-proved suspension components.
-
-**Exclusive repair sub-batch (5 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/3` `captain-fingerfood.dual/primary` | `Hangboards/captain-fingerfood-dual/assets/primary.png` | `regenerate` | `wood+ropeCord`, reversible portable; straight 20 mm face, complete sourced cord/hardware; current comparison only | gap `/records/3/comparator/baselineGap` | `/records/3/evidence` |
-| `/records/4` `captain-fingerfood.dual/reverse` | `Hangboards/captain-fingerfood-dual/assets/reverse.png` | `regenerate` | `wood+ropeCord`; curved 20 mm face head-on to itself with same physical assembly; current comparison only | gap `/records/4/comparator/baselineGap` | `/records/4/evidence` |
-| `/records/5` `captain-fingerfood.pocket/primary` | `Hangboards/captain-fingerfood-pocket/assets/primary.png` | `regenerate` | `wood+ropeCord`; exact 15/20 mm face and outer contacts plus suspension topology; current comparison only | gap `/records/5/comparator/baselineGap` | `/records/5/evidence` |
-| `/records/6` `captain-fingerfood.unlevel/primary` | `Hangboards/captain-fingerfood-unlevel/assets/primary.png` | `regenerate` | `wood+ropeCord`; curved 20 mm face and complete suspension assembly; current comparison only | gap `/records/6/comparator/baselineGap` | `/records/6/evidence` |
-| `/records/7` `captain-fingerfood.unlevel/reverse` | `Hangboards/captain-fingerfood-unlevel/assets/reverse.png` | `regenerate` | `wood+ropeCord`; curved 25 mm face head-on to itself and same sourced assembly; current comparison only | gap `/records/7/comparator/baselineGap` | `/records/7/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-portable-captain-fingerfood`, mark ownership, trap exact resources, and byte-copy/hash all five current assets.**
-
-- [ ] **Step 2: Reopen all official/independent URLs for records 3–7, repeat gaps, save/hash minimum unmodified face and suspension references, inspect every source/current/gap image manually with `view_image`, and record actual reviews. Verify reverse faces as separately usable surfaces rather than inferring them from fronts.**
-
-- [ ] **Step 3: Populate five `product-mockup` prompts from literal manifest fields. Require complete source-proved ropes/knots/hardware, exact wood finish, each selected face orthographic to itself, exact existing canvas, uncropped hardware, and no inferred depths/components. Call built-in imagegen once per candidate through exact local paths, maximum three per asset.**
-
-- [ ] **Step 4: Hash/IHDR-check untouched candidates; manually compare sources/current/candidate/gap; transiently verify bytes; commit/push rejected provenance with message `Record rejected Captain Fingerfood candidates`; then delete only recorded rejection/input bytes and promote one accepted output per record.**
-
-- [ ] **Step 5: Review all five presentations in Workbench normal/all-active/every individual hold and piece/hit-test states. Directly edit only source-proved errors and keep coupled physical geometry coherent without raster-derived alignment. Hash captures and record all checks.**
-
-- [ ] **Step 6: Run and record gates.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id portable-captain-fingerfood
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/captain-fingerfood-dual Hangboards/captain-fingerfood-pocket \
-    Hangboards/captain-fingerfood-unlevel \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair Captain Fingerfood presentations"
-  rtk git push
-  ```
-
-  Verify exact owned cleanup.
-
----
-
-### Task 9: Repair Helium Mobile, NUG, and Light Rail reversible boards
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/crimptonite-helium-mobile/board.json`, `Hangboards/frictitious-nug/board.json`, `Hangboards/metolius-light-rail-2/board.json`
-- Modify: the six exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 8, 9, 16, 17, 30, and 31; preserves every coupled face in one task.
-- Produces: batch `portable-reversible-edges` with three edits and three regenerations.
-
-**Exclusive repair sub-batch (6 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/8` `crimptonite.helium-mobile/primary` | `Hangboards/crimptonite-helium-mobile/assets/primary.png` | `edit` | `wood+ropeCord`; current edit target/topology lock for updated front edge/jug face; preserve three recesses and cited rough-side/smooth-contact constraint without universalizing owner measurements | gap `/records/8/comparator/baselineGap` | `/records/8/evidence` |
-| `/records/9` `crimptonite.helium-mobile/reverse` | `Hangboards/crimptonite-helium-mobile/assets/reverse.png` | `edit` | `wood+ropeCord`; current edit target/topology lock; make back jug/sloper head-on while retaining exact product | gap `/records/9/comparator/baselineGap` | `/records/9/evidence` |
-| `/records/16` `frictitious.nug/primary` | `Hangboards/frictitious-nug/assets/primary.png` | `regenerate` | `wood+ropeCord`; exact 20/25 mm face and source-proved cord; current comparison only; current official beech governs species | gap `/records/16/comparator/baselineGap` | `/records/16/evidence`, preserving poplar/beech conflict roles |
-| `/records/17` `frictitious.nug/reverse` | `Hangboards/frictitious-nug/assets/reverse.png` | `regenerate` | `wood+ropeCord`; exact 8/13 mm face and same sourced cord assembly; current comparison only | gap `/records/17/comparator/baselineGap` | `/records/17/evidence` |
-| `/records/30` `metolius.light-rail-2/20mm-side` | `Hangboards/metolius-light-rail-2/assets/primary.png` | `regenerate` | `wood+ropeCord`; exact reversible face only if reopened evidence resolves/contains the recorded nominal 20 vs 19/26 mm conflict; current comparison only | gap `/records/30/comparator/baselineGap` | `/records/30/evidence` |
-| `/records/31` `metolius.light-rail-2/15mm-side` | `Hangboards/metolius-light-rail-2/assets/15mm-surface.png` | `edit` | `wood+ropeCord`; current edit target/topology lock; restore uncropped complete suspension cord only, keep orthographic 15 mm face | gap `/records/31/comparator/baselineGap` | `/records/31/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-portable-reversible-edges`, mark ownership, install exact traps, and byte-copy/hash all six originals.**
-
-- [ ] **Step 2: Independently reopen and inspect every routed URL/gap/conflict. Save/hash only minimum unmodified references; inspect all source/current/gap images with `view_image`; record actual review. Do not average NUG species evidence or Light Rail depth conflicts. If the 20 mm face cannot be tied to an exact revision, block that record instead of inventing topology.**
-
-- [ ] **Step 3: Populate `precise-object-edit` prompts for records 8, 9, and 31 with current targets and invariant topology; populate `product-mockup` prompts for 16, 17, and 30 without current inputs. Route exact record material/surface/revision/findings/source roles/canvas, require complete uncropped cord/hardware and face-head-on composition, and apply no post-processing. One built-in call per candidate, maximum three.**
-
-- [ ] **Step 4: Hash/IHDR-check, manually review, transiently verify, and record all candidate dispositions. Commit/push rejections with message `Record rejected reversible edge candidates` before deleting exact bytes. Promote only accepted original outputs.**
-
-- [ ] **Step 5: Review all six presentations in Workbench normal/all-active/individual/hit-test states against primary evidence. Correct paths directly only when proved and never infer one face's geometry from another. Hash captures and record truth.**
-
-- [ ] **Step 6: Run package, focused, full-suite, and partial batch validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id portable-reversible-edges
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/crimptonite-helium-mobile Hangboards/frictitious-nug \
-    Hangboards/metolius-light-rail-2 \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair reversible edge presentations"
-  rtk git push
-  ```
-
-  Verify exact cleanup and accepted-output placement.
-
----
-
-### Task 10: Repair portable lifting and suspended products
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/lattice-mxedge-lift-large/board.json`, `Hangboards/lattice-mxedge-lift-small/board.json`, `Hangboards/metolius-rock-rings-3d/board.json`, `Hangboards/plateau-lifting-edge/board.json`
-- Modify: the four exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 24, 25, 34, and 47.
-- Produces: batch `portable-lifting-suspended` with two edits and two regenerations.
-
-**Exclusive repair sub-batch (4 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/24` `lattice.mxedge-lift-large/primary` | `Hangboards/lattice-mxedge-lift-large/assets/primary.png` | `edit` | `wood+ropeCord`, lifting edge; current edit target/topology lock; remove label/photo/crop treatment and retain complete MXLarge multi-edge assembly | gap `/records/24/comparator/baselineGap` | `/records/24/evidence` |
-| `/records/25` `lattice.mxedge-lift-small/primary` | `Hangboards/lattice-mxedge-lift-small/assets/primary.png` | `edit` | `wood+ropeCord`, lifting edge; current edit target/topology lock; remove label/photo/crop treatment and retain complete MXSmall assembly | gap `/records/25/comparator/baselineGap` | `/records/25/evidence` |
-| `/records/34` `metolius.rock-rings-3d/front-pair` | `Hangboards/metolius-rock-rings-3d/assets/primary.png` | `regenerate` | `resin+ropeCord`, suspended portable; complete two-unit cords/knots and exact jug/deep-pocket/flat-edge/lower-pocket topology, no false wood; current comparison only | gap `/records/34/comparator/baselineGap` | `/records/34/evidence` |
-| `/records/47` `plateau.lifting-edge/primary` | `Hangboards/plateau-lifting-edge/assets/primary.png` | `regenerate` | `metal+wood+ropeCord+mixedOther`, lifting edge; exact aluminum body, oak insert, 15/10 mm blocker, complete 6 mm Edelrid PES cord; current comparison only | gap `/records/47/comparator/baselineGap` | `/records/47/evidence`, repeating independent gap search |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-portable-lifting-suspended`, mark ownership, trap exact resources, and byte-copy/hash all four originals.**
-
-- [ ] **Step 2: Reopen all evidence URLs/gaps, save/hash minimum unmodified full-assembly and material views, inspect sources/current/comparator gaps with `view_image`, and record actual review. Do not infer missing Plateau independent facts.**
-
-- [ ] **Step 3: Use `precise-object-edit` for records 24 and 25 with target topology locked; use `product-mockup` for 34 and 47. Populate literal record revision/surface/material/component/findings/source-role/canvas fields, require complete uncropped ropes/knots/blockers, separate material cues, orthographic surface view, and no branding/text. Use one built-in call per candidate, maximum three.**
-
-- [ ] **Step 4: Hash/IHDR-check and manually compare all candidates; transiently verify; commit/push rejection provenance with message `Record rejected lifting and suspended candidates` before exact deletion; promote one accepted untouched candidate per record.**
-
-- [ ] **Step 5: Workbench-review normal/all-active/every hold or piece/hit testing for all four presentations. Directly correct only primary-evidence mismatches, hash captures, and record all results.**
-
-- [ ] **Step 6: Run and record validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id portable-lifting-suspended
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/lattice-mxedge-lift-large Hangboards/lattice-mxedge-lift-small \
-    Hangboards/metolius-rock-rings-3d Hangboards/plateau-lifting-edge \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair lifting and suspended presentations"
-  rtk git push
-  ```
-
-  Verify exact owned context and external output cleanup.
-
----
-
-### Task 11: Repair Port-A-Board and Flash Board multi-orientation products
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/frictitious-port-a-board/board.json`, `Hangboards/tension-flash-board/board.json`
-- Modify: the seven exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 18–20 and 52–55; preserves all coupled presentations for each physical product.
-- Produces: batch `multi-port-a-board-flash` with three edits and four regenerations.
-
-**Exclusive repair sub-batch (7 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/18` `frictitious.port-a-board/primary` | `Hangboards/frictitious-port-a-board/assets/primary.png` | `edit` | `wood+ropeCord`, multi-orientation; current edit target/topology lock for front edge/pocket face; remove branded/photo-like treatment, retain complete hardware | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/18/evidence` |
-| `/records/19` `frictitious.port-a-board/back` | `Hangboards/frictitious-port-a-board/assets/back.png` | `edit` | `wood+ropeCord`; current edit target/topology lock for back edge/jug face head-on to itself | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/19/evidence` |
-| `/records/20` `frictitious.port-a-board/side` | `Hangboards/frictitious-port-a-board/assets/side.png` | `edit` | `wood+ropeCord`; current edit target/topology lock for narrow side pinch, with the side working surface orthographic | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/20/evidence` |
-| `/records/52` `tension.flash-board/three-edge-upright` | `Hangboards/tension-flash-board/assets/primary.png` | `regenerate` | `wood+ropeCord`; complete adjustable cord/knots and upright three-edge cylinder surface; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/52/evidence` |
-| `/records/53` `tension.flash-board/three-edge-inverted` | `Hangboards/tension-flash-board/assets/three-edge-inverted.png` | `regenerate` | `wood+ropeCord`; complete adjustable cord/knots, inverted three-edge surface, no transparent cutout; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/53/evidence` |
-| `/records/54` `tension.flash-board/two-edge-upright` | `Hangboards/tension-flash-board/assets/two-edge-surface.png` | `regenerate` | `wood+ropeCord`; complete adjustable cord/knots and upright two-edge cylinder surface; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/54/evidence` |
-| `/records/55` `tension.flash-board/two-edge-inverted` | `Hangboards/tension-flash-board/assets/two-edge-inverted.png` | `regenerate` | `wood+ropeCord`; complete adjustable cord/knots and inverted two-edge surface; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/55/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-multi-port-a-board-flash`, mark ownership, install exact traps, and byte-copy/hash all seven current assets.**
-
-- [ ] **Step 2: Freshly reopen every routed URL/gap for all seven records, including direct proof that every back/side/inversion is intended for use. Save/hash minimum unmodified surface and full-cord references, inspect sources/current/Mini Bar comparator with `view_image`, and record literal review results. Preserve Tension's 8/10/15/20 mm naming and do not reintroduce 6 mm.**
-
-- [ ] **Step 3: Use `precise-object-edit` for Port-A-Board records with current targets as topology locks; use `product-mockup` for Flash Board records without current inputs. Populate every literal revision/surface/material/source-role/finding/canvas field, require selected surface head-on, whole product/cords uncropped, and use Mini Bar only for style. Call built-in `image_gen` separately for each candidate, at most three per asset.**
-
-- [ ] **Step 4: Hash/IHDR-check and manually review each candidate; transiently verify; commit/push rejection provenance with message `Record rejected Port-A-Board and Flash Board candidates` before deletion; promote only one exact accepted output per record.**
-
-- [ ] **Step 5: Workbench-review all seven normal/all-active/every individual hold or piece/hit-test states. Verify presentation switching scopes the correct holds. Directly edit paths only when primary evidence proves them wrong; never register one orientation to another. Hash captures and record results.**
-
-- [ ] **Step 6: Run and record validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id multi-port-a-board-flash
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/frictitious-port-a-board Hangboards/tension-flash-board \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair Port-A-Board and Flash Board presentations"
-  rtk git push
-  ```
-
-  Verify exact owned cleanup and no comparator/source bytes in packages.
-
----
-
-### Task 12: Edit all four Poker working faces
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/owl-climb-poker/board.json`
-- Modify: the four exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 43–46 and the Phase 1 ruling that local face IDs A–D are analyst mappings, not manufacturer numeric labels.
-- Produces: batch `multi-poker` with four bounded brand-removal edits and no topology/depth reassignment.
-
-**Exclusive repair sub-batch (4 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/43` `owl-climb.poker/face-a` | `Hangboards/owl-climb-poker/assets/face-a.png` | `edit` | `wood+mixedOther`; current edit target/topology lock for flat-center face; remove only engraved Owl mark | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/43/evidence`, including fresh first-party route attempt |
-| `/records/44` `owl-climb.poker/face-b` | `Hangboards/owl-climb-poker/assets/face-b.png` | `edit` | `wood+mixedOther`; current edit target/topology lock for deep-sloper face; remove only mark | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/44/evidence` |
-| `/records/45` `owl-climb.poker/face-c` | `Hangboards/owl-climb-poker/assets/face-c.png` | `edit` | `wood+mixedOther`; current edit target/topology lock for shallow half-round face; remove only mark | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/45/evidence` |
-| `/records/46` `owl-climb.poker/face-d` | `Hangboards/owl-climb-poker/assets/face-d.png` | `edit` | `wood+mixedOther`; current edit target/topology lock for deep rounded-recess face; remove only mark | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/46/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-multi-poker`, record ownership, trap exact resources, and byte-copy/hash all four originals.**
-
-- [ ] **Step 2: Reopen all record evidence and the direct first-party route for each face. Save/hash minimum unmodified four-face references, inspect sources/current/Mini Bar style comparator with `view_image`, and record actual result. Preserve published board-level depth sequences as board-level facts; do not assign them to analyst face IDs without direct proof.**
-
-- [ ] **Step 3: Populate four `precise-object-edit` prompts with each current asset first, exact 1980×300 canvas, invariants locking the whole bar/support/contact geometry/material/framing, and one bounded request: remove the engraved brand mark into the same source-proved wood surface. No other change is permitted. Make one built-in call per candidate, maximum three per face.**
-
-- [ ] **Step 4: Hash/IHDR-check and compare source/current/candidate/comparator for each face. Reject any topology, shading, framing, support, or material drift. Transiently verify and commit/push rejections with message `Record rejected Poker edit candidates` before deletion; promote one accepted output per face.**
-
-- [ ] **Step 5: Workbench-review all four faces in normal/all-active/every hold or piece/hit-test states and presentation switching. Direct geometry changes are expected only if fresh primary evidence proves an existing path wrong; do not use candidate pixels. Hash captures and record checks.**
-
-- [ ] **Step 6: Run package validation, common focused tests, full package tests, and partial validation for `multi-poker`.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id multi-poker
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/owl-climb-poker \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Remove branding from Poker presentations"
-  rtk git push
-  ```
-
-  Verify exact owned cleanup.
-
----
-
-### Task 13: Regenerate all four Rock Prodigy Pivot orientations
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/trango-rock-prodigy-pivot/board.json`
-- Modify: the four exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 64–67, the Pivot quick-start guide, and the Pivot package as the repository's direct-geometry structural/path-style precedent only.
-- Produces: batch `multi-rock-prodigy-pivot` with four complete source-proved orientations and quad-cleat assembly.
-
-**Exclusive repair sub-batch (4 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/64` `trango.rock-prodigy-pivot/orientation-1` | `Hangboards/trango-rock-prodigy-pivot/assets/primary.png` | `regenerate` | `urethane`; exact orientation-1 jug/sloper/pinch/supported-crimp face and quad-cleat assembly, controlled molded relief; current comparison only | gap `/records/64/comparator/baselineGap` | `/records/64/evidence` |
-| `/records/65` `trango.rock-prodigy-pivot/orientation-2` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-2.png` | `regenerate` | `urethane`; exact orientation-2 mono/gaston/small-crimp face and same sourced assembly; current comparison only | gap `/records/65/comparator/baselineGap` | `/records/65/evidence` |
-| `/records/66` `trango.rock-prodigy-pivot/orientation-3` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-3.png` | `regenerate` | `urethane`; exact orientation-3 pocket/supported-crimp/sloper face; current comparison only | gap `/records/66/comparator/baselineGap` | `/records/66/evidence` |
-| `/records/67` `trango.rock-prodigy-pivot/orientation-4` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-4.png` | `regenerate` | `urethane`; exact orientation-4 compression-pinch/mono face; current comparison only | gap `/records/67/comparator/baselineGap` | `/records/67/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-multi-rock-prodigy-pivot`, mark ownership, install exact traps, and byte-copy/hash all four originals.**
-
-- [ ] **Step 2: Reopen every official/independent URL and quick-start evidence per orientation. Save/hash minimum unmodified orientation and cleat references, inspect source/current/gap images with `view_image`, and record exact reviews. A picture of one rotation may establish the shared assembly but cannot prove another face's contacts.**
-
-- [ ] **Step 3: Write four separate `product-mockup` prompts from each record's literal fields, with exact 1774×887 untouched canvas, selected surface orthographic, complete quad-cleat assembly, matte urethane and controlled relief, and no inferred contacts/hardware. Use one built-in call per candidate, maximum three per orientation.**
-
-- [ ] **Step 4: Hash/IHDR-check and side-by-side review all candidates; transiently verify; commit/push rejections with message `Record rejected Rock Prodigy Pivot candidates` before deletion; promote exactly one accepted output per orientation.**
-
-- [ ] **Step 5: Workbench-review normal/all-active/every individual hold/piece/hit testing for each orientation and presentation switching. Directly redraw any proved path; exact left/right mirroring is permitted only where the primary guide proves physical symmetry. Hash captures and record checks.**
-
-- [ ] **Step 6: Run and record validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_coderabbit_mirrored_geometry.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id multi-rock-prodigy-pivot
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/trango-rock-prodigy-pivot \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair Rock Prodigy Pivot presentations"
-  rtk git push
-  ```
-
-  Verify exact context/output cleanup.
-
----
-
-### Task 14: Regenerate the four non-kept Baguette Evo surfaces
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/yy-baguette-evo/board.json`
-- Modify: the four exclusive assets declared below
-- Preserve byte-for-byte: the `rounded-tray` keep presentation in the same package
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 69–72; record 73 remains an immutable keep in the same product.
-- Produces: batch `multi-baguette-evo` with four regenerations while proving the accepted tray bytes remain unchanged.
-
-**Exclusive repair sub-batch (4 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/69` `yy.baguette-evo/paired-25-20-15-10` | `Hangboards/yy-baguette-evo/assets/primary.png` | `regenerate` | `wood+ropeCord`; paired 25/20/15/10 surface with complete source-proved cords; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/69/evidence` |
-| `/records/70` `yy.baguette-evo/paired-12-8-6` | `Hangboards/yy-baguette-evo/assets/shallow-pairs.png` | `regenerate` | `wood+ropeCord`; paired 12/8/6 surface and complete cords; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/70/evidence` |
-| `/records/71` `yy.baguette-evo/central-30-25` | `Hangboards/yy-baguette-evo/assets/central-30-25.png` | `regenerate` | `wood+ropeCord`; central 30/25 surface and complete cords; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/71/evidence` |
-| `/records/72` `yy.baguette-evo/central-20-6` | `Hangboards/yy-baguette-evo/assets/central-20-6.png` | `regenerate` | `wood+ropeCord`; central 20/6 surface and complete cords; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/72/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-multi-baguette-evo`, mark ownership, install exact traps, byte-copy/hash the four targets, and separately record the keep tray hash as a no-change assertion.**
-
-- [ ] **Step 2: Reopen every record's official/independent evidence and conflicts. Save/hash minimum unmodified surface/cord references, inspect sources/current/Mini Bar comparator plus the accepted tray with `view_image`, and record review. Use exact current Evo evidence (6–30 mm, 52 cm, 550 g) and do not import the earlier 5 mm/12–5 mm/415 g configuration.**
-
-- [ ] **Step 3: Populate four `product-mockup` prompts with exact record surfaces/materials/canvas/source roles, full uncropped polyester cord, selected surface head-on, and Mini Bar style-only treatment. Do not infer a different cord chemistry. Call built-in imagegen once per candidate, maximum three per surface.**
-
-- [ ] **Step 4: Hash/IHDR-check and manually review; transiently verify; commit/push rejection provenance with message `Record rejected Baguette Evo candidates` before exact deletion; promote one accepted untouched output per changed surface. Re-hash the tray and fail if it changed.**
-
-- [ ] **Step 5: Workbench-review all four changed surfaces normal/all-active/individual/hit-test plus presentation switching, and visually re-check the kept tray without modifying it. Directly edit only source-proved canonical-path errors. Hash captures and record checks.**
-
-- [ ] **Step 6: Run package validation, common focused tests, full package tests, and partial batch validation; assert the keep tray hash still equals `/records/73/currentAsset/sha256`.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id multi-baguette-evo
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/yy-baguette-evo \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair Baguette Evo presentations"
-  rtk git push
-  ```
-
-  Verify exact owned cleanup and immutable tray bytes.
-
----
-
-### Task 15: Regenerate Penta Evo and both TravelBoard faces
-
-**Files:**
-- Inspect and conditionally modify: `Hangboards/yy-penta-evo/board.json`, `Hangboards/yy-travelboard/board.json`
-- Modify: the three exclusive assets declared below
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: records 76–78 and keeps both TravelBoard faces coupled.
-- Produces: batch `multi-yy-penta-travel` with three completed regenerations.
-
-**Exclusive repair sub-batch (3 presentations):**
-
-| Record | Asset path | Mode | Material/render and current role | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/76` `yy.penta-evo/front-pair` | `Hangboards/yy-penta-evo/assets/primary.png` | `regenerate` | `wood+ropeCord`; paired front orientation, ring jug, distributed contacts, and complete source-proved cords; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/76/evidence`, preserving seven/eight grip count conflict |
-| `/records/77` `yy.travelboard/front-25-15` | `Hangboards/yy-travelboard/assets/primary.png` | `regenerate` | `wood+ropeCord`; front 25/15 rails with jug/monos and complete cords; current comparison only; do not resolve species by averaging | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/77/evidence`, preserving beech/rubberwood conflict |
-| `/records/78` `yy.travelboard/reverse-10` | `Hangboards/yy-travelboard/assets/reverse.png` | `regenerate` | `wood+ropeCord`; reverse 10 mm rail working face head-on to itself and same complete physical assembly; current comparison only | `Hangboards/lattice-mini-bar/assets/primary.png` | `/records/78/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-multi-yy-penta-travel`, mark ownership, trap exact resources, and byte-copy/hash all three originals.**
-
-- [ ] **Step 2: Reopen all routed evidence URLs/gaps/conflicts, save/hash minimum unmodified orientation/cord references, inspect source/current/Mini Bar comparator with `view_image`, and record actual review. Preserve unresolved Penta count and TravelBoard species conflicts; omit details not established for the depicted revision.**
-
-- [ ] **Step 3: Populate three `product-mockup` prompts from literal record fields with complete polyester cords, selected face orthographic, existing exact canvas, material facts only where source-resolved, and Mini Bar style only. Call built-in imagegen once per candidate, maximum three per asset.**
-
-- [ ] **Step 4: Hash/IHDR-check and manually review; transiently verify; commit/push rejection provenance with message `Record rejected Penta and TravelBoard candidates` before deletion; promote only accepted untouched outputs.**
-
-- [ ] **Step 5: Workbench-review normal/all-active/every individual hold or piece/hit testing for all three and presentation switching for TravelBoard. Directly edit only proved paths, hash captures, and record checks.**
-
-- [ ] **Step 6: Run and record package, focused, full-suite, and partial validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id multi-yy-penta-travel
-  ```
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/yy-penta-evo Hangboards/yy-travelboard \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Repair Penta Evo and TravelBoard presentations"
-  rtk git push
-  ```
-
-  Verify exact owned cleanup.
-
----
-
-### Task 16: Remove the unsupported Lattice Mini Bar end presentation
+### Task 56: Remove only the unsupported Mini Bar end presentation and retain all four grips
 
 **Files:**
 - Modify: `Hangboards/lattice-mini-bar/board.json`
-- Delete: the one exclusive asset declared below
-- Modify: `Tools/HangboardPackages/tests/test_approved_board_packages.py`
-- Modify if removal lifecycle coverage needs a real-catalog assertion: `Tools/HangboardPackages/tests/test_presentation_remediation_audit.py`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
+- Delete: `Hangboards/lattice-mini-bar/assets/end.png`
+- Preserve byte-for-byte: `Hangboards/lattice-mini-bar/assets/primary.png`
+- Modify: `Tools/HangboardPackages/tests/test_presentation_remediation_audit.py`
+- Modify: `Tools/HangboardPackages/tests/test_board_catalog.py`
+- Modify: manifest and narrative
 
-**Interfaces:**
-- Consumes: record 23's canonical sourced unusability proof and the package's current inventory.
-- Produces: batch `lattice-mini-bar-removal`, a historical removal record, and a valid one-presentation Mini Bar package without `mini-pinch`.
+**Interfaces:** owns only `/records/23` `lattice.mini-bar/end`; batch `mini-bar-removal`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-remove-mini-bar-end`; consumes the official and independent record-23 evidence proving one physical four-grip lengthwise bar; produces one `primary` presentation, the same four hold IDs, a directly reauthored lengthwise `mini-pinch`, an absent `end.png`, one historical removal, and no image-generation call.
 
-**Exclusive repair sub-batch (1 sourced removal):**
+- [ ] **Step 1: Establish sourced removal truth and backups.** Run the exact ownership/trap recipe with the literal context. Reopen every official and independent record-23 URL and repeat each gap search. Record exact URL/role/date/result. Hash and ledger rollback copies of `primary.png`, `end.png`, and `board.json`. Require `primary.png` hash equal its historical keep hash.
+- [ ] **Step 2: Add this exact failing package test.** Put the assertion in `test_board_catalog.py`; add parallel removal-history assertions to the audit test.
 
-| Record | Asset path | Mode | Inventory/geometry action | Comparator | Evidence to reopen |
-| --- | --- | --- | --- | --- | --- |
-| `/records/23` `lattice.mini-bar/end` | `Hangboards/lattice-mini-bar/assets/end.png` | `removeUnsupportedPresentation` | remove presentation ID `end`, hold ID `mini-pinch`, and only this PNG; preserve `primary`, `ergonomic-jug`, `edge-10`, `edge-20`, all their geometry, and primary bytes | `Hangboards/lattice-mini-bar/assets/primary.png` remains the accepted self-baseline | every URL under `/records/23/evidence` |
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-lattice-mini-bar-removal`, add the owner marker/trap, and hash/copy the complete pre-removal `board.json`, `primary.png`, and end PNG for exact audit/rollback. No imagegen call is permitted.**
-
-- [ ] **Step 2: Freshly reopen every official and independent URL under `/records/23/evidence`. Confirm the four lengthwise grips are selected by flipping the bar and the declared end cap is not a usable working surface. Record literal reopened URLs and the actual date; if canonical unusability proof no longer holds, block instead of deleting.**
-
-- [ ] **Step 3: Write a failing real-catalog inventory test before mutation.**
-
-  Assert Mini Bar has exactly one `primary` presentation, exactly the three hold IDs `ergonomic-jug`, `edge-10`, and `edge-20`, no hold with `presentationID == "end"`, and an asset set of exactly `{"primary.png"}`. Also assert record 23 remains historical and authorizes the absent presentation/hold/asset.
-
-- [ ] **Step 4: Run the focused tests and confirm RED.**
-
-  ```bash
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py
+  ```python
+  def test_lattice_mini_bar_retains_four_physical_grips_on_lengthwise_presentation() -> None:
+      module = load_board_catalog_module()
+      repository_root = Path(__file__).resolve().parents[3]
+      package = module.load_board_package(repository_root / "Hangboards/lattice-mini-bar")
+      assert [presentation.id for presentation in package.board.presentations] == ["primary"]
+      assert package.board.presentations[0].asset_path == "assets/primary.png"
+      assert {hold.id for hold in package.board.holds} == {
+          "ergonomic-jug",
+          "edge-10",
+          "edge-20",
+          "mini-pinch",
+      }
+      assert {hold.presentation_id for hold in package.board.holds} == {"primary"}
+      assert not (repository_root / "Hangboards/lattice-mini-bar/assets/end.png").exists()
   ```
 
-  Expected: FAIL because `end`, `mini-pinch`, and the end PNG still exist.
+- [ ] **Step 3: Confirm RED.** Run only the two test files. Expected: current `end` presentation/file and `mini-pinch.presentationID == "end"` fail the new assertions.
+- [ ] **Step 4: Directly reauthor the Mini Pinch on the lengthwise view.** Open `primary` in Workbench alongside the reopened straight-on and oblique Mini Bar evidence. Deliberately draw the `mini-pinch` canonical path over its source-proved lengthwise contact and set only `mini-pinch.presentationID` from `end` to `primary`; do not reuse, project, transform, align, or infer the old end-view path. Review `ergonomic-jug`, `edge-10`, `edge-20`, and `mini-pinch` in normal, all-active, individual, and hit-test modes. Record the new path commands and evidence pointers in the narrative.
+- [ ] **Step 5: Remove only the unsupported presentation.** Delete only the `end` presentation object and `Hangboards/lattice-mini-bar/assets/end.png`. Do not delete or rename any hold. Do not change the `primary` presentation object or PNG. Complete `/records/23` as `removeUnsupportedPresentation`, `phase2EvidenceReview.confirmed`, four passed Workbench checks, removed visual decision, and `simulatorReview.notApplicableRemovedPresentation` with the same source evidence. Set the removal batch checks/status passed.
+- [ ] **Step 6: Validate and prove exact scope.** Run the two focused test files, full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id mini-bar-removal`. Require 61 packages, 84 current presentations, 85 historical records, four Mini Bar holds on `primary`, absent `end.png`, unchanged `primary.png` hash, 19 byte-identical keeps, and one completed removal.
+- [ ] **Step 7: Commit/push and clean.** Stage only the declared files; commit `Retain Mini Bar grips while removing end presentation`; push; execute the trap; require exact owned paths absent.
 
-- [ ] **Step 5: Perform the narrow inventory/geometry removal.**
+### Task 57: Perform the direct cross-catalog visual and integrity review
 
-  Use `apply_patch` to remove only the `end` presentation object and `mini-pinch` hold object from `board.json`, then delete only the exact end PNG. Do not change package identity, primary presentation, primary asset bytes, the remaining three holds, their canonical paths, or any unrelated package field. Set record 23 final decision to removed, generation to none/empty, Workbench visual checks to `notRequired` with the sourced-removal reason, and validation truth to actual results.
+**Files:** manifest and narrative only; no package changes.
 
-- [ ] **Step 6: Prove narrowness and validate.**
+**Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-cross-catalog-review`; consumes the final 84 presentation paths and all 85 historical records; produces a terminal review entry for every current presentation and an absent-presentation entry for `/records/23`.
+
+- [ ] **Step 1: Own review artifacts.** Install the ownership/trap recipe with the literal context; hash/ledger every montage or screenshot before it can be deleted.
+- [ ] **Step 2: Inspect all current presentations directly.** In deterministic package/presentation order, open each of the 84 PNGs with `view_image`, compare the 65 replacements to reopened evidence and their final comparator, and compare the 19 keeps to their historical hashes. Record one terminal result per current key: `passed` with image hash/date/reviewer notes, or `blocked` with a concrete defect. Record `/records/23` as `notApplicableRemovedPresentation` only after checking the absent file/presentation and retained four-grip Mini Bar truth.
+- [ ] **Step 3: Inspect the catalog as a cohort.** Require common off-white background, centered orthographic working surface, complete silhouettes, comparable scale/framing within form-factor cohorts, neutral light/shadow, no branding/text/watermarks, and source-proved material cues. Require 17 edited hashes, 48 regenerated hashes, 19 unchanged hashes, and one absent historical path.
+- [ ] **Step 4: Route defects to their exclusive owners.** A defect reopens the owning product task and its following batch gate; do not alter package bytes in Task 57. The owner changes the prior accepted disposition to rejected with the cross-catalog reason, uses only the remaining slots in the original three-attempt limit, and finishes with exactly one accepted candidate. Exhausting attempt 3 blocks the owner and stops Phase 2. Repeat Task 57 only after the owner commits/pushes a new accepted candidate and the affected gate passes.
+- [ ] **Step 5: Validate and close.** Run the full HangboardPackages tests, final inventory, and partial audit. Set `phase2.finalChecks.crossCatalogReview` passed only after all 85 entries are terminal and no defect remains. Commit/push with `rtk git commit -m "Review remediated presentation catalog"`; execute and verify exact cleanup.
+
+## Isolated iOS direct-inspection recipe
+
+Tasks 58–61 use `validate-hang-ten-ios` and read `docs/IOS_SIMULATOR_VALIDATION.md` plus `docs/IOS_RUNTIME_SERVICES.md` completely before creating a simulator. Each task creates exactly the two literal devices stated in its Interfaces line. Set `phase2_phone_device_type_id=com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro` and `phase2_tablet_device_type_id=com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4`; require both exact identifiers in `xcrun simctl list devicetypes -j`. Set `phase2_runtime_id` to the final item after filtering `xcrun simctl list runtimes -j` to available iOS runtimes and sorting numeric `version` components ascending; require exactly one non-null selected identifier. Commit the three literal identifiers and both JSON-query commands as environment evidence. Install the skill's exact pending/owned manifest traps before either `simctl create`, append each validated UUID to pending before owned, and use those two explicit UUIDs for every later command. Never address `booted`.
+
+```zsh
+phase2_phone_device_type_id='com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro'
+phase2_tablet_device_type_id='com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4'
+phase2_device_types_json="$(rtk xcrun simctl list devicetypes -j)"
+print -r -- "$phase2_device_types_json" | rtk jq -e --arg id "$phase2_phone_device_type_id" \
+  'any(.devicetypes[]; .identifier == $id)'
+print -r -- "$phase2_device_types_json" | rtk jq -e --arg id "$phase2_tablet_device_type_id" \
+  'any(.devicetypes[]; .identifier == $id)'
+phase2_runtime_id="$(rtk xcrun simctl list runtimes -j | rtk jq -er \
+  '[.runtimes[] | select(.isAvailable == true and (.name | startswith("iOS "))) \
+    | {identifier, numericVersion: (.version | split(".") | map(tonumber))}] \
+   | sort_by(.numericVersion) | last | .identifier')"
+test -n "$phase2_runtime_id"
+```
+
+Build once per task for the explicit phone destination, with signing enabled and an 1,800-second hard bound:
+
+```bash
+rtk perl -e 'alarm 1800; exec @ARGV' xcodebuild \
+  -project HangTen.xcodeproj -scheme HangTen -configuration Debug \
+  -destination "platform=iOS Simulator,id=$phase2_phone_uuid" \
+  -derivedDataPath .context/DerivedData build-for-testing
+```
+
+`phase2_phone_uuid` is assigned only from the validated `simctl create` result for the task's exact Phone resource. A timeout or nonzero exit sets every unreviewed owned record to `blocked`, records the command/result, commits/pushes that terminal state, runs archive cleanup, and stops the task. Install the exact built app on both UUIDs, verify each app container and built/installed executable hash, and launch by explicit UUID.
+
+For each owned image-repair record, inspect both devices directly and record a separate run. Use `HANGTEN_REVIEW_BOARD_PICKER=1` to open the picker, select `boardPicker.board.<packageID>`, and prove the catalog/normal view. Open a compatible plan and workout with the review routes when the repository has a plan whose declared board compatibility includes that package; otherwise record only the plan flow as `notApplicableNoCompatiblePlan` and cite the catalog query that returned no plan. Inspect inactive and active/highlight states, every logical hold/piece individually, and hit-test alignment. Open every presentation in source order; only a package with exactly one current presentation records selector `notApplicableSinglePresentation`. Capture at least one inactive, one all-active, one individual-hold, and one selector image per multi-presentation package on each device; hash every capture before cleanup. All other applicable flows must be `passed`. A presentation defect reopens its product task under Task 57's remaining-attempt rule, then repeats the affected batch gate, Task 57, and this simulator task; the QA task itself never changes package bytes.
+
+After the last record, run partial audit and require every owned `simulatorReview.state == passedDirectInspection`, exactly one phone/one tablet run, all seven terminal flows, nonempty capture hashes, and literal environment IDs. Commit/push manifest/narrative before cleanup. Invoke the skill's archive cleanup; require both exact UUIDs absent, pending/owned entries consumed, and `.context/DerivedData`, `.context/workout-raw.png`, and `.context/workout-landscape.png` absent. Preserve manifests and fail if archive cleanup fails; never delete a shared or unknown simulator.
+
+### Task 58: Directly inspect Batch 1 presentations on iPhone and iPad
+
+**Files:** manifest and narrative only.
+
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-58 Phone` and `Hang Ten Paseo sincere-otter Task-58 Tablet`; owns exactly `/records/11`, `/records/13`, `/records/28`, `/records/29`, `/records/33`, `/records/35`, `/records/48`, `/records/49`, `/records/50`, `/records/62`, `/records/68`, `/records/12`, `/records/14`, `/records/26`, `/records/39`, `/records/83`, `/records/84`; commit `Validate nonwood presentation repairs on iOS`.
+
+- [ ] **Execute the isolated iOS direct-inspection recipe for all 17 records, commit/push, and prove cleanup.**
+
+### Task 59: Directly inspect Batch 2 presentations on iPhone and iPad
+
+**Files:** manifest and narrative only.
+
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-59 Phone` and `Hang Ten Paseo sincere-otter Task-59 Tablet`; owns exactly `/records/1`, `/records/27`, `/records/36`, `/records/38`, `/records/56`, `/records/57`, `/records/63`, `/records/79`, `/records/80`, `/records/81`, `/records/82`; commit `Validate wood presentation repairs on iOS`.
+
+- [ ] **Execute the isolated iOS direct-inspection recipe for all 11 records, commit/push, and prove cleanup.**
+
+### Task 60: Directly inspect Batch 3 presentations on iPhone and iPad
+
+**Files:** manifest and narrative only.
+
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-60 Phone` and `Hang Ten Paseo sincere-otter Task-60 Tablet`; owns exactly `/records/3`, `/records/4`, `/records/5`, `/records/6`, `/records/7`, `/records/8`, `/records/9`, `/records/16`, `/records/17`, `/records/30`, `/records/31`, `/records/24`, `/records/25`, `/records/34`, `/records/47`; commit `Validate portable presentation repairs on iOS`.
+
+- [ ] **Execute the isolated iOS direct-inspection recipe for all 15 records, commit/push, and prove cleanup.**
+
+### Task 61: Directly inspect Batch 4 presentations on iPhone and iPad
+
+**Files:** manifest and narrative only.
+
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-61 Phone` and `Hang Ten Paseo sincere-otter Task-61 Tablet`; owns exactly `/records/18`, `/records/19`, `/records/20`, `/records/52`, `/records/53`, `/records/54`, `/records/55`, `/records/43`, `/records/44`, `/records/45`, `/records/46`, `/records/64`, `/records/65`, `/records/66`, `/records/67`, `/records/69`, `/records/70`, `/records/71`, `/records/72`, `/records/76`, `/records/77`, `/records/78`; also rechecks the current Mini Bar `primary` catalog/normal/active/individual/hit-test behavior but leaves removed `/records/23` at `notApplicableRemovedPresentation`; commit `Validate multi-orientation presentation repairs on iOS`.
+
+- [ ] **Execute the isolated iOS direct-inspection recipe for all 22 image records and current Mini Bar primary, commit/push, and prove cleanup.**
+
+### Task 62: Run the final Phase 2 catalog gate
+
+**Files:** manifest and narrative only.
+
+**Interfaces:** consumes all preceding commits and produces the only `phase2Final` success state; no package, app, routine, or training-plan change.
+
+- [ ] **Step 1: Prove source, comparator, and action terminal truth.** Require every one of the 65 repair records to have confirmed evidence, completed action, exactly one accepted candidate, passed transient input/candidate verification, accepted/on-disk hash equality, final ready/self comparator, four Workbench passes, two direct simulator runs, and no blocked flow. Require record 23 completed removal with confirmed evidence and valid removed-presentation N/A. Require zero pending or blocked Phase 2 actions while preserving all five Phase 1 gap strings and the two evidence-blocked keep decisions unchanged.
+- [ ] **Step 2: Prove exact inventory and byte truth.** Require 61 packages, 85 historical records, 84 current presentations, 19 keep records whose PNG hashes still equal Phase 1, 17 completed edits, 48 completed regenerations, one completed removal, absent Mini Bar `end`, retained Mini Bar `primary` plus all four physical grips, and package-ID set equality without order rewriting.
+- [ ] **Step 3: Run the complete validation commands.**
 
   ```bash
+  phase2_baseline_sha="$(rtk awk -F': ' '/^Phase 2 baseline SHA: / {print $2; exit}' \
+    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md)"
+  test "${#phase2_baseline_sha}" -eq 40
+  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q
   rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
   rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial --batch-id lattice-mini-bar-removal
-  rtk git diff -- Hangboards/lattice-mini-bar/board.json
-  ```
-
-  Expected: package/tests/batch PASS; current inventory becomes 61 packages/84 presentations; diff shows only the `end` presentation and `mini-pinch` hold removed; re-hashed primary bytes equal `/records/22/currentAsset/sha256`.
-
-- [ ] **Step 7: Commit, push, and clean.**
-
-  ```bash
-  rtk git add Hangboards/lattice-mini-bar/board.json \
-    Hangboards/lattice-mini-bar/assets/end.png \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Remove unsupported Mini Bar end presentation"
-  rtk git push
-  ```
-
-  Remove and verify the exact owned audit/rollback directory only after the committed removal passes.
-
----
-
-### Task 17: Perform the complete cross-catalog smoothing and framing review
-
-**Files:**
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-- Reopen for rework only through its existing exclusive owner: a failed record's package asset and conditionally its `board.json`
-
-**Interfaces:**
-- Consumes: all 15 passed repair batches, 84 current presentation PNGs, 85 historical records, 19 immutable keeps, accepted candidate hashes, comparators, and material/form-factor cohorts.
-- Produces: a passed `crossCatalogReview` final check or a failure routed back to the one existing owning batch; this task does not create a new asset assignment.
-
-- [ ] **Step 1: Create `.context/sincere-otter-phase2-cross-catalog-review`, immediately mark ownership, and install exact cleanup traps for captures and any review processes.**
-
-- [ ] **Step 2: Generate a deterministic review inventory without analyzing pixels.**
-
-  Use the Phase 2 validator report and manifest records to list the 84 current asset paths by material and form factor. Do not use image similarity, pixel statistics, automatic cropping, detection, masks, contours, or a generated contact-sheet pipeline. Manually open the original-sized files and their declared comparators with `view_image` or Workbench; captures may document what the human saw but may not decide pass/fail automatically.
-
-- [ ] **Step 3: Review every current presentation across and within cohorts.**
-
-  For each of the 84 presentations, confirm off-white background, neutral lighting direction, restrained shadow, clean antialiasing, complete uncropped product, cohort-consistent scale, and continuous material-appropriate smoothing. Recheck wood grain/laminations, molded/resin/urethane matte response, metal finish, stone/mineral density, and mixed components independently. For every repaired record, compare official evidence, independent evidence or recorded gap, Phase 1 current role, accepted output, and comparator/gap. For each keep, compare its immutable current bytes but do not replace it merely for uniformity.
-
-- [ ] **Step 4: Route any defect back to its exclusive repair owner.**
-
-  If a repaired asset fails, mark its existing batch check failed, preserve review capture hash/reason, and have the controller dispatch a fresh rework subagent for that same batch/record. The rework repeats live evidence, built-in-only one-call-per-candidate generation, transient hash/provenance, Workbench review, validation, commit, push, and cleanup. Do not repair the asset inside Task 17 and do not assign it to another batch. If an immutable keep appears genuinely nonconforming, stop for spec clarification rather than silently changing its Phase 1 decision.
-
-- [ ] **Step 5: Record the passed manual review.**
-
-  After all 84 pass, hash the owned review captures/log, set root `crossCatalogReview` to passed with actual date, reviewer decision, reviewed counts by material/form factor, capture hashes, and explicit confirmation that all 19 keeps retained original hashes. Update every completed record's `crossCatalogConsistency` explanation only when the review yields new evidence-specific wording; never turn the comparator into geometry proof.
-
-- [ ] **Step 6: Re-run full package and partial manifest validation.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial
-  ```
-
-  Expected: 61 packages, 84 inventory presentations, 19 keeps, 65 completed image repairs, one completed removal, and zero pending/blocked records.
-
-- [ ] **Step 7: Commit, push, and clean review artifacts.**
-
-  ```bash
-  rtk git add \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Review hangboard catalog presentation consistency"
-  rtk git push
-  ```
-
-  Trigger the exact cleanup trap and verify the owned review directory/resources are absent.
-
----
-
-### Task 18: Build, install, and visually validate on isolated iOS Simulators
-
-**Files:**
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-- Create temporarily and delete before completion: `.context/sincere-otter-phase2-ios-validation/*`, `.context/DerivedData`, `.context/paseo-pending-simulators`, `.context/paseo-owned-simulators`
-
-**Interfaces:**
-- Consumes: passed cross-catalog review, `validate-hang-ten-ios`, `docs/IOS_SIMULATOR_VALIDATION.md`, `docs/IOS_RUNTIME_SERVICES.md`, 61 valid packages/84 presentations, and exact simulator ownership `sincere-otter`.
-- Produces: a signed bounded `build-for-testing`, phone and tablet catalog/runtime review, exact capture hashes/results, passed build/simulator checks, and verified deletion of owned simulators/artifacts.
-
-- [ ] **Step 1: Invoke the required validation skill and read its dependencies completely.**
-
-  Use `validate-hang-ten-ios` for this task. Read `.codex/skills/validate-hang-ten-ios/SKILL.md`, `docs/IOS_SIMULATOR_VALIDATION.md`, and `docs/IOS_RUNTIME_SERVICES.md` completely in the execution session before any simulator operation. Do not substitute a generic simulator recipe.
-
-- [ ] **Step 2: Establish exact workspace ownership and traps before `simctl create`.**
-
-  Set `workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"`, verify its final component is exactly `sincere-otter`, create `.context/sincere-otter-phase2-ios-validation/OWNER-sincere-otter`, and install the skill's `EXIT`/`INT`/`TERM` archive trap. The trap calls `scripts/paseo-resource-cleanup.sh archive` with the exact workspace path and deletes only `.context/DerivedData` plus exact Phase 2 iOS captures/logs. It must preserve pending/owned manifests if archive cleanup fails.
-
-- [ ] **Step 3: Create and register representative phone and tablet devices safely.**
-
-  Run `rtk xcrun simctl list devicetypes` and `rtk xcrun simctl list runtimes`; choose one available current iPhone device type and one available current iPad device type on an available iOS runtime, and record their literal IDs. Create `Hang Ten Paseo sincere-otter Review` and `Hang Ten Paseo sincere-otter Tablet Review`. Validate each returned UUID; append each UUID to `.context/paseo-pending-simulators` before any owned-manifest write/boot/build, then append it to `.context/paseo-owned-simulators`. Use the two exact UUIDs for every command; never use `booted`.
-
-- [ ] **Step 4: Boot both devices with bounded readiness checks and build for testing.**
-
-  Follow the skill's 40-attempt/4-second-command/3-second-interval launch-services poll for each UUID. Keep signing enabled. Run the bounded build against the phone UUID and workspace-owned Derived Data:
-
-  ```bash
-  rtk xcodebuild build-for-testing \
-    -project HangTen.xcodeproj \
-    -scheme HangTen \
-    -configuration Debug \
-    -destination "platform=iOS Simulator,id=$phone_simulator_uuid" \
-    -derivedDataPath .context/DerivedData
-  ```
-
-  Record the literal expanded command, UUID, Xcode/runtime/device versions, exit status, and app path. Inspect the generated `HangTen.app-Simulated.xcent` for `com.apple.developer.healthkit = true`; do not disable signing.
-
-- [ ] **Step 5: Install and prove app provenance on both exact UUIDs.**
-
-  Terminate only `com.hangten.training` on each owned UUID, install `.context/DerivedData/Build/Products/Debug-iphonesimulator/HangTen.app`, launch by exact UUID, and run `xcrun simctl get_app_container UUID com.hangten.training app`. Compare the built and installed binary hash so another workspace's build cannot be mistaken for this one.
-
-- [ ] **Step 6: Validate catalog, plans, presentations, and hold hit testing on phone and tablet.**
-
-  Use `SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_PICKER=1` to inspect catalog thumbnails for every repaired product family and preserved baselines: no crop, transparency, labels, source photos, wrong material, or missing components. Select at least one board from every repair batch on both device classes through the accessibility identifier formed by `boardPicker.board.` followed by that selected board's literal `TrainingBoard.id`; open the identifier formed by `boardPicker.holdSpecs.` followed by the same literal ID, and inspect the normal board map. Use each visible presentation picker for representative coupled products (Port-A-Board, Flash Board, Poker, Pivot, Baguette Evo, and TravelBoard), tap representative contacts across every visible presentation, and confirm the intended individual hold highlights and hold card; taps outside paths must not select a hold. Exercise all-active/multi-hold states through compatible plan/workout previews, and use `HANGTEN_REVIEW_PLAN=1`, `HANGTEN_REVIEW_WORKOUT=1`, and literal `HANGTEN_REVIEW_STEP` values to confirm the plan view, selected board, active highlight, presentation auto-selection, and hit-test alignment. Repeat representative states in iPhone portrait/landscape and iPad portrait/landscape.
-
-- [ ] **Step 7: Capture and manually inspect exact visual evidence.**
-
-  Save phone/tablet catalog, plan, normal, active, individual-hold, hit-test, and presentation-selector screenshots only under `.context/sincere-otter-phase2-ios-validation`. If the runtime emits landscape UI in portrait pixels, follow the skill's inspect-then-rotate rule for review copies; do not modify package assets. Hash every capture, manually inspect geometry/highlight alignment, text clipping, framing, and selector correctness, and record hashes plus the exact board/presentation/hold/device/state in the manifest/narrative.
-
-- [ ] **Step 8: Record build/simulator truth and handle failure narrowly.**
-
-  Mark per-record/global build and simulator checks passed only for states actually exercised. Use `notRequired` with a concrete global-representative reason where a removed presentation cannot be shown. If any visual fails, mark the check failed, preserve the capture hash/reason, route asset/geometry rework back to its owning batch, and rerun Task 17 plus this task after the new commit; do not accept compile success as visual validation.
-
-- [ ] **Step 9: Archive and verify exact simulator/resource cleanup.**
-
-  On success, failure, or interruption, run the installed archive trap. It must verify each exact UUID has the `Hang Ten Paseo sincere-otter ` name prefix before shutdown/deletion, consume pending/owned records only after successful cleanup, remove exact Derived Data and capture paths, and leave shared/unknown simulators alone. Re-query both exact UUIDs and verify they no longer exist before marking simulator cleanup passed.
-
-- [ ] **Step 10: Commit and push durable QA results only.**
-
-  ```bash
-  rtk git add \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Validate remediated hangboards on iOS"
-  rtk git push
-  ```
-
-  Expected: no simulator, capture, Derived Data, or other `.context` artifact is staged.
-
----
-
-### Task 19: Run the final 61-package/84-presentation gate and clean all owned state
-
-**Files:**
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`
-- Modify: `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`
-
-**Interfaces:**
-- Consumes: all passed batches, passed cross-catalog and iOS checks, complete package tests, and cleaned workspace-owned resources.
-- Produces: the final schema-version-2 report: 61 packages, 85 historical records, 84 current presentations, 19 unchanged keeps, 17 completed edits, 48 completed regenerations, one completed removal, zero pending/blocked records, and no owned context artifacts.
-
-- [ ] **Step 1: Recompute exact inventory and immutable keep facts.**
-
-  Use the validator, not hand counts, to prove 61 package IDs and 84 declared PNGs. Re-hash every keep and require equality with its original `currentAsset.sha256`; require all accepted repair PNGs to equal their accepted candidate/final hashes and exact original dimensions; require Mini Bar end/pinch/asset absence and Mini Bar primary self-baseline preservation. Reject duplicate/unknown asset records or extra package files.
-
-- [ ] **Step 2: Run all focused and complete tests.**
-
-  ```bash
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
-    Tools/HangboardPackages/tests/test_cli.py \
-    Tools/HangboardPackages/tests/test_board_catalog.py \
-    Tools/HangboardPackages/tests/test_approved_board_packages.py \
-    Tools/HangboardPackages/tests/test_board_package_staging.py
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
-    Tools/HangboardPackages/tests
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-  rtk scripts/hangboard-packages.sh status --root Hangboards
-  ```
-
-  Expected: every test passes; final inventory reports exactly 61 complete packages, zero drafts, and 84 declared presentation PNGs.
-
-- [ ] **Step 3: Validate final manifest truth before setting its own check.**
-
-  ```bash
-  rtk scripts/hangboard-packages.sh audit-presentations \
-    --root Hangboards \
-    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    --phase2-partial
-  ```
-
-  Expected: 15 passed batches; 19 keeps; 65 completed repairs split as 17 edits/48 regenerations; one removal; zero pending/blocked; 84 inventory presentations. Confirm every rejected candidate has lowercase hash, built-in/untouched/no-postprocessing provenance, concrete disposition/reason, and passed transient byte verification even though its bytes are gone.
-
-- [ ] **Step 4: Prove no owned resources or forbidden artifacts remain.**
-
-  Inspect `.context` and simulator lists. There must be no `sincere-otter-phase2-*` directory, candidate, copied web image, comparison board, Workbench capture, simulator capture, Derived Data, pending/owned simulator UUID, or built-in generated output owned by this workspace. Confirm no source photograph, sidecar, candidate, review directory, or undeclared asset exists under `Hangboards`. Leave shared/standard/unknown resources untouched.
-
-- [ ] **Step 5: Record only checks that actually passed.**
-
-  Set `phase2.finalChecks.manifestValidation`, `finalInventory`, `packageTestSuite`, and `contextCleanup` to passed with literal commands/results and actual date; retain the already passed cross-catalog, build, and simulator evidence. Update the narrative final table from validator output, including exact 61/85-history/84-current/19/17/48/1 totals and any source gaps that remained explicitly resolved or blocked before acceptance.
-
-- [ ] **Step 6: Run the final closed gate.**
-
-  ```bash
-  rtk python3 -m json.tool \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json
-  rtk scripts/hangboard-packages.sh audit-presentations \
-    --root Hangboards \
     --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
     --phase2-final
-  rtk git status --short
+  rtk git diff --name-only "$phase2_baseline_sha..HEAD" -- TrainingPlans HangTen
   ```
 
-  Expected: JSON parses; final validation passes with the exact counts above; status contains only the two audit documents intended for this task.
-
-- [ ] **Step 7: Commit and push the final verified ledger.**
-
-  ```bash
-  rtk git add \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-    docs/source-audits/2026-08-30-hangboard-presentation-remediation.md
-  rtk git commit -m "Verify hangboard remediation phase two"
-  rtk git push
-  ```
-
-  The controller performs the final spec-compliance review and separate code/data-quality review after this push. Completion is not claimed until the remote branch contains every reviewed task commit and `rtk git status --short` is clean.
+  Expected: all tests pass; final inventory is 61/84; Phase 2 report is 20 canvas classes, 65 covered repairs, 19 keeps, 17 edits, 48 regenerations, one removal, two historical evidence-blocked keeps, zero pending actions, and zero blocked actions; the unrelated-code diff is empty.
+- [ ] **Step 4: Close final checks coherently.** Set `manifestValidation`, `finalInventory`, `packageTestSuite`, and `simulatorReview` passed with literal command/date/result evidence. Set `buildForTesting` passed from the four bounded successful build records. Set `contextCleanup` passed only after checking every task-owned ledger path, generated-image path, simulator UUID, simulator manifest entry, and exact `.context` task directory is absent. Do not remove shared or unknown resources.
+- [ ] **Step 5: Re-run `--phase2-final` after closing checks.** Require identical totals and zero pending/blocked Phase 2 actions. Review the final diff and manifest/narrative consistency.
+- [ ] **Step 6: Commit and push.** Stage only manifest and narrative, commit `Complete hangboard presentation remediation phase two`, and push. Record the pushed SHA and final validator output in the handoff.
