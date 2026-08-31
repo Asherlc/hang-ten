@@ -697,8 +697,11 @@ Fresh evidence:
 
 The package declares exactly one presentation, `primary`, and the repaired
 asset remains an independently head-on 1503 x 394 view. Its silhouette,
-aspect, shadows, alpha-derived edge coverage, and all 11 physical hold
-openings are unchanged. Ten source-backed recessed mounting bores were drawn
+aspect, shadows, and alpha-derived edge coverage are unchanged. Review of the
+first accepted gray candidate found that two symmetric lower-outer
+through-openings had incorrectly remained opaque gray; only nine of the
+source-backed 11 openings exposed the shared background. Ten source-backed
+recessed mounting bores were drawn
 at manually reviewed top-origin pixel centers: upper `(327,82)`,
 `(751.5,86)`, `(1176,82)`; outer-side `(79,201)`, `(1424,201)`; and
 lower/center `(283,309)`, `(516,261)`, `(751.5,231)`, `(987,261)`,
@@ -717,14 +720,28 @@ does not establish it clearly enough to justify inventing pixels.
 
 Candidate 1 (`ba1224d0b338fece178e6ccbb3f34bd8903e392e409c74274640ec0adcc39cdf`)
 was rejected as too pale to read as published gray resin. Candidate 2 was
-accepted. The asset changed from
+accepted for color and finish, then corrected for the two-opening omission.
+The asset changed from
 `f55fa7cf1e86cf050cd774d3068da37d02534da830eea6442c8e5038f22c3c90`
-to `2cbd1e4cb54d2447379ff2801fe0b918139b2681d6749624aa1448a8952b78d1`;
-both are 1503 x 394 PNGs. `board.json` remains byte-identical at
+through intermediate
+`2cbd1e4cb54d2447379ff2801fe0b918139b2681d6749624aa1448a8952b78d1`
+to `c02f7f3d23aaa158b359fdd41f47315a4077bbde1b7a2879927f1902133c6f59`;
+all three are 1503 x 394 PNGs. `board.json` remains byte-identical at
 `eb27ddc4b9f92332e1133db6ade1ce1a81de92edf7896a7790bbe3bfc1310873`.
 
+The correction directly authors the two rounded-pill interiors within
+top-origin review bounds approximately `x=171...345, y=203...276` and
+`x=1146...1320, y=203...276`. Their centers expose opaque `#F6F2EA`, with a
+narrow manually shaded inner edge matching the other through-openings; the
+gray molded perimeter remains the physical rim, not a plug. Pixel comparison
+against the intermediate candidate found 11,183 changed pixels, all inside
+the two declared review boxes, zero changes elsewhere, and 5,550 exact
+background pixels across the two openings. This was a direct symmetric raster
+drawing: no detection, segmentation, generated mask, vectorization, crop,
+resize, registration, warp, or image generation was used.
+
 Workbench rendered the single presentation with all 22 canonical geometry
-pieces and hold-ID labels aligned to their unchanged physical openings; the
+pieces and hold-ID labels aligned to their physical openings; the
 same byte-identical paths remain the hit-testing source of truth. The repaired
 image therefore passes the one-presentation/all-positions requirement,
 head-on view, gray plastic/resin material, published 11-opening/10-bore
