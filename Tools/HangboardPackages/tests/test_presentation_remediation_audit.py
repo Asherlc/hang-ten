@@ -291,6 +291,17 @@ def test_evidence_kind_and_url_must_be_direct_https(
         _validate_document(tmp_path, boards, inventory, [record])
 
 
+def test_evidence_rejects_duckduckgo_search_result_url(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["url"] = "https://duckduckgo.com/?q=fixture+board"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="must not be a search-result URL",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
 def test_each_evidence_class_requires_sources_or_gap(tmp_path: Path) -> None:
     boards, inventory, record = _single_board_fixture(tmp_path)
     record["evidence"]["official"] = []
@@ -359,6 +370,51 @@ def test_comparator_reason_cannot_claim_geometry_evidence(tmp_path: Path) -> Non
         _validate_document(tmp_path, boards, inventory, [record])
 
 
+def test_comparator_reason_cannot_claim_silhouette_or_contact_evidence(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["comparator"]["reason"] = (
+        "This accepted cohort baseline proves the silhouette and contact layout."
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="comparator reason must not claim geometry evidence",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_comparator_cannot_target_a_non_kept_record(tmp_path: Path) -> None:
+    boards = tmp_path / "Hangboards"
+    write_board_package(boards / "accepted", board_id="accepted.board")
+    write_board_package(boards / "repair", board_id="repair.board")
+    inventory = discover_board_packages(boards, require_complete_inventory=True)
+    accepted = _record(
+        boards, "accepted", "accepted.board", "primary", "assets/primary.png"
+    )
+    repair = _record(boards, "repair", "repair.board", "primary", "assets/primary.png")
+    _mark_phase_2_repair(repair, "regenerate")
+    accepted["comparator"].update(assetPath=repair["assetPath"])
+    manifest = _write_manifest(
+        tmp_path,
+        _manifest(
+            package_ids=["accepted.board", "repair.board"],
+            records=[accepted, repair],
+        ),
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="comparator must identify a ready accepted keep record",
+    ):
+        validate_presentation_remediation_manifest(
+            load_presentation_remediation_manifest(manifest),
+            inventory,
+            hangboards_root=boards,
+        )
+
+
 def test_accepted_keep_cannot_claim_a_comparator_baseline_gap(tmp_path: Path) -> None:
     boards, inventory, record = _single_board_fixture(tmp_path)
     record["comparator"] = {
@@ -420,11 +476,21 @@ def test_keep_accepted_hash_must_match_current_asset(tmp_path: Path) -> None:
         _validate_document(tmp_path, boards, inventory, [record])
 
 
-def test_repair_record_cannot_claim_phase_2_output_or_validation(
-    tmp_path: Path,
-) -> None:
+def test_repair_record_cannot_claim_phase_2_accepted_output(tmp_path: Path) -> None:
     boards, inventory, record = _single_board_fixture(tmp_path)
-    record["decision"] = "regenerate"
+    _mark_phase_2_repair(record, "regenerate")
+    record["final"]["acceptedAssetSHA256"] = record["currentAsset"]["sha256"]
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="regenerate must not claim accepted output or final validation in Phase 1",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_repair_record_cannot_claim_phase_2_final_validation(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "regenerate")
     record["final"]["validation"]["packageValidation"] = {
         "status": "passed",
         "evidence": "fixture",
@@ -442,9 +508,43 @@ def test_removal_requires_sourced_nonconforming_findings(tmp_path: Path) -> None
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="removeUnsupportedPresentation requires sourced nonconforming findings",
+        match="removeUnsupportedPresentation requires cited proof that the declared working surface is not usable",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_removal_rejects_nonconforming_but_usable_surface(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "removeUnsupportedPresentation")
+    record["findings"]["topology"] = {
+        "outcome": "nonconforming",
+        "explanation": "Published front working face is usable despite the topology mismatch.",
+    }
+    record["evidence"]["official"][0]["supportedClaim"] = (
+        "The Published front working face is usable despite the topology mismatch."
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="removeUnsupportedPresentation requires cited proof that the declared working surface is not usable",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_removal_accepts_cited_proof_that_surface_is_not_usable(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "removeUnsupportedPresentation")
+    record["findings"]["topology"] = {
+        "outcome": "nonconforming",
+        "explanation": "Published front working face is not usable because the cited layout is a different surface.",
+    }
+    record["evidence"]["official"][0]["supportedClaim"] = (
+        "Published front working face is not usable because the official layout is a different surface."
+    )
+
+    report = _validate_document(tmp_path, boards, inventory, [record])
+
+    assert report.to_json()["decisions"] == {"removeUnsupportedPresentation": 1}
 
 
 def test_revision_split_requires_two_named_conflicting_revisions(
@@ -455,9 +555,59 @@ def test_revision_split_requires_two_named_conflicting_revisions(
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="splitPhysicalRevision requires conflicting sources tied to named physical revisions",
+        match="splitPhysicalRevision requires cited conflicting named physical revisions",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_revision_split_rejects_distinct_but_nonconflicting_labels(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "splitPhysicalRevision")
+    record["evidence"]["official"][0]["revisionApplicability"] = "Revision A"
+    record["evidence"]["independent"][0]["revisionApplicability"] = "Revision B"
+    record["physicalRevision"] = "Revision A versus Revision B"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="splitPhysicalRevision requires cited conflicting named physical revisions",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_revision_split_accepts_cited_named_physical_revision_conflict(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "splitPhysicalRevision")
+    record["physicalRevision"] = "Revision A versus Revision B"
+    record["evidence"]["official"][0].update(
+        revisionApplicability="Revision A",
+        supportedClaim="Published front working face is Revision A and conflicts with Revision B.",
+    )
+    record["evidence"]["independent"][0].update(
+        revisionApplicability="Revision B",
+        supportedClaim="Published front working face is Revision B and conflicts with Revision A.",
+    )
+
+    report = _validate_document(tmp_path, boards, inventory, [record])
+
+    assert report.to_json()["decisions"] == {"splitPhysicalRevision": 1}
+
+
+@pytest.mark.parametrize("schema_version", [1.0, True])
+def test_manifest_schema_version_must_be_a_json_integer(
+    tmp_path: Path, schema_version: object
+) -> None:
+    document = _manifest(package_ids=[], records=[])
+    document["schemaVersion"] = schema_version
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="schemaVersion must be a JSON integer equal to 1",
+    ):
+        load_presentation_remediation_manifest(_write_manifest(tmp_path, document))
 
 
 def test_lane_filter_keeps_full_manifest_contract_and_reports_selected_board(

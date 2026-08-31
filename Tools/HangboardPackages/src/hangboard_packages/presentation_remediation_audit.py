@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import parse_qsl, urlsplit
 
 from .board_catalog import (
     BoardInventory,
@@ -86,6 +86,35 @@ _VALIDATION_CHECKS = frozenset(
     }
 )
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_SEARCH_HOSTS = frozenset(
+    {
+        "bing.com",
+        "duckduckgo.com",
+        "google.com",
+        "search.brave.com",
+        "search.yahoo.com",
+        "www.bing.com",
+        "www.google.com",
+        "www.yahoo.com",
+        "yandex.com",
+        "www.yandex.com",
+    }
+)
+_SEARCH_QUERY_KEYS = frozenset({"q", "query", "search", "search_query", "keyword"})
+_COMPARATOR_GEOMETRY_TERMS = (
+    "contact layout",
+    "working surface",
+    "geometry",
+    "geometric",
+    "silhouette",
+    "topology",
+    "contacts",
+    "contact",
+    "holds",
+)
+_NAMED_REVISION = re.compile(
+    r"\b(?:revision|model|version|generation|mk)\s*[a-z0-9]", re.IGNORECASE
+)
 
 
 class PresentationRemediationAuditError(ValueError):
@@ -272,12 +301,12 @@ def _url(value: Any, source: str) -> str:
     if parsed.scheme != "https" or not parsed.hostname:
         raise PresentationRemediationAuditError(f"{source} must be a direct HTTPS URL")
     hostname = parsed.hostname.lower()
-    if "/search" in parsed.path.lower() or hostname in {
-        "google.com",
-        "www.google.com",
-        "bing.com",
-        "www.bing.com",
-    }:
+    query_keys = {key.lower() for key, _ in parse_qsl(parsed.query)}
+    if (
+        "/search" in parsed.path.lower()
+        or hostname in _SEARCH_HOSTS
+        or bool(query_keys & _SEARCH_QUERY_KEYS)
+    ):
         raise PresentationRemediationAuditError(
             f"{source} must not be a search-result URL"
         )
@@ -607,9 +636,13 @@ def load_presentation_remediation_manifest(
         },
         "presentation remediation manifest",
     )
-    if isinstance(payload["schemaVersion"], bool) or payload["schemaVersion"] != 1:
+    if (
+        isinstance(payload["schemaVersion"], bool)
+        or not isinstance(payload["schemaVersion"], int)
+        or payload["schemaVersion"] != 1
+    ):
         raise PresentationRemediationAuditError(
-            "presentation remediation manifest.schemaVersion must be 1"
+            "presentation remediation manifest.schemaVersion must be a JSON integer equal to 1"
         )
     if payload["phase"] != "sourceReclassification":
         raise PresentationRemediationAuditError(
@@ -669,6 +702,74 @@ def _is_evidence_blocked(record: PresentationRemediationRecord) -> bool:
     )
 
 
+def _source_text(source: PresentationRemediationSource) -> str:
+    return f"{source.image_role} {source.supported_claim}".casefold()
+
+
+def _states_surface_is_not_usable(text: str, working_surface: str) -> bool:
+    lowered_surface = working_surface.casefold()
+    return lowered_surface in text.casefold() and (
+        "not usable" in text.casefold() or "unusable" in text.casefold()
+    )
+
+
+def _validate_unsupported_surface_removal(
+    record: PresentationRemediationRecord,
+) -> None:
+    finding = record.findings["topology"]
+    cited_sources = (*record.evidence.official, *record.evidence.independent)
+    if (
+        _is_evidence_blocked(record)
+        or finding.outcome != "nonconforming"
+        or not _states_surface_is_not_usable(
+            finding.explanation, record.working_surface
+        )
+        or not any(
+            _states_surface_is_not_usable(_source_text(source), record.working_surface)
+            for source in cited_sources
+        )
+    ):
+        raise PresentationRemediationAuditError(
+            "removeUnsupportedPresentation requires cited proof that the declared working surface is not usable"
+        )
+
+
+def _validate_physical_revision_split(record: PresentationRemediationRecord) -> None:
+    sources = (*record.evidence.official, *record.evidence.independent)
+    named_sources = tuple(
+        source
+        for source in sources
+        if _NAMED_REVISION.search(source.revision_applicability)
+    )
+    named_revisions = {
+        source.revision_applicability.casefold() for source in named_sources
+    }
+    physical_revision = record.physical_revision.casefold()
+    if (
+        _is_evidence_blocked(record)
+        or len(named_revisions) < 2
+        or not all(revision in physical_revision for revision in named_revisions)
+    ):
+        raise PresentationRemediationAuditError(
+            "splitPhysicalRevision requires cited conflicting named physical revisions"
+        )
+    for source in named_sources:
+        source_revision = source.revision_applicability.casefold()
+        other_revisions = named_revisions - {source_revision}
+        source_text = _source_text(source)
+        if (
+            record.working_surface.casefold() not in source_text
+            or source_revision not in source_text
+            or not any(
+                other_revision in source_text for other_revision in other_revisions
+            )
+            or "conflict" not in source_text
+        ):
+            raise PresentationRemediationAuditError(
+                "splitPhysicalRevision requires cited conflicting named physical revisions"
+            )
+
+
 def _validate_phase_truth(record: PresentationRemediationRecord) -> None:
     repair = record.decision != "keep"
     if repair:
@@ -691,25 +792,10 @@ def _validate_phase_truth(record: PresentationRemediationRecord) -> None:
             raise PresentationRemediationAuditError(
                 f"{record.decision} must not claim accepted output or final validation in Phase 1"
             )
-        if record.decision == "removeUnsupportedPresentation" and (
-            _is_evidence_blocked(record)
-            or not any(
-                finding.outcome == "nonconforming"
-                for finding in record.findings.values()
-            )
-        ):
-            raise PresentationRemediationAuditError(
-                "removeUnsupportedPresentation requires sourced nonconforming findings"
-            )
+        if record.decision == "removeUnsupportedPresentation":
+            _validate_unsupported_surface_removal(record)
         if record.decision == "splitPhysicalRevision":
-            revisions = {
-                source.revision_applicability
-                for source in (*record.evidence.official, *record.evidence.independent)
-            }
-            if _is_evidence_blocked(record) or len(revisions) < 2:
-                raise PresentationRemediationAuditError(
-                    "splitPhysicalRevision requires conflicting sources tied to named physical revisions"
-                )
+            _validate_physical_revision_split(record)
         return
     if (
         record.generation.prompt is not None
@@ -881,7 +967,8 @@ def validate_presentation_remediation_manifest(
             raise PresentationRemediationAuditError(
                 "self comparator reason must name the accepted cohort baseline"
             )
-        if re.search(r"\bgeometr(?:y|ic)\b", comparator.reason, re.IGNORECASE):
+        reason = comparator.reason.casefold()
+        if any(term in reason for term in _COMPARATOR_GEOMETRY_TERMS):
             raise PresentationRemediationAuditError(
                 "comparator reason must not claim geometry evidence"
             )
