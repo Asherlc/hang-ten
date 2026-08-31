@@ -22,7 +22,7 @@ Search each exact manufacturer/product/revision independently. Open and cite dir
 | --- | ---: | ---: | --- |
 | A — Aelith through Mammut | 20 | 27 | Complete — 20 packages / 27 assets |
 | B — Metolius through So iLL | 19 | 24 | Complete — 19 packages / 24 assets |
-| C — target10a through Zlagboard | 22 | 34 | Not started |
+| C — target10a through Zlagboard | 22 | 34 | Complete — 22 packages / 34 assets |
 
 ## Revision, source-conflict, and unsupported-surface resolutions
 
@@ -138,6 +138,49 @@ Resolutions are added only when direct live sources establish the named revision
   validated lane report contains 19 packages and 24 presentations; all five
   keeps are accepted current assets, all nineteen repairs remain pending Phase
   2, and Plateau primary is the lane's only evidence-blocked asset.
+- Linebreaker BASE is an accepted `keep`: the exact target10a cosmetic-B-stock
+  page states that B-stock preserves the production geometry, while Basislager
+  independently corroborates the Yellow Poplar body and grip layout.
+- All four Flash Board orientations are `edit`. The manufacturer demonstration
+  directly establishes that flipping exposes the declared working surfaces;
+  each current asset omits or crops the adjustable cord and knots, and the
+  three-edge-inverted asset also uses a transparent cutout. The current
+  Grindstone Mk2, Honestone, and Whetstone are accepted `keep` records. The
+  distinct 2017 Grindstone and Grindstone Pro are `edit` for transparent
+  cutouts, but remain explicitly first-party-evidence-blocked because fresh
+  manufacturer, manual, catalog, and archive searches found no retrievable
+  exact-revision first-party page; independent launch-period sources establish
+  their separate layouts.
+- The Hangboard is an accepted `keep`. Forge, Natural, all four Pivot
+  orientations, and the Rock Prodigy Training Center are `edit`: their verified
+  working contacts remain usable, while Phase 2 must restore the sourced
+  mounting/components context. Natural additionally needs its transparent
+  cutout replaced. Pivot's official quick-start guide separately establishes
+  the four intended rotations and the quad-cleat mounting assembly, so no
+  orientation is inferred from another presentation.
+- Baguette Evo's rounded-tray view and both original La Baguette faces are
+  accepted `keep` records. The other four Baguette Evo surfaces, Penta Evo, and
+  both TravelBoard faces are `edit` because the complete suspension cords are
+  cropped or omitted. Current Baguette Evo documentation specifies polyester
+  cord, while a retailer for the older La Baguette calls its cord polyamide;
+  those revision-specific claims are not merged.
+- All four VerticalBoard models are `edit` because the recognizable wood grip
+  layouts omit their source-published mounting points and fastener context.
+  TravelBoard has a source conflict: its English introduction says beech, while
+  its first-party materials/features content and exact independent listing say
+  recycled rubberwood. Phase 2 must preserve that conflict and may not silently
+  normalize the species.
+- Zlagboard.Evo and Zlagboard.Pro 2.0 are `regenerate`: the current bare wood
+  rails omit the source-published electronic/metal assembly, including steel
+  support, plates, phone interface, and fasteners, so the physical topology and
+  mixed-material identity are not repairable as a bounded edit. Current
+  Zlagboard copy calls the wood noble lime, while contemporary catalog and
+  retailer evidence calls it alder; the manifest therefore preserves the
+  wood/metal mixed construction without choosing a species.
+- Lane C classification: 8 `keep`, 24 `edit`, and 2 `regenerate` records. The
+  validated lane report contains exactly 22 packages and 34 presentations; all
+  eight keeps are accepted current assets, and all twenty-six repairs remain
+  pending Phase 2.
 
 ## Final classification totals
 
