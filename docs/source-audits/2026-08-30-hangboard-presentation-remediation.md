@@ -1,5 +1,59 @@
 # Hangboard Presentation Remediation Phase 1 Source Audit
 
+## 2026-08-31 Evolv/Kilter Basic Training Board (Long) material correction
+
+This correction covers every declared presentation of
+`evolv-kilter-basic-long`: `board.json` declares exactly one presentation,
+`primary` (`Primary`, default), at `assets/primary.png`. There is no reverse,
+side, alternate mounting position, or other selectable orientation in this
+package. The one asset remains orthographic to its own front working surface;
+its four horizontal contact bands are parallel, its two ends are equally
+foreshortened, and no side plane or angled installation view is visible.
+
+Live evidence was searched and reopened on 2026-08-31. Evolv's current
+[official Basic Training Board (Long) page](https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105)
+explicitly specifies `Color: BLACK`, resin material, 79 x 16 x 6 cm long-board
+dimensions, and the complete four-contact inventory: rounded jug plus 20, 15,
+and 10 mm rounded edges. Its published straight-on and detail images show a
+dark, subtly mottled resin body with the same top jug and three full-width
+lower edge bands. The independent
+[Backcountry product listing and gallery](https://www.backcountry.com/evolv-basic-training-board)
+independently publishes the black resin/Kilter Grip treatment, the same
+four-band silhouette in straight-on and oblique photos, and the distinct long
+31 x 6.25 x 2.25 inch size. The independent ended
+[eBay long-board listing](https://www.ebay.com/itm/326431990533) additionally
+identifies the exact long Evolv product and its black exterior. The original
+catalog geometry and head-on composition therefore conformed, but its white
+material color contradicted both official and independent published evidence.
+
+The original 1537 x 1023 RGBA asset had SHA-256
+`b9c91bc7f4e31db5883a8025b407851c25fd3b6d16a9b9e0e9e41d2a64302bfc`.
+The corrected 1537 x 1023 RGBA asset has SHA-256
+`c4bf068b612398b6243928dbafbfd42d32e0bf5ceab036f08e44f160ab790d13`.
+The bounded deterministic transform decoded the existing premultiplied-sRGB
+pixels, used the authored alpha channel as the sole product boundary, and
+applied one global neutral-black tone mapping to every nontransparent authored
+pixel: `round(6 + 42 * luminance^1.55)`. It then source-over composited those
+remapped product pixels and their unchanged authored alpha edges onto the
+shared `#F6F2EA` studio background and flattened the result. This preserves
+the original silhouette, soft cast shadow, rounded resin relief, fine surface
+texture, four-contact topology, rail separation, framing, and head-on geometry
+while correcting white material to the source-published charcoal-black resin.
+There was no resize, crop, padding, warp, perspective correction, blur,
+denoising, segmentation, generated mask or contour, registration, redraw,
+replacement geometry, or generated product pixel.
+
+`board.json` remained byte-identical at SHA-256
+`e5b3f56250ad09b9565d56c04a940d7ddb8fcb6c936da850dec086e3822bbe5f`.
+The final owned headless Workbench capture
+`evolv-kilter-basic-long--ac4049aa3a2d.png` visibly aligns all four labeled
+canonical paths (`jug-rounded`, `edge-20`, `edge-15`, and `edge-10`) with their
+corresponding contact bands. Both `scripts/hangboard-packages.sh validate
+--root Hangboards --final-inventory` and `scripts/hangboard-packages.sh status
+--root Hangboards` passed with 61 complete packages and zero drafts. The
+machine remediation manifest is intentionally unchanged for the later
+consolidated lifecycle pass.
+
 ## 2026-08-31 Tension Grindstone Pro deterministic presentation repair
 
 This repair covers every declared presentation of `tension.grindstone-pro`:
