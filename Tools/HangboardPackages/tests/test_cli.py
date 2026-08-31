@@ -384,6 +384,102 @@ def test_package_cli_phase2_final_rejects_transient_file_arguments(
     assert "final Phase 2 validation rejects transient files" in result.stderr
 
 
+def test_package_cli_phase2_rejects_duplicate_transient_sha_and_nonpartial_batch(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    manifest = _write_manifest(tmp_path, _empty_phase2_document())
+    path = tmp_path / "candidate.png"
+    path.write_bytes(b"fixture")
+
+    duplicate = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+        "--candidate-file",
+        "0" * 64,
+        str(path),
+        "--candidate-file",
+        "0" * 64,
+        str(path),
+    )
+    assert duplicate.returncode == 1
+    assert "duplicate --candidate-file SHA-256 key" in duplicate.stderr
+
+    batch = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+        "--batch-id",
+        "portable",
+    )
+    assert batch.returncode == 1
+    assert "--batch-id is legal only with --phase2-partial" in batch.stderr
+
+
+def test_package_cli_reports_truncated_candidate_png_as_a_domain_error(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    candidate = tmp_path / "truncated.png"
+    candidate.write_bytes(b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR")
+    digest = "0" * 64
+    document = _empty_phase2_document()
+    document["phase2"]["capabilityProbeCheck"]["artifacts"] = [
+        {
+            "id": "probe-attempt-1",
+            "behaviorProbeID": "probe",
+            "attempt": 1,
+            "returnedOutputPath": str(tmp_path / "returned.png"),
+            "transientOutputPath": str(candidate),
+            "sha256": digest,
+            "widthPixels": 1,
+            "heightPixels": 1,
+            "canvasResult": "exactCanvas",
+            "disposition": "capabilityProbeRejected",
+            "productionUse": "forbidden",
+            "reason": "Fixture probe output.",
+            "provenance": {
+                "tool": "builtInImageGen",
+                "untouchedModelOutput": True,
+                "postProcessing": "none",
+            },
+            "byteVerification": {
+                "status": "pending",
+                "checkedAt": None,
+                "command": None,
+                "observedSHA256": None,
+            },
+            "recordedAt": "2026-08-31T00:00:00+00:00",
+            "deletionVerifiedAt": None,
+        }
+    ]
+    manifest = _write_manifest(tmp_path, document)
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+        "--candidate-file",
+        digest,
+        str(candidate),
+    )
+
+    assert result.returncode == 1
+    assert result.stderr == f"error: asset is not a PNG: {candidate}\n"
+
+
 def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None:
     package_root = tmp_path / "packages"
     write_board_package(package_root / "package-board", board_id="fixture.board")

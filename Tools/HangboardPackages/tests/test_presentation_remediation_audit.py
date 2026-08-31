@@ -1504,6 +1504,236 @@ def test_production_action_requires_passed_canvas_preflight(tmp_path: Path) -> N
         _validate_real_phase2_document(tmp_path, document)
 
 
+def test_phase2_canonical_matrix_rejects_repair_reclassified_as_removal(
+    tmp_path: Path,
+) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    record = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "beastmaker-1000/primary"
+    )
+    record["decision"] = "removeUnsupportedPresentation"
+    record["generation"] = {
+        "mode": "none",
+        "prompt": None,
+        "requiredCanvas": None,
+        "sourceInputs": [],
+        "currentAssetRole": None,
+        "candidates": [],
+    }
+    record["phase2Comparator"] = {
+        "generationTime": None,
+        "bootstrapComparatorSet": None,
+        "final": None,
+    }
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="Phase 2 remediation decision/batch matrix does not match canonical catalog",
+    ):
+        _validate_real_phase2_document(tmp_path, document)
+
+
+def test_started_production_requires_canonical_prompt_and_inputs(tmp_path: Path) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    document["phase2"]["canvasPreflight"]["status"] = "passed"
+    for canvas_class in document["phase2"]["canvasPreflight"]["classes"]:
+        canvas_class["status"] = "passed"
+        for probe in canvas_class["behaviorProbes"]:
+            probe["status"] = "passed"
+    record = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "beastmaker-1000/primary"
+    )
+    comparator = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "beastmaker-2000/primary"
+    )
+    record["phase2Action"] = {"state": "inProgress", "blockedReason": None}
+    record["phase2EvidenceReview"] = {
+        "result": "confirmed",
+        "reviewedAt": "2026-08-31T00:00:00+00:00",
+        "officialURLsReopened": [
+            source["url"] for source in record["evidence"]["official"]
+        ],
+        "independentURLsReopened": [
+            source["url"] for source in record["evidence"]["independent"]
+        ],
+        "evidenceGapSearchesRepeated": [],
+        "notes": "Evidence reopened for the production action.",
+    }
+    record["phase2Comparator"]["generationTime"] = {
+        "mode": "readyBaseline",
+        "assetPath": comparator["assetPath"],
+        "sourceRecordKey": "beastmaker-2000/primary",
+        "acceptedAssetSHA256": comparator["final"]["acceptedAssetSHA256"],
+        "reason": presentation_audit._SINGULAR_COMPARATOR_REASON,
+        "selectedAt": "2026-08-31T00:00:00+00:00",
+    }
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="started production requires canonical prompt and complete inputs",
+    ):
+        _validate_real_phase2_document(tmp_path, document)
+
+
+def test_source_reclassification_rejects_schema2_manifest(tmp_path: Path) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    inventory = discover_board_packages(boards, require_complete_inventory=True)
+    manifest = load_presentation_remediation_manifest(
+        _write_manifest(tmp_path, _empty_phase2_document())
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="source reclassification requires schemaVersion 1",
+    ):
+        validate_presentation_remediation_manifest(
+            manifest,
+            inventory,
+            hangboards_root=boards,
+        )
+
+
+def test_phase2_matrix_freezes_every_record_decision_and_batch(
+    tmp_path: Path,
+) -> None:
+    inventory = discover_board_packages(
+        REPO_ROOT / "Hangboards",
+        require_complete_inventory=True,
+    )
+
+    def validate(document: dict[str, object]) -> None:
+        validate_presentation_remediation_manifest(
+            load_presentation_remediation_manifest(_write_manifest(tmp_path, document)),
+            inventory,
+            hangboards_root=REPO_ROOT / "Hangboards",
+            validation_mode=presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
+        )
+
+    for record_index in range(85):
+        for field, replacement in (
+            ("decision", "keep"),
+            ("repairBatchID", "portable"),
+        ):
+            document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+            record = document["records"][record_index]
+            if record[field] == replacement:
+                replacement = "regenerate" if field == "decision" else None
+            record[field] = replacement
+            with pytest.raises(
+                PresentationRemediationAuditError,
+                match="Phase 2 remediation decision/batch matrix does not match canonical catalog",
+            ):
+                validate(document)
+
+
+def test_pending_action_cannot_promote_accepted_final_bytes(tmp_path: Path) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    record = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "beastmaker-1000/primary"
+    )
+    record["final"]["acceptedAssetSHA256"] = record["currentAsset"]["sha256"]
+    record["final"]["finalDimensions"] = {
+        "widthPixels": record["currentAsset"]["widthPixels"],
+        "heightPixels": record["currentAsset"]["heightPixels"],
+    }
+    record["final"]["visualReviewerDecision"] = "acceptedPhase2"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="only completed actions may promote accepted candidate or final bytes",
+    ):
+        _validate_real_phase2_document(tmp_path, document)
+
+
+def test_pending_batch_cannot_prewrite_passed_checks(tmp_path: Path) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    document["phase2"]["batches"][0]["checks"]["packageValidation"] = {
+        "status": "passed",
+        "evidence": "scripts/hangboard-packages.sh validate --root Hangboards",
+    }
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="pending batch cannot prewrite passed checks",
+    ):
+        _validate_real_phase2_document(tmp_path, document)
+
+
+@pytest.mark.parametrize("path_bytes", [b"\x89PNG\r\n\x1a\n", b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR"])
+def test_transient_candidate_truncated_png_is_domain_error(
+    tmp_path: Path,
+    path_bytes: bytes,
+) -> None:
+    manifest, path, sha = _transient_manifest(tmp_path)
+    path.write_bytes(path_bytes)
+
+    with pytest.raises(PresentationRemediationAuditError, match="asset is not a PNG"):
+        presentation_audit.verify_transient_candidate_files(manifest, {sha: path})
+
+
+def test_pending_preflight_reason_fields_fail_closed(tmp_path: Path) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    document["phase2"]["canvasPreflight"]["classes"][0]["behaviorProbes"][0][
+        "blockedReason"
+    ] = "not blocked"
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="pending/passed preflight probe cannot have blockedReason",
+    ):
+        _validate_real_phase2_document(tmp_path, document)
+
+
+def test_preflight_rejects_untracked_comparator_input(tmp_path: Path) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    probe = document["phase2"]["canvasPreflight"]["classes"][0][
+        "behaviorProbes"
+    ][0]
+    unrelated = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "soill.iron-palm-2/primary"
+    )
+    probe["sourceInputs"].append(
+        {
+            "id": "untracked-comparator",
+            "sourceType": "comparator",
+            "evidencePointer": None,
+            "sourceURL": None,
+            "assetPath": unrelated["assetPath"],
+            "role": "Unapproved material reference.",
+            "sha256": unrelated["currentAsset"]["sha256"],
+            "suppliedToImagegen": True,
+            "byteVerification": {
+                "status": "pending",
+                "checkedAt": None,
+                "command": None,
+                "observedSHA256": None,
+            },
+        }
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="preflight source input ID is not authorized",
+    ):
+        _validate_real_phase2_document(tmp_path, document)
+
+
 @pytest.mark.parametrize(
     ("mutation", "message"),
     [

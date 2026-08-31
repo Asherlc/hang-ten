@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import stat
 import struct
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
@@ -337,6 +339,43 @@ _REPAIR_TASK_BY_KEY = {
     **{key: task for task, keys in ((40, _BATCH_RECORD_KEYS["portable"][:2]), (41, _BATCH_RECORD_KEYS["portable"][2:3]), (42, _BATCH_RECORD_KEYS["portable"][3:5]), (43, _BATCH_RECORD_KEYS["portable"][5:7]), (44, _BATCH_RECORD_KEYS["portable"][7:9]), (45, _BATCH_RECORD_KEYS["portable"][9:11]), (46, _BATCH_RECORD_KEYS["portable"][11:12]), (47, _BATCH_RECORD_KEYS["portable"][12:13]), (48, _BATCH_RECORD_KEYS["portable"][13:14]), (49, _BATCH_RECORD_KEYS["portable"][14:])) for key in keys},
     **{key: task for task, keys in ((51, _BATCH_RECORD_KEYS["multi-orientation"][:3]), (52, _BATCH_RECORD_KEYS["multi-orientation"][3:7]), (53, _BATCH_RECORD_KEYS["multi-orientation"][7:11]), (54, _BATCH_RECORD_KEYS["multi-orientation"][11:15]), (55, _BATCH_RECORD_KEYS["multi-orientation"][15:19]), (56, _BATCH_RECORD_KEYS["multi-orientation"][19:20]), (57, _BATCH_RECORD_KEYS["multi-orientation"][20:])) for key in keys},
     "lattice.mini-bar/end": 59,
+}
+
+_CANONICAL_EDIT_KEYS = frozenset(
+    {
+        "beastmaker-1000/primary",
+        "crimptonite.helium-mobile/primary",
+        "crimptonite.helium-mobile/reverse",
+        "escape-beta-22/primary",
+        "evolv-kilter-basic-long/primary",
+        "frictitious.port-a-board/primary",
+        "frictitious.port-a-board/back",
+        "frictitious.port-a-board/side",
+        "lattice.mxedge-lift-large/primary",
+        "lattice.mxedge-lift-small/primary",
+        "metolius.light-rail-2/15mm-side",
+        "moon.armstrong/primary",
+        "owl-climb.poker/face-a",
+        "owl-climb.poker/face-b",
+        "owl-climb.poker/face-c",
+        "owl-climb.poker/face-d",
+        "tension.grindstone-pro/primary",
+    }
+)
+_CANONICAL_REMEDIATION_MATRIX = {
+    **{key: ("keep", None) for key in (*_SOURCE_SUPPORTED_KEEP_KEYS, *_HISTORICAL_BLOCKED_KEEP_KEYS)},
+    **{
+        key: (
+            "removeUnsupportedPresentation"
+            if key == "lattice.mini-bar/end"
+            else "edit"
+            if key in _CANONICAL_EDIT_KEYS
+            else "regenerate",
+            batch_id,
+        )
+        for batch_id, keys in _BATCH_RECORD_KEYS.items()
+        for key in keys
+    },
 }
 
 
@@ -1771,11 +1810,38 @@ def load_presentation_remediation_manifest(
     )
 
 
+def _read_regular_file_bytes(path: Path, *, label: str) -> bytes:
+    """Read one regular file through a no-follow descriptor."""
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        descriptor = os.open(path, flags)
+    except OSError as error:
+        raise PresentationRemediationAuditError(
+            f"{label} must be a regular file: {path}"
+        ) from error
+    try:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise PresentationRemediationAuditError(
+                f"{label} must be a regular file: {path}"
+            )
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                return b"".join(chunks)
+            chunks.append(chunk)
+    finally:
+        os.close(descriptor)
+
+
 def _current_png_facts(path: Path) -> tuple[str, int, int]:
-    data = path.read_bytes()
-    if data[:16] != b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR":
+    data = _read_regular_file_bytes(path, label="PNG asset")
+    if len(data) < 24 or data[:16] != b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR":
         raise PresentationRemediationAuditError(f"asset is not a PNG: {path}")
     width, height = struct.unpack(">II", data[16:24])
+    if width <= 0 or height <= 0:
+        raise PresentationRemediationAuditError(f"asset has invalid PNG IHDR: {path}")
     return hashlib.sha256(data).hexdigest(), width, height
 
 
@@ -1850,6 +1916,11 @@ def render_phase2_generation_prompt(record: PresentationRemediationRecord) -> st
         f"Materials/textures: {' + '.join(record.materials)}; preserve only evidence-supported finish and construction cues",
         f"Repair findings: {findings}",
         f"Comparator: {comparator}",
+        *(
+            (f"Bootstrap shared render contract: {bootstrap.shared_render_contract}",)
+            if bootstrap is not None
+            else ()
+        ),
         f"Bootstrap material ruling: {material_ruling}",
         f"Current asset role: {generation.current_asset_role}",
         "Constraints: preserve every source-proved contact, component, silhouette, and usable-surface orientation; add no unsupported detail; output must already have exact dimensions",
@@ -1937,9 +2008,9 @@ def verify_transient_source_files(
         declared_paths = {item for item in declared[expected] if item is not None}
         if declared_paths and str(path) not in declared_paths:
             raise PresentationRemediationAuditError("source file path is not declared for its hash")
-        if path.is_symlink() or not path.is_file():
-            raise PresentationRemediationAuditError(f"source file must be a regular file: {path}")
-        observed = hashlib.sha256(path.read_bytes()).hexdigest()
+        observed = hashlib.sha256(
+            _read_regular_file_bytes(path, label="source file")
+        ).hexdigest()
         if observed != expected:
             raise PresentationRemediationAuditError("source SHA-256 mismatch")
         verified.append(expected)
@@ -1974,8 +2045,6 @@ def verify_transient_candidate_files(
         matching = tuple(item for item in declarations if item[0] == str(path))
         if not matching:
             raise PresentationRemediationAuditError("candidate file path is not declared for its hash")
-        if path.is_symlink() or not path.is_file():
-            raise PresentationRemediationAuditError(f"candidate file must be a regular file: {path}")
         observed, width, height = _current_png_facts(path)
         if observed != expected:
             raise PresentationRemediationAuditError("candidate SHA-256 mismatch")
@@ -2363,6 +2432,53 @@ def _record_key(record: PresentationRemediationRecord) -> str:
     return f"{record.package_id}/{record.presentation_id}"
 
 
+def _is_real_phase2_catalog(
+    manifest: PresentationRemediationManifest,
+    inventory: BoardInventory,
+) -> bool:
+    return len(manifest.records) == 85 and len(inventory.packages) == 61
+
+
+def _validate_canonical_remediation_matrix(
+    manifest: PresentationRemediationManifest,
+    inventory: BoardInventory,
+) -> None:
+    if not _is_real_phase2_catalog(manifest, inventory):
+        return
+    actual = {
+        _record_key(record): (record.decision, record.repair_batch_id)
+        for record in manifest.records
+    }
+    if actual != _CANONICAL_REMEDIATION_MATRIX:
+        raise PresentationRemediationAuditError(
+            "Phase 2 remediation decision/batch matrix does not match canonical catalog"
+        )
+    removal = next(
+        record
+        for record in manifest.records
+        if _record_key(record) == "lattice.mini-bar/end"
+    )
+    _validate_unsupported_surface_removal(removal)
+
+
+def _production_started(record: PresentationRemediationRecord) -> bool:
+    if record.decision == "keep" or not isinstance(record.generation, Phase2Generation):
+        return False
+    action = record.phase2_action
+    comparator = record.phase2_comparator
+    return bool(
+        record.generation.prompt
+        or record.generation.source_inputs
+        or record.generation.candidates
+        or (comparator is not None and (
+            comparator.generation_time is not None
+            or comparator.bootstrap_comparator_set is not None
+            or comparator.final is not None
+        ))
+        or (action is not None and action.state in {"inProgress", "completed", "blocked"})
+    )
+
+
 def _is_phase2_keep(record: PresentationRemediationRecord) -> bool:
     return record.decision == "keep"
 
@@ -2446,6 +2562,10 @@ def _validate_phase2_evidence_review(record: PresentationRemediationRecord) -> N
         raise PresentationRemediationAuditError(
             "repair evidence review cannot be notRequired"
         )
+    if action.state == "notRequired":
+        raise PresentationRemediationAuditError(
+            "repair action cannot be notRequired"
+        )
     if action.state == "pending":
         if (
             review.result != "pending"
@@ -2465,6 +2585,10 @@ def _validate_phase2_evidence_review(record: PresentationRemediationRecord) -> N
     if action.state == "inProgress" and review.result != "confirmed":
         raise PresentationRemediationAuditError(
             "in-progress Phase 2 action requires confirmed evidence review"
+        )
+    if action.state == "blocked" and review.result != "blocked":
+        raise PresentationRemediationAuditError(
+            "blocked Phase 2 action requires blocked evidence review"
         )
     if review.result in {"confirmed", "blocked"}:
         if review.reviewed_at is None:
@@ -2528,16 +2652,137 @@ def _validate_source_input_linkage(
         if input_item.evidence_pointer is not None or input_item.source_url is not None or input_item.asset_path is None:
             raise PresentationRemediationAuditError("current/comparator input must use only its package asset path")
     path = Path(input_item.asset_path) if input_item.asset_path is not None else None
-    if input_item.byte_verification.status == "passed":
-        if input_item.byte_verification.observed_sha256 != input_item.sha256:
-            raise PresentationRemediationAuditError("source verification hash mismatch")
-    elif path is not None and path.exists():
-        observed = hashlib.sha256(path.read_bytes()).hexdigest()
+    if path is not None and os.path.lexists(path):
+        observed = hashlib.sha256(
+            _read_regular_file_bytes(path, label="source file")
+        ).hexdigest()
         if observed != input_item.sha256:
             raise PresentationRemediationAuditError("source SHA-256 mismatch")
     elif path is not None:
+        _verify_durable_byte_record(
+            input_item.sha256,
+            input_item.byte_verification,
+            missing_message="deleted source input requires passed transient byte verification",
+            mismatch_message="source verification hash mismatch",
+        )
+    elif input_item.byte_verification.status == "passed" and (
+        input_item.byte_verification.observed_sha256 != input_item.sha256
+    ):
+        raise PresentationRemediationAuditError("source verification hash mismatch")
+
+
+def _validate_production_inputs(
+    record: PresentationRemediationRecord,
+) -> None:
+    """Require the complete, mode-specific image-tool input tuple."""
+    assert isinstance(record.generation, Phase2Generation)
+    assert record.phase2_comparator is not None
+    generation = record.generation
+    comparator = record.phase2_comparator
+    inputs = generation.source_inputs
+    evidence_inputs = tuple(
+        item
+        for item in inputs
+        if item.source_type in {"officialEvidence", "independentEvidence"}
+    )
+    if not evidence_inputs:
         raise PresentationRemediationAuditError(
-            "deleted source input requires passed transient byte verification"
+            "started production requires canonical prompt and complete inputs"
+        )
+    current_targets = tuple(item for item in inputs if item.id == "current-target")
+    style_inputs = tuple(item for item in inputs if item.id == "style-comparator")
+    bootstrap_composition = tuple(
+        item for item in inputs if item.id == "bootstrap-composition"
+    )
+    bootstrap_material = tuple(
+        item for item in inputs if item.id == "bootstrap-material"
+    )
+    structural_ids = {
+        "current-target",
+        "style-comparator",
+        "bootstrap-composition",
+        "bootstrap-material",
+    }
+    if any(
+        item.source_type in {"currentAsset", "comparator"}
+        and item.id not in structural_ids
+        for item in inputs
+    ):
+        raise PresentationRemediationAuditError(
+            "production source input ID is not authorized"
+        )
+    if record.decision == "edit":
+        if len(current_targets) != 1:
+            raise PresentationRemediationAuditError(
+                "started production requires canonical prompt and complete inputs"
+            )
+        target = current_targets[0]
+        if (
+            target.asset_path != record.asset_path
+            or target.sha256 != record.current_asset.sha256
+        ):
+            raise PresentationRemediationAuditError(
+                "current-target input must equal the record current asset"
+            )
+    elif current_targets:
+        raise PresentationRemediationAuditError("regenerate prohibits current-target input")
+    singular = comparator.generation_time
+    bootstrap = comparator.bootstrap_comparator_set
+    if (singular is None) == (bootstrap is None):
+        raise PresentationRemediationAuditError(
+            "started production requires canonical prompt and complete inputs"
+        )
+    if singular is not None:
+        if len(style_inputs) != 1 or bootstrap_composition or bootstrap_material:
+            raise PresentationRemediationAuditError(
+                "singular comparator generation requires exactly one style-comparator input"
+            )
+        style = style_inputs[0]
+        if (
+            style.asset_path != singular.asset_path
+            or style.sha256 != singular.accepted_asset_sha256
+        ):
+            raise PresentationRemediationAuditError(
+                "style-comparator input does not match selection"
+            )
+        return
+    assert bootstrap is not None
+    if style_inputs:
+        raise PresentationRemediationAuditError(
+            "bootstrap generation prohibits style-comparator input"
+        )
+    expected_axes = (
+        ("bootstrap-composition", bootstrap.composition_framing_scale, bootstrap_composition),
+        ("bootstrap-material", bootstrap.material_texture_lighting, bootstrap_material),
+    )
+    for label, axis, axis_inputs in expected_axes:
+        if axis is None:
+            if axis_inputs:
+                raise PresentationRemediationAuditError(
+                    "bootstrap generation inputs must match every non-null axis"
+                )
+            continue
+        if len(axis_inputs) != 1:
+            raise PresentationRemediationAuditError(
+                "bootstrap generation inputs must match every non-null axis"
+            )
+        item = axis_inputs[0]
+        if item.asset_path != axis.asset_path or item.sha256 != axis.accepted_asset_sha256:
+            raise PresentationRemediationAuditError(
+                f"{label} input does not match selected bootstrap axis"
+            )
+    official_ids = tuple(
+        item.id for item in inputs if item.source_type == "officialEvidence"
+    )
+    independent_ids = tuple(
+        item.id for item in inputs if item.source_type == "independentEvidence"
+    )
+    if (
+        official_ids != bootstrap.official_evidence_input_ids
+        or independent_ids != bootstrap.independent_evidence_input_ids
+    ):
+        raise PresentationRemediationAuditError(
+            "bootstrap evidence input IDs must match supplied inputs in order"
         )
 
 
@@ -2545,6 +2790,7 @@ def _validate_generation_and_final(
     record: PresentationRemediationRecord,
     record_index: int,
     on_disk_facts: tuple[str, int, int] | None,
+    validation_mode: PresentationValidationMode,
 ) -> None:
     assert isinstance(record.generation, Phase2Generation)
     assert record.phase2_action is not None
@@ -2576,6 +2822,14 @@ def _validate_generation_and_final(
     attempts = tuple(candidate.attempt for candidate in generation.candidates)
     if attempts != tuple(sorted(set(attempts))) or any(attempt not in (1, 2, 3) for attempt in attempts):
         raise PresentationRemediationAuditError("candidate attempts must be unique increasing values from 1 through 3")
+    if len({candidate.sha256 for candidate in generation.candidates}) != len(
+        generation.candidates
+    ) or len({candidate.transient_output_path for candidate in generation.candidates}) != len(
+        generation.candidates
+    ):
+        raise PresentationRemediationAuditError(
+            "generation candidates must not reuse a hash or transient output path"
+        )
     for candidate in generation.candidates:
         _require_verification_command(
             candidate.byte_verification, "--phase2-partial", "--candidate-file"
@@ -2583,7 +2837,7 @@ def _validate_generation_and_final(
         if candidate.byte_verification.status == "passed" and candidate.byte_verification.observed_sha256 != candidate.sha256:
             raise PresentationRemediationAuditError("candidate verification hash mismatch")
         candidate_path = Path(candidate.transient_output_path)
-        if candidate_path.exists():
+        if os.path.lexists(candidate_path):
             observed, width, height = _current_png_facts(candidate_path)
             if observed != candidate.sha256:
                 raise PresentationRemediationAuditError("candidate SHA-256 mismatch")
@@ -2636,43 +2890,23 @@ def _validate_generation_and_final(
         role = "Built-in edit target and topology/likeness invariant." if record.decision == "edit" else "Human comparison only; not evidence and not supplied to imagegen."
         if generation.current_asset_role != role:
             raise PresentationRemediationAuditError("currentAssetRole does not match generation mode")
-        if generation.prompt is not None and generation.prompt != render_phase2_generation_prompt(record):
-            raise PresentationRemediationAuditError("stored Phase 2 generation prompt does not equal canonical rendering")
-        if action.state in {"inProgress", "completed", "blocked"} and generation.source_inputs and generation.prompt is None:
-            raise PresentationRemediationAuditError("started generation requires a canonical prompt")
-        current_targets = tuple(item for item in generation.source_inputs if item.id == "current-target")
-        if record.decision == "edit" and generation.source_inputs and len(current_targets) != 1:
-            raise PresentationRemediationAuditError("edit requires exactly one current-target input")
-        if record.decision == "regenerate" and current_targets:
-            raise PresentationRemediationAuditError("regenerate prohibits current-target input")
-        if current_targets and current_targets[0].sha256 != record.current_asset.sha256:
-            raise PresentationRemediationAuditError("current-target hash must equal historical currentAsset")
-        comparator = record.phase2_comparator
-        assert comparator is not None
-        style_inputs = tuple(item for item in generation.source_inputs if item.id == "style-comparator")
-        bootstrap_composition = tuple(item for item in generation.source_inputs if item.id == "bootstrap-composition")
-        bootstrap_material = tuple(item for item in generation.source_inputs if item.id == "bootstrap-material")
-        if comparator.generation_time is not None and generation.source_inputs:
-            if len(style_inputs) != 1 or bootstrap_composition or bootstrap_material:
-                raise PresentationRemediationAuditError("singular comparator generation requires exactly one style-comparator input")
-            if style_inputs[0].sha256 != comparator.generation_time.accepted_asset_sha256 or style_inputs[0].asset_path != comparator.generation_time.asset_path:
-                raise PresentationRemediationAuditError("style-comparator input does not match selection")
-        bootstrap = comparator.bootstrap_comparator_set
-        if bootstrap is not None and generation.source_inputs:
-            if style_inputs:
-                raise PresentationRemediationAuditError("bootstrap generation prohibits style-comparator input")
-            expected_composition = 0 if bootstrap.composition_framing_scale is None else 1
-            expected_material = 0 if bootstrap.material_texture_lighting is None else 1
-            if len(bootstrap_composition) != expected_composition or len(bootstrap_material) != expected_material:
-                raise PresentationRemediationAuditError("bootstrap generation inputs must match every non-null axis")
-            if not any(item.source_type in {"officialEvidence", "independentEvidence"} for item in generation.source_inputs):
-                raise PresentationRemediationAuditError("bootstrap generation requires live evidence input")
-            official_ids = tuple(item.id for item in generation.source_inputs if item.source_type == "officialEvidence")
-            independent_ids = tuple(item.id for item in generation.source_inputs if item.source_type == "independentEvidence")
-            if official_ids != bootstrap.official_evidence_input_ids or independent_ids != bootstrap.independent_evidence_input_ids:
-                raise PresentationRemediationAuditError("bootstrap evidence input IDs must match supplied inputs in order")
-        if (generation.candidates or action.state == "completed") and any(item.byte_verification.status != "passed" for item in generation.source_inputs):
-            raise PresentationRemediationAuditError("deleted source input requires passed transient byte verification")
+        if _production_started(record):
+            if generation.prompt is None:
+                raise PresentationRemediationAuditError(
+                    "started production requires canonical prompt and complete inputs"
+                )
+            if generation.prompt != render_phase2_generation_prompt(record):
+                raise PresentationRemediationAuditError(
+                    "stored Phase 2 generation prompt does not equal canonical rendering"
+                )
+            _validate_production_inputs(record)
+        if (generation.candidates or action.state == "completed") and any(
+            item.byte_verification.status != "passed"
+            for item in generation.source_inputs
+        ):
+            raise PresentationRemediationAuditError(
+                "deleted source input requires passed transient byte verification"
+            )
     validation = record.final.validation
     package_check = validation["packageValidation"]
     focused_check = validation["focusedTests"]
@@ -2719,16 +2953,67 @@ def _validate_generation_and_final(
             raise PresentationRemediationAuditError("completed Phase 2 action requires four passed Workbench checks")
         if not _check_passed(package_check) or not _check_passed(focused_check):
             raise PresentationRemediationAuditError("completed Phase 2 action requires package and focused validation")
-    elif action.state == "pending":
-        if record.final.accepted_asset_sha256 is not None or record.final.final_dimensions is not None or record.final.visual_reviewer_decision != "pendingPhase2":
-            raise PresentationRemediationAuditError("pending action must retain pending Phase 2 final state")
-        if any(not _check_pending(check) for check in record.final.workbench_review.values()):
-            raise PresentationRemediationAuditError("pending action cannot prewrite Workbench results")
-        if on_disk_facts != (record.current_asset.sha256, record.current_asset.width_pixels, record.current_asset.height_pixels):
-            raise PresentationRemediationAuditError("pending action must retain original on-disk bytes")
-    elif action.state in {"blocked", "inProgress"} and record.final.accepted_asset_sha256 is None:
-        if on_disk_facts != (record.current_asset.sha256, record.current_asset.width_pixels, record.current_asset.height_pixels):
-            raise PresentationRemediationAuditError("non-accepted action must retain original on-disk bytes")
+    else:
+        expected_visual_decision = (
+            "blockedPhase2" if action.state == "blocked" else "pendingPhase2"
+        )
+        if (
+            record.final.accepted_asset_sha256 is not None
+            or record.final.final_dimensions is not None
+            or record.final.visual_reviewer_decision != expected_visual_decision
+            or any(candidate.disposition == "accepted" for candidate in generation.candidates)
+        ):
+            raise PresentationRemediationAuditError(
+                "only completed actions may promote accepted candidate or final bytes"
+            )
+        if any(
+            not _check_pending(check)
+            for check in record.final.workbench_review.values()
+        ):
+            raise PresentationRemediationAuditError(
+                "non-completed action cannot prewrite Workbench results"
+            )
+        if any(
+            not _check_pending(check)
+            for check in (package_check, focused_check, full_check, build_check)
+        ):
+            raise PresentationRemediationAuditError(
+                "non-completed action cannot prewrite validation results"
+            )
+        if (
+            simulator.state != "pending"
+            or simulator.reviewed_at is not None
+            or simulator.environment_evidence_ids
+            or simulator.device_runs
+        ):
+            raise PresentationRemediationAuditError(
+                "non-completed action cannot prewrite simulator review"
+            )
+        if on_disk_facts != (
+            record.current_asset.sha256,
+            record.current_asset.width_pixels,
+            record.current_asset.height_pixels,
+        ):
+            raise PresentationRemediationAuditError(
+                "non-completed action must retain original on-disk bytes"
+            )
+    if validation_mode == PresentationValidationMode.PHASE2_FINAL:
+        if any(
+            not _check_passed(check)
+            for check in (package_check, focused_check, full_check, build_check)
+        ):
+            raise PresentationRemediationAuditError(
+                "final Phase 2 validation requires terminal per-record validation"
+            )
+        if record.decision in {"edit", "regenerate"}:
+            if simulator.state != "passedDirectInspection":
+                raise PresentationRemediationAuditError(
+                    "final Phase 2 repair requires direct phone/tablet simulator review"
+                )
+        elif simulator.state != "notApplicableRemovedPresentation":
+            raise PresentationRemediationAuditError(
+                "final Phase 2 removal requires notApplicableRemovedPresentation simulator review"
+            )
 
 
 def _validate_simulator_review(
@@ -2888,10 +3173,14 @@ def _validate_bootstrap_set(
     if bootstrap.shared_render_contract != _BOOTSTRAP_SHARED_RENDER_CONTRACT or bootstrap.selection_rule != _BOOTSTRAP_SELECTION_RULE:
         raise PresentationRemediationAuditError("bootstrap render contract or selection rule is not canonical")
     checks = bootstrap.review_checks
-    if not _check_passed(checks.evidence_review):
+    if bootstrap.status != "blocked" and not _check_passed(checks.evidence_review):
         raise PresentationRemediationAuditError("bootstrap selection requires passed evidence review")
-    if record.phase2_evidence_review is None or record.phase2_evidence_review.result != "confirmed":
+    if record.phase2_evidence_review is None:
+        raise PresentationRemediationAuditError("bootstrap requires a record evidence review")
+    if bootstrap.status != "blocked" and record.phase2_evidence_review.result != "confirmed":
         raise PresentationRemediationAuditError("bootstrap selection requires confirmed record evidence review")
+    if bootstrap.status == "blocked" and record.phase2_evidence_review.result != "blocked":
+        raise PresentationRemediationAuditError("blocked bootstrap requires blocked record evidence review")
     all_four = all(_check_passed(check) for check in (checks.evidence_review, checks.visual_review, checks.workbench_review, checks.package_validation))
     if bootstrap.status == "acceptedCohortBaseline":
         package_check = record.final.validation["packageValidation"]
@@ -2906,10 +3195,40 @@ def _validate_bootstrap_set(
                 "bootstrap acceptance requires passed evidence, visual, Workbench, and package review"
             )
     elif bootstrap.status == "selected":
-        if bootstrap.accepted_at is not None or bootstrap.blocked_reason is not None:
+        if (
+            bootstrap.accepted_at is not None
+            or bootstrap.blocked_reason is not None
+            or not _check_pending(checks.visual_review)
+            or not _check_pending(checks.workbench_review)
+            or not _check_pending(checks.package_validation)
+        ):
             raise PresentationRemediationAuditError("selected bootstrap cannot claim acceptance or block")
     elif bootstrap.status == "blocked":
-        if bootstrap.blocked_reason is None or record.phase2_action is None or record.phase2_action.blocked_reason != bootstrap.blocked_reason:
+        if (
+            bootstrap.accepted_at is not None
+            or bootstrap.blocked_reason is None
+            or record.phase2_action is None
+            or record.phase2_action.state != "blocked"
+            or record.phase2_action.blocked_reason != bootstrap.blocked_reason
+            or not any(
+                check.status in {"failed", "blocked"}
+                for check in (
+                    checks.evidence_review,
+                    checks.visual_review,
+                    checks.workbench_review,
+                    checks.package_validation,
+                )
+            )
+            or any(
+                check.status == "notRequired"
+                for check in (
+                    checks.evidence_review,
+                    checks.visual_review,
+                    checks.workbench_review,
+                    checks.package_validation,
+                )
+            )
+        ):
             raise PresentationRemediationAuditError("blocked bootstrap and action must share the same reason")
 
 
@@ -2939,7 +3258,7 @@ def _validate_phase2_comparator_graph(manifest: PresentationRemediationManifest)
             continue
         generation = record.generation
         assert isinstance(generation, Phase2Generation)
-        started = bool(generation.source_inputs or generation.candidates or generation.prompt) or (record.phase2_action is not None and record.phase2_action.state in {"inProgress", "completed", "blocked"})
+        started = _production_started(record)
         singular = comparator.generation_time
         bootstrap = comparator.bootstrap_comparator_set
         if started and singular is None and bootstrap is None:
@@ -2961,6 +3280,37 @@ def _validate_phase2_comparator_graph(manifest: PresentationRemediationManifest)
                 raise PresentationRemediationAuditError("final comparator must preserve generation-time singular selection")
         elif comparator.final is not None:
             raise PresentationRemediationAuditError("final comparator cannot precede completion")
+    for seed in manifest.records:
+        seed_comparator = seed.phase2_comparator
+        if (
+            seed_comparator is None
+            or seed_comparator.bootstrap_comparator_set is None
+            or seed_comparator.bootstrap_comparator_set.status
+            != "acceptedCohortBaseline"
+        ):
+            continue
+        seed_key = _record_key(seed)
+        seed_task = _REPAIR_TASK_BY_KEY.get(seed_key, 10_000)
+        for consumer in manifest.records:
+            consumer_key = _record_key(consumer)
+            consumer_comparator = consumer.phase2_comparator
+            if (
+                consumer_key == seed_key
+                or consumer.decision not in {"edit", "regenerate"}
+                or _REPAIR_TASK_BY_KEY.get(consumer_key, 10_000) <= seed_task
+                or consumer.form_factor != seed.form_factor
+                or not set(consumer.materials) & set(seed.materials)
+                or not _production_started(consumer)
+            ):
+                continue
+            if (
+                consumer_comparator is None
+                or consumer_comparator.generation_time is None
+                or consumer_comparator.generation_time.source_record_key != seed_key
+            ):
+                raise PresentationRemediationAuditError(
+                    "downstream cohort row must use the accepted canonical seed"
+                )
 
 
 def _production_hashes_and_paths(manifest: PresentationRemediationManifest) -> tuple[set[str], set[str]]:
@@ -3010,8 +3360,17 @@ def _validate_canvas_preflight(manifest: PresentationRemediationManifest) -> Non
     assert manifest.phase2 is not None
     preflight = manifest.phase2.canvas_preflight
     repair_keys = {_record_key(record) for record in manifest.records if record.decision in {"edit", "regenerate"}}
-    full_catalog = len(repair_keys) == 65
+    full_catalog = len(manifest.records) == 85
     if full_catalog:
+        expected_repair_keys = {
+            key
+            for key, (decision, _) in _CANONICAL_REMEDIATION_MATRIX.items()
+            if decision in {"edit", "regenerate"}
+        }
+        if repair_keys != expected_repair_keys:
+            raise PresentationRemediationAuditError(
+                "canvas preflight must cover exactly 65 edit/regenerate record keys"
+            )
         dimensions = tuple((item.width_pixels, item.height_pixels) for item in preflight.classes)
         if len(preflight.classes) != 20 or set(dimensions) != set(_PREFLIGHT_COVERAGE):
             raise PresentationRemediationAuditError("canvas preflight must contain the exact 20 canvas classes")
@@ -3086,10 +3445,25 @@ def _validate_canvas_preflight(manifest: PresentationRemediationManifest) -> Non
                     )
                 current_targets = tuple(item for item in probe.source_inputs if item.id == "current-target")
                 composition_inputs = tuple(item for item in probe.source_inputs if item.id == "preflight-composition")
+                if any(
+                    item.source_type in {"currentAsset", "comparator"}
+                    and item.id not in {"current-target", "preflight-composition"}
+                    for item in probe.source_inputs
+                ):
+                    raise PresentationRemediationAuditError(
+                        "preflight source input ID is not authorized"
+                    )
                 if probe.behavior == "edit" and len(current_targets) != 1:
                     raise PresentationRemediationAuditError("edit preflight probe requires exactly one current-target")
                 if probe.behavior == "generate" and current_targets:
                     raise PresentationRemediationAuditError("generate preflight probe prohibits current-target")
+                if current_targets and (
+                    current_targets[0].asset_path != record.asset_path
+                    or current_targets[0].sha256 != record.current_asset.sha256
+                ):
+                    raise PresentationRemediationAuditError(
+                        "preflight current-target input must equal representative asset"
+                    )
                 expected_composition_count = 0 if comparator.composition_framing_scale is None else 1
                 if len(composition_inputs) != expected_composition_count:
                     raise PresentationRemediationAuditError("preflight composition input does not match assigned reference")
@@ -3118,16 +3492,22 @@ def _validate_canvas_preflight(manifest: PresentationRemediationManifest) -> Non
                     )
                 referenced_artifacts.add(artifact_id)
                 exact = (artifact.width_pixels, artifact.height_pixels) == dims
-                artifact_path = next(
-                    (
-                        Path(path)
-                        for path in (artifact.transient_output_path, artifact.returned_output_path)
-                        if Path(path).is_file()
-                    ),
-                    None,
+                if artifact.returned_output_path == artifact.transient_output_path:
+                    raise PresentationRemediationAuditError(
+                        "capability artifact returned and transient paths must be distinct"
+                    )
+                extant_paths = tuple(
+                    Path(path)
+                    for path in (
+                        artifact.returned_output_path,
+                        artifact.transient_output_path,
+                    )
+                    if os.path.lexists(path)
                 )
-                if artifact_path is not None:
-                    observed_sha, observed_width, observed_height = _current_png_facts(artifact_path)
+                for artifact_path in extant_paths:
+                    observed_sha, observed_width, observed_height = _current_png_facts(
+                        artifact_path
+                    )
                     if observed_sha != artifact.sha256 or (observed_width, observed_height) != (artifact.width_pixels, artifact.height_pixels):
                         raise PresentationRemediationAuditError("capability artifact bytes disagree with recorded hash/IHDR")
                 if (artifact.canvas_result == "exactCanvas") != exact:
@@ -3143,17 +3523,23 @@ def _validate_canvas_preflight(manifest: PresentationRemediationManifest) -> Non
                     "--phase2-preflight",
                     "--candidate-file",
                 )
-                if artifact.deletion_verified_at is None and not (
-                    Path(artifact.returned_output_path).is_file()
-                    or Path(artifact.transient_output_path).is_file()
-                ):
+                if artifact.deletion_verified_at is None and not extant_paths:
                     raise PresentationRemediationAuditError(
                         "undeleted capability artifact must remain present at a recorded path"
                     )
-                if artifact.deletion_verified_at is not None and (Path(artifact.returned_output_path).exists() or Path(artifact.transient_output_path).exists()):
+                if artifact.deletion_verified_at is not None and extant_paths:
                     raise PresentationRemediationAuditError("deleted capability artifact path still exists")
             if len(probe.artifact_ids) > 3:
                 raise PresentationRemediationAuditError("preflight probe permits at most three attempts")
+            if probe.status == "blocked":
+                if probe.blocked_reason is None:
+                    raise PresentationRemediationAuditError(
+                        "blocked preflight probe requires blockedReason"
+                    )
+            elif probe.blocked_reason is not None:
+                raise PresentationRemediationAuditError(
+                    "pending/passed preflight probe cannot have blockedReason"
+                )
             if probe.status in {"passed", "blocked"}:
                 if not probe.artifact_ids or any(artifacts[item].deletion_verified_at is None for item in probe.artifact_ids):
                     raise PresentationRemediationAuditError("terminal preflight probe requires recorded deleted artifacts")
@@ -3162,8 +3548,6 @@ def _validate_canvas_preflight(manifest: PresentationRemediationManifest) -> Non
                     raise PresentationRemediationAuditError("passed preflight probe requires terminal exactCanvas")
                 if probe.status == "blocked" and (len(results) != 3 or any(result != "wrongCanvas" for result in results)):
                     raise PresentationRemediationAuditError("blocked preflight probe requires three wrongCanvas attempts")
-            elif probe.blocked_reason is not None:
-                raise PresentationRemediationAuditError("pending preflight probe cannot have blockedReason")
         class_statuses = tuple(probe.status for probe in canvas_class.behavior_probes)
         expected_class_status = (
             "blocked"
@@ -3174,6 +3558,23 @@ def _validate_canvas_preflight(manifest: PresentationRemediationManifest) -> Non
         )
         if canvas_class.status != expected_class_status:
             raise PresentationRemediationAuditError("canvas class status does not match its probe states")
+        if canvas_class.status == "blocked":
+            reasons = {
+                probe.blocked_reason
+                for probe in canvas_class.behavior_probes
+                if probe.status == "blocked"
+            }
+            if (
+                canvas_class.blocked_reason is None
+                or reasons != {canvas_class.blocked_reason}
+            ):
+                raise PresentationRemediationAuditError(
+                    "blocked canvas class must preserve its probe blockedReason"
+                )
+        elif canvas_class.blocked_reason is not None:
+            raise PresentationRemediationAuditError(
+                "pending/passed canvas class cannot have blockedReason"
+            )
     if full_catalog and probe_count != 22:
         raise PresentationRemediationAuditError("canvas preflight must contain exactly 22 behavior probes")
     if referenced_artifacts != set(artifacts):
@@ -3188,6 +3589,20 @@ def _validate_canvas_preflight(manifest: PresentationRemediationManifest) -> Non
     )
     if preflight.status != expected_preflight_status:
         raise PresentationRemediationAuditError("canvas preflight status does not match class states")
+    if preflight.status == "blocked":
+        reasons = {
+            canvas_class.blocked_reason
+            for canvas_class in preflight.classes
+            if canvas_class.status == "blocked"
+        }
+        if preflight.blocked_reason is None or reasons != {preflight.blocked_reason}:
+            raise PresentationRemediationAuditError(
+                "blocked canvas preflight must preserve its class blockedReason"
+            )
+    elif preflight.blocked_reason is not None:
+        raise PresentationRemediationAuditError(
+            "pending/passed canvas preflight cannot have blockedReason"
+        )
     _validate_artifact_disjointness(manifest)
 
 
@@ -3202,8 +3617,6 @@ def _validate_batches(
         raise PresentationRemediationAuditError("Phase 2 batches must occur once in canonical order")
     if selected_batch_id is not None and selected_batch_id not in {batch.id for batch in batches}:
         raise PresentationRemediationAuditError("selected batch ID is not declared")
-    seen_nonpassed = False
-    active_count = 0
     owned: set[str] = set()
     records = {_record_key(record): record for record in manifest.records}
     for index, batch in enumerate(batches, 1):
@@ -3211,12 +3624,6 @@ def _validate_batches(
             raise PresentationRemediationAuditError("batch ID/order/kind does not match canonical order")
         if batch.status not in {"pending", "inProgress", "passed", "blocked"}:
             raise PresentationRemediationAuditError("batch status is invalid")
-        if batch.status == "passed" and seen_nonpassed:
-            raise PresentationRemediationAuditError("batch statuses must form a passed prefix")
-        if batch.status != "passed":
-            seen_nonpassed = True
-        if batch.status in {"inProgress", "blocked"}:
-            active_count += 1
         if (batch.status == "blocked") != (batch.blocked_reason is not None):
             raise PresentationRemediationAuditError("blocked batch requires exactly one reason")
         overlap = owned & set(batch.record_keys)
@@ -3229,16 +3636,76 @@ def _validate_batches(
             record = records.get(key)
             if record is None or record.repair_batch_id != batch.id:
                 raise PresentationRemediationAuditError("record repairBatchID does not match owning batch")
+        owned_records = tuple(records[key] for key in batch.record_keys)
         if batch.status == "passed":
-            if any(records[key].phase2_action is None or records[key].phase2_action.state != "completed" for key in batch.record_keys):
+            if any(
+                record.phase2_action is None
+                or record.phase2_action.state != "completed"
+                for record in owned_records
+            ):
                 raise PresentationRemediationAuditError("passed batch owns only completed actions")
             if any(not _check_passed(check) for check in batch.checks.values()):
                 raise PresentationRemediationAuditError("passed batch requires three passed checks")
-        _require_command_evidence(
-            batch.checks["fullPackageSuite"], "fullPackageSuite"
-        )
-    if active_count > 1:
-        raise PresentationRemediationAuditError("at most one batch may be in progress or blocked")
+            if any(
+                not _check_passed(record.final.validation["fullPackageSuite"])
+                for record in owned_records
+            ):
+                raise PresentationRemediationAuditError(
+                    "passed batch requires fullPackageSuite passed for every owned record"
+                )
+        elif batch.status == "pending":
+            if any(not _check_pending(check) for check in batch.checks.values()):
+                raise PresentationRemediationAuditError(
+                    "pending batch cannot prewrite passed checks"
+                )
+            if any(
+                record.phase2_action is None
+                or record.phase2_action.state != "pending"
+                for record in owned_records
+            ):
+                raise PresentationRemediationAuditError(
+                    "pending batch owns only pending actions"
+                )
+        elif batch.status == "inProgress":
+            if any(
+                record.phase2_action is None
+                or record.phase2_action.state == "blocked"
+                for record in owned_records
+            ) or not any(
+                record.phase2_action is not None
+                and record.phase2_action.state == "inProgress"
+                for record in owned_records
+            ):
+                raise PresentationRemediationAuditError(
+                    "in-progress batch must own an in-progress action and no blocked action"
+                )
+        else:
+            if not any(
+                record.phase2_action is not None
+                and record.phase2_action.state == "blocked"
+                and record.phase2_action.blocked_reason == batch.blocked_reason
+                for record in owned_records
+            ):
+                raise PresentationRemediationAuditError(
+                    "blocked batch must share an owned blocked action reason"
+                )
+        for name in ("packageValidation", "focusedTests", "fullPackageSuite"):
+            _require_command_evidence(batch.checks[name], name)
+    states = tuple(batch.status for batch in batches)
+    passed_prefix = 0
+    while passed_prefix < len(states) and states[passed_prefix] == "passed":
+        passed_prefix += 1
+    remainder = states[passed_prefix:]
+    if remainder:
+        if remainder[0] in {"inProgress", "blocked"}:
+            if any(state != "pending" for state in remainder[1:]):
+                raise PresentationRemediationAuditError(
+                    "batch states require one active batch followed only by pending batches"
+                )
+        elif any(state != "pending" for state in remainder):
+            raise PresentationRemediationAuditError(
+                "batch statuses must form a passed prefix then optional active batch"
+            )
     nonkeeps = {_record_key(record) for record in manifest.records if record.decision != "keep"}
     if full_catalog and owned != nonkeeps:
         raise PresentationRemediationAuditError("batches must own every non-keep record exactly once")
@@ -3307,10 +3774,9 @@ def _validate_phase2_manifest(
 ) -> PresentationRemediationReport:
     if manifest.schema_version != 2 or manifest.phase != "assetRemediation" or manifest.phase2 is None:
         raise PresentationRemediationAuditError("Phase 2 validation requires schemaVersion 2 assetRemediation manifest")
+    _validate_canonical_remediation_matrix(manifest, inventory)
     if manifest.phase2.canvas_preflight.status != "passed" and any(
-        record.decision != "keep"
-        and record.phase2_action is not None
-        and record.phase2_action.state in {"inProgress", "completed", "blocked"}
+        _production_started(record)
         for record in manifest.records
     ):
         raise PresentationRemediationAuditError(
@@ -3332,6 +3798,7 @@ def _validate_phase2_manifest(
             raise PresentationRemediationAuditError(
                 "final Phase 2 validation requires zero pending Phase 2 actions"
             )
+    _validate_artifact_disjointness(manifest)
     inventory_ids = frozenset(package.board.id for package in inventory.packages)
     if set(manifest.package_ids) != inventory_ids:
         raise PresentationRemediationAuditError("manifest packageIDs must exactly equal inventory board IDs")
@@ -3372,7 +3839,7 @@ def _validate_phase2_manifest(
             raise PresentationRemediationAuditError(f"presentation asset is missing for {key}")
         assert record.phase2_action is not None and record.phase2_evidence_review is not None and record.phase2_comparator is not None
         _validate_phase2_evidence_review(record)
-        _validate_generation_and_final(record, index, facts)
+        _validate_generation_and_final(record, index, facts, validation_mode)
     expected_keys = set(expected)
     missing = expected_keys - set(records_by_key)
     if missing:
@@ -3392,14 +3859,35 @@ def _validate_phase2_manifest(
             raise PresentationRemediationAuditError("Phase 2 keep partition must preserve the exact 17 accepted and two historical blocked keeps")
     if transient_source_files:
         verified_sources = verify_transient_source_files(manifest, transient_source_files)
-        allowed_sources = _allowed_transient_source_hashes(manifest, validation_mode, selected_batch_id)
-        if not set(verified_sources) <= allowed_sources:
-            raise PresentationRemediationAuditError("source file is not legal in the selected lifecycle")
+        allowed_sources = _allowed_transient_source_paths(
+            manifest, validation_mode, selected_batch_id
+        )
+        all_sources = _allowed_transient_source_paths(
+            manifest, None, None
+        )
+        for digest in verified_sources:
+            path = str(transient_source_files[digest])
+            legal_paths = allowed_sources.get(digest, set())
+            all_paths = all_sources.get(digest, set())
+            if path in legal_paths:
+                continue
+            if None in legal_paths and all_paths == {None}:
+                continue
+            raise PresentationRemediationAuditError(
+                "source file is not legal in the selected lifecycle/batch/path owner"
+            )
     if transient_candidate_files:
         verified_candidates = verify_transient_candidate_files(manifest, transient_candidate_files)
-        allowed_candidates = _allowed_transient_candidate_hashes(manifest, validation_mode, selected_batch_id)
-        if not set(verified_candidates) <= allowed_candidates:
-            raise PresentationRemediationAuditError("candidate file is not legal in the selected lifecycle")
+        allowed_candidates = _allowed_transient_candidate_paths(
+            manifest, validation_mode, selected_batch_id
+        )
+        for digest in verified_candidates:
+            if str(transient_candidate_files[digest]) not in allowed_candidates.get(
+                digest, set()
+            ):
+                raise PresentationRemediationAuditError(
+                    "candidate file is not legal in the selected lifecycle/batch/path owner"
+                )
     _validate_canvas_preflight(manifest)
     _validate_batches(manifest, selected_batch_id)
     _validate_phase2_final_check_evidence(manifest)
@@ -3451,42 +3939,58 @@ def _validate_phase2_manifest(
     return report
 
 
-def _allowed_transient_source_hashes(
+def _allowed_transient_source_paths(
+    manifest: PresentationRemediationManifest,
+    mode: PresentationValidationMode | None,
+    selected_batch_id: str | None,
+) -> dict[str, set[str | None]]:
+    result: dict[str, set[str | None]] = {}
+    def add(item: GenerationSourceInput) -> None:
+        result.setdefault(item.sha256, set()).add(item.asset_path)
+    if mode in {PresentationValidationMode.PHASE2_PREFLIGHT, None}:
+        assert manifest.phase2 is not None
+        for canvas in manifest.phase2.canvas_preflight.classes:
+            for probe in canvas.behavior_probes:
+                for item in probe.source_inputs:
+                    add(item)
+        if mode == PresentationValidationMode.PHASE2_PREFLIGHT:
+            return result
+    if mode in {PresentationValidationMode.PHASE2_PARTIAL, None}:
+        for record in manifest.records:
+            if (
+                mode is not None
+                and selected_batch_id is not None
+                and record.repair_batch_id != selected_batch_id
+            ):
+                continue
+            if isinstance(record.generation, Phase2Generation):
+                for item in record.generation.source_inputs:
+                    add(item)
+    return result
+
+
+def _allowed_transient_candidate_paths(
     manifest: PresentationRemediationManifest,
     mode: PresentationValidationMode,
     selected_batch_id: str | None,
-) -> set[str]:
+) -> dict[str, set[str]]:
+    result: dict[str, set[str]] = {}
+    def add(digest: str, path: str) -> None:
+        result.setdefault(digest, set()).add(path)
     if mode == PresentationValidationMode.PHASE2_PREFLIGHT:
         assert manifest.phase2 is not None
-        return {item.sha256 for canvas in manifest.phase2.canvas_preflight.classes for probe in canvas.behavior_probes for item in probe.source_inputs}
+        for item in manifest.phase2.capability_probe_artifacts:
+            add(item.sha256, item.returned_output_path)
+            add(item.sha256, item.transient_output_path)
+        return result
     if mode == PresentationValidationMode.PHASE2_PARTIAL:
-        return {
-            item.sha256
-            for record in manifest.records
-            if selected_batch_id is None or record.repair_batch_id == selected_batch_id
-            if isinstance(record.generation, Phase2Generation)
-            for item in record.generation.source_inputs
-        }
-    return set()
-
-
-def _allowed_transient_candidate_hashes(
-    manifest: PresentationRemediationManifest,
-    mode: PresentationValidationMode,
-    selected_batch_id: str | None,
-) -> set[str]:
-    if mode == PresentationValidationMode.PHASE2_PREFLIGHT:
-        assert manifest.phase2 is not None
-        return {item.sha256 for item in manifest.phase2.capability_probe_artifacts}
-    if mode == PresentationValidationMode.PHASE2_PARTIAL:
-        return {
-            item.sha256
-            for record in manifest.records
-            if selected_batch_id is None or record.repair_batch_id == selected_batch_id
-            if isinstance(record.generation, Phase2Generation)
-            for item in record.generation.candidates
-        }
-    return set()
+        for record in manifest.records:
+            if selected_batch_id is not None and record.repair_batch_id != selected_batch_id:
+                continue
+            if isinstance(record.generation, Phase2Generation):
+                for item in record.generation.candidates:
+                    add(item.sha256, item.transient_output_path)
+    return result
 
 
 def validate_presentation_remediation_manifest(
@@ -3503,6 +4007,10 @@ def validate_presentation_remediation_manifest(
 ) -> PresentationRemediationReport:
     """Validate historical, preflight, partial, or final catalog truth."""
     if validation_mode == PresentationValidationMode.SOURCE_RECLASSIFICATION:
+        if manifest.schema_version != 1 or manifest.phase != "sourceReclassification":
+            raise PresentationRemediationAuditError(
+                "source reclassification requires schemaVersion 1 sourceReclassification manifest"
+            )
         if selected_batch_id is not None or transient_source_files or transient_candidate_files:
             raise PresentationRemediationAuditError("Phase 1 validation rejects Phase 2 lifecycle arguments")
         return _validate_source_reclassification_manifest(
@@ -3514,6 +4022,10 @@ def validate_presentation_remediation_manifest(
         )
     if final_validation:
         raise PresentationRemediationAuditError("--final-validation is only valid for Phase 1")
+    if manifest.schema_version != 2 or manifest.phase != "assetRemediation":
+        raise PresentationRemediationAuditError(
+            "Phase 2 validation requires schemaVersion 2 assetRemediation manifest"
+        )
     if selected_package_ids:
         raise PresentationRemediationAuditError("Phase 2 validation rejects package lane selection")
     if validation_mode == PresentationValidationMode.PHASE2_FINAL and (transient_source_files or transient_candidate_files):
