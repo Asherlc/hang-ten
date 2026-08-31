@@ -28,6 +28,20 @@ def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -
     assert "soill-iron-palm-2" not in module._ENCLOSED_BACKGROUND_SEEDS
 
 
+def test_manually_transparent_trango_pivot_is_not_reprocessed_by_legacy_seed_fill() -> None:
+    module = _load_script()
+    path = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot" / "assets" / "primary.png"
+    with Image.open(path) as source_image:
+        source = source_image.convert("RGBA")
+    opaque_mask = Image.new("L", source.size, color=255)
+
+    corrected = module._clear_known_enclosed_backgrounds(
+        source, opaque_mask, "trango-rock-prodigy-pivot"
+    )
+
+    assert corrected.getextrema() == (255, 255)
+
+
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [
@@ -35,10 +49,6 @@ def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -
         ("beastmaker-1000", (785, 10), (500, 20)),
         ("soill-training-tiles", (500, 450), (500, 350)),
         ("tension-grindstone", (887, 443), (887, 360)),
-        ("trango-rock-prodigy-pivot", (590, 310), (590, 400)),
-        ("trango-rock-prodigy-pivot", (710, 310), (710, 400)),
-        ("trango-rock-prodigy-pivot", (1055, 310), (1055, 400)),
-        ("trango-rock-prodigy-pivot", (1180, 310), (1180, 400)),
         ("yy-travelboard", (190, 625), (768, 512)),
         ("yy-travelboard", (1348, 625), (768, 512)),
         ("yy-verticalboard-evo", (887, 500), (887, 443)),
