@@ -1,5 +1,57 @@
 # Hangboard Presentation Remediation Phase 1 Source Audit
 
+## 2026-08-31 Tension Grindstone Pro deterministic presentation repair
+
+This repair covers every declared presentation of `tension.grindstone-pro`:
+`board.json` declares exactly one presentation, `primary` (`Primary`, default),
+at `assets/primary.png`. There is no reverse, side, mounting-orientation, or
+other selectable presentation in this package, and this finding makes no claim
+about the original Grindstone, Mk2/current Grindstone, or another Tension
+model.
+
+Live evidence was searched and reopened on 2026-08-31. Tension's current
+[official hangboards page](https://tensionclimbing.com/pages/hangboards)
+confirms the manufacturer's wood-board family treatment, signature rounded
+edge profiles, and asymmetric spacing approach; the exact historical
+`https://www.tensionclimbing.com/hangboards/grindstone-pro` route is no longer
+available. The contemporaneous [Power Company interview with Tension founders
+Will Anglin and Ben Spannuth](https://www.powercompanyclimbing.com/blog/2017/7/5/episode-49-a-better-strip-of-wood-with-tension-climbing)
+identifies the 2017 Grindstone Pro's 35/20/15/10 mm progression, 30 and 22 mm
+center edges, mono and two-finger pockets, 7 mm incut, phone slot, and
+deliberately asymmetric spacing. The independent 2017
+[Climbing product photo](https://www.climbing.com/gear/sponsor-content-climbing-holiday-gift-guide-tension-climbing-grindstone-pro-hangboard/)
+publishes the complete three-tier wooden front face, including the two top
+openings, center pocket family, lower five edges, Tension mark, and engraved
+depth labels. The catalog asset is the established simplified, unbranded
+render of that exact topology: wood material, silhouette, opening count,
+relative placement, and the asymmetric front working face conform. It is
+genuinely head-on to that working face, with parallel horizontal tiers and no
+visible side plane. Its existing uniform soft, pale-wood smoothing treatment
+also conforms; no smoothing or product-pixel filter was applied.
+
+The original asset was 1654 × 951 pixels with SHA-256
+`9c252286a19c379236574e703b61ec8b92b5443b54f9c9bce5dcb774a901e1de`.
+The accepted asset remains 1654 × 951 pixels and has SHA-256
+`6682e9a2f019ac6ca345cfa7aca376a988b15bb408664e15dbd0ee181c3e23d1`.
+The sole deterministic transform decoded the current PNG as premultiplied sRGB
+and source-over composited its existing alpha onto `#F6F2EA`; every output
+pixel is opaque. There was no resize, crop, padding, warp, perspective
+correction, registration, segmentation, inferred mask, redraw, replacement
+product pixel, sharpening, denoising, or other filter. `board.json` remained
+byte-identical at SHA-256
+`75182723b4a04ffdacecd51722dd0c1ee6f28d3f639ee0c420b69053978585c4`.
+
+Both `scripts/hangboard-packages.sh validate --root Hangboards
+--final-inventory` and `scripts/hangboard-packages.sh status --root Hangboards`
+passed with 61 complete packages and zero drafts. The normal Workbench catalog
+capture was exercised against the changed checkout; a target-only follow-up in
+a minimized symlink repository exited during server startup, so no new
+target-specific labeled screenshot or interactive active/hit-test result is
+claimed. Because the canvas dimensions, presentation aspect ratio, and
+`board.json` geometry bytes are unchanged, this alpha-only composition cannot
+move a canonical path relative to any product pixel. The machine remediation
+manifest is intentionally unchanged for the later consolidated lifecycle pass.
+
 ## 2026-08-31 Beastmaker 1000 deterministic presentation repair
 
 This narrowly scoped, user-approved deterministic exception repairs only
