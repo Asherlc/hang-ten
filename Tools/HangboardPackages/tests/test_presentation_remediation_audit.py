@@ -3,17 +3,23 @@ from __future__ import annotations
 import hashlib
 import json
 import struct
+from datetime import datetime
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 from conftest import write_board_package, write_multi_presentation_board_package
 from hangboard_packages.board_catalog import BoardInventory, discover_board_packages
+import hangboard_packages.presentation_remediation_audit as presentation_audit
 from hangboard_packages.presentation_remediation_audit import (
     PresentationRemediationAuditError,
     PresentationRemediationReport,
     load_presentation_remediation_manifest,
     validate_presentation_remediation_manifest,
 )
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+REAL_PHASE2_MANIFEST = REPO_ROOT / "docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json"
 
 
 def _manifest(
@@ -1175,3 +1181,449 @@ def test_lane_filter_keeps_full_manifest_contract_and_reports_selected_board(
         selected_package_ids=frozenset({"first.board"}),
     )
     assert report.to_json()["packageIDs"] == ["first.board"]
+
+
+def _empty_phase2_document() -> dict[str, object]:
+    document = _manifest(package_ids=[], records=[])
+    document.update(
+        schemaVersion=2,
+        phase="assetRemediation",
+        phase2={
+            "canvasPreflight": {
+                "status": "pending",
+                "blockedReason": None,
+                "classes": [],
+            },
+            "capabilityProbeCheck": {"artifacts": []},
+            "batches": [],
+            "finalChecks": {
+                name: {"status": "pending", "evidence": None}
+                for name in (
+                    "crossCatalogReview",
+                    "manifestValidation",
+                    "finalInventory",
+                    "packageTestSuite",
+                    "buildForTesting",
+                    "simulatorReview",
+                    "contextCleanup",
+                )
+            },
+        },
+    )
+    return document
+
+
+def test_phase2_public_loader_rejects_unknown_nested_keys(tmp_path: Path) -> None:
+    document = _empty_phase2_document()
+    document["phase2"]["extra"] = True
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="phase2 has unknown keys",
+    ):
+        load_presentation_remediation_manifest(_write_manifest(tmp_path, document))
+
+
+def test_phase2_public_interfaces_are_available() -> None:
+    assert tuple(presentation_audit.PresentationValidationMode) == (
+        presentation_audit.PresentationValidationMode.SOURCE_RECLASSIFICATION,
+        presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
+        presentation_audit.PresentationValidationMode.PHASE2_PARTIAL,
+        presentation_audit.PresentationValidationMode.PHASE2_FINAL,
+    )
+    assert callable(presentation_audit.render_phase2_generation_prompt)
+    assert callable(presentation_audit.render_phase2_capability_probe_prompt)
+    assert callable(presentation_audit.verify_transient_source_files)
+    assert callable(presentation_audit.verify_transient_candidate_files)
+
+
+def test_capability_prompt_renderer_is_exact_and_disposable() -> None:
+    pending = presentation_audit.ByteVerification("pending", None, None, None)
+    probe = presentation_audit.CanvasBehaviorProbe(
+        "1000x1000-edit-mxedge-large",
+        "edit",
+        "lattice.mxedge-lift-large/primary",
+        "stored later",
+        (
+            presentation_audit.GenerationSourceInput(
+                "official-0-image-0",
+                "officialEvidence",
+                "/records/24/evidence/official/0",
+                "https://manufacturer.example/mxedge",
+                None,
+                "Straight-on product evidence.",
+                "0" * 64,
+                True,
+                pending,
+            ),
+        ),
+        presentation_audit.PreflightComparatorSet(
+            "preflightCapabilityOnly",
+            None,
+            None,
+            ("compositionFramingScale", "materialTextureLighting"),
+            ("official-0-image-0",),
+            (),
+            presentation_audit._PREFLIGHT_MATERIAL_CONTRACT,
+            "forbidden",
+            datetime.fromisoformat("2026-08-31T00:00:00+00:00"),
+        ),
+        (),
+        "pending",
+        None,
+    )
+    assert presentation_audit.render_phase2_capability_probe_prompt(
+        probe,
+        presentation_audit.RequiredCanvas(1000, 1000),
+    ) == (
+        "Purpose: disposable image-tool exact-canvas capability probe; never a production candidate, comparator, baseline, or accepted asset\n"
+        "Behavior: edit-capability\n"
+        "Representative: lattice.mxedge-lift-large/primary; identity cues come only from freshly reopened official/independent evidence\n"
+        "Input images: official-0-image-0, officialEvidence, Straight-on product evidence., https://manufacturer.example/mxedge; for edit-capability only, the current target is tool input but not evidence or style reference\n"
+        "Scene/backdrop: common off-white studio background; no wall or mounting scenery\n"
+        "Composition reference: unavailable\n"
+        "Material reference: unavailable; live evidence and the shared material contract govern material appearance\n"
+        f"Material contract: {presentation_audit._PREFLIGHT_MATERIAL_CONTRACT}\n"
+        "Canvas request: untouched PNG output exactly 1000 by 1000\n"
+        "Disposition: every returned output is capabilityProbeRejected and must be hashed, recorded separately, and deleted\n"
+        "Production authorization: forbidden\n"
+        "Avoid: branding, labels, logos, text, watermark, transparent background, camera tilt, invented product detail, and every post-processing operation"
+    )
+
+
+def _transient_manifest(tmp_path: Path) -> tuple[object, Path, str]:
+    boards, _, _ = _single_board_fixture(tmp_path)
+    source_path = boards / "fixture-board" / "assets" / "primary.png"
+    sha = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    width, height = struct.unpack(">II", source_path.read_bytes()[16:24])
+    loaded = load_presentation_remediation_manifest(
+        _write_manifest(
+            tmp_path,
+            _manifest(
+                package_ids=["fixture.board"],
+                records=[
+                    _record(
+                        boards,
+                        "fixture-board",
+                        "fixture.board",
+                        "primary",
+                        "assets/primary.png",
+                    )
+                ],
+            ),
+        )
+    )
+    record = replace(
+        loaded.records[0],
+        generation=presentation_audit.Phase2Generation(
+            "builtInEdit",
+            None,
+            presentation_audit.RequiredCanvas(width, height),
+            (
+                presentation_audit.GenerationSourceInput(
+                    "current-target",
+                    "currentAsset",
+                    None,
+                    None,
+                    str(source_path),
+                    "Built-in edit target and topology/likeness invariant.",
+                    sha,
+                    True,
+                    presentation_audit.ByteVerification("pending", None, None, None),
+                ),
+            ),
+            "Built-in edit target and topology/likeness invariant.",
+            (
+                presentation_audit.GenerationCandidate(
+                    1,
+                    str(source_path),
+                    sha,
+                    width,
+                    height,
+                    "accepted",
+                    "Fixture candidate.",
+                    presentation_audit.CandidateProvenance(
+                        "builtInImageGen", True, "none"
+                    ),
+                    presentation_audit.ByteVerification("pending", None, None, None),
+                ),
+            ),
+        ),
+    )
+    return replace(loaded, schema_version=2, phase="assetRemediation", records=(record,)), source_path, sha
+
+
+def test_transient_verifiers_hash_present_bytes_and_candidate_ihdr(tmp_path: Path) -> None:
+    manifest, path, sha = _transient_manifest(tmp_path)
+
+    assert presentation_audit.verify_transient_source_files(manifest, {sha: path}) == (sha,)
+    assert presentation_audit.verify_transient_candidate_files(manifest, {sha: path}) == (sha,)
+
+    path.write_bytes(path.read_bytes() + b"changed")
+    with pytest.raises(PresentationRemediationAuditError, match="candidate SHA-256 mismatch"):
+        presentation_audit.verify_transient_candidate_files(manifest, {sha: path})
+
+
+def test_production_prompt_renderer_uses_exact_literal_record_fields(
+    tmp_path: Path,
+) -> None:
+    manifest, path, sha = _transient_manifest(tmp_path)
+    record = replace(
+        manifest.records[0],
+        decision="edit",
+        phase2_comparator=presentation_audit.Phase2Comparator(
+            presentation_audit.ComparatorSelection(
+                "readyBaseline",
+                str(path),
+                "fixture.board/primary",
+                sha,
+                presentation_audit._SINGULAR_COMPARATOR_REASON,
+                datetime.fromisoformat("2026-08-31T00:00:00+00:00"),
+            ),
+            None,
+            None,
+        ),
+    )
+    canvas = record.generation.required_canvas
+    assert canvas is not None
+
+    rendered = presentation_audit.render_phase2_generation_prompt(record)
+
+    assert rendered == (
+        "Use case: precise-object-edit\n"
+        f"Asset type: Hang Ten package presentation PNG at {record.asset_path}\n"
+        "Primary request: edit Fixture Board; physical revision: Revision named by the cited first-party page; working surface: Published front working face\n"
+        f"Input images: current-target, currentAsset, Built-in edit target and topology/likeness invariant., {path}\n"
+        "Scene/backdrop: common off-white studio background; no wall or mounting scenery\n"
+        "Subject: The exact revision is a wood fixed board with the shown front working face.; The production finish and component inventory match the official revision.\n"
+        "Style/medium: original simplified unbranded catalog product render, not a photograph\n"
+        f"Composition/framing: orthographic head-on to Published front working face; centered; complete uncropped product; untouched output canvas exactly {canvas.width_pixels} by {canvas.height_pixels}\n"
+        "Lighting/mood: neutral direction; restrained contact shadow; controlled depth relief\n"
+        "Materials/textures: wood; preserve only evidence-supported finish and construction cues\n"
+        "Repair findings: \n"
+        f"Comparator: singular readyBaseline: {path}, fixture.board/primary, {sha}, {presentation_audit._SINGULAR_COMPARATOR_REASON}\n"
+        "Bootstrap material ruling: not applicable; singular ready baseline selected\n"
+        "Current asset role: Built-in edit target and topology/likeness invariant.\n"
+        "Constraints: preserve every source-proved contact, component, silhouette, and usable-surface orientation; add no unsupported detail; output must already have exact dimensions\n"
+        "Avoid: branding, labels, logos, text, watermark, transparent background, camera tilt, source-photo styling, invented contacts, invented hardware, and every forbidden post-processing operation"
+    )
+
+
+def _validate_real_phase2_document(
+    tmp_path: Path,
+    document: dict[str, object],
+) -> PresentationRemediationReport:
+    inventory = discover_board_packages(
+        REPO_ROOT / "Hangboards",
+        require_complete_inventory=True,
+    )
+    return validate_presentation_remediation_manifest(
+        load_presentation_remediation_manifest(_write_manifest(tmp_path, document)),
+        inventory,
+        hangboards_root=REPO_ROOT / "Hangboards",
+        validation_mode=presentation_audit.PresentationValidationMode.PHASE2_PREFLIGHT,
+    )
+
+
+def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
+    tmp_path: Path,
+) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+
+    report = _validate_real_phase2_document(tmp_path, document)
+
+    assert document["schemaVersion"] == 2
+    assert document["phase"] == "assetRemediation"
+    assert report.canvas_class_count == 20
+    assert report.canvas_covered_repair_count == 65
+    assert report.capability_probe_artifact_count == 0
+    assert report.pending_phase2_action_count == 66
+    assert report.historical_evidence_blocked_keeps == 2
+    assert report.blocked_phase2_action_count == 0
+    probes = [
+        probe
+        for canvas_class in document["phase2"]["canvasPreflight"]["classes"]
+        for probe in canvas_class["behaviorProbes"]
+    ]
+    assert len(probes) == 22
+    assert all(
+        probe["preflightComparatorSet"]["materialTextureLighting"] is None
+        and "materialTextureLighting"
+        in probe["preflightComparatorSet"]["unavailableAxes"]
+        for probe in probes
+    )
+    mini_primary = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "lattice.mini-bar/primary"
+    )
+    assert mini_primary["comparator"]["assetPath"] == mini_primary["assetPath"]
+
+
+def test_production_action_requires_passed_canvas_preflight(tmp_path: Path) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    record = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "beastmaker-1000/primary"
+    )
+    comparator = next(
+        record
+        for record in document["records"]
+        if f'{record["packageID"]}/{record["presentationID"]}'
+        == "beastmaker-2000/primary"
+    )
+    record["phase2Action"] = {"state": "inProgress", "blockedReason": None}
+    record["phase2EvidenceReview"] = {
+        "result": "confirmed",
+        "reviewedAt": "2026-08-31T00:00:00+00:00",
+        "officialURLsReopened": [
+            source["url"] for source in record["evidence"]["official"]
+        ],
+        "independentURLsReopened": [
+            source["url"] for source in record["evidence"]["independent"]
+        ],
+        "evidenceGapSearchesRepeated": [],
+        "notes": "Evidence reopened for the production action.",
+    }
+    record["phase2Comparator"]["generationTime"] = {
+        "mode": "readyBaseline",
+        "assetPath": comparator["assetPath"],
+        "sourceRecordKey": "beastmaker-2000/primary",
+        "acceptedAssetSHA256": comparator["final"]["acceptedAssetSHA256"],
+        "reason": presentation_audit._SINGULAR_COMPARATOR_REASON,
+        "selectedAt": "2026-08-31T00:00:00+00:00",
+    }
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="production actions require passed canvas preflight",
+    ):
+        _validate_real_phase2_document(tmp_path, document)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda d: d["phase2"].update(extra=True), "phase2 has unknown keys"),
+        (
+            lambda d: d["records"][0]["phase2Action"].update(state="pending"),
+            "keep requires notRequired",
+        ),
+        (
+            lambda d: d["phase2"]["canvasPreflight"]["classes"][0][
+                "coveredRecordKeys"
+            ].pop(),
+            "canvas preflight must cover exactly 65 edit/regenerate record keys",
+        ),
+        (
+            lambda d: d["records"][1]["phase2EvidenceReview"].update(
+                result="notRequired"
+            ),
+            "repair evidence review cannot be notRequired",
+        ),
+        (
+            lambda d: d["records"][1]["generation"].update(
+                mode="builtInGenerate"
+            ),
+            "edit requires builtInEdit",
+        ),
+        (
+            lambda d: d["records"][3]["generation"].update(mode="builtInEdit"),
+            "regenerate requires builtInGenerate",
+        ),
+        (
+            lambda d: d["records"][1]["final"]["workbenchReview"].pop(
+                "hitTest"
+            ),
+            "workbenchReview is missing keys",
+        ),
+        (
+            lambda d: d["records"][1]["phase2Comparator"].update(
+                final={
+                    "mode": "temporaryGap",
+                    "assetPath": "Hangboards/beastmaker-2000/assets/primary.png",
+                    "sourceRecordKey": "beastmaker-2000/primary",
+                    "acceptedAssetSHA256": "0" * 64,
+                    "reason": "Historical gap cannot authorize generation.",
+                    "selectedAt": "2026-08-31T00:00:00+00:00",
+                }
+            ),
+            "final comparator cannot be a gap",
+        ),
+        (
+            lambda d: d["phase2"]["canvasPreflight"]["classes"][3][
+                "behaviorProbes"
+            ][0].update(bootstrapComparatorSet={}),
+            "preflight probe has unknown keys",
+        ),
+        (
+            lambda d: d["phase2"]["canvasPreflight"]["classes"][3][
+                "behaviorProbes"
+            ][0]["preflightComparatorSet"].update(materialTextureLighting={}),
+            "preflight material comparator is always unavailable",
+        ),
+        (
+            lambda d: d["phase2"]["canvasPreflight"]["classes"][5][
+                "behaviorProbes"
+            ][0]["preflightComparatorSet"].update(
+                compositionFramingScale={
+                    "axis": "compositionFramingScale",
+                    "assetPath": "Hangboards/soill-iron-palm-2/assets/primary.png",
+                    "sourceRecordKey": "soill.iron-palm-2/primary",
+                    "acceptedAssetSHA256": "0" * 64,
+                    "reason": presentation_audit._PREFLIGHT_COMPOSITION_REASON,
+                }
+            ),
+            "preflight composition reference does not match the exact assignment table",
+        ),
+        (
+            lambda d: d["records"][1]["generation"]["candidates"].append(
+                {
+                    "attempt": 1,
+                    "transientOutputPath": "/tmp/rejected.png",
+                    "sha256": "0" * 64,
+                    "widthPixels": 1000,
+                    "heightPixels": 259,
+                    "disposition": "rejected",
+                    "reason": "Rejected fixture.",
+                    "provenance": {
+                        "tool": "builtInImageGen",
+                        "untouchedModelOutput": True,
+                        "postProcessing": "resize",
+                    },
+                    "byteVerification": {
+                        "status": "pending",
+                        "checkedAt": None,
+                        "command": None,
+                        "observedSHA256": None,
+                    },
+                }
+            ),
+            "postProcessing must equal none",
+        ),
+        (
+            lambda d: d["phase2"]["canvasPreflight"]["classes"][0][
+                "behaviorProbes"
+            ][0].update(
+                prompt=d["phase2"]["canvasPreflight"]["classes"][0][
+                    "behaviorProbes"
+                ][0]["prompt"]
+                + "x"
+            ),
+            "stored capability prompt does not equal canonical rendering",
+        ),
+    ],
+)
+def test_real_phase2_schema_and_coverage_fail_closed(
+    tmp_path: Path,
+    mutation: object,
+    message: str,
+) -> None:
+    document = json.loads(REAL_PHASE2_MANIFEST.read_text(encoding="utf-8"))
+    mutation(document)  # type: ignore[operator]
+
+    with pytest.raises(PresentationRemediationAuditError, match=message):
+        _validate_real_phase2_document(tmp_path, document)

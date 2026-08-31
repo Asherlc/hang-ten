@@ -277,3 +277,62 @@ validation returned 61 packages and 85 presentations with 19 `keep`, 17
 Both `Hangboards` diff commands produced no paths, proving that no Hangboards
 PNG or `board.json` changed from approved-spec commit `2e74fc8` through this
 Phase 1 verification, or in the working tree.
+
+## Phase 2 lifecycle baseline
+
+Phase 2 baseline SHA: 257287636d2b0c1ac0877b01435a68d61b4a97d2
+
+Schema 2 preserves the Phase 1 record order and every historical identity,
+classification, finding, evidence, current-asset, and comparator field. It adds
+a separate Phase 2 action/evidence/comparator lifecycle. The initial ledger has
+19 factual `notRequired` keep actions and 66 pending actions: 17 edits, 48
+regenerations, and the one sourced Mini Bar end-presentation removal. The 17
+source-supported keeps retain their accepted hashes and dimensions; only the
+Aelith Cyclops #011 and deWOODSTOK Woodbord keeps retain null accepted values
+and `blockedEvidence`. All five historical evidence-gap strings remain Phase 1
+history and do not count as Phase 2 action blocks.
+
+## Phase 2 transient resource contract
+
+Copied source inputs, built-in outputs, and disposable capability artifacts are
+temporary resources. Their literal paths and SHA-256 values are verified while
+bytes exist, then their passed byte-verification records remain durable after
+cleanup. Untouched PNG signature and IHDR facts are the only image-byte facts
+the validator reads. Post-processing is always `none`; capability artifacts are
+always `capabilityProbeRejected`, production-forbidden, separately recorded,
+and deleted. Their hashes and both returned/transient paths are globally
+disjoint from production inputs, candidates, comparators, final hashes, and
+accepted assets in preflight, partial, and final validation.
+
+## Phase 2 comparator contract
+
+The Phase 1 `comparator` object is unchanged classification history. Production
+generation uses the separate `phase2Comparator`: either an accepted singular
+baseline from order zero or a strictly earlier completed repair, or the exact
+production-only nine-seed bootstrap table. Singular dependencies are acyclic
+and style-only. Bootstrap axes separately govern composition/framing/scale and
+material texture/lighting, explicitly list unavailable axes, and become a
+cohort baseline only after evidence, visual, Workbench, and package review all
+pass. Temporary gaps and disposable preflight references never authorize a
+production generation.
+
+## Exact-canvas preflight baseline
+
+The initial preflight contains 20 unique canvas classes that partition all 65
+edit/regenerate record keys and 22 behavior probes (separate edit/generate
+probes for the two mixed-mode classes). Its only optional composition references
+are the accepted Beastmaker 2000 primary and Lattice Mini Bar primary assets;
+the material axis is unavailable for every probe and live evidence plus the
+closed material contract governs the disposable subject. All classes and probes
+begin pending with zero capability artifacts. This preflight tests only whether
+the built-in tool can return untouched exact IHDR dimensions; it makes no
+likeness, material, Workbench, promotion, or cohort-baseline claim.
+
+## Initial Phase 2 validation state
+
+The schema-2 preflight and partial validators report 61 packages, 85 historical
+and current presentations, 19 keeps, 65 pending image repairs, one pending
+removal, two historical evidence-blocked keeps, zero Phase 2 blocks, 20 canvas
+classes covering 65 repair keys, and zero capability artifacts. Mini Bar primary
+retains its historical primary self-baseline; the pending removal does not alter
+its PNG, `board.json`, presentation inventory, or `mini-pinch` assignment.

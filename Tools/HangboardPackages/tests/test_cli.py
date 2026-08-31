@@ -11,7 +11,12 @@ from conftest import (
     write_multi_presentation_board_package,
     write_primary_only_draft,
 )
-from test_presentation_remediation_audit import _manifest, _record, _write_manifest
+from test_presentation_remediation_audit import (
+    _empty_phase2_document,
+    _manifest,
+    _record,
+    _write_manifest,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "hangboard-packages.sh"
@@ -330,6 +335,53 @@ def test_package_cli_final_presentation_audit_requires_completed_phase1_checks(
     assert result.stderr == (
         "error: final Phase 1 validation requires all phase1Checks passed\n"
     )
+
+
+def test_package_cli_phase2_preflight_prints_extended_report(tmp_path: Path) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    manifest = _write_manifest(tmp_path, _empty_phase2_document())
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-preflight",
+    )
+
+    assert result.returncode == 0, result.stderr
+    report = _json_output(result.stdout)
+    assert report["phase"] == "assetRemediation"
+    assert report["canvasClassCount"] == 0
+    assert report["canvasCoveredRepairCount"] == 0
+    assert report["capabilityProbeArtifactCount"] == 0
+
+
+def test_package_cli_phase2_final_rejects_transient_file_arguments(
+    tmp_path: Path,
+) -> None:
+    boards = tmp_path / "Hangboards"
+    boards.mkdir()
+    manifest = _write_manifest(tmp_path, _empty_phase2_document())
+    path = tmp_path / "candidate.png"
+    path.write_bytes(b"fixture")
+
+    result = _run_cli(
+        "audit-presentations",
+        "--root",
+        str(boards),
+        "--manifest",
+        str(manifest),
+        "--phase2-final",
+        "--candidate-file",
+        "0" * 64,
+        str(path),
+    )
+
+    assert result.returncode == 1
+    assert "final Phase 2 validation rejects transient files" in result.stderr
 
 
 def test_wrapper_rejects_python_3_11_3_before_validation(tmp_path: Path) -> None:

@@ -39,7 +39,7 @@ scripts/hangboard-packages.sh audit-metadata --root Hangboards \
   --ledger docs/source-audits/2026-08-25-hangboard-metadata-ledger.json
 scripts/hangboard-packages.sh audit-presentations --root Hangboards \
   --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
-  --final-validation
+  --phase2-preflight
 ```
 
 `validate` and `status` print the discovered complete packages and draft paths;
@@ -67,6 +67,28 @@ Use `--final-validation` only for the completed Phase 1 ledger. It rejects lane
 selection and requires all four root `phase1Checks` entries to be
 `passed` with their exact non-empty commands; omit it for skeleton and
 intermediate-lane validation while those checks are still pending.
+
+Schema 2 uses three mutually exclusive lifecycle modes:
+
+```sh
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-partial --batch-id nonwood-fixed
+scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-final
+```
+
+Preflight validates the 20 exact canvas classes, 22 disposable behavior probes,
+and capability-artifact deletion/production-disjointness. Partial mode validates
+truthful intermediate package bytes and may select one declared `--batch-id`.
+Final mode accepts no batch or transient files and requires the complete terminal
+catalog. Repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH`
+pairs are accepted only in preflight or partial mode and only for declarations
+owned by that lifecycle; duplicate SHA keys and cross-lifecycle reuse fail closed.
 
 Ledger boards in `reviewedBoardIDs` retain the complete contract: every hold
 must have one outcome for each supported metadata field. Boards in the
