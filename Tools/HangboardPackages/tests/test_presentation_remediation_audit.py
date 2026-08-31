@@ -201,6 +201,10 @@ def _revision_conflict_statement(record: dict[str, object]) -> str:
     )
 
 
+def _physical_revision_declaration() -> str:
+    return 'Physical revisions: "Revision A" versus "Revision B".'
+
+
 def test_manifest_inventory_must_equal_every_declared_presentation(
     tmp_path: Path,
 ) -> None:
@@ -313,6 +317,35 @@ def test_evidence_rejects_duckduckgo_search_result_url(tmp_path: Path) -> None:
         _validate_document(tmp_path, boards, inventory, [record])
 
 
+def test_evidence_rejects_www_duckduckgo_search_result_url(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["url"] = "https://www.duckduckgo.com/?q=fixture"
+
+    with pytest.raises(PresentationRemediationAuditError, match="search-result URL"):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_evidence_accepts_searchlight_product_path(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["url"] = (
+        "https://manufacturer.example/searchlight-board"
+    )
+
+    assert _validate_document(tmp_path, boards, inventory, [record]).to_json()[
+        "decisions"
+    ] == {"keep": 1}
+
+
+def test_evidence_rejects_nested_search_result_path(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["url"] = (
+        "https://manufacturer.example/products/search/fixture"
+    )
+
+    with pytest.raises(PresentationRemediationAuditError, match="search-result URL"):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
 def test_evidence_accepts_direct_product_url_with_unrelated_q_parameter(
     tmp_path: Path,
 ) -> None:
@@ -415,6 +448,22 @@ def test_comparator_reason_rejects_unlisted_geometry_proof_wording(
     boards, inventory, record = _single_board_fixture(tmp_path)
     record["comparator"]["reason"] = (
         "Accepted cohort baseline proves matching cutout arrangement and grip placement."
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="comparator reason must use canonical style-only statement",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_comparator_reason_rejects_geometry_claim_after_details_delimiter(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["comparator"]["reason"] = (
+        "Accepted cohort baseline; style-only: framing.\n\nDetails:\n"
+        "This baseline proves matching cutout arrangement."
     )
 
     with pytest.raises(
@@ -612,6 +661,24 @@ def test_removal_accepts_cited_proof_that_surface_is_not_usable(tmp_path: Path) 
     assert report.to_json()["decisions"] == {"removeUnsupportedPresentation": 1}
 
 
+def test_removal_rejects_details_suffix_on_authorization_statement(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "removeUnsupportedPresentation")
+    statement = _surface_unusable_statement(record) + "\n\nDetails:\nextra"
+    record["findings"]["topology"] = {
+        "outcome": "nonconforming",
+        "explanation": statement,
+    }
+    record["evidence"]["official"][0]["supportedClaim"] = statement
+
+    with pytest.raises(
+        PresentationRemediationAuditError, match="canonical cited proof"
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
 def test_revision_split_requires_two_named_conflicting_revisions(
     tmp_path: Path,
 ) -> None:
@@ -620,7 +687,7 @@ def test_revision_split_requires_two_named_conflicting_revisions(
 
     with pytest.raises(
         PresentationRemediationAuditError,
-        match="splitPhysicalRevision requires canonical cited conflict proof",
+        match="splitPhysicalRevision requires canonical physicalRevision declaration",
     ):
         _validate_document(tmp_path, boards, inventory, [record])
 
@@ -632,7 +699,7 @@ def test_revision_split_rejects_distinct_but_nonconflicting_labels(
     _mark_phase_2_repair(record, "splitPhysicalRevision")
     record["evidence"]["official"][0]["revisionApplicability"] = "Revision A"
     record["evidence"]["independent"][0]["revisionApplicability"] = "Revision B"
-    record["physicalRevision"] = "Revision A versus Revision B"
+    record["physicalRevision"] = _physical_revision_declaration()
 
     with pytest.raises(
         PresentationRemediationAuditError,
@@ -644,7 +711,7 @@ def test_revision_split_rejects_distinct_but_nonconflicting_labels(
 def test_revision_split_rejects_negated_conflict_claim(tmp_path: Path) -> None:
     boards, inventory, record = _single_board_fixture(tmp_path)
     _mark_phase_2_repair(record, "splitPhysicalRevision")
-    record["physicalRevision"] = "Revision A versus Revision B"
+    record["physicalRevision"] = _physical_revision_declaration()
     denial = 'Surface "Published front working face" has no conflict between Revision A and Revision B.'
     record["evidence"]["official"][0].update(
         revisionApplicability="Revision A",
@@ -667,7 +734,7 @@ def test_revision_split_accepts_cited_named_physical_revision_conflict(
 ) -> None:
     boards, inventory, record = _single_board_fixture(tmp_path)
     _mark_phase_2_repair(record, "splitPhysicalRevision")
-    record["physicalRevision"] = "Revision A versus Revision B"
+    record["physicalRevision"] = _physical_revision_declaration()
     statement = _revision_conflict_statement(record)
     record["evidence"]["official"][0].update(
         revisionApplicability="Revision A",
@@ -681,6 +748,47 @@ def test_revision_split_accepts_cited_named_physical_revision_conflict(
     report = _validate_document(tmp_path, boards, inventory, [record])
 
     assert report.to_json()["decisions"] == {"splitPhysicalRevision": 1}
+
+
+def test_revision_split_rejects_substring_physical_revision_linkage(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "splitPhysicalRevision")
+    record["physicalRevision"] = "Revision Alphabet and Revision Beta"
+    statement = _revision_conflict_statement(record)
+    record["evidence"]["official"][0].update(
+        revisionApplicability="Revision A", supportedClaim=statement
+    )
+    record["evidence"]["independent"][0].update(
+        revisionApplicability="Revision B", supportedClaim=statement
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError,
+        match="canonical physicalRevision declaration",
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_revision_split_rejects_details_suffix_on_conflict_statement(
+    tmp_path: Path,
+) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    _mark_phase_2_repair(record, "splitPhysicalRevision")
+    record["physicalRevision"] = _physical_revision_declaration()
+    statement = _revision_conflict_statement(record) + "\n\nDetails:\nextra"
+    record["evidence"]["official"][0].update(
+        revisionApplicability="Revision A", supportedClaim=statement
+    )
+    record["evidence"]["independent"][0].update(
+        revisionApplicability="Revision B", supportedClaim=statement
+    )
+
+    with pytest.raises(
+        PresentationRemediationAuditError, match="canonical cited conflict proof"
+    ):
+        _validate_document(tmp_path, boards, inventory, [record])
 
 
 @pytest.mark.parametrize("schema_version", [1.0, True])

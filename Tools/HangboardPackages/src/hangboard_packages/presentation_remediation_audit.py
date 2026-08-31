@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import unquote, urlsplit
 
 from .board_catalog import (
     BoardInventory,
@@ -93,17 +93,12 @@ _SEARCH_HOSTS = frozenset(
         "google.com",
         "search.brave.com",
         "search.yahoo.com",
-        "www.bing.com",
-        "www.google.com",
-        "www.yahoo.com",
         "yandex.com",
-        "www.yandex.com",
     }
 )
 _NAMED_REVISION = re.compile(
     r"\b(?:revision|model|version|generation|mk)\s*[a-z0-9]", re.IGNORECASE
 )
-_CANONICAL_DETAILS_DELIMITER = "\n\nDetails:\n"
 _STYLE_ONLY_TERMS = frozenset(
     {"framing", "lighting", "background", "texture", "smoothing", "edge treatment"}
 )
@@ -292,8 +287,11 @@ def _url(value: Any, source: str) -> str:
     parsed = urlsplit(url)
     if parsed.scheme != "https" or not parsed.hostname:
         raise PresentationRemediationAuditError(f"{source} must be a direct HTTPS URL")
-    hostname = parsed.hostname.lower()
-    if "/search" in parsed.path.lower() or hostname in _SEARCH_HOSTS:
+    hostname = parsed.hostname.casefold().removeprefix("www.")
+    path_segments = tuple(
+        unquote(segment).casefold() for segment in parsed.path.split("/") if segment
+    )
+    if "search" in path_segments or hostname in _SEARCH_HOSTS:
         raise PresentationRemediationAuditError(
             f"{source} must not be a search-result URL"
         )
@@ -690,12 +688,7 @@ def _is_evidence_blocked(record: PresentationRemediationRecord) -> bool:
 
 
 def _canonical_statement_matches(value: str, statement: str) -> bool:
-    if value == statement:
-        return True
-    details_prefix = statement + _CANONICAL_DETAILS_DELIMITER
-    return value.startswith(details_prefix) and bool(
-        value.removeprefix(details_prefix).strip()
-    )
+    return value == statement
 
 
 def _surface_unusable_statement(working_surface: str) -> str:
@@ -711,16 +704,17 @@ def _revision_conflict_statement(
     )
 
 
+def _physical_revision_declaration(first_revision: str, second_revision: str) -> str:
+    return f'Physical revisions: "{first_revision}" versus "{second_revision}".'
+
+
 def _is_canonical_style_only_reason(reason: str) -> bool:
     prefix = "Accepted cohort baseline; style-only: "
     if not reason.startswith(prefix):
         return False
-    statement, delimiter, details = reason.partition(_CANONICAL_DETAILS_DELIMITER)
-    if delimiter and not details.strip():
+    if not reason.endswith("."):
         return False
-    if not statement.endswith("."):
-        return False
-    terms = tuple(statement.removeprefix(prefix).removesuffix(".").split(", "))
+    terms = tuple(reason.removeprefix(prefix).removesuffix(".").split(", "))
     return (
         bool(terms)
         and len(terms) == len(set(terms))
@@ -759,21 +753,20 @@ def _validate_physical_revision_split(record: PresentationRemediationRecord) -> 
         source.revision_applicability.casefold(): source.revision_applicability
         for source in named_sources
     }
-    if (
-        _is_evidence_blocked(record)
-        or len(named_revisions) != 2
-        or not all(
-            revision.casefold() in record.physical_revision.casefold()
-            for revision in named_revisions.values()
-        )
-    ):
+    if _is_evidence_blocked(record) or len(named_revisions) != 2:
         raise PresentationRemediationAuditError(
-            "splitPhysicalRevision requires canonical cited conflict proof for named physical revisions"
+            "splitPhysicalRevision requires canonical physicalRevision declaration"
         )
     first_revision, second_revision = sorted(named_revisions.values(), key=str.casefold)
     statement = _revision_conflict_statement(
         record.working_surface, first_revision, second_revision
     )
+    if record.physical_revision != _physical_revision_declaration(
+        first_revision, second_revision
+    ):
+        raise PresentationRemediationAuditError(
+            "splitPhysicalRevision requires canonical physicalRevision declaration"
+        )
     for source in named_sources:
         if not _canonical_statement_matches(source.supported_claim, statement):
             raise PresentationRemediationAuditError(
