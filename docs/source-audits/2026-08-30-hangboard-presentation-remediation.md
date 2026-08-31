@@ -1102,6 +1102,84 @@ tests; the approved-package subset passed 13 tests with the concurrently owned
 Port-A-Board assertion intentionally deselected. The schema-2 machine manifest
 is intentionally unchanged in this bounded pass.
 
+## Trango Rock Prodigy Pivot four-orientation repair (2026-08-31)
+
+The current Rock Prodigy Pivot was freshly checked on 2026-08-31 against
+Trango's current [product
+page](https://trango.com/products/rock-prodigy-pivot?variant=33101615890537),
+its published [gray head-on product
+photo](https://trango.com/cdn/shop/products/22840-501_RockProdigyPivotGrey_MainImage.jpg?v=1755037446&width=1946),
+the first-party [quick-start and orientation
+guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507),
+and the first-party [depth
+guide](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905).
+Trango's live page establishes the exact two-piece Quad-Cleat revision, gray
+and red color variants, four usage directions, and 22 orientation-dependent
+grip positions. The quick-start guide supplies the complete numbered rotation
+sequence and explicitly says its key-hold lists are non-exhaustive. Current
+independent product pages at
+[Oliunid](https://www.oliunid.com/eu/trango-rock-prodigy-pivot-climbing-hangboard)
+and [Outdoor Gear
+Exchange](https://www.gearx.com/products/trango-rock-prodigypivot-hm47z-grey)
+corroborate the photographed revision, four orientations, 22 grip positions,
+15.5 x 5 x 2.5 in dimensions, and molded polyurethane material; Oliunid also
+states `polyurethane` directly in its current technical specification.
+
+There are exactly four independently selectable presentations, not five:
+
+| Presentation | First-party guide mapping | Result |
+| --- | --- | --- |
+| `orientation-1` / `assets/primary.png` | Starting horizontal position | Exact published gray working face, centered and head-on |
+| `orientation-2` / `assets/orientation-2.png` | Pivot both halves 90 degrees outwards | Exact cardinal half transforms of Orientation 1 |
+| `orientation-3` / `assets/orientation-3.png` | Inverted horizontal position reached after the guide's inward pivot | Exact 180-degree transform of each complete half |
+| `orientation-4` / `assets/orientation-4.png` | Switch the complete left/right halves, then pivot both 90 degrees outwards | Exact half swap plus cardinal transforms |
+
+The guide's separately labeled `ORIENTATION 3 SWITCH` is a transition needed
+to reach Orientation 4, not a fifth usage orientation. No other current
+official or independent source opened in this review publishes another
+discrete Pivot position.
+
+The repaired base raster uses only the official gray head-on photograph's
+published product pixels. An operator selected a fixed 1946 x 973 (2:1) crop,
+directly drew the two outer board silhouettes and the six visibly open
+through-holes, and translated the untouched product pixels upward by exactly
+190 pixels to center the pair. No product scaling, recoloring, material
+substitution, smoothing filter, perspective correction, automatic crop,
+registration, detection, segmentation, or image-derived geometry was used.
+Outside the directly reviewed silhouettes and through-openings is genuine
+alpha-zero transparency. The dark molded bevels remain intact. Per the user's
+board-only catalog convention, Quad Cleats, wall rails, screws, and all other
+mounting hardware are omitted; this product has no external cord. The four
+assets therefore share one gray polyurethane texture, relief, edge softness,
+alpha treatment, and head-on camera convention.
+
+Two generated transparency experiments were explicitly rejected before any
+tracked asset changed: the first encoded a visible checkerboard as opaque RGB,
+and the second proposed a green-key workflow. The green-key/chroma-key route
+was discarded because it would be image-driven background extraction. No
+generated, checkerboard, green-key, or chroma-key pixels appear in the package.
+Only the exact official gray source treatment described above was accepted.
+
+| Presentation | SHA-256 | Dimensions / alpha | Scoped holds |
+| --- | --- | --- | ---: |
+| `orientation-1` | `55921da5d612ce6b9e9029b2cd86309da9ae9cb6e93a17ea06b3080aa72e13d9` | 1946 x 973 RGBA; 1,313,990 fully transparent and 6,656 partial edge pixels | 18 |
+| `orientation-2` | `72b54e02d7eff31b705f2c841518d0f07889ed0db60c51f2b5c1129dbaeb6aa0` | 1946 x 973 RGBA; identical alpha counts | 18 |
+| `orientation-3` | `128f87718aceead8f646c24b694f25ad8572524741aeef87adc7a8b49d20f6bd` | 1946 x 973 RGBA; identical alpha counts | 18 |
+| `orientation-4` | `43c01baa1e3f48d81242677254bc2a2ff90282d022437af9551991e67c481bc8` | 1946 x 973 RGBA; identical alpha counts | 18 |
+
+The package retains its deliberately authored 18-contact / 22-piece canonical
+inventory in every presentation (72 presentation-scoped records / 88 pieces
+overall). A labeled Workbench review confirmed that the existing smooth paths
+still align to the exact official gray face, including the two-pocket pairs,
+variable rails, pinches, slopers, and lower V protrusions. The three secondary
+path sets remain exact manufacturer transforms of Orientation 1, so no hold
+ID, path, physical metadata, or `board.json` field required alteration. The
+focused Pivot suite passed all 8 tests, including decoded-pixel equality for
+all three cardinal-transform assets and exact geometry-transform assertions.
+Final-inventory validation and package status passed with 62 packages and no
+drafts. The schema-2 machine manifest is intentionally unchanged in this
+bounded repair.
+
 ## Moon Armstrong Beech presentation acceptance (2026-08-31)
 
 The current Moon Armstrong Beech was freshly checked against Moon Climbing's
