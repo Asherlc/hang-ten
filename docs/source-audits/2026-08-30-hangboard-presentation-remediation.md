@@ -46,17 +46,17 @@ Resolutions are added only when direct live sources establish the named revision
   smooth finger contacts; that specimen-level depth/finish conflict remains a
   Phase 2 source constraint rather than a universal production claim.
 - DUAL primary/reverse, POCKET primary, UNLEVEL primary/reverse, and both NUG
-  faces are `edit` because their source-faithful wood contacts omit the supplied
-  suspension rope. Escape Unlimited is also `edit` because four published
-  mounting positions and associated hardware are omitted. DoorMount Pro 7
-  remains `regenerate` because the complete metal/rubber clamp assembly is
-  absent, while Mammut Diamond Finger is `edit` because its verified hold body
-  can be preserved while restoring the required mounting plate, published
-  phone mount, and studio treatment.
-- Beastmaker 1000, all three Port-A-Board faces, both MXEdge Lift variants, and
-  Mammut Diamond Finger are Phase 2 style repairs: their verified geometry is
-  preserved, but transparent/photo-like, labeled, branded, or cropped
-  treatments do not satisfy the simplified unbranded studio contract.
+  faces are `regenerate`: although their wood contacts are recognizable, the
+  source-confirmed portable component topology includes suspension rope that
+  the current assets omit. Escape Unlimited is also `regenerate` because four
+  published mounting positions and associated hardware are omitted. DoorMount
+  Pro 7 remains `regenerate` because the complete metal/rubber clamp assembly
+  is absent. Mammut Diamond Finger is `regenerate` because its mounting plate,
+  published phone mount, and complete product topology must be restored.
+- Beastmaker 1000, all three Port-A-Board faces, and both MXEdge Lift variants
+  are Phase 2 edits: their verified geometry is preserved, but
+  transparent/photo-like, labeled, branded, or cropped treatments do not
+  satisfy the simplified unbranded studio contract.
 - Exact independent product coverage for NUG and Port-A-Board now comes from
   The Hangboard's direct portable-hangboard review instead of the generic
   Shop.app seller storefront. Evolv Long uses an exact Backcountry variant
@@ -70,8 +70,8 @@ Resolutions are added only when direct live sources establish the named revision
   independent retailer identify four lengthwise grips selected by flipping the
   bar, while the declared end cap is not a usable working surface. Removal is a
   Phase 2 action; this audit changes no package inventory.
-- Lane A classification: 6 `keep` records (2 evidence-blocked), 19 `edit`,
-  1 `regenerate`, and 1 `removeUnsupportedPresentation`.
+- Lane A classification: 6 `keep` records (2 evidence-blocked), 10 `edit`,
+  10 `regenerate`, and 1 `removeUnsupportedPresentation`.
 - Climber's Edge, Contact, Foundry, Project, and Simulator 3-D are
   `regenerate`: current broad silhouettes may be recognizable in places, but
   the cited exact revisions establish different rail, pinch, pocket, sloper,
@@ -79,24 +79,25 @@ Resolutions are added only when direct live sources establish the named revision
   listing, rather than the earlier generic Backcountry material attribution,
   supplies the explicit resin claim; Metolius supplies the exact geometry but
   does not name the chemistry. Prime Rib and Wood Grips II Deluxe
-  are accepted `keep` baselines. Compact II is an `edit` because its cited
-  two-row grip layout remains usable while the production mounting points are
-  absent.
-- Both Light Rail 2.0 sides are `edit`: each displayed working surface is
-  orthographic and legible, but its suspension cord is cropped. Metolius calls the current face 20 mm while
-  REI publishes a 19/26 mm depth list for the same current product; that exact
-  source conflict remains a Phase 2 constraint, while both sources agree on a
-  four-position reversible FSC-wood rail. Rock Rings 3D is also `edit` because
-  its body contact inventory remains recognizable but both complete cords and
-  knots are missing and its polyester-resin treatment is false.
+  are accepted `keep` baselines. Compact II is `regenerate` because the
+  source-confirmed production mounting points are absent from its topology.
+- The Light Rail 2.0 15 mm side remains an `edit`: its source-confirmed working
+  surface is orthographic and legible, but its suspension cord is cropped. The
+  nominal 20 mm side is `regenerate` because Metolius's current 20 mm label and
+  REI's 19/26 mm production depth list leave its exact topology uncertain. Both
+  sources otherwise agree on a four-position reversible FSC-wood rail. Rock
+  Rings 3D is also `regenerate` because both complete cords and knots are
+  missing from the source-confirmed topology and its polyester-resin treatment
+  is false.
 - Armstrong Beech SKU 60-112-BEC is `edit`: exact first-party and retailer
   sources prove the current hardwood geometry, but the current asset is an
   underscaled branded, depth-labeled photograph rather than the unbranded
   studio treatment.
-- Stoak Board III Oak is `edit` to restore sourced mounting and magnetic
-  details while preserving FSC oak and visibly real recycled Norwegian
-  granite; its independent evidence is the exact 2026 Grimpeez Stoak Board III
-  Oak comparison rather than the generic Loox storefront. The evidence-complete
+- Stoak Board III Oak is `regenerate` because its source-confirmed mounting and
+  magnetic component topology must be restored while preserving FSC oak and
+  visibly real recycled Norwegian granite; its independent evidence is the
+  exact 2026 Grimpeez Stoak Board III Oak comparison rather than the generic
+  Loox storefront. The evidence-complete
   KARMA8A collaboration remains the unique accepted mixed-material
   multi-orientation cohort and uses its own current presentation as the style
   baseline. Stone Hanger Mini Beech primary and its 60 mm pinch side are
@@ -120,24 +121,26 @@ Resolutions are added only when direct live sources establish the named revision
   660 × 100 × 100 mm, while Oliunìd publishes 68 × 14 × 12 cm for the supported
   assembly; that measurement-scope conflict remains explicit and does not
   alter face geometry.
-- Plateau Lifting Edge is `edit`: the aluminum body and oak insert are usable,
-  but the cited 3D-printed 15/10 mm blocker and complete 6 mm Edelrid PES cord
-  are omitted. Fresh exact-model searches found no independent direct review,
+- Plateau Lifting Edge is `regenerate`: the aluminum body and oak insert are
+  recognizable, but the cited 3D-printed 15/10 mm blocker and complete 6 mm
+  Edelrid PES cord are omitted from the source-confirmed product topology.
+  Fresh exact-model searches found no independent direct review,
   retailer, or owner page proving this Oak configuration, so the independent
   evidence gap remains explicit.
-- Iron Palm 2.0 is `edit` for its transparent cutout. So iLL publishes
-  40/35/15 mm rails while Backcountry publishes 40/25/15 mm for the same exact
-  product; the depth conflict remains unresolved. Only Backcountry is used for
-  the urethane claim because the So iLL Canada page does not name the material.
-  Split Palm and the So iLL x Meagan Martin Training Tiles are `edit`, not
-  accepted keeps: both current renders omit production mounting points and
-  hardware context. Split Palm's urethane claim comes from the exact So iLL US
+- Iron Palm 2.0 is `regenerate`: So iLL publishes 40/35/15 mm rails while
+  Backcountry publishes 40/25/15 mm for the same exact product, leaving its
+  exact topology uncertain in addition to the transparent-cutout defect. Only
+  Backcountry is used for the urethane claim because the So iLL Canada page
+  does not name the material. Split Palm and the So iLL x Meagan Martin
+  Training Tiles are `regenerate`, not accepted keeps: both current renders
+  omit source-confirmed production mounting points and hardware context. Split
+  Palm's urethane claim comes from the exact So iLL US
   page's urethane-items disclaimer, while Klatredepot supports only its direct
   topology and dimensions. Training Tiles' Canada page supports topology,
   dimensions, and hardware, while OutdoorGearLab supplies the independent
   urethane claim. No ready accepted urethane split-fixed-board comparator
-  remains for either Phase 2 edit.
-- Lane B classification: 5 `keep`, 14 `edit`, and 5 `regenerate` records. The
+  remains for either Phase 2 repair.
+- Lane B classification: 5 `keep`, 6 `edit`, and 13 `regenerate` records. The
   validated lane report contains 19 packages and 24 presentations; all five
   keeps are accepted current assets, all nineteen repairs remain pending Phase
   2, and Plateau primary is the lane's only evidence-blocked asset.
@@ -147,35 +150,39 @@ Resolutions are added only when direct live sources establish the named revision
   58 cm length, 15 cm height, and 1.7 kg weight. Its erroneous 55 cm
   product-depth field is excluded; the correct 5.5 cm depth and Yellow Poplar
   species are supported only by target10a.
-- All four Flash Board orientations are `edit`. The current official page calls
+- All four Flash Board orientations are `regenerate`. The current official page calls
   the smallest contacts `Small Crimps` and separately names 8/10/15/20 mm; the
   audit no longer attributes 6 mm to Tension. The manufacturer demonstration
   establishes the intended flipped surfaces, while each current asset omits or
-  crops the adjustable cord and knots and the three-edge-inverted asset also
-  uses a transparent cutout.
+  crops the adjustable cord and knots from the source-confirmed topology and
+  the three-edge-inverted asset also uses a transparent cutout.
 - The 2017 base Grindstone is `regenerate`, not a background-only edit. The
   launch-period founder interview describes jugs plus paired
   35/30/25/20/15 mm edges and central 50/22 mm edges, and explicitly reserves
   mono/two-finger pockets and increased row offset for the Pro. The current
   pocket-heavy PNG therefore has the wrong physical-revision topology. The
   unsubstantiated Reddit owner-photo mapping was removed. The separate
-  Grindstone Pro remains `edit` for its transparent cutout; both discontinued
+  Grindstone Pro remains the lane's sole `edit`, for its transparent cutout;
+  both discontinued
   revisions retain explicit first-party gaps. Current Grindstone Mk2,
   Honestone, and Whetstone remain accepted `keep`s, with Honestone now backed by
   the opened direct Climbing hands-on review rather than the unavailable Yahoo
   syndication URL.
 - The Hangboard is an accepted wood-board `keep`. Forge, Natural, all four
-  Pivot orientations, and the Rock Prodigy Training Center are `edit`. Natural
-  needs its complete cleat/fastener assembly and studio background. Forge,
-  Pivot, and Training Center also need controlled relief shading appropriate
-  to molded polyurethane because the current white-on-white recess depth is
-  materially weak. Pivot's quick-start guide separately establishes all four
-  rotations and the quad-cleat assembly. Training Center must restore body
-  mounting-point/installed context without depicting screws as supplied;
-  Trango explicitly excludes mounting hardware.
+  Pivot orientations, and the Rock Prodigy Training Center are `regenerate`
+  because their source-confirmed component or working-surface topology is
+  incomplete. Natural needs its complete cleat/fastener assembly and studio
+  background. Forge, Pivot, and Training Center also need controlled relief
+  shading appropriate to molded polyurethane because the current
+  white-on-white recess depth is materially weak. Pivot's quick-start guide
+  separately establishes all four rotations and the quad-cleat assembly.
+  Training Center must restore body mounting-point/installed context without
+  depicting screws as supplied; Trango explicitly excludes mounting hardware.
 - Baguette Evo's rounded-tray view and both classic La Baguette faces remain
   accepted `keep`s. The other four Baguette Evo surfaces, Penta Evo, and both
-  TravelBoard faces remain cord-completion `edit`s. The earlier/different
+  TravelBoard faces are `regenerate` because their source-confirmed portable
+  component topology includes complete cords that the current assets omit. The
+  earlier/different
   5 mm/12–5 mm/415 g Max Climbing configuration was replaced by an opened exact
   current Varuste Evo listing that corroborates 6–30 mm, 52 cm, and 550 g;
   YY Vertical governs exact surface distribution. The stale classic Varuste
@@ -184,8 +191,8 @@ Resolutions are added only when direct live sources establish the named revision
   was removed. Penta Evo's current page separately conflicts between an
   eight-grip heading and seven-technical-grip body copy; the audit preserves
   that count conflict instead of assigning either number to the presentation.
-- All four VerticalBoard models remain `edit`, with revision-specific component
-  scope. Evo must preserve two included -10 mm magnetic wedges, their integrated
+- All four VerticalBoard models are `regenerate`, with revision-specific
+  component topology. Evo must preserve two included -10 mm magnetic wedges, their integrated
   side storage, and hidden-anchor/inserts six-screw mounting without invented
   front holes. First includes four wall screws while magnetic inserts are
   optional and not included. Light's raw official page was not parseable, so
@@ -199,12 +206,13 @@ Resolutions are added only when direct live sources establish the named revision
   rails omit the source-published electronic/metal assembly, including steel
   support, plates, phone interface, and fasteners, so the physical topology and
   mixed-material identity are not repairable as a bounded edit. Current
-  Zlagboard copy calls the wood noble lime, while contemporary catalog and
-  retailer evidence calls it alder; the manifest therefore preserves the
-  wood/metal mixed construction without choosing a species. BananaFingers is
-  used only for the compact Evo, silicone phone mount, and three eye bolts;
+  Zlagboard copy calls all Zlagboards noble lime, while an undated exact
+  Sestogrado Evo listing describes alder on a steel frame. The listing does not
+  establish that alder belongs to the same current revision, so the manifest
+  preserves the mixed construction without choosing a species. BananaFingers
+  is used only for the compact Evo, silicone phone mount, and three eye bolts;
   metal support/components come solely from official evidence.
-- Lane C classification: 8 `keep`, 23 `edit`, and 3 `regenerate` records. The
+- Lane C classification: 8 `keep`, 1 `edit`, and 25 `regenerate` records. The
   validated lane report contains exactly 22 packages and 34 presentations; all
   eight keeps are accepted current assets, and all twenty-six repairs remain
   pending Phase 2.
@@ -216,8 +224,8 @@ The reconciled validator report covers 61 packages and 85 presentations:
 | Decision | Count |
 | --- | ---: |
 | `keep` | 19 |
-| `edit` | 56 |
-| `regenerate` | 9 |
+| `edit` | 17 |
+| `regenerate` | 48 |
 | `removeUnsupportedPresentation` | 1 |
 | `splitPhysicalRevision` | 0 |
 | **Total** | **85** |

@@ -455,7 +455,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -585,7 +585,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -715,7 +715,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -845,7 +845,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -975,7 +975,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -1614,7 +1614,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -2136,7 +2136,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -2266,7 +2266,7 @@
         "widthPixels": 1842,
         "heightPixels": 854
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -3442,7 +3442,7 @@
         "widthPixels": 1980,
         "heightPixels": 495
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -3959,7 +3959,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -4480,7 +4480,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -4738,7 +4738,7 @@
         "widthPixels": 1774,
         "heightPixels": 457
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -5130,7 +5130,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -6184,7 +6184,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "nonconforming",
@@ -6303,7 +6303,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -6432,7 +6432,7 @@
         "widthPixels": 1254,
         "heightPixels": 1254
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -6561,7 +6561,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -6823,7 +6823,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -6962,7 +6962,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -7101,7 +7101,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -7240,7 +7240,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -8153,7 +8153,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -8291,7 +8291,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -8429,7 +8429,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -8567,7 +8567,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -8705,7 +8705,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -8843,7 +8843,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -8981,7 +8981,7 @@
         "widthPixels": 1233,
         "heightPixels": 435
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -9120,7 +9120,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -9250,7 +9250,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -9380,7 +9380,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -9510,7 +9510,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10039,7 +10039,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10169,7 +10169,7 @@
         "widthPixels": 1536,
         "heightPixels": 1024
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10299,7 +10299,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10428,7 +10428,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10557,7 +10557,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10686,7 +10686,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10815,7 +10815,7 @@
         "widthPixels": 1774,
         "heightPixels": 887
       },
-      "decision": "edit",
+      "decision": "regenerate",
       "findings": {
         "productLikeness": {
           "outcome": "conforms",
@@ -10933,7 +10933,7 @@
       "presentationID": "primary",
       "assetPath": "Hangboards/zlagboard-evo/assets/primary.png",
       "workingSurface": "Evo front app-triggered training face",
-      "physicalRevision": "Current mixed-material Zlagboard Evo; official current copy says noble lime wood while the undated retailer listing says alder, so the wood species is not selected",
+      "physicalRevision": "Current mixed-material Zlagboard Evo; official current copy calls all Zlagboards noble lime, while an undated exact Evo retailer describes alder on a steel frame. The sources do not establish whether that retailer description represents the same current revision, so the wood species remains unresolved",
       "manufacturer": "Zlagboard",
       "materials": [
         "wood",
@@ -11007,6 +11007,15 @@
             "revisionApplicability": "Current Zlagboard Evo",
             "imageRole": "The opened exact retailer page establishes the compact Evo body, silicone phone mount, and three eye bolts. This presentation-specific review addresses Evo front app-triggered training face; metal support/components come only from official Zlagboard evidence.",
             "supportedClaim": "The exact source establishes the compact Evo, silicone phone mount, and three eye bolts only."
+          },
+          {
+            "url": "https://www.sestogrado.it/en/prodotto/zlagboard-evo-trave-allenamento-arrampicata/",
+            "publisher": "Sestogrado",
+            "sourceKind": "retailer",
+            "reviewedAt": "2026-08-30",
+            "revisionApplicability": "Undated exact Zlagboard Evo retailer description; not proof that alder belongs to the current noble-lime revision",
+            "imageRole": "The exact retailer page describes the Evo product, grip family, supplied silicone phone mount and eye bolts, and an alder board on a steel frame. Its undated copy does not establish the package image's wood species or a separate physical revision.",
+            "supportedClaim": "This retailer describes an alder Evo board on a steel frame; because its copy is undated, it does not resolve the current first-party noble-lime conflict or prove a distinct revision."
           }
         ],
         "officialEvidenceGap": null,
