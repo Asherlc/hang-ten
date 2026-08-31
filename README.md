@@ -120,6 +120,15 @@ does not apply to the browser-hosted Workbench, whose server-side OAuth flow
 retains its separately hosted `GITHUB_CLIENT_SECRET` configuration. The app
 requests `repo read:org` and no longer accepts personal access tokens.
 
+### Hangboard issue reporting release setup
+
+Before distributing a build with public hangboard reporting, publish the Tally
+form and enable its Tally-to-GitHub Zap using the exact field contract in the
+[hangboard issue reporting runbook](docs/hangboard-issue-reporting.md). Set the
+same public `HANGBOARD_REPORT_FORM_URL` for both iOS and Android release builds.
+The form creates `hangboard-report` issues in `Asherlc/hang-ten` without asking
+the reporter for a GitHub account; no GitHub token belongs in either app.
+
 ## Maintainer-generated countdown audio
 
 Hang Ten ships reviewed audio files and never stores an ElevenLabs API key or
