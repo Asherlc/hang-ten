@@ -1094,15 +1094,28 @@ slogan. The exact package revision is Beech SKU `60-112-BEC`; Moon specifies it
 as 100% sustainably sourced Beech. Ash and Sycamore are sibling material SKUs,
 not additional working positions of this Beech package.
 
-There is exactly one usable physical orientation and one declared presentation:
-`primary`, the upright front working face containing all 21 scoped holds. Moon's
-2022 [Armstrong Advice & Tips / installation
-guide](https://www.klimwinkel.nl/assets/pdfs/shop1/Moon_Armstrong_Guidelines.pdf)
-requires the board to be mounted level, identifies the bottom edge as the pulley
-rope attachment edge, and explicitly says never to hang upside down. Mounting
-above a door, on a beam, or on a free-standing frame changes location rather
-than working surface. The rear is the mounting face, and neither it nor an
-inverted board is a supported presentation.
+There is one declared presentation: `primary`, the upright front working face
+containing all 21 scoped holds. That intended upright presentation is supported
+by Moon's published product imagery and its 2022 [Armstrong Advice & Tips /
+installation
+guide](https://www.klimwinkel.nl/assets/pdfs/shop1/Moon_Armstrong_Guidelines.pdf),
+which requires the Armstrong to be mounted level and instructs the supplied
+short ropes to be attached to the board's bottom edge for pulley loops. In that
+orientation, the bottom-edge pulley function, readable depth labels, medallion,
+slogan, and offset hold layout agree with the official product image and the
+independent retailer galleries. The guide's separate warning, `Never hang
+upside down on a fingerboard`, addresses the climber's body orientation during
+use; it does not state that the board itself must not be mounted upside down.
+
+Fresh searches of Moon's product and design publications, the installation
+guide, and the cited independent retailer sources found no published Armstrong
+installation or working presentation with the board inverted. The available
+evidence therefore supports retaining the documented upright presentation and
+does not support adding an inverted presentation. This is a cautious
+evidence-based inference and an evidence gap, not a claim that inverted mounting
+is physically impossible or explicitly prohibited by Moon. Mounting above a
+door, on a beam, or on a free-standing frame changes location rather than the
+documented working surface.
 
 The existing 1697 x 1200 RGBA PNG is the same clean, published head-on Beech
 product view used by Moon. Its usable front face is orthographic: horizontal
