@@ -287,9 +287,9 @@ def _url(value: Any, source: str) -> str:
     parsed = urlsplit(url)
     if parsed.scheme != "https" or not parsed.hostname:
         raise PresentationRemediationAuditError(f"{source} must be a direct HTTPS URL")
-    hostname = parsed.hostname.casefold().removeprefix("www.")
+    hostname = parsed.hostname.casefold().removesuffix(".").removeprefix("www.")
     path_segments = tuple(
-        unquote(segment).casefold() for segment in parsed.path.split("/") if segment
+        segment for segment in unquote(parsed.path).casefold().split("/") if segment
     )
     if "search" in path_segments or hostname in _SEARCH_HOSTS:
         raise PresentationRemediationAuditError(

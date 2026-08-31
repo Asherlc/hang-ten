@@ -346,6 +346,24 @@ def test_evidence_rejects_nested_search_result_path(tmp_path: Path) -> None:
         _validate_document(tmp_path, boards, inventory, [record])
 
 
+def test_evidence_rejects_search_path_with_encoded_delimiters(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["url"] = (
+        "https://manufacturer.example/products%2Fsearch%2Ffixture"
+    )
+
+    with pytest.raises(PresentationRemediationAuditError, match="search-result URL"):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
+def test_evidence_rejects_search_host_with_terminal_dot(tmp_path: Path) -> None:
+    boards, inventory, record = _single_board_fixture(tmp_path)
+    record["evidence"]["official"][0]["url"] = "https://duckduckgo.com./?q=fixture"
+
+    with pytest.raises(PresentationRemediationAuditError, match="search-result URL"):
+        _validate_document(tmp_path, boards, inventory, [record])
+
+
 def test_evidence_accepts_direct_product_url_with_unrelated_q_parameter(
     tmp_path: Path,
 ) -> None:
