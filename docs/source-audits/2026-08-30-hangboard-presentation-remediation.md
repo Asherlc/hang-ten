@@ -109,11 +109,14 @@ Resolutions are added only when direct live sources establish the named revision
   retains the visibly supported flat-center, deep-sloper, shallow half-round,
   and deep rounded-recess topologies. Local face IDs A–D are analyst mappings
   to published gallery views, not manufacturer numeric face labels; the
-  published 25/20/15/10 mm outer-slot, 40/30/25/20 mm mono/bi, and 30/25/20/15
-  mm center-depth sequences remain board-level specifications and are not
+  published 25/20/15/10 mm outer-slot and 40/30/25/20 mm mono/bi sequences;
+  its central area is only a 15–30 mm range. Oliunìd, not Owl, publishes the
+  exact 30/25/20/15 mm center-depth sequence. All remain board-level
+  specifications and are not
   assigned to those local face IDs. Each is `edit` only for the engraved Owl
-  mark. The current first-party route is visibly a 404, so the audit uses the
-  exact openable 2026-05-17 Owl Climb archive snapshot. Owl Climb publishes the bare body as
+  mark. The current first-party route timed out during Task 6 re-opening, so
+  the audit retains the cited 2026-05-17 Owl Climb archive snapshot. Owl Climb
+  publishes the bare body as
   660 × 100 × 100 mm, while Oliunìd publishes 68 × 14 × 12 cm for the supported
   assembly; that measurement-scope conflict remains explicit and does not
   alter face geometry.
@@ -208,4 +211,35 @@ Resolutions are added only when direct live sources establish the named revision
 
 ## Final classification totals
 
-Totals are written from the validated manifest report after all three lanes reconcile.
+The reconciled validator report covers 61 packages and 85 presentations:
+
+| Decision | Count |
+| --- | ---: |
+| `keep` | 19 |
+| `edit` | 56 |
+| `regenerate` | 9 |
+| `removeUnsupportedPresentation` | 1 |
+| `splitPhysicalRevision` | 0 |
+| **Total** | **85** |
+
+The sole removal remains `lattice.mini-bar/end`: direct sources establish that
+its declared end cap is not a usable working surface. No record has sufficient
+two-revision evidence for `splitPhysicalRevision`; no package inventory changes
+in Phase 1.
+
+The validator's explicitly evidence-blocked paths are:
+
+- `Hangboards/aelith-cyclops-011/assets/primary.png`
+- `Hangboards/dewoodstok-woodbord/assets/primary.png`
+- `Hangboards/plateau-lifting-edge/assets/primary.png`
+- `Hangboards/tension-grindstone-original/assets/primary.png`
+- `Hangboards/tension-grindstone-pro/assets/primary.png`
+
+All 17 accepted `keep` records have a matching current SHA-256/dimensions,
+seven conforming findings, complete official and independent evidence, and a
+ready accepted cohort comparator. The two evidence-blocked `keep` records
+retain null final output, `blockedEvidence`, an `uncertain` finding, and the
+exact evidence gap in their manifest records. The remaining three
+evidence-blocked assets are Phase 2 repairs. Every non-keep record has null
+final output and either a ready accepted comparator or an explicit repair-only
+cohort gap.
