@@ -1181,3 +1181,58 @@ metadata changed. Direct visual inspection confirmed the normal image and all
 21 visible contacts; final-inventory package validation and package status
 passed with 61 packages and no drafts. The schema-2 machine manifest is
 intentionally unchanged in this bounded acceptance pass.
+
+## YY Vertical Baguette Evo five-position repair (2026-08-31)
+
+The current Baguette Evo was freshly re-researched as a distinct physical
+revision before accepting its repaired presentation set. YY Vertical's live
+[product page](https://www.yyvertical.com/en/products/baguette-evo) establishes
+the rounded portable body, 52 x 5 x 5 cm dimensions, approximately 550 g
+weight, rubberwood construction, paired 25/20/15/12/10/8/6 mm edges, central
+30/25/20/6 mm edges, rounded trays, and the continuously variable Turn & Pull
+system. Current independent listings at
+[Outside](https://www.outside.co.uk/y-y-baguette-evo.html),
+[Varuste](https://varuste.net/en/p135968/yy-vertical-baguette-evo), and
+[Up and Under](https://upandunder.co.uk/yy-vertical-la-baguette-evo-2)
+corroborate the photographed rounded revision, 52 cm length, approximately
+550 g weight, and recycled rubberwood construction. Varuste independently
+corroborates the 6--30 mm range, while Up and Under reproduces YY's current
+paired and central edge inventory exactly.
+
+The evidence also contains two conflicts that were preserved rather than
+silently combined. YY's older
+[2025/2026 catalog](https://graniteoutdoor.net/wp-content/uploads/YY_Leaflet-2026-Catalog-2025.pdf)
+calls the Baguette Evo rubberwood in its body copy but `Poplar Plywood` in its
+composition field. That catalog and Outside's currently live listing also name
+the third central edge as 12 mm, while YY's current first-party page and the
+current Up and Under listing name it as 20 mm. The package follows the current
+live manufacturer specification and photographed revision: recycled
+rubberwood with central 30/25/20/6 mm edges. It does not import the older
+catalog's poplar-plywood field or the conflicting 12 mm center claim.
+
+The finished package has exactly five finite, independently head-on,
+board-only presentations:
+
+| Presentation ID | Working surface | Scoped regions |
+| --- | --- | ---: |
+| `paired-25-20-15-10` | paired 25/20/15/10 mm edges | 8 |
+| `paired-12-8-6` | paired 12/8/6 mm edges | 6 |
+| `central-30-25` | central 30/25 mm edges | 2 |
+| `central-20-6` | central 20/6 mm edges | 2 |
+| `rounded-tray` | rounded tray | 1 |
+
+Turn & Pull changes pitch continuously; it does not create a sixth discrete
+machined face, so no extra presentation was invented for an arbitrary tilt.
+By explicit user choice, the external suspension cords are omitted from every
+catalog raster so no position depicts gravity-defying or misleading cord
+routing. The authentic cord eyelets remain visible in the wooden body. This is
+a board-only catalog convention, not a claim that the production product ships
+without cords.
+
+All five assets use the same 1774 x 887 studio canvas, straight-on orthographic
+framing, recycled-rubberwood treatment, off-white background, lighting,
+edge softness, and smoothing approach. Every canonical region was directly
+reviewed against its visible contact surface; no image-derived geometry was
+used. Final-inventory package validation and package status passed, and the
+focused Workbench package suite passed 173 tests. The schema-2 machine
+manifest is intentionally unchanged in this bounded repair.
