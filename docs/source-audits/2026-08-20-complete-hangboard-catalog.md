@@ -804,15 +804,17 @@ once, on the orientation in which it is usable.
 
 ### AI-simplified presentation illustrations
 
-Both PNGs were generated with the built-in image-generation tool using the
-official Metolius photograph as reference Image 1. They are app presentation
-content and were never treated as evidence for contact identity, count, kind,
-depth, or geometry.
+The base illustrations for both PNGs were generated with the built-in
+image-generation tool using the official Metolius photograph as reference
+Image 1. The committed assets were subsequently remediated to remove the
+backdrop and suspension cords with directly authored alpha. They are app
+presentation content and were never treated as evidence for contact identity,
+count, kind, depth, or geometry.
 
-`assets/primary.png` is the default `20mm-side` illustration, 1536 × 1024
-(aspect `1.5`, SHA-256
-`ec94a25e2f653d7972eea4c755df5413aa70a81c393764365b0cdbaa8232fc12`).
-Prompt:
+`assets/primary.png` is the default `20mm-side` illustration, 1254 × 1254
+(aspect `1.0`, SHA-256
+`e865318b8aa7ea7acbda62aee4625ce1fb829fe7e479d4332d2419bec24010d1`).
+Original generation prompt (before transparent, cord-free remediation):
 
 > Use case: product-mockup
 >
@@ -834,10 +836,10 @@ Prompt:
 >
 > Avoid: a second channel, pockets, pinches, slopers, screws, labels, decorative elements, or a generic fingerboard.
 
-`assets/15mm-surface.png` is the reversed `15mm-side` illustration, 1672 ×
-941 (aspect `1672 / 941`, SHA-256
-`7b365965bb7d3c7b6f1fcd8c2503c5a77ddba8cc75084294c5a7766a90ef3705`).
-Prompt:
+`assets/15mm-surface.png` is the reversed `15mm-side` illustration, 1254 ×
+1254 (aspect `1.0`, SHA-256
+`28faa6cdb4311f4aa7fa3c9a1efed0995f53ee7cefadb21618a42b2b5d5157b2`).
+Original generation prompt (before transparent, cord-free remediation):
 
 > Use case: product-mockup
 >
@@ -864,9 +866,10 @@ photograph, product-page inventory, video close-up/use evidence, and manual's
 suspended-device classification. Both results retain one rail, one routed
 channel, and exactly two source-supported contact surfaces for the shown
 orientation. They add no recess, pocket, screw, label, or selectable contact.
-The generated PNGs were only copied into the package: no crop, registration,
-segmentation, mask, contour extraction, vectorization, or automatic geometry
-operation was applied.
+The accepted RGB presentation art was retained while the backdrop and cords
+were removed through direct alpha edits. No crop, registration, segmentation,
+contour extraction, vectorization, or automatic geometry operation was
+applied.
 
 ### Direct geometry mapping and review
 
