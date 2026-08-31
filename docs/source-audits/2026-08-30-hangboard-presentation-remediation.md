@@ -384,3 +384,66 @@ removal, two historical evidence-blocked keeps, zero Phase 2 blocks, 20 canvas
 classes covering 65 repair keys, and zero capability artifacts. Mini Bar primary
 retains its historical primary self-baseline; the pending removal does not alter
 its PNG, `board.json`, presentation inventory, or `mini-pinch` assignment.
+
+## Owl Climb Poker four-face disposition correction (2026-08-31)
+
+The complete `owl-climb-poker` presentation set was freshly re-reviewed as one
+atomic four-face product on 2026-08-31. The manufacturer identifies Poker as a
+660 x 100 x 100 mm tulipwood (`Toulipier`) bar whose four working faces are
+selected by rotating the bar in its brackets. The independent WOGU review also
+describes the same parallelepiped board as usable on all four faces, with the
+outer slots and one-/two-finger pockets changing depth by face and with two
+35-degree planes plus two 100 mm half-rounds in the center. Oliunìd's current
+listing independently corroborates the four rotations, tulipwood construction,
+outer edge depths, mono/bi-finger depth sequence, center one-arm feature, and
+supplied black brackets. Its published four-view gallery shows the light wood,
+black end brackets, centered owl engraving, outer slot/pocket groups, and the
+four different center treatments. The face letters below remain local analyst
+mappings; neither publisher labels the rotations A-D.
+
+Freshly opened evidence:
+
+- Owl Climb manufacturer page:
+  <https://owlclimb.com/index.php/en/prds-2/poker/>
+- Oliunìd product listing and four-view published gallery:
+  <https://www.oliunid.com/owl-climb-poker-climbing-hangboard>
+- Oliunìd independent product review (2020-03-18):
+  <https://www.oliunid.it/blog/ti-presentiamo-il-trave-poker-di-owl-climb-oliunid-is-recensione-prodotto/>
+- WOGU independent Owl Climb review (2019-04-17):
+  <https://woguclimbing.com/review-owl-climb-accesorios-entrenamiento-escalada/>
+- Published retailer face images inspected at original resolution:
+  <https://www.oliunid.com/media/catalog/product/o/w/owlclimb_poker19_0.jpg>,
+  <https://www.oliunid.com/media/catalog/product/o/w/owlclimb_poker19_1.jpg>,
+  <https://www.oliunid.com/media/catalog/product/o/w/owlclimb_poker19_2.jpg>, and
+  <https://www.oliunid.com/media/catalog/product/o/w/owlclimb_poker19_3.jpg>.
+
+All four declared presentations were enumerated from `board.json` and reviewed
+independently against their own working surface. Each asset is a 1980 x 300,
+8-bit RGB, sRGB PNG with no alpha channel. Every face is orthographic to its own
+front working plane: the long axis and top/bottom edges remain horizontal, the
+end brackets have equal vertical treatment, paired outer contacts remain
+bilaterally aligned, and no face uses a three-quarter or oblique product view.
+The four assets use one consistent pale-tulipwood grain, recessed-hold lighting,
+black-bracket treatment, off-white studio field, and smoothing level. Their owl
+engravings are product-faithful: the engraving is present across the published
+gallery, so removing it to satisfy the earlier internal `unbranded studio`
+reason would conflict with the user's published-likeness requirement.
+
+| Presentation | Declared asset | Scoped holds | Material / likeness / head-on finding | Old SHA-256 | New SHA-256 | Dimensions | Exact transform |
+| --- | --- | ---: | --- | --- | --- | --- | --- |
+| `face-a` — flat center (default) | `assets/face-a.png` | 7 | Tulipwood; source-faithful four-face Poker layout and engraving; independently head-on to face A | `ddadd81e2fff9b4ca467d0320d53a496035b2131e905f76e0231c7ea2dc45028` | same | 1980 x 300 | none (accepted no-op) |
+| `face-b` — deep slopers | `assets/face-b.png` | 9 | Tulipwood; published deep-plane center treatment, outer contacts, brackets, and engraving; independently head-on to face B | `5b33ce95315224a37fa13d83062cfbdab27d514d8922b65d06c0368bcd1523de` | same | 1980 x 300 | none (accepted no-op) |
+| `face-c` — shallow half-rounds | `assets/face-c.png` | 9 | Tulipwood; manufacturer-described half-round center treatment with published outer contacts and engraving; independently head-on to face C | `e4f9990a71eced298dfb3f2c881ee7c3b29bfe76a191e751d632fb6f159e45dd` | same | 1980 x 300 | none (accepted no-op) |
+| `face-d` — deep rounded recesses | `assets/face-d.png` | 9 | Tulipwood; source-faithful rounded center treatment, outer contacts, brackets, and engraving; independently head-on to face D | `ee9f4d928416a008b9a784631549d15ce675e32fb6771ad5bf67ad2627024e02` | same | 1980 x 300 | none (accepted no-op) |
+
+No raster mutation was justified. The files are opaque, so the approved
+existing-alpha composite cannot apply; a blur/noise filter would alter product
+pixels without correcting material, likeness, perspective, or consistency.
+No crop, resize, padding, warp, mask, segmentation, registration, redraw,
+generated pixel, or re-encoding-only image diff was made. `board.json` remains
+byte-identical at SHA-256
+`808236bdef4826ae2db59c261b67440042c9d446adec208ec0ca2630d1b2452c`.
+This source-backed correction accepts all four presentations together as
+no-ops under the user's material, published-likeness, head-on, and uniform
+smoothing requirements; the schema-2 machine manifest is intentionally not
+updated in this bounded pass.
