@@ -481,7 +481,15 @@ def validate_presentation_remediation_manifest(
     """Validate historical, preflight, partial, or final catalog truth."""
 ```
 
-CLI keeps `--final-validation` for Phase 1 and adds mutually exclusive `--phase2-preflight`, `--phase2-partial`, and `--phase2-final`; `--batch-id` is partial-only; repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH` are preflight/partial-only. In preflight mode, `--candidate-file` can verify only a hash/path already declared in `capabilityProbeCheck.artifacts`; in partial mode it can verify only a production `generation.candidates` hash/path. The report adds `phase`, `batchID`, `canvasClassCount`, `canvasCoveredRepairCount`, `capabilityProbeArtifactCount`, `historicalEvidenceBlockedKeeps`, `blockedPhase2ActionCount`, `originalPresentationCount`, `inventoryPresentationCount`, `keptPresentationCount`, `completedEditCount`, `completedRegenerationCount`, `completedRemovalCount`, and `pendingPhase2ActionCount`.
+CLI keeps `--final-validation` for Phase 1 and adds mutually exclusive `--phase2-preflight`, `--phase2-partial`, and `--phase2-final`. Repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH` are legal only in the matching transient lifecycle; `--batch-id` is partial-only. Use this exact command matrix:
+
+| Lifecycle checkpoint | Exact manifest/mode/file arguments | Valid transient targets |
+| --- | --- | --- |
+| Capability probe input or artifact | `--manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json --phase2-preflight --source-file SHA256 PATH` and/or `--candidate-file SHA256 PATH` | The `--source-file` pair resolves only to a declared probe `sourceInputs` hash/path; the `--candidate-file` pair resolves only to a root `capabilityProbeCheck.artifacts` hash/path. |
+| Production input or candidate | `--manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json --phase2-partial [--batch-id ID] --source-file SHA256 PATH` and/or `--candidate-file SHA256 PATH` | The `--source-file` and `--candidate-file` pairs resolve only to the selected production record's `generation.sourceInputs` and `generation.candidates`. |
+| Final accepted catalog | `--manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json --phase2-final` | No `--batch-id`, `--source-file`, or `--candidate-file`; this mode is used only at Task 65's final gate. |
+
+The CLI rejects every cross-lifecycle hash/path, file argument, and mode combination. The report adds `phase`, `batchID`, `canvasClassCount`, `canvasCoveredRepairCount`, `capabilityProbeArtifactCount`, `historicalEvidenceBlockedKeeps`, `blockedPhase2ActionCount`, `originalPresentationCount`, `inventoryPresentationCount`, `keptPresentationCount`, `completedEditCount`, `completedRegenerationCount`, `completedRemovalCount`, and `pendingPhase2ActionCount`.
 
 Partial mode validates every record and current byte state: the 17 accepted keeps retain accepted hash/dimensions/decision equal to unchanged bytes; the two evidence-blocked keeps retain null hash/dimensions; pending/in-progress repair actions remain at original bytes; completed repairs match accepted bytes; completed removal matches historical-record/absent-presentation truth. It accepts historical evidence gaps without reclassifying them as Phase 2 blocks. Final mode requires passed preflight, all batches/final checks passed, 61 packages, 85 historical records, 84 current presentations, 19 unchanged keeps including two historical evidence-blocked keeps, 17 completed edits, 48 completed regenerations, one completed removal, zero pending Phase 2 actions, and zero blocked Phase 2 actions. It requires terminal per-record validation only for the 65 repaired records and the removal record; keep records retain the truthful pending/not-required Phase 1/Phase 2 states defined above.
 
@@ -680,7 +688,16 @@ After an accepted context candidate is hash-verified and moved byte-for-byte to 
 
 Normal completion calls `write_stdin({"session_id":phase2_cleanup_session_id,"chars":"EXIT\n","yield_time_ms":1000,"max_output_tokens":2000})`, then polls with `write_stdin({"session_id":phase2_cleanup_session_id,"chars":"","yield_time_ms":1000,"max_output_tokens":2000})` until exit. Require exit 0, `CLEANUP_OK`, absence of every registered non-promoted path, absence of every promoted source, retained package destination/hash, and absence of the exact context. An interruption calls the same tool with `chars:"\u0003"` and must exit 130 after cleanup. For TERM handling, assign the literal PID reported by `READY` to controller value `phase2_cleanup_pid`, call `exec_command({"cmd":"rtk kill -TERM " + phase2_cleanup_pid,"workdir":"/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter","yield_time_ms":1000,"max_output_tokens":2000})`, then poll the same session and require exit 143 after cleanup. Never use `terminate` as the normal path. A cleanup failure must return nonzero, print `CLEANUP_FAILED<TAB>ledger-path`, and retain the exact context/ledger for diagnosis; do not delete shared or unknown paths.
 
-For each copied web input, use a deterministic filename `inputs/record-N-official-I-image-J.ext` or `inputs/record-N-independent-I-image-J.ext`, preserve original bytes, register it through the live PTY, require the cleanup-session hash equal `rtk shasum -a 256` on the exact file, add its `GenerationSourceInput`, then run:
+For each copied web input, use a deterministic filename `inputs/record-N-official-I-image-J.ext` or `inputs/record-N-independent-I-image-J.ext`, preserve original bytes, register it through the live PTY, require the cleanup-session hash equal `rtk shasum -a 256` on the exact file, and add its `GenerationSourceInput`. For a capability probe, run only the preflight verifier against the probe input:
+
+```bash
+phase2_probe_source_input_sha256="$(rtk shasum -a 256 "$phase2_probe_source_input_path" | rtk awk '{print $1}')"
+rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight --source-file "$phase2_probe_source_input_sha256" "$phase2_probe_source_input_path"
+```
+
+For a production input, run only the partial verifier against the record input:
 
 ```bash
 phase2_source_input_sha256="$(rtk shasum -a 256 "$phase2_source_input_path" | rtk awk '{print $1}')"
@@ -689,15 +706,27 @@ rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
   --phase2-partial --source-file "$phase2_source_input_sha256" "$phase2_source_input_path"
 ```
 
-The command is executed with the literal computed hash/path, and its actual date/command/result is committed in `byteVerification` before deletion.
+The applicable lifecycle command is executed with the literal computed hash/path, and its actual date/command/result is committed in `byteVerification` before deletion. Never use `--phase2-final` for a transient input.
 
-After each built-in call, take the exact absolute path returned by the tool as `phase2_generated_path`, immediately relay it with `REGISTER`, and require its ACK/hash. Only then inspect it. Require its path to match `/Users/asherlc/.codex/generated_images/*`, inspect PNG IHDR through the validator, move it byte-for-byte to the deterministic context output filename assigned to `phase2_candidate_path`, register that path, rehash into `phase2_candidate_sha256`, and require equality with both ACK hashes. A product task adds a `GenerationCandidate` with this exact `transientOutputPath`. A preflight task must instead add only a root `CapabilityProbeArtifact` with this exact path/hash and `capabilityProbeRejected`; it is forbidden from touching any record's `generation.candidates`. Then execute:
+After each built-in call, take the exact absolute path returned by the tool as `phase2_generated_path`, immediately relay it with `REGISTER`, and require its ACK/hash. Only then inspect it. Require its path to match `/Users/asherlc/.codex/generated_images/*` and inspect PNG IHDR through the validator.
+
+For a capability probe, move the returned bytes unchanged to the deterministic `phase2_probe_artifact_path` assigned by the canvas preflight recipe, register that path, rehash it into `phase2_probe_artifact_sha256`, and require equality with both ACK hashes. Add only the root `CapabilityProbeArtifact` with this exact path/hash and `capabilityProbeRejected`; touching any record's `generation.candidates` is forbidden. Then run only:
+
+```bash
+rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+  --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+  --phase2-preflight --candidate-file "$phase2_probe_artifact_sha256" "$phase2_probe_artifact_path"
+```
+
+For a production output, move the returned bytes unchanged to its deterministic `phase2_candidate_path`, register that path, rehash it into `phase2_candidate_sha256`, and require equality with both ACK hashes. Add the `GenerationCandidate` with this exact `transientOutputPath`, then run only:
 
 ```bash
 rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
   --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
   --phase2-partial --candidate-file "$phase2_candidate_sha256" "$phase2_candidate_path"
 ```
+
+Never use `--phase2-preflight` for a production candidate or `--phase2-partial` for a capability artifact. Never use `--phase2-final` for transient verification or per-record acceptance; final mode is reserved for Task 65's final catalog gate after all accepted state and final checks are recorded.
 
 No rejected production candidate, capability artifact, or input is deleted until source/candidate roles, URLs, hashes, dispositions, reasons, and passed transient commands are committed and pushed. A preflight artifact is then deleted through the live cleanup session, its absence is verified, and its non-null `deletionVerifiedAt` is committed/pushed before its probe may pass.
 
@@ -1141,7 +1170,7 @@ Each probe freshly reopens the representative record's evidence, hashes/verifies
 
 - [ ] **Step 8: Implement and test CLI flags.**
 
-  Parse lifecycle flags as mutually exclusive. Parse each `--source-file` and `--candidate-file` as exactly two arguments, reject duplicate hash keys and illegal lifecycle combinations, and print the extended report. CLI tests assert preflight `--candidate-file` accepts only a declared capability artifact hash/path, partial accepts only a declared production candidate hash/path, cross-lifecycle reuse fails, and preflight/partial/final exact JSON includes `capabilityProbeArtifactCount`.
+  Parse lifecycle flags as mutually exclusive. Parse each `--source-file` and `--candidate-file` as exactly two arguments, reject duplicate hash keys and illegal lifecycle combinations, and print the extended report. CLI tests assert preflight `--source-file` accepts only a declared probe input and preflight `--candidate-file` accepts only a declared root capability artifact hash/path; partial `--source-file` and `--candidate-file` accept only declared production inputs/candidates; cross-lifecycle reuse fails; final rejects `--batch-id`, `--source-file`, and `--candidate-file`; and preflight/partial/final exact JSON includes `capabilityProbeArtifactCount`.
 
 - [ ] **Step 9: Migrate the real manifest without package mutation.**
 
@@ -1185,8 +1214,8 @@ Each Task 2–8 supplies its literal context directory and exact assignment-tabl
 - [ ] Launch the persistent cleanup PTY before reopening sources. For each probe, reopen all representative `/evidence` URL leaves and gap searches; copy/register/hash/transiently verify at least one official/independent input and record all reopened evidence IDs.
 - [ ] Instantiate exactly the row's `PreflightComparatorSet`. If the row names a composition reference, register/hash its exact accepted keep path and supply it as the sole `preflight-composition` comparator input. Otherwise supply no composition path and require `compositionFramingScale` in `unavailableAxes`. Always set `materialTextureLighting` null, list it in `unavailableAxes`, supply no material comparator, and use live evidence plus the literal shared material contract. Reject every reference outside the 17-key whitelist, including Task 16 Iron Palm, Task 17 Split Palm, any production repair, and any earlier preflight output.
 - [ ] Render only `render_phase2_capability_probe_prompt`. Inspect evidence, the optional accepted composition keep, and—for edit behavior only—the current target with `view_image`. Call built-in `image_gen` once per attempt with those exact paths. A current edit target is tool input only; it is not a style reference, baseline, candidate, or evidence.
-- [ ] Immediately register the returned generated-images path before inspection/movement. At the controller level assign `phase2_probe_artifact_id = probe["id"] + "-attempt-" + str(attempt)` and `phase2_probe_artifact_path = phase2_context_path + "/candidates/" + phase2_probe_artifact_id + ".png"`; move/register that exact path, hash/inspect untouched IHDR, and add the exact root artifact ID with both paths, hash, dimensions, `canvasResult`, `capabilityProbeRejected`, `productionUse: forbidden`, provenance, passed byte verification, `recordedAt`, and null `deletionVerifiedAt`. Add only its ID to the probe's `artifactIDs`; do not write any record `generation` or `phase2Comparator` field.
-- [ ] Run transient verification in `PHASE2_PREFLIGHT`, then commit/push the artifact checkpoint before deletion. `exactCanvas` ends attempts for that probe; `wrongCanvas` permits the next prompt-only attempt, at most three. Never promote or copy an artifact into `Hangboards`.
+- [ ] Immediately register the returned generated-images path before inspection/movement. At the controller level assign `phase2_probe_artifact_id = probe["id"] + "-attempt-" + str(attempt)` and `phase2_probe_artifact_path = phase2_context_path + "/candidates/" + phase2_probe_artifact_id + ".png"`; move/register that exact path, hash it into `phase2_probe_artifact_sha256`, inspect untouched IHDR, and add the exact root artifact ID with both paths, hash, dimensions, `canvasResult`, `capabilityProbeRejected`, `productionUse: forbidden`, provenance, passed byte verification, `recordedAt`, and null `deletionVerifiedAt`. Add only its ID to the probe's `artifactIDs`; do not write any record `generation` or `phase2Comparator` field.
+- [ ] Run the shared recipe's exact `--phase2-preflight --candidate-file "$phase2_probe_artifact_sha256" "$phase2_probe_artifact_path"` transient verification command, then commit/push the artifact checkpoint before deletion. `exactCanvas` ends attempts for that probe; `wrongCanvas` permits the next prompt-only attempt, at most three. Never substitute `--phase2-partial`, promote, or copy an artifact into `Hangboards`.
 - [ ] After all task probes reach an exact canvas or their third wrong canvas, send `EXIT` to the same cleanup PTY and poll it to exit 0/`CLEANUP_OK`. Require both recorded paths for every artifact absent. Write one non-null `deletionVerifiedAt` per artifact. A probe with an `exactCanvas` artifact becomes passed; a third `wrongCanvas` becomes blocked and blocks its class/root with the same reason. The task's Step 3 commits/pushes this terminal deletion/status update; a block stops later tasks after that cleanup commit.
 - [ ] Before task completion, require the validator's global disjointness scan to prove every artifact hash, returned path, and context path absent from all production candidates, source inputs, comparator selections/axes/baselines, and final accepted hashes. Preflight never establishes `readyBaseline`, `cohortBootstrapBaseline`, or `acceptedCohortBaseline`, and never authorizes Task 10 unless Task 9 independently passes all terminal checks.
 
@@ -1946,4 +1975,4 @@ After each presentation's phone and tablet exercise actually completes, write th
   ```
 
   Expected: Phase 2 report is 20 canvas classes, 65 covered repairs, 22–66 terminal rejected capability artifacts, zero artifact/production overlaps, 19 keeps, 17 edits, 48 regenerations, one removal, two historical evidence-blocked keeps, zero pending actions, and zero blocked actions; the unrelated-code diff is empty. This is the first and only `--phase2-final` invocation in Task 65.
-- [ ] **Step 5: Review, commit, and push.** Review the final diff plus manifest/narrative consistency. Stage only manifest and narrative, commit `Complete hangboard presentation remediation phase two`, and push. Record the pushed SHA and final validator output in the handoff.
+- [ ] **Step 5: Review, commit, and push.** Review the final diff plus manifest/narrative consistency. As a lifecycle-command self-review, require every capability input/artifact checkpoint to use only `--phase2-preflight`, every production input/candidate checkpoint to use only `--phase2-partial`, and Step 4 above to remain the first and only `--phase2-final` invocation. Stage only manifest and narrative, commit `Complete hangboard presentation remediation phase two`, and push. Record the pushed SHA and final validator output in the handoff.
