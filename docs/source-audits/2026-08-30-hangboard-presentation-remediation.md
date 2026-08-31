@@ -28,15 +28,14 @@ material color contradicted both official and independent published evidence.
 
 The original 1537 x 1023 RGBA asset had SHA-256
 `b9c91bc7f4e31db5883a8025b407851c25fd3b6d16a9b9e0e9e41d2a64302bfc`.
-The corrected 1537 x 1023 RGBA asset has SHA-256
-`c4bf068b612398b6243928dbafbfd42d32e0bf5ceab036f08e44f160ab790d13`.
+The committed transparent 1537 x 1023 RGBA asset has SHA-256
+`1d2c2bff70b87f27f173a2aa25f21aa003a01a1218bda695d3bc0d0097df0e48`.
 The bounded deterministic transform decoded the existing premultiplied-sRGB
 pixels, used the authored alpha channel as the sole product boundary, and
 applied one global neutral-black tone mapping to every nontransparent authored
-pixel: `round(6 + 42 * luminance^1.55)`. It then source-over composited those
-remapped product pixels and their unchanged authored alpha edges onto the
-shared `#F6F2EA` studio background and flattened the result. This preserves
-the original silhouette, soft cast shadow, rounded resin relief, fine surface
+pixel: `round(6 + 42 * luminance^1.55)`. The committed presentation retains
+that genuine transparent alpha field. This preserves the original silhouette,
+soft cast shadow, rounded resin relief, fine surface
 texture, four-contact topology, rail separation, framing, and head-on geometry
 while correcting white material to the source-published charcoal-black resin.
 There was no resize, crop, padding, warp, perspective correction, blur,
@@ -132,7 +131,7 @@ The deterministic PNG may remain in place, but this section does not claim
 that the Tension presentation has passed the full official-plus-unofficial
 evidence requirement; its acceptance state is **BLOCKED**.
 
-## 2026-08-31 Beastmaker 1000 deterministic presentation repair
+## 2026-08-31 Beastmaker 1000 transparent presentation correction
 
 This narrowly scoped, user-approved deterministic exception repairs only
 `beastmaker-1000/primary`; it makes no claim about another Beastmaker model,
@@ -145,22 +144,14 @@ layout, and symmetric front face. Those sources and side-by-side review with
 `Hangboards/beastmaker-2000/assets/primary.png` confirm this package's one
 Primary presentation is already head-on to its own front working surface.
 
-The original asset was 1000 × 259 pixels with SHA-256
+The committed asset is 1000 × 259 pixels with SHA-256
 `8d89a500122aac4d5bb4bb03c47202f881fd8cf66f9a321b620507dccad36289`.
-The accepted asset is the same 1000 × 259 canvas with SHA-256
-`3327fe6ab4527b16003861b17c23fca07de402fb46672555a67221aa03dfb7d7`.
-The exact deterministic command was
-`swift .context/sincere-otter-beastmaker-1000-deterministic/repair.swift Hangboards/beastmaker-1000/assets/primary.png <product-exact.png> <candidate.png>`.
-It uses the existing source alpha only for Core Image source-over compositing
-of the exact current product pixels onto the uniform catalog field `#F6F2EA`.
+It retains its genuine transparent alpha field around the exact current product
+pixels.
 No resize, crop of source pixels, padding, warp, perspective correction,
 registration, geometry inference, redraw, replacement product pixels, or
-source-photo substitution occurred. The accepted transform has **no image
-filter** (zero passes). A single allowed trial of `CINoiseReduction`
-(`inputNoiseLevel = 0.002`, `inputSharpness = 0.0`) was rejected because it
-changed source alpha. The accepted path compares the full decoded RGBA product
-buffer and alpha bytes before compositing; that passed, preserving the
-silhouette, all six mounting openings, hold/recess topology, wood grain
+source-photo substitution occurred. The preserved source pixels and alpha
+retain the silhouette, all six mounting openings, hold/recess topology, wood grain
 direction, and head-on geometry.
 
 Workbench's owned loopback server and headless catalog capture completed with
@@ -729,13 +720,13 @@ Fresh evidence:
 
 The package declares exactly one presentation, `primary`, and the repaired
 asset remains an independently head-on 1503 x 394 view. Its silhouette,
-aspect, shadows, and alpha-derived edge coverage are unchanged. Review of the
+aspect, shadows, and genuine transparent edge coverage are unchanged. Review of the
 first accepted gray candidate found that three lower through-openings had
-incorrectly remained opaque gray: the symmetric lower-outer pair and the
+incorrectly remained filled gray: the symmetric lower-outer pair and the
 lower center-right opening. Only eight of the source-backed 11 openings
 exposed the shared background. The first correction reopened the lower-outer
 pair, producing a 10-opening intermediate that still left the lower
-center-right rounded region opaque. Ten source-backed
+center-right rounded region filled. Ten source-backed
 recessed mounting bores were drawn
 at manually reviewed top-origin pixel centers: upper `(327,82)`,
 `(751.5,86)`, `(1176,82)`; outer-side `(79,201)`, `(1424,201)`; and
@@ -745,8 +736,9 @@ positions reflect the symmetric molded product; no image detection,
 registration, mask, contour, crop, resample, warp, or edge movement was used.
 
 The accepted gray-resin transform is the monotonic luminance mapping
-`0.12 + 0.58 * luminance^1.50`, tinted by `(0.98, 1.00, 0.99)` and composited
-through the source's unchanged alpha coverage onto `#F6F2EA`. It preserves
+`0.12 + 0.58 * luminance^1.50`, tinted by `(0.98, 1.00, 0.99)`, and retained
+only in the authored resin pixels. The source alpha remains genuinely
+transparent around the board and through every opening. It preserves
 the existing high-frequency gritty contact texture, recessed shadows, and
 specular rim highlights without blur, yielding the official rough-contact /
 glossy-margin dual finish. No branding was added: the current official gray
@@ -762,13 +754,14 @@ through intermediate
 `2cbd1e4cb54d2447379ff2801fe0b918139b2681d6749624aa1448a8952b78d1`
 and first-correction
 `c02f7f3d23aaa158b359fdd41f47315a4077bbde1b7a2879927f1902133c6f59`
-to `f7d79b4777b99c81688a64e8e83b6d4c52fd082e893e10cd44cc4e9a9af9a342`;
+to the transparent committed asset
+`a53eef6f2cc6b540376aed24e1a27d833492efe302761ca7814ae1862f0a2a78`;
 all four are 1503 x 394 PNGs. `board.json` remains byte-identical at
 `eb27ddc4b9f92332e1133db6ade1ce1a81de92edf7896a7790bbe3bfc1310873`.
 
 The first correction directly authored the two rounded-pill interiors within
 top-origin review bounds approximately `x=171...345, y=203...276` and
-`x=1146...1320, y=203...276`. Their centers expose opaque `#F6F2EA`, with a
+`x=1146...1320, y=203...276`. Their centers are genuinely transparent, with a
 narrow manually shaded inner edge matching the other through-openings; the
 gray molded perimeter remains the physical rim, not a plug. Pixel comparison
 against the intermediate candidate found 11,183 changed pixels, all inside
@@ -780,13 +773,13 @@ resize, registration, warp, or image generation was used.
 The final rereview correction directly authored the remaining center-right
 rounded-pill opening inside the single declared top-origin review box
 `x=774...947, y=204...276`, using the neighboring center-left opening as the
-manual symmetry reference. Its center exposes opaque `#F6F2EA`; two restrained
+manual symmetry reference. Its center is genuinely transparent; two restrained
 interior edge strokes preserve the recessed shading while leaving the molded
 gray perimeter intact. Exact decoded-pixel comparison against the
 first-correction image found 7,632 changed pixels bounded by
 `x=783...944, y=211...272`, with zero changes outside the declared box. The
-result was inspected at original detail and contains all 11 background-visible
-through-openings plus all 10 mounting bores. This was direct deliberate path
+result was inspected at original detail and contains all 11 transparent
+through-openings plus all 10 retained mounting bores. This was direct deliberate path
 drawing, with no detection, segmentation, generated mask, vectorization,
 crop, resize, registration, warp, or image generation.
 
@@ -820,7 +813,7 @@ its upper-left and lower edges. That band read as a pasted inset rather than
 the same open recess shown by its neighbors. Two manually parameterized
 shading candidates retained the exact established opening path and 1503 x 394
 canvas. Both used a four-stop linear falloff from neutral gray through a muted
-middle gray and near-white to the exact `#F6F2EA` opening center. Candidate 1
+middle gray and near-white to a transparent opening center. Candidate 1
 used edge/middle sRGB values `(0.50, 0.51, 0.50)` and
 `(0.79, 0.78, 0.75)` at locations `0.00, 0.22, 0.48, 1.00`; candidate 2 used
 `(0.55, 0.56, 0.55)` and `(0.83, 0.82, 0.79)` at locations
@@ -830,14 +823,16 @@ bright outline; candidate 2 was rejected as slightly too light.
 
 The prior asset SHA-256 was
 `f7d79b4777b99c81688a64e8e83b6d4c52fd082e893e10cd44cc4e9a9af9a342`.
-Candidate 1 and the accepted asset are
+Candidate 1 is
 `84d413b55d8ada97f6af5f0cc32312314da923d7ba87558f7436236b03ddfdd6`;
 rejected candidate 2 was
 `77a3d5941e2800ed2807bd7b6b7a4a018766b8a5007120c25094607951390894`.
+The current accepted transparent asset is
+`a53eef6f2cc6b540376aed24e1a27d833492efe302761ca7814ae1862f0a2a78`.
 Decoded-pixel comparison found 6,384 changed pixels, bounded exactly by the
 top-origin box `x=783...944, y=211...272`, with zero changed pixels outside.
-The accepted image remains 1503 x 394 RGBA and visibly retains all 11 open
-background regions and all ten mounting bores. `board.json` remains
+The accepted image remains 1503 x 394 RGBA and visibly retains all 11
+transparent through-openings and all ten mounting bores. `board.json` remains
 byte-identical at
 `eb27ddc4b9f92332e1133db6ade1ce1a81de92edf7896a7790bbe3bfc1310873`.
 No hold, silhouette, opening footprint, perspective, material texture, canvas,
@@ -847,16 +842,14 @@ vectorization, registration, crop, resize, warp, or image generation.
 
 ## Metolius Light Rail 2.0 two-position repair (2026-08-31)
 
-The complete current-revision Light Rail 2.0 was freshly re-researched and
-repaired as one atomic reversible product on 2026-08-31. Metolius identifies
-the product as a 18 x 3 x 1.5 in, 0.54 kg portable FSC-certified wooden rail
-whose reversible design yields four holds. The current official product image
-shows one rounded timber body, one long routed channel, a complete blue cord
-with pink flecks and a left knot, upright 40/20 mm markings, and the inverse
-40/15 mm markings. Those four labeled contacts require exactly two physical
-suspension positions: 40/20 mm upright and the same rail inverted in its cord
-with 40/15 mm upright. There is no separate rear working face or third
-mounting position in the current evidence.
+The complete current-revision Light Rail 2.0 was freshly re-researched as one
+atomic reversible product on 2026-08-31. Metolius identifies the product as a
+18 x 3 x 1.5 in, 0.54 kg portable FSC-certified wooden rail whose reversible
+design yields four holds. The sources establish the 40/20 mm upright and
+40/15 mm inverted working faces. The two committed catalog presentations are
+cord-free, centered, genuinely transparent 1254 x 1254 renderings of those
+same two working faces; neither claims a separate rear working face or third
+mounting position.
 
 Freshly opened evidence:
 
@@ -872,45 +865,37 @@ Freshly opened evidence:
 - Treeline's published straight-on product view and its genuine tested-at-the-
   crag owner/reviewer photograph:
   <https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/b4f8b087-e046-4231-bcbd-f070bb3c85ec/metolius-light-rail-20.jpg>
-  and
   <https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/452f6e96-37f1-454d-a405-e801658501a5/metolius-light-rail-1.jpg>.
 
-Treeline independently confirms wood construction, single-cord suspension,
-four contacts, and the same one-channel silhouette. Its table reports measured
+Treeline independently confirms wood construction, four contacts, and the same
+one-channel silhouette. Its table reports measured
 edge values that differ slightly from Metolius's current 15/20/40 mm copy;
 the package keeps the manufacturer's current specification and the depth
 markings visibly published on both official and independent photos. Older
 38/18/13 mm images with metal end brackets are a prior revision and were
 explicitly excluded from the current 2.0 render.
 
-The built-in image tool produced one source-constrained candidate for each
-distinct operating position. The 20 mm prompt required the exact current
-single-piece rounded FSC-wood rail, one routed channel, complete blue/pink cord
-loop and left knot, upright 40/20 mm and inverse 40/15 mm markings and Metolius
-marks, a straight-on orthographic working face, no metal brackets, and a warm
-off-white studio field. The 15 mm prompt used the official image and accepted
-20 mm candidate as references, kept the cord above the rail, and required the
-wooden body to be physically inverted so 40/15 mm reads upright while the
-40/20 mm markings read upside-down. Both prompts prohibited crop, perspective,
-extra grooves, extra holes, hardware, hands, walls, and watermarks. Both first
-candidates passed; no second iteration was used.
+The committed presentation treatment retains only the centered rounded
+FSC-wood rail, routed channel, and source-supported 40/20 or 40/15 markings.
+It is cord-free and uses a genuine transparent field, without a studio
+background, accessory, bracket, hand, wall, or watermark. The 15 mm image
+physically inverts the rail so 40/15 mm reads upright while 40/20 mm reads
+upside-down; both remain straight-on to their active working surfaces.
 
 | Presentation | Declared asset | Scoped holds | Old SHA-256 / dimensions | New SHA-256 / dimensions | Result |
 | --- | --- | --- | --- | --- | --- |
-| `20mm-side` — 40/20 mm upright (default) | `assets/primary.png` | `jug-40-20mm-side`, `edge-20` | `da320b5673289e1aa15e226d0fe55a13d2fde7625c10bd9f8c10442d04caa7f2` / 1536 x 1024 RGBA | `1fa7bccc1ba6406fad3a6700ae826ea170fe2e4deb592f40cf84b42deef79b8d` / 1254 x 1254 RGB | accepted canonical 20 mm suspension position |
-| `15mm-side` — 40/15 mm upright | `assets/15mm-surface.png` | `jug-40-15mm-side`, `edge-15` | `7b365965bb7d3c7b6f1fcd8c2503c5a77ddba8cc75084294c5a7766a90ef3705` / 1672 x 941 RGB | `c5e2a5edde3e5b0eebea601fac588e332d1bcfdee1adcb10f5bc58d66fe7aa78` / 1254 x 1254 RGB | accepted matched inverted-rail suspension position |
+| `20mm-side` — centered 40/20 mm upright (default) | `assets/primary.png` | `jug-40-20mm-side`, `edge-20` | `da320b5673289e1aa15e226d0fe55a13d2fde7625c10bd9f8c10442d04caa7f2` / 1536 x 1024 RGBA | `e865318b8aa7ea7acbda62aee4625ce1fb829fe7e479d4332d2419bec24010d1` / 1254 x 1254 RGBA | accepted cord-free transparent 20 mm presentation |
+| `15mm-side` — centered 40/15 mm upright | `assets/15mm-surface.png` | `jug-40-15mm-side`, `edge-15` | `7b365965bb7d3c7b6f1fcd8c2503c5a77ddba8cc75084294c5a7766a90ef3705` / 1672 x 941 RGB | `28faa6cdb4311f4aa7fa3c9a1efed0995f53ee7cefadb21618a42b2b5d5157b2` / 1254 x 1254 RGBA | accepted cord-free transparent 15 mm presentation |
 
 The accepted outputs were already the same square canvas, so they were copied
 without resize, crop, padding, stretch, perspective warp, mask, segmentation,
 registration, or local filtering. Each presentation is independently head-on
 to its active working surface: the rail and routed channel edges are horizontal
 and parallel, left/right ends have equal scale, and neither exposes side-depth
-foreshortening. Both include the complete suspension loop, knot/tail, and lower
-cord return. They share one pale natural-wood treatment, subtle grain, soft
-recess lighting, off-white field, edge softness, and smoothing level. A
-side-by-side catalog check against the head-on Frictitious Port-A-Board wood
-presentation confirmed compatible wood texture, recessed shading, cord detail,
-and studio treatment.
+foreshortening. Both are cord-free and centered within a genuine transparent
+field. They share one pale natural-wood treatment, subtle grain, soft recess
+lighting, edge softness, and smoothing level. A side-by-side catalog check
+confirmed compatible wood texture and recessed shading.
 
 Because the new canvases changed the board's placement, the four existing
 rounded-rectangle paths were deliberately repositioned without changing hold
