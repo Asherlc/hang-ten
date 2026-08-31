@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
+		D30000000000000000000001 /* HangboardIssueReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30000000000000000000002 /* HangboardIssueReport.swift */; };
+		D30000000000000000000003 /* HangboardIssueReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30000000000000000000004 /* HangboardIssueReportTests.swift */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
 		AA0000000000000000000003 /* TrainingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000003 /* TrainingModels.swift */; };
@@ -168,6 +170,8 @@
 		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
 		C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwlClimbPokerBoardMapInteractionUITests.swift; sourceTree = "<group>"; };
+		D30000000000000000000002 /* HangboardIssueReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangboardIssueReport.swift; sourceTree = "<group>"; };
+		D30000000000000000000004 /* HangboardIssueReportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangboardIssueReportTests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
 		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
 		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
@@ -325,6 +329,7 @@
 		DD0000000000000000000004 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D30000000000000000000002 /* HangboardIssueReport.swift */,
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
@@ -417,6 +422,7 @@
 		DD0000000000000000000007 /* HangTenTests */ = {
 			isa = PBXGroup;
 			children = (
+				D30000000000000000000004 /* HangboardIssueReportTests.swift */,
 				BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */,
 				BB0000000000000000000018 /* TestTargetSmokeTests.swift */,
 				BB0000000000000000000021 /* MotherboardModelsTests.swift */,
@@ -681,6 +687,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D30000000000000000000001 /* HangboardIssueReport.swift in Sources */,
 				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
@@ -747,6 +754,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D30000000000000000000003 /* HangboardIssueReportTests.swift in Sources */,
 				AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */,
 				AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */,
 				AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */,
@@ -936,6 +944,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
+				INFOPLIST_KEY_HANGBOARD_REPORT_FORM_URL = "$(HANGBOARD_REPORT_FORM_URL)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
@@ -979,6 +988,7 @@
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
+				INFOPLIST_KEY_HANGBOARD_REPORT_FORM_URL = "$(HANGBOARD_REPORT_FORM_URL)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";

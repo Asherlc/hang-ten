@@ -24,6 +24,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>GITHUB_OAUTH_CLIENT_ID</key>
 	<string>$(GITHUB_OAUTH_CLIENT_ID)</string>
+	<key>HANGBOARD_REPORT_FORM_URL</key>
+	<string>$(HANGBOARD_REPORT_FORM_URL)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>

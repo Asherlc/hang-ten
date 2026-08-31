@@ -1,4 +1,5 @@
 ANALYTICS_API_KEY =
 SENTRY_DSN = https://088ccff208bb716d4f9a6684fdaed553@o4511073249067008.ingest.us.sentry.io/4511905306640384
 GITHUB_OAUTH_CLIENT_ID =
+HANGBOARD_REPORT_FORM_URL = https:/$()/tally.so/r/XxbJG4
 #include? "Analytics.local.xcconfig"
