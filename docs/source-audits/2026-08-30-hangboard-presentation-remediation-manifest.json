@@ -6740,8 +6740,8 @@
             "sourceKind": "retailer",
             "reviewedAt": "2026-08-30",
             "revisionApplicability": "Linebreaker BASE",
-            "imageRole": "Independent source-published product, detail, or in-use views establish the straight-on production layout, dimensions, and exact grip depths. This presentation-specific review addresses front jug, sloper, bar, and pocket training face.",
-            "supportedClaim": "The exact source establishes the straight-on production layout, dimensions, and exact grip depths; material species is supported only by target10a."
+            "imageRole": "Independent source-published product, detail, or in-use views establish the straight-on production layout, individual grip depths, 58 cm length, 15 cm height, and 1.7 kg weight. This presentation-specific review addresses front jug, sloper, bar, and pocket training face; the retailer's erroneous 55 cm product-depth field is excluded.",
+            "supportedClaim": "The exact source establishes the straight-on production layout, individual grip depths, 58 cm length, 15 cm height, and 1.7 kg weight; 5.5 cm product depth and Yellow Poplar are supported only by target10a."
           }
         ],
         "officialEvidenceGap": null,

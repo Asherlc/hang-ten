@@ -140,8 +140,10 @@ Resolutions are added only when direct live sources establish the named revision
   2, and Plateau primary is the lane's only evidence-blocked asset.
 - Linebreaker BASE is an accepted `keep`: the opened exact target10a
   manufacturer article establishes Yellow Poplar and the complete BASE layout.
-  Basislager independently corroborates the layout, dimensions, and depths but
-  is not used for the species claim.
+  Basislager independently corroborates the layout, individual grip depths,
+  58 cm length, 15 cm height, and 1.7 kg weight. Its erroneous 55 cm
+  product-depth field is excluded; the correct 5.5 cm depth and Yellow Poplar
+  species are supported only by target10a.
 - All four Flash Board orientations are `edit`. The current official page calls
   the smallest contacts `Small Crimps` and separately names 8/10/15/20 mm; the
   audit no longer attributes 6 mm to Tension. The manufacturer demonstration
