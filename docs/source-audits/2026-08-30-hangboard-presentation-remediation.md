@@ -1,5 +1,53 @@
 # Hangboard Presentation Remediation Phase 1 Source Audit
 
+## 2026-08-31 Beastmaker 1000 deterministic presentation repair
+
+This narrowly scoped, user-approved deterministic exception repairs only
+`beastmaker-1000/primary`; it makes no claim about another Beastmaker model,
+revision, variation, or orientation. Live evidence was reopened on 2026-08-31:
+the [official Beastmaker 1000 Series product page](https://www.beastmaker.co.uk/products/beastmaker-1000-series)
+identifies the current wood board, its jugs, slopers, pocket families, and six
+installation screws; the independent [The Hangboard review](https://thehangboard.com/blogs/news/beastmaker-1000-review)
+corroborates the 580 × 150 × 58 mm wood layout, identical beech/tulipwood hold
+layout, and symmetric front face. Those sources and side-by-side review with
+`Hangboards/beastmaker-2000/assets/primary.png` confirm this package's one
+Primary presentation is already head-on to its own front working surface.
+
+The original asset was 1000 × 259 pixels with SHA-256
+`8d89a500122aac4d5bb4bb03c47202f881fd8cf66f9a321b620507dccad36289`.
+The accepted asset is the same 1000 × 259 canvas with SHA-256
+`3327fe6ab4527b16003861b17c23fca07de402fb46672555a67221aa03dfb7d7`.
+The exact deterministic command was
+`swift .context/sincere-otter-beastmaker-1000-deterministic/repair.swift Hangboards/beastmaker-1000/assets/primary.png <product-exact.png> <candidate.png>`.
+It uses the existing source alpha only for Core Image source-over compositing
+of the exact current product pixels onto the uniform catalog field `#F6F2EA`.
+No resize, crop of source pixels, padding, warp, perspective correction,
+registration, geometry inference, redraw, replacement product pixels, or
+source-photo substitution occurred. The accepted transform has **no image
+filter** (zero passes). A single allowed trial of `CINoiseReduction`
+(`inputNoiseLevel = 0.002`, `inputSharpness = 0.0`) was rejected because it
+changed source alpha. The accepted path compares the full decoded RGBA product
+buffer and alpha bytes before compositing; that passed, preserving the
+silhouette, all six mounting openings, hold/recess topology, wood grain
+direction, and head-on geometry.
+
+Workbench's owned loopback server and headless catalog capture completed with
+all 22 Beastmaker 1000 hold paths visibly aligned in the normal labeled capture.
+The environment exposed no controllable browser window, so manual all-active,
+individual interactive activation, and hit-testing could not be exercised and
+are explicitly not claimed. `board.json` remained byte-identical. Passed checks:
+`scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`,
+`scripts/hangboard-packages.sh status --root Hangboards`, and the direct
+19 keep-hash audit against each `currentAsset.sha256`, plus
+`uv run --with pytest --with Pillow python -m pytest -q Tools/HangboardPackages/tests/test_beastmaker_depth_metadata.py`
+(4 passed). The broader presentation/approved-package pytest selection was
+stopped without a result after prolonged silence and is not recorded as passed.
+The machine remediation manifest was deliberately not changed, so its full
+Phase 2 lifecycle audit correctly remains pending and rejects this newly
+accepted on-disk edit as an action without recorded completion. This repair
+follows rejection of the prior topology-drifting image-generation candidates;
+no image-generation tool was used here.
+
 ## Scope and result contract
 
 This audit covers the 61 current packages and 85 declared presentation PNGs. Phase 1 records live-web evidence and a remediation decision only; it changes no PNG and no board.json.
