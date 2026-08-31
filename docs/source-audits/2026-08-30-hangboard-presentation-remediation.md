@@ -1059,3 +1059,55 @@ with 61 packages and no drafts. The focused Workbench package suite passed 159
 tests; the approved-package subset passed 13 tests with the concurrently owned
 Port-A-Board assertion intentionally deselected. The schema-2 machine manifest
 is intentionally unchanged in this bounded pass.
+
+## Moon Armstrong Beech presentation acceptance (2026-08-31)
+
+The current Moon Armstrong Beech was freshly checked against Moon Climbing's
+[current product page](https://moonclimbing.com/moon-armstrong-fingerboard-beech.html),
+its [published main Beech product
+image](https://moonclimbing.com/media/catalog/product/cache/d6cc8bf5bd96a83606fc1c516f2f9600/6/0/60-112-bec_moon_armstrong_fingerboard_bec_01.jpg),
+and Moon's first-party [design
+history](https://moonclimbing.com/News/post/the-story-behind-the-armstrong-fingerboard).
+Independent corroboration came from the current retailer galleries and product
+descriptions at
+[Klimwinkel](https://www.klimwinkel.nl/moon-climbing-armstrong-fingerboard),
+[Rock+Run](https://rockrun.com/products/moon-armstrong-fingerboard), and
+[Goodbouldering](https://goodbouldering.com/?pid=169014527), including their
+published customer/owner reviews. These sources establish the same offset
+silhouette, central jug and 22/18 mm edges, paired jugs and 35-degree slopers,
+25/20/15/10/8 mm slots, 22 mm two-finger and mono pockets, pulley points,
+authentic Moon medallion, engraved depth labels, and `train hard climb harder`
+slogan. The exact package revision is Beech SKU `60-112-BEC`; Moon specifies it
+as 100% sustainably sourced Beech. Ash and Sycamore are sibling material SKUs,
+not additional working positions of this Beech package.
+
+There is exactly one usable physical orientation and one declared presentation:
+`primary`, the upright front working face containing all 21 scoped holds. Moon's
+2022 [Armstrong Advice & Tips / installation
+guide](https://www.klimwinkel.nl/assets/pdfs/shop1/Moon_Armstrong_Guidelines.pdf)
+requires the board to be mounted level, identifies the bottom edge as the pulley
+rope attachment edge, and explicitly says never to hang upside down. Mounting
+above a door, on a beam, or on a free-standing frame changes location rather
+than working surface. The rear is the mounting face, and neither it nor an
+inverted board is a supported presentation.
+
+The existing 1697 x 1200 RGBA PNG is the same clean, published head-on Beech
+product view used by Moon. Its usable front face is orthographic: horizontal
+features remain parallel, both ends have equal scale, and the recesses show no
+side-depth foreshortening. The complete body is visible, uncropped, and nearly
+fills the canvas width. Its tall bright field is the manufacturer's own product
+framing; cropping it or removing the authentic logo, depth labels, or slogan
+would reduce published-source fidelity. A side-by-side check with the
+Metolius Wood Grips Deluxe II wood-board comparator confirmed compatible pale
+hardwood, soft studio lighting, restrained natural grain, recessed shadowing,
+rounded-edge softness, and smoothing. No denoise or stylization is warranted.
+
+This is therefore an accepted no-op. `assets/primary.png` remains
+`f81b2d306afe070177eeda2464a9b4019e505916641ebdb9399141e19e129fa3`
+(1697 x 1200 RGBA), and `board.json` remains
+`50c1a5752dc5a0d2bb59cc3c77c4e5d3de25ae688c48531827d10852d138c20b`.
+No image pixels, paths, hold assignments, dimensions, aspect ratios, or package
+metadata changed. Direct visual inspection confirmed the normal image and all
+21 visible contacts; final-inventory package validation and package status
+passed with 61 packages and no drafts. The schema-2 machine manifest is
+intentionally unchanged in this bounded acceptance pass.
