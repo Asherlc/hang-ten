@@ -4,7 +4,7 @@
 
 **Goal:** Repair 65 Phase 1 presentation assets, remove only the unsupported Mini Bar end presentation while retaining all four physical grips, preserve 19 keep assets byte-for-byte, and prove the resulting 61-package/84-presentation catalog.
 
-**Architecture:** A schema-version-2 manifest separates historical Phase 1 evidence from Phase 2 action state, 20-class canvas preflight, transient input/output byte verification, acyclic style-comparator promotion, product-scoped repair, direct Workbench geometry review, and per-presentation simulator evidence. Seven preflight tasks prove built-in edit and generation behavior for every required canvas before any package mutation; 42 product-scoped repair tasks then run sequentially inside four material/form-factor batches, followed by the sourced Mini Bar inventory/geometry change and complete catalog/iOS gates. Every implementation or configuration task uses a fresh subagent and is reviewed before the next task.
+**Architecture:** A schema-version-2 manifest separates historical Phase 1 evidence from Phase 2 action state, 20-class canvas preflight, transient input/output byte verification, acyclic singular-baseline or cohort-bootstrap style comparison, product-scoped repair, direct Workbench geometry review, and per-presentation simulator evidence. Seven preflight tasks prove built-in edit and generation behavior for every required canvas before any package mutation; 45 product-scoped repair tasks then run sequentially inside four material/form-factor batches, followed by the sourced Mini Bar inventory/geometry change and complete catalog/iOS gates. Every implementation or configuration task uses a fresh subagent and is reviewed before the next task.
 
 **Tech Stack:** Python 3.11.4+ standard library, pytest 9, existing `hangboard_packages` discovery/CLI, JSON, SHA-256 and PNG IHDR byte inspection, built-in `view_image` and `image_gen`, Hangboard Workbench, Swift/Xcode, `xcrun simctl`, and Markdown.
 
@@ -12,15 +12,17 @@
 
 ## Global Constraints
 
-- Execute Tasks 1–62 in order with `superpowers:subagent-driven-development`; `AGENTS.md` requires a fresh implementation subagent and separate controller spec/quality reviews per task. Do not parallelize tasks that share the manifest.
+- Execute Tasks 1–65 in order with `superpowers:subagent-driven-development`; `AGENTS.md` requires a fresh implementation subagent and separate controller spec/quality reviews per task. Do not parallelize tasks that share the manifest.
 - Use `rtk` for shell commands. Commit and push every completed task, rejected-input/output provenance checkpoint, batch gate, and final gate.
-- Preserve all 19 Phase 1 `keep` PNGs byte-for-byte. Their `board.json` files also remain byte-for-byte except `Hangboards/lattice-mini-bar/board.json`, which Task 56 must deliberately change to retain and reassign `mini-pinch` while removing only the unsupported end presentation.
-- Implement exactly 17 edits and 48 regenerations. Task 56 performs the sole `removeUnsupportedPresentation`. The exclusive repair matrix assigns all 66 non-keep records exactly once; no later review creates another owner.
+- Preserve all 19 Phase 1 `keep` PNGs byte-for-byte. Their `board.json` files also remain byte-for-byte except `Hangboards/lattice-mini-bar/board.json`, which Task 59 must deliberately change to retain and reassign `mini-pinch` while removing only the unsupported end presentation.
+- Implement exactly 17 edits and 48 regenerations. Task 59 performs the sole `removeUnsupportedPresentation`. The exclusive repair matrix assigns all 66 non-keep records exactly once; no later review creates another owner.
 - Preserve literal/set validation of `packageIDs`: require unique identifiers and set equality to inventory without imposing or rewriting sorted order. Reports remain deterministically sorted.
 - Preserve the Phase 1 `comparator` object unchanged as historical classification. Phase 2 uses the separate `phase2Comparator` lifecycle defined below; all reasons remain canonical style-only and never supply geometry.
 - Before each canvas probe and product repair, freshly reopen every literal URL below the routed record's `/evidence/official` and `/evidence/independent` arrays, repeat every non-null evidence-gap search, inspect straight-on and oblique evidence, and record the actual date/result. Local docs, current assets, package geometry, comparators, prompts, and generated output are never product proof.
 - Use only built-in `image_gen`, one call per candidate or canvas attempt. Never use the imagegen CLI/API fallback, `scripts/image_gen.py`, `OPENAI_API_KEY`, a destination-path or size argument, or batch generation.
-- For built-in edits, inspect the local current target and every reference with `view_image`, then pass their exact paths via `referenced_image_paths`. For built-in generations, do not supply the current asset; supply only minimum copied official/independent inputs and a non-null ready style comparator.
+- For built-in edits, inspect the local current target and every reference with `view_image`, then pass their exact paths via `referenced_image_paths`. For built-in generations, do not supply the current asset; supply only minimum copied official/independent inputs plus either one non-null ready singular style comparator or every non-null axis asset in a validator-approved bootstrap comparator set.
+- Ruling: the first repair in a material/form-factor cohort with no accepted singular catalog baseline uses a pre-generation bootstrap comparator set made only from accepted catalog assets for each available style axis (same form factor for composition/framing/scale, same material family for texture/lighting when one exists), plus exact live official/independent material evidence and the shared render contract; none supplies geometry. After that first output passes evidence, Workbench, package, and visual review, it becomes the ready singular cohort baseline for acyclic downstream repairs. This is necessary because Phase 1 proves no accepted non-wood baseline exists; it costs stricter review of the first cohort asset and a potential rerender if the eventual cohort comparison exposes drift.
+- Temporary gaps alone cannot authorize generation. A historical Phase 1 `baselineGap` remains evidence history only: it is never opened, never supplied, and never satisfies the Phase 2 comparator requirement.
 - Required dimensions and aspect ratio appear in the prompt because the built-in tool has no size field. Accept only untouched PNG output whose IHDR already matches exactly. Never crop, resize, rotate, pad, register, align, mask, composite, recolor, sharpen, smooth, trace, vectorize, simplify, detect, segment, or otherwise post-process a package candidate.
 - A byte-preserving move or copy is allowed only to move untouched generated bytes, create an exact rollback copy, or restore exact original bytes after rejection. Accepted generated bytes end only at their declared package path. Source photographs never enter `Hangboards`.
 - Preserve the common off-white studio background, centered orthographic working-surface view, neutral lighting, restrained contact shadows, clean antialiasing, cohort-consistent framing, and source-proved material cues. Omit unsupported facts instead of filling gaps.
@@ -37,7 +39,7 @@
 - `Tools/HangboardPackages/src/hangboard_packages/cli.py`, `Tools/HangboardPackages/tests/test_cli.py`, `Tools/HangboardPackages/README.md`: Phase 2 CLI flags and durable/transient semantics.
 - `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json`: sole machine ledger; original record order, decisions, `currentAsset`, evidence, findings, and Phase 1 comparator values remain historical.
 - `docs/source-audits/2026-08-30-hangboard-presentation-remediation.md`: batch/source/candidate/geometry/validation narrative.
-- `Hangboards/*`: only the exclusive task owner changes its declared PNG; `board.json` follows the exact Workbench branch above. Task 56 alone removes a presentation asset and reassigns a physical hold.
+- `Hangboards/*`: only the exclusive task owner changes its declared PNG; `board.json` follows the exact Workbench branch above. Task 59 alone removes a presentation asset and reassigns a physical hold.
 
 ## Complete Phase 2 schema and interfaces
 
@@ -88,6 +90,7 @@ Every record adds these closed fields:
   },
   "phase2Comparator": {
     "generationTime": null,
+    "bootstrapComparatorSet": null,
     "final": null
   }
 }
@@ -95,9 +98,13 @@ Every record adds these closed fields:
 
 `phase2Action.state` is `notRequired`, `pending`, `inProgress`, `completed`, or `blocked`. Only blocked has a non-null reason. Keeps require `notRequired`; non-keeps never use it. For `phase2EvidenceReview`, not-required keeps have null time, empty URL/search arrays, and the exact note `Phase 1 keep; Phase 2 product repair does not apply.`; pending actions have null time, empty arrays, and `Phase 2 evidence review pending.`; confirmed/blocked reviews have an aware timestamp and nonempty factual notes. Completed Phase 2 actions require `confirmed`; an evidence failure requires both result/action `blocked` and the same nonempty reason in notes. Confirmed `officialURLsReopened` and `independentURLsReopened` preserve literal URL order and exactly equal their corresponding historical evidence URL arrays. `evidenceGapSearchesRepeated` has one result string per non-null Phase 1 gap leaf and is empty when both gap leaves are null. Gap searches are added Phase 2 audit text without changing any Phase 1 gap field.
 
-Keeps and the removal record require both `phase2Comparator` leaves null. For edit/regenerate records, `phase2Comparator.generationTime` is null until work starts, then closed over `mode`, `assetPath`, `sourceRecordKey`, `acceptedAssetSHA256`, `reason`, `gap`, and `selectedAt`. Mode is `readyBaseline` or `temporaryGap`. Ready mode requires non-null asset/key/hash/canonical reason and null gap. Gap mode requires those four ready fields null and a nonempty gap copied from or refining the historical gap. A null/gap comparator is never opened or supplied to imagegen.
+Keeps and the removal record require all three `phase2Comparator` leaves null. Every edit/regenerate record takes exactly one mutually exclusive pre-generation path: a non-null `generationTime` ready singular comparator with null `bootstrapComparatorSet`, or a non-null selected `bootstrapComparatorSet` with null `generationTime`. Null/null is forbidden once image generation begins. A historical Phase 1 comparator gap is never a third path.
 
-For edit/regenerate records, `phase2Comparator.final` is null until completion, then uses the same fields with mode `readyBaseline` or `uniqueSelfBaseline`; final never permits a gap. A ready Phase 1 keep has batch order 0. A repaired baseline must be completed in a strictly earlier batch/task, match at least one material and the exact form factor, have a passed visual review, and make the graph acyclic. `uniqueSelfBaseline` requires asset/key/hash to name the same accepted record, a canonical style-only reason, and validator proof that no compatible ready Phase 1 keep or earlier repair exists. Later repairs update their Phase 2 comparator to this accepted baseline where compatible. Comparator hashes must equal accepted on-disk bytes.
+`phase2Comparator.generationTime` is closed over `mode`, `assetPath`, `sourceRecordKey`, `acceptedAssetSHA256`, `reason`, and `selectedAt`; generation-time mode is only `readyBaseline`. Its asset is either one of the 17 source-supported Phase 1 keeps at order 0 or a completed strictly earlier repair. It must match the exact form factor and at least one material token, have an accepted visual decision, and preserve an acyclic dependency graph. Its reason is exactly `Accepted singular style baseline: framing, scale, background, lighting, texture frequency, smoothing, and edge treatment only; no product geometry.`
+
+`phase2Comparator.bootstrapComparatorSet` is permitted only for the exact nine seed rows in the ordering table below. Before generation it has `status: selected`, passed evidence review, and pending visual/Workbench/package review. Candidate acceptance writes visual passed; completed four-mode Workbench inspection writes Workbench passed; an actual package-validation exit 0 writes package passed. Only then does it transition to `acceptedCohortBaseline`. It never becomes accepted merely because bytes were generated. A blocked source, candidate, Workbench, package, or visual result transitions it to `blocked` with the same reason as `phase2Action`, and no downstream cohort row may start.
+
+For edit/regenerate records, `phase2Comparator.final` is null until completion. A normal downstream completion uses `readyBaseline` and preserves the selected singular asset/key/hash. A seed completion uses `cohortBootstrapBaseline`, names its own accepted asset/key/hash, and uses exactly `Accepted cohort bootstrap baseline after direct evidence, Workbench, package, and visual review; style-only for downstream use, no geometry.` No other self-reference is legal. Comparator hashes must equal the applicable accepted on-disk bytes.
 
 The schema uses these exact scalar aliases; every object below is closed and rejects extra keys:
 
@@ -113,7 +120,9 @@ InputType = Literal["officialEvidence", "independentEvidence", "currentAsset", "
 ByteStatus = Literal["pending", "passed", "failed"]
 GenerationMode = Literal["none", "builtInEdit", "builtInGenerate"]
 CandidateDisposition = Literal["accepted", "rejected"]
-ComparatorMode = Literal["readyBaseline", "temporaryGap", "uniqueSelfBaseline"]
+ComparatorMode = Literal["readyBaseline", "cohortBootstrapBaseline"]
+BootstrapStatus = Literal["selected", "acceptedCohortBaseline", "blocked"]
+BootstrapAxisName = Literal["compositionFramingScale", "materialTextureLighting"]
 SimulatorState = Literal[
     "pending", "passedDirectInspection", "notApplicableRemovedPresentation", "blocked"
 ]
@@ -191,15 +200,63 @@ class Phase2EvidenceReview(TypedDict):
 
 class ComparatorSelection(TypedDict):
     mode: ComparatorMode
-    assetPath: str | None
-    sourceRecordKey: RecordKey | None
-    acceptedAssetSHA256: SHA256 | None
-    reason: NonEmpty | None
-    gap: NonEmpty | None
+    assetPath: str
+    sourceRecordKey: RecordKey
+    acceptedAssetSHA256: SHA256
+    reason: NonEmpty
     selectedAt: ISOInstant
+
+class BootstrapComparatorAxis(TypedDict):
+    axis: BootstrapAxisName
+    assetPath: str
+    sourceRecordKey: RecordKey
+    acceptedAssetSHA256: SHA256
+    matchedMaterialTokens: list[NonEmpty]
+    reason: NonEmpty
+
+class BootstrapReviewChecks(TypedDict):
+    evidenceReview: ReviewCheck
+    visualReview: ReviewCheck
+    workbenchReview: ReviewCheck
+    packageValidation: ReviewCheck
+
+class BootstrapComparatorSet(TypedDict):
+    cohortID: Literal[
+        "moldedPlastic/fullWidthFixedBoard",
+        "resin/fullWidthFixedBoard",
+        "urethane/fullWidthFixedBoard",
+        "urethane/splitFixedBoard",
+        "wood/splitFixedBoard",
+        "wood/reversiblePortable",
+        "wood/liftingEdge",
+        "resin/suspendedPortable",
+        "urethane/multiOrientationDevice",
+    ]
+    seedRecordKey: RecordKey
+    status: BootstrapStatus
+    compositionFramingScale: BootstrapComparatorAxis | None
+    materialTextureLighting: BootstrapComparatorAxis | None
+    absentAxes: list[BootstrapAxisName]
+    officialEvidenceInputIDs: list[NonEmpty]
+    independentEvidenceInputIDs: list[NonEmpty]
+    sharedRenderContract: Literal[
+        "Common off-white studio background; centered orthographic working-surface view; "
+        "complete uncropped product; neutral lighting; restrained contact shadows; "
+        "clean antialiasing; cohort-consistent framing; source-proved material cues only."
+    ]
+    selectionRule: Literal[
+        "Accepted assets only: earliest exact-form-factor asset for composition/framing/scale; "
+        "earliest asset sharing the seed material-family token for texture/lighting; "
+        "missing axes are explicit; no axis supplies product geometry."
+    ]
+    selectedAt: ISOInstant
+    acceptedAt: ISOInstant | None
+    reviewChecks: BootstrapReviewChecks
+    blockedReason: NonEmpty | None
 
 class Phase2Comparator(TypedDict):
     generationTime: ComparatorSelection | None
+    bootstrapComparatorSet: BootstrapComparatorSet | None
     final: ComparatorSelection | None
 
 class CanvasAttempt(TypedDict):
@@ -217,6 +274,7 @@ class CanvasBehaviorProbe(TypedDict):
     representativeRecordKey: RecordKey
     prompt: NonEmpty
     sourceInputs: list[GenerationSourceInput]
+    bootstrapComparatorSet: BootstrapComparatorSet | None
     attempts: list[CanvasAttempt]
     status: Literal["pending", "passed", "blocked"]
     blockedReason: NonEmpty | None
@@ -263,17 +321,38 @@ class Phase2Root(TypedDict):
     finalChecks: Phase2FinalChecks
 ```
 
-The five batches occur once in the literal enum order. Their `recordKeys` are exactly the exclusive matrix rows owned by Tasks 10–25, 27–36, 38–46, 48–54, and Task 56 respectively; the removal batch has only `lattice.mini-bar/end`. A repair row's `repairBatchID` equals its batch ID, the removal row equals `mini-bar-removal`, and every keep uses null. No record may appear in two batch lists.
+The five batches occur once in the literal enum order. Their `recordKeys` are exactly the exclusive matrix rows owned by Tasks 10–26, 28–38, 40–49, 51–57, and Task 59 respectively; the removal batch has only `lattice.mini-bar/end`. A repair row's `repairBatchID` equals its batch ID, the removal row equals `mini-bar-removal`, and every keep uses null. No record may appear in two batch lists.
 
-Evidence inputs require their exact `/records/N/evidence/official/I` or `/records/N/evidence/independent/I` pointer, the byte-for-byte URL at that leaf, null `assetPath`, and a `role` equal to that leaf's `imageRole`. Current/comparator inputs require null pointer/URL and their declared package path. A `current-target` hash equals historical `currentAsset.sha256`; a `style-comparator` hash equals the generation-time comparator hash. Both must match bytes when transient verification runs, but durable validation uses that committed verification because the target or upstream baseline may later change. Input IDs are unique within a record and equal `official-I-image-J`, `independent-I-image-J`, `current-target`, or `style-comparator`, with zero-based evidence/image ordinals in source-page order. A supplied evidence input must have been copied from the corresponding freshly reopened URL. Edit requires one supplied `current-target`; regenerate prohibits it. Generation requires one supplied ready comparator except while the record has a generation-time temporary gap, in which case no comparator input exists. The exact current roles are `Built-in edit target and topology/likeness invariant.` and `Human comparison only; not evidence and not supplied to imagegen.`
+Bootstrap selection uses an exact `baselineOrder`: source-supported Phase 1 keeps sort as `(0, recordIndex)`; accepted repaired assets sort as `(owningTaskNumber, recordIndex)`. An accepted asset is eligible only after its visual decision, four Workbench checks, and package validation pass. The composition axis selects the first eligible exact-form-factor asset without requiring a material match. The material axis selects the first eligible asset sharing the cohort's literal material-family token without requiring a form-factor match. Neither axis can be the seed record before it is accepted; neither reason may mention topology, holds, contacts, dimensions, component count, or silhouette. The exact axis reasons are:
+
+- Composition: `Style axis only: composition, framing, scale, background, and lighting balance from an accepted exact-form-factor catalog asset; no product geometry or material transfer.`
+- Material: `Style axis only: texture frequency, finish restraint, and lighting response for the matched material-family token; no product geometry or component transfer.`
+
+The seed order and selected pre-generation axes are fixed:
+
+| Owning task / cohort | Seed record | Composition/framing/scale axis | Material texture/lighting axis | Exact absent axes before generation |
+| --- | --- | --- | --- | --- |
+| Task 10 `moldedPlastic/fullWidthFixedBoard` | `escape-beta-22/primary` | `beastmaker-2000/primary` | null | `materialTextureLighting` |
+| Task 11 `resin/fullWidthFixedBoard` | `evolv-kilter-basic-long/primary` | `beastmaker-2000/primary` | null | `materialTextureLighting` |
+| Task 16 `urethane/fullWidthFixedBoard` | `soill.iron-palm-2/primary` | `beastmaker-2000/primary` | null | `materialTextureLighting` |
+| Task 17 `urethane/splitFixedBoard` | `soill.split-palm/primary` | null | `soill.iron-palm-2/primary` | `compositionFramingScale` |
+| Task 34 `wood/splitFixedBoard` | `trango.rock-prodigy-natural/primary` | `soill.split-palm/primary` | `beastmaker-2000/primary` | none |
+| Task 40 `wood/reversiblePortable` | `captain-fingerfood.dual/primary` | null | `beastmaker-2000/primary` | `compositionFramingScale` |
+| Task 46 `wood/liftingEdge` | `lattice.mxedge-lift-large/primary` | null | `beastmaker-2000/primary` | `compositionFramingScale` |
+| Task 48 `resin/suspendedPortable` | `metolius.rock-rings-3d/front-pair` | null | `evolv-kilter-basic-long/primary` | `compositionFramingScale` |
+| Task 54 `urethane/multiOrientationDevice` | `trango.rock-prodigy-pivot/orientation-1` | `lattice.mini-bar/primary` | `soill.iron-palm-2/primary` | none |
+
+Task 10 is the first non-wood seed. Its accepted Beastmaker wood asset governs only composition/framing/scale. Its material axis is explicitly absent; exact live Escape evidence and the shared render contract govern molded-plastic material. The validator rejects any Task 10 reason or prompt that implies wood governs plastic texture, finish, construction, or geometry. The same absent-axis rule applies to Tasks 11 and 16 for resin and urethane. After each seed reaches `acceptedCohortBaseline`, every later compatible row must use that seed as its singular ready baseline; a second bootstrap in the same cohort is invalid.
+
+Evidence inputs require their exact `/records/N/evidence/official/I` or `/records/N/evidence/independent/I` pointer, the byte-for-byte URL at that leaf, null `assetPath`, and a `role` equal to that leaf's `imageRole`. Current/comparator inputs require null pointer/URL and their declared package path. A `current-target` hash equals historical `currentAsset.sha256`; `style-comparator`, `bootstrap-composition`, and `bootstrap-material` hashes equal their selected comparator records. All must match bytes when transient verification runs, but durable validation uses that committed verification because the target or an upstream baseline may later change. Input IDs are unique within a record and equal `official-I-image-J`, `independent-I-image-J`, `current-target`, `style-comparator`, `bootstrap-composition`, or `bootstrap-material`, with zero-based evidence/image ordinals in source-page order. A supplied evidence input must have been copied from the corresponding freshly reopened URL. Edit requires one supplied `current-target`; regenerate prohibits it. A singular-baseline generation requires exactly one supplied `style-comparator`. A bootstrap generation requires one supplied input for each non-null bootstrap axis, no `style-comparator`, and at least one official/independent evidence input; a null axis supplies no path and appears in `absentAxes`. The exact current roles are `Built-in edit target and topology/likeness invariant.` and `Human comparison only; not evidence and not supplied to imagegen.`
 
 Pending byte verification has all three remaining values null. Passed/failed verification has a date, the literal command executed, and the observed hash; passed additionally requires observed/declared equality. Before deletion, every copied input and candidate requires passed verification. Durable validation checks the record, URL/role/hash linkage, and passed command/result; it never requires deleted transient bytes to exist.
 
-`mode: none` requires null prompt/canvas/current role and empty inputs/candidates. The two image modes require positive canvas dimensions equal to original `currentAsset`, a non-null canonical prompt, the applicable exact current role, and the source rules above. Candidate attempts are unique, strictly increasing, and bounded 1–3. Every candidate requires built-in/untouched/none provenance and passed transient verification before deletion or promotion. Completed edits/regenerations have exactly one accepted candidate; its hash/dimensions equal final/on-disk bytes. Rejected bytes may be absent only after their passed verification/provenance was committed and pushed.
+`mode: none` requires null prompt/canvas/current role and empty inputs/candidates. The two image modes require positive canvas dimensions equal to original `currentAsset`, a non-null canonical prompt, the applicable exact current role, and exactly one lawful comparator path above. Candidate attempts are unique, strictly increasing, and bounded 1–3. Every candidate requires built-in/untouched/none provenance and passed transient verification before deletion or promotion. Completed edits/regenerations have exactly one accepted candidate; its hash/dimensions equal final/on-disk bytes. Rejected bytes may be absent only after their passed verification/provenance was committed and pushed.
 
-Canvas preflight classes are closed over `widthPixels`, `heightPixels`, `coveredRecordKeys`, `status`, `blockedReason`, and `behaviorProbes`. Each behavior probe is closed over `behavior` (`edit` or `generate`), `representativeRecordKey`, exact `prompt`, `sourceInputs`, `attempts`, `status`, and `blockedReason`. Attempts use candidate hash/dimensions/provenance/byteVerification, with disposition `canvasPass` or `canvasFail`; no preflight output is accepted or promoted. A behavior passes after one exact-dimension untouched output within three prompt-only attempts. A class passes when all behaviors used by its 65 covered targets pass. Root preflight passes only when 20 unique classes cover the exact 65 edit/regenerate keys once and all 22 behavior probes pass.
+Canvas preflight classes are closed over `widthPixels`, `heightPixels`, `coveredRecordKeys`, `status`, `blockedReason`, and `behaviorProbes`. Each behavior probe is closed over `behavior` (`edit` or `generate`), `representativeRecordKey`, exact `prompt`, `sourceInputs`, `bootstrapComparatorSet`, `attempts`, `status`, and `blockedReason`. A preflight probe uses a ready singular baseline when one exists; otherwise it uses a `selected` bootstrap set under the same accepted-axis rules, but preflight output is never promoted and never transitions that set to `acceptedCohortBaseline`. Attempts use candidate hash/dimensions/provenance/byteVerification, with disposition `canvasPass` or `canvasFail`; no preflight output is accepted or promoted. A behavior passes after one exact-dimension untouched output within three prompt-only attempts. A class passes when all behaviors used by its 65 covered targets pass. Root preflight passes only when 20 unique classes cover the exact 65 edit/regenerate keys once and all 22 behavior probes pass.
 
-`final` is closed over `acceptedAssetSHA256`, `finalDimensions`, `visualReviewerDecision`, `workbenchReview`, and `validation`. `acceptedAssetSHA256` and `finalDimensions` are null for keep/pending/removal and are the accepted on-disk values for a completed image repair. `finalDimensions` is the exact `RequiredCanvas` shape. `visualReviewerDecision` is exactly `acceptedCurrentAsset`, `blockedEvidence`, `pendingPhase2`, `acceptedPhase2`, `blockedPhase2`, or `removedUnsupportedPresentation`. The first two preserve the 19 historical keep values; completed image repairs use `acceptedPhase2`; an action block uses `blockedPhase2`; and Task 56 uses `removedUnsupportedPresentation`. `workbenchReview` contains exactly `normal`, `allActive`, `individualHolds`, and `hitTest`, each an exact check object. Completed image repairs require all four passed. Removal uses four passed checks after reauthoring `mini-pinch`; it is not visually `notRequired`.
+`final` is closed over `acceptedAssetSHA256`, `finalDimensions`, `visualReviewerDecision`, `workbenchReview`, and `validation`. The 17 source-supported keeps preserve their existing non-null accepted hash, dimensions, and `acceptedCurrentAsset` decision; each hash equals both `currentAsset.sha256` and the unchanged on-disk PNG. Only the two historical evidence-blocked keeps preserve null hash/dimensions and `blockedEvidence`. Pending repairs and removal use null hash/dimensions; completed image repairs use accepted on-disk values and `acceptedPhase2`; a Phase 2 action block uses `blockedPhase2`; Task 59 uses `removedUnsupportedPresentation`. `finalDimensions` is the exact `RequiredCanvas` shape. `workbenchReview` contains exactly `normal`, `allActive`, `individualHolds`, and `hitTest`, each an exact check object. Completed image repairs require all four passed. Removal uses four passed checks after reauthoring `mini-pinch`; it is not visually `notRequired`. Keep records preserve their three existing Phase 1 pending Workbench checks, add `hitTest: notRequired` with factual Phase 2 evidence, and are exempt from repaired-record terminal checks.
 
 `final.validation` is closed over `packageValidation`, `focusedTests`, `fullPackageSuite`, `buildForTesting`, and `simulatorReview`. The first four are exact check objects. `simulatorReview` uses these exact nested types:
 
@@ -300,7 +379,9 @@ class SimulatorReview(TypedDict):
     deviceRuns: list[SimulatorDeviceRun]
 ```
 
-Only pending simulator review has null date and empty evidence/runs. Direct inspection has a date, nonempty environment IDs, exactly one phone and one tablet run, unique UUIDs, and nonempty capture hashes. Only selector may use `notApplicableSinglePresentation`; only plan may use `notApplicableNoCompatiblePlan`; all other applicable flows pass. Blocked has a date and evidence that agrees with the Phase 2 action's block reason. Removal uses `notApplicableRemovedPresentation`, a date and sourced removal evidence, and no device runs. Shared environment evidence does not replace per-record runs.
+Per-record propagation is command-ordered and fail-closed. A product task writes its record's `packageValidation` passed only after the literal package validator exits 0, then writes `focusedTests` passed only after the literal focused pytest command exits 0. A batch gate writes `fullPackageSuite` passed to every changed record in that batch only after the complete HangboardPackages suite exits 0; its batch-level package/focused checks aggregate already-passed per-record evidence and its full-suite check cites that actual gate command. Tasks 61–64 write `buildForTesting` passed to every changed record covered by their build only after the bounded build exits 0. They write `simulatorReview` record-by-record only after that exact presentation's direct phone/tablet exercise completes. Task 64 also writes the removal record's `buildForTesting` from the final catalog build while retaining its sourced simulator N/A. No task may prewrite `passed`, reuse a later command result, or promote a batch/root status before the underlying record evidence exists.
+
+Only pending simulator review has null date and empty evidence/runs. Direct inspection has a date, nonempty environment IDs, exactly one phone and one tablet run, unique UUIDs, and nonempty capture hashes. Only selector may use `notApplicableSinglePresentation`; only plan may use `notApplicableNoCompatiblePlan`; all other applicable flows pass. Blocked has a date and evidence that agrees with the Phase 2 action's block reason. Removal uses `notApplicableRemovedPresentation`, a date and sourced removal evidence, and no device runs. Shared environment evidence does not replace per-record runs. Keeps retain pending simulator review because Phase 2 does not exercise them per-record; the root cross-catalog check records their direct cohort inspection without rewriting a keep record's pending Phase 1 validation fields.
 
 The public interfaces are exact:
 
@@ -349,7 +430,7 @@ def validate_presentation_remediation_manifest(
 
 CLI keeps `--final-validation` for Phase 1 and adds mutually exclusive `--phase2-preflight`, `--phase2-partial`, and `--phase2-final`; `--batch-id` is partial-only; repeated `--source-file SHA256 PATH` and `--candidate-file SHA256 PATH` are preflight/partial-only. The report adds `phase`, `batchID`, `canvasClassCount`, `canvasCoveredRepairCount`, `historicalEvidenceBlockedKeeps`, `blockedPhase2ActionCount`, `originalPresentationCount`, `inventoryPresentationCount`, `keptPresentationCount`, `completedEditCount`, `completedRegenerationCount`, `completedRemovalCount`, and `pendingPhase2ActionCount`.
 
-Partial mode validates every record and current byte state: keep/pending/in-progress actions remain at original bytes; completed repairs match accepted bytes; completed removal matches historical-record/absent-presentation truth. It accepts historical evidence gaps without reclassifying them as Phase 2 blocks. Final mode requires passed preflight, all batches/final checks passed, 61 packages, 85 historical records, 84 current presentations, 19 unchanged keeps including two historical evidence-blocked keeps, 17 completed edits, 48 completed regenerations, one completed removal, zero pending Phase 2 actions, and zero blocked Phase 2 actions.
+Partial mode validates every record and current byte state: the 17 accepted keeps retain accepted hash/dimensions/decision equal to unchanged bytes; the two evidence-blocked keeps retain null hash/dimensions; pending/in-progress repair actions remain at original bytes; completed repairs match accepted bytes; completed removal matches historical-record/absent-presentation truth. It accepts historical evidence gaps without reclassifying them as Phase 2 blocks. Final mode requires passed preflight, all batches/final checks passed, 61 packages, 85 historical records, 84 current presentations, 19 unchanged keeps including two historical evidence-blocked keeps, 17 completed edits, 48 completed regenerations, one completed removal, zero pending Phase 2 actions, and zero blocked Phase 2 actions. It requires terminal per-record validation only for the 65 repaired records and the removal record; keep records retain the truthful pending/not-required Phase 1/Phase 2 states defined above.
 
 ## Canonical prompt transformation
 
@@ -367,7 +448,8 @@ Composition/framing: orthographic head-on to workingSurface; centered; complete 
 Lighting/mood: neutral direction; restrained contact shadow; controlled depth relief
 Materials/textures: materials joined with " + "; preserve only evidence-supported finish and construction cues
 Repair findings: finding-key and explanation for every nonconforming or uncertain finding, in the fixed seven-key order
-Comparator: literal generation-time ready asset/hash/canonical reason, or literal temporary gap followed by "No comparator image is supplied."
+Comparator: either literal singular ready asset/hash/canonical reason, or bootstrap cohort/status plus each composition/material axis asset/hash/reason and each explicit absent axis
+Bootstrap material ruling: for a missing material axis, exact live material evidence and the shared render contract govern material; a composition asset never governs material or geometry
 Current asset role: exact currentAssetRole
 Constraints: preserve every source-proved contact, component, silhouette, and usable-surface orientation; add no unsupported detail; output must already have exact dimensions
 Avoid: branding, labels, logos, text, watermark, transparent background, camera tilt, source-photo styling, invented contacts, invented hardware, and every forbidden post-processing operation
@@ -377,53 +459,156 @@ Edits use `precise-object-edit`; regenerations use `product-mockup`. The validat
 
 ## Exact ownership, transient verification, and cleanup recipe
 
-Every preflight and product task runs this recipe with its task's literal context directory. Variables use task-specific names and never reuse `HOME`, `home`, or `CODEX_HOME`.
+Every preflight and product task uses a persistent cleanup PTY for the entire task. It does not rely on a trap in a short-lived setup command. Variables use task-specific names and never declare or repurpose `HOME`, `home`, or `CODEX_HOME`.
+
+Before browsing, generation, Workbench launch, or source copying, assign `phase2_context_path` to the task's literal absolute context directory from its Interfaces line and create that exact directory plus the children `inputs`, `candidates`, and `review`. With `apply_patch`, append the literal filenames `OWNER-sincere-otter`, `owned-resources.tsv`, and `phase2-cleanup.zsh` to `phase2_context_path` and create those exact files. The owner file contains exactly `sincere-otter`; the ledger header is exactly `state<TAB>absolute_path<TAB>sha256<TAB>promoted_destination`. The cleanup script content is exactly:
 
 ```zsh
-set -euo pipefail
-phase2_workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"
-test "${phase2_workspace_path:t}" = "sincere-otter"
-test -n "$phase2_context_path"
-case "$phase2_context_path" in "$phase2_workspace_path"/.context/sincere-otter-*) ;; *) exit 64 ;; esac
-phase2_ledger_path="$phase2_context_path/owned-resources.tsv"
-mkdir -p "$phase2_context_path/inputs" "$phase2_context_path/candidates" "$phase2_context_path/review"
-```
+#!/bin/zsh
+set -u
+setopt extendedglob
 
-Before this block, each task sets `phase2_context_path` to the literal absolute directory stated in that task's Interfaces line; no synthesized slug is permitted. Immediately create `OWNER-sincere-otter` and `owned-resources.tsv` with `apply_patch`. `OWNER-sincere-otter` contains exactly `sincere-otter`, the ledger header is exactly `kind<TAB>absolute_path<TAB>sha256`, and every subsequent row is added with `apply_patch`, never shell redirection.
+phase2_cleanup_script_path="${0:A}"
+phase2_cleanup_context_path="${phase2_cleanup_script_path:h}"
+phase2_cleanup_workspace_path="${phase2_cleanup_context_path:h:h}"
+phase2_cleanup_ledger_path="$phase2_cleanup_context_path/owned-resources.tsv"
+phase2_cleanup_owner_path="$phase2_cleanup_context_path/OWNER-sincere-otter"
+phase2_cleanup_complete=0
+typeset -A phase2_cleanup_states phase2_cleanup_hashes phase2_cleanup_destinations
 
-Install these traps before browsing, generation, Workbench launch, or simulator creation:
+[[ "${phase2_cleanup_workspace_path:t}" == "sincere-otter" ]] || exit 64
+[[ "${phase2_cleanup_context_path:h}" == "$phase2_cleanup_workspace_path/.context" ]] || exit 64
+[[ "${phase2_cleanup_context_path:t}" == sincere-otter-* ]] || exit 64
+[[ "$(<"$phase2_cleanup_owner_path")" == "sincere-otter" ]] || exit 64
+[[ "$(rtk head -n 1 "$phase2_cleanup_ledger_path")" == $'state\tabsolute_path\tsha256\tpromoted_destination' ]] || exit 64
 
-```zsh
-phase2_cleanup_owned() {
-  phase2_original_status=$?
-  trap - EXIT INT TERM
-  phase2_cleanup_status=0
-  while IFS=$'\t' read -r phase2_kind phase2_owned_path phase2_owned_hash; do
-    [[ "$phase2_kind" == "kind" ]] && continue
-    case "$phase2_owned_path" in
-      "$phase2_context_path"/*|/Users/asherlc/.codex/generated_images/*) ;;
-      *) print -u2 "refusing unowned cleanup path: $phase2_owned_path"; phase2_cleanup_status=1; continue ;;
-    esac
-    if [[ -e "$phase2_owned_path" ]]; then
-      rm -f -- "$phase2_owned_path" || phase2_cleanup_status=1
-    fi
-    [[ ! -e "$phase2_owned_path" ]] || phase2_cleanup_status=1
-  done < "$phase2_ledger_path"
-  if (( phase2_cleanup_status == 0 )); then
-    rm -rf -- "$phase2_context_path" || phase2_cleanup_status=1
-    [[ ! -e "$phase2_context_path" ]] || phase2_cleanup_status=1
-  else
-    print -u2 "cleanup failed; retaining ownership ledger at $phase2_ledger_path"
-  fi
-  if (( phase2_original_status != 0 )); then exit "$phase2_original_status"; fi
-  exit "$phase2_cleanup_status"
+phase2_cleanup_hash_file() {
+  rtk shasum -a 256 "$1" | rtk awk '{print $1}'
 }
-trap phase2_cleanup_owned EXIT
+
+phase2_cleanup_append() {
+  print -r -- "$1"$'\t'"$2"$'\t'"$3"$'\t'"$4" >> "$phase2_cleanup_ledger_path"
+  phase2_cleanup_states[$2]="$1"
+  phase2_cleanup_hashes[$2]="$3"
+  phase2_cleanup_destinations[$2]="$4"
+}
+
+phase2_cleanup_validate_owned_path() {
+  case "$1" in
+    "$phase2_cleanup_context_path"/*|/Users/asherlc/.codex/generated_images/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+phase2_cleanup_register() {
+  local phase2_register_path="${1:A}"
+  phase2_cleanup_validate_owned_path "$phase2_register_path" || return 65
+  [[ -f "$phase2_register_path" && ! -L "$phase2_register_path" ]] || return 66
+  [[ -z "${phase2_cleanup_states[$phase2_register_path]-}" ]] || return 67
+  local phase2_register_hash="$(phase2_cleanup_hash_file "$phase2_register_path")" || return 68
+  [[ "$phase2_register_hash" == [0-9a-f]## && ${#phase2_register_hash} -eq 64 ]] || return 68
+  phase2_cleanup_append registered "$phase2_register_path" "$phase2_register_hash" -
+  print -r -- "ACK"$'\t'"REGISTER"$'\t'"$phase2_register_path"$'\t'"$phase2_register_hash"
+}
+
+phase2_cleanup_promote() {
+  local phase2_promote_source="${1:A}"
+  local phase2_promote_destination="${2:A}"
+  local phase2_promote_expected_hash="$3"
+  [[ "${phase2_cleanup_states[$phase2_promote_source]-}" == "registered" ]] || return 69
+  [[ ! -e "$phase2_promote_source" ]] || return 70
+  [[ "$phase2_promote_destination" == "$phase2_cleanup_workspace_path"/Hangboards/* ]] || return 71
+  [[ -f "$phase2_promote_destination" && ! -L "$phase2_promote_destination" ]] || return 72
+  [[ "$phase2_promote_expected_hash" == "${phase2_cleanup_hashes[$phase2_promote_source]}" ]] || return 73
+  local phase2_promote_observed_hash="$(phase2_cleanup_hash_file "$phase2_promote_destination")" || return 74
+  [[ "$phase2_promote_observed_hash" == "$phase2_promote_expected_hash" ]] || return 74
+  phase2_cleanup_append promoted "$phase2_promote_source" "$phase2_promote_expected_hash" "$phase2_promote_destination"
+  print -r -- "ACK"$'\t'"PROMOTE"$'\t'"$phase2_promote_source"$'\t'"$phase2_promote_destination"$'\t'"$phase2_promote_expected_hash"
+}
+
+phase2_cleanup_run() {
+  local phase2_cleanup_original_status="$1"
+  (( phase2_cleanup_complete == 0 )) || return
+  phase2_cleanup_complete=1
+  trap - EXIT INT TERM
+  local phase2_cleanup_status=0
+  local phase2_cleanup_path phase2_cleanup_state phase2_cleanup_destination phase2_cleanup_observed_hash
+  for phase2_cleanup_path in ${(k)phase2_cleanup_states}; do
+    phase2_cleanup_state="${phase2_cleanup_states[$phase2_cleanup_path]}"
+    if [[ "$phase2_cleanup_state" == "registered" ]]; then
+      if [[ -e "$phase2_cleanup_path" ]]; then
+        rtk rm -f -- "$phase2_cleanup_path" || phase2_cleanup_status=1
+      fi
+      [[ ! -e "$phase2_cleanup_path" ]] || phase2_cleanup_status=1
+    elif [[ "$phase2_cleanup_state" == "promoted" ]]; then
+      phase2_cleanup_destination="${phase2_cleanup_destinations[$phase2_cleanup_path]}"
+      [[ ! -e "$phase2_cleanup_path" ]] || phase2_cleanup_status=1
+      [[ -f "$phase2_cleanup_destination" && ! -L "$phase2_cleanup_destination" ]] || phase2_cleanup_status=1
+      if [[ -f "$phase2_cleanup_destination" ]]; then
+        phase2_cleanup_observed_hash="$(phase2_cleanup_hash_file "$phase2_cleanup_destination")" || phase2_cleanup_status=1
+        [[ "$phase2_cleanup_observed_hash" == "${phase2_cleanup_hashes[$phase2_cleanup_path]}" ]] || phase2_cleanup_status=1
+      fi
+    else
+      phase2_cleanup_status=1
+    fi
+  done
+  for phase2_cleanup_path in "$phase2_cleanup_context_path/inputs" "$phase2_cleanup_context_path/candidates" "$phase2_cleanup_context_path/review"; do
+    rtk rmdir "$phase2_cleanup_path" 2>/dev/null || phase2_cleanup_status=1
+  done
+  if (( phase2_cleanup_status != 0 )); then
+    print -u2 -r -- "CLEANUP_FAILED"$'\t'"$phase2_cleanup_ledger_path"
+    (( phase2_cleanup_original_status != 0 )) && return "$phase2_cleanup_original_status"
+    return 1
+  fi
+  rtk rm -f -- "$phase2_cleanup_owner_path" "$phase2_cleanup_script_path" || phase2_cleanup_status=1
+  if (( phase2_cleanup_status == 0 )); then
+    local phase2_cleanup_ledger_copy="$(<"$phase2_cleanup_ledger_path")"
+    rtk rm -f -- "$phase2_cleanup_ledger_path" || phase2_cleanup_status=1
+    if ! rtk rmdir "$phase2_cleanup_context_path" 2>/dev/null; then
+      print -r -- "$phase2_cleanup_ledger_copy" > "$phase2_cleanup_ledger_path"
+      phase2_cleanup_status=1
+    fi
+  fi
+  if (( phase2_cleanup_status == 0 )); then
+    print -r -- "CLEANUP_OK"$'\t'"$phase2_cleanup_context_path"
+  else
+    print -u2 -r -- "CLEANUP_FAILED"$'\t'"$phase2_cleanup_ledger_path"
+  fi
+  (( phase2_cleanup_original_status != 0 )) && return "$phase2_cleanup_original_status"
+  return "$phase2_cleanup_status"
+}
+
+trap 'phase2_cleanup_run $?' EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+print -r -- "READY"$'\t'"$$"$'\t'"$phase2_cleanup_context_path"
+
+while IFS=$'\t' read -r phase2_cleanup_command phase2_cleanup_arg1 phase2_cleanup_arg2 phase2_cleanup_arg3; do
+  case "$phase2_cleanup_command" in
+    REGISTER) phase2_cleanup_register "$phase2_cleanup_arg1" || exit $? ;;
+    PROMOTE) phase2_cleanup_promote "$phase2_cleanup_arg1" "$phase2_cleanup_arg2" "$phase2_cleanup_arg3" || exit $? ;;
+    EXIT) exit 0 ;;
+    *) exit 75 ;;
+  esac
+done
+exit 76
 ```
 
-For each copied web input, use a deterministic filename `inputs/record-N-official-I-image-J.ext` or `inputs/record-N-independent-I-image-J.ext`, preserve original bytes, run `rtk shasum -a 256` on the exact file, add its exact ledger row and `GenerationSourceInput`, then run:
+At the controller level, set `phase2_cleanup_script_path` to the task's literal context path plus `/phase2-cleanup.zsh`. Launch it with this exact call shape; the string concatenation inserts that already assigned literal path into the command rather than relying on shell environment persistence:
+
+```text
+exec_command({"cmd":"/bin/zsh " + phase2_cleanup_script_path,"workdir":"/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter","tty":true,"yield_time_ms":1000,"max_output_tokens":2000})
+```
+
+Store the returned `session_id` as `phase2_cleanup_session_id`; require `READY<TAB>pid<TAB>` followed by the literal `phase2_context_path` before continuing. The persistent PTY remains alive across browsing, `view_image`, imagegen, Workbench review, validation, commits, and rollback.
+
+Register a file with `write_stdin({"session_id":phase2_cleanup_session_id,"chars":"REGISTER\t" + phase2_owned_path + "\n","yield_time_ms":1000,"max_output_tokens":2000})`; require `ACK<TAB>REGISTER<TAB>` followed by the same absolute path and its SHA-256 before reading, inspecting, hashing independently, moving, or deleting that file. This applies to every copied input, candidate, review capture, rollback copy, and rejected artifact. Most importantly, assign the exact absolute path returned by every built-in imagegen call under `/Users/asherlc/.codex/generated_images/` to `phase2_generated_path`, then make that exact call with `phase2_owned_path = phase2_generated_path` immediately, before any inspection or movement.
+
+After an accepted context candidate is hash-verified and moved byte-for-byte to its exact declared package asset, call `write_stdin({"session_id":phase2_cleanup_session_id,"chars":"PROMOTE\t" + phase2_candidate_path + "\t" + phase2_package_asset_path + "\t" + phase2_candidate_sha256 + "\n","yield_time_ms":1000,"max_output_tokens":2000})`. Require the exact `ACK<TAB>PROMOTE` response. Promotion causes cleanup to verify that the registered source is absent and the package destination retains the same hash; it never registers or deletes the package destination.
+
+Normal completion calls `write_stdin({"session_id":phase2_cleanup_session_id,"chars":"EXIT\n","yield_time_ms":1000,"max_output_tokens":2000})`, then polls with `write_stdin({"session_id":phase2_cleanup_session_id,"chars":"","yield_time_ms":1000,"max_output_tokens":2000})` until exit. Require exit 0, `CLEANUP_OK`, absence of every registered non-promoted path, absence of every promoted source, retained package destination/hash, and absence of the exact context. An interruption calls the same tool with `chars:"\u0003"` and must exit 130 after cleanup. For TERM handling, assign the literal PID reported by `READY` to controller value `phase2_cleanup_pid`, call `exec_command({"cmd":"rtk kill -TERM " + phase2_cleanup_pid,"workdir":"/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter","yield_time_ms":1000,"max_output_tokens":2000})`, then poll the same session and require exit 143 after cleanup. Never use `terminate` as the normal path. A cleanup failure must return nonzero, print `CLEANUP_FAILED<TAB>ledger-path`, and retain the exact context/ledger for diagnosis; do not delete shared or unknown paths.
+
+For each copied web input, use a deterministic filename `inputs/record-N-official-I-image-J.ext` or `inputs/record-N-independent-I-image-J.ext`, preserve original bytes, register it through the live PTY, require the cleanup-session hash equal `rtk shasum -a 256` on the exact file, add its `GenerationSourceInput`, then run:
 
 ```bash
 phase2_source_input_sha256="$(rtk shasum -a 256 "$phase2_source_input_path" | rtk awk '{print $1}')"
@@ -434,7 +619,7 @@ rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
 
 The command is executed with the literal computed hash/path, and its actual date/command/result is committed in `byteVerification` before deletion.
 
-After each built-in call, take the exact absolute path returned by the tool as `phase2_generated_path`. Before moving it, require its path to match `/Users/asherlc/.codex/generated_images/*`, run `rtk shasum -a 256 "$phase2_generated_path"`, append its exact path/hash to the ledger with `apply_patch`, and inspect PNG IHDR through the validator. Move it byte-for-byte to the deterministic context candidate filename assigned to `phase2_candidate_path`, rehash into `phase2_candidate_sha256`, and require equality with the pre-move hash. Add the candidate record, then execute:
+After each built-in call, take the exact absolute path returned by the tool as `phase2_generated_path`, immediately relay it with `REGISTER`, and require its ACK/hash. Only then inspect it. Require its path to match `/Users/asherlc/.codex/generated_images/*`, inspect PNG IHDR through the validator, move it byte-for-byte to the deterministic context candidate filename assigned to `phase2_candidate_path`, register that path, rehash into `phase2_candidate_sha256`, and require equality with both ACK hashes. Add the candidate record, then execute:
 
 ```bash
 rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
@@ -444,7 +629,7 @@ rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
 
 No rejected candidate or input is deleted until source/candidate roles, URLs, hashes, dispositions, reasons, and passed transient commands are committed and pushed.
 
-For acceptance, first byte-copy the original package PNG into the owned context and ledger. Move the accepted context candidate to the declared package path without modification and rehash it. If package/Workbench validation fails, move those candidate bytes back to their exact context path, restore the original copy byte-for-byte, record rejection, commit/push provenance, and only then clean. The trap never lists or deletes an accepted package path. Cleanup success is proved by absence of every ledger path and the exact context directory; cleanup failure retains the ledger and makes the task fail.
+For acceptance, first byte-copy the original package PNG into the owned context, register it through the PTY, and require its ACK/hash. Move the accepted context candidate to the declared package path without modification, rehash it, send `PROMOTE`, and require its ACK. If package/Workbench validation fails before task completion, restore the original copy byte-for-byte, record the candidate rejection, register any newly created temporary path, commit/push provenance, and exit through the live cleanup session. Cleanup never deletes an accepted package path. Cleanup success is proved by PTY exit 0 plus exact absence/retention checks; cleanup failure retains the ledger and makes the task fail.
 
 ## Exact 20-class canvas preflight
 
@@ -655,14 +840,28 @@ Each probe freshly reopens the representative record's evidence, hashes/verifies
   | compatible Phase 1 keep at order 0 | success |
   | compatible completed repair in earlier task/batch | success |
   | compatible repair in later task/batch | `comparator must precede consumer` |
-  | proved same-record `uniqueSelfBaseline` with no earlier compatible record | success |
-  | `uniqueSelfBaseline` while an earlier compatible record exists | `self baseline is not unique` |
   | material mismatch | `comparator material is incompatible` |
   | form-factor mismatch | `comparator form factor is incompatible` |
   | two-record cycle | `comparator graph contains a cycle` |
-  | final `temporaryGap` | `final comparator cannot be a gap` |
+  | null singular comparator and null bootstrap set at generation | `generation requires a singular comparator or bootstrap set` |
+  | non-null singular comparator and non-null bootstrap set | `comparator paths are mutually exclusive` |
+  | legacy `temporaryGap` mode | `temporary gaps cannot authorize generation` |
+  | bootstrap set on a record outside the nine-seed table | `record is not an authorized cohort seed` |
+  | bootstrap seed or axis differing from the exact ordering table | `bootstrap selection does not match canonical seed order` |
+  | Task 10 with Beastmaker composition axis and explicit absent material axis | success |
+  | Task 10 using Beastmaker as material axis | `wood cannot govern moldedPlastic material` |
+  | null axis omitted from `absentAxes` | `bootstrap absent axes do not match null axes` |
+  | bootstrap marked accepted before all four review checks pass | `bootstrap acceptance requires passed evidence, visual, Workbench, and package review` |
+  | downstream cohort row using another bootstrap after seed acceptance | `cohort already has a singular baseline` |
+  | downstream cohort row using the accepted seed as ready singular comparator | success |
+  | seed final `cohortBootstrapBaseline` naming itself after all reviews pass | success |
+  | non-seed self-referential final comparator | `self reference is reserved for accepted cohort bootstrap seed` |
 
-  Then add exact equality/one-character-drift tests for `render_phase2_generation_prompt`; exact Mini Bar assertions for one `primary` presentation plus `ergonomic-jug`, `edge-10`, `edge-20`, and `mini-pinch` all assigned to it; and a simulator parameterization that deletes each device class, each of the seven flow keys, and the capture hash list in turn and asserts public validation fails. Add separate invalid-state rows proving only `presentationSelector` accepts `notApplicableSinglePresentation` and only `plan` accepts `notApplicableNoCompatiblePlan`.
+  Then add exact equality/one-character-drift tests for `render_phase2_generation_prompt`; assert a bootstrap prompt names both axes, explicit absent axes, live evidence inputs, and the shared render contract without geometry transfer; exact Mini Bar assertions for one `primary` presentation plus `ergonomic-jug`, `edge-10`, `edge-20`, and `mini-pinch` all assigned to it; and a simulator parameterization that deletes each device class, each of the seven flow keys, and the capture hash list in turn and asserts public validation fails. Add separate invalid-state rows proving only `presentationSelector` accepts `notApplicableSinglePresentation` and only `plan` accepts `notApplicableNoCompatiblePlan`.
+
+  Add keep-state fixtures for all 19 real keep records. Assert the 17 `acceptedCurrentAsset` records retain their exact existing accepted hashes/dimensions and equal on-disk bytes; mutate each hash/dimension/decision in turn and require failure. Assert only `aelith.cyclops-011/primary` and `dewoodstok-woodbord/primary` retain null accepted hash/dimensions with `blockedEvidence`. Assert keeps retain pending Phase 1 validation fields plus only the schema-added factual not-required fields, and final mode does not demand repaired-record terminal states from them.
+
+  Add command-order fixtures for every per-record validation field. Starting from pending, attempt to mark package, focused, full suite, build, batch, root, and simulator fields passed without their literal command/device evidence and require failure. Add one success transition at a time in the exact order product command → focused command → batch full suite → bounded build → direct phone/tablet presentation run.
 
 - [ ] **Step 5: Run the focused tests and confirm RED.**
 
@@ -680,7 +879,7 @@ Each probe freshly reopens the representative record's evidence, hashes/verifies
 
 - [ ] **Step 7: Implement transient verification and Phase 2 validation.**
 
-  Implement both verifier functions, 20-class/65-key/22-probe coverage, input/candidate durable rules, exact batch prefix, partial on-disk states, comparator acyclicity/compatibility/self-baseline proof, Mini Bar absent-end/retained-mini-pinch truth, per-record simulator rules, historical-gap separation, and exact final totals.
+  Implement both verifier functions, 20-class/65-key/22-probe coverage, input/candidate durable rules, exact batch prefix, partial on-disk states, singular-comparator acyclicity, the closed nine-seed bootstrap selection/transition table, rejection of temporary-gap authorization, Mini Bar absent-end/retained-mini-pinch truth, command-ordered per-record validation propagation, keep-state preservation, simulator rules, historical-gap separation, and exact final totals.
 
 - [ ] **Step 8: Implement and test CLI flags.**
 
@@ -688,7 +887,7 @@ Each probe freshly reopens the representative record's evidence, hashes/verifies
 
 - [ ] **Step 9: Migrate the real manifest without package mutation.**
 
-  Before editing, assign `phase2_baseline_sha="$(rtk git rev-parse HEAD)"` and write that exact 40-character SHA under the narrative's `Phase 2 baseline SHA` field. Preserve record order and every value in `packageID`, `productName`, `presentationID`, `assetPath`, `workingSurface`, `physicalRevision`, `manufacturer`, `materials`, `formFactor`, `currentAsset`, `decision`, `findings`, `evidence`, and historical `comparator`. Preserve the 19 keep `final.visualReviewerDecision` values. Replace only the Phase 1 empty/pending `generation` and `final` lifecycle scaffolding with the schema-2 forms, then add Phase 2 record/root fields, the exact 20-class table, and the exact batch matrix below. Keeps use generation `none`, null Phase 2 comparators, action/evidence not-required, and not-required Phase 2 checks with factual evidence. Preserve all five Phase 1 evidence-gap paths and strings. Add narrative lifecycle/resource/comparator/preflight sections. Do not change any PNG or `board.json`.
+  Before editing, assign `phase2_baseline_sha="$(rtk git rev-parse HEAD)"` and write that exact 40-character SHA under the narrative's `Phase 2 baseline SHA` field. Preserve record order and every value in `packageID`, `productName`, `presentationID`, `assetPath`, `workingSurface`, `physicalRevision`, `manufacturer`, `materials`, `formFactor`, `currentAsset`, `decision`, `findings`, `evidence`, and historical `comparator`. Preserve all 19 keep decisions; preserve accepted hash/dimensions for the 17 `acceptedCurrentAsset` keeps and null hash/dimensions only for the two `blockedEvidence` keeps. Replace only the Phase 1 empty/pending repair/removal `generation` and `final` lifecycle scaffolding with schema-2 forms, then add Phase 2 record/root fields, the exact 20-class table, exact nine-seed bootstrap table, and exact batch matrix below. Keeps use generation `none`, null Phase 2 comparators, action/evidence not-required, their existing pending Phase 1 checks, and only schema-added factual not-required fields. Preserve all five Phase 1 evidence-gap paths and strings. Add narrative lifecycle/resource/comparator/preflight sections. Do not change any PNG or `board.json`.
 
 - [ ] **Step 10: Run GREEN verification.**
 
@@ -723,7 +922,7 @@ Each probe freshly reopens the representative record's evidence, hashes/verifies
 
 ## Canvas preflight task recipe
 
-Each Task 2–8 supplies its literal context directory and class rows. For every behavior probe: run the exact ownership recipe; reopen all representative `/evidence` URL leaves and gap searches; copy/hash/transiently verify source inputs; write the canonical prompt; inspect local references with `view_image`; call built-in `image_gen` once per attempt with `referenced_image_paths`; hash at the returned path before moving; move to context; transiently verify; record `canvasPass` only for exact IHDR; commit/push attempts before cleanup. Stop the probe after its first pass or its third failure. A third failure sets probe/class/root preflight blocked, commits/pushes the exact reason, cleans owned paths, and stops Tasks 3–62. No package path changes.
+Each Task 2–8 supplies its literal context directory and class rows. For every behavior probe: launch the persistent cleanup PTY; reopen all representative `/evidence` URL leaves and gap searches; copy/register/hash/transiently verify source inputs; select either a ready singular comparator or a `selected` bootstrap set under the exact nine-seed axis rules; write the canonical prompt; inspect local references with `view_image`; call built-in `image_gen` once per attempt with `referenced_image_paths`; immediately register the returned path before inspection/movement; move/register the context candidate; transiently verify; record `canvasPass` only for exact IHDR; commit/push attempts before cleanup. Stop the probe after its first pass or its third failure. A third failure sets probe/class/root preflight blocked, commits/pushes the exact reason, exits/polls the cleanup PTY, and stops Tasks 3–65. No preflight output is promoted and no package path changes.
 
 The command after each task's probes is:
 
@@ -821,7 +1020,7 @@ Expected: validator passes the completed probe prefix; `Hangboards` diff is empt
 
 ## Exclusive product repair matrix
 
-This table is the sole ownership map for the 65 image repairs. `Record` is the literal manifest JSON pointer; `Evidence` and `historical comparator` are exactly `Record + /evidence` and `Record + /comparator`. A task may not change a row owned by another task. Batch order is `nonwood-fixed` (Tasks 10–25), `wood-fixed` (Tasks 27–36), `portable` (Tasks 38–46), and `multi-orientation` (Tasks 48–54). The table contains 17 edit rows and 48 regenerate rows.
+This table is the sole ownership map for the 65 image repairs. `Record` is the literal manifest JSON pointer; `Evidence` and `historical comparator` are exactly `Record + /evidence` and `Record + /comparator`. A task may not change a row owned by another task. Batch order is `nonwood-fixed` (Tasks 10–26), `wood-fixed` (Tasks 28–38), `portable` (Tasks 40–49), and `multi-orientation` (Tasks 51–57). The table contains 17 edit rows and 48 regenerate rows.
 
 | Task | Record / key | Exact asset path | Action / canvas | Evidence-routed material / form factor |
 | ---: | --- | --- | --- | --- |
@@ -841,74 +1040,80 @@ This table is the sole ownership map for the 65 image repairs. `Record` is the l
 | 23 | `/records/26` `mammut.diamond-finger/primary` | `Hangboards/mammut-diamond-finger/assets/primary.png` | regenerate / 1980×495 | wood+metal+mixedOther / fullWidthFixedBoard |
 | 24 | `/records/39` `nature.stoak-board-iii/primary` | `Hangboards/nature-stoak-board-iii/assets/primary.png` | regenerate / 1774×887 | wood+stoneMineralComposite+metal / fullWidthFixedBoard |
 | 25 | `/records/83` `zlagboard.evo/primary` | `Hangboards/zlagboard-evo/assets/primary.png` | regenerate / 2081×755 | wood+metal+mixedOther / fullWidthFixedBoard |
-| 25 | `/records/84` `zlagboard.pro/primary` | `Hangboards/zlagboard-pro/assets/primary.png` | regenerate / 2112×745 | wood+metal+mixedOther / fullWidthFixedBoard |
-| 27 | `/records/1` `beastmaker-1000/primary` | `Hangboards/beastmaker-1000/assets/primary.png` | edit / 1000×259 | wood / fullWidthFixedBoard |
-| 28 | `/records/27` `metolius.climbers-edge/primary` | `Hangboards/metolius-climbers-edge/assets/primary.png` | regenerate / 1717×916 | wood / fullWidthFixedBoard |
-| 29 | `/records/36` `metolius.wood-grips-compact-ii/primary` | `Hangboards/metolius-wood-grips-compact-ii/assets/primary.png` | regenerate / 1774×457 | wood / fullWidthFixedBoard |
-| 30 | `/records/38` `moon.armstrong/primary` | `Hangboards/moon-armstrong/assets/primary.png` | edit / 1697×1200 | wood / fullWidthFixedBoard |
-| 31 | `/records/56` `tension.grindstone-original/primary` | `Hangboards/tension-grindstone-original/assets/primary.png` | regenerate / 1537×1023 | wood / fullWidthFixedBoard |
-| 31 | `/records/57` `tension.grindstone-pro/primary` | `Hangboards/tension-grindstone-pro/assets/primary.png` | edit / 1654×951 | wood / fullWidthFixedBoard |
-| 32 | `/records/63` `trango.rock-prodigy-natural/primary` | `Hangboards/trango-rock-prodigy-natural/assets/primary.png` | regenerate / 1536×1024 | wood / splitFixedBoard |
-| 33 | `/records/79` `yy.verticalboard-evo/primary` | `Hangboards/yy-verticalboard-evo/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
-| 34 | `/records/80` `yy.verticalboard-first/primary` | `Hangboards/yy-verticalboard-first/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
-| 35 | `/records/81` `yy.verticalboard-light/primary` | `Hangboards/yy-verticalboard-light/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
-| 36 | `/records/82` `yy.verticalboard-one/primary` | `Hangboards/yy-verticalboard-one/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
-| 38 | `/records/3` `captain-fingerfood.dual/primary` | `Hangboards/captain-fingerfood-dual/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 38 | `/records/4` `captain-fingerfood.dual/reverse` | `Hangboards/captain-fingerfood-dual/assets/reverse.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 39 | `/records/5` `captain-fingerfood.pocket/primary` | `Hangboards/captain-fingerfood-pocket/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 40 | `/records/6` `captain-fingerfood.unlevel/primary` | `Hangboards/captain-fingerfood-unlevel/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 40 | `/records/7` `captain-fingerfood.unlevel/reverse` | `Hangboards/captain-fingerfood-unlevel/assets/reverse.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 41 | `/records/8` `crimptonite.helium-mobile/primary` | `Hangboards/crimptonite-helium-mobile/assets/primary.png` | edit / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 41 | `/records/9` `crimptonite.helium-mobile/reverse` | `Hangboards/crimptonite-helium-mobile/assets/reverse.png` | edit / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 42 | `/records/16` `frictitious.nug/primary` | `Hangboards/frictitious-nug/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 42 | `/records/17` `frictitious.nug/reverse` | `Hangboards/frictitious-nug/assets/reverse.png` | regenerate / 1842×854 | wood+ropeCord / reversiblePortable |
-| 43 | `/records/30` `metolius.light-rail-2/20mm-side` | `Hangboards/metolius-light-rail-2/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
-| 43 | `/records/31` `metolius.light-rail-2/15mm-side` | `Hangboards/metolius-light-rail-2/assets/15mm-surface.png` | edit / 1672×941 | wood+ropeCord / reversiblePortable |
-| 44 | `/records/24` `lattice.mxedge-lift-large/primary` | `Hangboards/lattice-mxedge-lift-large/assets/primary.png` | edit / 1000×1000 | wood+ropeCord / liftingEdge |
-| 44 | `/records/25` `lattice.mxedge-lift-small/primary` | `Hangboards/lattice-mxedge-lift-small/assets/primary.png` | edit / 1000×1000 | wood+ropeCord / liftingEdge |
-| 45 | `/records/34` `metolius.rock-rings-3d/front-pair` | `Hangboards/metolius-rock-rings-3d/assets/primary.png` | regenerate / 1536×1024 | resin+ropeCord / suspendedPortable |
-| 46 | `/records/47` `plateau.lifting-edge/primary` | `Hangboards/plateau-lifting-edge/assets/primary.png` | regenerate / 1536×1024 | metal+wood+ropeCord+mixedOther / liftingEdge |
-| 48 | `/records/18` `frictitious.port-a-board/primary` | `Hangboards/frictitious-port-a-board/assets/primary.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
-| 48 | `/records/19` `frictitious.port-a-board/back` | `Hangboards/frictitious-port-a-board/assets/back.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
-| 48 | `/records/20` `frictitious.port-a-board/side` | `Hangboards/frictitious-port-a-board/assets/side.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
-| 49 | `/records/52` `tension.flash-board/three-edge-upright` | `Hangboards/tension-flash-board/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
-| 49 | `/records/53` `tension.flash-board/three-edge-inverted` | `Hangboards/tension-flash-board/assets/three-edge-inverted.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
-| 49 | `/records/54` `tension.flash-board/two-edge-upright` | `Hangboards/tension-flash-board/assets/two-edge-surface.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
-| 49 | `/records/55` `tension.flash-board/two-edge-inverted` | `Hangboards/tension-flash-board/assets/two-edge-inverted.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
-| 50 | `/records/43` `owl-climb.poker/face-a` | `Hangboards/owl-climb-poker/assets/face-a.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
-| 50 | `/records/44` `owl-climb.poker/face-b` | `Hangboards/owl-climb-poker/assets/face-b.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
-| 50 | `/records/45` `owl-climb.poker/face-c` | `Hangboards/owl-climb-poker/assets/face-c.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
-| 50 | `/records/46` `owl-climb.poker/face-d` | `Hangboards/owl-climb-poker/assets/face-d.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
-| 51 | `/records/64` `trango.rock-prodigy-pivot/orientation-1` | `Hangboards/trango-rock-prodigy-pivot/assets/primary.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
-| 51 | `/records/65` `trango.rock-prodigy-pivot/orientation-2` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-2.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
-| 51 | `/records/66` `trango.rock-prodigy-pivot/orientation-3` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-3.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
-| 51 | `/records/67` `trango.rock-prodigy-pivot/orientation-4` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-4.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
-| 52 | `/records/69` `yy.baguette-evo/paired-25-20-15-10` | `Hangboards/yy-baguette-evo/assets/primary.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
-| 52 | `/records/70` `yy.baguette-evo/paired-12-8-6` | `Hangboards/yy-baguette-evo/assets/shallow-pairs.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
-| 52 | `/records/71` `yy.baguette-evo/central-30-25` | `Hangboards/yy-baguette-evo/assets/central-30-25.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
-| 52 | `/records/72` `yy.baguette-evo/central-20-6` | `Hangboards/yy-baguette-evo/assets/central-20-6.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
-| 53 | `/records/76` `yy.penta-evo/front-pair` | `Hangboards/yy-penta-evo/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
-| 54 | `/records/77` `yy.travelboard/front-25-15` | `Hangboards/yy-travelboard/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
-| 54 | `/records/78` `yy.travelboard/reverse-10` | `Hangboards/yy-travelboard/assets/reverse.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 26 | `/records/84` `zlagboard.pro/primary` | `Hangboards/zlagboard-pro/assets/primary.png` | regenerate / 2112×745 | wood+metal+mixedOther / fullWidthFixedBoard |
+| 28 | `/records/1` `beastmaker-1000/primary` | `Hangboards/beastmaker-1000/assets/primary.png` | edit / 1000×259 | wood / fullWidthFixedBoard |
+| 29 | `/records/27` `metolius.climbers-edge/primary` | `Hangboards/metolius-climbers-edge/assets/primary.png` | regenerate / 1717×916 | wood / fullWidthFixedBoard |
+| 30 | `/records/36` `metolius.wood-grips-compact-ii/primary` | `Hangboards/metolius-wood-grips-compact-ii/assets/primary.png` | regenerate / 1774×457 | wood / fullWidthFixedBoard |
+| 31 | `/records/38` `moon.armstrong/primary` | `Hangboards/moon-armstrong/assets/primary.png` | edit / 1697×1200 | wood / fullWidthFixedBoard |
+| 32 | `/records/56` `tension.grindstone-original/primary` | `Hangboards/tension-grindstone-original/assets/primary.png` | regenerate / 1537×1023 | wood / fullWidthFixedBoard |
+| 33 | `/records/57` `tension.grindstone-pro/primary` | `Hangboards/tension-grindstone-pro/assets/primary.png` | edit / 1654×951 | wood / fullWidthFixedBoard |
+| 34 | `/records/63` `trango.rock-prodigy-natural/primary` | `Hangboards/trango-rock-prodigy-natural/assets/primary.png` | regenerate / 1536×1024 | wood / splitFixedBoard |
+| 35 | `/records/79` `yy.verticalboard-evo/primary` | `Hangboards/yy-verticalboard-evo/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 36 | `/records/80` `yy.verticalboard-first/primary` | `Hangboards/yy-verticalboard-first/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 37 | `/records/81` `yy.verticalboard-light/primary` | `Hangboards/yy-verticalboard-light/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 38 | `/records/82` `yy.verticalboard-one/primary` | `Hangboards/yy-verticalboard-one/assets/primary.png` | regenerate / 1774×887 | wood / fullWidthFixedBoard |
+| 40 | `/records/3` `captain-fingerfood.dual/primary` | `Hangboards/captain-fingerfood-dual/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 40 | `/records/4` `captain-fingerfood.dual/reverse` | `Hangboards/captain-fingerfood-dual/assets/reverse.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 41 | `/records/5` `captain-fingerfood.pocket/primary` | `Hangboards/captain-fingerfood-pocket/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 42 | `/records/6` `captain-fingerfood.unlevel/primary` | `Hangboards/captain-fingerfood-unlevel/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 42 | `/records/7` `captain-fingerfood.unlevel/reverse` | `Hangboards/captain-fingerfood-unlevel/assets/reverse.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 43 | `/records/8` `crimptonite.helium-mobile/primary` | `Hangboards/crimptonite-helium-mobile/assets/primary.png` | edit / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 43 | `/records/9` `crimptonite.helium-mobile/reverse` | `Hangboards/crimptonite-helium-mobile/assets/reverse.png` | edit / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 44 | `/records/16` `frictitious.nug/primary` | `Hangboards/frictitious-nug/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 44 | `/records/17` `frictitious.nug/reverse` | `Hangboards/frictitious-nug/assets/reverse.png` | regenerate / 1842×854 | wood+ropeCord / reversiblePortable |
+| 45 | `/records/30` `metolius.light-rail-2/20mm-side` | `Hangboards/metolius-light-rail-2/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / reversiblePortable |
+| 45 | `/records/31` `metolius.light-rail-2/15mm-side` | `Hangboards/metolius-light-rail-2/assets/15mm-surface.png` | edit / 1672×941 | wood+ropeCord / reversiblePortable |
+| 46 | `/records/24` `lattice.mxedge-lift-large/primary` | `Hangboards/lattice-mxedge-lift-large/assets/primary.png` | edit / 1000×1000 | wood+ropeCord / liftingEdge |
+| 47 | `/records/25` `lattice.mxedge-lift-small/primary` | `Hangboards/lattice-mxedge-lift-small/assets/primary.png` | edit / 1000×1000 | wood+ropeCord / liftingEdge |
+| 48 | `/records/34` `metolius.rock-rings-3d/front-pair` | `Hangboards/metolius-rock-rings-3d/assets/primary.png` | regenerate / 1536×1024 | resin+ropeCord / suspendedPortable |
+| 49 | `/records/47` `plateau.lifting-edge/primary` | `Hangboards/plateau-lifting-edge/assets/primary.png` | regenerate / 1536×1024 | metal+wood+ropeCord+mixedOther / liftingEdge |
+| 51 | `/records/18` `frictitious.port-a-board/primary` | `Hangboards/frictitious-port-a-board/assets/primary.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
+| 51 | `/records/19` `frictitious.port-a-board/back` | `Hangboards/frictitious-port-a-board/assets/back.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
+| 51 | `/records/20` `frictitious.port-a-board/side` | `Hangboards/frictitious-port-a-board/assets/side.png` | edit / 1440×1440 | wood+ropeCord / multiOrientationDevice |
+| 52 | `/records/52` `tension.flash-board/three-edge-upright` | `Hangboards/tension-flash-board/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 52 | `/records/53` `tension.flash-board/three-edge-inverted` | `Hangboards/tension-flash-board/assets/three-edge-inverted.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 52 | `/records/54` `tension.flash-board/two-edge-upright` | `Hangboards/tension-flash-board/assets/two-edge-surface.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 52 | `/records/55` `tension.flash-board/two-edge-inverted` | `Hangboards/tension-flash-board/assets/two-edge-inverted.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 53 | `/records/43` `owl-climb.poker/face-a` | `Hangboards/owl-climb-poker/assets/face-a.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 53 | `/records/44` `owl-climb.poker/face-b` | `Hangboards/owl-climb-poker/assets/face-b.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 53 | `/records/45` `owl-climb.poker/face-c` | `Hangboards/owl-climb-poker/assets/face-c.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 53 | `/records/46` `owl-climb.poker/face-d` | `Hangboards/owl-climb-poker/assets/face-d.png` | edit / 1980×300 | wood+mixedOther / multiOrientationDevice |
+| 54 | `/records/64` `trango.rock-prodigy-pivot/orientation-1` | `Hangboards/trango-rock-prodigy-pivot/assets/primary.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 54 | `/records/65` `trango.rock-prodigy-pivot/orientation-2` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-2.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 54 | `/records/66` `trango.rock-prodigy-pivot/orientation-3` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-3.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 54 | `/records/67` `trango.rock-prodigy-pivot/orientation-4` | `Hangboards/trango-rock-prodigy-pivot/assets/orientation-4.png` | regenerate / 1774×887 | urethane / multiOrientationDevice |
+| 55 | `/records/69` `yy.baguette-evo/paired-25-20-15-10` | `Hangboards/yy-baguette-evo/assets/primary.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 55 | `/records/70` `yy.baguette-evo/paired-12-8-6` | `Hangboards/yy-baguette-evo/assets/shallow-pairs.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 55 | `/records/71` `yy.baguette-evo/central-30-25` | `Hangboards/yy-baguette-evo/assets/central-30-25.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 55 | `/records/72` `yy.baguette-evo/central-20-6` | `Hangboards/yy-baguette-evo/assets/central-20-6.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
+| 56 | `/records/76` `yy.penta-evo/front-pair` | `Hangboards/yy-penta-evo/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 57 | `/records/77` `yy.travelboard/front-25-15` | `Hangboards/yy-travelboard/assets/primary.png` | regenerate / 1536×1024 | wood+ropeCord / multiOrientationDevice |
+| 57 | `/records/78` `yy.travelboard/reverse-10` | `Hangboards/yy-travelboard/assets/reverse.png` | regenerate / 1774×887 | wood+ropeCord / multiOrientationDevice |
 
 ### Exact manifest-to-prompt and task routing
 
-For each matrix row, let `R` be its already-literal `/records/N` value. The executor reads, without inference: key from `R/packageID` + `/` + `R/presentationID`; target from `R/assetPath`; action from `R/decision`; dimensions/hash from `R/currentAsset`; identity from `R/productName`, `R/physicalRevision`, and `R/workingSurface`; materials/form factor from `R/materials` and `R/formFactor`; source claims/roles/URLs from every leaf of `R/evidence/official` then `R/evidence/independent`; repeated searches from the two gap leaves; findings in this exact order: `productLikeness`, `material`, `topology`, `headOnPerspective`, `smoothing`, `framing`, `crossCatalogConsistency`; and historical comparator only from `R/comparator`. The executor writes only `R/repairBatchID`, `R/phase2Action`, `R/phase2EvidenceReview`, `R/phase2Comparator`, `R/generation`, and `R/final`, except for Task 56's explicit package topology change. `render_phase2_generation_prompt` alone transforms those literal fields into the canonical prompt.
+For each matrix row, let `R` be its already-literal `/records/N` value. The executor reads, without inference: key from `R/packageID` + `/` + `R/presentationID`; target from `R/assetPath`; action from `R/decision`; dimensions/hash from `R/currentAsset`; identity from `R/productName`, `R/physicalRevision`, and `R/workingSurface`; materials/form factor from `R/materials` and `R/formFactor`; source claims/roles/URLs from every leaf of `R/evidence/official` then `R/evidence/independent`; repeated searches from the two gap leaves; findings in this exact order: `productLikeness`, `material`, `topology`, `headOnPerspective`, `smoothing`, `framing`, `crossCatalogConsistency`; and historical comparator only from `R/comparator`. The executor writes only `R/repairBatchID`, `R/phase2Action`, `R/phase2EvidenceReview`, `R/phase2Comparator`, `R/generation`, and `R/final`, except for Task 59's explicit package topology change. `render_phase2_generation_prompt` alone transforms those literal fields into the canonical prompt.
 
 ### Product repair task recipe
 
-Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in matrix row order, with its literal absolute context path, package directory, batch ID, focused tests, and commit message. A multi-row task finishes one row through package validation before starting the next; one failed/blocked row stops the task.
+Every Task 10–26, 28–38, 40–49, and 51–57 executes all steps below, in matrix row order, with its literal absolute context path, package directory, batch ID, focused tests, and commit message. A multi-row task finishes one row through package validation before starting the next; one failed/blocked row stops the task.
 
-- [ ] **Step R1 — Own resources and prove a clean start.** Set `phase2_context_path` to the task's literal absolute context and `phase2_batch_id` to the task's literal batch ID. Install the ownership/trap recipe before opening external sources; `OWNER-sincere-otter` records ownership of the context itself, while the ledger records every owned file outside it and every copied input/candidate/rollback file inside it. Require the task's matrix asset hash to equal `currentAsset.sha256`; require all 19 keep hashes unchanged; require root preflight passed; require this batch `inProgress`, all prior batches passed, all later batches pending; and require every owned action pending.
-- [ ] **Step R2 — Reopen and verify source inputs.** Open every literal URL in the row's official array, then independent array, in stored order. Repeat each non-null gap search using its literal query and record the search command/result/date. Select only bytes that directly implement the stored `imageRole`; save them at the deterministic input path; hash before any move; add the exact URL, role, evidence pointer, SHA-256, acquisition command/result/date, and ledger row; run `verify_transient_source_files`; commit/push the passed records before any input can be deleted. Set `phase2EvidenceReview.result` to `confirmed` only after the reopened arrays equal the historical arrays exactly. A URL/search/byte failure sets evidence/action to `blocked` with the same reason, commits/pushes, cleans exact resources, and stops the task.
-- [ ] **Step R3 — Resolve an acyclic style comparator.** First inspect the historical comparator path when it is non-null and still hash-valid. Then ask partial validation for compatible baselines. Select the first compatible ready Phase 1 keep in manifest order; if none exists, select the earliest completed compatible repair by batch order, task number, then record index. Write a ready generation-time comparator with accepted hash and the canonical style-only reason. Add `style-comparator` to `sourceInputs`, hash its exact package path, write its verification command/status/timestamp, and pass that hash/path to `verify_transient_source_files`. If no compatible baseline exists, write `temporaryGap`, create no comparator source input, and supply no comparator path. Never open a null path. After candidate acceptance, repeat the search including the accepted record: use a ready compatible earlier baseline if one now exists, otherwise write `uniqueSelfBaseline` for the accepted asset. The validator proves compatibility and acyclicity and rejects a self baseline when an earlier compatible baseline exists.
-- [ ] **Step R4 — Produce candidates without post-processing.** Inspect target/current, selected source inputs, and ready comparator paths with `view_image`. For an edit, add the exact package target as `current-target`, hash it, write its verification command/status/timestamp, and pass its hash/path to `verify_transient_source_files`; for a regenerate, create no current-target input. Use the renderer-produced exact prompt. For an edit, call built-in `image_gen` with current target plus supplied source/comparator paths. For a regenerate, call it with supplied source/comparator paths and never the current target. With a temporary comparator gap, omit comparator path and include the renderer's literal no-comparator sentence. Make one call per attempt and at most three attempts. Hash at the returned generated-images path before moving; ledger it; byte-move to deterministic `candidates/record-N-attempt-I.png`; require hash equality and exact IHDR; run `verify_transient_candidate_files`; record and commit/push every rejected attempt before deleting it. Third rejection sets action blocked, commits/pushes, restores original bytes, cleans, and stops the task.
-- [ ] **Step R5 — Accept only direct human/source agreement.** Compare source/current/candidate/comparator side-by-side. Require exact canvas, supported identity/topology/material/working-surface orientation, common studio treatment, complete uncropped silhouette, and no unsupported detail. Record a specific rejection or acceptance reason. Byte-copy original target to context and hash/ledger it before moving accepted candidate bytes to the exact matrix asset. Require package-path hash equal candidate hash. Write exactly one accepted candidate, final hash/dimensions, accepted visual decision, completed action, and final comparator.
-- [ ] **Step R6 — Review geometry directly in Workbench.** Open the package and accepted presentation. Exercise normal, all-active, every logical hold/piece individually, and hit testing. Compare paths only to reopened primary evidence. If all boundaries agree, record all four passed checks and prove `board.json` SHA-256 equals its R1 hash. If one or more boundaries disagree, directly redraw only those named paths in Workbench, select a constraint only for a human-identified regular shape, repeat all four modes, and record every edited hold ID plus evidence pointer. Never derive geometry from raster pixels.
-- [ ] **Step R7 — Validate exact partial state.** Run package validation, the four common tests below plus the task's focused extras, and `audit-presentations --phase2-partial --batch-id "$phase2_batch_id"`. Require current/accepted hash equality, passed Workbench checks, no changes outside the task package/manifest/narrative, unchanged keeps, and no Phase 2 block. Write package/focused checks passed; leave full-suite/build/simulator pending.
+> Ruling: the first repair in a material/form-factor cohort with no accepted singular catalog baseline uses a pre-generation bootstrap comparator set made only from accepted catalog assets for each available style axis (same form factor for composition/framing/scale, same material family for texture/lighting when one exists), plus exact live official/independent material evidence and the shared render contract; none supplies geometry. After that first output passes evidence, Workbench, package, and visual review, it becomes the ready singular cohort baseline for acyclic downstream repairs. This is necessary because Phase 1 proves no accepted non-wood baseline exists; it costs stricter review of the first cohort asset and a potential rerender if the eventual cohort comparison exposes drift.
+
+- [ ] **Step R1 — Own resources and prove a clean start.** Set `phase2_context_path` to the task's literal absolute context, `phase2_batch_id` to the task's literal batch ID, and `phase2_package_id` to the matrix row's literal `packageID`. Create the control files with `apply_patch`, launch the persistent cleanup PTY, and require its exact READY response before opening external sources. Require the task's matrix asset hash to equal `currentAsset.sha256`; require all 19 keep hashes unchanged; require root preflight passed; require this batch `inProgress`, all prior batches passed, all later batches pending; and require every owned action pending.
+- [ ] **Step R2 — Reopen and verify source inputs.** Open every literal URL in the row's official array, then independent array, in stored order. Repeat each non-null gap search using its literal query and record the search command/result/timestamp. Select only bytes that directly implement the stored `imageRole`; save them at the deterministic input path; immediately register each path with the cleanup PTY and require its ACK/hash; add the exact URL, role, evidence pointer, SHA-256, acquisition command/result/timestamp; run `verify_transient_source_files`; commit/push the passed records before any input can be deleted. Set `phase2EvidenceReview.result` to `confirmed` only after the reopened arrays equal the historical arrays exactly. A URL/search/byte failure sets evidence/action to `blocked` with the same reason, commits/pushes, exits/polls cleanup, and stops the task.
+- [ ] **Step R3 — Resolve the one lawful pre-generation comparator path.** Ask partial validation for the earliest compatible singular baseline. If found, write `generationTime.readyBaseline`, leave `bootstrapComparatorSet` null, add `style-comparator`, register/hash/verify that path, and use the exact singular reason. If none exists, require the row to equal the next seed in the nine-row ordering table; write its exact `selected` bootstrap set, axis assets, absent axes, evidence IDs, shared contract, selection rule, passed evidence review, pending visual/Workbench/package reviews, and timestamps; leave `generationTime` null. Add/register/hash/verify `bootstrap-composition` and/or `bootstrap-material` only for non-null axes. For Task 10 specifically, use Beastmaker only as composition and keep material explicitly absent. If neither lawful path validates, set the action/bootstrap blocked, commit/push, exit/poll cleanup, and stop. Never open or supply a historical gap or null axis.
+- [ ] **Step R4 — Produce candidates without post-processing.** Inspect target/current, evidence inputs, and the ready singular or non-null bootstrap-axis paths with `view_image`. For an edit, add/register/hash/verify the exact package target as `current-target`; for a regenerate, create no current-target input. Use the renderer-produced exact prompt. Call built-in `image_gen` with the edit target when applicable, exact evidence paths, and either the singular comparator or all non-null bootstrap axes. Make one call per attempt and at most three attempts. Immediately relay each returned generated-images path to the live cleanup session before inspection/movement; require ACK/hash, then move/register the deterministic context candidate, require hash equality/exact IHDR, and run `verify_transient_candidate_files`. Record and commit/push every rejected attempt before cleanup. Third rejection sets action/bootstrap blocked, commits/pushes, restores original bytes, exits/polls cleanup, and stops the task.
+- [ ] **Step R5 — Accept only direct human/source agreement.** Compare source/current/candidate and singular/bootstrap style axes side-by-side. Require exact canvas, supported identity/topology/material/working-surface orientation, common studio treatment, complete uncropped silhouette, no unsupported detail, and no geometry/material transfer from a style axis. Record a specific rejection or acceptance reason. Byte-copy/register the original target before moving accepted candidate bytes to the exact matrix asset; require package-path hash equal candidate hash; send PROMOTE and require ACK. Write exactly one accepted candidate, final hash/dimensions, and `acceptedPhase2`; for a seed write bootstrap visual review passed. Keep `phase2Action` in-progress, final comparator null, and bootstrap status selected until Steps R6–R7 actually pass.
+- [ ] **Step R6 — Review geometry directly in Workbench.** Open the package and accepted presentation. Exercise normal, all-active, every logical hold/piece individually, and hit testing. Compare paths only to reopened primary evidence. If all boundaries agree, record all four passed checks and prove `board.json` SHA-256 equals its R1 hash. If one or more boundaries disagree, directly redraw only those named paths in Workbench, select a constraint only for a human-identified regular shape, repeat all four modes, and record every edited hold ID plus evidence pointer. Never derive geometry from raster pixels. For a seed, write bootstrap Workbench review passed only after all four record checks pass.
+- [ ] **Step R7 — Validate exact partial state and then promote status.** First run partial validation while the record/action remains in-progress. Run the package validator for the literal package ID; only after exit 0 write that record's exact command/date/result as `packageValidation: passed`. Run the four common tests plus the task's focused extras; only after exit 0 write that record's exact command/date/result as `focusedTests: passed`. For a bootstrap seed, require confirmed evidence, passed visual review, four passed Workbench checks, and passed package validation, then transition bootstrap status to `acceptedCohortBaseline` and write the canonical self-naming `cohortBootstrapBaseline` final comparator. For a normal row, write the selected `readyBaseline` final comparator. Only then mark the action completed and rerun `audit-presentations --phase2-partial --batch-id "$phase2_batch_id"`. Require current/accepted hash equality, no changes outside the task package/manifest/narrative, unchanged keep truth, and no Phase 2 block. Leave full-suite/build/simulator pending.
 
   ```bash
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+  rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
+    --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
+    --phase2-partial --batch-id "$phase2_batch_id"
+  rtk scripts/hangboard-packages.sh validate --root Hangboards \
+    --package-id "$phase2_package_id"
   rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q \
     Tools/HangboardPackages/tests/test_presentation_remediation_audit.py \
     Tools/HangboardPackages/tests/test_board_catalog.py \
@@ -918,7 +1123,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
     --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
     --phase2-partial --batch-id "$phase2_batch_id"
   ```
-- [ ] **Step R8 — Commit, push, and clean.** Stage only the task's declared package directory, manifest, and narrative. Commit with the task's literal message and push. Execute the trap cleanup, then require absence of every ledger path, exact context directory, and owned generated-image path. Do not delete shared or unknown files.
+- [ ] **Step R8 — Commit, push, and clean.** Stage only the task's declared package directory, manifest, and narrative. Commit with the task's literal message and push. Send EXIT to the persistent cleanup session, poll to terminal, and require exit 0/CLEANUP_OK plus exact registered/promoted absence/retention checks. Do not delete shared or unknown files.
 
 ## Batch 1 — Nonwood and mixed-material fixed boards
 
@@ -926,7 +1131,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 **Files:** `Hangboards/escape-beta-22/assets/primary.png`, `Hangboards/escape-beta-22/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/11`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-escape-beta-22`; focused extra `Tools/HangboardPackages/tests/test_escape_beta_22_board_package.py`; commit `Repair Escape Beta 22 presentation`.
+**Interfaces:** matrix `/records/11`; batch `nonwood-fixed`; bootstrap seed `moldedPlastic/fullWidthFixedBoard` with composition `beastmaker-2000/primary` and material explicitly absent; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-escape-beta-22`; focused extra `Tools/HangboardPackages/tests/test_escape_beta_22_board_package.py`; commit `Repair Escape Beta 22 presentation`.
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
@@ -934,7 +1139,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 **Files:** `Hangboards/evolv-kilter-basic-long/assets/primary.png`, `Hangboards/evolv-kilter-basic-long/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/13`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-evolv-kilter`; no focused extra; commit `Repair Evolv Kilter presentation`.
+**Interfaces:** matrix `/records/13`; batch `nonwood-fixed`; bootstrap seed `resin/fullWidthFixedBoard` with composition `beastmaker-2000/primary` and material explicitly absent; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-evolv-kilter`; no focused extra; commit `Repair Evolv Kilter presentation`.
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
@@ -974,7 +1179,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 **Files:** `Hangboards/soill-iron-palm-2/assets/primary.png`, `Hangboards/soill-iron-palm-2/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/48`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-soill-iron-palm`; no focused extra; commit `Repair So iLL Iron Palm presentation`.
+**Interfaces:** matrix `/records/48`; batch `nonwood-fixed`; bootstrap seed `urethane/fullWidthFixedBoard` with composition `beastmaker-2000/primary` and material explicitly absent; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-soill-iron-palm`; no focused extra; commit `Repair So iLL Iron Palm presentation`.
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
@@ -982,7 +1187,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 **Files:** `Hangboards/soill-split-palm/assets/primary.png`, `Hangboards/soill-split-palm/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/49`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-soill-split-palm`; no focused extra; commit `Repair So iLL Split Palm presentation`.
+**Interfaces:** matrix `/records/49`; batch `nonwood-fixed`; bootstrap seed `urethane/splitFixedBoard` with composition absent and material `soill.iron-palm-2/primary`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-soill-split-palm`; no focused extra; commit `Repair So iLL Split Palm presentation`.
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
@@ -1042,25 +1247,33 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 25: Repair the Zlagboard Evo and Pro family
+### Task 25: Repair Zlagboard Evo
 
-**Files:** `Hangboards/zlagboard-evo/assets/primary.png`, `Hangboards/zlagboard-evo/board.json`, `Hangboards/zlagboard-pro/assets/primary.png`, `Hangboards/zlagboard-pro/board.json`, manifest, narrative.
+**Files:** `Hangboards/zlagboard-evo/assets/primary.png`, `Hangboards/zlagboard-evo/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/83` then `/records/84`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-zlagboard-family`; no focused extra; commit `Repair Zlagboard presentation family`.
+**Interfaces:** matrix `/records/83`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-zlagboard-evo`; no focused extra; commit `Repair Zlagboard Evo presentation`.
 
-- [ ] **Execute Steps R1–R8 sequentially for the two inseparable current-revision family rows.**
+- [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 26: Gate the nonwood and mixed-material fixed-board batch
+### Task 26: Repair Zlagboard Pro
+
+**Files:** `Hangboards/zlagboard-pro/assets/primary.png`, `Hangboards/zlagboard-pro/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/84`; batch `nonwood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-zlagboard-pro`; no focused extra; commit `Repair Zlagboard Pro presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 27: Gate the nonwood and mixed-material fixed-board batch
 
 **Files:** manifest and narrative only.
 
 - [ ] **Step 1:** Require exactly the 17 Batch 1 matrix rows completed, current/accepted hashes equal, four passed Workbench checks each, no blocked action, and all other action rows pending.
 - [ ] **Step 2:** Run `rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests`, final inventory, and partial audit with literal `--batch-id nonwood-fixed`; require all pass.
-- [ ] **Step 3:** Set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate nonwood fixed-board presentation repairs"`.
+- [ ] **Step 3:** Only after Step 2's full package command exits 0, write that literal command/date/result as `fullPackageSuite: passed` to each of the 17 owned records. Then set the batch package/focused aggregates, full-suite check, and batch status passed; rerun partial audit with literal `--batch-id nonwood-fixed` and require the terminal batch state to pass; commit/push with `rtk git commit -m "Gate nonwood fixed-board presentation repairs"`.
 
 ## Batch 2 — Wood fixed and split boards
 
-### Task 27: Repair Beastmaker 1000
+### Task 28: Repair Beastmaker 1000
 
 **Files:** `Hangboards/beastmaker-1000/assets/primary.png`, `Hangboards/beastmaker-1000/board.json`, manifest, narrative.
 
@@ -1068,7 +1281,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 28: Repair Metolius Climber's Edge
+### Task 29: Repair Metolius Climber's Edge
 
 **Files:** `Hangboards/metolius-climbers-edge/assets/primary.png`, `Hangboards/metolius-climbers-edge/board.json`, manifest, narrative.
 
@@ -1076,7 +1289,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 29: Repair Metolius Wood Grips Compact II
+### Task 30: Repair Metolius Wood Grips Compact II
 
 **Files:** `Hangboards/metolius-wood-grips-compact-ii/assets/primary.png`, `Hangboards/metolius-wood-grips-compact-ii/board.json`, manifest, narrative.
 
@@ -1084,7 +1297,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 30: Repair Moon Armstrong
+### Task 31: Repair Moon Armstrong
 
 **Files:** `Hangboards/moon-armstrong/assets/primary.png`, `Hangboards/moon-armstrong/board.json`, manifest, narrative.
 
@@ -1092,23 +1305,31 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 31: Repair the Tension Grindstone family
+### Task 32: Repair Tension Grindstone Original
 
-**Files:** `Hangboards/tension-grindstone-original/assets/primary.png`, `Hangboards/tension-grindstone-original/board.json`, `Hangboards/tension-grindstone-pro/assets/primary.png`, `Hangboards/tension-grindstone-pro/board.json`, manifest, narrative.
+**Files:** `Hangboards/tension-grindstone-original/assets/primary.png`, `Hangboards/tension-grindstone-original/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/56` then `/records/57`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-grindstone-family`; focused extra `Tools/HangboardPackages/tests/test_tension_grindstone_legacy_board_packages.py`; commit `Repair Tension Grindstone presentation family`.
-
-- [ ] **Execute Steps R1–R8 sequentially for the two inseparable family rows.**
-
-### Task 32: Repair Trango Rock Prodigy Natural
-
-**Files:** `Hangboards/trango-rock-prodigy-natural/assets/primary.png`, `Hangboards/trango-rock-prodigy-natural/board.json`, manifest, narrative.
-
-**Interfaces:** matrix `/records/63`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-natural`; no focused extra; commit `Repair Trango Rock Prodigy Natural presentation`.
+**Interfaces:** matrix `/records/56`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-grindstone-original`; focused extra `Tools/HangboardPackages/tests/test_tension_grindstone_legacy_board_packages.py`; commit `Repair Tension Grindstone Original presentation`.
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 33: Repair YY VerticalBoard Evo
+### Task 33: Repair Tension Grindstone Pro
+
+**Files:** `Hangboards/tension-grindstone-pro/assets/primary.png`, `Hangboards/tension-grindstone-pro/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/57`; batch `wood-fixed`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-grindstone-pro`; focused extra `Tools/HangboardPackages/tests/test_tension_grindstone_legacy_board_packages.py`; commit `Repair Tension Grindstone Pro presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 34: Repair Trango Rock Prodigy Natural
+
+**Files:** `Hangboards/trango-rock-prodigy-natural/assets/primary.png`, `Hangboards/trango-rock-prodigy-natural/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/63`; batch `wood-fixed`; bootstrap seed `wood/splitFixedBoard` with composition `soill.split-palm/primary` and material `beastmaker-2000/primary`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-natural`; no focused extra; commit `Repair Trango Rock Prodigy Natural presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 35: Repair YY VerticalBoard Evo
 
 **Files:** `Hangboards/yy-verticalboard-evo/assets/primary.png`, `Hangboards/yy-verticalboard-evo/board.json`, manifest, narrative.
 
@@ -1116,7 +1337,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 34: Repair YY VerticalBoard First
+### Task 36: Repair YY VerticalBoard First
 
 **Files:** `Hangboards/yy-verticalboard-first/assets/primary.png`, `Hangboards/yy-verticalboard-first/board.json`, manifest, narrative.
 
@@ -1124,7 +1345,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 35: Repair YY VerticalBoard Light
+### Task 37: Repair YY VerticalBoard Light
 
 **Files:** `Hangboards/yy-verticalboard-light/assets/primary.png`, `Hangboards/yy-verticalboard-light/board.json`, manifest, narrative.
 
@@ -1132,7 +1353,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 36: Repair YY VerticalBoard One
+### Task 38: Repair YY VerticalBoard One
 
 **Files:** `Hangboards/yy-verticalboard-one/assets/primary.png`, `Hangboards/yy-verticalboard-one/board.json`, manifest, narrative.
 
@@ -1140,25 +1361,25 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 37: Gate the wood fixed/split batch
+### Task 39: Gate the wood fixed/split batch
 
 **Files:** manifest and narrative only.
 
 - [ ] **Step 1:** Require exactly the 11 Batch 2 matrix rows completed in addition to passed Batch 1, with accepted hashes/four Workbench checks/no blocks, and later rows pending.
-- [ ] **Step 2:** Run the full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id wood-fixed`; require all pass.
-- [ ] **Step 3:** Set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate wood fixed-board presentation repairs"`.
+- [ ] **Step 2:** Run `rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests`, `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`, and partial audit with literal `--batch-id wood-fixed`; require all pass.
+- [ ] **Step 3:** Only after Step 2's full package command exits 0, write that literal command/date/result as `fullPackageSuite: passed` to each of the 11 owned records. Then set the batch package/focused aggregates, full-suite check, and batch status passed; rerun partial audit with literal `--batch-id wood-fixed` and require the terminal batch state to pass; commit/push with `rtk git commit -m "Gate wood fixed-board presentation repairs"`.
 
 ## Batch 3 — Reversible and lifting portable devices
 
-### Task 38: Repair Captain Fingerfood Dual
+### Task 40: Repair Captain Fingerfood Dual
 
 **Files:** `Hangboards/captain-fingerfood-dual/assets/primary.png`, `Hangboards/captain-fingerfood-dual/assets/reverse.png`, `Hangboards/captain-fingerfood-dual/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/3` then `/records/4`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-captain-dual`; no focused extra; commit `Repair Captain Fingerfood Dual presentations`.
+**Interfaces:** matrix `/records/3` then `/records/4`; batch `portable`; first-row bootstrap seed `wood/reversiblePortable` with composition absent and material `beastmaker-2000/primary`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-captain-dual`; no focused extra; commit `Repair Captain Fingerfood Dual presentations`.
 
 - [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
 
-### Task 39: Repair Captain Fingerfood Pocket
+### Task 41: Repair Captain Fingerfood Pocket
 
 **Files:** `Hangboards/captain-fingerfood-pocket/assets/primary.png`, `Hangboards/captain-fingerfood-pocket/board.json`, manifest, narrative.
 
@@ -1166,7 +1387,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 40: Repair Captain Fingerfood Unlevel
+### Task 42: Repair Captain Fingerfood Unlevel
 
 **Files:** `Hangboards/captain-fingerfood-unlevel/assets/primary.png`, `Hangboards/captain-fingerfood-unlevel/assets/reverse.png`, `Hangboards/captain-fingerfood-unlevel/board.json`, manifest, narrative.
 
@@ -1174,7 +1395,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
 
-### Task 41: Repair Crimptonite Helium Mobile
+### Task 43: Repair Crimptonite Helium Mobile
 
 **Files:** `Hangboards/crimptonite-helium-mobile/assets/primary.png`, `Hangboards/crimptonite-helium-mobile/assets/reverse.png`, `Hangboards/crimptonite-helium-mobile/board.json`, manifest, narrative.
 
@@ -1182,7 +1403,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
 
-### Task 42: Repair Frictitious NUG
+### Task 44: Repair Frictitious NUG
 
 **Files:** `Hangboards/frictitious-nug/assets/primary.png`, `Hangboards/frictitious-nug/assets/reverse.png`, `Hangboards/frictitious-nug/board.json`, manifest, narrative.
 
@@ -1190,7 +1411,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
 
-### Task 43: Repair Metolius Light Rail 2
+### Task 45: Repair Metolius Light Rail 2
 
 **Files:** `Hangboards/metolius-light-rail-2/assets/primary.png`, `Hangboards/metolius-light-rail-2/assets/15mm-surface.png`, `Hangboards/metolius-light-rail-2/board.json`, manifest, narrative.
 
@@ -1198,23 +1419,31 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the two physical-face rows.**
 
-### Task 44: Repair Lattice MXEdge Lift Large and Small
+### Task 46: Repair Lattice MXEdge Lift Large
 
-**Files:** `Hangboards/lattice-mxedge-lift-large/assets/primary.png`, `Hangboards/lattice-mxedge-lift-large/board.json`, `Hangboards/lattice-mxedge-lift-small/assets/primary.png`, `Hangboards/lattice-mxedge-lift-small/board.json`, manifest, narrative.
+**Files:** `Hangboards/lattice-mxedge-lift-large/assets/primary.png`, `Hangboards/lattice-mxedge-lift-large/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/24` then `/records/25`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-mxedge-lift-family`; no focused extra; commit `Repair Lattice MXEdge Lift presentations`.
-
-- [ ] **Execute Steps R1–R8 sequentially for the two size-family rows.**
-
-### Task 45: Repair Metolius Rock Rings 3D
-
-**Files:** `Hangboards/metolius-rock-rings-3d/assets/primary.png`, `Hangboards/metolius-rock-rings-3d/board.json`, manifest, narrative.
-
-**Interfaces:** matrix `/records/34`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-rock-rings`; no focused extra; commit `Repair Metolius Rock Rings presentation`.
+**Interfaces:** matrix `/records/24`; batch `portable`; bootstrap seed `wood/liftingEdge` with composition absent and material `beastmaker-2000/primary`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-mxedge-lift-large`; no focused extra; commit `Repair Lattice MXEdge Lift Large presentation`.
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 46: Repair Plateau Lifting Edge
+### Task 47: Repair Lattice MXEdge Lift Small
+
+**Files:** `Hangboards/lattice-mxedge-lift-small/assets/primary.png`, `Hangboards/lattice-mxedge-lift-small/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/25`; batch `portable`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-mxedge-lift-small`; no focused extra; commit `Repair Lattice MXEdge Lift Small presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 48: Repair Metolius Rock Rings 3D
+
+**Files:** `Hangboards/metolius-rock-rings-3d/assets/primary.png`, `Hangboards/metolius-rock-rings-3d/board.json`, manifest, narrative.
+
+**Interfaces:** matrix `/records/34`; batch `portable`; bootstrap seed `resin/suspendedPortable` with composition absent and material `evolv-kilter-basic-long/primary`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-rock-rings`; no focused extra; commit `Repair Metolius Rock Rings presentation`.
+
+- [ ] **Execute Steps R1–R8 for the one owned row.**
+
+### Task 49: Repair Plateau Lifting Edge
 
 **Files:** `Hangboards/plateau-lifting-edge/assets/primary.png`, `Hangboards/plateau-lifting-edge/board.json`, manifest, narrative.
 
@@ -1222,17 +1451,17 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 47: Gate the portable-device batch
+### Task 50: Gate the portable-device batch
 
 **Files:** manifest and narrative only.
 
 - [ ] **Step 1:** Require exactly the 15 Batch 3 rows completed in addition to Batches 1–2, with accepted hashes/four Workbench checks/no blocks, and later rows pending.
-- [ ] **Step 2:** Run the full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id portable`; require all pass.
-- [ ] **Step 3:** Set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate portable presentation repairs"`.
+- [ ] **Step 2:** Run `rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests`, `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`, and partial audit with literal `--batch-id portable`; require all pass.
+- [ ] **Step 3:** Only after Step 2's full package command exits 0, write that literal command/date/result as `fullPackageSuite: passed` to each of the 15 owned records. Then set the batch package/focused aggregates, full-suite check, and batch status passed; rerun partial audit with literal `--batch-id portable` and require the terminal batch state to pass; commit/push with `rtk git commit -m "Gate portable presentation repairs"`.
 
 ## Batch 4 — Multi-orientation devices
 
-### Task 48: Repair Frictitious Port-A-Board
+### Task 51: Repair Frictitious Port-A-Board
 
 **Files:** `Hangboards/frictitious-port-a-board/assets/primary.png`, `Hangboards/frictitious-port-a-board/assets/back.png`, `Hangboards/frictitious-port-a-board/assets/side.png`, `Hangboards/frictitious-port-a-board/board.json`, manifest, narrative.
 
@@ -1240,7 +1469,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the three orientations.**
 
-### Task 49: Repair Tension Flash Board
+### Task 52: Repair Tension Flash Board
 
 **Files:** `Hangboards/tension-flash-board/assets/primary.png`, `Hangboards/tension-flash-board/assets/three-edge-inverted.png`, `Hangboards/tension-flash-board/assets/two-edge-surface.png`, `Hangboards/tension-flash-board/assets/two-edge-inverted.png`, `Hangboards/tension-flash-board/board.json`, manifest, narrative.
 
@@ -1248,7 +1477,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the four source-proved orientations.**
 
-### Task 50: Repair Owl Climb Poker
+### Task 53: Repair Owl Climb Poker
 
 **Files:** `Hangboards/owl-climb-poker/assets/face-a.png`, `Hangboards/owl-climb-poker/assets/face-b.png`, `Hangboards/owl-climb-poker/assets/face-c.png`, `Hangboards/owl-climb-poker/assets/face-d.png`, `Hangboards/owl-climb-poker/board.json`, manifest, narrative.
 
@@ -1256,15 +1485,15 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for faces A, B, C, and D.**
 
-### Task 51: Repair Trango Rock Prodigy Pivot
+### Task 54: Repair Trango Rock Prodigy Pivot
 
 **Files:** `Hangboards/trango-rock-prodigy-pivot/assets/primary.png`, `Hangboards/trango-rock-prodigy-pivot/assets/orientation-2.png`, `Hangboards/trango-rock-prodigy-pivot/assets/orientation-3.png`, `Hangboards/trango-rock-prodigy-pivot/assets/orientation-4.png`, `Hangboards/trango-rock-prodigy-pivot/board.json`, manifest, narrative.
 
-**Interfaces:** matrix `/records/64`, `/records/65`, `/records/66`, then `/records/67`; batch `multi-orientation`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-pivot`; focused extra `Tools/HangboardPackages/tests/test_coderabbit_mirrored_geometry.py`; commit `Repair Trango Rock Prodigy Pivot presentations`.
+**Interfaces:** matrix `/records/64`, `/records/65`, `/records/66`, then `/records/67`; batch `multi-orientation`; first-row bootstrap seed `urethane/multiOrientationDevice` with composition `lattice.mini-bar/primary` and material `soill.iron-palm-2/primary`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-repair-trango-pivot`; focused extra `Tools/HangboardPackages/tests/test_coderabbit_mirrored_geometry.py`; commit `Repair Trango Rock Prodigy Pivot presentations`.
 
 - [ ] **Execute Steps R1–R8 sequentially for the four source-proved orientations.**
 
-### Task 52: Repair YY Baguette Evo
+### Task 55: Repair YY Baguette Evo
 
 **Files:** `Hangboards/yy-baguette-evo/assets/primary.png`, `Hangboards/yy-baguette-evo/assets/shallow-pairs.png`, `Hangboards/yy-baguette-evo/assets/central-30-25.png`, `Hangboards/yy-baguette-evo/assets/central-20-6.png`, `Hangboards/yy-baguette-evo/board.json`, manifest, narrative.
 
@@ -1272,7 +1501,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the four source-proved surfaces.**
 
-### Task 53: Repair YY Penta Evo
+### Task 56: Repair YY Penta Evo
 
 **Files:** `Hangboards/yy-penta-evo/assets/primary.png`, `Hangboards/yy-penta-evo/board.json`, manifest, narrative.
 
@@ -1280,7 +1509,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 for the one owned row.**
 
-### Task 54: Repair YY TravelBoard
+### Task 57: Repair YY TravelBoard
 
 **Files:** `Hangboards/yy-travelboard/assets/primary.png`, `Hangboards/yy-travelboard/assets/reverse.png`, `Hangboards/yy-travelboard/board.json`, manifest, narrative.
 
@@ -1288,17 +1517,17 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Execute Steps R1–R8 sequentially for the two source-proved surfaces.**
 
-### Task 55: Gate the multi-orientation batch
+### Task 58: Gate the multi-orientation batch
 
 **Files:** manifest and narrative only.
 
 - [ ] **Step 1:** Require exactly the 22 Batch 4 rows completed in addition to Batches 1–3, with accepted hashes/four Workbench checks/no blocks.
-- [ ] **Step 2:** Run the full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id multi-orientation`; require all pass.
-- [ ] **Step 3:** Require cumulative totals 17 edits, 48 regenerations, zero removals, 19 byte-identical keeps, 85 current presentations, and zero Phase 2 blocks; set all three batch checks and batch status passed; commit/push with `rtk git commit -m "Gate multi-orientation presentation repairs"`.
+- [ ] **Step 2:** Run `rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q Tools/HangboardPackages/tests`, `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`, and partial audit with literal `--batch-id multi-orientation`; require all pass.
+- [ ] **Step 3:** Only after Step 2's full package command exits 0, write that literal command/date/result as `fullPackageSuite: passed` to each of the 22 owned records. Then require cumulative totals 17 edits, 48 regenerations, zero removals, 19 byte-identical keeps, 85 current presentations, and zero Phase 2 blocks; set the batch package/focused aggregates, full-suite check, and batch status passed; rerun partial audit with literal `--batch-id multi-orientation` and require the terminal batch state to pass; commit/push with `rtk git commit -m "Gate multi-orientation presentation repairs"`.
 
 ---
 
-### Task 56: Remove only the unsupported Mini Bar end presentation and retain all four grips
+### Task 59: Remove only the unsupported Mini Bar end presentation and retain all four grips
 
 **Files:**
 - Modify: `Hangboards/lattice-mini-bar/board.json`
@@ -1310,7 +1539,7 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 **Interfaces:** owns only `/records/23` `lattice.mini-bar/end`; batch `mini-bar-removal`; context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-remove-mini-bar-end`; consumes the official and independent record-23 evidence proving one physical four-grip lengthwise bar; produces one `primary` presentation, the same four hold IDs, a directly reauthored lengthwise `mini-pinch`, an absent `end.png`, one historical removal, and no image-generation call.
 
-- [ ] **Step 1: Establish sourced removal truth and backups.** Run the exact ownership/trap recipe with the literal context. Reopen every official and independent record-23 URL and repeat each gap search. Record exact URL/role/date/result. Hash and ledger rollback copies of `primary.png`, `end.png`, and `board.json`. Require `primary.png` hash equal its historical keep hash.
+- [ ] **Step 1: Establish sourced removal truth and backups.** Launch the persistent cleanup PTY with the literal context, register every rollback copy immediately, and keep that session alive through commit and cleanup. Reopen every official and independent record-23 URL and repeat each gap search. Record exact URL/role/date/result. Hash and ledger rollback copies of `primary.png`, `end.png`, and `board.json`. Require `primary.png` hash equal its historical keep hash. Set the removal batch and record action to `inProgress`; leave every removal-batch check pending.
 - [ ] **Step 2: Add this exact failing package test.** Put the assertion in `test_board_catalog.py`; add parallel removal-history assertions to the audit test.
 
   ```python
@@ -1332,25 +1561,25 @@ Every Task 10–25, 27–36, 38–46, and 48–54 executes all steps below, in m
 
 - [ ] **Step 3: Confirm RED.** Run only the two test files. Expected: current `end` presentation/file and `mini-pinch.presentationID == "end"` fail the new assertions.
 - [ ] **Step 4: Directly reauthor the Mini Pinch on the lengthwise view.** Open `primary` in Workbench alongside the reopened straight-on and oblique Mini Bar evidence. Deliberately draw the `mini-pinch` canonical path over its source-proved lengthwise contact and set only `mini-pinch.presentationID` from `end` to `primary`; do not reuse, project, transform, align, or infer the old end-view path. Review `ergonomic-jug`, `edge-10`, `edge-20`, and `mini-pinch` in normal, all-active, individual, and hit-test modes. Record the new path commands and evidence pointers in the narrative.
-- [ ] **Step 5: Remove only the unsupported presentation.** Delete only the `end` presentation object and `Hangboards/lattice-mini-bar/assets/end.png`. Do not delete or rename any hold. Do not change the `primary` presentation object or PNG. Complete `/records/23` as `removeUnsupportedPresentation`, `phase2EvidenceReview.confirmed`, four passed Workbench checks, removed visual decision, and `simulatorReview.notApplicableRemovedPresentation` with the same source evidence. Set the removal batch checks/status passed.
-- [ ] **Step 6: Validate and prove exact scope.** Run the two focused test files, full HangboardPackages test directory, final inventory, and partial audit with literal `--batch-id mini-bar-removal`. Require 61 packages, 84 current presentations, 85 historical records, four Mini Bar holds on `primary`, absent `end.png`, unchanged `primary.png` hash, 19 byte-identical keeps, and one completed removal.
-- [ ] **Step 7: Commit/push and clean.** Stage only the declared files; commit `Retain Mini Bar grips while removing end presentation`; push; execute the trap; require exact owned paths absent.
+- [ ] **Step 5: Remove only the unsupported presentation while remaining in progress.** Delete only the `end` presentation object and `Hangboards/lattice-mini-bar/assets/end.png`. Do not delete or rename any hold. Do not change the `primary` presentation object or PNG. Record `/records/23` evidence as confirmed, all four actual Workbench reviews as passed, the removed visual decision, and `simulatorReview.notApplicableRemovedPresentation` with the same source evidence. Keep `phase2Action.state` and removal-batch status `inProgress`, keep package/focused/full-suite checks pending, and keep all three removal `phase2Comparator` leaves null; deletion and visual review alone are not completion.
+- [ ] **Step 6: Validate, then publish terminal state in command order.** Run the two focused test files; only after exit 0 write the literal command/date/result as the removal record's `focusedTests: passed`. Run the package validator; only after exit 0 write its literal command/date/result as `packageValidation: passed`. Run partial audit with `--batch-id mini-bar-removal` while the action remains `inProgress` and require that truthful intermediate state to pass. Then run the full HangboardPackages directory and final inventory; only after those exit 0 write `fullPackageSuite: passed`. Require 61 packages, 84 current presentations, 85 historical records, four Mini Bar holds on `primary`, absent `end.png`, unchanged `primary.png` hash, 19 byte-identical keeps, and one pending removal at this intermediate instant. Now, and only now, set the action `completed`, retain all three removal comparator leaves null, set all three removal-batch checks and batch status passed, and rerun partial audit with literal `--batch-id mini-bar-removal`; require one completed removal and zero pending/blocked removal actions.
+- [ ] **Step 7: Commit/push and clean through the live session.** Stage only the declared files; commit `Retain Mini Bar grips while removing end presentation`; push; send `EXIT` to the persistent cleanup PTY, poll the same session to exit 0, and require `CLEANUP_OK`, exact owned paths absent, and the promoted package state retained.
 
-### Task 57: Perform the direct cross-catalog visual and integrity review
+### Task 60: Perform the direct cross-catalog visual and integrity review
 
 **Files:** manifest and narrative only; no package changes.
 
 **Interfaces:** context `/Users/asherlc/.paseo/worktrees/0h78jp9r/sincere-otter/.context/sincere-otter-cross-catalog-review`; consumes the final 84 presentation paths and all 85 historical records; produces a terminal review entry for every current presentation and an absent-presentation entry for `/records/23`.
 
-- [ ] **Step 1: Own review artifacts.** Install the ownership/trap recipe with the literal context; hash/ledger every montage or screenshot before it can be deleted.
+- [ ] **Step 1: Own review artifacts.** Launch the persistent cleanup PTY with the literal context and keep it alive through review, commit, push, and cleanup; immediately register every montage or screenshot and require its ACK/hash before inspection or deletion.
 - [ ] **Step 2: Inspect all current presentations directly.** In deterministic package/presentation order, open each of the 84 PNGs with `view_image`, compare the 65 replacements to reopened evidence and their final comparator, and compare the 19 keeps to their historical hashes. Record one terminal result per current key: `passed` with image hash/date/reviewer notes, or `blocked` with a concrete defect. Record `/records/23` as `notApplicableRemovedPresentation` only after checking the absent file/presentation and retained four-grip Mini Bar truth.
 - [ ] **Step 3: Inspect the catalog as a cohort.** Require common off-white background, centered orthographic working surface, complete silhouettes, comparable scale/framing within form-factor cohorts, neutral light/shadow, no branding/text/watermarks, and source-proved material cues. Require 17 edited hashes, 48 regenerated hashes, 19 unchanged hashes, and one absent historical path.
-- [ ] **Step 4: Route defects to their exclusive owners.** A defect reopens the owning product task and its following batch gate; do not alter package bytes in Task 57. The owner changes the prior accepted disposition to rejected with the cross-catalog reason, uses only the remaining slots in the original three-attempt limit, and finishes with exactly one accepted candidate. Exhausting attempt 3 blocks the owner and stops Phase 2. Repeat Task 57 only after the owner commits/pushes a new accepted candidate and the affected gate passes.
+- [ ] **Step 4: Route defects to their exclusive owners.** A defect reopens the owning product task and its following batch gate; do not alter package bytes in Task 60. The owner changes the prior accepted disposition to rejected with the cross-catalog reason, uses only the remaining slots in the original three-attempt limit, and finishes with exactly one accepted candidate. Exhausting attempt 3 blocks the owner and stops Phase 2. Repeat Task 60 only after the owner commits/pushes a new accepted candidate and the affected gate passes.
 - [ ] **Step 5: Validate and close.** Run the full HangboardPackages tests, final inventory, and partial audit. Set `phase2.finalChecks.crossCatalogReview` passed only after all 85 entries are terminal and no defect remains. Commit/push with `rtk git commit -m "Review remediated presentation catalog"`; execute and verify exact cleanup.
 
 ## Isolated iOS direct-inspection recipe
 
-Tasks 58–61 use `validate-hang-ten-ios` and read `docs/IOS_SIMULATOR_VALIDATION.md` plus `docs/IOS_RUNTIME_SERVICES.md` completely before creating a simulator. Each task creates exactly the two literal devices stated in its Interfaces line. Set `phase2_phone_device_type_id=com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro` and `phase2_tablet_device_type_id=com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4`; require both exact identifiers in `xcrun simctl list devicetypes -j`. Set `phase2_runtime_id` to the final item after filtering `xcrun simctl list runtimes -j` to available iOS runtimes and sorting numeric `version` components ascending; require exactly one non-null selected identifier. Commit the three literal identifiers and both JSON-query commands as environment evidence. Install the skill's exact pending/owned manifest traps before either `simctl create`, append each validated UUID to pending before owned, and use those two explicit UUIDs for every later command. Never address `booted`.
+Tasks 61–64 use `validate-hang-ten-ios` and read `docs/IOS_SIMULATOR_VALIDATION.md` plus `docs/IOS_RUNTIME_SERVICES.md` completely before creating a simulator. Each task creates exactly the two literal devices stated in its Interfaces line. Set `phase2_phone_device_type_id=com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro` and `phase2_tablet_device_type_id=com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4`; require both exact identifiers in `xcrun simctl list devicetypes -j`. Set `phase2_runtime_id` to the final item after filtering `xcrun simctl list runtimes -j` to available iOS runtimes and sorting numeric `version` components ascending; require exactly one non-null selected identifier. Commit the three literal identifiers and both JSON-query commands as environment evidence. Install the skill's exact pending/owned manifest traps before either `simctl create`, append each validated UUID to pending before owned, and use those two explicit UUIDs for every later command. Never address `booted`.
 
 ```zsh
 phase2_phone_device_type_id='com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro'
@@ -1376,67 +1605,75 @@ rtk perl -e 'alarm 1800; exec @ARGV' xcodebuild \
   -derivedDataPath .context/DerivedData build-for-testing
 ```
 
-`phase2_phone_uuid` is assigned only from the validated `simctl create` result for the task's exact Phone resource. A timeout or nonzero exit sets every unreviewed owned record to `blocked`, records the command/result, commits/pushes that terminal state, runs archive cleanup, and stops the task. Install the exact built app on both UUIDs, verify each app container and built/installed executable hash, and launch by explicit UUID.
+`phase2_phone_uuid` is assigned only from the validated `simctl create` result for the task's exact Phone resource. A timeout or nonzero exit sets every unreviewed owned record to `blocked`, records the command/result, commits/pushes that terminal state, runs archive cleanup, and stops the task. Only after the bounded build command exits 0, write that literal command/date/result as `buildForTesting: passed` to every image-repair record owned by that simulator task; Task 64 writes the same successful final-catalog build evidence to removal `/records/23` as well. Install the exact built app on both UUIDs, verify each app container and built/installed executable hash, and launch by explicit UUID.
 
-For each owned image-repair record, inspect both devices directly and record a separate run. Use `HANGTEN_REVIEW_BOARD_PICKER=1` to open the picker, select `boardPicker.board.<packageID>`, and prove the catalog/normal view. Open a compatible plan and workout with the review routes when the repository has a plan whose declared board compatibility includes that package; otherwise record only the plan flow as `notApplicableNoCompatiblePlan` and cite the catalog query that returned no plan. Inspect inactive and active/highlight states, every logical hold/piece individually, and hit-test alignment. Open every presentation in source order; only a package with exactly one current presentation records selector `notApplicableSinglePresentation`. Capture at least one inactive, one all-active, one individual-hold, and one selector image per multi-presentation package on each device; hash every capture before cleanup. All other applicable flows must be `passed`. A presentation defect reopens its product task under Task 57's remaining-attempt rule, then repeats the affected batch gate, Task 57, and this simulator task; the QA task itself never changes package bytes.
+For each owned image-repair record, inspect both devices directly and record a separate run. Use `HANGTEN_REVIEW_BOARD_PICKER=1` to open the picker, select `boardPicker.board.<packageID>`, and prove the catalog/normal view. Open a compatible plan and workout with the review routes when the repository has a plan whose declared board compatibility includes that package; otherwise record only the plan flow as `notApplicableNoCompatiblePlan` and cite the catalog query that returned no plan. Inspect inactive and active/highlight states, every logical hold/piece individually, and hit-test alignment. Open every presentation in source order; only a package with exactly one current presentation records selector `notApplicableSinglePresentation`. Capture at least one inactive, one all-active, one individual-hold, and one selector image per multi-presentation package on each device; hash every capture before cleanup. All other applicable flows must be `passed`. A presentation defect reopens its product task under Task 60's remaining-attempt rule, then repeats the affected batch gate, Task 60, and this simulator task; the QA task itself never changes package bytes.
 
-After the last record, run partial audit and require every owned `simulatorReview.state == passedDirectInspection`, exactly one phone/one tablet run, all seven terminal flows, nonempty capture hashes, and literal environment IDs. Commit/push manifest/narrative before cleanup. Invoke the skill's archive cleanup; require both exact UUIDs absent, pending/owned entries consumed, and `.context/DerivedData`, `.context/workout-raw.png`, and `.context/workout-landscape.png` absent. Preserve manifests and fail if archive cleanup fails; never delete a shared or unknown simulator.
+After each presentation's phone and tablet exercise actually completes, write that record's `simulatorReview` immediately with its exact runs, terminal flows, and capture hashes; do not prefill later records from an earlier presentation. After the last record, run partial audit and require every owned `simulatorReview.state == passedDirectInspection`, exactly one phone/one tablet run, all seven terminal flows, nonempty capture hashes, and literal environment IDs. Commit/push manifest/narrative before cleanup. Invoke the skill's archive cleanup; require both exact UUIDs absent, pending/owned entries consumed, and `.context/DerivedData`, `.context/workout-raw.png`, and `.context/workout-landscape.png` absent. Preserve manifests and fail if archive cleanup fails; never delete a shared or unknown simulator.
 
-### Task 58: Directly inspect Batch 1 presentations on iPhone and iPad
+### Task 61: Directly inspect Batch 1 presentations on iPhone and iPad
 
 **Files:** manifest and narrative only.
 
-**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-58 Phone` and `Hang Ten Paseo sincere-otter Task-58 Tablet`; owns exactly `/records/11`, `/records/13`, `/records/28`, `/records/29`, `/records/33`, `/records/35`, `/records/48`, `/records/49`, `/records/50`, `/records/62`, `/records/68`, `/records/12`, `/records/14`, `/records/26`, `/records/39`, `/records/83`, `/records/84`; commit `Validate nonwood presentation repairs on iOS`.
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-61 Phone` and `Hang Ten Paseo sincere-otter Task-61 Tablet`; owns exactly `/records/11`, `/records/13`, `/records/28`, `/records/29`, `/records/33`, `/records/35`, `/records/48`, `/records/49`, `/records/50`, `/records/62`, `/records/68`, `/records/12`, `/records/14`, `/records/26`, `/records/39`, `/records/83`, `/records/84`; commit `Validate nonwood presentation repairs on iOS`.
 
 - [ ] **Execute the isolated iOS direct-inspection recipe for all 17 records, commit/push, and prove cleanup.**
 
-### Task 59: Directly inspect Batch 2 presentations on iPhone and iPad
+### Task 62: Directly inspect Batch 2 presentations on iPhone and iPad
 
 **Files:** manifest and narrative only.
 
-**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-59 Phone` and `Hang Ten Paseo sincere-otter Task-59 Tablet`; owns exactly `/records/1`, `/records/27`, `/records/36`, `/records/38`, `/records/56`, `/records/57`, `/records/63`, `/records/79`, `/records/80`, `/records/81`, `/records/82`; commit `Validate wood presentation repairs on iOS`.
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-62 Phone` and `Hang Ten Paseo sincere-otter Task-62 Tablet`; owns exactly `/records/1`, `/records/27`, `/records/36`, `/records/38`, `/records/56`, `/records/57`, `/records/63`, `/records/79`, `/records/80`, `/records/81`, `/records/82`; commit `Validate wood presentation repairs on iOS`.
 
 - [ ] **Execute the isolated iOS direct-inspection recipe for all 11 records, commit/push, and prove cleanup.**
 
-### Task 60: Directly inspect Batch 3 presentations on iPhone and iPad
+### Task 63: Directly inspect Batch 3 presentations on iPhone and iPad
 
 **Files:** manifest and narrative only.
 
-**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-60 Phone` and `Hang Ten Paseo sincere-otter Task-60 Tablet`; owns exactly `/records/3`, `/records/4`, `/records/5`, `/records/6`, `/records/7`, `/records/8`, `/records/9`, `/records/16`, `/records/17`, `/records/30`, `/records/31`, `/records/24`, `/records/25`, `/records/34`, `/records/47`; commit `Validate portable presentation repairs on iOS`.
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-63 Phone` and `Hang Ten Paseo sincere-otter Task-63 Tablet`; owns exactly `/records/3`, `/records/4`, `/records/5`, `/records/6`, `/records/7`, `/records/8`, `/records/9`, `/records/16`, `/records/17`, `/records/30`, `/records/31`, `/records/24`, `/records/25`, `/records/34`, `/records/47`; commit `Validate portable presentation repairs on iOS`.
 
 - [ ] **Execute the isolated iOS direct-inspection recipe for all 15 records, commit/push, and prove cleanup.**
 
-### Task 61: Directly inspect Batch 4 presentations on iPhone and iPad
+### Task 64: Directly inspect Batch 4 presentations on iPhone and iPad
 
 **Files:** manifest and narrative only.
 
-**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-61 Phone` and `Hang Ten Paseo sincere-otter Task-61 Tablet`; owns exactly `/records/18`, `/records/19`, `/records/20`, `/records/52`, `/records/53`, `/records/54`, `/records/55`, `/records/43`, `/records/44`, `/records/45`, `/records/46`, `/records/64`, `/records/65`, `/records/66`, `/records/67`, `/records/69`, `/records/70`, `/records/71`, `/records/72`, `/records/76`, `/records/77`, `/records/78`; also rechecks the current Mini Bar `primary` catalog/normal/active/individual/hit-test behavior but leaves removed `/records/23` at `notApplicableRemovedPresentation`; commit `Validate multi-orientation presentation repairs on iOS`.
+**Interfaces:** simulator names `Hang Ten Paseo sincere-otter Task-64 Phone` and `Hang Ten Paseo sincere-otter Task-64 Tablet`; owns exactly `/records/18`, `/records/19`, `/records/20`, `/records/52`, `/records/53`, `/records/54`, `/records/55`, `/records/43`, `/records/44`, `/records/45`, `/records/46`, `/records/64`, `/records/65`, `/records/66`, `/records/67`, `/records/69`, `/records/70`, `/records/71`, `/records/72`, `/records/76`, `/records/77`, `/records/78`; also rechecks the current Mini Bar `primary` catalog/normal/active/individual/hit-test behavior, writes removal `/records/23` `buildForTesting` only after this task's bounded build passes, and leaves its removed presentation `simulatorReview` at sourced `notApplicableRemovedPresentation`; commit `Validate multi-orientation presentation repairs on iOS`.
 
-- [ ] **Execute the isolated iOS direct-inspection recipe for all 22 image records and current Mini Bar primary, commit/push, and prove cleanup.**
+- [ ] **Execute the isolated iOS direct-inspection recipe for all 22 image records and current Mini Bar primary.** After this task's build and all per-record reviews pass, require all four task build records and all 65 repaired-record simulator reviews terminal; then set root `phase2.finalChecks.buildForTesting` and `phase2.finalChecks.simulatorReview` passed with the exact four build results and per-record review summary. Commit/push and prove cleanup.
 
-### Task 62: Run the final Phase 2 catalog gate
+### Task 65: Run the final Phase 2 catalog gate
 
 **Files:** manifest and narrative only.
 
 **Interfaces:** consumes all preceding commits and produces the only `phase2Final` success state; no package, app, routine, or training-plan change.
 
-- [ ] **Step 1: Prove source, comparator, and action terminal truth.** Require every one of the 65 repair records to have confirmed evidence, completed action, exactly one accepted candidate, passed transient input/candidate verification, accepted/on-disk hash equality, final ready/self comparator, four Workbench passes, two direct simulator runs, and no blocked flow. Require record 23 completed removal with confirmed evidence and valid removed-presentation N/A. Require zero pending or blocked Phase 2 actions while preserving all five Phase 1 gap strings and the two evidence-blocked keep decisions unchanged.
-- [ ] **Step 2: Prove exact inventory and byte truth.** Require 61 packages, 85 historical records, 84 current presentations, 19 keep records whose PNG hashes still equal Phase 1, 17 completed edits, 48 completed regenerations, one completed removal, absent Mini Bar `end`, retained Mini Bar `primary` plus all four physical grips, and package-ID set equality without order rewriting.
-- [ ] **Step 3: Run the complete validation commands.**
+- [ ] **Step 1: Run partial validation before changing any final check.** Run `rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json --phase2-partial`. Require every one of the 65 repair records to have confirmed evidence, completed action, exactly one accepted candidate, passed transient input/candidate verification, accepted/on-disk hash equality, an accepted singular final comparator (including an accepted bootstrap seed's self baseline), four Workbench passes, per-record package/focused/full-suite/build evidence, two direct simulator runs, and no blocked flow. Require record 23 completed removal with confirmed evidence, per-record package/focused/full-suite/build evidence, and valid removed-presentation N/A. Require zero pending or blocked Phase 2 actions while preserving all five Phase 1 gap strings, all 17 source-supported keep hashes/dimensions/accepted decisions, and the two evidence-blocked keep null hashes/dimensions/decisions unchanged. Leave the four Task 65-owned final checks pending during this command.
+- [ ] **Step 2: Run the actual final checks while their fields remain pending.** Execute these commands with the four check fields still pending:
+
+  ```bash
+  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q
+  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+  phase2_live_owned_paths="$(rtk find .context -maxdepth 1 \( -name '*sincere-otter*' -o -name DerivedData -o -name workout-raw.png -o -name workout-landscape.png \) -print)"
+  test -z "$phase2_live_owned_paths"
+  rtk uv run python -c 'from pathlib import Path; import re; files=(Path("docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json"),Path("docs/source-audits/2026-08-30-hangboard-presentation-remediation.md")); text="\n".join(p.read_text() for p in files); paths=sorted(set(re.findall(r"/Users/asherlc/(?:\.codex/generated_images|\.paseo/worktrees/0h78jp9r/sincere-otter/\.context/sincere-otter-[^/\s`\"\x27]+)[^\s`\"\x27]*",text))); live=[p for p in paths if Path(p).exists()]; assert not live, live'
+  rtk xcrun simctl list devices -j | rtk jq -e '[.devices[][] | select(.name | startswith("Hang Ten Paseo sincere-otter "))] | length == 0'
+  ```
+
+  The empty `find`, path assertion, and simulator query together check every committed task-owned ledger path, registered generated-image path, simulator UUID/name and pending/owned manifest path, and exact task context is absent while leaving shared or unknown resources untouched. Require every command to exit 0; require 61 packages, 85 historical records, 84 current presentations, 19 keep records whose PNG hashes still equal Phase 1, 17 completed edits, 48 completed regenerations, one completed removal, absent Mini Bar `end`, retained Mini Bar `primary` plus all four physical grips, package-ID set equality without order rewriting, and a clean owned-resource scan.
+- [ ] **Step 3: Record exactly the four Task 65-owned final checks from actual results.** Write `manifestValidation: passed` from Step 1's literal partial-audit command/date/result, `packageTestSuite: passed` from Step 2's literal full-suite command/date/result, `finalInventory: passed` from Step 2's literal inventory command/date/result, and `contextCleanup: passed` from Step 2's literal cleanup-scan command/date/result. Do not alter `crossCatalogReview`, which Task 60 already passed, or `buildForTesting`/`simulatorReview`, whose per-record and aggregate evidence Tasks 61–64 already passed. No check may be written before its command exits 0.
+- [ ] **Step 4: Only now run the final validator and unrelated-code proof.**
 
   ```bash
   phase2_baseline_sha="$(rtk awk -F': ' '/^Phase 2 baseline SHA: / {print $2; exit}' \
     docs/source-audits/2026-08-30-hangboard-presentation-remediation.md)"
   test "${#phase2_baseline_sha}" -eq 40
-  rtk uv run --with pytest --with Pillow --with PyYAML python -m pytest -q
-  rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
   rtk scripts/hangboard-packages.sh audit-presentations --root Hangboards \
     --manifest docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json \
     --phase2-final
   rtk git diff --name-only "$phase2_baseline_sha..HEAD" -- TrainingPlans HangTen
   ```
 
-  Expected: all tests pass; final inventory is 61/84; Phase 2 report is 20 canvas classes, 65 covered repairs, 19 keeps, 17 edits, 48 regenerations, one removal, two historical evidence-blocked keeps, zero pending actions, and zero blocked actions; the unrelated-code diff is empty.
-- [ ] **Step 4: Close final checks coherently.** Set `manifestValidation`, `finalInventory`, `packageTestSuite`, and `simulatorReview` passed with literal command/date/result evidence. Set `buildForTesting` passed from the four bounded successful build records. Set `contextCleanup` passed only after checking every task-owned ledger path, generated-image path, simulator UUID, simulator manifest entry, and exact `.context` task directory is absent. Do not remove shared or unknown resources.
-- [ ] **Step 5: Re-run `--phase2-final` after closing checks.** Require identical totals and zero pending/blocked Phase 2 actions. Review the final diff and manifest/narrative consistency.
-- [ ] **Step 6: Commit and push.** Stage only manifest and narrative, commit `Complete hangboard presentation remediation phase two`, and push. Record the pushed SHA and final validator output in the handoff.
+  Expected: Phase 2 report is 20 canvas classes, 65 covered repairs, 19 keeps, 17 edits, 48 regenerations, one removal, two historical evidence-blocked keeps, zero pending actions, and zero blocked actions; the unrelated-code diff is empty. This is the first and only `--phase2-final` invocation in Task 65.
+- [ ] **Step 5: Review, commit, and push.** Review the final diff plus manifest/narrative consistency. Stage only manifest and narrative, commit `Complete hangboard presentation remediation phase two`, and push. Record the pushed SHA and final validator output in the handoff.
