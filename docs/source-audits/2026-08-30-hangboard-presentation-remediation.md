@@ -749,3 +749,89 @@ topology, and catalog smoothing/background checks. Final-inventory validation
 and package status passed with 61 packages and no drafts. This deterministic
 recolor/manual-bore repair is the user-approved exception to image generation;
 the schema-2 machine manifest is intentionally unchanged in this bounded pass.
+
+## Metolius Light Rail 2.0 two-position repair (2026-08-31)
+
+The complete current-revision Light Rail 2.0 was freshly re-researched and
+repaired as one atomic reversible product on 2026-08-31. Metolius identifies
+the product as a 18 x 3 x 1.5 in, 0.54 kg portable FSC-certified wooden rail
+whose reversible design yields four holds. The current official product image
+shows one rounded timber body, one long routed channel, a complete blue cord
+with pink flecks and a left knot, upright 40/20 mm markings, and the inverse
+40/15 mm markings. Those four labeled contacts require exactly two physical
+suspension positions: 40/20 mm upright and the same rail inverted in its cord
+with 40/15 mm upright. There is no separate rear working face or third
+mounting position in the current evidence.
+
+Freshly opened evidence:
+
+- Metolius official product page:
+  <https://www.metoliusclimbing.com/products/light-rail>
+- Current official product image:
+  <https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616>
+- Metolius official training-board manual, whose suspended-device section
+  explicitly covers Light Rails:
+  <https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826>
+- Treeline Review's independent 2026 hands-on comparison:
+  <https://www.treelinereview.com/gearreviews/best-hangboards-for-climbing>
+- Treeline's published straight-on product view and its genuine tested-at-the-
+  crag owner/reviewer photograph:
+  <https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/b4f8b087-e046-4231-bcbd-f070bb3c85ec/metolius-light-rail-20.jpg>
+  and
+  <https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/452f6e96-37f1-454d-a405-e801658501a5/metolius-light-rail-1.jpg>.
+
+Treeline independently confirms wood construction, single-cord suspension,
+four contacts, and the same one-channel silhouette. Its table reports measured
+edge values that differ slightly from Metolius's current 15/20/40 mm copy;
+the package keeps the manufacturer's current specification and the depth
+markings visibly published on both official and independent photos. Older
+38/18/13 mm images with metal end brackets are a prior revision and were
+explicitly excluded from the current 2.0 render.
+
+The built-in image tool produced one source-constrained candidate for each
+distinct operating position. The 20 mm prompt required the exact current
+single-piece rounded FSC-wood rail, one routed channel, complete blue/pink cord
+loop and left knot, upright 40/20 mm and inverse 40/15 mm markings and Metolius
+marks, a straight-on orthographic working face, no metal brackets, and a warm
+off-white studio field. The 15 mm prompt used the official image and accepted
+20 mm candidate as references, kept the cord above the rail, and required the
+wooden body to be physically inverted so 40/15 mm reads upright while the
+40/20 mm markings read upside-down. Both prompts prohibited crop, perspective,
+extra grooves, extra holes, hardware, hands, walls, and watermarks. Both first
+candidates passed; no second iteration was used.
+
+| Presentation | Declared asset | Scoped holds | Old SHA-256 / dimensions | New SHA-256 / dimensions | Result |
+| --- | --- | --- | --- | --- | --- |
+| `20mm-side` — 40/20 mm upright (default) | `assets/primary.png` | `jug-40-20mm-side`, `edge-20` | `da320b5673289e1aa15e226d0fe55a13d2fde7625c10bd9f8c10442d04caa7f2` / 1536 x 1024 RGBA | `1fa7bccc1ba6406fad3a6700ae826ea170fe2e4deb592f40cf84b42deef79b8d` / 1254 x 1254 RGB | accepted canonical 20 mm suspension position |
+| `15mm-side` — 40/15 mm upright | `assets/15mm-surface.png` | `jug-40-15mm-side`, `edge-15` | `7b365965bb7d3c7b6f1fcd8c2503c5a77ddba8cc75084294c5a7766a90ef3705` / 1672 x 941 RGB | `c5e2a5edde3e5b0eebea601fac588e332d1bcfdee1adcb10f5bc58d66fe7aa78` / 1254 x 1254 RGB | accepted matched inverted-rail suspension position |
+
+The accepted outputs were already the same square canvas, so they were copied
+without resize, crop, padding, stretch, perspective warp, mask, segmentation,
+registration, or local filtering. Each presentation is independently head-on
+to its active working surface: the rail and routed channel edges are horizontal
+and parallel, left/right ends have equal scale, and neither exposes side-depth
+foreshortening. Both include the complete suspension loop, knot/tail, and lower
+cord return. They share one pale natural-wood treatment, subtle grain, soft
+recess lighting, off-white field, edge softness, and smoothing level. A
+side-by-side catalog check against the head-on Frictitious Port-A-Board wood
+presentation confirmed compatible wood texture, recessed shading, cord detail,
+and studio treatment.
+
+Because the new canvases changed the board's placement, the four existing
+rounded-rectangle paths were deliberately repositioned without changing hold
+IDs, kinds, depths, equipment ownership, path command topology, constraints,
+or presentation assignments. Both 40 mm frames are now
+`(0.041, 0.624, 0.916, 0.041)`; the 20 mm channel frame is
+`(0.079, 0.674, 0.842, 0.070)` and the 15 mm channel frame is
+`(0.079, 0.674, 0.842, 0.067)`. Presentation and board aspect ratios changed
+to `1.0` to match the decoded 1254 x 1254 PNGs. `board.json` changed from
+`4ec3fd03e6753466a66dc9fa3044d6ac962071bfd47f58d764bbe3fe3d229077`
+to `1fd7f4ccb04fe572ffb0db5cc11dbd473a0403e1cb562091c2c5495116463303`.
+
+Workbench loaded both presentation IDs and showed the normal image plus both
+active paths aligned on each position. All four scoped paths were clicked
+individually and became the expected selected hit target. Final-inventory
+package validation and package status passed with 61 packages and no drafts;
+the focused Workbench package suite passed 173 tests. The repair therefore
+passes the all-presentations/all-positions requirement atomically. The
+schema-2 machine manifest is intentionally unchanged in this bounded pass.
